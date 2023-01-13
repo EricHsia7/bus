@@ -239,6 +239,14 @@
       margin-left: 5px;
     }
 
+    .route li.stop .name .bus[l="1"] {
+      opacity: 1;
+    }
+
+    .route li.stop .name .bus[l="0"] {
+      opacity: 0.3;
+    }
+
     .route li.stop .name .bus[d="false"] {
       display: none;
     }
@@ -436,7 +444,7 @@
       for (var w = 0; w < l; w++) {
         var displayName = k[w].StopID
         var s = {}
-        var bv = { 'h': false, 'n': '', 'icon': '' }
+        var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
         if (g) {
           s = { 'b': k[w].b }
           displayName = ''
@@ -448,9 +456,11 @@
           }
           if (busevent_json.loaded) {
             if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+              var thisbv = bp['s_' + k[w].StopID]
               bv.h = true
-              bv.n = bp['s_' + k[w].StopID].BusID
+              bv.n = thisbv.BusID
               bv.icon = icon_bus
+              bv.l = thisbv.CarOnStop
             }
           }
         }
