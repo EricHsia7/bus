@@ -343,7 +343,7 @@
       switchDirection('departure')
     }
   }
-  function printStop(k, c) {
+  function printStop(k, c, bp) {
     var htm = {}
     var l = k.length
     var g = false
@@ -365,7 +365,7 @@
         }
         if (busevent_json.loaded) {
           bv.h = true
-          bv.n = c['s_' + k[w].StopID].BusID
+          bv.n = bp['s_' + k[w].StopID].BusID
         }
       }
 
@@ -452,7 +452,7 @@
           realtime_json = JSON.parse(z)
           var s = findStop(realtime_json, c_routeid)
           var bb = findBus(busevent_json, c_routeid)
-          printStop(s, bb)
+          printStop(s, '', bb)
           setTimeout(function () { updateRealtimeJson() }, 10000);
 
         });
