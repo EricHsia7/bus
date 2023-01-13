@@ -53,8 +53,8 @@
       background: var(--g-ffffff);
     }
 
-    .container {
-      position: absolute;
+    .route_container {
+      position: fixed;
       top: 0px;
       left: 0px;
       width: 100%;
@@ -63,6 +63,7 @@
       padding: 0px;
       overflow: hidden;
       background: var(--g-ffffff);
+      display: none;
     }
 
     .title {
@@ -275,7 +276,7 @@
 </head>
 
 <body></body>
-<div class="container">
+<div class="route_container">
   <div class="routes" display="departure">
     <div class="route" direction="departure"></div>
     <div class="route" direction="destination"></div>
@@ -284,11 +285,9 @@
     <div class="back"></div>
     <div class="routename"></div>
   </div>
-
   <div class="tabs">
     <div class="tab" direction="departure"><span></span></div>
     <div class="tab" direction="destination"><span></span></div>
-
     <div class="tab-line-box">
       <div class="tab-line-box2">
         <div class="tab-line"></div>
@@ -330,9 +329,9 @@
       var dep = this_route.dep
       var des = this_route.des
       var name = this_route.n
-      $('.container .tabs .tab[direction="departure"] span').text(des)
-      $('.container .tabs .tab[direction="destination"] span').text(dep)
-      $('.container .title .routename').text(name)
+      $('.route_container .tabs .tab[direction="departure"] span').text(des)
+      $('.route_container .tabs .tab[direction="destination"] span').text(dep)
+      $('.route_container .title .routename').text(name)
       switchDirection('departure')
     }
   }
@@ -370,8 +369,8 @@
       htm['h_' + s.b].push('<li class="stop" l="' + g + '"><div class="name">' + displayName + '</div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
-    $('.container .route[direction="departure"]').html(htm['h_0'].join(''))
-    $('.container .route[direction="destination"]').html(htm['h_1'].join(''))
+    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
   }
   function timeStatus(t) {
     t = parseInt(t)
@@ -591,7 +590,7 @@
 
   }
   function switchDirection(d) {
-    $('.container .routes').attr('display', d)
+    $('.route_container .routes').attr('display', d)
     var line = 0;
     var content = 0;
     var tabwidth = $(".tab-line-box").width();
@@ -602,15 +601,17 @@
     }
     line = (1 / 2) * y * tabwidth;
     $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)", "transition": "0.35s" });
-    $(".tab-line").css({ "width": $('.container .tabs .tab[direction="' + d + '"] span').width() + "px", "transition": "0.35s" });
+    $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px", "transition": "0.35s" });
   }
 
   function initialize() {
-    $('.container .tabs .tab').click(function () {
+    $('.route_container .tabs .tab').click(function () {
       var d = $(this).attr('direction')
       switchDirection(d)
     });
   }
+
+  initialize()
 </script>
 
 </html>
