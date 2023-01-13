@@ -354,10 +354,11 @@
       for (var w = 0; w < l; w++) {
         var displayName = k[w].StopID
         var s = {}
-        var bv = { 'h': false, 'n': '' }
+        var bv = {}
         if (g) {
           s = { 'b': k[w].b }
           displayName = ''
+          bv = { 'h': false, 'n': '' }
         }
         else {
           if (stops_json.loaded) {
