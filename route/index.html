@@ -208,33 +208,39 @@
     .route li.stop .name .bus {
       display: inline-block;
       position: relative;
-      height: 29px;
+      height: 25px;
       padding: 0px;
       box-sizing: border-box;
-      background: var(--g-14b1ff);
+      background: var(--g-e3e3e3);
       border-radius: 20px;
       overflow: hidden;
     }
 
+    .route li.stop .name .bus[d="false"] {
+      display: none;
+    }
+
     .route li.stop .name .bus .busicon {
-      width: 29px;
-      height: 29px;
+      width: 25px;
+      height: 25px;
       display: inline-flex;
       justify-content: center;
       align-items: center;
     }
 
     .route li.stop .name .bus .busicon svg {
-      width: 20px;
-      height: 20px;
+      width: 17px;
+      height: 17px;
     }
 
     .route li.stop .name .bus .busid {
       display: inline-flex;
-      height: 29px;
+      height: 23px;
       padding: 0px 4.5px;
-      font-size: 15px;
-      color:var(--g-333333);
+      font-size: 13px;
+      color: var(--g-333333);
+      box-sizing: border-box;
+      align-items: center;
     }
 
     .route li.stop[l="true"] .name::after {
