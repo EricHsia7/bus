@@ -625,7 +625,7 @@
             routes_json.c = json_lite
             LS.setItem('bus_routes', JSON.stringify(json_lite))
             LS.setItem('bus_routes_t', new Date().getTime())
-            c_routeid_p = routes_json.c['b_' + c_routeid].pid
+            c_routeid_p = parseInt(routes_json.c['b_' + c_routeid].pid)
             routes_json.loaded = true
             setRouteD()
           });
