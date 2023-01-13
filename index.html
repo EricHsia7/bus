@@ -1,337 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bus</title>
+  <meta name="description" content="Bus">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0" />
+  <!---
+  <link href="https://erichsia7.github.io/bus/pwaicon/512x512.png" sizes="512x512" rel="apple-touch-icon-precomposed" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="defualt" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon/256x256_corner_radius.ico" rel="icon" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon/256x256_corner_radius.ico" rel="bookmark" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon/256x256_corner_radius.ico" rel="shortcut icon" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" kji="light">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0d" kji="dark">
+  <link rel="manifest" href="https://erichsia7.github.io/bus/manifest.json">
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g-4e4e4e: #333333;
+      --g-f5f5f5: #f5f5f5;
+      --g-14b1ff: #14b1ff;
+      --g-856dff: #c7ecff;
+      --g-ffffff: #ffffff;
+      --g-888888: #888888;
+      --g-e3e3e3: #e3e3e3;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --g-4e4e4e: #ffffff;
+        --g-f5f5f5: #1f1f1f;
+        --g-14b1ff: #2f92cc;
+        --g-856dff: #2e4a59;
+        --g-ffffff: #101010;
+        --g-888888: #888888;
+        --g-e3e3e3: #262626;
+      }
+    }
+
+    * {
+      font-family: 'Noto Sans', sans-serif;
+    }
+
+    body {
+      margin: 0px;
+      padding: 0px;
+      background: var(--g-ffffff);
+    }
+
+    .container {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      background: var(--g-ffffff);
+    }
+
+    .title {
+      width: 100%;
+      height: 35ox;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: var(--g-ffffff);
+    }
+
+    .title .routename {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 50px;
+      color: var(--g-4e4e4e);
+      font-weight: 700;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+    .tabs {
+      width: 100%;
+      height: 40px;
+      position: absolute;
+      top: 45px;
+      left: 0px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 0px;
+      border-bottom: 1px solid var(--g-e3e3e3);
+      background: var(--g-ffffff);
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--g-4e4e4e);
+      font-weight: 500;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .tab-line-box {
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: 2px;
+    }
+
+    .tab-line-box2 {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 2px;
+      width: calc(100% / 2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tab-line {
+      width: 30px;
+      height: 2px;
+      background: var(--g-4e4e4e);
+      border-radius: 15px 15px 0px 0px;
+    }
+
+    .routes {
+      width: 200%;
+      height: calc(100% - 85px);
+      position: absolute;
+      top: 85px;
+      left: 0px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 0px;
+      -webkit-user-select: none;
+      user-select: none;
+      background: var(--g-ffffff);
+      transition: transform 0.35s;
+    }
+
+    .routes[display="departure"] {
+      transform: translateX(0)
+    }
+
+    .routes[display="destination"] {
+      transform: translateX(-50%);
+    }
+
+    .route {
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: scroll;
+      background: var(--g-ffffff);
+    }
+
+    .route::-webkit-scrollbar {
+      display: none;
+    }
+
+    .route li.stop {
+      list-style: none;
+      display: block;
+      height: 45px;
+      width: 100%;
+      position: relative;
+      margin: 0px;
+      padding: 0px;
+      border-bottom: solid 1px var(--g-f5f5f5);
+      background: var(--g-ffffff);
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .route li.stop .name {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      height: 35px;
+      width: calc(100% - 20px - 70px);
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      color: var(--g-4e4e4e);
+      font-size: 17px;
+      font-weight: 400;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .route li.stop[l="true"] .name::after {
+      content: '';
+      background: var(--g-f5f5f5);
+      position: absolute;
+      top: 3px;
+      left: 0px;
+      width: calc(100% - 10px);
+      height: 29px;
+      border-radius: 10px;
+    }
+
+    .route li.stop .status {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      width: 70px;
+      height: 35px;
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow: hidden;
+      background: var(--g-f5f5f5);
+      border-radius: 99em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--g-4e4e4e);
+
+      -webkit-user-select: none;
+      user-select: none;
+
+    }
+
+    .route li.stop .status[status="0"] {
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="1"] {
+      background: var(--g-856dff);
+      color: var(--g-14b1ff);
+      font-weight: 700;
+    }
+
+    .route li.stop .status[status="2"] {
+      background: var(--g-14b1ff);
+      color: var(--g-ffffff);
+      font-weight: 700;
+    }
+
+    .route li.stop .status[status="3"] {
+      color: var(--g-888888);
+    }
+
+    .route li.stop .status[status="4"] {
+      color: var(--g-888888);
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="5"] {
+      color: var(--g-888888);
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="6"] {
+      color: var(--g-888888);
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body></body>
+<div class="container">
+  <div class="routes" display="departure">
+    <div class="route" direction="departure"></div>
+    <div class="route" direction="destination"></div>
+  </div>
+  <div class="title">
+    <div class="back"></div>
+    <div class="routename"></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab" direction="departure"><span></span></div>
+    <div class="tab" direction="destination"><span></span></div>
+
+    <div class="tab-line-box">
+      <div class="tab-line-box2">
+        <div class="tab-line"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
 <script>
-const LS = window.localStorage
-const SS = window.sessionStorage
-let realtime_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetEstimateTime.gz'
-let stopName_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetStop.gz'
-let routes_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetRoute.gz'
+  const LS = window.localStorage
+  const SS = window.sessionStorage
+  let realtime_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetEstimateTime.gz'
+  let stops_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetStop.gz'
+  let routes_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetRoute.gz'
 
-var realtime_json = {}
-var stopName_json = {'loaded':false,'c':{}}
-var routes_json =  {'loaded':false,'c':{}}
-var c_routeid = 0
-var o_routeid
-var realtime_lo = 0
-function skeletonScreen() {
-var j =[]
-var ll = Math.floor(window.innerHeight/45)+5
-for(var y=0;y<ll;y++) {
-j.push({'sk':true,'b':0})
-}
-  for(var y=0;y<ll;y++) {
-j.push({'sk':true,'b':1})
-}
-  printStop(j,'skeleton')
-}
-function setRouteD() {
-  if(routes_json.loaded) {
-    var this_route = routes_json.c['b_' + c_routeid]
-    var dep = this_route.dep
-    var des = this_route.des
-    var name = this_route.n
-    $('.container .tabs .tab[direction="departure"] span').text(des)
-    $('.container .tabs .tab[direction="destination"] span').text(dep)
-    $('.container .title .routename').text(name)
-    switchDirection('departure')
+  var realtime_json = {}
+  var stops_json = { 'loaded': false, 'c': {} }
+  var routes_json = { 'loaded': false, 'c': {} }
+  var c_routeid = 0
+  var o_routeid
+  var realtime_lo = 0
+  function skeletonScreen() {
+    var j = []
+    var ll = Math.floor(window.innerHeight / 45) + 5
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'b': 0 })
+    }
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'b': 1 })
+    }
+    printStop(j, 'skeleton')
   }
-}
-function printStop(k,c) {
-  
-  var htm={}
-  var l= k.length
-var g = false
-  if(c === 'skeleton') {
-g = true
-}
-for(var w = 0;w<l;w++) {
-  var displayName = k[w].StopID
-  var s = {}
-if(g) {
-s = {'b':k[w].b}
-    displayName = ''
-}
-  else {
+  function setRouteD() {
+    if (routes_json.loaded) {
+      var this_route = routes_json.c['b_' + c_routeid]
+      var dep = this_route.dep
+      var des = this_route.des
+      var name = this_route.n
+      $('.container .tabs .tab[direction="departure"] span').text(des)
+      $('.container .tabs .tab[direction="destination"] span').text(dep)
+      $('.container .title .routename').text(name)
+      switchDirection('departure')
+    }
+  }
+  function printStop(k, c) {
+    var htm = {}
+    var l = k.length
+    var g = false
+    if (c === 'skeleton') {
+      g = true
+    }
+    for (var w = 0; w < l; w++) {
+      var displayName = k[w].StopID
+      var s = {}
+      if (g) {
+        s = { 'b': k[w].b }
+        displayName = ''
+      }
+      else {
 
-  if(stopName_json.loaded) {
-    s = stopName_json.c['b_' + k[w].StopID]
-displayName = s.n 
-}
+        if (stops_json.loaded) {
+          s = stops_json.c['b_' + k[w].StopID]
+          displayName = s.n
+        }
+      }
+
+      if (!(htm.hasOwnProperty('h_' + s.b))) {
+        htm['h_' + s.b] = []
+      }
+      if (g) {
+        var status = { 'status': 10, 'text': '' }
+      }
+      else {
+        var status = timeStatus(k[w].EstimateTime)
+      }
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '"><div class="name">' + displayName + '</div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+    }
+
+    $('.container .route[direction="departure"]').html(htm['h_0'].join(''))
+    $('.container .route[direction="destination"]').html(htm['h_1'].join(''))
   }
-  
-  if(!(htm.hasOwnProperty('h_' + s.b))) {
-    htm['h_' + s.b] = []
-  }
-  if(g) {
-var status = {'status':10,'text':''}
-}
-else {
-var status = timeStatus(k[w].EstimateTime)
-}
-  
-htm['h_' + s.b].push('<li class="stop" l="' + g + '"><div class="name">' + displayName + '</div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
-}
-  
-$('.container .route[direction="departure"]').html(htm['h_0'].join(''))
-  $('.container .route[direction="destination"]').html(htm['h_1'].join(''))
-  
-  
-}
-function timeStatus(t) {
-  t = parseInt(t)
-  var minute = Math.round(t/60) + '分'
-  if(t === -3) {
-    return {status:6,text:'末班駛離'}
-  }
-  if(t === -4) {
-    return {status:5,text:'今日未營運'}
-  }
-  if(t === -2) {
-    return {status:4,text:'交管不停靠'}
-  }
-  if(t === -1) {
-    return {status:3,text:'未發車'}
-  }
-  if(t <= 180) {
-    if(t <= 100) {
-    return {status:2,text:'進站中'}
+  function timeStatus(t) {
+    t = parseInt(t)
+    var minute = Math.round(t / 60) + '分'
+    if (t === -3) {
+      return { status: 6, text: '末班駛離' }
+    }
+    if (t === -4) {
+      return { status: 5, text: '今日未營運' }
+    }
+    if (t === -2) {
+      return { status: 4, text: '交管不停靠' }
+    }
+    if (t === -1) {
+      return { status: 3, text: '未發車' }
+    }
+    if (t <= 180) {
+      if (t <= 100) {
+        return { status: 2, text: '進站中' }
+      }
+      else {
+        return { status: 1, text: minute }
+      }
     }
     else {
-      return {status:1,text:minute}
+      return { status: 0, text: minute }
     }
   }
-  else {
-    return {status:0,text:minute}
-  }
-}
-function findStop(j,id) {
-  var res = []
-  var o = j.BusInfo
-  var l = o.length
-  for(var w = 0;w<l;w++) {
-    if(o[w].RouteID == id) {
-      res.push(o[w])
+  function findStop(j, id) {
+    var res = []
+    var o = j.BusInfo
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      if (o[w].RouteID == id) {
+        res.push(o[w])
+      }
     }
-  }
-  
- res.sort(function (a, b) {
-      return stopName_json.c['b_' + a.StopID].s - stopName_json.c['b_' + b.StopID].s
+
+    res.sort(function (a, b) {
+      return stops_json.c['b_' + a.StopID].s - stops_json.c['b_' + b.StopID].s
     });
-  return res
-}
-function updateRealtimeJson() {
- $.ajax({
-        type: 'GET', url: realtime_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-        
-        var b = new Blob([data.slice(0,data.size)], {type: 'application/gzip'});
-          
+    return res
+  }
+  function updateRealtimeJson() {
+    $.ajax({
+      type: 'GET', url: realtime_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          realtime_json = JSON.parse(z)
+          var s = findStop(realtime_json, c_routeid)
+
+          printStop(s)
+          setTimeout(function () { updateRealtimeJson() }, 10000);
+
+        });
+      }, error: function () {
+        setTimeout(function () { updateRealtimeJson() }, 1000);
+      }
+    });
+  }
+
+  var stopsDataShortName = [
+    { 'source': 'routeId', 'short': 'r' },
+    { 'source': 'nameZh', 'short': 'n' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'seqNo', 'short': 's' },
+    { 'source': 'goBack', 'short': 'b' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'address', 'short': false },
+    { 'source': 'longitude', 'short': false },
+    { 'source': 'latitude', 'short': false },
+    { 'source': 'showLon', 'short': false },
+    { 'source': 'showLat', 'short': false },
+    { 'source': 'vector', 'short': false }
+  ]
+
+  var sdsn_len = stopsDataShortName.length
+
+  function getStops() {
+    var t = new Date().getTime()
+    if (!stops_json.loaded) {
+      $.ajax({
+        type: 'GET', url: stops_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf,{to:'string'})
-        realtime_json = JSON.parse(z)
-            var s = findStop(realtime_json,c_routeid)
-            
-           printStop(s)
-         setTimeout(function() {updateRealtimeJson()},10000);
-            
-          });
-      },error:function(){
-        setTimeout(function() {updateRealtimeJson()},1000);
-      }});
-}
-
-var stopsDataShortName = [
-  {'source':'routeId','short':'r'},
-  {'source':'nameZh','short':'n'},
-  {'source':'nameEn','short':false},
-{'source':'seqNo','short':'s'},
-  {'source':'goBack','short':'b'},
-  {'source':'nameEn','short':false},
-  {'source':'address','short':false},
-  {'source':'longitude','short':false},
-   {'source':'latitude','short':false},
-  {'source':'showLon','short':false},
-  {'source':'showLat','short':false},
-  {'source':'vector','short':false},
-  
-]
-
-var sdsn_len = stopsDataShortName.length
-
-function getStops() {
-  var t = new Date().getTime()
-  if(SS.hasOwnProperty('bus_stops_t')) {
-    if(t-parseInt(String(SS.getItem('bus_stops_t'))) < 60*60*24*15 ) {
-      stopName_json.c = JSON.parse(String(SS.getItem('bus_stops')))
-            stopName_json.loaded = true
-      
-    }
-  }
-  if(stopName_json.loaded) {
-    
-  }
-  else {
- $.ajax({
-        type: 'GET', url: stopName_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-        
-        var b = new Blob([data.slice(0,data.size)], {type: 'application/gzip'});
-          
-          b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf,{to:'string'})
-        var o = JSON.parse(z).BusInfo
-        
-        var iqq = {}
-         
-var pl= o.length
-for(var j= 0;j<pl;j++) {
-  var jjj = o[j]
-  for(var g = 0;g<sdsn_len;g++) {
-    var thsS = stopsDataShortName[g]
-  if(!(thsS === false)) {
-      jjj[thsS.short] = jjj[thsS.source]
-    }
-  delete jjj[thsS.source]
-  }
-  iqq['b_' + o[j].Id] = o[j]
-}
-            stopName_json.c = iqq
-            /*
-     SS.setItem('bus_stops',JSON.stringify(iqq))
-            SS.setItem('bus_stops_t',new Date().getTime())
-*/
-            
-            stopName_json.loaded = true
-            if(realtime_lo === 0) {
-    realtime_lo = 1
-            updateRealtimeJson()
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              for (var g = 0; g < sdsn_len; g++) {
+                var thsS = stopsDataShortName[g]
+                if (!(thsS === false)) {
+                  this_json_k[thsS.short] = this_json_k[thsS.source]
+                }
+                delete this_json_k[thsS.source]
+              }
+              json_lite['b_' + o[j].Id] = o[j]
             }
-            
-            //()
+            stops_json.c = json_lite
+            stops_json.loaded = true
+            if (realtime_lo === 0) {
+              realtime_lo = 1
+              updateRealtimeJson()
+            }
           });
-      }});
-}
-}
-
-
-var routesDataShortName = [
-  {'source':'providerId','short':false},
-  {'source':'providerName','short':false},
-  {'source':'nameZh','short':'n'},
-  {'source':'nameEn','short':false},
-  {'source':'aliasName','short':'an'},
-  {'source':'pathAttributeId','short':false},
-  {'source':'pathAttributeNId','short':false},
-  {'source':'pathAttributeName','short':false},
-  {'source':'pathAttributeEname','short':false},
-  {'source':'buildPeriod','short':false},
-  {'source':'departureZh','short':'dep'},
-  {'source':'destinationZh','short':'des'},
-  {'source':'departureEn','short':false},
-  {'source':'destinationEn','short':false},
-  {'source':'goFirstBusTime','short':false},
-  {'source':'goLastBusTime','short':false},
-  {'source':'backFirstBusTime','short':false},
-  {'source':'backLastBusTime','short':false},
-  {'source':'offPeakHeadway','short':false},
-  {'source':'roadMapUrl','short':false},
-  {'source':'headwayDesc','short':false},
-  {'source':'holidayGoFirstBusTime','short':false},
-  {'source':'holidayBackFirstBusTime','short':false},
-  {'source':'holidayBackLastBusTime','short':false},
-  {'source':'holidayGoLastBusTime','short':false},
-  {'source':'holidayBusTimeDesc','short':false},
-  {'source':'realSequence','short':'rs'},
-  {'source':'holidayHeadwayDesc','short':false},
-  {'source':'holidayOffPeakHeadway','short':false},
-  {'source':'holidayPeakHeadway','short':false},
-  {'source':'segmentBufferEn','short':false},
-{'source':'ticketPriceDescriptionZh','short':false},
-{'source':'ticketPriceDescriptionEn','short':false},
-  {'source':'peakHeadway','short':false},
-  {'source':'ttiaPathId','short':false},
-  {'source':'segmentBufferZh','short':false},
-  {'source':'busTimeDesc','short':false},
-  {'source':'distance','short':false},
-  {'source':'NId','short':false},
-  {'source':'genus','short':false},
-  {'source':'Id','short':false}
-]
-var rdsn_len = routesDataShortName.length
-
-function getRoutes() {
-  var t = new Date().getTime()
-  if(LS.hasOwnProperty('bus_routes_t')) {
-    if(t-parseInt(String(LS.getItem('bus_routes_t'))) < 60*60*24*15 ) {
-      routes_json.c = JSON.parse(String(LS.getItem('bus_routes')))
-      
-            routes_json.loaded = true
-      
+        }
+      });
     }
   }
-  if(routes_json.loaded) {
-    setRouteD()
-  }
-  else {
-   
- $.ajax({
+
+
+  var routesDataShortName = [
+    { 'source': 'providerId', 'short': false },
+    { 'source': 'providerName', 'short': false },
+    { 'source': 'nameZh', 'short': 'n' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'aliasName', 'short': 'an' },
+    { 'source': 'pathAttributeId', 'short': false },
+    { 'source': 'pathAttributeNId', 'short': false },
+    { 'source': 'pathAttributeName', 'short': false },
+    { 'source': 'pathAttributeEname', 'short': false },
+    { 'source': 'buildPeriod', 'short': false },
+    { 'source': 'departureZh', 'short': 'dep' },
+    { 'source': 'destinationZh', 'short': 'des' },
+    { 'source': 'departureEn', 'short': false },
+    { 'source': 'destinationEn', 'short': false },
+    { 'source': 'goFirstBusTime', 'short': false },
+    { 'source': 'goLastBusTime', 'short': false },
+    { 'source': 'backFirstBusTime', 'short': false },
+    { 'source': 'backLastBusTime', 'short': false },
+    { 'source': 'offPeakHeadway', 'short': false },
+    { 'source': 'roadMapUrl', 'short': false },
+    { 'source': 'headwayDesc', 'short': false },
+    { 'source': 'holidayGoFirstBusTime', 'short': false },
+    { 'source': 'holidayBackFirstBusTime', 'short': false },
+    { 'source': 'holidayBackLastBusTime', 'short': false },
+    { 'source': 'holidayGoLastBusTime', 'short': false },
+    { 'source': 'holidayBusTimeDesc', 'short': false },
+    { 'source': 'realSequence', 'short': 'rs' },
+    { 'source': 'holidayHeadwayDesc', 'short': false },
+    { 'source': 'holidayOffPeakHeadway', 'short': false },
+    { 'source': 'holidayPeakHeadway', 'short': false },
+    { 'source': 'segmentBufferEn', 'short': false },
+    { 'source': 'ticketPriceDescriptionZh', 'short': false },
+    { 'source': 'ticketPriceDescriptionEn', 'short': false },
+    { 'source': 'peakHeadway', 'short': false },
+    { 'source': 'ttiaPathId', 'short': false },
+    { 'source': 'segmentBufferZh', 'short': false },
+    { 'source': 'busTimeDesc', 'short': false },
+    { 'source': 'distance', 'short': false },
+    { 'source': 'NId', 'short': false },
+    { 'source': 'genus', 'short': false },
+    { 'source': 'Id', 'short': false }
+  ]
+  var rdsn_len = routesDataShortName.length
+
+  function getRoutes() {
+    var t = new Date().getTime()
+    if (LS.hasOwnProperty('bus_routes_t')) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t'))) < 60 * 60 * 24 * 15) {
+        routes_json.c = JSON.parse(String(LS.getItem('bus_routes')))
+
+        routes_json.loaded = true
+
+      }
+    }
+    if (routes_json.loaded) {
+      setRouteD()
+    }
+    else {
+
+      $.ajax({
         type: 'GET', url: routes_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-        
-        var b = new Blob([data.slice(0,data.size)], {type: 'application/gzip'});
-          
-          b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf,{to:'string'})
-        var o = JSON.parse(z).BusInfo
-     var iqq = {}
-var pl= o.length
 
-for(var j= 0;j<pl;j++) {
-  var jjj = o[j]
-  var id = o[j].Id
-  for(var g = 0;g<rdsn_len;g++) {
-    var thsS = routesDataShortName[g]
-  if(!(thsS.short === false)) {
-      jjj[thsS.short] = jjj[thsS.source]
-    }
-  delete jjj[thsS.source]
-    
-  }
-  iqq['b_' + id] = o[j]
-}
-            routes_json.c = iqq
-          LS.setItem('bus_routes',JSON.stringify(iqq))
-            LS.setItem('bus_routes_t',new Date().getTime())
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < rdsn_len; g++) {
+                var thsS = routesDataShortName[g]
+                if (!(thsS.short === false)) {
+                  this_json_k[thsS.short] = this_json_k[thsS.source]
+                }
+                delete this_json_k[thsS.source]
+
+              }
+              json_lite['b_' + id] = o[j]
+            }
+            routes_json.c = json_lite
+            LS.setItem('bus_routes', JSON.stringify(json_lite))
+            LS.setItem('bus_routes_t', new Date().getTime())
             routes_json.loaded = true
             setRouteD()
           });
-      }});
+        }
+      });
+    }
   }
-}
 
-function showRoute(id) {
-  skeletonScreen()
-  c_routeid = id
-  getStops()
-  getRoutes()
-  
-}
+  function showRoute(id) {
+    skeletonScreen()
+    c_routeid = id
+    getStops()
+    getRoutes()
 
-
-showRoute(10747)
- function switchDirection(d) {
-$('.container .routes').attr('display',d)
-  var line = 0;
-  var content = 0;
-  var tabwidth = $(".tab-line-box").width();
-  var contentwidth = $(".content-box").width();
-  var y = 0
-  if(d === 'destination') {
-y = 1
-}
+  }
+  function switchDirection(d) {
+    $('.container .routes').attr('display', d)
+    var line = 0;
+    var content = 0;
+    var tabwidth = $(".tab-line-box").width();
+    var contentwidth = $(".content-box").width();
+    var y = 0
+    if (d === 'destination') {
+      y = 1
+    }
     line = (1 / 2) * y * tabwidth;
-  $(".tab-line-box2").css({"transform": "translateX(" + line + "px)","transition": "0.35s"});
-  
-  $(".tab-line").css({"width":$('.container .tabs .tab[direction="' + d + '"] span').width() + "px","transition": "0.35s"});
-  
-}
-$('.container .tabs .tab').click(function () {
-  var d = $(this).attr('direction')
-  switchDirection(d)
-});
+    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)", "transition": "0.35s" });
+    $(".tab-line").css({ "width": $('.container .tabs .tab[direction="' + d + '"] span').width() + "px", "transition": "0.35s" });
+  }
+
+  function initialize() {
+    $('.container .tabs .tab').click(function () {
+      var d = $(this).attr('direction')
+      switchDirection(d)
+    });
+  }
 </script>
+
+</html>
