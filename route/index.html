@@ -436,14 +436,14 @@
     return res
   }
   function findBus(j, id) {
-    if (!j.loaded) {
+    if (!j.loaded || !routes_json.loaded) {
       return {}
     }
     var res = {}
     var o = j.c
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (String(o[w].RouteID) === id) {
+      if (o[w].RouteID == id) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
@@ -625,7 +625,7 @@
             routes_json.c = json_lite
             LS.setItem('bus_routes', JSON.stringify(json_lite))
             LS.setItem('bus_routes_t', new Date().getTime())
-            c_routeid_p = String(routes_json.c['b_' + c_routeid].pid)
+            c_routeid_p = routes_json.c['b_' + c_routeid].pid
             routes_json.loaded = true
             setRouteD()
           });
