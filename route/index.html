@@ -318,6 +318,7 @@
   var stops_json = { 'loaded': false, 'c': {} }
   var routes_json = { 'loaded': false, 'c': {} }
   var c_routeid = 0
+  var c_routeid_p = 0
   var o_routeid
   var realtime_lo = 0
   function skeletonScreen() {
@@ -459,7 +460,7 @@
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
           var s = findStop(realtime_json, c_routeid)
-          var bb = findBus(busevent_json, c_routeid)
+          var bb = findBus(busevent_json, c_routeid_p)
           printStop(s, '', bb)
           setTimeout(function () { updateRealtimeJson() }, 10000);
 
@@ -549,7 +550,7 @@
     { 'source': 'nameZh', 'short': 'n' },
     { 'source': 'nameEn', 'short': false },
     { 'source': 'aliasName', 'short': 'an' },
-    { 'source': 'pathAttributeId', 'short': false },
+    { 'source': 'pathAttributeId', 'short': 'pid' },
     { 'source': 'pathAttributeNId', 'short': false },
     { 'source': 'pathAttributeName', 'short': false },
     { 'source': 'pathAttributeEname', 'short': false },
@@ -624,6 +625,7 @@
             routes_json.c = json_lite
             LS.setItem('bus_routes', JSON.stringify(json_lite))
             LS.setItem('bus_routes_t', new Date().getTime())
+            c_routeid_p = routes_json.c['b_' + c_routeid].pid
             routes_json.loaded = true
             setRouteD()
           });
