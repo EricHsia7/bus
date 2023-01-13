@@ -443,7 +443,7 @@
     var o = j.c
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (o[w].RouteID == id) {
+      if (parseInt(o[w].RouteID) === id) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
