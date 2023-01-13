@@ -53,6 +53,25 @@
       background: var(--g-ffffff);
     }
 
+    .refresh_progress_box {
+      position: fixed;
+      top: 96px;
+      left: 0px;
+      height: 1.2px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .refresh_progress {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: var(--g-c7ecff);
+      height: 1.2px;
+      width: 100%;
+      transform: translateX(-100% * (var(--o-refresh-progress)));
+    }
+
     .route_container {
       position: fixed;
       top: 0px;
@@ -99,7 +118,6 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 0px;
-      border-bottom: 1px solid var(--g-e3e3e3);
       background: var(--g-ffffff);
     }
 
@@ -339,8 +357,10 @@
         </div>
       </div>
     </div>
-
-  </div>
+    <div class="refresh_progress_box">
+      <div class="refresh_progress" style="--o-refresh-progress:0;">
+      </div>
+    </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
@@ -367,6 +387,19 @@
   var c_routeid_p = 0
   var o_routeid
   var realtime_lo = 0
+  var realtime_last_update = new Date().getTime()
+  function updateRefreshProgress() {
+    var t = new Date().getTime()
+    var p = Math.abs(t - realtime_last_update) / 10000
+    if (p < 0) {
+      p = 0
+    }
+    if (p > 1) {
+      p = 1
+    }
+    $('.refresh_progress').css({ '--o-refresh-progress': p })
+    window.requestAnimationFrame(updateRefreshProgress)
+  }
   function skeletonScreen() {
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
@@ -509,6 +542,7 @@
           var s = findStop(realtime_json, c_routeid)
           var bb = findBus(busevent_json, c_routeid, c_routeid_p)
           printStop(s, '', bb)
+          realtime_last_update = new Date().getTime()
           setTimeout(function () { updateRealtimeJson() }, 10000);
 
         });
@@ -707,6 +741,7 @@
     if (urlparams('r') === '1') {
       var i = urlparams('id')
       showRoute(parseInt(i))
+      updateRefreshProgress()
     }
   }
 
