@@ -311,8 +311,10 @@
   let realtime_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetEstimateTime.gz'
   let stops_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetStop.gz'
   let routes_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetRoute.gz'
+  var busevent_api = 'https://tcgbusfs.blob.core.windows.net/blobbus/GetBusEvent.gz'
 
   var realtime_json = {}
+  var busevent_json = { 'loaded': false, 'c': {} }
   var stops_json = { 'loaded': false, 'c': {} }
   var routes_json = { 'loaded': false, 'c': {} }
   var c_routeid = 0
@@ -351,15 +353,19 @@
     for (var w = 0; w < l; w++) {
       var displayName = k[w].StopID
       var s = {}
+      var bv = { 'h': false, 'n': '' }
       if (g) {
         s = { 'b': k[w].b }
         displayName = ''
       }
       else {
-
         if (stops_json.loaded) {
           s = stops_json.c['b_' + k[w].StopID]
           displayName = s.n
+        }
+        if (busevent_json.loaded) {
+          bv.h = true
+          bv.n = c['s_' + k[w].StopID].BusID
         }
       }
 
@@ -372,7 +378,7 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="busid" d="' + bv.h + '">' + bv.n + '</div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
     $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
@@ -410,7 +416,7 @@
     var o = j.BusInfo
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (o[w].RouteID == id) {
+      if (parseInt(o[w].RouteID) === id) {
         res.push(o[w])
       }
     }
@@ -420,7 +426,22 @@
     });
     return res
   }
+  function findBus(j, id) {
+    if (!j.loaded) {
+      return {}
+    }
+    var res = {}
+    var o = j.BusInfo
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      if (parseInt(o[w].RouteID) === id) {
+        res['s_' + o[w].StopID] = o[w]
+      }
+    }
+    return res
+  }
   function updateRealtimeJson() {
+    updateBusEventJson()
     $.ajax({
       type: 'GET', url: realtime_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
 
@@ -430,8 +451,8 @@
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
           var s = findStop(realtime_json, c_routeid)
-
-          printStop(s)
+          var bb = findBus(busevent_json, c_routeid)
+          printStop(s, bb)
           setTimeout(function () { updateRealtimeJson() }, 10000);
 
         });
@@ -440,7 +461,20 @@
       }
     });
   }
+  function updateBusEventJson() {
+    $.ajax({
+      type: 'GET', url: busevent_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          busevent_json.loaded = true
+          busevent_json.c = JSON.parse(z)
+        });
+      }, error: function () {
 
+      }
+    });
+  }
   var stopsDataShortName = [
     { 'source': 'routeId', 'short': 'r' },
     { 'source': 'nameZh', 'short': 'n' },
@@ -582,12 +616,15 @@
     }
   }
 
+
+
   function showRoute(id) {
     skeletonScreen()
     c_routeid = id
     getStops()
     getRoutes()
   }
+
   function switchDirection(d) {
     $('.route_container .routes').attr('display', d)
     var line = 0;
