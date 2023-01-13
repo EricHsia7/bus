@@ -69,7 +69,7 @@
       background: var(--g-14b1ff);
       height: 1.2px;
       width: 100%;
-      transform: translateX(-1 * 100% * (var(--o-refresh-progress)));
+      transform: translateX(var(--o-refresh-progress));
     }
 
     .route_container {
@@ -397,7 +397,7 @@
     if (p > 1) {
       p = 1
     }
-    $('.refresh_progress').css({ '--o-refresh-progress': p })
+    $('.refresh_progress').css({ '--o-refresh-progress': p*100 + '%' })
     window.requestAnimationFrame(updateRefreshProgress)
   }
   function skeletonScreen() {
