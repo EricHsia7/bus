@@ -599,6 +599,7 @@
     }
     if (routes_json.loaded) {
       setRouteD()
+      c_routeid_p = routes_json.c['b_' + c_routeid].pid
     }
     else {
       $.ajax({
