@@ -481,7 +481,7 @@
     });
     return res
   }
-  function findBus(j, id) {
+  function findBus(j, id, pid) {
     if (!j.loaded || !routes_json.loaded) {
       return {}
     }
@@ -489,7 +489,8 @@
     var o = j.c
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (parseInt(o[w].RouteID) === id) {
+      var ro = parseInt(o[w].RouteID)
+      if (parseInt(o[w].RouteID) === id || pid) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
@@ -506,7 +507,7 @@
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
           var s = findStop(realtime_json, c_routeid)
-          var bb = findBus(busevent_json, c_routeid_p)
+          var bb = findBus(busevent_json, c_routeid, c_routeid_p)
           printStop(s, '', bb)
           setTimeout(function () { updateRealtimeJson() }, 10000);
 
