@@ -366,9 +366,10 @@
             displayName = s.n
           }
           if (busevent_json.loaded) {
-            console.log(bp)
-            bv.h = true
-            bv.n = bp['s_' + k[w].StopID].BusID
+            if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+              bv.h = true
+              bv.n = bp['s_' + k[w].StopID].BusID
+            }
           }
         }
 
