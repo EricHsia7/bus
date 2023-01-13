@@ -150,6 +150,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: 0.45s;
     }
 
     .tab-line {
@@ -157,6 +158,7 @@
       height: 2px;
       background: var(--g-333333);
       border-radius: 15px 15px 0px 0px;
+      transition: 0.45s;
     }
 
     .routes {
@@ -171,7 +173,7 @@
       -webkit-user-select: none;
       user-select: none;
       background: var(--g-ffffff);
-      transition: transform 0.35s;
+      transition: transform 0.45s;
     }
 
     .routes[display="departure"] {
@@ -741,8 +743,8 @@
       y = 1
     }
     line = (1 / 2) * y * tabwidth;
-    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)", "transition": "0.35s" });
-    $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px", "transition": "0.35s" });
+    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)"});
+    $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px"});
   }
 
   function initialize() {
