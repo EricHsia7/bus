@@ -467,8 +467,14 @@
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
+          var o = JSON.parse(z).BusInfo
+          var json_lite = {}
+          var pl = o.length
+          for (var j = 0; j < pl; j++) {
+            json_lite['s_' + o[j].StopID] = o[j]
+          }
+          busevent_json.c = json_lite
           busevent_json.loaded = true
-          busevent_json.c = JSON.parse(z)
         });
       }, error: function () {
 
