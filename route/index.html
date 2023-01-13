@@ -214,6 +214,8 @@
       background: var(--g-e3e3e3);
       border-radius: 20px;
       overflow: hidden;
+      white-space: nowrap;
+      word-break: keep-all;
     }
 
     .route li.stop .name .bus[d="false"] {
@@ -241,8 +243,11 @@
       color: var(--g-333333);
       box-sizing: border-box;
       align-items: center;
+      line-height: 13px;
     }
-
+    .route li.stop .name .bus .fl {
+      float: left;
+    }
     .route li.stop[l="true"] .name::after {
       content: '';
       background: var(--g-f5f5f5);
@@ -422,7 +427,7 @@
         else {
           var status = timeStatus(k[w].EstimateTime)
         }
-        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '"><div class="busicon">' + bv.icon + '</div><div class="busid">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
       }
 
       $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
