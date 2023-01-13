@@ -344,45 +344,50 @@
     }
   }
   function printStop(k, c, bp) {
-    var htm = {}
-    var l = k.length
-    var g = false
-    if (c === 'skeleton') {
-      g = true
-    }
-    for (var w = 0; w < l; w++) {
-      var displayName = k[w].StopID
-      var s = {}
-      var bv = { 'h': false, 'n': '' }
-      if (g) {
-        s = { 'b': k[w].b }
-        displayName = ''
+    try {
+      var htm = {}
+      var l = k.length
+      var g = false
+      if (c === 'skeleton') {
+        g = true
       }
-      else {
-        if (stops_json.loaded) {
-          s = stops_json.c['b_' + k[w].StopID]
-          displayName = s.n
+      for (var w = 0; w < l; w++) {
+        var displayName = k[w].StopID
+        var s = {}
+        var bv = { 'h': false, 'n': '' }
+        if (g) {
+          s = { 'b': k[w].b }
+          displayName = ''
         }
-        if (busevent_json.loaded) {
-          bv.h = true
-          bv.n = bp['s_' + k[w].StopID].BusID
+        else {
+          if (stops_json.loaded) {
+            s = stops_json.c['b_' + k[w].StopID]
+            displayName = s.n
+          }
+          if (busevent_json.loaded) {
+            bv.h = true
+            bv.n = bp['s_' + k[w].StopID].BusID
+          }
         }
+
+        if (!(htm.hasOwnProperty('h_' + s.b))) {
+          htm['h_' + s.b] = []
+        }
+        if (g) {
+          var status = { 'status': 10, 'text': '' }
+        }
+        else {
+          var status = timeStatus(k[w].EstimateTime)
+        }
+        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="busid" d="' + bv.h + '">' + bv.n + '</div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
       }
 
-      if (!(htm.hasOwnProperty('h_' + s.b))) {
-        htm['h_' + s.b] = []
-      }
-      if (g) {
-        var status = { 'status': 10, 'text': '' }
-      }
-      else {
-        var status = timeStatus(k[w].EstimateTime)
-      }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="busid" d="' + bv.h + '">' + bv.n + '</div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+      $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
     }
-
-    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
-    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
+    catch (e) {
+      console.log(e)
+    }
   }
   function timeStatus(t) {
     t = parseInt(t)
