@@ -397,7 +397,7 @@
     if (p > 1) {
       p = 1
     }
-    $('.refresh_progress').css({ '--o-refresh-progress': p*100 + '%' })
+    $('.refresh_progress').css({ '--o-refresh-progress': p * -100 + '%' })
     window.requestAnimationFrame(updateRefreshProgress)
   }
   function skeletonScreen() {
