@@ -443,7 +443,7 @@
     var o = j.c
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (parseInt(o[w].RouteID) === id) {
+      if (String(o[w].RouteID) === id) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
@@ -549,7 +549,7 @@
     { 'source': 'providerName', 'short': false },
     { 'source': 'nameZh', 'short': 'n' },
     { 'source': 'nameEn', 'short': false },
-    { 'source': 'aliasName', 'short': 'an' },
+    { 'source': 'aliasName', 'short': false },
     { 'source': 'pathAttributeId', 'short': 'pid' },
     { 'source': 'pathAttributeNId', 'short': false },
     { 'source': 'pathAttributeName', 'short': false },
@@ -625,7 +625,7 @@
             routes_json.c = json_lite
             LS.setItem('bus_routes', JSON.stringify(json_lite))
             LS.setItem('bus_routes_t', new Date().getTime())
-            c_routeid_p = parseInt(routes_json.c['b_' + c_routeid].pid)
+            c_routeid_p = String(routes_json.c['b_' + c_routeid].pid)
             routes_json.loaded = true
             setRouteD()
           });
