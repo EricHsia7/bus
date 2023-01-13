@@ -60,7 +60,7 @@
       height: 1.2px;
       width: 100%;
       overflow: hidden;
-      background:var(--g-e3e3e3);
+      background: var(--g-e3e3e3);
     }
 
     .refresh_progress {
@@ -398,7 +398,7 @@
     if (p > 1) {
       p = 1
     }
-    $('.refresh_progress').css({ '--o-refresh-progress': p * -100 + '%' })
+    $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
     window.requestAnimationFrame(updateRefreshProgress)
   }
   function skeletonScreen() {
