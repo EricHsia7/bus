@@ -148,6 +148,7 @@
       -webkit-user-select: none;
       user-select: none;
       font-size: 16px;
+      position: relative;
     }
 
     .tab[g="0"] {
@@ -186,6 +187,27 @@
       background: var(--g-333333);
       border-radius: 15px 15px 0px 0px;
       transition: 0.45s;
+    }
+
+    .tabs[l="0"] .tab-line {
+      background: rgba(0, 0, 0, 0);
+      transition: 0s;
+    }
+
+    .tabs[l="0"] .tab {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    .tabs[l="0"] .tab::after {
+      content: '';
+      background: var(--g-f5f5f5);
+      position: absolute;
+      top: 7.5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 25px;
+      border-radius: 30px;
     }
 
     .routes {
@@ -388,7 +410,7 @@
       <div class="back"></div>
       <div class="routename"></div>
     </div>
-    <div class="tabs">
+    <div class="tabs" l="0">
       <button class="tab" direction="departure" onclick="switchDirection('departure')" g="1"><span></span></button>
       <button class="tab" direction="destination" onclick="switchDirection('destination')" g="0"><span></span></button>
       <div class="tab-line-box">
@@ -461,6 +483,7 @@
       $('.route_container .tabs .tab[direction="destination"] span').text(dep)
       $('.route_container .title .routename').text(name)
       switchDirection('departure')
+      $('.route_container .tabs').attr('l', '1')
     }
   }
   function printStop(k, c, bp) {
