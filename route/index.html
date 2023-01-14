@@ -511,56 +511,55 @@
     }
   }
   function printStop(k, c, bp) {
-    try {
-      var htm = {}
-      var l = k.length
-      var g = false
-      if (c === 'skeleton') {
-        g = true
+    var htm = {}
+    var l = k.length
+    var g = false
+    if (l <= 0) {
+      return ''
+    }
+    if (c === 'skeleton') {
+      g = true
+    }
+    for (var w = 0; w < l; w++) {
+      var displayName = k[w].StopID
+      var s = {}
+      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
+      if (g) {
+        s = { 'b': k[w].b }
+        displayName = ''
       }
-      for (var w = 0; w < l; w++) {
-        var displayName = k[w].StopID
-        var s = {}
-        var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
-        if (g) {
-          s = { 'b': k[w].b }
-          displayName = ''
+      else {
+        if (stops_json.loaded) {
+          s = stops_json.c['b_' + k[w].StopID]
+          displayName = s.n
         }
-        else {
-          if (stops_json.loaded) {
-            s = stops_json.c['b_' + k[w].StopID]
-            displayName = s.n
-          }
-          if (busevent_json.loaded) {
-            if (bp.hasOwnProperty('s_' + k[w].StopID)) {
-              var thisbv = bp['s_' + k[w].StopID]
-              bv.h = true
-              bv.n = thisbv.BusID
-              bv.icon = icon_bus
-              bv.l = thisbv.CarOnStop
-            }
+        if (busevent_json.loaded) {
+          if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+            var thisbv = bp['s_' + k[w].StopID]
+            bv.h = true
+            bv.n = thisbv.BusID
+            bv.icon = icon_bus
+            bv.l = thisbv.CarOnStop
           }
         }
-
-        if (!(htm.hasOwnProperty('h_' + s.b))) {
-          htm['h_' + s.b] = []
-        }
-        if (g) {
-          var status = { 'status': 10, 'text': '' }
-        }
-        else {
-          var status = timeStatus(k[w].EstimateTime)
-        }
-        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
       }
 
-      $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
-      $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
+      if (!(htm.hasOwnProperty('h_' + s.b))) {
+        htm['h_' + s.b] = []
+      }
+      if (g) {
+        var status = { 'status': 10, 'text': '' }
+      }
+      else {
+        var status = timeStatus(k[w].EstimateTime)
+      }
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
-    catch (e) {
-      console.log(e)
-    }
+
+    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
   }
+
   function timeStatus(t) {
     t = parseInt(t)
     var minute = Math.round(t / 60) + '分'
