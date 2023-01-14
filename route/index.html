@@ -593,7 +593,10 @@
     { 'source': 'latitude', 'short': false },
     { 'source': 'showLon', 'short': false },
     { 'source': 'showLat', 'short': false },
-    { 'source': 'vector', 'short': false }
+    { 'source': 'vector', 'short': false },
+    { 'source': 'Id', 'short': false },
+    { 'source': 'pgp', 'short': false },
+    { 'source': 'stopLocationId', 'short': false }
   ]
 
   var sdsn_len = stopsDataShortName.length
@@ -611,14 +614,15 @@
             var pl = o.length
             for (var j = 0; j < pl; j++) {
               var this_json_k = o[j]
+              var id = o[j].Id
               for (var g = 0; g < sdsn_len; g++) {
                 var thsS = stopsDataShortName[g]
-                if (!(thsS === false)) {
+                if (!(thsS.short === false)) {
                   this_json_k[thsS.short] = this_json_k[thsS.source]
                 }
                 delete this_json_k[thsS.source]
               }
-              json_lite['b_' + o[j].Id] = o[j]
+              json_lite['b_' + id] = o[j]
             }
             stops_json.c = json_lite
             stops_json.loaded = true
