@@ -39,7 +39,7 @@
         --g-c7ecff: #2e4a59;
         --g-ffffff: #101010;
         --g-888888: #888888;
-        --g-c7c7c7: #c7c7c7;
+        --g-c7c7c7: #383838;
         --g-e3e3e3: #262626;
       }
     }
@@ -90,6 +90,10 @@
       height: 1.2px;
       width: 100%;
       transform: translateX(var(--o-refresh-progress));
+    }
+
+    .refresh_progress_box[l="0"] .refresh_progress {
+      background: rgba(0, 0, 0, 0);
     }
 
     .route_container {
@@ -437,7 +441,7 @@
         </div>
       </div>
     </div>
-    <div class="refresh_progress_box">
+    <div class="refresh_progress_box" l="0">
       <div class="refresh_progress" style="--o-refresh-progress:0;">
       </div>
     </div>
@@ -468,6 +472,7 @@
   var o_routeid
   var realtime_lo = 0
   var realtime_last_update = new Date().getTime()
+  var refresh_progress_l = 0
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 10000
@@ -617,9 +622,7 @@
     updateBusEventJson()
     $.ajax({
       type: 'GET', url: realtime_api, async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
@@ -627,8 +630,11 @@
           var bb = findBus(busevent_json, c_routeid, c_routeid_p)
           printStop(s, '', bb)
           realtime_last_update = new Date().getTime()
+          if (refresh_progress_l === 0) {
+            refresh_progress_l = 1
+            $('.refresh_progress_box').attr('l', '1')
+          }
           setTimeout(function () { updateRealtimeJson() }, 10000);
-
         });
       }, error: function () {
         setTimeout(function () { updateRealtimeJson() }, 1000);
