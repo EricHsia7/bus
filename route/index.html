@@ -836,8 +836,8 @@
   }
 
   function initialize() {
-    if (urlparams('r') === '1') {
-      var i = urlparams('id')
+    var i = urlparams('id')
+    if (!(i === null)) {
       showRoute(parseInt(i))
       updateRefreshProgress()
     }
