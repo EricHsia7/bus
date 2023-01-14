@@ -46,6 +46,22 @@
 
     * {
       font-family: 'Noto Sans', sans-serif;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    button {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      background: transparent;
+      display: block;
+      border-radius: 0px;
     }
 
     body {
@@ -362,8 +378,8 @@
       <div class="routename"></div>
     </div>
     <div class="tabs">
-      <div class="tab" direction="departure"><span></span></div>
-      <div class="tab" direction="destination"><span></span></div>
+      <button class="tab" direction="departure" onclick="switchDirection('departure')"><span></span></button>
+      <button class="tab" direction="destination" onclick="switchDirection('destination')"><span></span></button>
       <div class="tab-line-box">
         <div class="tab-line-box2">
           <div class="tab-line"></div>
@@ -748,15 +764,11 @@
       y = 1
     }
     line = (1 / 2) * y * tabwidth;
-    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)"});
-    $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px"});
+    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)" });
+    $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px" });
   }
 
   function initialize() {
-    $('.route_container .tabs .tab').click(function () {
-      var d = $(this).attr('direction')
-      switchDirection(d)
-    });
     if (urlparams('r') === '1') {
       var i = urlparams('id')
       showRoute(parseInt(i))
