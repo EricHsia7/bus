@@ -555,7 +555,12 @@
       }
       htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
-
+    if (htm['h_0'].length <= 0) {
+      htm['h_0'].push('發生錯誤')
+    }
+    if (htm['h_1'].length <= 0) {
+      htm['h_1'].push('發生錯誤')
+    }
     $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
   }
