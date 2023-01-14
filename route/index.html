@@ -186,12 +186,15 @@
       height: 2px;
       background: var(--g-333333);
       border-radius: 15px 15px 0px 0px;
+    }
+
+    .tabs[l="1"] .tab-line {
       transition: 0.45s;
     }
 
     .tabs[l="0"] .tab-line {
       background: rgba(0, 0, 0, 0);
-      transition: 0s;
+      display: none;
     }
 
     .tabs[l="0"] .tab {
