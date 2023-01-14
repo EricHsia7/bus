@@ -766,7 +766,7 @@
   function getRoutes() {
     var t = new Date().getTime()
     if (LS.hasOwnProperty('bus_routes_t_' + city)) {
-      if (t - parseInt(String(LS.getItem('bus_routes_t_' + city))) < 60 * 60 * 24 * 15) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t_' + city))) < 60 * 60 * 24 * 14 * 1000) {
         routes_json.c = JSON.parse(String(LS.getItem('bus_routes_' + city)))
         routes_json.loaded = true
       }
