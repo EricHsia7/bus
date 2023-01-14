@@ -842,12 +842,12 @@
   function initialize() {
     var r = urlparams('id')
     var c = urlparams('c')
+    if (!(c === null)) {
+      city = parseInt(c)
+    }
     if (!(r === null)) {
       showRoute(parseInt(r))
       updateRefreshProgress()
-    }
-    if (!(c === null)) {
-      city = parseInt(c)
     }
   }
 
