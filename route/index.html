@@ -790,10 +790,12 @@
               var id = o[j].Id
               for (var g = 0; g < rdsn_len; g++) {
                 var thsS = routesDataShortName[g]
-                if (!(thsS.short === false)) {
-                  this_json_k[thsS.short] = this_json_k[thsS.source]
+                if (this_json_k.hasOwnProperty(thsS.source)) {
+                  if (!(thsS.short === false)) {
+                    this_json_k[thsS.short] = this_json_k[thsS.source]
+                  }
+                  delete this_json_k[thsS.source]
                 }
-                delete this_json_k[thsS.source]
               }
               json_lite['b_' + id] = o[j]
             }
