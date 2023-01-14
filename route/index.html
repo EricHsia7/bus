@@ -62,6 +62,8 @@
       background: transparent;
       display: block;
       border-radius: 0px;
+      font-size: unset;
+      font-weight: unset;
     }
 
     body {
@@ -143,10 +145,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--g-333333);
-      font-weight: 500;
       -webkit-user-select: none;
       user-select: none;
+      font-size: 16px;
+    }
+
+    .tab[g="0"] {
+      color: var(--g-333333);
+      font-weight: 500;
+    }
+
+    .tab[g="1"] {
+      color: var(--g-888888);
+      font-weight: 400;
     }
 
     .tab-line-box {
@@ -378,8 +389,8 @@
       <div class="routename"></div>
     </div>
     <div class="tabs">
-      <button class="tab" direction="departure" onclick="switchDirection('departure')"><span></span></button>
-      <button class="tab" direction="destination" onclick="switchDirection('destination')"><span></span></button>
+      <button class="tab" direction="departure" onclick="switchDirection('departure')" g="1"><span></span></button>
+      <button class="tab" direction="destination" onclick="switchDirection('destination')" g="0"><span></span></button>
       <div class="tab-line-box">
         <div class="tab-line-box2">
           <div class="tab-line"></div>
@@ -760,10 +771,16 @@
     var tabwidth = $(".tab-line-box").width();
     var contentwidth = $(".content-box").width();
     var y = 0
+    var a = 0
+    var b = 1
     if (d === 'destination') {
       y = 1
+      a = 1
+      b = 0
     }
     line = (1 / 2) * y * tabwidth;
+    $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
+    $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)" });
     $(".tab-line").css({ "width": $('.route_container .tabs .tab[direction="' + d + '"] span').width() + "px" });
   }
