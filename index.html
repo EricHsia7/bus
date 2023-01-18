@@ -240,7 +240,7 @@
 
  function disableInputFocusScroll(pervious_time, end_time) {
   var n = new Date().getTime()
-  document.documentElement.scrollTop = 0;
+  $('html,body').scrollTop(0)
   if (pervious_time < end_time) {
    window.requestAnimationFrame(function () {
     disableInputFocusScroll(n, end_time)
