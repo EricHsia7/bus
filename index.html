@@ -238,6 +238,16 @@
   window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
  }
 
+ function disableInputFocusScroll(pervious_time, end_time) {
+  var n = new Date().getTime()
+  document.body.scrollTop = 0;
+  if (pervious_time < end_time) {
+   window.requestAnimationFrame(function () {
+    disableInputFocusScroll(n, end_time)
+   })
+  }
+ }
+
  const LS = window.localStorage
  const SS = window.sessionStorage
 
@@ -495,8 +505,8 @@
  $('.search').click(function (e) {
   e.stopPropagation()
   if (!($('.search').attr('p') === '1')) {
-   window.scrollTo(0, 0);
-   document.body.scrollTop = 0;
+   var n = new Date().getTime()
+   disableInputFocusScroll(n, n + 1500)
    opensearch()
   }
 
