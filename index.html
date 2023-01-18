@@ -448,13 +448,16 @@
   }
   return res_1
  }
-
+function openRoute(c,i) {
+var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
+location.href = u
+}
  function printSearchResult(result) {
   var result_len = result.length
   var f = []
   for (var e = 0; e < result_len; e++) {
    var thisres = result[e]
-   var htm = '<li class="search_result_r"><a href="https://erichsia7.github.io/bus/route/?c=' + thisres.city + '&id=' + thisres.id + '"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.dep + ' - ' + thisres.des + '</div></a></li>'
+   var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
    f.push(htm)
   }
   return f.join('')
