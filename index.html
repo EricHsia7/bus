@@ -84,16 +84,16 @@
    content: '';
    position: absolute;
    top: 11px;
-   left: 0px;
+   left: 55px;
    height: 23px;
    width: 1.5px;
    background: #4e4e4e;
    border-radius: 5px;
    animation-name: cursor;
-   animation-duration: 0.2s;
+   animation-duration: 0.5s;
    animation-timing-function: ease-in-out;
    animation-iteration-count: infinite;
-   transform: translateY(calc(5px / var(--scale-h))) translateX(calc(var(--cursor-offset) / var(--scale-w)));
+   transform: translateY(calc(5px / var(--scale-h))) translateX(calc(var(--cursor-offset) / var(--scale-w))) scaleX(calc(1 / var(--scale-w))) scaleY(calc(1 / var(--scale-h)));
   }
 
   @keyframes cursor {
