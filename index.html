@@ -197,21 +197,27 @@
   }
 
   .routes_keyboard {
-   position: absolute;
+   position: fixed;
    left: 0px;
    bottom: 0px;
    width: 100%;
-   height: clamp(200px, 36%, 300px);
+   height: clamp(200px, 36%, 270px);
    display: grid;
    grid-template-columns: repeat(5, 1fr);
    grid-gap: 0px;
    grid-template-rows: auto;
    padding: 5px;
    box-sizing: border-box;
+   background: #ffffff;
+   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.15);
+   transform: translateY(300px);
+  }
+
+  .routes_keyboard[p="1"] {
+   transform: translateY(0px);
   }
 
   .routes_keyboard_key {
-
    position: relative;
   }
 
