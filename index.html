@@ -80,10 +80,10 @@
    font-weight: 500;
   }
 
-  .search #search_routes::after {
+  .search[p="1"]::after {
    content: '';
    position: absolute;
-   top: 6px;
+   top: 11px;
    left: 0px;
    height: 23px;
    width: 1.5px;
@@ -93,7 +93,7 @@
    animation-duration: 0.2s;
    animation-timing-function: ease-in-out;
    animation-iteration-count: infinite;
-   transform: translateX(calc(var(--cursor-offset) / var(--scale-w)));
+   transform: translateY(calc(5px / var(--scale-h))) translateX(calc(var(--cursor-offset) / var(--scale-w)));
   }
 
   @keyframes cursor {
@@ -575,7 +575,7 @@
   $('.search_routes_result').html(printSearchResult(res))
   var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
   var text_width = getTextWidth(q, font)
-  $('#search_routes').css({ '--cursor-offset': text_width + 'px' })
+  $('.search').css({ '--cursor-offset': text_width + 'px' })
  }
  getRoutes()
 
