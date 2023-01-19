@@ -30,19 +30,21 @@
   body {
    overflow: hidden;
   }
-button {
-      -webkit-appearance: none;
-      appearance: none;
-      border: none;
-      margin: 0px;
-      padding: 0px;
-      box-sizing: border-box;
-      background: transparent;
-      display: block;
-      border-radius: 0px;
-      font-size: unset;
-      font-weight: unset;
-    }
+
+  button {
+   -webkit-appearance: none;
+   appearance: none;
+   border: none;
+   margin: 0px;
+   padding: 0px;
+   box-sizing: border-box;
+   background: transparent;
+   display: block;
+   border-radius: 0px;
+   font-size: unset;
+   font-weight: unset;
+  }
+
   .search {
    position: fixed;
    top: 28%;
@@ -153,9 +155,9 @@ button {
    font-size: 16px;
    color: #888;
    height: 23px;
-text-align:left;
-display:flex;
-align-items:center;
+   text-align: left;
+   display: flex;
+   align-items: center;
   }
 
   .search_result_r_name {
@@ -193,6 +195,41 @@ align-items:center;
    width: 20px;
    height: 20px;
   }
+
+  .routes_keyboard {
+   position: absolute;
+   left: 0px;
+   bottom: 0px;
+   width: 100%;
+   height: clamp(200px, 43%, 360px);
+   display: grid;
+   grid-template-columns: repeat(5, 1fr);
+   grid-gap: 0px;
+   grid-template-rows: auto;
+   padding: 5px;
+   box-sizing: border-box;
+  }
+
+  .routes_keyboard_key {
+
+   position: relative;
+  }
+
+  .routes_keyboard_key::after {
+   content: var(--key-display-str);
+   position: absolute;
+   top: 5px;
+   left: 5px;
+   width: calc(100% - 10px);
+   height: calc(100% - 10px);
+   background: #f5f5f5;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 15px;
+   font-size: 20px;
+   color: #4e4e4e
+  }
  </style>
 </head>
 
@@ -207,6 +244,7 @@ align-items:center;
   <input type="text" placeholder="搜尋路線" id="search_routes">
  </div>
  <div class="search_routes_result"></div>
+ <div class="routes_keyboard"></div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
@@ -272,6 +310,10 @@ align-items:center;
  var stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
  var routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
  var busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
+ let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
+ ['綠', '棕', '4', '5', '6'],
+ ['橘', '小', '7', '8', '9'],
+ ['更多', '幹線', '清空', '0', '刪除']]
 
  var routesDataShortName = [
   { 'source': 'providerId', 'short': false },
@@ -462,10 +504,10 @@ align-items:center;
   }
   return res_1
  }
-function openRoute(c,i) {
-var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
-location.href = u
-}
+ function openRoute(c, i) {
+  var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
+  location.href = u
+ }
  function printSearchResult(result) {
   var result_len = result.length
   var f = []
@@ -534,6 +576,45 @@ location.href = u
    closeopensearch()
   }
  })
+
+
+
+
+ function initializeKeyboard() {
+  var htm = []
+  var row_len = routes_keyboard_keys.length
+  for (var o = 0; o < row_len; o++) {
+   var this_row = routes_keyboard_keys[o]
+   var this_row_len = this_row.length
+   for (var w = 0; w < this_row_len; w++) {
+    var this_key = this_row[w]
+    var onclick = "keyboard_add('" + this_key + "')"
+    if (this_key === '刪除') {
+     onclick = "keyboard_delete()"
+    }
+    if (this_key === '清空') {
+     onclick = "keyboard_clear()"
+    }
+    htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
+   }
+  }
+  $('.routes_keyboard').html(htm.join(''))
+ }
+
+ function keyboard_add(k) {
+  var v = $('#search_routes').val()
+  v += k
+  $('#search_routes').val(v)
+ }
+ function keyboard_delete() {
+  var v = $('#search_routes').val()
+  v = v.substring(0, v.length - 1)
+  $('#search_routes').val(v)
+ }
+ function keyboard_clear() {
+  $('#search_routes').val('')
+ }
+ initializeKeyboard()
 </script>
 
 </html>
