@@ -59,7 +59,7 @@
    transition: 0.3s;
   }
 
-  .search input {
+  .search #search_routes {
    -webkit-appearance: none;
    appearance: none;
    border: none;
@@ -77,6 +77,35 @@
    transform-origin: top left;
    transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
    opacity: 0;
+   font-weight: 500;
+  }
+
+  .search #search_routes::after {
+   content: '';
+   position: absolute;
+   height: 23px;
+   width: 1.5px;
+   background: #4e4e4e;
+   border-radius: 5px;
+   animation-name: cursor;
+   animation-duration: 0.2s;
+   animation-timing-function: ease-in-out;
+   animation-iteration-count: infinite;
+   transform: translateX(calc(var(--cursor-offset) / var(--scale-w)));
+  }
+
+  @keyframes cursor {
+   0% {
+    opacity: 0;
+   }
+
+   50% {
+    opacity: 1;
+   }
+
+   100% {
+    opacity: 0;
+   }
   }
 
   .search .input_placeholder {
@@ -112,7 +141,7 @@
 
   }
 
-  .search[p="1"] input {
+  .search[p="1"] #search_routes {
    transform: scaleX(calc(1 / var(--scale-w))) scaleY(calc(1 / var(--scale-h))) translateY(calc(5px / var(--scale-h))) translateX(calc(45px / var(--scale-w)));
    opacity: 1;
   }
@@ -436,6 +465,14 @@
   }
  }
 
+ function getTextWidth(text, font) {
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  const context = canvas.getContext("2d");
+  context.font = font;
+  const metrics = context.measureText(text);
+  return metrics.width;
+ }
+
  function createSearchIndex(j) {
   if (j.loaded) {
    j = j.c
@@ -533,9 +570,10 @@
  function update_search_result() {
   var q = $('#search_routes').val()
   var res = search_result(q, search_index.c)
-
-
   $('.search_routes_result').html(printSearchResult(res))
+  var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
+  var text_width = getTextWidth(q, font)
+  $('#search_routes').css({ '--cursor-offset': text_width + 'px' })
  }
  getRoutes()
 
@@ -630,7 +668,6 @@
   $('#search_routes').val('')
   update_search_result()
  }
-
  initializeKeyboard()
 </script>
 
