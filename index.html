@@ -605,15 +605,21 @@
   var v = $('#search_routes').val()
   v += k
   $('#search_routes').val(v)
+  update_search_result()
  }
+
  function keyboard_delete() {
   var v = $('#search_routes').val()
   v = v.substring(0, v.length - 1)
   $('#search_routes').val(v)
+  update_search_result()
  }
+
  function keyboard_clear() {
   $('#search_routes').val('')
+  update_search_result()
  }
+
  initializeKeyboard()
 </script>
 
