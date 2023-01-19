@@ -257,10 +257,13 @@
 
     .route {
       height: 100%;
-      overflow: scroll;
+      overflow-y: scroll;
+      overflow-x:hidden;
       background: var(--g-ffffff);
     }
-
+.route::-webkit-scrollbar {
+  display: none;
+}
     .route li.stop {
       list-style: none;
       display: block;
