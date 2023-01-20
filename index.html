@@ -692,12 +692,12 @@
   var ww = window.innerWidth
   var wh = window.innerHeight
   w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
-  w.push('--k-search-left:' + fl((wh - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+  w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
   w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
   w.push('--k-window-w:' + ww + 'px')
   w.push('--k-window-h:' + wh + 'px')
   w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
-  w.push('--k-offset-left:' + -1 * fl((wh - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+  w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
 
   $('#search_size_css').html(':root{' + w.join(';') + '}')
  }
