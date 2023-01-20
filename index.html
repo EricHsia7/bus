@@ -18,6 +18,9 @@
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+ <style id="search_size_css">
+  :root {}
+ </style>
  <style>
   * {
    font-family: 'Noto Sans', sans-serif;
@@ -209,15 +212,16 @@
   }
 
   .back_btn {
-   position: fiexd;
+   position: fixed;
    top: 28%;
-   left: 50%;
+   left: calc((100% - clamp(150px, 80%, 300px)) / 2);
    width: 45px;
    height: 45px;
    display: flex;
    justify-content: center;
    align-items: center;
    transform-origin: top left;
+   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
    opacity: 0;
    transition: 0.3s;
   }
@@ -670,7 +674,35 @@
   $('#search_routes').val('')
   update_search_result()
  }
+
+ function setSearchSize() {
+  function clamp(w, min, df, max) {
+   var y = df * w
+   var p = y
+   if (y > max) {
+    p = max
+   }
+   if (y < min) {
+    p = min
+   }
+   return p
+  }
+  var w = []
+  var ww = window.innerWidth
+  var wh = window.innerHeight
+  w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
+  w.push('--k-search-left:' + (wh - clamp(ww, 150, 0.8, 300)) / 2 + 'px')
+  w.push('--k-search-top:' + wh * 0.28 + 'px')
+  w.push('--k-window-w:' + ww + 'px')
+  w.push('--k-window-h:' + wh + 'px')
+
+  $('#search_size_css').html(':root{' + w.join(';') + '}')
+ }
+ setSearchSize()
  initializeKeyboard()
+ $(window).resize(function () {
+  setSearchSize()
+ })
 </script>
 
 </html>
