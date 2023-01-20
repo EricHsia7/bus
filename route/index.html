@@ -215,21 +215,22 @@
       border-radius: 15px 15px 0px 0px;
       user-select: none;
       -webkit-user-select: none;
-      animation-name: none;
-      animation-duration: 0s;
+    }
+
+    .tab-line.departure {
+      animation-name: r_des;
+      animation-duration: 0.45s;
       animation-fill-mode: forwards;
     }
 
-    .tab-line[display="departure"] {
-      animation-name: r_des;
-    }
-
-    .tab-line[display="destination"] {
+    .tab-line.destination {
       animation-name: r_dep;
+      animation-duration: 0.45s;
+      animation-fill-mode: forwards;
     }
 
     .tabs[l="1"] .tab-line {
-      animation-duration: 0.45s;
+      
     }
 
     .tabs[l="0"] .tab-line {
@@ -924,7 +925,7 @@
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
 
     $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)" });
-    $(".tab-line").attr('display', d)
+    $(".tab-line").attr('class', 'tab-line ' + d)
   }
 
   function initialize() {
