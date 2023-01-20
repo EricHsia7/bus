@@ -582,6 +582,8 @@
   }
   function setRouteD() {
     if (routes_json.loaded) {
+      switchDirection('departure')
+
       var this_route = routes_json.c['b_' + c_routeid]
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
@@ -599,7 +601,6 @@
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
       $('.route_container .tabs .tab[direction="destination"] span').text(dep)
       $('.route_container .title .routename').text(name)
-      switchDirection('departure')
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
     }
