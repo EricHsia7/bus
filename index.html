@@ -114,7 +114,6 @@
       padding: 0px;
       box-sizing: border-box;
       opacity: 1;
-      transition: 0.3s;
     }
 
     .input_placeholder[p="1"] {
@@ -214,7 +213,6 @@
       transform-origin: top left;
       transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
       opacity: 0;
-      transition: 0.3s;
     }
 
     .back_btn[p="1"] {
@@ -593,13 +591,6 @@
     update_search_result()
   });
   function opensearch() {
-    /*
-      var offset_left = -1 * (window.innerWidth) / 2
-      var offset_top = -1 * (window.innerHeight) * 0.28
-      
-      $('.search,#search_routes,.input_placeholder').css({ '--k-offset-left': offset_left + 'px', '--k-offset-top': offset_top + 'px', '--k-scale-w': scale_w, '--k-scale-h': scale_h })
-      $('.search_routes_result').css({ '--k-offset-top': offset_top + 'px' })
-    */
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
   }
   function closeopensearch() {
