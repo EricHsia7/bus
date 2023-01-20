@@ -485,6 +485,15 @@
       -webkit-user-select: none;
     }
 
+    .bus_info_mask {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      opacity: 0;
+      transition: 0.45s;
+    }
 
     .bus_info_box {
       position: fixed;
@@ -498,7 +507,7 @@
       -webkit-user-select: none;
       transform: translateY(100%);
       opacity: 0;
-      transition: 0.35s;
+      transition: 0.45s;
     }
 
     .bus_info_box[p="1"] {
@@ -1082,6 +1091,17 @@
       e.stopPropagation()
     })
   }
+  var businfo_close = 0
+  function closeBus() {
+    if (businfo_close === 0) {
+      businfo_close = 1
+      $('.bus_info_mask').css({ 'opacity': '0' })
+      setTimeout(() => {
+        $('.bus_info_mask').css({ 'display': 'none' })
+        businfo_close = 0
+      }, 480);
+    }
+  }
   function displayBus(id, onstop, type, status, update) {
     var sel = '.bus_info_box .bus_info .bus_info_list li'
     if (onstop === '0') {
@@ -1129,6 +1149,10 @@
     $(sel + '[f="bus_status"]').text(status)
     $(sel + '[f="bus_update"]').text(update)
     $('.bus_info_box').scrollTop(50).attr('p', '1')
+    $('.bus_info_mask').css({ 'display': 'none' })
+    setTimeout(() => {
+      $('.bus_info_mask').css({ 'opacity': '1' })
+    }, 1);
   }
   function backPerviousPage() {
     var t = new Date().getTime()
