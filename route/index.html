@@ -717,12 +717,12 @@
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
-  function bString(h,u) {
+  function bString(h, u) {
     var e = '"'
-    if(u === 1) {
+    if (u === 1) {
       e = "'"
     }
-return e + h + e
+    return e + h + e
   }
   function printStop(k, c, bp) {
     var htm = {}
@@ -1069,7 +1069,7 @@ return e + h + e
     }
     $('.bus_info_box').scroll(function () {
       var scrolltop = $('.bus_info_box').scrollTop()
-      if (scrolltop < 50) {
+      if (scrolltop < 5) {
         $('.bus_info_box').attr('p', '0')
       }
     })
@@ -1083,12 +1083,51 @@ return e + h + e
   }
   function displayBus(id, onstop, type, status, update) {
     var sel = '.bus_info_box .bus_info .bus_info_list li'
+    if (onstop === '0') {
+      onstop = '離站'
+    }
+    if (onstop === '1') {
+      onstop = '進站'
+    }
+    if (type === '0') {
+      type = '一般'
+    }
+    if (type === '1') {
+      type = '低底盤'
+    }
+    if (type === '2') {
+      type = '大復康巴士'
+    }
+    if (type === '3') {
+      type = '狗狗友善專車'
+    }
+    if (status === '0') {
+      status = '正常'
+    }
+    if (status === '1') {
+      status = '車禍'
+    }
+    if (status === '2') {
+      status = '故障'
+    }
+    if (status === '3') {
+      status = '塞車'
+    }
+    if (status === '4') {
+      status = '緊急求援'
+    }
+    if (status === '5') {
+      status = '加油'
+    }
+    if (status === '99') {
+      status = '非營運狀態'
+    }
     $(sel + '[f="bus_id"]').text(id)
     $(sel + '[f="bus_onstopstatus"]').text(onstop)
     $(sel + '[f="bus_type"]').text(type)
     $(sel + '[f="bus_status"]').text(status)
     $(sel + '[f="bus_update"]').text(update)
-    $('.bus_info_box').scrollTop(50).attr('p','1')
+    $('.bus_info_box').scrollTop(50).attr('p', '1')
   }
   function backPerviousPage() {
     var t = new Date().getTime()
