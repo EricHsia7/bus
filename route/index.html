@@ -767,7 +767,7 @@ return e + h + e
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n) + ',' + bString(bv.onstop) + ',' + bString(bv.ty) + ',' + bString(bv.status) + ',' + bString(bv.time)+ ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n,1) + ',' + bString(bv.onstop,1) + ',' + bString(bv.ty,1) + ',' + bString(bv.status,1) + ',' + bString(bv.time,1)+ ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
     if (!htm.hasOwnProperty('h_0')) {
