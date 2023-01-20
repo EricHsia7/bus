@@ -436,9 +436,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transform-origin: top left;
-      transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
-      opacity: 0;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -468,11 +465,11 @@
       <div class="route" direction="destination"></div>
     </div>
     <div class="title">
-      <div class="back_btn">
+      <button class="back_btn" onclick="backPerviousPage()">
         <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
         </svg>
-      </div>
+      </button>
       <div class="routename" l="0"></div>
     </div>
     <div class="tabs" l="0">
@@ -912,6 +909,11 @@
       showRoute(parseInt(r))
       updateRefreshProgress()
     }
+  }
+
+  function backPerviousPage() {
+    var t = new Date().getTime()
+    location.href = 'https://erichsia7.github.io/bus/?t=' + t
   }
 
   initialize()
