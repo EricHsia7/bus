@@ -527,6 +527,7 @@
       'event_label': position + ' | ' + err.message,
     });
   }
+
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 10000
@@ -565,61 +566,57 @@
     }
   }
   function printStop(k, c, bp) {
-    try {
-      var htm = {}
-      var l = k.length
-      var g = false
-      if (c === 'skeleton') {
-        g = true
+    var htm = {}
+    var l = k.length
+    var g = false
+    if (c === 'skeleton') {
+      g = true
+    }
+    for (var w = 0; w < l; w++) {
+      var displayName = k[w].StopID
+      var s = {}
+      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
+      if (g) {
+        s = { 'b': k[w].b }
+        displayName = ''
       }
-      for (var w = 0; w < l; w++) {
-        var displayName = k[w].StopID
-        var s = {}
-        var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
-        if (g) {
-          s = { 'b': k[w].b }
-          displayName = ''
+      else {
+        if (stops_json.loaded) {
+          s = stops_json.c['b_' + k[w].StopID]
+          displayName = s.n
         }
-        else {
-          if (stops_json.loaded) {
-            s = stops_json.c['b_' + k[w].StopID]
-            displayName = s.n
-          }
-          if (busevent_json.loaded) {
-            if (bp.hasOwnProperty('s_' + k[w].StopID)) {
-              var thisbv = bp['s_' + k[w].StopID]
-              bv.h = true
-              bv.n = thisbv.BusID
-              bv.icon = icon_bus
-              bv.l = thisbv.CarOnStop
-            }
+        if (busevent_json.loaded) {
+          if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+            var thisbv = bp['s_' + k[w].StopID]
+            bv.h = true
+            bv.n = thisbv.BusID
+            bv.icon = icon_bus
+            bv.l = thisbv.CarOnStop
           }
         }
-
-        if (!(htm.hasOwnProperty('h_' + s.b))) {
-          htm['h_' + s.b] = []
-        }
-        if (g) {
-          var status = { 'status': 10, 'text': '' }
-        }
-        else {
-          var status = timeStatus(k[w].EstimateTime)
-        }
-        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
       }
 
-      if (!htm.hasOwnProperty('h_0')) {
-        htm['h_0'] = ['發生錯誤']
+      if (!(htm.hasOwnProperty('h_' + s.b))) {
+        htm['h_' + s.b] = []
       }
-      if (!htm.hasOwnProperty('h_1')) {
-        htm['h_1'] = ['發生錯誤']
+      if (g) {
+        var status = { 'status': 10, 'text': '' }
       }
-      $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
-      $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
+      else {
+        var status = timeStatus(k[w].EstimateTime)
+      }
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
-    catch (err) {
-      sendError(err)
+
+    if (!htm.hasOwnProperty('h_0')) {
+      htm['h_0'] = ['發生錯誤']
     }
+    if (!htm.hasOwnProperty('h_1')) {
+      htm['h_1'] = ['發生錯誤']
+    }
+    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
+
   }
 
   function timeStatus(t) {
@@ -681,51 +678,45 @@
   }
   function updateRealtimeJson() {
     updateBusEventJson()
-    try {
-      $.ajax({
-        type: 'GET', url: realtime_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-          b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf, { to: 'string' })
-            realtime_json = JSON.parse(z)
-            var s = findStop(realtime_json, c_routeid)
-            var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            printStop(s, '', bb)
-            realtime_last_update = new Date().getTime()
-            if (refresh_progress_l === 0) {
-              refresh_progress_l = 1
-              $('.refresh_progress_box').attr('l', '1')
-            }
-            setTimeout(function () { updateRealtimeJson() }, 10000);
-          });
-        }, error: function () {
-          setTimeout(function () { updateRealtimeJson() }, 1000);
-        }
-      });
-    }
-    catch (err) {
-      sendError(err)
-    }
+
+    $.ajax({
+      type: 'GET', url: realtime_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          realtime_json = JSON.parse(z)
+          var s = findStop(realtime_json, c_routeid)
+          var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+          printStop(s, '', bb)
+          realtime_last_update = new Date().getTime()
+          if (refresh_progress_l === 0) {
+            refresh_progress_l = 1
+            $('.refresh_progress_box').attr('l', '1')
+          }
+          setTimeout(function () { updateRealtimeJson() }, 10000);
+        });
+      }, error: function () {
+        setTimeout(function () { updateRealtimeJson() }, 1000);
+      }
+    });
+
   }
   function updateBusEventJson() {
-    try {
-      $.ajax({
-        type: 'GET', url: busevent_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-          b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf, { to: 'string' })
-            var o = JSON.parse(z).BusInfo
-            busevent_json.c = o
-            busevent_json.loaded = true
-          });
-        }, error: function () {
 
-        }
-      });
-    }
-    catch (err) {
-      sendError(err)
-    }
+    $.ajax({
+      type: 'GET', url: busevent_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          var o = JSON.parse(z).BusInfo
+          busevent_json.c = o
+          busevent_json.loaded = true
+        });
+      }, error: function () {
+
+      }
+    });
+
   }
   var stopsDataShortName = [
     { 'source': 'routeId', 'short': 'r' },
@@ -748,43 +739,41 @@
   var sdsn_len = stopsDataShortName.length
 
   function getStops() {
-    try {
-      var t = new Date().getTime()
-      if (!stops_json.loaded) {
-        $.ajax({
-          type: 'GET', url: stops_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-            var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-            b.arrayBuffer().then(bf => {
-              var z = pako.inflate(bf, { to: 'string' })
-              var o = JSON.parse(z).BusInfo
-              var json_lite = {}
-              var pl = o.length
-              for (var j = 0; j < pl; j++) {
-                var this_json_k = o[j]
-                var id = o[j].Id
-                for (var g = 0; g < sdsn_len; g++) {
-                  var thsS = stopsDataShortName[g]
-                  if (!(thsS.short === false)) {
-                    this_json_k[thsS.short] = this_json_k[thsS.source]
-                  }
-                  delete this_json_k[thsS.source]
+
+    var t = new Date().getTime()
+    if (!stops_json.loaded) {
+      $.ajax({
+        type: 'GET', url: stops_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < sdsn_len; g++) {
+                var thsS = stopsDataShortName[g]
+                if (!(thsS.short === false)) {
+                  this_json_k[thsS.short] = this_json_k[thsS.source]
                 }
-                json_lite['b_' + id] = o[j]
+                delete this_json_k[thsS.source]
               }
-              stops_json.c = json_lite
-              stops_json.loaded = true
-              if (realtime_lo === 0) {
-                realtime_lo = 1
-                updateRealtimeJson()
-              }
-            });
-          }
-        });
-      }
+              json_lite['b_' + id] = o[j]
+            }
+            stops_json.c = json_lite
+            stops_json.loaded = true
+            if (realtime_lo === 0) {
+              realtime_lo = 1
+              updateRealtimeJson()
+            }
+          });
+        }
+      });
     }
-    catch (err) {
-      sendError(err)
-    }
+
+
   }
 
 
@@ -834,56 +823,53 @@
   var rdsn_len = routesDataShortName.length
 
   function getRoutes() {
-    try {
-      var t = new Date().getTime()
-      if (LS.hasOwnProperty('bus_routes_t_' + city)) {
-        if (t - parseInt(String(LS.getItem('bus_routes_t_' + city))) < 60 * 60 * 24 * 14 * 1000) {
-          routes_json.c = JSON.parse(String(LS.getItem('bus_routes_' + city)))
-          routes_json.loaded = true
-        }
-      }
-      if (routes_json.loaded) {
-        setRouteD()
-        c_routeid_p = routes_json.c['b_' + c_routeid].pid
-      }
-      else {
-        $.ajax({
-          type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-            var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-            b.arrayBuffer().then(bf => {
-              var z = pako.inflate(bf, { to: 'string' })
-              var o = JSON.parse(z).BusInfo
-              var json_lite = {}
-              var pl = o.length
 
-              for (var j = 0; j < pl; j++) {
-                var this_json_k = o[j]
-                var id = o[j].Id
-                for (var g = 0; g < rdsn_len; g++) {
-                  var thsS = routesDataShortName[g]
-                  if (this_json_k.hasOwnProperty(thsS.source)) {
-                    if (!(thsS.short === false)) {
-                      this_json_k[thsS.short] = this_json_k[thsS.source]
-                    }
-                    delete this_json_k[thsS.source]
-                  }
-                }
-                json_lite['b_' + id] = o[j]
-              }
-              routes_json.c = json_lite
-              LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
-              LS.setItem('bus_routes_t_' + city, new Date().getTime())
-              c_routeid_p = routes_json.c['b_' + c_routeid].pid
-              routes_json.loaded = true
-              setRouteD()
-            });
-          }
-        });
+    var t = new Date().getTime()
+    if (LS.hasOwnProperty('bus_routes_t_' + city)) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t_' + city))) < 60 * 60 * 24 * 14 * 1000) {
+        routes_json.c = JSON.parse(String(LS.getItem('bus_routes_' + city)))
+        routes_json.loaded = true
       }
     }
-    catch (err) {
-      sendError(err)
+    if (routes_json.loaded) {
+      setRouteD()
+      c_routeid_p = routes_json.c['b_' + c_routeid].pid
     }
+    else {
+      $.ajax({
+        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < rdsn_len; g++) {
+                var thsS = routesDataShortName[g]
+                if (this_json_k.hasOwnProperty(thsS.source)) {
+                  if (!(thsS.short === false)) {
+                    this_json_k[thsS.short] = this_json_k[thsS.source]
+                  }
+                  delete this_json_k[thsS.source]
+                }
+              }
+              json_lite['b_' + id] = o[j]
+            }
+            routes_json.c = json_lite
+            LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
+            LS.setItem('bus_routes_t_' + city, new Date().getTime())
+            c_routeid_p = routes_json.c['b_' + c_routeid].pid
+            routes_json.loaded = true
+            setRouteD()
+          });
+        }
+      });
+    }
+
   }
 
 
