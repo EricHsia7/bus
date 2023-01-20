@@ -2,710 +2,712 @@
 <html lang="zh-tw">
 
 <head>
- <meta charset="UTF-8">
- <title>Bus</title>
- <meta name="description" content="Bus">
- <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0, maximum-scale=1.0" />
- <link href="https://erichsia7.github.io/bus/pwaicon2/512x512.png" sizes="512x512" rel="apple-touch-icon-precomposed" />
- <meta name="apple-mobile-web-app-capable" content="yes" />
- <meta name="apple-mobile-web-app-status-bar-style" content="defualt" />
- <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="icon" />
- <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="bookmark" />
- <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="shortcut icon" />
- <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" kji="light">
- <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101010" kji="dark">
- <link rel="manifest" href="https://erichsia7.github.io/bus/manifest.json">
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
- <style id="search_size_css"></style>
- <style>
-  * {
-   font-family: 'Noto Sans', sans-serif;
-   -webkit-appearance: none;
-   appearance: none;
-   outline: none;
-   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  }
+  <meta charset="UTF-8">
+  <title>Bus</title>
+  <meta name="description" content="Bus">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0, maximum-scale=1.0" />
+  <link href="https://erichsia7.github.io/bus/pwaicon2/512x512.png" sizes="512x512" rel="apple-touch-icon-precomposed" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="defualt" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="icon" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="bookmark" />
+  <link type="image/x-icon" href="https://erichsia7.github.io/bus/pwaicon2/256x256_corner_radius.ico" rel="shortcut icon" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" kji="light">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101010" kji="dark">
+  <link rel="manifest" href="https://erichsia7.github.io/bus/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style id="search_size_css"></style>
+  <style>
+    * {
+      font-family: 'Noto Sans', sans-serif;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
 
-  body {
-   overflow: hidden;
-  }
+    body {
+      overflow: hidden;
+    }
 
-  button {
-   -webkit-appearance: none;
-   appearance: none;
-   border: none;
-   margin: 0px;
-   padding: 0px;
-   box-sizing: border-box;
-   background: transparent;
-   display: block;
-   border-radius: 0px;
-   font-size: unset;
-   font-weight: unset;
-  }
+    button {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      background: transparent;
+      display: block;
+      border-radius: 0px;
+      font-size: unset;
+      font-weight: unset;
+    }
 
-  .search {
-   position: fixed;
-   top: var(--k-search-top);
-   left: var(--k-search-left);
-   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
-   height: 45px;
-   width: var(--k-width);
-   background: #f5f5f5;
-   border-radius: 50px;
-   transform-origin: top left;
-   border-bottom: 1px solid rgba(0, 0, 0, 0);
-   transition: 0.3s;
-  }
+    .search {
+      position: fixed;
+      top: var(--k-search-top);
+      left: var(--k-search-left);
+      transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
+      height: 45px;
+      width: var(--k-width);
+      background: #f5f5f5;
+      border-radius: 50px;
+      transform-origin: top left;
+      border-bottom: 1px solid rgba(0, 0, 0, 0);
+      transition: 0.3s;
+    }
 
-  .search[p="1"] {
-   transform: translateX(calc(var(--k-offset-left))) translateY(calc(var(--k-offset-top))) scaleX(var(--k-scale-w)) scaleY(var(--k-scale-h));
-   border-radius: 0px;
-   background: #ffffff;
-   border-bottom: 1px solid #f5f5f5;
+    .search[p="1"] {
+      transform: translateX(calc(var(--k-offset-left))) translateY(calc(var(--k-offset-top))) scaleX(var(--k-scale-w)) scaleY(var(--k-scale-h));
+      border-radius: 0px;
+      background: #ffffff;
+      border-bottom: 1px solid #f5f5f5;
 
-  }
+    }
 
-  .search[p="1"]::after {
-   content: '';
-   position: absolute;
-   top: 5px;
-   left: 0px;
-   height: 25px;
-   width: 1.5px;
-   background: #4e4e4e;
-   border-radius: 5px;
-   animation-name: cursor;
-   animation-duration: 0.9s;
-   animation-timing-function: ease-in-out;
-   animation-iteration-count: infinite;
-   transform-origin: top left;
-   display: block;
-   transform: translateY(calc(10px / var(--k-scale-h))) translateX(calc((55px / var(--k-scale-w)) + (var(--cursor-offset) / var(--k-scale-w)))) scaleX(calc(1 / var(--k-scale-w))) scaleY(calc(1 / var(--k-scale-h)));
-  }
+    .search[p="1"]::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0px;
+      height: 25px;
+      width: 1.5px;
+      background: #4e4e4e;
+      border-radius: 5px;
+      animation-name: cursor;
+      animation-duration: 0.9s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      transform-origin: top left;
+      display: block;
+      transform: translateY(calc(10px / var(--k-scale-h))) translateX(calc((55px / var(--k-scale-w)) + (var(--cursor-offset) / var(--k-scale-w)))) scaleX(calc(1 / var(--k-scale-w))) scaleY(calc(1 / var(--k-scale-h)));
+    }
 
-  @keyframes cursor {
-   0% {
-    opacity: 0;
-   }
+    @keyframes cursor {
+      0% {
+        opacity: 0;
+      }
 
-   50% {
-    opacity: 1;
-   }
+      50% {
+        opacity: 1;
+      }
 
-   100% {
-    opacity: 0;
-   }
-  }
+      100% {
+        opacity: 0;
+      }
+    }
 
-  .input_placeholder {
-   position: fixed;
-   top: var(--k-search-top);
-   left: calc(var(--k-search-left) + 10px);
-   width: calc(var(--k-width) - 20px);
-   height: 45px;
-   display: flex;
-   align-items: center;
-   font-size: 18px;
-   transform-origin: top left;
-   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
-   color: #888;
-   margin: 0px;
-   padding: 0px;
-   box-sizing: border-box;
-   opacity: 1;
-   transition: 0.3s;
-  }
+    .input_placeholder {
+      position: fixed;
+      top: var(--k-search-top);
+      left: calc(var(--k-search-left) + 10px);
+      width: calc(var(--k-width) - 20px);
+      height: 45px;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      transform-origin: top left;
+      transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
+      color: #888;
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      opacity: 1;
+      transition: 0.3s;
+    }
 
-  .input_placeholder[p="1"] {
-   transform: translateX(calc(var(--k-offset-left) - 10px + 55px)) translateY(calc(var(--k-offset-top) + 5px));
-   opacity: 0;
-  }
+    .input_placeholder[p="1"] {
+      transform: translateX(calc(var(--k-offset-left) - 10px + 55px)) translateY(calc(var(--k-offset-top) + 5px));
+      opacity: 0;
+    }
 
-  #search_routes {
-   position: fixed;
-   top: calc(var(--k-search-top) + 5px);
-   left: calc(var(--k-search-left) + 10px);
-   -webkit-appearance: none;
-   appearance: none;
-   border: none;
-   background: rgba(0, 0, 0, 0);
-   margin: 0px;
-   padding: 0px;
-   box-sizing: border-box;
-   border-radius: 0px;
-   font-size: 18px;
-   width: calc(var(--k-width) - 55px - 10px);
-   height: 35px;
-   transform-origin: top left;
-   transform: translateX(0px) translateY(0px);
-   font-weight: 500;
-   transition: 0.3s;
-   opacity:0;
-  }
+    #search_routes {
+      position: fixed;
+      top: calc(var(--k-search-top) + 5px);
+      left: calc(var(--k-search-left) + 10px);
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      background: rgba(0, 0, 0, 0);
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      border-radius: 0px;
+      font-size: 18px;
+      width: calc(var(--k-width) - 55px - 10px);
+      height: 35px;
+      transform-origin: top left;
+      transform: translateX(0px) translateY(0px);
+      font-weight: 500;
+      transition: 0.3s;
+      opacity: 0;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
 
-  #search_routes[p="1"] {
-   transform: translateX(calc(var(--k-offset-left) - 10px + 55px)) translateY(calc(var(--k-offset-top) - 5px + 10px));
-   opacity: 1;
-  }
+    #search_routes[p="1"] {
+      transform: translateX(calc(var(--k-offset-left) - 10px + 55px)) translateY(calc(var(--k-offset-top) - 5px + 10px));
+      opacity: 1;
+    }
 
-  .search_routes_result {
-   position: fixed;
-   top: calc(var(--k-search-top) + 45px);
-   left: 0px;
-   width: 100%;
-   height: calc(var(--k-window-h) - 55px);
-   overflow: scroll;
-   transform: translateY(0px);
-   transition: 0.3s;
-   opacity: 0;
-  }
+    .search_routes_result {
+      position: fixed;
+      top: calc(var(--k-search-top) + 45px);
+      left: 0px;
+      width: 100%;
+      height: calc(var(--k-window-h) - 55px);
+      overflow: scroll;
+      transform: translateY(0px);
+      transition: 0.3s;
+      opacity: 0;
+    }
 
-  .search_routes_result[p="1"] {
-   transform: translateY(calc(var(--k-offset-top) + 10px));
-   opacity: 1;
-  }
+    .search_routes_result[p="1"] {
+      transform: translateY(calc(var(--k-offset-top) + 10px));
+      opacity: 1;
+    }
 
-  li.search_result_r {
-   list-style: none;
-   margin: 0px;
-   padding: 0px;
-   width: 100%;
-   height: 60px;
-   box-sizing: border-box;
-   position: relative;
+    li.search_result_r {
+      list-style: none;
+      margin: 0px;
+      padding: 0px;
+      width: 100%;
+      height: 60px;
+      box-sizing: border-box;
+      position: relative;
 
-   border-bottom: 1px solid #f5f5f5;
+      border-bottom: 1px solid #f5f5f5;
 
-  }
+    }
 
-  .search_result_r_dep_to_des {
-   position: absolute;
-   top: 32.5px;
-   left: 10px;
-   width: calc(100% - 10px - 60px);
-   font-size: 16px;
-   color: #888;
-   height: 23px;
-   text-align: left;
-   display: flex;
-   align-items: center;
-  }
+    .search_result_r_dep_to_des {
+      position: absolute;
+      top: 32.5px;
+      left: 10px;
+      width: calc(100% - 10px - 60px);
+      font-size: 16px;
+      color: #888;
+      height: 23px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
 
-  .search_result_r_name {
-   position: absolute;
-   top: 2.5px;
-   left: 10px;
-   width: calc(100% - 10px - 60px);
-   height: 30px;
-   display: flex;
-   font-size: 21px;
-   align-items: center;
-   color: #4e4e4e;
-  }
+    .search_result_r_name {
+      position: absolute;
+      top: 2.5px;
+      left: 10px;
+      width: calc(100% - 10px - 60px);
+      height: 30px;
+      display: flex;
+      font-size: 21px;
+      align-items: center;
+      color: #4e4e4e;
+    }
 
-  .search_routes_result::-webkit-scrollbar {
-   display: none;
-  }
+    .search_routes_result::-webkit-scrollbar {
+      display: none;
+    }
 
-  .back_btn {
-   position: fixed;
-   top: calc(var(--k-search-top));
-   left: calc(var(--k-search-left));
-   width: 45px;
-   height: 45px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   transform-origin: top left;
-   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
-   opacity: 0;
-   transition: 0.3s;
-  }
+    .back_btn {
+      position: fixed;
+      top: calc(var(--k-search-top));
+      left: calc(var(--k-search-left));
+      width: 45px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: top left;
+      transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
+      opacity: 0;
+      transition: 0.3s;
+    }
 
-  .back_btn[p="1"] {
-   transform: translateY(calc(var(--k-offset-top) + 5px)) translateX(calc(var(--k-offset-left) + 5px));
-   opacity: 1;
-  }
+    .back_btn[p="1"] {
+      transform: translateY(calc(var(--k-offset-top) + 5px)) translateX(calc(var(--k-offset-left) + 5px));
+      opacity: 1;
+    }
 
-  .back_btn svg {
-   width: 20px;
-   height: 20px;
-  }
+    .back_btn svg {
+      width: 20px;
+      height: 20px;
+    }
 
-  .routes_keyboard {
-   position: fixed;
-   left: 0px;
-   bottom: 0px;
-   width: 100%;
-   height: clamp(200px, 36%, 270px);
-   display: grid;
-   grid-template-columns: repeat(5, 1fr);
-   grid-gap: 0px;
-   grid-template-rows: auto;
-   padding: 5px;
-   box-sizing: border-box;
-   background: #ffffff;
-   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.15);
-   transform: translateY(300px);
-   transition: 0.3s;
-  }
+    .routes_keyboard {
+      position: fixed;
+      left: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: clamp(200px, 36%, 270px);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: 0px;
+      grid-template-rows: auto;
+      padding: 5px;
+      box-sizing: border-box;
+      background: #ffffff;
+      box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.15);
+      transform: translateY(300px);
+      transition: 0.3s;
+    }
 
-  .routes_keyboard[p="1"] {
-   transform: translateY(0px);
-  }
+    .routes_keyboard[p="1"] {
+      transform: translateY(0px);
+    }
 
-  .routes_keyboard_key {
-   position: relative;
-  }
+    .routes_keyboard_key {
+      position: relative;
+    }
 
-  .routes_keyboard_key::after {
-   content: var(--key-display-str);
-   position: absolute;
-   top: 5px;
-   left: 5px;
-   width: calc(100% - 10px);
-   height: calc(100% - 10px);
-   background: #f5f5f5;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-radius: 15px;
-   font-size: 20px;
-   color: #4e4e4e
-  }
- </style>
+    .routes_keyboard_key::after {
+      content: var(--key-display-str);
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: calc(100% - 10px);
+      height: calc(100% - 10px);
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+      font-size: 20px;
+      color: #4e4e4e
+    }
+  </style>
 </head>
 
 <body>
- <div class="search" p="0"> </div>
- <div class="input_placeholder">搜尋路線</div>
- <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
- <div class="back_btn">
-  <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-   <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--d-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
-  </svg>
- </div>
- <div class="search_routes_result"></div>
- <div class="routes_keyboard"></div>
+  <div class="search" p="0"> </div>
+  <div class="input_placeholder">搜尋路線</div>
+  <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
+  <div class="back_btn">
+    <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--d-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
+    </svg>
+  </div>
+  <div class="search_routes_result"></div>
+  <div class="routes_keyboard"></div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script>
- var getUrlString = location.href;
- var url = new URL(getUrlString);
- function urlparams(p) {
-  return url.searchParams.get(p)
- }
- var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
- function preventDefault(e) {
-  e.preventDefault();
- }
- function preventDefaultForScrollKeys(e) {
-  if (keys[e.keyCode]) {
-   preventDefault(e);
-   return false;
+  var getUrlString = location.href;
+  var url = new URL(getUrlString);
+  function urlparams(p) {
+    return url.searchParams.get(p)
   }
- }
- // modern Chrome requires { passive: false } when adding event
- var supportsPassive = false;
- try {
-  window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-   get: function () { supportsPassive = true; }
-  }));
- } catch (e) { }
-
- var wheelOpt = supportsPassive ? { passive: false } : false;
- var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
-
- // call this to Disable
- function disableScroll() {
-  window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
-  window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-  window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
-  window.addEventListener('keydown', preventDefaultForScrollKeys, false);
- }
- // call this to Enable
- function enableScroll() {
-  window.removeEventListener('DOMMouseScroll', preventDefault, false);
-  window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-  window.removeEventListener('touchmove', preventDefault, wheelOpt);
-  window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
- }
-
- function disableInputFocusScroll(pervious_time, end_time) {
-  var n = new Date().getTime()
-  $('html,body').scrollTop(0)
-  if (pervious_time < end_time) {
-   window.requestAnimationFrame(function () {
-    disableInputFocusScroll(n, end_time)
-   })
+  var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+  function preventDefault(e) {
+    e.preventDefault();
   }
- }
-
- const LS = window.localStorage
- const SS = window.sessionStorage
-
- let cities = ['blobbus', 'ntpcbus']
- var city = 0
-
- var realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
- var stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
- var routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
- var busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
- let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
- ['綠', '棕', '4', '5', '6'],
- ['橘', '小', '7', '8', '9'],
- ['更多', '幹線', '清空', '0', '刪除']]
-
- var routesDataShortName = [
-  { 'source': 'providerId', 'short': false },
-  { 'source': 'providerName', 'short': false },
-  { 'source': 'nameZh', 'short': 'n' },
-  { 'source': 'nameEn', 'short': false },
-  { 'source': 'aliasName', 'short': false },
-  { 'source': 'pathAttributeId', 'short': 'pid' },
-  { 'source': 'pathAttributeNId', 'short': false },
-  { 'source': 'pathAttributeName', 'short': false },
-  { 'source': 'pathAttributeEname', 'short': false },
-  { 'source': 'buildPeriod', 'short': false },
-  { 'source': 'departureZh', 'short': 'dep' },
-  { 'source': 'destinationZh', 'short': 'des' },
-  { 'source': 'departureEn', 'short': false },
-  { 'source': 'destinationEn', 'short': false },
-  { 'source': 'goFirstBusTime', 'short': false },
-  { 'source': 'goLastBusTime', 'short': false },
-  { 'source': 'backFirstBusTime', 'short': false },
-  { 'source': 'backLastBusTime', 'short': false },
-  { 'source': 'offPeakHeadway', 'short': false },
-  { 'source': 'roadMapUrl', 'short': false },
-  { 'source': 'headwayDesc', 'short': false },
-  { 'source': 'holidayGoFirstBusTime', 'short': false },
-  { 'source': 'holidayBackFirstBusTime', 'short': false },
-  { 'source': 'holidayBackLastBusTime', 'short': false },
-  { 'source': 'holidayGoLastBusTime', 'short': false },
-  { 'source': 'holidayBusTimeDesc', 'short': false },
-  { 'source': 'realSequence', 'short': 'rs' },
-  { 'source': 'holidayHeadwayDesc', 'short': false },
-  { 'source': 'holidayOffPeakHeadway', 'short': false },
-  { 'source': 'holidayPeakHeadway', 'short': false },
-  { 'source': 'segmentBufferEn', 'short': false },
-  { 'source': 'ticketPriceDescriptionZh', 'short': false },
-  { 'source': 'ticketPriceDescriptionEn', 'short': false },
-  { 'source': 'peakHeadway', 'short': false },
-  { 'source': 'ttiaPathId', 'short': false },
-  { 'source': 'segmentBufferZh', 'short': false },
-  { 'source': 'busTimeDesc', 'short': false },
-  { 'source': 'distance', 'short': false },
-  { 'source': 'NId', 'short': false },
-  { 'source': 'genus', 'short': false },
-  { 'source': 'Id', 'short': false }
- ]
- var rdsn_len = routesDataShortName.length
- var routes_json = { 'loaded': false, 'c': {} }
- var search_index = { 'loaded': false, 'c': {} }
-
- function getRoutes() {
-  var t = new Date().getTime()
-  var g = 60 * 60 * 24 * 14 * 1000
-  if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
-   if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g) {
-    var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
-    var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
-    routes_json['c_0'] = cc0
-    routes_json['c_1'] = cc1
-    routes_json.c = Object.assign({}, cc0, cc1);
-    routes_json.loaded = true
-   }
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+      preventDefault(e);
+      return false;
+    }
   }
-  if (routes_json.loaded) {
-   createSearchIndex(routes_json)
-  }
-  else {
-   $.ajax({
-    type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-     var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-     b.arrayBuffer().then(bf => {
-      var z = pako.inflate(bf, { to: 'string' })
-      var o = JSON.parse(z).BusInfo
-      var json_lite = {}
-      var pl = o.length
+  // modern Chrome requires { passive: false } when adding event
+  var supportsPassive = false;
+  try {
+    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+      get: function () { supportsPassive = true; }
+    }));
+  } catch (e) { }
 
-      for (var j = 0; j < pl; j++) {
-       var this_json_k = o[j]
-       var id = o[j].Id
-       for (var g = 0; g < rdsn_len; g++) {
-        var thsS = routesDataShortName[g]
-        if (this_json_k.hasOwnProperty(thsS.source)) {
-         if (!(thsS.short === false)) {
-          this_json_k[thsS.short] = this_json_k[thsS.source]
-         }
-         delete this_json_k[thsS.source]
-        }
-       }
-       json_lite['b_' + id] = o[j]
+  var wheelOpt = supportsPassive ? { passive: false } : false;
+  var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+
+  // call this to Disable
+  function disableScroll() {
+    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
+    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+  }
+  // call this to Enable
+  function enableScroll() {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+    window.removeEventListener('touchmove', preventDefault, wheelOpt);
+    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+  }
+
+  function disableInputFocusScroll(pervious_time, end_time) {
+    var n = new Date().getTime()
+    $('html,body').scrollTop(0)
+    if (pervious_time < end_time) {
+      window.requestAnimationFrame(function () {
+        disableInputFocusScroll(n, end_time)
+      })
+    }
+  }
+
+  const LS = window.localStorage
+  const SS = window.sessionStorage
+
+  let cities = ['blobbus', 'ntpcbus']
+  var city = 0
+
+  var realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
+  var stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
+  var routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
+  var busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
+  let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
+  ['綠', '棕', '4', '5', '6'],
+  ['橘', '小', '7', '8', '9'],
+  ['更多', '幹線', '清空', '0', '刪除']]
+
+  var routesDataShortName = [
+    { 'source': 'providerId', 'short': false },
+    { 'source': 'providerName', 'short': false },
+    { 'source': 'nameZh', 'short': 'n' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'aliasName', 'short': false },
+    { 'source': 'pathAttributeId', 'short': 'pid' },
+    { 'source': 'pathAttributeNId', 'short': false },
+    { 'source': 'pathAttributeName', 'short': false },
+    { 'source': 'pathAttributeEname', 'short': false },
+    { 'source': 'buildPeriod', 'short': false },
+    { 'source': 'departureZh', 'short': 'dep' },
+    { 'source': 'destinationZh', 'short': 'des' },
+    { 'source': 'departureEn', 'short': false },
+    { 'source': 'destinationEn', 'short': false },
+    { 'source': 'goFirstBusTime', 'short': false },
+    { 'source': 'goLastBusTime', 'short': false },
+    { 'source': 'backFirstBusTime', 'short': false },
+    { 'source': 'backLastBusTime', 'short': false },
+    { 'source': 'offPeakHeadway', 'short': false },
+    { 'source': 'roadMapUrl', 'short': false },
+    { 'source': 'headwayDesc', 'short': false },
+    { 'source': 'holidayGoFirstBusTime', 'short': false },
+    { 'source': 'holidayBackFirstBusTime', 'short': false },
+    { 'source': 'holidayBackLastBusTime', 'short': false },
+    { 'source': 'holidayGoLastBusTime', 'short': false },
+    { 'source': 'holidayBusTimeDesc', 'short': false },
+    { 'source': 'realSequence', 'short': 'rs' },
+    { 'source': 'holidayHeadwayDesc', 'short': false },
+    { 'source': 'holidayOffPeakHeadway', 'short': false },
+    { 'source': 'holidayPeakHeadway', 'short': false },
+    { 'source': 'segmentBufferEn', 'short': false },
+    { 'source': 'ticketPriceDescriptionZh', 'short': false },
+    { 'source': 'ticketPriceDescriptionEn', 'short': false },
+    { 'source': 'peakHeadway', 'short': false },
+    { 'source': 'ttiaPathId', 'short': false },
+    { 'source': 'segmentBufferZh', 'short': false },
+    { 'source': 'busTimeDesc', 'short': false },
+    { 'source': 'distance', 'short': false },
+    { 'source': 'NId', 'short': false },
+    { 'source': 'genus', 'short': false },
+    { 'source': 'Id', 'short': false }
+  ]
+  var rdsn_len = routesDataShortName.length
+  var routes_json = { 'loaded': false, 'c': {} }
+  var search_index = { 'loaded': false, 'c': {} }
+
+  function getRoutes() {
+    var t = new Date().getTime()
+    var g = 60 * 60 * 24 * 14 * 1000
+    if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g) {
+        var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
+        var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
+        routes_json['c_0'] = cc0
+        routes_json['c_1'] = cc1
+        routes_json.c = Object.assign({}, cc0, cc1);
+        routes_json.loaded = true
       }
-      routes_json['c_' + city] = json_lite
-
-      LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
-      LS.setItem('bus_routes_t_' + city, new Date().getTime())
-
-      if (city === 0) {
-       city = 1
-       getRoutes()
-      }
-      if (city === 1) {
-       routes_json.loaded = true
-       routes_json['c_1'] = json_lite
-       routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
-
-       createSearchIndex(routes_json)
-      }
-
-     });
     }
-   });
-  }
- }
-
- function getTextWidth(text, font) {
-  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-  const context = canvas.getContext("2d");
-  context.font = font;
-  const metrics = context.measureText(text);
-  return metrics.width;
- }
-
- function createSearchIndex(j) {
-  if (j.loaded) {
-   j = j.c
-   var arr = []
-   for (var p in j) {
-    var this_p = j[p]
-    var id = String(p).replace('b_', '')
-    var ct = undefined
-    this_p['id'] = id
-    this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
-
-    if (routes_json['c_0'].hasOwnProperty(p)) {
-     ct = 0
-    }
-    if (routes_json['c_1'].hasOwnProperty(p)) {
-     ct = 1
-    }
-    this_p['city'] = ct
-    arr.push(this_p)
-   }
-   search_index.c = arr
-   search_index.loaded = true
-  }
- }
- function unicode_arr(str) {
-  var str_len = str.length
-  var unicode_arr = []
-  for (var t = 0; t < str_len; t++) {
-   var unicode = str.charCodeAt(t)
-   if (!(unicode_arr.indexOf(unicode) > -1)) {
-    unicode_arr.push(unicode)
-   }
-  }
-  return unicode_arr
- }
-
- function search_result(q, search_index) {
-  if (!(String(q).length > 0)) {
-   return []
-  }
-
-  var res_1 = []
-  var q_u = unicode_arr(q)
-  var q_u_len = q_u.length
-  var search_index_len = search_index.length
-  for (var s = 0; s < search_index_len; s++) {
-   var this_s = search_index[s]
-   var this_s_u = this_s.unicode
-   var res_t = false
-   for (var f = 0; f < q_u_len; f++) {
-    if (this_s_u.indexOf(q_u[f]) > -1) {
-     res_t = true
-     break;
-    }
-   }
-   if (!(res_t)) {
-    continue;
-   }
-   else {
-    if (String(this_s.n).indexOf(q) > -1) {
-     res_1.push(this_s)
-     continue;
+    if (routes_json.loaded) {
+      createSearchIndex(routes_json)
     }
     else {
-     if (String(this_s.dep).indexOf(q) > -1) {
-      res_1.push(this_s)
-      continue;
-     }
-     else {
-      if (String(this_s.des).indexOf(q) > -1) {
-       res_1.push(this_s)
-       continue;
+      $.ajax({
+        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < rdsn_len; g++) {
+                var thsS = routesDataShortName[g]
+                if (this_json_k.hasOwnProperty(thsS.source)) {
+                  if (!(thsS.short === false)) {
+                    this_json_k[thsS.short] = this_json_k[thsS.source]
+                  }
+                  delete this_json_k[thsS.source]
+                }
+              }
+              json_lite['b_' + id] = o[j]
+            }
+            routes_json['c_' + city] = json_lite
+
+            LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
+            LS.setItem('bus_routes_t_' + city, new Date().getTime())
+
+            if (city === 0) {
+              city = 1
+              getRoutes()
+            }
+            if (city === 1) {
+              routes_json.loaded = true
+              routes_json['c_1'] = json_lite
+              routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
+
+              createSearchIndex(routes_json)
+            }
+
+          });
+        }
+      });
+    }
+  }
+
+  function getTextWidth(text, font) {
+    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  }
+
+  function createSearchIndex(j) {
+    if (j.loaded) {
+      j = j.c
+      var arr = []
+      for (var p in j) {
+        var this_p = j[p]
+        var id = String(p).replace('b_', '')
+        var ct = undefined
+        this_p['id'] = id
+        this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
+
+        if (routes_json['c_0'].hasOwnProperty(p)) {
+          ct = 0
+        }
+        if (routes_json['c_1'].hasOwnProperty(p)) {
+          ct = 1
+        }
+        this_p['city'] = ct
+        arr.push(this_p)
       }
-     }
+      search_index.c = arr
+      search_index.loaded = true
     }
-   }
   }
-  return res_1
- }
- function openRoute(c, i) {
-  var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
-  location.href = u
- }
- function printSearchResult(result) {
-  var result_len = result.length
-  var f = []
-  for (var e = 0; e < result_len; e++) {
-   var thisres = result[e]
-   var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
-   f.push(htm)
-  }
-  return f.join('')
- }
-
- function update_search_result() {
-  var q = $('#search_routes').val()
-  var res = search_result(q, search_index.c)
-  $('.search_routes_result').html(printSearchResult(res))
-  var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
-  var text_width = getTextWidth(q, font)
-  $('.search').css({ '--cursor-offset': text_width + 'px' })
- }
- getRoutes()
-
- document.querySelector('#search_routes').addEventListener("paste", function (e) {
-  update_search_result()
- });
- document.querySelector('#search_routes').addEventListener("cut", function (e) {
-  update_search_result()
- });
- document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-  update_search_result()
- });
-
- document.addEventListener("selectionchange", function (e) {
-  if (1 === 1) {
-   update_search_result()
-  }
- });
- document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-  update_search_result()
- });
- function opensearch() {
-  /*
-    var offset_left = -1 * (window.innerWidth) / 2
-    var offset_top = -1 * (window.innerHeight) * 0.28
-    
-    $('.search,#search_routes,.input_placeholder').css({ '--k-offset-left': offset_left + 'px', '--k-offset-top': offset_top + 'px', '--k-scale-w': scale_w, '--k-scale-h': scale_h })
-    $('.search_routes_result').css({ '--k-offset-top': offset_top + 'px' })
-  */
-  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
- }
- function closeopensearch() {
-  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
- }
- $('#search_routes').click(function (e) {
-  e.stopPropagation()
-  if (!($('.search').attr('p') === '1')) {
-   var n = new Date().getTime()
-   disableInputFocusScroll(n, n + 1500)
-   opensearch()
-  }
-
- })
- $('.back_btn').click(function (e) {
-  e.stopPropagation()
-  if ($('.search').attr('p') === '1') {
-   closeopensearch()
-  }
- })
-
-
-
-
- function initializeKeyboard() {
-  var htm = []
-  var row_len = routes_keyboard_keys.length
-  for (var o = 0; o < row_len; o++) {
-   var this_row = routes_keyboard_keys[o]
-   var this_row_len = this_row.length
-   for (var w = 0; w < this_row_len; w++) {
-    var this_key = this_row[w]
-    var onclick = "keyboard_add('" + this_key + "')"
-    if (this_key === '刪除') {
-     onclick = "keyboard_delete()"
+  function unicode_arr(str) {
+    var str_len = str.length
+    var unicode_arr = []
+    for (var t = 0; t < str_len; t++) {
+      var unicode = str.charCodeAt(t)
+      if (!(unicode_arr.indexOf(unicode) > -1)) {
+        unicode_arr.push(unicode)
+      }
     }
-    if (this_key === '清空') {
-     onclick = "keyboard_clear()"
+    return unicode_arr
+  }
+
+  function search_result(q, search_index) {
+    if (!(String(q).length > 0)) {
+      return []
     }
-    htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
-   }
+
+    var res_1 = []
+    var q_u = unicode_arr(q)
+    var q_u_len = q_u.length
+    var search_index_len = search_index.length
+    for (var s = 0; s < search_index_len; s++) {
+      var this_s = search_index[s]
+      var this_s_u = this_s.unicode
+      var res_t = false
+      for (var f = 0; f < q_u_len; f++) {
+        if (this_s_u.indexOf(q_u[f]) > -1) {
+          res_t = true
+          break;
+        }
+      }
+      if (!(res_t)) {
+        continue;
+      }
+      else {
+        if (String(this_s.n).indexOf(q) > -1) {
+          res_1.push(this_s)
+          continue;
+        }
+        else {
+          if (String(this_s.dep).indexOf(q) > -1) {
+            res_1.push(this_s)
+            continue;
+          }
+          else {
+            if (String(this_s.des).indexOf(q) > -1) {
+              res_1.push(this_s)
+              continue;
+            }
+          }
+        }
+      }
+    }
+    return res_1
   }
-  $('.routes_keyboard').html(htm.join(''))
- }
-
- function keyboard_add(k) {
-  var v = $('#search_routes').val()
-  v += k
-  $('#search_routes').val(v)
-  update_search_result()
- }
-
- function keyboard_delete() {
-  var v = $('#search_routes').val()
-  v = v.substring(0, v.length - 1)
-  $('#search_routes').val(v)
-  update_search_result()
- }
-
- function keyboard_clear() {
-  $('#search_routes').val('')
-  update_search_result()
- }
-
- function setSearchSize() {
-  function fl(n) {
-   return Math.floor(n)
+  function openRoute(c, i) {
+    var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
+    location.href = u
   }
-  function clamp(w, min, df, max) {
-   var y = df * w
-   var p = y
-   if (y > max) {
-    p = max
-   }
-   if (y < min) {
-    p = min
-   }
-   return fl(p)
+  function printSearchResult(result) {
+    var result_len = result.length
+    var f = []
+    for (var e = 0; e < result_len; e++) {
+      var thisres = result[e]
+      var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
+      f.push(htm)
+    }
+    return f.join('')
   }
-  var w = []
-  var ww = window.innerWidth
-  var wh = window.innerHeight
-  w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
-  w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
-  w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
-  w.push('--k-window-w:' + ww + 'px')
-  w.push('--k-window-h:' + wh + 'px')
-  w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
-  w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
-  w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
-  w.push('--k-scale-h:' + 55 / 45)
-  $('#search_size_css').html(':root{' + w.join(';') + '}')
- }
- setSearchSize()
- initializeKeyboard()
- $(window).resize(function () {
- // setSearchSize()
- })
+
+  function update_search_result() {
+    var q = $('#search_routes').val()
+    var res = search_result(q, search_index.c)
+    $('.search_routes_result').html(printSearchResult(res))
+    var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
+    var text_width = getTextWidth(q, font)
+    $('.search').css({ '--cursor-offset': text_width + 'px' })
+  }
+  getRoutes()
+
+  document.querySelector('#search_routes').addEventListener("paste", function (e) {
+    update_search_result()
+  });
+  document.querySelector('#search_routes').addEventListener("cut", function (e) {
+    update_search_result()
+  });
+  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+    update_search_result()
+  });
+
+  document.addEventListener("selectionchange", function (e) {
+    if (1 === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+    update_search_result()
+  });
+  function opensearch() {
+    /*
+      var offset_left = -1 * (window.innerWidth) / 2
+      var offset_top = -1 * (window.innerHeight) * 0.28
+      
+      $('.search,#search_routes,.input_placeholder').css({ '--k-offset-left': offset_left + 'px', '--k-offset-top': offset_top + 'px', '--k-scale-w': scale_w, '--k-scale-h': scale_h })
+      $('.search_routes_result').css({ '--k-offset-top': offset_top + 'px' })
+    */
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+  }
+  function closeopensearch() {
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+  }
+  $('#search_routes').click(function (e) {
+    e.stopPropagation()
+    if (!($('.search').attr('p') === '1')) {
+      var n = new Date().getTime()
+      disableInputFocusScroll(n, n + 1500)
+      opensearch()
+    }
+
+  })
+  $('.back_btn').click(function (e) {
+    e.stopPropagation()
+    if ($('.search').attr('p') === '1') {
+      closeopensearch()
+    }
+  })
+
+
+
+
+  function initializeKeyboard() {
+    var htm = []
+    var row_len = routes_keyboard_keys.length
+    for (var o = 0; o < row_len; o++) {
+      var this_row = routes_keyboard_keys[o]
+      var this_row_len = this_row.length
+      for (var w = 0; w < this_row_len; w++) {
+        var this_key = this_row[w]
+        var onclick = "keyboard_add('" + this_key + "')"
+        if (this_key === '刪除') {
+          onclick = "keyboard_delete()"
+        }
+        if (this_key === '清空') {
+          onclick = "keyboard_clear()"
+        }
+        htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
+      }
+    }
+    $('.routes_keyboard').html(htm.join(''))
+  }
+
+  function keyboard_add(k) {
+    var v = $('#search_routes').val()
+    v += k
+    $('#search_routes').val(v)
+    update_search_result()
+  }
+
+  function keyboard_delete() {
+    var v = $('#search_routes').val()
+    v = v.substring(0, v.length - 1)
+    $('#search_routes').val(v)
+    update_search_result()
+  }
+
+  function keyboard_clear() {
+    $('#search_routes').val('')
+    update_search_result()
+  }
+
+  function setSearchSize() {
+    function fl(n) {
+      return Math.floor(n)
+    }
+    function clamp(w, min, df, max) {
+      var y = df * w
+      var p = y
+      if (y > max) {
+        p = max
+      }
+      if (y < min) {
+        p = min
+      }
+      return fl(p)
+    }
+    var w = []
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+    w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
+    w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
+    w.push('--k-window-w:' + ww + 'px')
+    w.push('--k-window-h:' + wh + 'px')
+    w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
+    w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
+    w.push('--k-scale-h:' + 55 / 45)
+    $('#search_size_css').html(':root{' + w.join(';') + '}')
+  }
+  setSearchSize()
+  initializeKeyboard()
+  $(window).resize(function () {
+    // setSearchSize()
+  })
 </script>
 
 </html>
