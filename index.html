@@ -211,8 +211,8 @@
 
   .back_btn {
    position: fixed;
-   top: 28%;
-   left: calc((100% - clamp(150px, 80%, 300px)) / 2);
+   top: calc(var(--k-search-top));
+   left: calc(var(--k-search-left));
    width: 45px;
    height: 45px;
    display: flex;
@@ -225,7 +225,7 @@
   }
 
   .back_btn[p="1"] {
-   transform: scaleX(calc(1 / var(--k-scale-w))) scaleY(calc(1 / var(--k-scale-h))) translateY(calc(5px / var(--k-scale-h))) translateX(calc(5px / var(--k-scale-w)));
+   transform: translateY(5px) translateX(5px);
    opacity: 1;
   }
 
