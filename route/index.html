@@ -1088,7 +1088,7 @@ return e + h + e
     $(sel + '[f="bus_type"]').text(type)
     $(sel + '[f="bus_status"]').text(status)
     $(sel + '[f="bus_update"]').text(update)
-    $('.bus_info_box').scrollTop(50)
+    $('.bus_info_box').scrollTop(50).attr('p','1')
   }
   function backPerviousPage() {
     var t = new Date().getTime()
