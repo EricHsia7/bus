@@ -203,9 +203,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: 0.45s;
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    .tab-line-box2.departure {
+      animation-name: t_des;
+      animation-duration: 0.45s;
+      animation-fill-mode: forwards;
+    }
+
+    .tab-line-box2.destination {
+      animation-name: t_dep;
+      animation-duration: 0.45s;
+      animation-fill-mode: forwards;
     }
 
     .tab-line {
@@ -229,9 +240,7 @@
       animation-fill-mode: forwards;
     }
 
-    .tabs[l="1"] .tab-line {
-
-    }
+    .tabs[l="1"] .tab-line {}
 
     .tabs[l="0"] .tab-line {
       background: rgba(0, 0, 0, 0);
@@ -581,6 +590,9 @@
       var r_des_w = getTextWidth(dep, font) + 'px'
       w.push('@keyframes r_dep {0%{width:' + r_dep_w + '} 100%{width:' + r_des_w + '}}')
       w.push('@keyframes r_des {0%{width:' + r_des_w + '} 100%{width:' + r_dep_w + '}}')
+      w.push('@keyframes t_des {0%{transform:' + 'translateX(0px)' + '} 100%{transform:' + 'translateX(' + $(".tab-line-box-2").width() + 'px)' + '}}')
+      w.push('@keyframes t_des {0%{transform:' + 'translateX(' + $(".tab-line-box-2").width() + 'px)' + '} 100%{transform:' + 'translateX(0px)' + '}}')
+
       $('#routes_animation_css').html(w.join(' '))
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
       $('.route_container .tabs .tab[direction="destination"] span').text(dep)
@@ -923,7 +935,6 @@
     line = (1 / 2) * y * tabwidth;
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
-
     $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)" });
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
