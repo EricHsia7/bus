@@ -18,9 +18,7 @@
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
- <style id="search_size_css">
-  :root {}
- </style>
+ <style id="search_size_css"></style>
  <style>
   * {
    font-family: 'Noto Sans', sans-serif;
@@ -50,11 +48,11 @@
 
   .search {
    position: fixed;
-   top: 28%;
-   left: 50%;
-   transform: translateX(-50%) translateY(0px) scaleX(1) scaleY(1);
+   top: var(--k-search-top);
+   left: var(--k-search-left);
+   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
    height: 45px;
-   width: clamp(150px, 80%, 300px);
+   width: var(--k-width);
    background: #f5f5f5;
    border-radius: 50px;
    transform-origin: top left;
@@ -104,15 +102,15 @@
 
   .input_placeholder {
    position: fixed;
-   top: 28%;
-   left: calc(50% + 15px);
-   width: clamp(150px, 80%, 300px);
+   top: var(--k-search-top);
+   left: calc(var(--k-search-left) + 10px);
+   width: calc(var(--k-width) - 20px);
    height: 45px;
    display: flex;
    align-items: center;
    font-size: 18px;
    transform-origin: top left;
-   transform: translateX(-50%) translateY(0px) scaleX(1) scaleY(1);
+   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
    color: #888;
    margin: 0px;
    padding: 0px;
@@ -128,8 +126,8 @@
 
   #search_routes {
    position: fixed;
-   top: calc(28% + 5px);
-   left: calc(50% + 10px);
+   top: calc(var(--k-search-top) + 5px);
+   left: calc(var(--k-search-left) + 10px);
    -webkit-appearance: none;
    appearance: none;
    border: none;
@@ -139,10 +137,10 @@
    box-sizing: border-box;
    border-radius: 0px;
    font-size: 18px;
-   width: clamp(150px, 80%, 300px);
+   width: calc(var(--k-width) - 55px - 10px);
    height: 35px;
    transform-origin: top left;
-   transform: translateX(-50%) translateY(0px) scaleX(1) scaleY(1);
+   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
    opacity: 0;
    font-weight: 500;
   }
@@ -602,15 +600,15 @@
   update_search_result()
  });
  function opensearch() {
-
-  var se = document.querySelector('.search')
-  var offset_left = -1 * (window.innerWidth) / 2
-  var offset_top = -1 * (window.innerHeight) * 0.28
-  var scale_w = window.innerWidth / se.clientWidth
-  var scale_h = 55 / se.clientHeight
-  $('.search,#search_routes,.input_placeholder').css({ '--offset-left': offset_left + 'px', '--offset-top': offset_top + 'px', '--scale-w': scale_w, '--scale-h': scale_h })
-  $('.search_routes_result').css({ '--offset-top': offset_top + 'px' })
-
+  /*
+    var se = document.querySelector('.search')
+    var offset_left = -1 * (window.innerWidth) / 2
+    var offset_top = -1 * (window.innerHeight) * 0.28
+    var scale_w = window.innerWidth / se.clientWidth
+    var scale_h = 55 / se.clientHeight
+    $('.search,#search_routes,.input_placeholder').css({ '--offset-left': offset_left + 'px', '--offset-top': offset_top + 'px', '--scale-w': scale_w, '--scale-h': scale_h })
+    $('.search_routes_result').css({ '--offset-top': offset_top + 'px' })
+  */
   $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder').attr('p', '1')
  }
  function closeopensearch() {
@@ -698,6 +696,8 @@
   w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
   w.push('--k-window-w:' + ww + 'px')
   w.push('--k-window-h:' + wh + 'px')
+  w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
+  w.push('--k-offset-left:' + -1 * fl((wh - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
 
   $('#search_size_css').html(':root{' + w.join(';') + '}')
  }
