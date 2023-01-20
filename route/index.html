@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style id="routes_size"> </style>
   <style>
     :root {
       --g-333333: #333333;
@@ -537,6 +538,14 @@
     $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
     window.requestAnimationFrame(updateRefreshProgress)
   }
+  function getTextWidth(text, font) {
+    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  }
+
   function skeletonScreen() {
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
@@ -551,9 +560,13 @@
   function setRouteD() {
     if (routes_json.loaded) {
       var this_route = routes_json.c['b_' + c_routeid]
-      var dep = this_route.dep
-      var des = this_route.des
+      var dep = '往' + this_route.dep
+      var des = '往' + this_route.des
       var name = this_route.n
+      var w = []
+      var font = "500 16px 'Noto Sans', sans-serif"
+      w.push('--k-tab-line-dep-w:' + getTextWidth(des, font) + 'px')
+      w.push('--k-tab-line-des-w:' + getTextWidth(dep, font) + 'px')
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
       $('.route_container .tabs .tab[direction="destination"] span').text(dep)
       $('.route_container .title .routename').text(name)
@@ -914,6 +927,40 @@
   function backPerviousPage() {
     var t = new Date().getTime()
     location.href = 'https://erichsia7.github.io/bus/?t=' + t
+  }
+  function setRouteSize() {
+    routes_size
+  }
+
+
+  function setSearchSize() {
+    function fl(n) {
+      return Math.floor(n)
+    }
+    function clamp(w, min, df, max) {
+      var y = df * w
+      var p = y
+      if (y > max) {
+        p = max
+      }
+      if (y < min) {
+        p = min
+      }
+      return fl(p)
+    }
+    var w = []
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+    w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
+    w.push('--k-window-w:' + ww + 'px')
+    w.push('--k-window-h:' + wh + 'px')
+    w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
+    w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
+    w.push('--k-scale-h:' + 55 / 45)
+    w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
+    $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
 
   initialize()
