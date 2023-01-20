@@ -6,7 +6,6 @@
   <title>Bus</title>
   <meta name="description" content="Bus">
   <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0" />
-
   <link href="https://erichsia7.github.io/bus/pwaicon2/512x512.png" sizes="512x512" rel="apple-touch-icon-precomposed" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="defualt" />
@@ -427,7 +426,39 @@
       color: var(--g-888888);
       font-weight: 500;
     }
+
+    .back_btn {
+      position: absolute;
+      top: calc(var(--k-search-top));
+      left: calc(var(--k-search-left));
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: top left;
+      transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
+      opacity: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .back_btn svg {
+      width: 20px;
+      height: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XX5QF4D2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-6XX5QF4D2J');
+  </script>
 </head>
 
 <body>
@@ -437,7 +468,11 @@
       <div class="route" direction="destination"></div>
     </div>
     <div class="title">
-      <div class="back"></div>
+      <div class="back_btn">
+        <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
+        </svg>
+      </div>
       <div class="routename" l="0"></div>
     </div>
     <div class="tabs" l="0">
@@ -485,6 +520,13 @@
   var realtime_lo = 0
   var realtime_last_update = new Date().getTime()
   var refresh_progress_l = 0
+  function sendError(err) {
+    var position = 'L' + err.line + ',C' + err.column
+    gtag('event', 'error_feedback', {
+      'event_category': position,
+      'event_label': position + ' | ' + err.message,
+    });
+  }
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 10000
@@ -523,56 +565,61 @@
     }
   }
   function printStop(k, c, bp) {
-    var htm = {}
-    var l = k.length
-    var g = false
-    if (c === 'skeleton') {
-      g = true
-    }
-    for (var w = 0; w < l; w++) {
-      var displayName = k[w].StopID
-      var s = {}
-      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
-      if (g) {
-        s = { 'b': k[w].b }
-        displayName = ''
+    try {
+      var htm = {}
+      var l = k.length
+      var g = false
+      if (c === 'skeleton') {
+        g = true
       }
-      else {
-        if (stops_json.loaded) {
-          s = stops_json.c['b_' + k[w].StopID]
-          displayName = s.n
+      for (var w = 0; w < l; w++) {
+        var displayName = k[w].StopID
+        var s = {}
+        var bv = { 'h': false, 'n': '', 'icon': '', 'l': '' }
+        if (g) {
+          s = { 'b': k[w].b }
+          displayName = ''
         }
-        if (busevent_json.loaded) {
-          if (bp.hasOwnProperty('s_' + k[w].StopID)) {
-            var thisbv = bp['s_' + k[w].StopID]
-            bv.h = true
-            bv.n = thisbv.BusID
-            bv.icon = icon_bus
-            bv.l = thisbv.CarOnStop
+        else {
+          if (stops_json.loaded) {
+            s = stops_json.c['b_' + k[w].StopID]
+            displayName = s.n
+          }
+          if (busevent_json.loaded) {
+            if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+              var thisbv = bp['s_' + k[w].StopID]
+              bv.h = true
+              bv.n = thisbv.BusID
+              bv.icon = icon_bus
+              bv.l = thisbv.CarOnStop
+            }
           }
         }
+
+        if (!(htm.hasOwnProperty('h_' + s.b))) {
+          htm['h_' + s.b] = []
+        }
+        if (g) {
+          var status = { 'status': 10, 'text': '' }
+        }
+        else {
+          var status = timeStatus(k[w].EstimateTime)
+        }
+        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
       }
 
-      if (!(htm.hasOwnProperty('h_' + s.b))) {
-        htm['h_' + s.b] = []
+      if (!htm.hasOwnProperty('h_0')) {
+        htm['h_0'] = ['發生錯誤']
       }
-      if (g) {
-        var status = { 'status': 10, 'text': '' }
+      if (!htm.hasOwnProperty('h_1')) {
+        htm['h_1'] = ['發生錯誤']
       }
-      else {
-        var status = timeStatus(k[w].EstimateTime)
-      }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+      $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
     }
-
-    if (!htm.hasOwnProperty('h_0')) {
-      htm['h_0'] = ['發生錯誤']
+    catch (err) {
+      sendError(err)
     }
-    if (!htm.hasOwnProperty('h_1')) {
-      htm['h_1'] = ['發生錯誤']
-    }
-    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
-    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
   }
 
   function timeStatus(t) {
