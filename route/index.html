@@ -1080,12 +1080,12 @@
     $('.bus_info_box').scroll(function () {
       var scrolltop = $('.bus_info_box').scrollTop()
       if (scrolltop < 5) {
-        $('.bus_info_box').attr('p', '0')
+        closeBus()
       }
     })
     $('.bus_info_box').click(function (e) {
       e.stopPropagation()
-      $('.bus_info_box').attr('p', '0')
+      closeBus()
     });
     $('.bus_info').click(function (e) {
       e.stopPropagation()
@@ -1095,6 +1095,7 @@
   function closeBus() {
     if (businfo_close === 0) {
       businfo_close = 1
+      $('.bus_info_box').attr('p', '0')
       $('.bus_info_mask').css({ 'opacity': '0' })
       setTimeout(() => {
         $('.bus_info_mask').css({ 'display': 'none' })
