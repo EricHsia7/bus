@@ -103,7 +103,7 @@
    position: fixed;
    top: 28%;
    left: calc(50% + 15px);
-   width: calc(clamp(150px, 80%, 300px) - 25px);
+   width: clamp(150px, 80%, 300px);
    height: 45px;
    display: flex;
    align-items: center;
@@ -136,7 +136,7 @@
    box-sizing: border-box;
    border-radius: 0px;
    font-size: 18px;
-   width: calc(clamp(150px, 80%, 300px) - 55px);
+   width: clamp(150px, 80%, 300px);
    height: 35px;
    transform-origin: top left;
    transform: translateX(-50%) translateY(0px) scaleX(1) scaleY(1);
@@ -209,9 +209,9 @@
   }
 
   .back_btn {
-   position: absolute;
-   top: 0px;
-   left: 0px;
+   position: fiexd;
+   top: 28%;
+   left: 50%;
    width: 45px;
    height: 45px;
    display: flex;
@@ -222,7 +222,7 @@
    transition: 0.3s;
   }
 
-  .search[p="1"] .back_btn {
+  .back_btn[p="1"] {
    transform: scaleX(calc(1 / var(--scale-w))) scaleY(calc(1 / var(--scale-h))) translateY(calc(5px / var(--scale-h))) translateX(calc(5px / var(--scale-w)));
    opacity: 1;
   }
@@ -277,15 +277,14 @@
 </head>
 
 <body>
- <div class="search" p="0">
-  <div class="back_btn">
-   <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--d-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
-   </svg>
-  </div>
- </div>
+ <div class="search" p="0"> </div>
  <div class="input_placeholder">搜尋路線</div>
  <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
+ <div class="back_btn">
+  <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--d-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
+  </svg>
+ </div>
  <div class="search_routes_result"></div>
  <div class="routes_keyboard"></div>
 </body>
