@@ -1110,6 +1110,8 @@
       businfo_close = 1
       $('.bus_info_box').attr('p', '0')
       $('.bus_info_mask').css({ 'opacity': '0' })
+      $('head meta[kji="light"]').attr('content', '#ffffff')
+      $('head meta[kji="dark"]').attr('content', '#101010')
       setTimeout(() => {
         $('.bus_info_mask').css({ 'display': 'none' })
         businfo_close = 0
@@ -1167,6 +1169,8 @@
     $('.bus_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.bus_info_mask').css({ 'opacity': '1' })
+      $('head meta[kji="light"]').attr('content', '#7f7f7f')
+      $('head meta[kji="dark"]').attr('content', '#080808')
     }, 1);
   }
   function backPerviousPage() {
