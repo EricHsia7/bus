@@ -241,6 +241,9 @@
       animation-duration: 0.45s;
       animation-fill-mode: forwards;
     }
+    .tab-line-box2.initialization {
+      width:var(--j-initialization-width);
+    }
 
 
 
@@ -584,7 +587,6 @@
   }
   function setRouteD() {
     if (routes_json.loaded) {
-      switchDirection('departure')
       var this_route = routes_json.c['b_' + c_routeid]
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
@@ -604,6 +606,7 @@
       $('.route_container .title .routename').text(name)
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
+      $(".tab-line").attr('class', 'tab-line initialization').css({'--j-initialization-width':r_dep_w + 'px'})
     }
   }
   function printStop(k, c, bp) {
