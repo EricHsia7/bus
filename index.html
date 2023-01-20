@@ -691,7 +691,7 @@
     w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
     w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
     w.push('--k-scale-h:' + 55 / 45)
-    w.push('--k-keyboard-h:' + clamp(200, 0.36, 270) + 'px')
+    w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
   setSearchSize()
