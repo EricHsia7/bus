@@ -205,6 +205,8 @@
       align-items: center;
       user-select: none;
       -webkit-user-select: none;
+      animation-name: none;
+      animation-duration: 0s;
     }
 
     .tabs[l="1"] .tab-line-box2.departure {
@@ -583,7 +585,6 @@
   function setRouteD() {
     if (routes_json.loaded) {
       switchDirection('departure')
-
       var this_route = routes_json.c['b_' + c_routeid]
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
