@@ -931,6 +931,12 @@
   }
 
   function switchDirection(d) {
+    var a = 0
+    var b = 1
+    if (d === 'destination') {
+      a = 1
+      b = 0
+    }
     $('.route_container .routes').attr('class', 'routes ' + d)
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
