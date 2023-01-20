@@ -230,7 +230,7 @@
     }
 
     .tabs[l="1"] .tab-line {
-      
+
     }
 
     .tabs[l="0"] .tab-line {
@@ -581,7 +581,7 @@
       var r_des_w = getTextWidth(dep, font) + 'px'
       w.push('@keyframes r_dep {0%{width:' + r_dep_w + '} 100%{width:' + r_des_w + '}}')
       w.push('@keyframes r_des {0%{width:' + r_des_w + '} 100%{width:' + r_dep_w + '}}')
-      $('#routes_animation_css').html(':root{' + w.join(' ') + '}')
+      $('#routes_animation_css').html(w.join(' '))
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
       $('.route_container .tabs .tab[direction="destination"] span').text(dep)
       $('.route_container .title .routename').text(name)
