@@ -601,11 +601,9 @@
  });
  function opensearch() {
   /*
-    var se = document.querySelector('.search')
     var offset_left = -1 * (window.innerWidth) / 2
     var offset_top = -1 * (window.innerHeight) * 0.28
-    var scale_w = window.innerWidth / se.clientWidth
-    var scale_h = 55 / se.clientHeight
+    
     $('.search,#search_routes,.input_placeholder').css({ '--k-offset-left': offset_left + 'px', '--k-offset-top': offset_top + 'px', '--scale-w': scale_w, '--scale-h': scale_h })
     $('.search_routes_result').css({ '--k-offset-top': offset_top + 'px' })
   */
@@ -698,7 +696,8 @@
   w.push('--k-window-h:' + wh + 'px')
   w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
   w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
-
+  w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
+  w.push('--k-scale-h:' + 55 / 45)
   $('#search_size_css').html(':root{' + w.join(';') + '}')
  }
  setSearchSize()
