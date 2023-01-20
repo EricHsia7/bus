@@ -284,12 +284,16 @@
       transition: transform 0.45s;
     }
 
-    .routes[display="departure"] {
-      transform: translateX(0)
+    .routes.departure {
+      animation-name: p_des;
+      animation-duration: 0.45s;
+      animation-fill-mode: forwards;
     }
 
-    .routes[display="destination"] {
-      transform: translateX(-50%);
+    .routes.destination {
+      animation-name: p_dep;
+      animation-duration: 0.45s;
+      animation-fill-mode: forwards;
     }
 
     .route {
@@ -598,6 +602,8 @@
       w.push('@keyframes r_des {0%{width:' + r_des_w + '} 100%{width:' + r_dep_w + '}}')
       w.push('@keyframes t_dep {0%{transform:' + 'translateX(0px)' + '} 100%{transform:' + 'translateX(' + $(".tab-line-box2").width() + 'px)' + '}}')
       w.push('@keyframes t_des {0%{transform:' + 'translateX(' + $(".tab-line-box2").width() + 'px)' + '} 100%{transform:' + 'translateX(0px)' + '}}')
+      w.push('@keyframes t_dep {0%{transform:' + 'translateX(0%)' + '} 100%{transform:' + 'translateX(-50%)' + '}}')
+      w.push('@keyframes t_des {0%{transform:' + 'translateX(-50%)' + '} 100%{transform:' + 'translateX(0%)' + '}}')
 
       $('#routes_animation_css').html(w.join(' '))
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
@@ -605,7 +611,7 @@
       $('.route_container .title .routename').text(name)
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
-      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w})
+      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
   function printStop(k, c, bp) {
@@ -925,20 +931,7 @@
   }
 
   function switchDirection(d) {
-    $('.route_container .routes').attr('display', d)
-    var line = 0;
-    var content = 0;
-    var tabwidth = $(".tab-line-box").width();
-    var contentwidth = $(".content-box").width();
-    var y = 0
-    var a = 0
-    var b = 1
-    if (d === 'destination') {
-      y = 1
-      a = 1
-      b = 0
-    }
-    line = (1 / 2) * y * tabwidth;
+    $('.route_container .routes').attr('class', 'routes ' + d)
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
