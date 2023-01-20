@@ -607,10 +607,10 @@
     $('.search,#search_routes,.input_placeholder').css({ '--k-offset-left': offset_left + 'px', '--k-offset-top': offset_top + 'px', '--k-scale-w': scale_w, '--k-scale-h': scale_h })
     $('.search_routes_result').css({ '--k-offset-top': offset_top + 'px' })
   */
-  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder').attr('p', '1')
+  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
  }
  function closeopensearch() {
-  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder').attr('p', '0')
+  $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
  }
  $('#search_routes').click(function (e) {
   e.stopPropagation()
