@@ -935,7 +935,7 @@
     line = (1 / 2) * y * tabwidth;
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
-    $(".tab-line-box2").css({ "transform": "translateX(" + line + "px)" });
+    $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
 
