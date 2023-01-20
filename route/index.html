@@ -240,11 +240,16 @@
       animation-fill-mode: forwards;
     }
 
-    .tabs[l="1"] .tab-line {}
+    .tabs[l="0"] .tab-line-box2 {
+      animation-name: none;
+      animation-duration: 0s;
+    }
 
     .tabs[l="0"] .tab-line {
       background: rgba(0, 0, 0, 0);
       display: none;
+      animation-name: none;
+      animation-duration: 0s;
     }
 
     .tabs[l="0"] .tab {
