@@ -605,8 +605,8 @@
   var offset_top = -1 * (window.innerHeight) * 0.28
   var scale_w = window.innerWidth / se.clientWidth
   var scale_h = 55 / se.clientHeight
-  $('.search').css({ '--offset-left': offset_left + 'px', '--offset-top': offset_top + 'px', '--scale-w': scale_w, '--scale-h': scale_h })
-  $('.search_routes_result,#search_routes,.input_placeholder').css({ '--offset-top': offset_top + 'px' })
+  $('.search,#search_routes,.input_placeholder').css({ '--offset-left': offset_left + 'px', '--offset-top': offset_top + 'px', '--scale-w': scale_w, '--scale-h': scale_h })
+  $('.search_routes_result').css({ '--offset-top': offset_top + 'px' })
 
   $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder').attr('p', '1')
  }
