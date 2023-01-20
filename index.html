@@ -140,8 +140,7 @@
    width: calc(var(--k-width) - 55px - 10px);
    height: 35px;
    transform-origin: top left;
-   transform: translateX(0px) translateY(0px) scaleX(1) scaleY(1);
-   opacity: 0;
+   transform: translateX(0px) translateY(0px);
    font-weight: 500;
    transition: 0.3s;
   }
@@ -153,10 +152,10 @@
 
   .search_routes_result {
    position: fixed;
-   top: calc(28% + 45px);
+   top: calc(var(--k-search-top) + 45px);
    left: 0px;
    width: 100%;
-   height: calc(100% - 55px);
+   height: calc(var(--k-window-h) - 55px);
    overflow: scroll;
    transform: translateY(0px);
    transition: 0.3s;
