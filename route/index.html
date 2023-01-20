@@ -241,11 +241,10 @@
       animation-duration: 0.45s;
       animation-fill-mode: forwards;
     }
+
     .tab-line-box2.initialization {
-      width:var(--j-initialization-width);
+      width: var(--j-initialization-width);
     }
-
-
 
     .tabs[l="0"] .tab-line {
       background: rgba(0, 0, 0, 0);
@@ -606,7 +605,7 @@
       $('.route_container .title .routename').text(name)
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
-      $(".tab-line").attr('class', 'tab-line initialization').css({'--j-initialization-width':r_dep_w + 'px'})
+      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w})
     }
   }
   function printStop(k, c, bp) {
