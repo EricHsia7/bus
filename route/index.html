@@ -660,7 +660,7 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '" ih="' + bv.n + '"><div class="busicon">' + bv.icon + '</div><div class="busid">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + "'" + bv.n + "'" + '"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
     if (!htm.hasOwnProperty('h_0')) {
@@ -961,7 +961,9 @@
       updateRefreshProgress()
     }
   }
+  function displayBus(n) {
 
+  }
   function backPerviousPage() {
     var t = new Date().getTime()
     location.href = 'https://erichsia7.github.io/bus/?t=' + t
