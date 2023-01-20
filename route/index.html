@@ -340,9 +340,12 @@
     }
 
     .route li.stop .name .bus {
-      display: inline-block;
-      position: relative;
-      height: 25px;
+      display: block;
+      position: absolute;
+      top: 7.5px;
+      right: 90px;
+      height: 35px;
+      width: 35px;
       padding: 0px;
       box-sizing: border-box;
       background: var(--g-e3e3e3);
@@ -366,11 +369,14 @@
     }
 
     .route li.stop .name .bus .busicon {
-      width: 25px;
-      height: 25px;
-      display: inline-flex;
+      width: 35px;
+      height: 45px;
+      display: flex;
       justify-content: center;
       align-items: center;
+      position: absolute;
+      top: 0px;
+      left: 0px;
     }
 
     .route li.stop .name .bus .busicon svg {
@@ -654,7 +660,7 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '"><div class="busicon fl">' + bv.icon + '</div><div class="busid fl">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '<div class="bus" d="' + bv.h + '" l="' + bv.l + '" ih="' + bv.n + '"><div class="busicon">' + bv.icon + '</div><div class="busid">' + bv.n + '</div></div></div><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
     if (!htm.hasOwnProperty('h_0')) {
