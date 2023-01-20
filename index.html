@@ -141,8 +141,6 @@
       transform: translateX(0px) translateY(0px);
       font-weight: 500;
       opacity: 0;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
     }
 
     #search_routes[p="1"] {
@@ -611,7 +609,6 @@
     e.stopPropagation()
     if (!($('.search').attr('p') === '1')) {
       var n = new Date().getTime()
-      disableInputFocusScroll(n, n + 1500)
       opensearch()
     }
 
