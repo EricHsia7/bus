@@ -676,6 +676,9 @@
  }
 
  function setSearchSize() {
+  function fl(n) {
+   return Math.floor(n)
+  }
   function clamp(w, min, df, max) {
    var y = df * w
    var p = y
@@ -685,14 +688,14 @@
    if (y < min) {
     p = min
    }
-   return p
+   return fl(p)
   }
   var w = []
   var ww = window.innerWidth
   var wh = window.innerHeight
   w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
-  w.push('--k-search-left:' + (wh - clamp(ww, 150, 0.8, 300)) / 2 + 'px')
-  w.push('--k-search-top:' + wh * 0.28 + 'px')
+  w.push('--k-search-left:' + fl((wh - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+  w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
   w.push('--k-window-w:' + ww + 'px')
   w.push('--k-window-h:' + wh + 'px')
 
