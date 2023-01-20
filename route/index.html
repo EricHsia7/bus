@@ -498,6 +498,7 @@
       -webkit-user-select: none;
       transform: translateY(100%);
       opacity: 0;
+      transition: 0.35s;
     }
 
     .bus_info_box[p="1"] {
@@ -767,7 +768,7 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n,1) + ',' + bString(bv.onstop,1) + ',' + bString(bv.ty,1) + ',' + bString(bv.status,1) + ',' + bString(bv.time,1)+ ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.onstop, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
     }
 
     if (!htm.hasOwnProperty('h_0')) {
