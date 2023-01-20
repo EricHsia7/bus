@@ -614,7 +614,7 @@
  function closeopensearch() {
   $('.search,.search_routes_result,.search_routes_result,.routes_keyboard').attr('p', '0')
  }
- $('.search').click(function (e) {
+ $('#search_routes').click(function (e) {
   e.stopPropagation()
   if (!($('.search').attr('p') === '1')) {
    var n = new Date().getTime()
