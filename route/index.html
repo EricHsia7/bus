@@ -1068,7 +1068,7 @@
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
-
+  var businfo_scroll = 0
   function initialize() {
     var r = urlparams('id')
     var c = urlparams('c')
@@ -1082,12 +1082,18 @@
     $('.bus_info_box').scroll(function () {
       var scrolltop = $('.bus_info_box').scrollTop()
       if (scrolltop < 5) {
-        closeBus()
+        if (businfo_scroll === 0) {
+          closeBus()
+          businfo_scroll = 1
+        }
       }
     })
     $('.bus_info_box').click(function (e) {
       e.stopPropagation()
-      closeBus()
+      if (businfo_scroll === 0) {
+        closeBus()
+        businfo_scroll = 1
+      }
     });
     $('.bus_info').click(function (e) {
       e.stopPropagation()
@@ -1106,6 +1112,7 @@
     }
   }
   function displayBus(id, onstop, type, status, update) {
+    businfo_scroll = 0
     var sel = '.bus_info_box .bus_info .bus_info_list li'
     if (onstop === '0') {
       onstop = '離站'
