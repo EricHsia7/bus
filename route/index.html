@@ -326,7 +326,7 @@
       top: 5px;
       left: 10px;
       height: 40px;
-      width: calc(100% - 20px - 70px - 35px - 5px - 5px);
+      width: calc(100% - 20px - 70px - 35px);
       white-space: nowrap;
       word-break: keep-all;
       overflow: hidden;
@@ -751,10 +751,11 @@
     for (var w = 0; w < l; w++) {
       var displayName = k[w].StopID
       var s = {}
-      var bv = { 'h': true, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
+      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       if (g) {
         s = { 'b': k[w].b }
         displayName = ''
+        bv.h = true
       }
       else {
         if (stops_json.loaded) {
