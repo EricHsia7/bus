@@ -1295,7 +1295,7 @@
 
     var setF = function (f, v) {
       var l = String(v).length
-      if (l <= 0) {
+      if (l <= 0 || v === '' || null || undefined) {
         $(sel + '[f="' + f + '"]').attr('d', '0')
       }
       else {
@@ -1313,6 +1313,9 @@
         var max = minute(str.substring(2, 4))
         return min + '-' + max
       }
+      if (l === 2) {
+        return minute(str)
+      }
       return str
     }
     var time24h = function (str) {
@@ -1323,7 +1326,7 @@
         var mm = str.substring(2, 4)
         return hh + ':' + mm
       }
-    return str
+      return str
     }
     $.ajax({
       type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
@@ -1343,15 +1346,23 @@
               continue;
             }
           }
+          var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
+          if ((u.peakHeadway).length <= 0) {
+            r_weekday = undefined
+          }
+          var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
+          if ((u.holidayPeakHeadway).length <= 0) {
+            r_holiday = undefined
+          }
           setF("route_name", u.nameZh)
           setF("route_departure", u.departureZh)
           setF("route_destination", u.destinationZh)
           setF("route_weekday_first", time24h(u.goFirstBusTime))
           setF("route_weekday_last", time24h(u.goLastBusTime))
-          setF("route_weekday", '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway))
+          setF("route_weekday", r_weekday)
           setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
           setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
-          setF("route_holiday", '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway))
+          setF("route_holiday", r_holiday)
           setF("route_price", u.ticketPriceDescriptionZh)
           setF("route_buffer", u.segmentBufferZh)
           setF("route_provider", u.providerName)
