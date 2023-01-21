@@ -1267,6 +1267,7 @@
     }, 1);
   }
   var routeinfo_close = 0
+  var routeinfo_loaded = 0
   function closeRouteInfo() {
     if (routeinfo_close === 0) {
       routeinfo_close = 1
@@ -1283,9 +1284,6 @@
   function displayRouteInfo() {
     routeinfo_scroll = 0
     let sel = '.route_info_box .route_info .route_info_list li'
-
-    $('.route_info_box').attr('l', '0')
-    $(sel).attr('d', '1')
     $('.route_info_box').scrollTop(50).attr('p', '1')
     $('.route_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
@@ -1332,75 +1330,81 @@
       }
       return str
     }
-    $.ajax({
-      type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-        b.arrayBuffer().then(bf => {
-          var z = pako.inflate(bf, { to: 'string' })
-          var o = JSON.parse(z).BusInfo
-          var l = o.length
-          var u
-          for (var i = 0; i < l; i++) {
-            var this_route = o[i]
-            if (this_route.Id === c_routeid) {
-              u = this_route
-              break;
-            }
-            else {
-              continue;
-            }
-          }
 
-          $.ajax({
-            type: 'GET', url: provider_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data2) {
-              var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
-              b2.arrayBuffer().then(bf2 => {
-                var z2 = pako.inflate(bf2, { to: 'string' })
-                var o2 = JSON.parse(z2).BusInfo
-                var l2 = o.length
-                var u2
-                for (var i = 0; i < l; i++) {
-            var this_provider = o2[i]
-            if (this_provider.id === u.providerId) {
-              u2 = this_provider
-              break;
+    if (routeinfo_loaded === 0) {
+      $('.route_info_box').attr('l', '0')
+      $(sel).attr('d', '1')
+      $.ajax({
+        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var l = o.length
+            var u
+            for (var i = 0; i < l; i++) {
+              var this_route = o[i]
+              if (this_route.Id === c_routeid) {
+                u = this_route
+                break;
+              }
+              else {
+                continue;
+              }
             }
-            else {
-              continue;
-            }
-          }
 
-                var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
-                if ((u.peakHeadway).length <= 0) {
-                  r_weekday = undefined
-                }
-                var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
-                if ((u.holidayPeakHeadway).length <= 0) {
-                  r_holiday = undefined
-                }
-                setF("route_name", u.nameZh)
-                setF("route_departure", u.departureZh)
-                setF("route_destination", u.destinationZh)
-                setF("route_weekday_first", time24h(u.goFirstBusTime))
-                setF("route_weekday_last", time24h(u.goLastBusTime))
-                setF("route_weekday", r_weekday)
-                setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
-                setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
-                setF("route_holiday", r_holiday)
-                setF("route_price", u.ticketPriceDescriptionZh)
-                setF("route_buffer", u.segmentBufferZh)
-                setF("route_provider", u.providerName)
-                setF("route_tel", u2.phoneInfo)
-                setF("route_email", u2.email)
-                $('.route_info_box').attr('l', '1')
+            $.ajax({
+              type: 'GET', url: provider_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data2) {
+                var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
+                b2.arrayBuffer().then(bf2 => {
+                  var z2 = pako.inflate(bf2, { to: 'string' })
+                  var o2 = JSON.parse(z2).BusInfo
+                  var l2 = o.length
+                  var u2
+                  for (var i = 0; i < l; i++) {
+                    var this_provider = o2[i]
+                    if (this_provider.id === u.providerId) {
+                      u2 = this_provider
+                      break;
+                    }
+                    else {
+                      continue;
+                    }
+                  }
 
-              })
-            }
-          });
+                  var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
+                  if ((u.peakHeadway).length <= 0) {
+                    r_weekday = undefined
+                  }
+                  var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
+                  if ((u.holidayPeakHeadway).length <= 0) {
+                    r_holiday = undefined
+                  }
+                  setF("route_name", u.nameZh)
+                  setF("route_departure", u.departureZh)
+                  setF("route_destination", u.destinationZh)
+                  setF("route_weekday_first", time24h(u.goFirstBusTime))
+                  setF("route_weekday_last", time24h(u.goLastBusTime))
+                  setF("route_weekday", r_weekday)
+                  setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
+                  setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
+                  setF("route_holiday", r_holiday)
+                  setF("route_price", u.ticketPriceDescriptionZh)
+                  setF("route_buffer", u.segmentBufferZh)
+                  setF("route_provider", u.providerName)
+                  setF("route_tel", u2.phoneInfo)
+                  setF("route_email", u2.email)
+                  $('.route_info_box').attr('l', '1')
+                  routeinfo_loaded = 1
+                })
+              }
+            });
 
-        })
-      }
-    });
+          })
+        }
+      });
+    }
+    
   }
   function backPerviousPage() {
     var t = new Date().getTime()
