@@ -564,6 +564,15 @@
       -webkit-user-select: none;
       font-size: 18px;
       box-sizing: border-box;
+      position: sticky;
+      top: 0px;
+      left: 0px;
+    }
+
+    .bus_info_title[sticky="1"],
+    .route_info_title[sticky="1"] {
+      border-radius: 0px;
+      z-index: 10;
     }
 
     .bus_info_list,
@@ -1179,6 +1188,12 @@
           businfo_scroll = 1
         }
       }
+      if(scrolltop > $('.bus_info_title').offset().top) {
+        $('.bus_info_title').attr('sticky','1')
+      }
+      else {
+        $('.bus_info_title').attr('sticky','0')
+      }
     })
     $('.bus_info_box').click(function (e) {
       e.stopPropagation()
@@ -1197,6 +1212,12 @@
           closeRouteInfo()
           routeinfo_scroll = 1
         }
+      }
+      if(scrolltop > $('.route_info_title').offset().top) {
+        $('.route_info_title').attr('sticky','1')
+      }
+      else {
+        $('.route_info_title').attr('sticky','0')
       }
     });
     $('.route_info_box').click(function (e) {
@@ -1272,6 +1293,7 @@
     $(sel + '[f="bus_status"]').text(status)
     $(sel + '[f="bus_update"]').text(update)
     $('.bus_info_box').scrollTop(50).attr('p', '1')
+    $('.bus_info_title').attr('sticky','0')
     $('.bus_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.bus_info_mask').css({ 'opacity': '1' })
@@ -1298,6 +1320,7 @@
     routeinfo_scroll = 0
     let sel = '.route_info_box .route_info .route_info_list li'
     $('.route_info_box').scrollTop(50).attr('p', '1')
+    $('.route_info_title').attr('sticky','0')
     $('.route_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.route_info_mask').css({ 'opacity': '1' })
