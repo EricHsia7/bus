@@ -1294,9 +1294,11 @@
     }, 1);
 
     var setF = function (f, v) {
+      console.log(v)
       if (v === null || undefined || '' || ' ') {
         v = ''
       }
+      console.log(v)
       var l = String(v).length
       if (l <= 0) {
         $(sel + '[f="' + f + '"]').attr('d', '0')
