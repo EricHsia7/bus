@@ -1274,6 +1274,12 @@
     }
   }
   function displayBus(id, onstop, type, status, update) {
+    gtag('event', 'display_bus_info', {
+      'event_category': onstop,
+      'event_label': id,
+      'event_callback': function () {
+      }
+    });
     businfo_scroll = 0
     businfo_scroll_1 = 0
     let sel = '.bus_info_box .bus_info .bus_info_list li'
@@ -1344,6 +1350,7 @@
     }
   }
   function displayRouteInfo() {
+
     routeinfo_scroll = 0
     routeinfo_scroll_1 = 0
     let sel = '.route_info_box .route_info .route_info_list li'
@@ -1395,6 +1402,7 @@
     }
 
     if (routeinfo_loaded === 0) {
+      routeinfoloadtime_t1 = new Date().getTime()
       $('.route_info_box').attr('l', '0')
       $(sel).attr('d', '1')
       $.ajax({
@@ -1530,6 +1538,14 @@
                         setF("route_email", u2.email)
                         $('.route_info_box').attr('l', '1')
                         routeinfo_loaded = 1
+                        routeinfoloadtime_t2 = new Date().getTime()
+                        routeinfoloadtime = routeinfoloadtime_t2 - routeinfoloadtime_t1
+                        gtag('event', 'display_route_info', {
+                          'event_category': c_routeid,
+                          'event_label': routeinfoloadtime,
+                          'event_callback': function () {
+                          }
+                        });
                       })
                     }
                   });
