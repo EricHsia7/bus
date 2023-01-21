@@ -1384,7 +1384,7 @@
                         var z3 = pako.inflate(bf3, { to: 'string' })
                         var o3 = JSON.parse(z3).BusInfo
                         var l3 = o3.length
-                        var u3 = { 'u_weekday': {}, 'u_specialday': {} }
+                        var u3 = { 'u_weekday': {}, 'u_specialday': {}, 'u_holiday': {} }
                         var u3_l_w = 0
                         var u3_l_h = 0
 
@@ -1395,7 +1395,7 @@
                             var dateval = this_timetable.DateValue
                             var depTime = this_timetable.DepartureTime
                             if (this_timetable.DateType === '0') {
-                              if(dateval === '1' || dateval === '7') {
+                              if (dateval === '1' || dateval === '7') {
                                 u3['u_holiday']['t_' + depTime] = this_timetable
                                 u3_l_h += 1
                               }
