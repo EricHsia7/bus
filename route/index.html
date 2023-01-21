@@ -725,6 +725,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script>
+  var ajax_event = { 'sent': {}, 'successful': {} }
+  $(document).ajaxSend(function (event, jqxhr, settings) {
+    var u = settings.url
+    if (!(u.indexOf('google-analytics') > -1)) {
+      var time = event.timeStamp
+      var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+      ajax_event.sent['ajax_' + uid] = { 'time': time }
+    }
+  });
+
+  $(document).ajaxSuccess(function (event, xhr, settings) {
+    var u = settings.url
+    var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+    if (ajax_event.sent.hasOwnProperty('ajax_' + uid)) {
+      var time = event.timeStamp
+      ajax_event.successful['ajax_' + uid] = { 'time': time, 'response_length': xhr.responseText.length, 'url': u }
+      gtag('event', 'ajax', {
+        'complate_time': ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time,
+        'response_length': ajax_event.successful['ajax_' + uid].response_length,
+        'transport_speed': ajax_event.successful['ajax_' + uid].response_length / (ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time),
+        'event_label': ajax_event.successful['ajax_' + uid].url,
+        'transport_type': 'beacon',
+        'event_callback': function () {
+
+        }
+      });
+    }
+  });
+</script>
+
+<script>
   var getUrlString = location.href;
   var url = new URL(getUrlString);
   function urlparams(p) {
