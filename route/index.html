@@ -485,7 +485,8 @@
       -webkit-user-select: none;
     }
 
-    .bus_info_mask {
+    .bus_info_mask,
+    .route_info {
       position: fixed;
       top: 0px;
       left: 0px;
@@ -497,7 +498,8 @@
       transition: 0.45s;
     }
 
-    .bus_info_box {
+    .bus_info_box,
+    .route_info_box {
       position: fixed;
       top: 0px;
       left: 0px;
@@ -512,16 +514,19 @@
       transition: 0.45s;
     }
 
-    .bus_info_box::-webkit-scrollbar {
+    .bus_info_box::-webkit-scrollbar,
+    .route_info_box::-webkit-scrollbar {
       display: none;
     }
 
-    .bus_info_box[p="1"] {
+    .bus_info_box[p="1"],
+    .route_info_box[p="1"] {
       transform: translateY(0%);
       opacity: 1;
     }
 
-    .bus_info {
+    .bus_info,
+    .route_info {
       display: inline-block;
       position: absolute;
       top: calc(100% - clamp(180px, 36%, 300px) + 50px);
@@ -536,7 +541,8 @@
       box-sizing: border-box;
     }
 
-    .bus_info_title {
+    .bus_info_title,
+    .route_info_title {
       width: 100%;
       height: 55px;
       display: flex;
@@ -550,7 +556,8 @@
       box-sizing: border-box;
     }
 
-    .bus_info_list {
+    .bus_info_list,
+    .route_info_list {
       position: relative;
       display: inline-block;
       width: 100%;
@@ -560,7 +567,8 @@
       box-sizing: border-box;
     }
 
-    .bus_info_list li {
+    .bus_info_list li,
+    .route_info_list li {
       width: calc(100% - 10px);
       padding-top: 30px;
       padding-left: 10px;
@@ -574,7 +582,8 @@
       -webkit-user-select: none;
     }
 
-    .bus_info_list li::after {
+    .bus_info_list li::after,
+    .route_info_list li::after {
       content: var(--li-name);
       position: absolute;
       top: 5px;
@@ -637,6 +646,28 @@
           <li f="bus_type" style="--li-name:'車輛類型'"></li>
           <li f="bus_status" style="--li-name:'行車狀態'"></li>
           <li f="bus_update" style="--li-name:'更新時間'"></li>
+        </div>
+      </div>
+    </div>
+    <div class="route_info_mask"></div>
+    <div class="route_info_box" l="0">
+      <div class="route_info">
+        <div class="route_info_title">關於這條路線</div>
+        <div class="route_info_list">
+          <li f="route_name" style="--li-name:'路線名稱'"></li>
+          <li f="route_departure" style="--li-name:'起點'"></li>
+          <li f="route_destination" style="--li-name:'訖點'"></li>
+          <li f="route_weekday_first" style="--li-name:'平日首班車'"></li>
+          <li f="route_weekday_last" style="--li-name:'平日末班車'"></li>
+          <li f="route_weekday" style="--li-name:'平日班距'"></li>
+          <li f="route_holiday_first" style="--li-name:'假日首班車'"></li>
+          <li f="route_holiday_last" style="--li-name:'假日末班車'"></li>
+          <li f="route_holiday" style="--li-name:'假日班距'"></li>
+          <li f="route_price" style="--li-name:'票價'"></li>
+          <li f="route_buffer" style="--li-name:'緩衝區'"></li>
+          <li f="route_provider" style="--li-name:'業者名稱'"></li>
+          <li f="route_tel" style="--li-name:'電話'"></li>
+          <li f="route_website" style="--li-name:'網站'"></li>
         </div>
       </div>
     </div>
@@ -1078,6 +1109,7 @@
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
   var businfo_scroll = 0
+  var routeinfo_scroll = 0
   function initialize() {
     var r = urlparams('id')
     var c = urlparams('c')
@@ -1107,6 +1139,16 @@
     $('.bus_info').click(function (e) {
       e.stopPropagation()
     })
+    $('.route_info_box').click(function (e) {
+      e.stopPropagation()
+      if (routeinfo_scroll === 0) {
+        closeRouteInfo()
+        routeinfo_scroll = 1
+      }
+    });
+    $('.route_info').click(function (e) {
+      e.stopPropagation()
+    })
   }
   var businfo_close = 0
   function closeBus() {
@@ -1124,7 +1166,7 @@
   }
   function displayBus(id, onstop, type, status, update) {
     businfo_scroll = 0
-    var sel = '.bus_info_box .bus_info .bus_info_list li'
+    let sel = '.bus_info_box .bus_info .bus_info_list li'
     if (onstop === '0') {
       onstop = '離站'
     }
@@ -1176,6 +1218,67 @@
       $('head meta[kji="light"]').attr('content', '#7f7f7f')
       $('head meta[kji="dark"]').attr('content', '#080808')
     }, 1);
+  }
+  function closeRouteInfo() {
+    if (routeinfo_close === 0) {
+      routeinfo_close = 1
+      $('.route_info_box').attr('p', '0')
+      $('.route_info_mask').css({ 'opacity': '0' })
+      $('head meta[kji="light"]').attr('content', '#ffffff')
+      $('head meta[kji="dark"]').attr('content', '#101010')
+      setTimeout(() => {
+        $('.route_info_mask').css({ 'display': 'none' })
+        routeinfo_close = 0
+      }, 480);
+    }
+  }
+  function displayRouteInfo() {
+    $('.route_info_box').attr('l', '0')
+    $('.route_info_box').scrollTop(50).attr('p', '1')
+    $('.route_info_mask').css({ 'display': 'block' })
+    setTimeout(() => {
+      $('.route_info_mask').css({ 'opacity': '1' })
+      $('head meta[kji="light"]').attr('content', '#7f7f7f')
+      $('head meta[kji="dark"]').attr('content', '#080808')
+    }, 1);
+
+    let sel = '.route_info_box .route_info .route_info_list li'
+    $.ajax({
+      type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          var o = JSON.parse(z).BusInfo
+          var l = o.length
+          var u
+          for (var i = 0; i < l; i++) {
+            var this_route = o[i]
+            if (this_route.Id === c_routeid || c_routeid_p) {
+              u = this_route
+              break;
+            }
+            else {
+              continue;
+            }
+          }
+          $(sel + '[f="route_name"]').text(u.nameZh)
+          $(sel + '[f="route_departure"]').text(u.departureZh)
+          $(sel + '[f="route_destination"]').text(u.destinationZh)
+          $(sel + '[f="route_weekday_first"]').text(u.goFirstBusTime)
+          $(sel + '[f="route_weekday_last"]').text(u.goLastBusTime)
+          $(sel + '[f="route_weekday"]').text(u.peakHeadway + '|' + u.offPeakHeadway)
+          $(sel + '[f="route_holiday_first"]').text(u.holidayGoFirstBusTime)
+          $(sel + '[f="route_holiday_last"]').text(u.holidayGoLastBusTime)
+          $(sel + '[f="route_holiday"]').text(u.holidayPeakHeadway + "|" + u.holidayOffPeakHeadway)
+          $(sel + '[f="route_price"]').text(u.ticketPriceDescriptionZh)
+          $(sel + '[f="route_buffer"]').text(u.segmentBufferZh)
+          $(sel + '[f="route_provider"]').text(u.providerName)
+          $(sel + '[f="route_tel"]').text(u.nameZh)
+          $(sel + '[f="route_website"]').text(u.nameZh)
+          $('.route_info_box').attr('l', '1')
+        })
+      }
+    });
   }
   function backPerviousPage() {
     var t = new Date().getTime()
