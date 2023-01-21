@@ -324,6 +324,15 @@
       color: var(--g-333333);
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XX5QF4D2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-6XX5QF4D2J');
+  </script>
 </head>
 
 <body>
@@ -612,8 +621,14 @@
     return res_1
   }
   function openRoute(c, i) {
-    var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
-    location.href = u
+    gtag('event', 'open_route', {
+      'event_category': c,
+      'event_label': i,
+      'event_callback': function () {
+        var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
+        location.replace(u)
+      }
+    });
   }
   function printSearchResult(result) {
     var result_len = result.length

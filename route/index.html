@@ -1544,8 +1544,14 @@
 
   }
   function backPerviousPage() {
-    var t = new Date().getTime()
-    location.href = 'https://erichsia7.github.io/bus/?t=' + t
+    gtag('event', 'back_pervious_page', {
+      'event_category': 'route_to_home',
+      'event_label': c_routeid,
+      'event_callback': function () {
+        var t = new Date().getTime()
+        location.replace('https://erichsia7.github.io/bus/?t=' + t)
+      }
+    });
   }
   initialize()
 </script>
