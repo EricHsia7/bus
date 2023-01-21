@@ -580,6 +580,7 @@
       color: var(--g-333333);
       user-select: none;
       -webkit-user-select: none;
+      height: 58px;
     }
 
     .bus_info_list li::after,
@@ -596,6 +597,21 @@
       color: var(--g-888888);
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    .route_info_list li[d="0"] {
+      display: none;
+    }
+
+    .route_info_box[l="1"] .route_info_list li::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10px;
+      width: calc(100% - 20px);
+      height: 25px;
+      border-radius: 30px;
+      background: var(--g-f5f5f5);
     }
   </style>
   <!-- Google tag (gtag.js) -->
@@ -1245,7 +1261,11 @@
     }
   }
   function displayRouteInfo() {
+    routeinfo_scroll = 0
+    let sel = '.route_info_box .route_info .route_info_list li'
+
     $('.route_info_box').attr('l', '0')
+    $(sel).attr('d', '1')
     $('.route_info_box').scrollTop(50).attr('p', '1')
     $('.route_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
@@ -1253,7 +1273,6 @@
       $('head meta[kji="light"]').attr('content', '#7f7f7f')
       $('head meta[kji="dark"]').attr('content', '#080808')
     }, 1);
-    let sel = '.route_info_box .route_info .route_info_list li'
 
     var setF = function (f, v) {
       var l = String(v).length
