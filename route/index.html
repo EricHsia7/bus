@@ -1141,6 +1141,15 @@
     $('.bus_info').click(function (e) {
       e.stopPropagation()
     })
+    $('.route_info_box').scroll(function () {
+      var scrolltop = $('.route_info_box').scrollTop()
+      if (scrolltop < 5) {
+        if (routeinfo_scroll === 0) {
+          closeRouteInfo()
+          routeinfo_scroll = 1
+        }
+      }
+    });
     $('.route_info_box').click(function (e) {
       e.stopPropagation()
       if (routeinfo_scroll === 0) {
@@ -1244,8 +1253,38 @@
       $('head meta[kji="light"]').attr('content', '#7f7f7f')
       $('head meta[kji="dark"]').attr('content', '#080808')
     }, 1);
-
     let sel = '.route_info_box .route_info .route_info_list li'
+
+    var setF = function (f, v) {
+      var l = String(v).length
+      if (l <= 0) {
+        $(sel + '[f="' + f + '"]').attr('d', '0')
+      }
+      else {
+        $(sel + '[f="' + f + '"]').attr('d', '1').text(v)
+      }
+    }
+    var minute = function (s) {
+      return parseInt(s) + '分'
+    }
+    var hw = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var min = minute(str.substring(0, 2))
+        var max = minute(str.substring(2, 4))
+        return min + '-' + max
+      }
+    }
+    var time24h = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var hh = str.substring(0, 2)
+        var mm = str.substring(2, 4)
+        return hh + ':' + mm
+      }
+    }
     $.ajax({
       type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -1264,20 +1303,20 @@
               continue;
             }
           }
-          $(sel + '[f="route_name"]').text(u.nameZh)
-          $(sel + '[f="route_departure"]').text(u.departureZh)
-          $(sel + '[f="route_destination"]').text(u.destinationZh)
-          $(sel + '[f="route_weekday_first"]').text(u.goFirstBusTime)
-          $(sel + '[f="route_weekday_last"]').text(u.goLastBusTime)
-          $(sel + '[f="route_weekday"]').text(u.peakHeadway + '|' + u.offPeakHeadway)
-          $(sel + '[f="route_holiday_first"]').text(u.holidayGoFirstBusTime)
-          $(sel + '[f="route_holiday_last"]').text(u.holidayGoLastBusTime)
-          $(sel + '[f="route_holiday"]').text(u.holidayPeakHeadway + "|" + u.holidayOffPeakHeadway)
-          $(sel + '[f="route_price"]').text(u.ticketPriceDescriptionZh)
-          $(sel + '[f="route_buffer"]').text(u.segmentBufferZh)
-          $(sel + '[f="route_provider"]').text(u.providerName)
-          $(sel + '[f="route_tel"]').text(u.nameZh)
-          $(sel + '[f="route_website"]').text(u.nameZh)
+          setF("route_name", u.nameZh)
+          setF("route_departure", u.departureZh)
+          setF("route_destination", u.destinationZh)
+          setF("route_weekday_first", time24h(u.goFirstBusTime))
+          setF("route_weekday_last", time24h(u.goLastBusTime))
+          setF("route_weekday", '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway))
+          setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
+          setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
+          setF("route_holiday", '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway))
+          setF("route_price", u.ticketPriceDescriptionZh)
+          setF("route_buffer", u.segmentBufferZh)
+          setF("route_provider", u.providerName)
+          setF("route_tel", u.nameZh)
+          setF("route_website", u.nameZh)
           $('.route_info_box').attr('l', '1')
         })
       }
