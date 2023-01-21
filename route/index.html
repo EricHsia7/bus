@@ -1192,19 +1192,20 @@
     }
     $('.bus_info_box').scroll(function () {
       var scrolltop = $('.bus_info_box').scrollTop()
-      if (scrolltop < 5) {
-        if (businfo_scroll === 0) {
-          closeBus()
-          businfo_scroll = 1
-        }
-      }
-      if (scrolltop > $('.bus_info_title').offset().top) {
+
+      if (scrolltop > $('.bus_info').offset().top) {
         $('.bus_info_title').attr('sticky', '1')
         standloneStatusBarColor(0)
       }
       else {
         $('.bus_info_title').attr('sticky', '0')
         standloneStatusBarColor(1)
+      }
+      if (scrolltop < 5) {
+        if (businfo_scroll === 0) {
+          closeBus()
+          businfo_scroll = 1
+        }
       }
     })
     $('.bus_info_box').click(function (e) {
@@ -1219,19 +1220,20 @@
     })
     $('.route_info_box').scroll(function () {
       var scrolltop = $('.route_info_box').scrollTop()
-      if (scrolltop < 5) {
-        if (routeinfo_scroll === 0) {
-          closeRouteInfo()
-          routeinfo_scroll = 1
-        }
-      }
-      if (scrolltop > $('.route_info_title').offset().top) {
+
+      if (scrolltop > $('.route_info').offset().top) {
         $('.route_info_title').attr('sticky', '1')
         standloneStatusBarColor(0)
       }
       else {
         $('.route_info_title').attr('sticky', '0')
         standloneStatusBarColor(1)
+      }
+      if (scrolltop < 5) {
+        if (routeinfo_scroll === 0) {
+          closeRouteInfo()
+          routeinfo_scroll = 1
+        }
       }
     });
     $('.route_info_box').click(function (e) {
