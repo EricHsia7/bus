@@ -1387,7 +1387,8 @@
                         var u3_l = 0
                         for (var i = 0; i < l3; i++) {
                           var this_timetable = o3[i]
-                          if (this_timetable.PathAttributeId === c_routeid_p) {
+                          var this_pid = this_timetable.PathAttributeId
+                          if (this_pid === c_routeid_p || this_pid === c_routeid || this_pid === c_routeid * 10) {
                             u3_l += 1
                             var dateval = this_timetable.DateValue
                             var depTime = this_timetable.DepartureTime
