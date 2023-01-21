@@ -603,7 +603,11 @@
       display: none;
     }
 
-    .route_info_box[l="1"] .route_info_list li::before {
+    .route_info_box[l="0"] .route_info_list li {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    .route_info_box[l="0"] .route_info_list li::before {
       content: '';
       position: absolute;
       top: 30px;
