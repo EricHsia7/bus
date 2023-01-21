@@ -740,7 +740,7 @@
     var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
     if (ajax_event.sent.hasOwnProperty('ajax_' + uid)) {
       var time = event.timeStamp
-      ajax_event.successful['ajax_' + uid] = { 'time': time, 'response_length': xhr.getResponseHeader('Content-Length'),'url': u }
+      ajax_event.successful['ajax_' + uid] = { 'time': time, 'response_length': xhr.getResponseHeader('Content-Length'), 'url': u.split('?')[0] }
       gtag('event', 'ajax', {
         'complate_time': ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time,
         'response_length': ajax_event.successful['ajax_' + uid].response_length,
