@@ -909,7 +909,7 @@
     var l = o.length
     for (var w = 0; w < l; w++) {
       var this_id = parseInt(o[w].RouteID)
-      if (this_id === id || this_id === pid || this_id === id * 10) {
+      if (this_id === id || pid.indexOf(String(this_id)) > -1 || this_id === id * 10) {
         res.push(o[w])
       }
     }
@@ -928,7 +928,7 @@
     var l = o.length
     for (var w = 0; w < l; w++) {
       var ro = parseInt(o[w].RouteID)
-      if (ro === id || ro === pid || ro === id * 10) {
+      if (ro === id || pid.indexOf(String(ro)) > -1 || ro === id * 10) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
@@ -1091,7 +1091,7 @@
     }
     if (routes_json.loaded) {
       setRouteD()
-      c_routeid_p = routes_json.c['b_' + c_routeid].pid
+      c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
     }
     else {
       $.ajax({
@@ -1115,12 +1115,19 @@
                   delete this_json_k[thsS.source]
                 }
               }
-              json_lite['b_' + id] = o[j]
+              if (!json_lite.hasOwnProperty('b_' + id)) {
+                json_lite['b_' + id] = this_json_k
+              }
+              else {
+                if (!(this_json_k.pid === json_lite['b_' + id]['pid'])) {
+                  json_lite['b_' + id]['pid'] = json_lite['b_' + id]['pid'] + ',' + this_json_k.pid
+                }
+              }
             }
             routes_json.c = json_lite
             LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
             LS.setItem('bus_routes_t_' + city, new Date().getTime())
-            c_routeid_p = routes_json.c['b_' + c_routeid].pid
+            c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
             routes_json.loaded = true
             setRouteD()
           });
