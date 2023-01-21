@@ -1295,6 +1295,7 @@
 
     var setF = function (f, v) {
       var l = String(v).length
+      console(v,l)
       if (l <= 0 || v === '' || null || undefined) {
         $(sel + '[f="' + f + '"]').attr('d', '0')
       }
