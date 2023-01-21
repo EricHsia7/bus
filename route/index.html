@@ -326,7 +326,7 @@
       top: 5px;
       left: 10px;
       height: 40px;
-      width: calc(100% - 20px - 70px);
+      width: calc(100% - 20px - 70px - 35px - 5px - 5px);
       white-space: nowrap;
       word-break: keep-all;
       overflow: hidden;
@@ -356,12 +356,12 @@
       margin-left: 5px;
     }
 
-    .route li.stop .bus[l="1"] {
+    .route li.stop .bus[l="1"] svg {
       opacity: 1;
     }
 
-    .route li.stop .bus[l="0"] {
-      opacity: 0.3;
+    .route li.stop .bus[l="0"] svg {
+      opacity: 0.5;
     }
 
     .route li.stop .bus[d="false"] {
@@ -545,7 +545,7 @@
       color: var(--g-333333);
       user-select: none;
       -webkit-user-select: none;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .bus_info_list {
@@ -751,7 +751,7 @@
     for (var w = 0; w < l; w++) {
       var displayName = k[w].StopID
       var s = {}
-      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
+      var bv = { 'h': true, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       if (g) {
         s = { 'b': k[w].b }
         displayName = ''
