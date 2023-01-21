@@ -468,7 +468,6 @@
     .back_btn,
     .info_btn {
       position: absolute;
-
       width: 55px;
       height: 55px;
       display: flex;
@@ -591,7 +590,7 @@
       color: var(--g-333333);
       user-select: none;
       -webkit-user-select: none;
-      height: 58px;
+      min-height: 58px;
     }
 
     .bus_info_list li::after,
@@ -1314,6 +1313,7 @@
         var max = minute(str.substring(2, 4))
         return min + '-' + max
       }
+      return 
     }
     var time24h = function (str) {
       str = String(str)
@@ -1323,6 +1323,7 @@
         var mm = str.substring(2, 4)
         return hh + ':' + mm
       }
+    return str
     }
     $.ajax({
       type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
