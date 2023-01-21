@@ -1180,6 +1180,8 @@
   }
   var businfo_scroll = 0
   var routeinfo_scroll = 0
+  var businfo_scroll_1 = 0
+  var routeinfo_scroll_1 = 0
   function initialize() {
     var r = urlparams('id')
     var c = urlparams('c')
@@ -1192,14 +1194,19 @@
     }
     $('.bus_info_box').scroll(function () {
       var scrolltop = $('.bus_info_box').scrollTop()
-
-      if (scrolltop > $('.bus_info').offset().top) {
-        $('.bus_info_title').attr('sticky', '1')
-        standloneStatusBarColor(0)
+      if ($('.bus_info').offset().top < 0) {
+        if (businfo_scroll_1 === 0) {
+          $('.bus_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          businfo_scroll_1 = 1
+        }
       }
       else {
-        $('.bus_info_title').attr('sticky', '0')
-        standloneStatusBarColor(1)
+        if (businfo_scroll_1 === 1) {
+          $('.bus_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          businfo_scroll_1 = 0
+        }
       }
       if (scrolltop < 5) {
         if (businfo_scroll === 0) {
@@ -1221,13 +1228,19 @@
     $('.route_info_box').scroll(function () {
       var scrolltop = $('.route_info_box').scrollTop()
 
-      if (scrolltop > $('.route_info').offset().top) {
-        $('.route_info_title').attr('sticky', '1')
-        standloneStatusBarColor(0)
+      if ($('.route_info').offset().top < 0) {
+        if (routeinfo_scroll_1 === 0) {
+          $('.route_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          routeinfo_scroll_1 = 1
+        }
       }
       else {
-        $('.route_info_title').attr('sticky', '0')
-        standloneStatusBarColor(1)
+        if (routeinfo_scroll_1 === 1) {
+          $('.route_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          routeinfo_scroll_1 = 0
+        }
       }
       if (scrolltop < 5) {
         if (routeinfo_scroll === 0) {
