@@ -1388,11 +1388,12 @@
                           if (this_timetable.PathAttributeId === c_routeid_p) {
                             u3_l += 1
                             var dateval = this_timetable.DateValue
+                            var depTime = this_timetable.DepartureTime
                             if (this_timetable.DateType === '0') {
-                              u3['u_weekday']['t_' + dateval] = this_timetable
+                              u3['u_weekday']['t_' + depTime] = this_timetable
                             }
                             else {
-                              u3['u_specialday']['t_' + dateval] = this_timetable
+                              u3['u_specialday']['t_' + depTime] = this_timetable
                             }
                           }
                           else {
