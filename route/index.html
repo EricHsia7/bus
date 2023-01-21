@@ -571,8 +571,8 @@
 
     .bus_info_title[sticky="1"],
     .route_info_title[sticky="1"] {
-      border-radius: 0px;
       z-index: 10;
+      background: var(--g-ffffff);
     }
 
     .bus_info_list,
@@ -1168,6 +1168,16 @@
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
+  function standloneStatusBarColor(a) {
+    var c = '#ffffff'
+    var d = '#101010'
+    if (a === 1) {
+      c = '#7f7f7f'
+      d = '#080808'
+    }
+    $('head meta[kji="light"]').attr('content', c)
+    $('head meta[kji="dark"]').attr('content', d)
+  }
   var businfo_scroll = 0
   var routeinfo_scroll = 0
   function initialize() {
@@ -1188,11 +1198,13 @@
           businfo_scroll = 1
         }
       }
-      if(scrolltop > $('.bus_info_title').offset().top) {
-        $('.bus_info_title').attr('sticky','1')
+      if (scrolltop > $('.bus_info_title').offset().top) {
+        $('.bus_info_title').attr('sticky', '1')
+        standloneStatusBarColor(0)
       }
       else {
-        $('.bus_info_title').attr('sticky','0')
+        $('.bus_info_title').attr('sticky', '0')
+        standloneStatusBarColor(1)
       }
     })
     $('.bus_info_box').click(function (e) {
@@ -1213,11 +1225,13 @@
           routeinfo_scroll = 1
         }
       }
-      if(scrolltop > $('.route_info_title').offset().top) {
-        $('.route_info_title').attr('sticky','1')
+      if (scrolltop > $('.route_info_title').offset().top) {
+        $('.route_info_title').attr('sticky', '1')
+        standloneStatusBarColor(0)
       }
       else {
-        $('.route_info_title').attr('sticky','0')
+        $('.route_info_title').attr('sticky', '0')
+        standloneStatusBarColor(1)
       }
     });
     $('.route_info_box').click(function (e) {
@@ -1237,8 +1251,7 @@
       businfo_close = 1
       $('.bus_info_box').attr('p', '0')
       $('.bus_info_mask').css({ 'opacity': '0' })
-      $('head meta[kji="light"]').attr('content', '#ffffff')
-      $('head meta[kji="dark"]').attr('content', '#101010')
+      standloneStatusBarColor(0)
       setTimeout(() => {
         $('.bus_info_mask').css({ 'display': 'none' })
         businfo_close = 0
@@ -1293,12 +1306,11 @@
     $(sel + '[f="bus_status"]').text(status)
     $(sel + '[f="bus_update"]').text(update)
     $('.bus_info_box').scrollTop(50).attr('p', '1')
-    $('.bus_info_title').attr('sticky','0')
+    $('.bus_info_title').attr('sticky', '0')
     $('.bus_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.bus_info_mask').css({ 'opacity': '1' })
-      $('head meta[kji="light"]').attr('content', '#7f7f7f')
-      $('head meta[kji="dark"]').attr('content', '#080808')
+      standloneStatusBarColor(1)
     }, 1);
   }
   var routeinfo_close = 0
@@ -1308,8 +1320,7 @@
       routeinfo_close = 1
       $('.route_info_box').attr('p', '0')
       $('.route_info_mask').css({ 'opacity': '0' })
-      $('head meta[kji="light"]').attr('content', '#ffffff')
-      $('head meta[kji="dark"]').attr('content', '#101010')
+      standloneStatusBarColor(0)
       setTimeout(() => {
         $('.route_info_mask').css({ 'display': 'none' })
         routeinfo_close = 0
@@ -1320,12 +1331,11 @@
     routeinfo_scroll = 0
     let sel = '.route_info_box .route_info .route_info_list li'
     $('.route_info_box').scrollTop(50).attr('p', '1')
-    $('.route_info_title').attr('sticky','0')
+    $('.route_info_title').attr('sticky', '0')
     $('.route_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.route_info_mask').css({ 'opacity': '1' })
-      $('head meta[kji="light"]').attr('content', '#7f7f7f')
-      $('head meta[kji="dark"]').attr('content', '#080808')
+      standloneStatusBarColor(1)
     }, 1);
 
     var setF = function (f, v) {
