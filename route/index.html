@@ -903,12 +903,13 @@
       return { status: 0, text: minute }
     }
   }
-  function findStop(j, id) {
+  function findStop(j, id, pid) {
     var res = []
     var o = j.BusInfo
     var l = o.length
     for (var w = 0; w < l; w++) {
-      if (parseInt(o[w].RouteID) === id) {
+      var this_id = parseInt(o[w].RouteID)
+      if (this_id === id || this_id === pid || this_id === id * 10) {
         res.push(o[w])
       }
     }
@@ -927,7 +928,7 @@
     var l = o.length
     for (var w = 0; w < l; w++) {
       var ro = parseInt(o[w].RouteID)
-      if (ro === id || pid) {
+      if (ro === id || ro === pid || ro === id * 10) {
         res['s_' + o[w].StopID] = o[w]
       }
     }
@@ -942,7 +943,7 @@
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
-          var s = findStop(realtime_json, c_routeid)
+          var s = findStop(realtime_json, c_routeid, c_routeid_p)
           var bb = findBus(busevent_json, c_routeid, c_routeid_p)
           printStop(s, '', bb)
           realtime_last_update = new Date().getTime()
