@@ -742,7 +742,7 @@
       var time = event.timeStamp
       ajax_event.successful['ajax_' + uid] = { 'time': time, 'response_length': xhr.getResponseHeader('Content-Length'), 'url': u.split('?')[0] }
       gtag('event', 'ajax', {
-        'complate_time': ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time,
+        'complete_time': ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time,
         'response_length': ajax_event.successful['ajax_' + uid].response_length,
         'transport_speed': ajax_event.successful['ajax_' + uid].response_length / (ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time),
         'event_label': ajax_event.successful['ajax_' + uid].url,
@@ -1573,7 +1573,7 @@
                         routeinfoloadtime = routeinfoloadtime_t2 - routeinfoloadtime_t1
                         gtag('event', 'display_route_info', {
                           'event_category': c_routeid,
-                          'complate_time': routeinfoloadtime,
+                          'complete_time': routeinfoloadtime,
                           'event_callback': function () {
                           }
                         });
