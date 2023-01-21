@@ -492,7 +492,14 @@
                   delete this_json_k[thsS.source]
                 }
               }
-              json_lite['b_' + id] = o[j]
+              if (!json_lite.hasOwnProperty('b_' + id)) {
+                json_lite['b_' + id] = this_json_k
+              }
+              else {
+                if (!(this_json_k.pid === json_lite['b_' + id]['pid'])) {
+                  json_lite['b_' + id]['pid'] = json_lite['b_' + id]['pid'] + ',' + this_json_k.pid
+                }
+              }
             }
             routes_json['c_' + city] = json_lite
 
