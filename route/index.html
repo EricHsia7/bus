@@ -1275,6 +1275,7 @@
   }
   function displayBus(id, onstop, type, status, update) {
     businfo_scroll = 0
+    businfo_scroll_1 = 0
     let sel = '.bus_info_box .bus_info .bus_info_list li'
     if (onstop === '0') {
       onstop = '離站'
@@ -1344,6 +1345,7 @@
   }
   function displayRouteInfo() {
     routeinfo_scroll = 0
+    routeinfo_scroll_1 = 0
     let sel = '.route_info_box .route_info .route_info_list li'
     $('.route_info_box').scrollTop(50).attr('p', '1')
     $('.route_info_title').attr('sticky', '0')
