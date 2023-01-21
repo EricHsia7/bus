@@ -1329,6 +1329,9 @@
         var mm = str.substring(2, 4)
         return hh + ':' + mm
       }
+      if (l === 0) {
+        return undefined
+      }
       return str
     }
     $.ajax({
