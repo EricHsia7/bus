@@ -1221,6 +1221,7 @@
       $('head meta[kji="dark"]').attr('content', '#080808')
     }, 1);
   }
+  var routeinfo_close = 0
   function closeRouteInfo() {
     if (routeinfo_close === 0) {
       routeinfo_close = 1
@@ -1255,7 +1256,7 @@
           var u
           for (var i = 0; i < l; i++) {
             var this_route = o[i]
-            if (this_route.Id === c_routeid || c_routeid_p) {
+            if (this_route.Id === c_routeid) {
               u = this_route
               break;
             }
