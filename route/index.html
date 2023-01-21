@@ -1294,7 +1294,7 @@
     }, 1);
 
     var setF = function (f, v) {
-      if (v === null || undefined || '') {
+      if (v === null || undefined || '' || ' ') {
         v = ''
       }
       var l = String(v).length
