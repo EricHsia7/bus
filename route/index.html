@@ -796,7 +796,7 @@
 
   function updateRefreshProgress() {
     var t = new Date().getTime()
-    var p = Math.abs(t - realtime_last_update) / 10000
+    var p = Math.abs(t - realtime_last_update) / 20000
     if (p < 0) {
       p = 0
     }
@@ -991,7 +991,7 @@
             refresh_progress_l = 1
             $('.refresh_progress_box').attr('l', '1')
           }
-          setTimeout(function () { updateRealtimeJson() }, 10000);
+          setTimeout(function () { updateRealtimeJson() }, 20000);
         });
       }, error: function () {
         setTimeout(function () { updateRealtimeJson() }, 1000);
