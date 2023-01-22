@@ -776,7 +776,11 @@
   let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
   let provider_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetProvider.gz' }
   let timetable_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetTimeTable.gz' }
-
+ 
+  let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
+  ['綠', '棕', '4', '5', '6'],
+  ['橘', '小', '7', '8', '9'],
+  ['更多', '幹線', '清空', '0', '刪除']]
   let icon_bus = '<svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M12.5474 64C11.8175 64 11.1719 63.7895 10.6105 63.3684C10.0491 62.9474 9.76842 62.4 9.76842 61.7263L9.76842 54.6526C8.14035 53.7544 6.94737 52.4632 6.18947 50.7789C5.43158 49.0947 5.05263 47.2982 5.05263 45.3895L5.05263 11.9579C5.05263 7.80351 7.2 4.77193 11.4947 2.86316C15.7895 0.954386 22.6526 0 32.0842 0C41.4035 0 48.2105 0.954386 52.5053 2.86316C56.8 4.77193 58.9474 7.80351 58.9474 11.9579L58.9474 45.3895C58.9474 47.2982 58.5684 49.0947 57.8105 50.7789C57.0526 52.4632 55.8596 53.7544 54.2316 54.6526L54.2316 61.7263C54.2316 62.4 53.9509 62.9474 53.3895 63.3684C52.8281 63.7895 52.1825 64 51.4526 64L49.8526 64C49.0667 64 48.393 63.7895 47.8316 63.3684C47.2702 62.9474 46.9895 62.4 46.9895 61.7263L46.9895 57.0947L17.0105 57.0947L17.0105 61.7263C17.0105 62.4 16.7298 62.9474 16.1684 63.3684C15.607 63.7895 14.9333 64 14.1474 64L12.5474 64ZM10.1053 29.3895L53.8947 29.3895L53.8947 14.8211L10.1053 14.8211L10.1053 29.3895ZM19.0316 47.8316C20.3228 47.8316 21.4175 47.3825 22.3158 46.4842C23.214 45.586 23.6632 44.4912 23.6632 43.2C23.6632 41.9088 23.214 40.814 22.3158 39.9158C21.4175 39.0175 20.3228 38.5684 19.0316 38.5684C17.7404 38.5684 16.6456 39.0175 15.7474 39.9158C14.8491 40.814 14.4 41.9088 14.4 43.2C14.4 44.4912 14.8491 45.586 15.7474 46.4842C16.6456 47.3825 17.7404 47.8316 19.0316 47.8316ZM44.9684 47.8316C46.2596 47.8316 47.3544 47.3825 48.2526 46.4842C49.1509 45.586 49.6 44.4912 49.6 43.2C49.6 41.9088 49.1509 40.814 48.2526 39.9158C47.3544 39.0175 46.2596 38.5684 44.9684 38.5684C43.6772 38.5684 42.5825 39.0175 41.6842 39.9158C40.786 40.814 40.3368 41.9088 40.3368 43.2C40.3368 44.4912 40.786 45.586 41.6842 46.4842C42.5825 47.3825 43.6772 47.8316 44.9684 47.8316Z" fill="var(--g-333333)" fill-rule="nonzero" opacity="1" stroke="none"/></svg>'
   var realtime_json = {}
   var busevent_json = { 'loaded': false, 'c': {} }
@@ -866,7 +870,7 @@
       'event_label': position + ' | ' + err.message,
     });
   }
- 
+
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 20000
@@ -1127,15 +1131,19 @@
 
   function getRoutes() {
     var t = new Date().getTime()
-    if (LS.hasOwnProperty('bus_routes_t_' + city)) {
-      if (t - parseInt(String(LS.getItem('bus_routes_t_' + city))) < 60 * 60 * 24 * 14 * 1000) {
-        routes_json.c = JSON.parse(String(LS.getItem('bus_routes_' + city)))
+    var g = 60 * 60 * 24 * 14 * 1000
+    if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g) {
+        var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
+        var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
+        routes_json['c_0'] = cc0
+        routes_json['c_1'] = cc1
+        routes_json.c = Object.assign({}, cc0, cc1);
         routes_json.loaded = true
       }
     }
     if (routes_json.loaded) {
-      setRouteD()
-      c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+      createSearchIndex(routes_json)
     }
     else {
       $.ajax({
@@ -1168,17 +1176,24 @@
                 }
               }
             }
-            routes_json.c = json_lite
+            routes_json['c_' + city] = json_lite
             LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
             LS.setItem('bus_routes_t_' + city, new Date().getTime())
-            c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
-            routes_json.loaded = true
-            setRouteD()
+            if (city === 0) {
+              city = 1
+              getRoutes()
+            }
+            if (city === 1) {
+              routes_json.loaded = true
+              routes_json['c_1'] = json_lite
+              routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
+              createSearchIndex(routes_json)
+            }
+
           });
         }
       });
     }
-
   }
 
   function showRoute(id) {
@@ -1596,6 +1611,231 @@
       }
     });
   }
+  function createSearchIndex(j) {
+    if (j.loaded) {
+      j = j.c
+      var arr = []
+      for (var p in j) {
+        var this_p = j[p]
+        var id = String(p).replace('b_', '')
+        var ct = undefined
+        this_p['id'] = id
+        this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
+
+        if (routes_json['c_0'].hasOwnProperty(p)) {
+          ct = 0
+        }
+        if (routes_json['c_1'].hasOwnProperty(p)) {
+          ct = 1
+        }
+        this_p['city'] = ct
+        arr.push(this_p)
+      }
+      search_index.c = arr
+      search_index.loaded = true
+    }
+  }
+  function unicode_arr(str) {
+    var str_len = str.length
+    var unicode_arr = []
+    for (var t = 0; t < str_len; t++) {
+      var unicode = str.charCodeAt(t)
+      if (!(unicode_arr.indexOf(unicode) > -1)) {
+        unicode_arr.push(unicode)
+      }
+    }
+    return unicode_arr
+  }
+
+  function search_result(q, search_index) {
+    if (!(String(q).length > 0)) {
+      return []
+    }
+
+    var res_1 = []
+    var q_u = unicode_arr(q)
+    var q_u_len = q_u.length
+    var search_index_len = search_index.length
+    for (var s = 0; s < search_index_len; s++) {
+      var this_s = search_index[s]
+      var this_s_u = this_s.unicode
+      var res_t = false
+      for (var f = 0; f < q_u_len; f++) {
+        if (this_s_u.indexOf(q_u[f]) > -1) {
+          res_t = true
+          break;
+        }
+      }
+      if (!(res_t)) {
+        continue;
+      }
+      else {
+        if (String(this_s.n).indexOf(q) > -1) {
+          res_1.push(this_s)
+          continue;
+        }
+        else {
+          if (String(this_s.dep).indexOf(q) > -1) {
+            res_1.push(this_s)
+            continue;
+          }
+          else {
+            if (String(this_s.des).indexOf(q) > -1) {
+              res_1.push(this_s)
+              continue;
+            }
+          }
+        }
+      }
+    }
+    return res_1
+  }
+  function openRoute(c, i) {
+    gtag('event', 'open_route', {
+      'event_category': c,
+      'event_label': i,
+      'event_callback': function () {
+        var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
+        location.replace(u)
+      }
+    });
+  }
+  function printSearchResult(result) {
+    var result_len = result.length
+    var f = []
+    for (var e = 0; e < result_len; e++) {
+      var thisres = result[e]
+      var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
+      f.push(htm)
+    }
+    return f.join('')
+  }
+
+  function update_search_result() {
+    var q = $('#search_routes').val()
+    var res = search_result(q, search_index.c)
+    $('.search_routes_result').html(printSearchResult(res))
+    var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
+    var text_width = getTextWidth(q, font)
+    $('.search').css({ '--cursor-offset': text_width + 'px' })
+  }
+  getRoutes()
+
+  document.querySelector('#search_routes').addEventListener("paste", function (e) {
+    update_search_result()
+  });
+  document.querySelector('#search_routes').addEventListener("cut", function (e) {
+    update_search_result()
+  });
+  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+    update_search_result()
+  });
+
+  document.addEventListener("selectionchange", function (e) {
+    if (1 === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+    update_search_result()
+  });
+  function opensearch() {
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+  }
+  function closeopensearch() {
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+  }
+  $('#search_routes').click(function (e) {
+    e.stopPropagation()
+    if (!($('.search').attr('p') === '1')) {
+      var n = new Date().getTime()
+      opensearch()
+    }
+
+  })
+  $('.back_btn').click(function (e) {
+    e.stopPropagation()
+    if ($('.search').attr('p') === '1') {
+      closeopensearch()
+    }
+  })
+
+  function initializeKeyboard() {
+    var htm = []
+    var row_len = routes_keyboard_keys.length
+    for (var o = 0; o < row_len; o++) {
+      var this_row = routes_keyboard_keys[o]
+      var this_row_len = this_row.length
+      for (var w = 0; w < this_row_len; w++) {
+        var this_key = this_row[w]
+        var onclick = "keyboard_add('" + this_key + "')"
+        if (this_key === '刪除') {
+          onclick = "keyboard_delete()"
+        }
+        if (this_key === '清空') {
+          onclick = "keyboard_clear()"
+        }
+        htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
+      }
+    }
+    $('.routes_keyboard').html(htm.join(''))
+  }
+
+  function keyboard_add(k) {
+    var v = $('#search_routes').val()
+    v += k
+    $('#search_routes').val(v)
+    update_search_result()
+  }
+
+  function keyboard_delete() {
+    var v = $('#search_routes').val()
+    v = v.substring(0, v.length - 1)
+    $('#search_routes').val(v)
+    update_search_result()
+  }
+
+  function keyboard_clear() {
+    $('#search_routes').val('')
+    update_search_result()
+  }
+
+  function setSearchSize() {
+    function fl(n) {
+      return Math.floor(n)
+    }
+    function clamp(w, min, df, max) {
+      var y = df * w
+      var p = y
+      if (y > max) {
+        p = max
+      }
+      if (y < min) {
+        p = min
+      }
+      return fl(p)
+    }
+    var w = []
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+    w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
+    w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
+    w.push('--k-window-w:' + ww + 'px')
+    w.push('--k-window-h:' + wh + 'px')
+    w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
+    w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
+    w.push('--k-scale-h:' + 55 / 45)
+    w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
+    $('#search_size_css').html(':root{' + w.join(';') + '}')
+  }
+  setSearchSize()
+  initializeKeyboard()
+  $(window).resize(function () {
+    setSearchSize()
+  })
+
   initialize()
 </script>
 
