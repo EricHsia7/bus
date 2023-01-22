@@ -352,71 +352,25 @@
 <script>
   var getUrlString = location.href;
   var url = new URL(getUrlString);
-  function urlparams(p) {
-    return url.searchParams.get(p)
-  }
-  var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
-  function preventDefault(e) {
-    e.preventDefault();
-  }
-  function preventDefaultForScrollKeys(e) {
-    if (keys[e.keyCode]) {
-      preventDefault(e);
-      return false;
-    }
-  }
-  // modern Chrome requires { passive: false } when adding event
-  var supportsPassive = false;
-  try {
-    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-      get: function () { supportsPassive = true; }
-    }));
-  } catch (e) { }
-
-  var wheelOpt = supportsPassive ? { passive: false } : false;
-  var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
-
-  // call this to Disable
-  function disableScroll() {
-    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
-    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
-    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
-  }
-  // call this to Enable
-  function enableScroll() {
-    window.removeEventListener('DOMMouseScroll', preventDefault, false);
-    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-    window.removeEventListener('touchmove', preventDefault, wheelOpt);
-    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
-  }
-
-  function disableInputFocusScroll(pervious_time, end_time) {
-    var n = new Date().getTime()
-    $('html,body').scrollTop(0)
-    if (pervious_time < end_time) {
-      window.requestAnimationFrame(function () {
-        disableInputFocusScroll(n, end_time)
-      })
-    }
-  }
-
   const LS = window.localStorage
   const SS = window.sessionStorage
+
+  let keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
   let cities = ['blobbus', 'ntpcbus']
   var city = 0
 
-  var realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
-  var stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
-  var routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
-  var busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
+  let realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
+  let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
+  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
+  let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
+
   let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
   ['更多', '幹線', '清空', '0', '刪除']]
 
-  var routesDataShortName = [
+  let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
     { 'source': 'nameZh', 'short': 'n' },
@@ -459,9 +413,58 @@
     { 'source': 'genus', 'short': false },
     { 'source': 'Id', 'short': false }
   ]
-  var rdsn_len = routesDataShortName.length
+  let rdsn_len = routesDataShortName.length
   var routes_json = { 'loaded': false, 'c': {} }
   var search_index = { 'loaded': false, 'c': {} }
+
+
+  function urlparams(p) {
+    return url.searchParams.get(p)
+  }
+
+  function preventDefault(e) {
+    e.preventDefault();
+  }
+
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+      preventDefault(e);
+      return false;
+    }
+  }
+  var supportsPassive = false;
+  try {
+    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+      get: function () { supportsPassive = true; }
+    }));
+  } catch (e) { }
+
+  var wheelOpt = supportsPassive ? { passive: false } : false;
+  var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+
+  function disableScroll() {
+    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
+    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+  }
+
+  function enableScroll() {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+    window.removeEventListener('touchmove', preventDefault, wheelOpt);
+    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+  }
+
+  function disableInputFocusScroll(pervious_time, end_time) {
+    var n = new Date().getTime()
+    $('html,body').scrollTop(0)
+    if (pervious_time < end_time) {
+      window.requestAnimationFrame(function () {
+        disableInputFocusScroll(n, end_time)
+      })
+    }
+  }
 
   function getRoutes() {
     var t = new Date().getTime()
@@ -511,10 +514,8 @@
               }
             }
             routes_json['c_' + city] = json_lite
-
             LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
             LS.setItem('bus_routes_t_' + city, new Date().getTime())
-
             if (city === 0) {
               city = 1
               getRoutes()
@@ -523,7 +524,6 @@
               routes_json.loaded = true
               routes_json['c_1'] = json_lite
               routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
-
               createSearchIndex(routes_json)
             }
 
@@ -689,9 +689,6 @@
       closeopensearch()
     }
   })
-
-
-
 
   function initializeKeyboard() {
     var htm = []
