@@ -866,13 +866,7 @@
       'event_label': position + ' | ' + err.message,
     });
   }
-  function inflateGzip(data) {
-    var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-    b.arrayBuffer().then(bf => {
-      var z = pako.inflate(bf, { to: 'string' })
-      return z
-    })
-  }
+ 
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 20000
@@ -1186,8 +1180,6 @@
     }
 
   }
-
-
 
   function showRoute(id) {
     skeletonScreen()
