@@ -1159,6 +1159,9 @@
     if (refreshProgresPause === 0) {
       window.requestAnimationFrame(updateRefreshProgress)
     }
+    else {
+      refreshProgresPause = 0
+    }
   }
   function getTextWidth(text, font) {
     const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
