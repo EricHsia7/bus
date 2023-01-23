@@ -1421,6 +1421,8 @@
     }
     if (routes_json.loaded) {
       createSearchIndex(routes_json)
+      setRouteD()
+      c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
     }
     else {
       $.ajax({
@@ -1464,6 +1466,8 @@
               routes_json['c_1'] = json_lite
               routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
               createSearchIndex(routes_json)
+              setRouteD()
+              c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
             }
           });
         }
@@ -2085,7 +2089,7 @@
     $(window).resize(function () {
       setSearchSize()
     })
-    
+
     document.querySelector('#search_routes').addEventListener("paste", function (e) {
       if (search_page_is_open === 1) {
         update_search_result()
