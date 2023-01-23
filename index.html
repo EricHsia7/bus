@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>Bus</title>
   <meta name="description" content="Bus">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0" />
   <link href="https://erichsia7.github.io/bus/pwaicon2/512x512.png" sizes="512x512" rel="apple-touch-icon-precomposed" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="defualt" />
@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style id="routes_animation_css"></style>
   <style id="search_size_css"></style>
   <style>
     :root {
@@ -52,11 +53,6 @@
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    body {
-      overflow: hidden;
-      background: var(--g-ffffff);
-    }
-
     button {
       -webkit-appearance: none;
       appearance: none;
@@ -69,6 +65,395 @@
       border-radius: 0px;
       font-size: unset;
       font-weight: unset;
+    }
+
+    body {
+      margin: 0px;
+      padding: 0px;
+      background: var(--g-ffffff);
+    }
+
+    .refresh_progress_box {
+      position: fixed;
+      top: 95px;
+      left: 0px;
+      height: 1.2px;
+      width: 100%;
+      overflow: hidden;
+      background: var(--g-e3e3e3);
+    }
+
+    .refresh_progress {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: var(--g-c7c7c7);
+      height: 1.2px;
+      width: 100%;
+      transform: translateX(var(--o-refresh-progress));
+    }
+
+    .refresh_progress_box[l="0"] .refresh_progress {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    .route_container {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      background: var(--g-ffffff);
+      display: none;
+    }
+
+    .title {
+      width: 100%;
+      height: 55px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: var(--g-ffffff);
+    }
+
+    .title .routename {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 55px;
+      color: var(--g-333333);
+      font-weight: 700;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .title .routename[l="0"] {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    .title .routename[l="0"]::after {
+      content: '';
+      background: var(--g-f5f5f5);
+      position: absolute;
+      top: 12.5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 65px;
+      height: 25px;
+      border-radius: 30px;
+    }
+
+    .tabs {
+      width: 100%;
+      height: 40px;
+      position: absolute;
+      top: 55px;
+      left: 0px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 0px;
+      background: var(--g-ffffff);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-user-select: none;
+      user-select: none;
+      font-size: 16px;
+      position: relative;
+      transition: none;
+    }
+
+    .tab[g="0"] {
+      color: var(--g-333333);
+      font-weight: 500;
+      transition: color 0.45s;
+    }
+
+    .tab[g="1"] {
+      color: var(--g-888888);
+      font-weight: 400;
+      transition: color 0.45s;
+    }
+
+    .tab-line-box {
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: 2px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tab-line-box2 {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 2px;
+      width: calc(100% / 2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.45s;
+    }
+
+    .tabs[l="1"] .tab-line-box2.departure {
+      transform: translateX(0%);
+    }
+
+    .tabs[l="1"] .tab-line-box2.destination {
+      transform: translateX(100%);
+    }
+
+    .tab-line {
+      width: 30px;
+      height: 2px;
+      background: var(--g-333333);
+      border-radius: 15px 15px 0px 0px;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: 0.45s;
+    }
+
+    .tabs[l="1"] .tab-line.departure {
+      width: var(--tab-line-depature-width);
+    }
+
+    .tabs[l="1"] .tab-line.destination {
+      width: var(--tab-line-destination-width);
+    }
+
+    .tab-line.initialization {
+      width: var(--j-initialization-width);
+    }
+
+    .tabs[l="0"] .tab-line {
+      background: rgba(0, 0, 0, 0);
+      display: none;
+      transition: none;
+    }
+
+    .tabs[l="0"] .tab span {
+      opacity: 0;
+    }
+
+    .tabs[l="0"] .tab::after {
+      content: '';
+      background: var(--g-f5f5f5);
+      position: absolute;
+      top: 7.5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 25px;
+      border-radius: 30px;
+    }
+
+    .routes {
+      width: 200%;
+      height: calc(100% - 95px);
+      position: absolute;
+      top: 95px;
+      left: 0px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 0px;
+      -webkit-user-select: none;
+      user-select: none;
+      background: var(--g-ffffff);
+      transition: transform 0.45s;
+    }
+
+    .routes.departure {
+      transform: translateX(0%);
+    }
+
+    .routes.destination {
+      transform: translateX(-50%);
+    }
+
+    .route {
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      background: var(--g-ffffff);
+    }
+
+    .route::-webkit-scrollbar {
+      display: none;
+    }
+
+    .route li.stop {
+      list-style: none;
+      display: block;
+      height: 50px;
+      width: 100%;
+      position: relative;
+      margin: 0px;
+      padding: 0px;
+      border-bottom: solid 1px var(--g-f5f5f5);
+      background: var(--g-ffffff);
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .route li.stop .name {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      height: 40px;
+      width: calc(100% - 20px - 70px - 35px);
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      color: var(--g-333333);
+      font-size: 20px;
+      font-weight: 400;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .route li.stop .bus {
+      display: block;
+      position: absolute;
+      top: 7.5px;
+      right: 85px;
+      height: 35px;
+      width: 35px;
+      padding: 0px;
+      box-sizing: border-box;
+      background: var(--g-f5f5f5);
+      border-radius: 20px;
+      overflow: hidden;
+      white-space: nowrap;
+      word-break: keep-all;
+      margin-left: 5px;
+    }
+
+    .route li.stop .bus[l="1"] svg {
+      opacity: 1;
+    }
+
+    .route li.stop .bus[l="0"] svg {
+      opacity: 0.5;
+    }
+
+    .route li.stop .bus[d="false"] {
+      display: none;
+    }
+
+    .route li.stop .bus .busicon {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+
+    .route li.stop .bus .busicon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .route li.stop .bus .busid {
+      display: inline-flex;
+      height: 25px;
+      font-size: 13px;
+      color: var(--g-333333);
+      box-sizing: border-box;
+      align-items: center;
+      margin-right: 5px;
+    }
+
+    .route li.stop .bus .fl {
+      float: left;
+    }
+
+    .route li.stop[l="true"] .name::after {
+      content: '';
+      background: var(--g-f5f5f5);
+      position: absolute;
+      top: 2.5px;
+      left: 0px;
+      width: calc(100% - 10px);
+      height: 35px;
+      border-radius: 30px;
+    }
+
+    .route li.stop .status {
+      position: absolute;
+      top: 7.5px;
+      right: 10px;
+      width: 70px;
+      height: 35px;
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow: hidden;
+      background: var(--g-f5f5f5);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--g-333333);
+      -webkit-user-select: none;
+      user-select: none;
+
+    }
+
+    .route li.stop .status[status="0"] {
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="1"] {
+      background: var(--g-c7ecff);
+      color: var(--g-14b1ff);
+      font-weight: 700;
+    }
+
+    .route li.stop .status[status="2"] {
+      background: var(--g-14b1ff);
+      color: var(--g-ffffff);
+      font-weight: 700;
+    }
+
+    .route li.stop .status[status="3"] {
+      color: var(--g-888888);
+    }
+
+    .route li.stop .status[status="4"] {
+      color: var(--g-888888);
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="5"] {
+      color: var(--g-888888);
+      font-weight: 500;
+    }
+
+    .route li.stop .status[status="6"] {
+      color: var(--g-888888);
+      font-weight: 500;
     }
 
     .search {
@@ -251,7 +636,7 @@
       display: none;
     }
 
-    .back_btn {
+    .search_back_btn {
       position: absolute;
       top: calc(var(--k-search-top));
       left: calc(var(--k-search-left));
@@ -267,18 +652,12 @@
       -webkit-user-select: none;
     }
 
-    .back_btn[p="1"] {
+    .search_back_btn[p="1"] {
       position: fixed;
       transform: translateY(calc(var(--k-offset-top) + 5px)) translateX(calc(var(--k-offset-left) + 5px));
       opacity: 1;
     }
 
-    .back_btn svg {
-      width: 20px;
-      height: 20px;
-      user-select: none;
-      -webkit-user-select: none;
-    }
 
     .routes_keyboard {
       position: fixed;
@@ -323,6 +702,181 @@
       font-size: 20px;
       color: var(--g-333333);
     }
+
+    .back_btn,
+    .info_btn {
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .back_btn {
+      top: 0px;
+      left: 0px
+    }
+
+    .info_btn {
+      top: 0px;
+      right: 0px;
+    }
+
+    .back_btn svg,
+    .info_btn svg,
+    .search_back_btn {
+      width: 20px;
+      height: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .bus_info_mask,
+    .route_info_mask {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      background: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      height: 100%;
+      display: none;
+      opacity: 0;
+      transition: 0.45s;
+    }
+
+    .bus_info_box,
+    .route_info_box {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      overflow: scroll;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) calc(100% - 130px), var(--g-ffffff) calc(100% - 130px), var(--g-ffffff) 100%);
+      user-select: none;
+      -webkit-user-select: none;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: 0.45s;
+    }
+
+    .bus_info_box::-webkit-scrollbar,
+    .route_info_box::-webkit-scrollbar {
+      display: none;
+    }
+
+    .bus_info_box[p="1"],
+    .route_info_box[p="1"] {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    .bus_info,
+    .route_info {
+      display: inline-block;
+      position: absolute;
+      top: calc(100% - clamp(180px, 36%, 300px) + 50px);
+      left: 0px;
+      width: 100%;
+      min-height: clamp(180px, 36%, 300px);
+      height: auto;
+      background: var(--g-ffffff);
+      border-radius: 20px 20px 0px 0px;
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+
+    .bus_info_title,
+    .route_info_title {
+      width: 100%;
+      height: 55px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid var(--g-f5f5f5);
+      color: var(--g-333333);
+      user-select: none;
+      -webkit-user-select: none;
+      font-size: 18px;
+      box-sizing: border-box;
+      position: sticky;
+      top: 0px;
+      left: 0px;
+    }
+
+    .bus_info_title[sticky="1"],
+    .route_info_title[sticky="1"] {
+      z-index: 10;
+      background: var(--g-ffffff);
+    }
+
+    .bus_info_list,
+    .route_info_list {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      padding-bottom: 50px;
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+
+    .bus_info_list li,
+    .route_info_list li {
+      width: calc(100% - 10px);
+      padding-top: 30px;
+      padding-left: 10px;
+      list-style: none;
+      font-size: 20px;
+      font-weight: 500;
+      position: relative;
+      box-sizing: border-box;
+      color: var(--g-333333);
+      user-select: none;
+      -webkit-user-select: none;
+      min-height: 58px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+
+    .bus_info_list li::after,
+    .route_info_list li::after {
+      content: var(--li-name);
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      width: 100%;
+      height: 25px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      color: var(--g-888888);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .route_info_list li[d="0"] {
+      display: none;
+    }
+
+    .route_info_box[l="0"] .route_info_list li {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    .route_info_box[l="0"] .route_info_list li::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10px;
+      width: calc(100% - 20px);
+      height: 25px;
+      border-radius: 30px;
+      background: var(--g-f5f5f5);
+    }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XX5QF4D2J"></script>
@@ -339,37 +893,183 @@
   <div class="search" p="0"> </div>
   <div class="input_placeholder">搜尋路線</div>
   <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
-  <div class="back_btn">
+  <button class="back_btn" onclick="closeopensearch()">
     <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
     </svg>
-  </div>
+  </button>
   <div class="search_routes_result"></div>
   <div class="routes_keyboard"></div>
+
+  <div class="route_container">
+    <div class="routes" display="departure">
+      <div class="route" direction="departure"></div>
+      <div class="route" direction="destination"></div>
+    </div>
+    <div class="title">
+      <div class="routename" l="0"></div>
+      <button class="back_btn" onclick="closeRoute()">
+        <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
+        </svg>
+      </button>
+      <button class="info_btn" onclick="displayRouteInfo()">
+        <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path d="M29.84 48L34.64 48L34.64 28.8L29.84 28.8L29.84 48ZM32 22.88C32.7467 22.88 33.3733 22.64 33.88 22.16C34.3867 21.68 34.64 21.0667 34.64 20.32C34.64 19.5733 34.3867 18.9333 33.88 18.4C33.3733 17.8667 32.7467 17.6 32 17.6C31.2533 17.6 30.6267 17.8667 30.12 18.4C29.6133 18.9333 29.36 19.5733 29.36 20.32C29.36 21.0667 29.6133 21.68 30.12 22.16C30.6267 22.64 31.2533 22.88 32 22.88ZM32 64C27.6267 64 23.4933 63.16 19.6 61.48C15.7067 59.8 12.3067 57.5067 9.4 54.6C6.49333 51.6933 4.2 48.2933 2.52 44.4C0.84 40.5067 1.77636e-15 36.3467 1.77636e-15 31.92C1.77636e-15 27.5467 0.84 23.4133 2.52 19.52C4.2 15.6267 6.49333 12.24 9.4 9.36C12.3067 6.48 15.7067 4.2 19.6 2.52C23.4933 0.84 27.6533 1.77636e-15 32.08 1.77636e-15C36.4533 1.77636e-15 40.5867 0.84 44.48 2.52C48.3733 4.2 51.76 6.48 54.64 9.36C57.52 12.24 59.8 15.6267 61.48 19.52C63.16 23.4133 64 27.5733 64 32C64 36.3733 63.16 40.5067 61.48 44.4C59.8 48.2933 57.52 51.6933 54.64 54.6C51.76 57.5067 48.3733 59.8 44.48 61.48C40.5867 63.16 36.4267 64 32 64ZM32.08 59.2C39.6 59.2 46 56.5467 51.28 51.24C56.56 45.9333 59.2 39.4933 59.2 31.92C59.2 24.4 56.56 18 51.28 12.72C46 7.44 39.5733 4.8 32 4.8C24.48 4.8 18.0667 7.44 12.76 12.72C7.45333 18 4.8 24.4267 4.8 32C4.8 39.52 7.45333 45.9333 12.76 51.24C18.0667 56.5467 24.5067 59.2 32.08 59.2Z" fill="var(--g-333333)" fill-rule="nonzero" opacity="1" stroke="none" />
+        </svg>
+      </button>
+    </div>
+    <div class="tabs" l="0">
+      <button class="tab" direction="departure" onclick="switchDirection('departure')" g="0"><span></span></button>
+      <button class="tab" direction="destination" onclick="switchDirection('destination')" g="1"><span></span></button>
+      <div class="tab-line-box">
+        <div class="tab-line-box2">
+          <div class="tab-line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="refresh_progress_box" l="0">
+      <div class="refresh_progress" style="--o-refresh-progress:0;">
+      </div>
+    </div>
+  </div>
+
+  <div class="bus_info_mask"></div>
+  <div class="bus_info_box">
+    <div class="bus_info">
+      <div class="bus_info_title">關於這輛公車</div>
+      <div class="bus_info_list">
+        <li f="bus_id" style="--li-name:'車牌號碼'"></li>
+        <li f="bus_onstopstatus" style="--li-name:'到離站狀態'"></li>
+        <li f="bus_type" style="--li-name:'車輛類型'"></li>
+        <li f="bus_status" style="--li-name:'行車狀態'"></li>
+        <li f="bus_update" style="--li-name:'更新時間'"></li>
+      </div>
+    </div>
+  </div>
+  <div class="route_info_mask"></div>
+  <div class="route_info_box" l="0">
+    <div class="route_info">
+      <div class="route_info_title">關於這條路線</div>
+      <div class="route_info_list">
+        <li f="route_name" style="--li-name:'路線名稱'"></li>
+        <li f="route_departure" style="--li-name:'起點'"></li>
+        <li f="route_destination" style="--li-name:'訖點'"></li>
+        <li f="route_weekday_first" style="--li-name:'平日首班車'"></li>
+        <li f="route_weekday_last" style="--li-name:'平日末班車'"></li>
+        <li f="route_weekday" style="--li-name:'平日班距'"></li>
+        <li f="route_weekday_timetable" style="--li-name:'平日班表'"></li>
+        <li f="route_holiday_first" style="--li-name:'假日首班車'"></li>
+        <li f="route_holiday_last" style="--li-name:'假日末班車'"></li>
+        <li f="route_holiday" style="--li-name:'假日班距'"></li>
+        <li f="route_holiday_timetable" style="--li-name:'假日班表'"></li>
+        <li f="route_price" style="--li-name:'票價'"></li>
+        <li f="route_buffer" style="--li-name:'緩衝區'"></li>
+        <li f="route_provider" style="--li-name:'業者名稱'"></li>
+        <li f="route_tel" style="--li-name:'電話'"></li>
+        <li f="route_email" style="--li-name:'電子郵件'"></li>
+      </div>
+    </div>
+  </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script>
+  /*
+  var ajax_event = { 'sent': {}, 'successful': {} }
+  $(document).ajaxSend(function (event, jqxhr, settings) {
+    var u = settings.url
+    if (!(u.indexOf('google-analytics') > -1)) {
+      var time = event.timeStamp
+      var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+      ajax_event.sent['ajax_' + uid] = { 'time': time }
+    }
+  });
+
+  $(document).ajaxSuccess(function (event, xhr, settings) {
+    var u = settings.url
+    var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+    if (ajax_event.sent.hasOwnProperty('ajax_' + uid)) {
+      var time = event.timeStamp
+      ajax_event.successful['ajax_' + uid] = { 'time': time, 'response_length': xhr.getResponseHeader('Content-Length'), 'url': u.split('?')[0] }
+      gtag('event', 'ajax', {
+        'complete_time': ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time,
+        'response_length': ajax_event.successful['ajax_' + uid].response_length,
+        'transport_speed': ajax_event.successful['ajax_' + uid].response_length / (ajax_event.successful['ajax_' + uid].time - ajax_event.sent['ajax_' + uid].time),
+        'event_label': ajax_event.successful['ajax_' + uid].url,
+        'transport_type': 'beacon',
+        'event_callback': function () {
+
+        }
+      });
+    }
+  });
+  */
+</script>
+
+<script>
   var getUrlString = location.href;
   var url = new URL(getUrlString);
+  function urlparams(p) {
+    return url.searchParams.get(p)
+  }
+
   const LS = window.localStorage
   const SS = window.sessionStorage
 
-  let keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
-
   let cities = ['blobbus', 'ntpcbus']
   var city = 0
+  var routes_data_city = 0
 
   let realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
   let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
-  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
+  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[routes_data_city] + '/GetRoute.gz' }
   let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
+  let provider_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetProvider.gz' }
+  let timetable_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetTimeTable.gz' }
 
   let routes_keyboard_keys = [['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
   ['更多', '幹線', '清空', '0', '刪除']]
-
+  let icon_bus = '<svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M12.5474 64C11.8175 64 11.1719 63.7895 10.6105 63.3684C10.0491 62.9474 9.76842 62.4 9.76842 61.7263L9.76842 54.6526C8.14035 53.7544 6.94737 52.4632 6.18947 50.7789C5.43158 49.0947 5.05263 47.2982 5.05263 45.3895L5.05263 11.9579C5.05263 7.80351 7.2 4.77193 11.4947 2.86316C15.7895 0.954386 22.6526 0 32.0842 0C41.4035 0 48.2105 0.954386 52.5053 2.86316C56.8 4.77193 58.9474 7.80351 58.9474 11.9579L58.9474 45.3895C58.9474 47.2982 58.5684 49.0947 57.8105 50.7789C57.0526 52.4632 55.8596 53.7544 54.2316 54.6526L54.2316 61.7263C54.2316 62.4 53.9509 62.9474 53.3895 63.3684C52.8281 63.7895 52.1825 64 51.4526 64L49.8526 64C49.0667 64 48.393 63.7895 47.8316 63.3684C47.2702 62.9474 46.9895 62.4 46.9895 61.7263L46.9895 57.0947L17.0105 57.0947L17.0105 61.7263C17.0105 62.4 16.7298 62.9474 16.1684 63.3684C15.607 63.7895 14.9333 64 14.1474 64L12.5474 64ZM10.1053 29.3895L53.8947 29.3895L53.8947 14.8211L10.1053 14.8211L10.1053 29.3895ZM19.0316 47.8316C20.3228 47.8316 21.4175 47.3825 22.3158 46.4842C23.214 45.586 23.6632 44.4912 23.6632 43.2C23.6632 41.9088 23.214 40.814 22.3158 39.9158C21.4175 39.0175 20.3228 38.5684 19.0316 38.5684C17.7404 38.5684 16.6456 39.0175 15.7474 39.9158C14.8491 40.814 14.4 41.9088 14.4 43.2C14.4 44.4912 14.8491 45.586 15.7474 46.4842C16.6456 47.3825 17.7404 47.8316 19.0316 47.8316ZM44.9684 47.8316C46.2596 47.8316 47.3544 47.3825 48.2526 46.4842C49.1509 45.586 49.6 44.4912 49.6 43.2C49.6 41.9088 49.1509 40.814 48.2526 39.9158C47.3544 39.0175 46.2596 38.5684 44.9684 38.5684C43.6772 38.5684 42.5825 39.0175 41.6842 39.9158C40.786 40.814 40.3368 41.9088 40.3368 43.2C40.3368 44.4912 40.786 45.586 41.6842 46.4842C42.5825 47.3825 43.6772 47.8316 44.9684 47.8316Z" fill="var(--g-333333)" fill-rule="nonzero" opacity="1" stroke="none"/></svg>'
+  var realtime_json = {}
+  var busevent_json = { 'loaded': false, 'c': {} }
+  var stops_json = { 'loaded': false, 'c': {} }
+  var routes_json = { 'loaded': false, 'c': {} }
+  var search_index = { 'loaded': false, 'c': {} }
+  var c_routeid = 0
+  var c_routeid_p = 0
+  var o_routeid
+  var realtime_lo = 0
+  var realtime_last_update = new Date().getTime()
+  var refresh_progress_l = 0
+  var businfo_scroll = 0
+  var routeinfo_scroll = 0
+  var businfo_scroll_1 = 0
+  var routeinfo_scroll_1 = 0
+  var businfo_close = 0
+  var routeinfo_close = 0
+  var routeinfo_loaded = 0
+  var refreshProgresPause = 0
+  var search_page_is_open = 0
+  let stopsDataShortName = [
+    { 'source': 'routeId', 'short': 'r' },
+    { 'source': 'nameZh', 'short': 'n' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'seqNo', 'short': 's' },
+    { 'source': 'goBack', 'short': 'b' },
+    { 'source': 'nameEn', 'short': false },
+    { 'source': 'address', 'short': false },
+    { 'source': 'longitude', 'short': false },
+    { 'source': 'latitude', 'short': false },
+    { 'source': 'showLon', 'short': false },
+    { 'source': 'showLat', 'short': false },
+    { 'source': 'vector', 'short': false },
+    { 'source': 'Id', 'short': false },
+    { 'source': 'pgp', 'short': false },
+    { 'source': 'stopLocationId', 'short': false }
+  ]
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -397,7 +1097,7 @@
     { 'source': 'holidayBackLastBusTime', 'short': false },
     { 'source': 'holidayGoLastBusTime', 'short': false },
     { 'source': 'holidayBusTimeDesc', 'short': false },
-    { 'source': 'realSequence', 'short': 'rs' },
+    { 'source': 'realSequence', 'short': false },
     { 'source': 'holidayHeadwayDesc', 'short': false },
     { 'source': 'holidayOffPeakHeadway', 'short': false },
     { 'source': 'holidayPeakHeadway', 'short': false },
@@ -413,56 +1113,286 @@
     { 'source': 'genus', 'short': false },
     { 'source': 'Id', 'short': false }
   ]
+  let sdsn_len = stopsDataShortName.length
   let rdsn_len = routesDataShortName.length
-  var routes_json = { 'loaded': false, 'c': {} }
-  var search_index = { 'loaded': false, 'c': {} }
 
-
-  function urlparams(p) {
-    return url.searchParams.get(p)
+  function sendError(err) {
+    var position = 'L' + err.line + ',C' + err.column
+    gtag('event', 'error_feedback', {
+      'event_category': position,
+      'event_label': position + ' | ' + err.message,
+    });
   }
 
-  function preventDefault(e) {
-    e.preventDefault();
+  function unicode_arr(str) {
+    var str_len = str.length
+    var unicode_arr = []
+    for (var t = 0; t < str_len; t++) {
+      var unicode = str.charCodeAt(t)
+      if (!(unicode_arr.indexOf(unicode) > -1)) {
+        unicode_arr.push(unicode)
+      }
+    }
+    return unicode_arr
   }
 
-  function preventDefaultForScrollKeys(e) {
-    if (keys[e.keyCode]) {
-      preventDefault(e);
-      return false;
+  function updateRefreshProgress() {
+    var t = new Date().getTime()
+    var p = Math.abs(t - realtime_last_update) / 20000
+    if (p < 0) {
+      p = 0
+    }
+    if (p > 1) {
+      p = 1
+    }
+    $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
+    if (refreshProgresPause === 0) {
+      window.requestAnimationFrame(updateRefreshProgress)
+    }
+    else {
+      refreshProgresPause = 0
     }
   }
-  var supportsPassive = false;
-  try {
-    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-      get: function () { supportsPassive = true; }
-    }));
-  } catch (e) { }
-
-  var wheelOpt = supportsPassive ? { passive: false } : false;
-  var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
-
-  function disableScroll() {
-    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
-    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
-    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+  function getTextWidth(text, font) {
+    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
   }
 
-  function enableScroll() {
-    window.removeEventListener('DOMMouseScroll', preventDefault, false);
-    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-    window.removeEventListener('touchmove', preventDefault, wheelOpt);
-    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+  function skeletonScreen() {
+    var j = []
+    var ll = Math.floor(window.innerHeight / 45) + 5
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'b': 0 })
+    }
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'b': 1 })
+    }
+    printStop(j, 'skeleton')
+  }
+  function setRouteD() {
+    if (routes_json.loaded) {
+      var this_route = routes_json.c['b_' + c_routeid]
+      var dep = '往' + this_route.dep
+      var des = '往' + this_route.des
+      var name = this_route.n
+      var w = []
+      var font = "500 16px 'Noto Sans', sans-serif"
+      var r_dep_w = getTextWidth(des, font) + 'px'
+      var r_des_w = getTextWidth(dep, font) + 'px'
+      w.push('--tab-line-depature-width:' + r_dep_w)
+      w.push('--tab-line-destination-width:' + r_des_w)
+
+      $('#routes_animation_css').html(':root{' + w.join(';') + '}')
+      $('.route_container .tabs .tab[direction="departure"] span').text(des)
+      $('.route_container .tabs .tab[direction="destination"] span').text(dep)
+      $('.route_container .title .routename').text(name)
+      $('.route_container .tabs').attr('l', '1')
+      $('.route_container .title .routename').attr('l', '1')
+      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
+    }
+  }
+  function bString(h, u) {
+    var e = '"'
+    if (u === 1) {
+      e = "'"
+    }
+    return e + h + e
+  }
+  function printStop(k, c, bp) {
+    var htm = {}
+    var l = k.length
+    var g = false
+    if (c === 'skeleton') {
+      g = true
+    }
+    for (var w = 0; w < l; w++) {
+      var displayName = k[w].StopID
+      var s = {}
+      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
+      if (g) {
+        s = { 'b': k[w].b }
+        displayName = ''
+        bv.h = true
+      }
+      else {
+        if (stops_json.loaded) {
+          s = stops_json.c['b_' + k[w].StopID]
+          displayName = s.n
+        }
+        if (busevent_json.loaded) {
+          if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+            var thisbv = bp['s_' + k[w].StopID]
+            bv.h = true
+            bv.n = thisbv.BusID
+            bv.icon = icon_bus
+            bv.l = thisbv.CarOnStop
+            bv.ty = thisbv.CarType
+            bv.time = thisbv.DataTime
+            bv.status = thisbv.BusStatus
+          }
+        }
+      }
+
+      if (!(htm.hasOwnProperty('h_' + s.b))) {
+        htm['h_' + s.b] = []
+      }
+      if (g) {
+        var status = { 'status': 10, 'text': '' }
+      }
+      else {
+        var status = timeStatus(k[w].EstimateTime)
+      }
+      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+    }
+
+    if (!htm.hasOwnProperty('h_0')) {
+      htm['h_0'] = ['發生錯誤']
+    }
+    if (!htm.hasOwnProperty('h_1')) {
+      htm['h_1'] = ['發生錯誤']
+    }
+    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
+
   }
 
-  function disableInputFocusScroll(pervious_time, end_time) {
-    var n = new Date().getTime()
-    $('html,body').scrollTop(0)
-    if (pervious_time < end_time) {
-      window.requestAnimationFrame(function () {
-        disableInputFocusScroll(n, end_time)
-      })
+  function timeStatus(t) {
+    t = parseInt(t)
+    var minute = Math.round(t / 60) + '分'
+    if (t === -3) {
+      return { status: 6, text: '末班駛離' }
+    }
+    if (t === -4) {
+      return { status: 5, text: '今日停駛' }
+    }
+    if (t === -2) {
+      return { status: 4, text: '交通管制' }
+    }
+    if (t === -1) {
+      return { status: 3, text: '未發車' }
+    }
+    if (t <= 180) {
+      if (t <= 100) {
+        return { status: 2, text: '進站中' }
+      }
+      else {
+        return { status: 1, text: minute }
+      }
+    }
+    else {
+      return { status: 0, text: minute }
+    }
+  }
+  function findStop(j, id, pid) {
+    var res = []
+    var o = j.BusInfo
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      var this_id = parseInt(o[w].RouteID)
+      if (this_id === id || pid.indexOf(String(this_id)) > -1 || this_id === id * 10) {
+        res.push(o[w])
+      }
+    }
+
+    res.sort(function (a, b) {
+      return stops_json.c['b_' + a.StopID].s - stops_json.c['b_' + b.StopID].s
+    });
+    return res
+  }
+  function findBus(j, id, pid) {
+    if (!j.loaded || !routes_json.loaded) {
+      return {}
+    }
+    var res = {}
+    var o = j.c
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      var ro = parseInt(o[w].RouteID)
+      if (ro === id || pid.indexOf(String(ro)) > -1 || ro === id * 10) {
+        res['s_' + o[w].StopID] = o[w]
+      }
+    }
+    return res
+  }
+  function updateRealtimeJson(immediate_update) {
+    updateBusEventJson()
+    $.ajax({
+      type: 'GET', url: realtime_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          realtime_json = JSON.parse(z)
+          var s = findStop(realtime_json, c_routeid, c_routeid_p)
+          var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+          printStop(s, '', bb)
+          realtime_last_update = new Date().getTime()
+          if (refresh_progress_l === 0) {
+            refresh_progress_l = 1
+            $('.refresh_progress_box').attr('l', '1')
+          }
+          if (!(immediate_update === true)) {
+            setTimeout(function () { updateRealtimeJson(false) }, 20000);
+          }
+        });
+      }, error: function () {
+        setTimeout(function () { updateRealtimeJson(false) }, 1000);
+      }
+    });
+
+  }
+  function updateBusEventJson() {
+
+    $.ajax({
+      type: 'GET', url: busevent_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          var o = JSON.parse(z).BusInfo
+          busevent_json.c = o
+          busevent_json.loaded = true
+        });
+      }, error: function () {
+
+      }
+    });
+
+  }
+
+  function getStops() {
+    var t = new Date().getTime()
+    if (!stops_json.loaded) {
+      $.ajax({
+        type: 'GET', url: stops_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_lite = {}
+            var pl = o.length
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < sdsn_len; g++) {
+                var thsS = stopsDataShortName[g]
+                if (!(thsS.short === false)) {
+                  this_json_k[thsS.short] = this_json_k[thsS.source]
+                }
+                delete this_json_k[thsS.source]
+              }
+              json_lite['b_' + id] = o[j]
+            }
+            stops_json.c = json_lite
+            stops_json.loaded = true
+            if (realtime_lo === 0) {
+              realtime_lo = 1
+              updateRealtimeJson(false)
+            }
+          });
+        }
+      });
     }
   }
 
@@ -470,7 +1400,7 @@
     var t = new Date().getTime()
     var g = 60 * 60 * 24 * 14 * 1000
     if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
-      if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g) {
+      if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
         var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
         var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
         routes_json['c_0'] = cc0
@@ -479,8 +1409,11 @@
         routes_json.loaded = true
       }
     }
+
     if (routes_json.loaded) {
       createSearchIndex(routes_json)
+      c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+      setRouteD()
     }
     else {
       $.ajax({
@@ -491,7 +1424,6 @@
             var o = JSON.parse(z).BusInfo
             var json_lite = {}
             var pl = o.length
-
             for (var j = 0; j < pl; j++) {
               var this_json_k = o[j]
               var id = o[j].Id
@@ -513,34 +1445,365 @@
                 }
               }
             }
-            routes_json['c_' + city] = json_lite
-            LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
-            LS.setItem('bus_routes_t_' + city, new Date().getTime())
-            if (city === 0) {
-              city = 1
+            routes_json['c_' + routes_data_city] = json_lite
+            LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_lite))
+            LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
+            if (routes_data_city === 0) {
+              routes_data_city = 1
               getRoutes()
             }
-            if (city === 1) {
+            if (routes_data_city === 1) {
               routes_json.loaded = true
               routes_json['c_1'] = json_lite
               routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
               createSearchIndex(routes_json)
+              c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              setRouteD()
             }
-
           });
         }
       });
     }
   }
 
-  function getTextWidth(text, font) {
-    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    const context = canvas.getContext("2d");
-    context.font = font;
-    const metrics = context.measureText(text);
-    return metrics.width;
+  function showRoute(id) {
+    skeletonScreen()
+    c_routeid = id
+    getStops()
+    getRoutes()
   }
 
+  function switchDirection(d) {
+    var a = 0
+    var b = 1
+    if (d === 'destination') {
+      a = 1
+      b = 0
+    }
+    $('.route_container .routes').attr('class', 'routes ' + d)
+    $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
+    $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
+    $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
+    $(".tab-line").attr('class', 'tab-line ' + d)
+  }
+
+  function standloneStatusBarColor(a) {
+    var c = '#ffffff'
+    var d = '#101010'
+    if (a === 1) {
+      c = '#7f7f7f'
+      d = '#080808'
+    }
+    $('head meta[kji="light"]').attr('content', c)
+    $('head meta[kji="dark"]').attr('content', d)
+  }
+
+  function closeBus() {
+    if (businfo_close === 0) {
+      businfo_close = 1
+      $('.bus_info_box').attr('p', '0')
+      $('.bus_info_mask').css({ 'opacity': '0' })
+      standloneStatusBarColor(0)
+      setTimeout(() => {
+        $('.bus_info_mask').css({ 'display': 'none' })
+        businfo_close = 0
+      }, 480);
+    }
+  }
+  function displayBus(id, onstop, type, status, update) {
+    gtag('event', 'display_bus_info', {
+      'event_category': onstop,
+      'event_label': id,
+      'event_callback': function () {
+      }
+    });
+    businfo_scroll = 0
+    businfo_scroll_1 = 0
+    let sel = '.bus_info_box .bus_info .bus_info_list li'
+    if (onstop === '0') {
+      onstop = '離站'
+    }
+    if (onstop === '1') {
+      onstop = '進站'
+    }
+    if (type === '0') {
+      type = '一般'
+    }
+    if (type === '1') {
+      type = '低底盤'
+    }
+    if (type === '2') {
+      type = '大復康巴士'
+    }
+    if (type === '3') {
+      type = '狗狗友善專車'
+    }
+    if (status === '0') {
+      status = '正常'
+    }
+    if (status === '1') {
+      status = '車禍'
+    }
+    if (status === '2') {
+      status = '故障'
+    }
+    if (status === '3') {
+      status = '塞車'
+    }
+    if (status === '4') {
+      status = '緊急求援'
+    }
+    if (status === '5') {
+      status = '加油'
+    }
+    if (status === '99') {
+      status = '非營運狀態'
+    }
+    $(sel + '[f="bus_id"]').text(id)
+    $(sel + '[f="bus_onstopstatus"]').text(onstop)
+    $(sel + '[f="bus_type"]').text(type)
+    $(sel + '[f="bus_status"]').text(status)
+    $(sel + '[f="bus_update"]').text(update)
+    $('.bus_info_box').scrollTop(50).attr('p', '1')
+    $('.bus_info_title').attr('sticky', '0')
+    $('.bus_info_mask').css({ 'display': 'block' })
+    setTimeout(() => {
+      $('.bus_info_mask').css({ 'opacity': '1' })
+      standloneStatusBarColor(1)
+    }, 1);
+  }
+
+  function closeRouteInfo() {
+    if (routeinfo_close === 0) {
+      routeinfo_close = 1
+      $('.route_info_box').attr('p', '0')
+      $('.route_info_mask').css({ 'opacity': '0' })
+      standloneStatusBarColor(0)
+      setTimeout(() => {
+        $('.route_info_mask').css({ 'display': 'none' })
+        routeinfo_close = 0
+      }, 480);
+    }
+  }
+  function displayRouteInfo() {
+    routeinfo_scroll = 0
+    routeinfo_scroll_1 = 0
+    let sel = '.route_info_box .route_info .route_info_list li'
+    $('.route_info_box').scrollTop(50).attr('p', '1')
+    $('.route_info_title').attr('sticky', '0')
+    $('.route_info_mask').css({ 'display': 'block' })
+    setTimeout(() => {
+      $('.route_info_mask').css({ 'opacity': '1' })
+      standloneStatusBarColor(1)
+    }, 1);
+
+    var setF = function (f, v) {
+      if (v === null || v === undefined || v === '' || v === ' ') {
+        v = ''
+      }
+      var l = String(v).length
+      if (l <= 0) {
+        $(sel + '[f="' + f + '"]').attr('d', '0')
+      }
+      else {
+        $(sel + '[f="' + f + '"]').attr('d', '1').text(v)
+      }
+    }
+    var minute = function (s) {
+      return parseInt(s) + '分'
+    }
+    var hw = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var min = minute(str.substring(0, 2))
+        var max = minute(str.substring(2, 4))
+        return min + '-' + max
+      }
+      if (l === 2) {
+        return minute(str)
+      }
+      return str
+    }
+    var time24h = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var hh = str.substring(0, 2)
+        var mm = str.substring(2, 4)
+        return hh + ':' + mm
+      }
+      return str
+    }
+
+    if (routeinfo_loaded === 0) {
+      routeinfoloadtime_t1 = new Date().getTime()
+      $('.route_info_box').attr('l', '0')
+      $(sel).attr('d', '1')
+      $.ajax({
+        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var l = o.length
+            var u
+            for (var i = 0; i < l; i++) {
+              var this_route = o[i]
+              if (this_route.Id === c_routeid) {
+                u = this_route
+                break;
+              }
+              else {
+                continue;
+              }
+            }
+
+            $.ajax({
+              type: 'GET', url: provider_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data2) {
+                var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
+                b2.arrayBuffer().then(bf2 => {
+                  var z2 = pako.inflate(bf2, { to: 'string' })
+                  var o2 = JSON.parse(z2).BusInfo
+                  var l2 = o.length
+                  var u2
+                  for (var i = 0; i < l; i++) {
+                    var this_provider = o2[i]
+                    if (this_provider.id === u.providerId) {
+                      u2 = this_provider
+                      break;
+                    }
+                    else {
+                      continue;
+                    }
+                  }
+
+                  $.ajax({
+                    type: 'GET', url: timetable_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data3) {
+                      var b3 = new Blob([data3.slice(0, data3.size)], { type: 'application/gzip' });
+                      b3.arrayBuffer().then(bf3 => {
+                        var z3 = pako.inflate(bf3, { to: 'string' })
+                        var o3 = JSON.parse(z3).BusInfo
+                        var l3 = o3.length
+                        var u3 = { 'u_weekday': {}, 'u_specialday': {}, 'u_holiday': {} }
+                        var u3_l_w = 0
+                        var u3_l_h = 0
+
+                        for (var i = 0; i < l3; i++) {
+                          var this_timetable = o3[i]
+                          var this_pid = this_timetable.PathAttributeId
+                          if (this_pid === c_routeid_p || this_pid === c_routeid || this_pid === c_routeid * 10) {
+                            var dateval = this_timetable.DateValue
+                            var depTime = this_timetable.DepartureTime
+                            if (this_timetable.DateType === '0') {
+                              if (dateval === '1' || dateval === '7') {
+                                u3['u_holiday']['t_' + depTime] = this_timetable
+                                u3_l_h += 1
+                              }
+                              else {
+                                u3['u_weekday']['t_' + depTime] = this_timetable
+                                u3_l_w += 1
+                              }
+                            }
+                            else {
+                              u3['u_specialday']['t_' + depTime] = this_timetable
+                            }
+                          }
+                          else {
+                            continue;
+                          }
+                        }
+                        var weekday_timetable = []
+                        var holiday_timetable = []
+                        var specialday_timetable = []
+                        var weekday_timetable_str = ''
+                        var holiday_timetable_str = ''
+
+                        if (u3_l_w >= 1) {
+                          for (var f in u3['u_weekday']) {
+                            var this_f = u3['u_weekday'][f]
+                            weekday_timetable.push(time24h(this_f.DepartureTime))
+                          }
+                          weekday_timetable.sort(function (a, b) {
+                            var c = a.split(':')
+                            var d = b.split(':')
+                            var e = parseInt(c[0]) * 60 + parseInt(c[1])
+                            var f = parseInt(d[0]) * 60 + parseInt(d[1])
+                            return e - f
+                          })
+                          weekday_timetable_str = weekday_timetable.join('|')
+                        }
+                        if (u3_l_h >= 1) {
+                          for (var f in u3['u_holiday']) {
+                            var this_f = u3['u_holiday'][f]
+                            holiday_timetable.push(time24h(this_f.DepartureTime))
+                          }
+                          holiday_timetable.sort(function (a, b) {
+                            var c = a.split(':')
+                            var d = b.split(':')
+                            var e = parseInt(c[0]) * 60 + parseInt(c[1])
+                            var f = parseInt(d[0]) * 60 + parseInt(d[1])
+                            return e - f
+                          })
+                          holiday_timetable_str = holiday_timetable.join('|')
+                        }
+                        var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
+                        if ((u.peakHeadway).length <= 0) {
+                          r_weekday = undefined
+                        }
+                        var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
+                        if ((u.holidayPeakHeadway).length <= 0) {
+                          r_holiday = undefined
+                        }
+                        setF("route_name", u.nameZh)
+                        setF("route_departure", u.departureZh)
+                        setF("route_destination", u.destinationZh)
+                        setF("route_weekday_first", time24h(u.goFirstBusTime))
+                        setF("route_weekday_last", time24h(u.goLastBusTime))
+                        setF("route_weekday", r_weekday)
+                        setF("route_weekday_timetable", weekday_timetable_str)
+                        setF("route_holiday_timetable", holiday_timetable_str)
+                        setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
+                        setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
+                        setF("route_holiday", r_holiday)
+                        setF("route_price", u.ticketPriceDescriptionZh)
+                        setF("route_buffer", u.segmentBufferZh)
+                        setF("route_provider", u.providerName)
+                        setF("route_tel", u2.phoneInfo)
+                        setF("route_email", u2.email)
+                        $('.route_info_box').attr('l', '1')
+                        routeinfo_loaded = 1
+                        routeinfoloadtime_t2 = new Date().getTime()
+                        routeinfoloadtime = routeinfoloadtime_t2 - routeinfoloadtime_t1
+                        gtag('event', 'display_route_info', {
+                          'event_category': c_routeid,
+                          'complete_time': routeinfoloadtime,
+                          'event_callback': function () {
+                          }
+                        });
+                      })
+                    }
+                  });
+                })
+              }
+            });
+
+          })
+        }
+      });
+    }
+
+  }
+  function closeRoute() {
+    refreshProgresPause = 1
+    gtag('event', 'back_to_previous_page', {
+      'event_category': 'close_route',
+      'event_label': c_routeid,
+      'event_callback': function () {
+        $('.route_container').css({ 'display': 'none' })
+      }
+    });
+  }
   function createSearchIndex(j) {
     if (j.loaded) {
       j = j.c
@@ -565,23 +1828,11 @@
       search_index.loaded = true
     }
   }
-  function unicode_arr(str) {
-    var str_len = str.length
-    var unicode_arr = []
-    for (var t = 0; t < str_len; t++) {
-      var unicode = str.charCodeAt(t)
-      if (!(unicode_arr.indexOf(unicode) > -1)) {
-        unicode_arr.push(unicode)
-      }
-    }
-    return unicode_arr
-  }
 
   function search_result(q, search_index) {
     if (!(String(q).length > 0)) {
       return []
     }
-
     var res_1 = []
     var q_u = unicode_arr(q)
     var q_u_len = q_u.length
@@ -620,16 +1871,27 @@
     }
     return res_1
   }
+
   function openRoute(c, i) {
     gtag('event', 'open_route', {
       'event_category': c,
       'event_label': i,
       'event_callback': function () {
-        var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
-        location.replace(u)
+        city = c
+        routeinfo_loaded = 0
+        $('.route_container').css({ 'display': 'block' })
+        $('.route_container .tabs').attr('l', '0')
+        $('.route_container .title .routename').attr('l', '0')
+        switchDirection('departure')
+        showRoute(parseInt(i))
+        updateRealtimeJson(true)
+        if (refreshProgresPause === 0) {
+          updateRefreshProgress()
+        }
       }
     });
   }
+
   function printSearchResult(result) {
     var result_len = result.length
     var f = []
@@ -649,46 +1911,16 @@
     var text_width = getTextWidth(q, font)
     $('.search').css({ '--cursor-offset': text_width + 'px' })
   }
-  getRoutes()
 
-  document.querySelector('#search_routes').addEventListener("paste", function (e) {
-    update_search_result()
-  });
-  document.querySelector('#search_routes').addEventListener("cut", function (e) {
-    update_search_result()
-  });
-  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-    update_search_result()
-  });
-
-  document.addEventListener("selectionchange", function (e) {
-    if (1 === 1) {
-      update_search_result()
-    }
-  });
-  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-    update_search_result()
-  });
   function opensearch() {
+    search_page_is_open = 1
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
   }
+
   function closeopensearch() {
+    search_page_is_open = 0
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
   }
-  $('#search_routes').click(function (e) {
-    e.stopPropagation()
-    if (!($('.search').attr('p') === '1')) {
-      var n = new Date().getTime()
-      opensearch()
-    }
-
-  })
-  $('.back_btn').click(function (e) {
-    e.stopPropagation()
-    if ($('.search').attr('p') === '1') {
-      closeopensearch()
-    }
-  })
 
   function initializeKeyboard() {
     var htm = []
@@ -715,19 +1947,25 @@
     var v = $('#search_routes').val()
     v += k
     $('#search_routes').val(v)
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function keyboard_delete() {
     var v = $('#search_routes').val()
     v = v.substring(0, v.length - 1)
     $('#search_routes').val(v)
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function keyboard_clear() {
     $('#search_routes').val('')
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function setSearchSize() {
@@ -760,11 +1998,120 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-  setSearchSize()
-  initializeKeyboard()
-  $(window).resize(function () {
+  function initialize() {
+    initializeKeyboard()
+    $('.bus_info_box').scroll(function () {
+      var scrolltop = $('.bus_info_box').scrollTop()
+      if ($('.bus_info').offset().top < 0) {
+        if (businfo_scroll_1 === 0) {
+          $('.bus_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          businfo_scroll_1 = 1
+        }
+      }
+      else {
+        if (businfo_scroll_1 === 1) {
+          $('.bus_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          businfo_scroll_1 = 0
+        }
+      }
+      if (scrolltop < 5) {
+        if (businfo_scroll === 0) {
+          closeBus()
+          businfo_scroll = 1
+        }
+      }
+    })
+    $('.bus_info_box').click(function (e) {
+      e.stopPropagation()
+      if (businfo_scroll === 0) {
+        closeBus()
+        businfo_scroll = 1
+      }
+    });
+    $('.bus_info').click(function (e) {
+      e.stopPropagation()
+    })
+    $('.route_info_box').scroll(function () {
+      var scrolltop = $('.route_info_box').scrollTop()
+
+      if ($('.route_info').offset().top < 0) {
+        if (routeinfo_scroll_1 === 0) {
+          $('.route_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          routeinfo_scroll_1 = 1
+        }
+      }
+      else {
+        if (routeinfo_scroll_1 === 1) {
+          $('.route_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          routeinfo_scroll_1 = 0
+        }
+      }
+      if (scrolltop < 5) {
+        if (routeinfo_scroll === 0) {
+          closeRouteInfo()
+          routeinfo_scroll = 1
+        }
+      }
+    });
+    $('.route_info_box').click(function (e) {
+      e.stopPropagation()
+      if (routeinfo_scroll === 0) {
+        closeRouteInfo()
+        routeinfo_scroll = 1
+      }
+    });
+
+    $('.route_info').click(function (e) {
+      e.stopPropagation()
+    })
+
+    $('#search_routes').click(function (e) {
+      e.stopPropagation()
+      if (!($('.search').attr('p') === '1')) {
+        var n = new Date().getTime()
+        opensearch()
+      }
+    });
+
+
+    $(window).resize(function () {
+      setSearchSize()
+    })
+
+    document.querySelector('#search_routes').addEventListener("paste", function (e) {
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
+    });
+    document.querySelector('#search_routes').addEventListener("cut", function (e) {
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
+    });
+    document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
+    });
+    document.addEventListener("selectionchange", function (e) {
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
+    });
+    document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
+    });
     setSearchSize()
-  })
+    getRoutes()
+  }
+
+  initialize()
 </script>
 
 </html>
