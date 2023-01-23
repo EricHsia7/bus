@@ -1062,7 +1062,7 @@
   var routeinfo_close = 0
   var routeinfo_loaded = 0
   var refreshProgresPause = 0
-
+  var search_page_is_open = 0
   let stopsDataShortName = [
     { 'source': 'routeId', 'short': 'r' },
     { 'source': 'nameZh', 'short': 'n' },
@@ -1909,9 +1909,11 @@
   }
 
   function opensearch() {
+    search_page_is_open = 1
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
   }
   function closeopensearch() {
+    search_page_is_open = 0
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
   }
   $('#search_routes').click(function (e) {
@@ -1954,19 +1956,25 @@
     var v = $('#search_routes').val()
     v += k
     $('#search_routes').val(v)
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function keyboard_delete() {
     var v = $('#search_routes').val()
     v = v.substring(0, v.length - 1)
     $('#search_routes').val(v)
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function keyboard_clear() {
     $('#search_routes').val('')
-    update_search_result()
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
   }
 
   function setSearchSize() {
@@ -2073,23 +2081,31 @@
       setSearchSize()
     })
     document.querySelector('#search_routes').addEventListener("paste", function (e) {
-      update_search_result()
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
     });
     document.querySelector('#search_routes').addEventListener("cut", function (e) {
-      update_search_result()
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
     });
     document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-      update_search_result()
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
     });
-
     document.addEventListener("selectionchange", function (e) {
-      if (1 === 1) {
+      if (search_page_is_open === 1) {
         update_search_result()
       }
     });
     document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-      update_search_result()
+      if (search_page_is_open === 1) {
+        update_search_result()
+      }
     });
+    getRoutes()
   }
 
   initialize()
