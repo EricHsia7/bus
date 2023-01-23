@@ -1028,10 +1028,11 @@
 
   let cities = ['blobbus', 'ntpcbus']
   var city = 0
+  var routes_data_city = 0
 
   let realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
   let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
-  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetRoute.gz' }
+  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[routes_data_city] + '/GetRoute.gz' }
   let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
   let provider_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetProvider.gz' }
   let timetable_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetTimeTable.gz' }
@@ -1415,7 +1416,6 @@
             var o = JSON.parse(z).BusInfo
             var json_lite = {}
             var pl = o.length
-
             for (var j = 0; j < pl; j++) {
               var this_json_k = o[j]
               var id = o[j].Id
@@ -1437,20 +1437,19 @@
                 }
               }
             }
-            routes_json['c_' + city] = json_lite
-            LS.setItem('bus_routes_' + city, JSON.stringify(json_lite))
-            LS.setItem('bus_routes_t_' + city, new Date().getTime())
-            if (city === 0) {
-              city = 1
+            routes_json['c_' + routes_data_city] = json_lite
+            LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_lite))
+            LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
+            if (routes_data_city === 0) {
+              routes_data_city = 1
               getRoutes()
             }
-            if (city === 1) {
+            if (routes_data_city === 1) {
               routes_json.loaded = true
               routes_json['c_1'] = json_lite
               routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
               createSearchIndex(routes_json)
             }
-
           });
         }
       });
@@ -1906,8 +1905,6 @@
     var text_width = getTextWidth(q, font)
     $('.search').css({ '--cursor-offset': text_width + 'px' })
   }
-  getRoutes()
-
 
   function opensearch() {
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
