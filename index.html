@@ -106,7 +106,7 @@
       padding: 0px;
       overflow: hidden;
       background: var(--g-ffffff);
-      display: black;
+      display: none;
     }
 
     .title {
@@ -917,7 +917,7 @@
     </div>
     <div class="title">
       <div class="routename" l="0"></div>
-      <button class="back_btn" onclick="backPerviousPage()">
+      <button class="back_btn" onclick="closeRoute()">
         <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
         </svg>
@@ -1058,6 +1058,7 @@
   var businfo_close = 0
   var routeinfo_close = 0
   var routeinfo_loaded = 0
+  var refreshProgresPause = 0
 
   let stopsDataShortName = [
     { 'source': 'routeId', 'short': 'r' },
@@ -1129,7 +1130,6 @@
       'event_label': position + ' | ' + err.message,
     });
   }
-
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 20000
@@ -1140,7 +1140,9 @@
       p = 1
     }
     $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
-    window.requestAnimationFrame(updateRefreshProgress)
+    if (refreshProgresPause === 0) {
+      window.requestAnimationFrame(updateRefreshProgress)
+    }
   }
   function getTextWidth(text, font) {
     const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
@@ -1486,84 +1488,6 @@
     $('head meta[kji="dark"]').attr('content', d)
   }
 
-  function initialize() {
-    var r = urlparams('id')
-    var c = urlparams('c')
-    if (!(c === null)) {
-      city = parseInt(c)
-    }
-    if (!(r === null)) {
-      showRoute(parseInt(r))
-      updateRefreshProgress()
-    }
-    $('.bus_info_box').scroll(function () {
-      var scrolltop = $('.bus_info_box').scrollTop()
-      if ($('.bus_info').offset().top < 0) {
-        if (businfo_scroll_1 === 0) {
-          $('.bus_info_title').attr('sticky', '1')
-          standloneStatusBarColor(0)
-          businfo_scroll_1 = 1
-        }
-      }
-      else {
-        if (businfo_scroll_1 === 1) {
-          $('.bus_info_title').attr('sticky', '0')
-          standloneStatusBarColor(1)
-          businfo_scroll_1 = 0
-        }
-      }
-      if (scrolltop < 5) {
-        if (businfo_scroll === 0) {
-          closeBus()
-          businfo_scroll = 1
-        }
-      }
-    })
-    $('.bus_info_box').click(function (e) {
-      e.stopPropagation()
-      if (businfo_scroll === 0) {
-        closeBus()
-        businfo_scroll = 1
-      }
-    });
-    $('.bus_info').click(function (e) {
-      e.stopPropagation()
-    })
-    $('.route_info_box').scroll(function () {
-      var scrolltop = $('.route_info_box').scrollTop()
-
-      if ($('.route_info').offset().top < 0) {
-        if (routeinfo_scroll_1 === 0) {
-          $('.route_info_title').attr('sticky', '1')
-          standloneStatusBarColor(0)
-          routeinfo_scroll_1 = 1
-        }
-      }
-      else {
-        if (routeinfo_scroll_1 === 1) {
-          $('.route_info_title').attr('sticky', '0')
-          standloneStatusBarColor(1)
-          routeinfo_scroll_1 = 0
-        }
-      }
-      if (scrolltop < 5) {
-        if (routeinfo_scroll === 0) {
-          closeRouteInfo()
-          routeinfo_scroll = 1
-        }
-      }
-    });
-    $('.route_info_box').click(function (e) {
-      e.stopPropagation()
-      if (routeinfo_scroll === 0) {
-        closeRouteInfo()
-        routeinfo_scroll = 1
-      }
-    });
-    $('.route_info').click(function (e) {
-      e.stopPropagation()
-    })
-  }
   function closeBus() {
     if (businfo_close === 0) {
       businfo_close = 1
@@ -1860,13 +1784,13 @@
     }
 
   }
-  function backPerviousPage() {
-    gtag('event', 'back_pervious_page', {
-      'event_category': 'route_to_home',
+  function closeRoute() {
+    refreshProgresPause = 1
+    gtag('event', 'back_to_previous_page', {
+      'event_category': 'close_route',
       'event_label': c_routeid,
       'event_callback': function () {
-        var t = new Date().getTime()
-        location.replace('https://erichsia7.github.io/bus/?t=' + t)
+        $('.route_container').css({ 'display': 'none' })
       }
     });
   }
@@ -1954,8 +1878,12 @@
       'event_category': c,
       'event_label': i,
       'event_callback': function () {
-        var u = 'https://erichsia7.github.io/bus/route/?c=' + c + '&id=' + i + '&t=' + new Date().getTime()
-        location.replace(u)
+        city = c
+        showRoute(parseInt(i))
+        if (refreshProgresPause === 0) {
+          updateRefreshProgress()
+        }
+        $('.route_container').css({ 'display': 'block' })
       }
     });
   }
@@ -1980,24 +1908,7 @@
   }
   getRoutes()
 
-  document.querySelector('#search_routes').addEventListener("paste", function (e) {
-    update_search_result()
-  });
-  document.querySelector('#search_routes').addEventListener("cut", function (e) {
-    update_search_result()
-  });
-  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-    update_search_result()
-  });
 
-  document.addEventListener("selectionchange", function (e) {
-    if (1 === 1) {
-      update_search_result()
-    }
-  });
-  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-    update_search_result()
-  });
   function opensearch() {
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
   }
@@ -2089,11 +2000,98 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-  setSearchSize()
-  initializeKeyboard()
-  $(window).resize(function () {
+  function initialize() {
+    initializeKeyboard()
+    $('.bus_info_box').scroll(function () {
+      var scrolltop = $('.bus_info_box').scrollTop()
+      if ($('.bus_info').offset().top < 0) {
+        if (businfo_scroll_1 === 0) {
+          $('.bus_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          businfo_scroll_1 = 1
+        }
+      }
+      else {
+        if (businfo_scroll_1 === 1) {
+          $('.bus_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          businfo_scroll_1 = 0
+        }
+      }
+      if (scrolltop < 5) {
+        if (businfo_scroll === 0) {
+          closeBus()
+          businfo_scroll = 1
+        }
+      }
+    })
+    $('.bus_info_box').click(function (e) {
+      e.stopPropagation()
+      if (businfo_scroll === 0) {
+        closeBus()
+        businfo_scroll = 1
+      }
+    });
+    $('.bus_info').click(function (e) {
+      e.stopPropagation()
+    })
+    $('.route_info_box').scroll(function () {
+      var scrolltop = $('.route_info_box').scrollTop()
+
+      if ($('.route_info').offset().top < 0) {
+        if (routeinfo_scroll_1 === 0) {
+          $('.route_info_title').attr('sticky', '1')
+          standloneStatusBarColor(0)
+          routeinfo_scroll_1 = 1
+        }
+      }
+      else {
+        if (routeinfo_scroll_1 === 1) {
+          $('.route_info_title').attr('sticky', '0')
+          standloneStatusBarColor(1)
+          routeinfo_scroll_1 = 0
+        }
+      }
+      if (scrolltop < 5) {
+        if (routeinfo_scroll === 0) {
+          closeRouteInfo()
+          routeinfo_scroll = 1
+        }
+      }
+    });
+    $('.route_info_box').click(function (e) {
+      e.stopPropagation()
+      if (routeinfo_scroll === 0) {
+        closeRouteInfo()
+        routeinfo_scroll = 1
+      }
+    });
+    $('.route_info').click(function (e) {
+      e.stopPropagation()
+    })
     setSearchSize()
-  })
+    $(window).resize(function () {
+      setSearchSize()
+    })
+    document.querySelector('#search_routes').addEventListener("paste", function (e) {
+      update_search_result()
+    });
+    document.querySelector('#search_routes').addEventListener("cut", function (e) {
+      update_search_result()
+    });
+    document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+      update_search_result()
+    });
+
+    document.addEventListener("selectionchange", function (e) {
+      if (1 === 1) {
+        update_search_result()
+      }
+    });
+    document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+      update_search_result()
+    });
+  }
 
   initialize()
 </script>
