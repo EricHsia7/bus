@@ -893,11 +893,11 @@
   <div class="search" p="0"> </div>
   <div class="input_placeholder">搜尋路線</div>
   <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
-  <div class="back_btn">
+  <button class="back_btn" onclick="closeopensearch()">
     <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
     </svg>
-  </div>
+  </button>
   <div class="search_routes_result"></div>
   <div class="routes_keyboard"></div>
 
@@ -2077,12 +2077,6 @@
       }
     });
 
-    $('.back_btn').click(function (e) {
-      e.stopPropagation()
-      if ($('.search').attr('p') === '1') {
-        closeopensearch()
-      }
-    });
 
     $(window).resize(function () {
       setSearchSize()
