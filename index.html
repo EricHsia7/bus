@@ -1194,8 +1194,8 @@
       var r_des_w = getTextWidth(dep, font) + 'px'
       w.push('@keyframes r_dep {0%{width:' + r_dep_w + '} 100%{width:' + r_des_w + '}}')
       w.push('@keyframes r_des {0%{width:' + r_des_w + '} 100%{width:' + r_dep_w + '}}')
-      w.push('@keyframes t_dep {0%{transform:' + 'translateX(0px)' + '} 100%{transform:' + 'translateX(' + $(".tab-line-box2").width() + 'px)' + '}}')
-      w.push('@keyframes t_des {0%{transform:' + 'translateX(' + $(".tab-line-box2").width() + 'px)' + '} 100%{transform:' + 'translateX(0px)' + '}}')
+      w.push('@keyframes t_dep {0%{transform:' + 'translateX(0%)' + '} 100%{transform:' + 'translateX(100%)' + '}}')
+      w.push('@keyframes t_des {0%{transform:' + 'translateX(100%)' + '} 100%{transform:' + 'translateX(0%)' + '}}')
       w.push('@keyframes p_dep {0%{transform:' + 'translateX(0%)' + '} 100%{transform:' + 'translateX(-50%)' + '}}')
       w.push('@keyframes p_des {0%{transform:' + 'translateX(-50%)' + '} 100%{transform:' + 'translateX(0%)' + '}}')
 
