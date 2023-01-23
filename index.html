@@ -1328,13 +1328,15 @@
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
-          var s = findStop(realtime_json, c_routeid, c_routeid_p)
-          var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-          printStop(s, '', bb)
-          realtime_last_update = new Date().getTime()
-          if (refresh_progress_l === 0) {
-            refresh_progress_l = 1
-            $('.refresh_progress_box').attr('l', '1')
+          if (stops_json['c_' + city + '_loaded']) {
+            var s = findStop(realtime_json, c_routeid, c_routeid_p)
+            var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+            printStop(s, '', bb)
+            realtime_last_update = new Date().getTime()
+            if (refresh_progress_l === 0) {
+              refresh_progress_l = 1
+              $('.refresh_progress_box').attr('l', '1')
+            }
           }
           if (!(immediate_update === true)) {
             setTimeout(function () { updateRealtimeJson(false) }, 20000);
