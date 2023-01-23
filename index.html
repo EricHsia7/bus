@@ -1892,9 +1892,10 @@
       'event_callback': function () {
         city = c
         routeinfo_loaded = 0
+        $('.route_container').css({ 'display': 'block' })
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
-        $('.route_container').css({ 'display': 'block' })
+        switchDirection('departure')
         showRoute(parseInt(i))
         updateRealtimeJson(true)
         if (refreshProgresPause === 0) {
