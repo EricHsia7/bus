@@ -1288,6 +1288,9 @@
   }
   function findStop(j, id, pid) {
     var res = []
+    if (!stops_json['c_' + city + '_loaded']) {
+      return res
+    }
     var o = j.BusInfo
     var l = o.length
     for (var w = 0; w < l; w++) {
