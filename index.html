@@ -1023,7 +1023,7 @@
 
   let realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
   let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
-  let routes_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[routes_data_city] + '/GetRoute.gz' }
+  let routes_api = function (c) { return 'https://tcgbusfs.blob.core.windows.net/' + cities[c] + '/GetRoute.gz' }
   let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
   let provider_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetProvider.gz' }
   let timetable_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetTimeTable.gz' }
@@ -1422,7 +1422,7 @@
     }
     else {
       $.ajax({
-        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        type: 'GET', url: routes_api(routes_data_city), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
@@ -1646,7 +1646,7 @@
       $('.route_info_box').attr('l', '0')
       $(sel).attr('d', '1')
       $.ajax({
-        type: 'GET', url: routes_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        type: 'GET', url: routes_api(city), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
