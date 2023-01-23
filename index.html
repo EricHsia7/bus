@@ -1596,6 +1596,7 @@
     }
   }
   function displayRouteInfo() {
+    var ct = 60 * 60 * 24 * 1000
     routeinfo_scroll = 0
     routeinfo_scroll_1 = 0
     let sel = '.route_info_box .route_info .route_info_list li'
@@ -1651,7 +1652,7 @@
       $('.route_info_box').attr('l', '0')
       $(sel).attr('d', '1')
       $.ajax({
-        type: 'GET', url: routes_api(city) + '?_=' + api_url_parameter(60 * 60 * 24 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+        type: 'GET', url: routes_api(city) + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
@@ -1670,7 +1671,7 @@
             }
 
             $.ajax({
-              type: 'GET', url: provider_api(), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data2) {
+              type: 'GET', url: provider_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data2) {
                 var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
                 b2.arrayBuffer().then(bf2 => {
                   var z2 = pako.inflate(bf2, { to: 'string' })
@@ -1689,7 +1690,7 @@
                   }
 
                   $.ajax({
-                    type: 'GET', url: timetable_api(), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data3) {
+                    type: 'GET', url: timetable_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data3) {
                       var b3 = new Blob([data3.slice(0, data3.size)], { type: 'application/gzip' });
                       b3.arrayBuffer().then(bf3 => {
                         var z3 = pako.inflate(bf3, { to: 'string' })
