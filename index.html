@@ -1133,6 +1133,19 @@
       'event_label': position + ' | ' + err.message,
     });
   }
+
+  function unicode_arr(str) {
+    var str_len = str.length
+    var unicode_arr = []
+    for (var t = 0; t < str_len; t++) {
+      var unicode = str.charCodeAt(t)
+      if (!(unicode_arr.indexOf(unicode) > -1)) {
+        unicode_arr.push(unicode)
+      }
+    }
+    return unicode_arr
+  }
+
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / 20000
@@ -1819,23 +1832,11 @@
       search_index.loaded = true
     }
   }
-  function unicode_arr(str) {
-    var str_len = str.length
-    var unicode_arr = []
-    for (var t = 0; t < str_len; t++) {
-      var unicode = str.charCodeAt(t)
-      if (!(unicode_arr.indexOf(unicode) > -1)) {
-        unicode_arr.push(unicode)
-      }
-    }
-    return unicode_arr
-  }
 
   function search_result(q, search_index) {
     if (!(String(q).length > 0)) {
       return []
     }
-
     var res_1 = []
     var q_u = unicode_arr(q)
     var q_u_len = q_u.length
@@ -1888,6 +1889,7 @@
       }
     });
   }
+
   function printSearchResult(result) {
     var result_len = result.length
     var f = []
@@ -1912,24 +1914,11 @@
     search_page_is_open = 1
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
   }
+
   function closeopensearch() {
     search_page_is_open = 0
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
   }
-  $('#search_routes').click(function (e) {
-    e.stopPropagation()
-    if (!($('.search').attr('p') === '1')) {
-      var n = new Date().getTime()
-      opensearch()
-    }
-
-  })
-  $('.back_btn').click(function (e) {
-    e.stopPropagation()
-    if ($('.search').attr('p') === '1') {
-      closeopensearch()
-    }
-  })
 
   function initializeKeyboard() {
     var htm = []
@@ -2073,13 +2062,30 @@
         routeinfo_scroll = 1
       }
     });
+
     $('.route_info').click(function (e) {
       e.stopPropagation()
     })
-    setSearchSize()
+
+    $('#search_routes').click(function (e) {
+      e.stopPropagation()
+      if (!($('.search').attr('p') === '1')) {
+        var n = new Date().getTime()
+        opensearch()
+      }
+    });
+
+    $('.back_btn').click(function (e) {
+      e.stopPropagation()
+      if ($('.search').attr('p') === '1') {
+        closeopensearch()
+      }
+    });
+
     $(window).resize(function () {
       setSearchSize()
     })
+    
     document.querySelector('#search_routes').addEventListener("paste", function (e) {
       if (search_page_is_open === 1) {
         update_search_result()
@@ -2105,6 +2111,7 @@
         update_search_result()
       }
     });
+    setSearchSize()
     getRoutes()
   }
 
