@@ -185,7 +185,7 @@
     .tabs[l="1"] .tab[g="1"] {
       color: var(--g-888888);
       font-weight: 400;
-      transition: color 0.45s;
+      transition: color 0.45s, opacity 0s;
     }
 
     .tab-line-box {
@@ -248,8 +248,8 @@
       transition: none;
     }
 
-    .tabs[l="0"] .tab {
-      color: rgba(0, 0, 0, 0);
+    .tabs[l="0"] .tab span {
+      opacity: 0;
     }
 
     .tabs[l="0"] .tab::after {
