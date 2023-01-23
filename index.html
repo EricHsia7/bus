@@ -1891,13 +1891,15 @@
       'event_label': i,
       'event_callback': function () {
         city = c
+        routeinfo_loaded = 0
+        $('.route_container .tabs').attr('l', '0')
+        $('.route_container .title .routename').attr('l', '0')
+        $('.route_container').css({ 'display': 'block' })
         showRoute(parseInt(i))
         updateRealtimeJson(true)
-        routeinfo_loaded = 0
         if (refreshProgresPause === 0) {
           updateRefreshProgress()
         }
-        $('.route_container').css({ 'display': 'block' })
       }
     });
   }
