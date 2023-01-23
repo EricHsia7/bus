@@ -173,17 +173,19 @@
       user-select: none;
       font-size: 16px;
       position: relative;
+      transition: none;
+    }
+
+    .tabs[l="1"] .tab[g="0"] {
+      color: var(--g-333333);
+      font-weight: 500;
       transition: color 0.45s;
     }
 
-    .tab[g="0"] {
-      color: var(--g-333333);
-      font-weight: 500;
-    }
-
-    .tab[g="1"] {
+    .tabs[l="1"] .tab[g="1"] {
       color: var(--g-888888);
       font-weight: 400;
+      transition: color 0.45s;
     }
 
     .tab-line-box {
@@ -248,7 +250,6 @@
 
     .tabs[l="0"] .tab {
       color: rgba(0, 0, 0, 0);
-      transition: none;
     }
 
     .tabs[l="0"] .tab::after {
