@@ -1331,9 +1331,8 @@
     }
     return res
   }
-  function updateRealtimeJson() {
+  function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
-
     $.ajax({
       type: 'GET', url: realtime_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -1348,10 +1347,12 @@
             refresh_progress_l = 1
             $('.refresh_progress_box').attr('l', '1')
           }
-          setTimeout(function () { updateRealtimeJson() }, 20000);
+          if (!(immediate_update === true)) {
+            setTimeout(function () { updateRealtimeJson(false) }, 20000);
+          }
         });
       }, error: function () {
-        setTimeout(function () { updateRealtimeJson() }, 1000);
+        setTimeout(function () { updateRealtimeJson(false) }, 1000);
       }
     });
 
@@ -1401,7 +1402,7 @@
             stops_json.loaded = true
             if (realtime_lo === 0) {
               realtime_lo = 1
-              updateRealtimeJson()
+              updateRealtimeJson(false)
             }
           });
         }
@@ -1889,6 +1890,7 @@
       'event_callback': function () {
         city = c
         showRoute(parseInt(i))
+        updateRealtimeJson(true)
         if (refreshProgresPause === 0) {
           updateRefreshProgress()
         }
