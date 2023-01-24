@@ -1627,8 +1627,8 @@
     route_container_content = { 'h_0': {}, 'h_1': {} }
     skeletonScreen(false)
     c_routeid = id
-    getStops()
     getRoutes()
+    getStops()
   }
 
   function switchDirection(d) {
@@ -2076,7 +2076,6 @@
   function opensearch() {
     search_page_is_open = 1
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
-    getStops()
   }
 
   function closeopensearch() {
