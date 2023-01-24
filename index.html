@@ -1293,7 +1293,7 @@
         }
         if (!(thiscontent.statushash === statushash)) {
           var status_s = status.tr
-          if (thiscontent.status <= 3 && status.status === 0) {
+          if (thiscontent.status <= 3 && status.status === 0 || 3) {
             status_s = true
           }
           $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
