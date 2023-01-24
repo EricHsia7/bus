@@ -1245,7 +1245,7 @@
     return metrics.width;
   }
 
-  function skeletonScreen() {
+  function skeletonScreen(m) {
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
     for (var y = 0; y < ll; y++) {
@@ -1254,7 +1254,12 @@
     for (var y = 0; y < ll; y++) {
       j.push({ 'sk': true, 'b': 1 })
     }
-    printStop(j, 'skeleton')
+    if (m) {
+      return j
+    }
+    else {
+      printStop(j, 'skeleton')
+    }
     skeletonScreenStatus = 1
   }
   function setRouteD() {
@@ -1415,7 +1420,7 @@
   function findStop(j, id, pid) {
     var res = []
     if (!stops_json.loaded) {
-      return { 'arr': res, 'tx': 'skeleton' }
+      return { 'arr': skeletonScreen(true), 'tx': 'skeleton' }
     }
     var o = j.BusInfo
     var l = o.length
@@ -1618,7 +1623,7 @@
     $('.route_container .route[direction="departure"]').scrollTop(0).html('')
     $('.route_container .route[direction="destination"]').scrollTop(0).html('')
     route_container_content = { 'h_0': {}, 'h_1': {} }
-    skeletonScreen()
+    skeletonScreen(false)
     c_routeid = id
     getStops()
     getRoutes()
