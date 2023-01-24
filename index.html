@@ -1643,7 +1643,7 @@
     $(".tab-line").attr('class', 'tab-line ' + d)
   }
 
-  function standloneStatusBarColor(a) {
+  function standaloneStatusBarColor(a) {
     var c = '#ffffff'
     var d = '#101010'
     if (a === 1) {
@@ -1659,7 +1659,7 @@
       businfo_close = 1
       $('.bus_info_box').attr('p', '0')
       $('.bus_info_mask').css({ 'opacity': '0' })
-      standloneStatusBarColor(0)
+      standaloneStatusBarColor(0)
       setTimeout(() => {
         $('.bus_info_mask').css({ 'display': 'none' })
         businfo_close = 0
@@ -1725,7 +1725,7 @@
     $('.bus_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.bus_info_mask').css({ 'opacity': '1' })
-      standloneStatusBarColor(1)
+      standaloneStatusBarColor(1)
     }, 1);
   }
 
@@ -1734,7 +1734,7 @@
       routeinfo_close = 1
       $('.route_info_box').attr('p', '0')
       $('.route_info_mask').css({ 'opacity': '0' })
-      standloneStatusBarColor(0)
+      standaloneStatusBarColor(0)
       setTimeout(() => {
         $('.route_info_mask').css({ 'display': 'none' })
         routeinfo_close = 0
@@ -1751,7 +1751,7 @@
     $('.route_info_mask').css({ 'display': 'block' })
     setTimeout(() => {
       $('.route_info_mask').css({ 'opacity': '1' })
-      standloneStatusBarColor(1)
+      standaloneStatusBarColor(1)
     }, 1);
 
     var setF = function (f, v) {
@@ -2162,14 +2162,14 @@
       if ($('.bus_info').offset().top < 0) {
         if (businfo_scroll_1 === 0) {
           $('.bus_info_title').attr('sticky', '1')
-          standloneStatusBarColor(0)
+          standaloneStatusBarColor(0)
           businfo_scroll_1 = 1
         }
       }
       else {
         if (businfo_scroll_1 === 1) {
           $('.bus_info_title').attr('sticky', '0')
-          standloneStatusBarColor(1)
+          standaloneStatusBarColor(1)
           businfo_scroll_1 = 0
         }
       }
@@ -2196,14 +2196,14 @@
       if ($('.route_info').offset().top < 0) {
         if (routeinfo_scroll_1 === 0) {
           $('.route_info_title').attr('sticky', '1')
-          standloneStatusBarColor(0)
+          standaloneStatusBarColor(0)
           routeinfo_scroll_1 = 1
         }
       }
       else {
         if (routeinfo_scroll_1 === 1) {
           $('.route_info_title').attr('sticky', '0')
-          standloneStatusBarColor(1)
+          standaloneStatusBarColor(1)
           routeinfo_scroll_1 = 0
         }
       }
