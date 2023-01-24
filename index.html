@@ -911,7 +911,7 @@
       position: absolute;
       top: 5px;
       left: 10px;
-      width: 100%;
+      width: calc(100% - 10px);
       height: 25px;
       font-size: 15px;
       display: flex;
@@ -1324,10 +1324,6 @@
           else {
             continue;
           }
-        }
-        else {
-          g = true
-          fg(k[w].b)
         }
         if (busevent_json.loaded) {
           if (bp.hasOwnProperty('s_' + k[w].StopID)) {
