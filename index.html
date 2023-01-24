@@ -1526,6 +1526,7 @@
             stops_json['c_' + stops_data_city] = json_lite
             stops_json['c_' + stops_data_city + '_loaded'] = true
             if (stops_data_city === 0) {
+              stops_json.c = stops_json['c_0']
               stops_data_city = 1
               getStops()
             }
