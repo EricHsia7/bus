@@ -347,7 +347,7 @@
       margin-left: 5px;
     }
 
-    .route li.stop .bus[d="true"] svg {
+    .route li.stop[l="false"] .bus[d="true"] svg {
       transition: opacity 0.3s;
     }
 
@@ -1262,7 +1262,7 @@
         htm['h_' + s.b] = []
       }
       if (g) {
-        var status = { 'status': 10, 'text': '' }
+        var status = { 'status': 10, 'text': '', 'tr': false }
       }
       else {
         var status = timeStatus(k[w].EstimateTime)
