@@ -1273,7 +1273,7 @@
         selector += ' .stop[stop-id="' + k[w].StopID + '"]'
         var thiscontent = route_container_content['h_' + s.b]['b_' + k[w].StopID]
         if (!(thiscontent.bvhash === bvhash)) {
-          $(selector + ' button').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
+          $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
         }
         if (!(thiscontent.statushash === statushash)) {
           $(selector + ' .status').attr('status', status.status).text(status.text)
