@@ -1615,8 +1615,8 @@
   }
 
   function showRoute(id) {
-    $('.route_container .route[direction="departure"]').html('')
-    $('.route_container .route[direction="destination"]').html('')
+    $('.route_container .route[direction="departure"]').scrollTop(0).html('')
+    $('.route_container .route[direction="destination"]').scrollTop(0).html('')
     route_container_content = { 'h_0': {}, 'h_1': {} }
     skeletonScreen()
     c_routeid = id
