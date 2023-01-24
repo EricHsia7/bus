@@ -1181,7 +1181,19 @@
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
   }
-
+  function gid(n) {
+    var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var genid = "";
+    for (var i = 0; i < 16; i++) {
+      var genrandomNumber = Math.floor(Math.random() * genidchars.length);
+      genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
+    }
+    if (!(n === undefined)) {
+      n = n.replaceAll('_', '-')
+      return n + '-' + genid + '' + new Date().getTime();
+    }
+    return genid + '' + new Date().getTime();
+  }
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
@@ -1300,6 +1312,10 @@
         if (stops_json.loaded && stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
           s = stops_json.c['b_' + k[w].StopID]
           displayName = s.n
+        }
+        else {
+          displayName = ''
+          s = { 'b': gid('b') }
         }
         if (busevent_json.loaded) {
           if (bp.hasOwnProperty('s_' + k[w].StopID)) {
