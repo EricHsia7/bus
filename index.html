@@ -1039,7 +1039,7 @@
   var stops_json = { 'loaded': false, 'c': {} }
   var routes_json = { 'loaded': false, 'c': {} }
   var search_index = { 'loaded': false, 'c': {} }
-  var route_container_content = {}
+  var route_container_content = { 'h_0': {}, 'h_1': {} }
   var c_routeid = 0
   var c_routeid_p = 0
   var o_routeid
@@ -1509,7 +1509,7 @@
   function showRoute(id) {
     $('.route_container .route[direction="departure"]').html('')
     $('.route_container .route[direction="destination"]').html('')
-    route_container_content = {}
+    route_container_content = { 'h_0': {}, 'h_1': {} }
     skeletonScreen()
     c_routeid = id
     getStops()
