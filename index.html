@@ -1415,7 +1415,7 @@
   function findStop(j, id, pid) {
     var res = []
     if (!stops_json.loaded) {
-      return res
+      return { 'arr': res, 'tx': 'skeleton' }
     }
     var o = j.BusInfo
     var l = o.length
@@ -1437,7 +1437,7 @@
       }
       return c - d
     });
-    return res
+    return { 'arr': res, 'tx': '' }
   }
   function findBus(j, id, pid) {
     if (!j.loaded || !routes_json.loaded) {
@@ -1465,7 +1465,7 @@
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            printStop(s, '', bb)
+            printStop(s.arr, s.tx, bb)
             realtime_last_update = new Date().getTime()
             if (refresh_progress_l === 0) {
               refresh_progress_l = 1
