@@ -1314,8 +1314,7 @@
           displayName = s.n
         }
         else {
-          displayName = '未知站牌'
-          s = { 'b': 0 }
+          continue;
         }
         if (busevent_json.loaded) {
           if (bp.hasOwnProperty('s_' + k[w].StopID)) {
