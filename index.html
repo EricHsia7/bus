@@ -422,7 +422,6 @@
       color: var(--g-333333);
       -webkit-user-select: none;
       user-select: none;
-      transition: 0.3s;
     }
 
     .route li.stop .status[status="0"] {
@@ -458,6 +457,10 @@
     .route li.stop .status[status="6"] {
       color: var(--g-888888);
       font-weight: 500;
+    }
+
+    .route li.stop .status[tr="true"] {
+      transition: 0.3s;
     }
 
     .search {
@@ -1265,7 +1268,7 @@
 
       if (!(route_container_content['h_' + s.b].hasOwnProperty('b_' + k[w].StopID))) {
         route_container_content['h_' + s.b]['b_' + k[w].StopID] = {}
-        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
       if (!(route_container_content['h_' + s.b]['b_' + k[w].StopID]['hash'] === hash)) {
@@ -1282,7 +1285,7 @@
           $(selector + ' .bus .busicon').html(bv.icon)
         }
         if (!(thiscontent.statushash === statushash)) {
-          $(selector + ' .status').attr('status', status.status).text(status.text)
+          $(selector + ' .status').attr('tr', status.tr).attr('status', status.status).text(status.text)
         }
         route_container_content['h_' + s.b]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash }
       }
@@ -1303,27 +1306,27 @@
     t = parseInt(t)
     var minute = Math.round(t / 60) + '分'
     if (t === -3) {
-      return { status: 6, text: '末班駛離' }
+      return { status: 6, text: '末班駛離', tr: false }
     }
     if (t === -4) {
-      return { status: 5, text: '今日停駛' }
+      return { status: 5, text: '今日停駛', tr: false }
     }
     if (t === -2) {
-      return { status: 4, text: '交通管制' }
+      return { status: 4, text: '交通管制', tr: false }
     }
     if (t === -1) {
-      return { status: 3, text: '未發車' }
+      return { status: 3, text: '未發車', tr: false }
     }
     if (t <= 180) {
       if (t <= 100) {
-        return { status: 2, text: '進站中' }
+        return { status: 2, text: '進站中', tr: true }
       }
       else {
-        return { status: 1, text: minute }
+        return { status: 1, text: minute, tr: true }
       }
     }
     else {
-      return { status: 0, text: minute }
+      return { status: 0, text: minute, tr: false }
     }
   }
   function findStop(j, id, pid) {
