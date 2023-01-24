@@ -974,6 +974,7 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <script>
   /*
   var ajax_event = { 'sent': {}, 'successful': {} }
@@ -1038,6 +1039,7 @@
   var stops_json = { 'loaded': false, 'c': {} }
   var routes_json = { 'loaded': false, 'c': {} }
   var search_index = { 'loaded': false, 'c': {} }
+  var route_container_content = {}
   var c_routeid = 0
   var c_routeid_p = 0
   var o_routeid
@@ -1214,6 +1216,7 @@
       g = true
     }
     for (var w = 0; w < l; w++) {
+      var selector = ''
       var displayName = k[w].StopID
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
@@ -1250,8 +1253,35 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-      htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+
+      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status }
+      var hash = sha256(JSON.stringify(jn))
+      var bvhash = sha256(JSON.stringify(bv))
+      var statushash = sha256(JSON.stringify(status))
+      if (!(route_container_content['h_' + s.b].hasOwnProperty('b_' + k[w].StopID))) {
+        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '">' + status.text + '</div></li>')
+      }
+      if (!(route_container_content['h_' + s.b]['b_' + k[w].StopID]['hash'] === hash)) {
+        route_container_content['h_' + s.b]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash }
+        if (s.b === 0) {
+          selector = '.route_container .route[direction="departure"]'
+        }
+        if (s.b === 1) {
+          selector = '.route_container .route[direction="destination"]'
+        }
+        selector += ' .stop[stop-id="' + k[w].StopID + '"]'
+        var thiscontent = route_container_content['h_' + s.b]['b_' + k[w].StopID]
+        if (!(thiscontent.bvhash === bvhash)) {
+          $(selector + ' button').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
+        }
+        if (!(thiscontent.statushash === statushash)) {
+          $(selector + ' .status').attr('status', status.status).text(status.text)
+        }
+      }
     }
+
+
+
 
     if (!htm.hasOwnProperty('h_0')) {
       htm['h_0'] = ['發生錯誤']
@@ -1259,9 +1289,9 @@
     if (!htm.hasOwnProperty('h_1')) {
       htm['h_1'] = ['發生錯誤']
     }
-    $('.route_container .route[direction="departure"]').html(htm['h_0'].join(''))
-    $('.route_container .route[direction="destination"]').html(htm['h_1'].join(''))
 
+    $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
   }
 
   function timeStatus(t) {
@@ -1477,6 +1507,9 @@
   }
 
   function showRoute(id) {
+    $('.route_container .route[direction="departure"]').html('')
+    $('.route_container .route[direction="destination"]').html('')
+    route_container_content = {}
     skeletonScreen()
     c_routeid = id
     getStops()
