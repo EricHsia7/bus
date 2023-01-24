@@ -1532,7 +1532,7 @@
             }
             if (stops_data_city === 1) {
               stops_json.loaded = true
-              stops_json.c = Object.assign({}, stops_json['c_0'], stops_json['c_1']);
+              stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
               if (realtime_lo === 0) {
                 realtime_lo = 1
                 updateRealtimeJson(false)
@@ -1553,7 +1553,7 @@
         var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
         routes_json['c_0'] = cc0
         routes_json['c_1'] = cc1
-        routes_json.c = Object.assign({}, cc0, cc1);
+        routes_json.c = Object.assign(cc0, cc1);
         routes_json.loaded = true
       }
     }
@@ -1603,7 +1603,7 @@
             if (routes_data_city === 1) {
               routes_json.loaded = true
               routes_json['c_1'] = json_lite
-              routes_json.c = Object.assign({}, routes_json['c_0'], json_lite);
+              routes_json.c = Object.assign(routes_json['c_0'], json_lite);
               createSearchIndex(routes_json)
               c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
               setRouteD()
