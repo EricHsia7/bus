@@ -1245,7 +1245,7 @@
     return metrics.width;
   }
 
-  function skeletonScreen(m) {
+  function skeletonScreen() {
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
     for (var y = 0; y < ll; y++) {
@@ -1254,12 +1254,7 @@
     for (var y = 0; y < ll; y++) {
       j.push({ 'sk': true, 'b': 1 })
     }
-    if (m) {
-      return j
-    }
-    else {
-      printStop(j, 'skeleton')
-    }
+    printStop(j, 'skeleton')
     skeletonScreenStatus = 1
   }
   function setRouteD() {
@@ -1420,7 +1415,7 @@
   function findStop(j, id, pid) {
     var res = []
     if (!stops_json.loaded) {
-      return { 'arr': skeletonScreen(true), 'tx': 'skeleton' }
+      return { 'arr': res, 'tx': true }
     }
     var o = j.BusInfo
     var l = o.length
@@ -1442,7 +1437,7 @@
       }
       return c - d
     });
-    return { 'arr': res, 'tx': '' }
+    return { 'arr': res, 'tx': false }
   }
   function findBus(j, id, pid) {
     if (!j.loaded || !routes_json.loaded) {
@@ -1470,7 +1465,13 @@
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            printStop(s.arr, s.tx, bb)
+            if (s.tx) {
+              skeletonScreen()
+            }
+            else {
+              printStop(s.arr, '', bb)
+            }
+
             realtime_last_update = new Date().getTime()
             if (refresh_progress_l === 0) {
               refresh_progress_l = 1
