@@ -1298,7 +1298,7 @@
       }
       else {
         if (stops_json.loaded) {
-          s = stops_json['c_' + city]['b_' + k[w].StopID]
+          s = stops_json.c['b_' + k[w].StopID]
           displayName = s.n
         }
         if (busevent_json.loaded) {
@@ -1447,7 +1447,7 @@
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
-          if (stops_json['c_' + city + '_loaded']) {
+          if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
             printStop(s, '', bb)
