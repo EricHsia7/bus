@@ -1266,12 +1266,12 @@
       var bvhash = sha256(JSON.stringify(bv))
       var statushash = sha256(JSON.stringify(status))
 
-      if (!(route_container_content['h_' + s.b].hasOwnProperty('b_' + k[w].StopID))) {
+      if (!(route_container_content['h_' + s.b].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.b]['b_' + k[w].StopID] = {}
         htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
-      if (!(route_container_content['h_' + s.b]['b_' + k[w].StopID]['hash'] === hash)) {
+      if (!(route_container_content['h_' + s.b]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
         if (s.b === 0) {
           selector = '.route_container .route[direction="departure"]'
         }
@@ -1289,7 +1289,7 @@
           if (status.status <= 3 && thiscontent.status === 0) {
             status_s = true
           }
-            $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
+          $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
         }
         route_container_content['h_' + s.b]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
