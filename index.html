@@ -20,6 +20,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style id="routes_animation_css"></style>
   <style id="search_size_css"></style>
+  <style id="safe-area-size-o">
+    :root {
+      --o-safe-area-top: 0px;
+      --o-safe-area-right: 0px;
+      --o-safe-area-bottom: 0px;
+      --o-safe-area-left: 0px;
+    }
+
+    @media all and (display-mode: standalone) {
+      :root {
+        --o-safe-area-top: env(safe-area-inset-top);
+        --o-safe-area-right: env(safe-area-inset-right);
+        --o-safe-area-bottom: env(safe-area-inset-bottom);
+        --o-safe-area-left: env(safe-area-inset-left);
+      }
+    }
+  </style>
   <style>
     :root {
       --g-333333: #333333;
@@ -310,6 +327,11 @@
       background: var(--g-ffffff);
       -webkit-user-select: none;
       user-select: none;
+    }
+
+    .route li.stop:last-child {
+      border: none;
+      margin-bottom: var(--j-safe-area-bottom);
     }
 
     .route li.stop .name {
@@ -785,7 +807,7 @@
     .route_info {
       display: inline-block;
       position: absolute;
-      top: calc(100% - clamp(180px, 36%, 300px) + 50px);
+      top: calc(100% - clamp(180px, 36%, 300px) + var(--j-safe-area-bottom));
       left: 0px;
       width: 100%;
       min-height: clamp(180px, 36%, 300px);
@@ -1125,6 +1147,11 @@
   ]
   let sdsn_len = stopsDataShortName.length
   let rdsn_len = routesDataShortName.length
+
+  function isRunningStandalone() {
+    return (window.matchMedia('(display-mode: standalone)').matches);
+  }
+
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
