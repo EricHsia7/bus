@@ -1297,7 +1297,7 @@
         bv.h = true
       }
       else {
-        if (stops_json.loaded) {
+        if (stops_json.loaded && stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
           s = stops_json.c['b_' + k[w].StopID]
           displayName = s.n
         }
