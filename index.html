@@ -1415,7 +1415,7 @@
   function findStop(j, id, pid) {
     var res = []
     if (!stops_json.loaded) {
-      return { 'arr': res, 'tx': true }
+      return res
     }
     var o = j.BusInfo
     var l = o.length
@@ -1437,7 +1437,7 @@
       }
       return c - d
     });
-    return { 'arr': res, 'tx': false }
+    return res
   }
   function findBus(j, id, pid) {
     if (!j.loaded || !routes_json.loaded) {
@@ -1465,13 +1465,7 @@
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            if (s.tx) {
-              skeletonScreen()
-            }
-            else {
-              printStop(s.arr, '', bb)
-            }
-
+            printStop(s, '', bb)
             realtime_last_update = new Date().getTime()
             if (refresh_progress_l === 0) {
               refresh_progress_l = 1
@@ -2042,7 +2036,9 @@
         $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
         showRoute(parseInt(i))
-        updateRealtimeJson(true)
+        if (stops_json.loaded) {
+          updateRealtimeJson(true)
+        }
         if (refreshProgresPause === 0) {
           updateRefreshProgress()
         }
