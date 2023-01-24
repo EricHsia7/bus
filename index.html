@@ -29,11 +29,40 @@
     }
 
     @media all and (display-mode: standalone) {
-      :root {
-        --o-safe-area-top: env(safe-area-inset-top);
-        --o-safe-area-right: env(safe-area-inset-right);
-        --o-safe-area-bottom: calc(55px + env(safe-area-inset-bottom));
-        --o-safe-area-left: env(safe-area-inset-left);
+      @media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
+        :root {
+          --o-safe-area-top: env(safe-area-inset-top);
+          --o-safe-area-right: env(safe-area-inset-right);
+          --o-safe-area-bottom: calc(24px + env(safe-area-inset-bottom));
+          --o-safe-area-left: env(safe-area-inset-left);
+        }
+      }
+
+      @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+        :root {
+          --o-safe-area-top: env(safe-area-inset-top);
+          --o-safe-area-right: env(safe-area-inset-right);
+          --o-safe-area-bottom: calc(24px + env(safe-area-inset-bottom));
+          --o-safe-area-left: env(safe-area-inset-left);
+        }
+      }
+
+      @media only screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) {
+        :root {
+          --o-safe-area-top: env(safe-area-inset-top);
+          --o-safe-area-right: env(safe-area-inset-right);
+          --o-safe-area-bottom: calc(24px + env(safe-area-inset-bottom));
+          --o-safe-area-left: env(safe-area-inset-left);
+        }
+      }
+
+      @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+        :root {
+          --o-safe-area-top: env(safe-area-inset-top);
+          --o-safe-area-right: env(safe-area-inset-right);
+          --o-safe-area-bottom: calc(24px + env(safe-area-inset-bottom));
+          --o-safe-area-left: env(safe-area-inset-left);
+        }
       }
     }
   </style>
