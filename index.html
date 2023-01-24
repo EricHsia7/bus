@@ -1062,6 +1062,7 @@
   var routeinfo_loaded = 0
   var refreshProgresPause = 0
   var search_page_is_open = 0
+  var skeletonScreenStatus = 0
   let stopsDataShortName = [
     { 'source': 'routeId', 'short': 'r' },
     { 'source': 'nameZh', 'short': 'n' },
@@ -1176,6 +1177,7 @@
   }
 
   function skeletonScreen() {
+    skeletonScreenStatus = 1
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
     for (var y = 0; y < ll; y++) {
@@ -1216,6 +1218,11 @@
     return e + h + e
   }
   function printStop(k, c, bp) {
+    if (skeletonScreenStatus === 1) {
+      skeletonScreenStatus = 0
+      $('.route_container .route[direction="departure"]').html('')
+      $('.route_container .route[direction="destination"]').html('')
+    }
     var htm = {}
     var l = k.length
     var g = false
