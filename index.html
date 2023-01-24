@@ -1412,7 +1412,15 @@
     }
 
     res.sort(function (a, b) {
-      return stops_json.c['b_' + a.StopID].s - stops_json.c['b_' + b.StopID].s
+      var c = -1
+      var d = 0
+      if (stops_json.c.hasOwnProperty('b_' + a.StopID)) {
+        c = stops_json.c['b_' + a.StopID].s
+      }
+      if (stops_json.c.hasOwnProperty('b_' + b.StopID)) {
+        d = stops_json.c['b_' + b.StopID].s
+      }
+      return c - d
     });
     return res
   }
