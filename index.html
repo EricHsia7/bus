@@ -1079,9 +1079,10 @@
   let cities = ['blobbus', 'ntpcbus']
   var city = 0
   var routes_data_city = 0
+  var stops_data_city = 0
 
   let realtime_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetEstimateTime.gz' }
-  let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetStop.gz' }
+  let stops_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[stops_data_city] + '/GetStop.gz' }
   let routes_api = function (c) { return 'https://tcgbusfs.blob.core.windows.net/' + cities[c] + '/GetRoute.gz' }
   let busevent_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetBusEvent.gz' }
   let provider_api = function () { return 'https://tcgbusfs.blob.core.windows.net/' + cities[city] + '/GetProvider.gz' }
@@ -1296,7 +1297,7 @@
         bv.h = true
       }
       else {
-        if (stops_json['c_' + city + '_loaded']) {
+        if (stops_json.loaded) {
           s = stops_json['c_' + city]['b_' + k[w].StopID]
           displayName = s.n
         }
@@ -1398,7 +1399,7 @@
   }
   function findStop(j, id, pid) {
     var res = []
-    if (!stops_json['c_' + city + '_loaded']) {
+    if (!stops_json.loaded) {
       return res
     }
     var o = j.BusInfo
@@ -1411,7 +1412,7 @@
     }
 
     res.sort(function (a, b) {
-      return stops_json['c_' + city]['b_' + a.StopID].s - stops_json['c_' + city]['b_' + b.StopID].s
+      return stops_json.c['b_' + a.StopID].s - stops_json.c['b_' + b.StopID].s
     });
     return res
   }
@@ -1478,9 +1479,9 @@
 
   function getStops() {
     var t = new Date().getTime()
-    if (!stops_json['c_' + city + '_loaded']) {
+    if (!stops_json['c_' + stops_data_city + '_loaded']) {
       $.ajax({
-        type: 'GET', url: stops_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+        type: 'GET', url: stops_api() + '?_=' + api_url_parameter(60 * 60 * 24 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
@@ -1499,11 +1500,19 @@
               }
               json_lite['b_' + id] = o[j]
             }
-            stops_json['c_' + city] = json_lite
-            stops_json['c_' + city + '_loaded'] = true
-            if (realtime_lo === 0) {
-              realtime_lo = 1
-              updateRealtimeJson(false)
+            stops_json['c_' + stops_data_city] = json_lite
+            stops_json['c_' + stops_data_city + '_loaded'] = true
+            if (stops_data_city === 0) {
+              stops_data_city = 1
+              getStops()
+            }
+            if (stops_data_city === 1) {
+              stops_json.loaded = true
+              stops_json.c = Object.assign({}, stops_json['c_0'], stops_json['c_1']);
+              if (realtime_lo === 0) {
+                realtime_lo = 1
+                updateRealtimeJson(false)
+              }
             }
           });
         }
