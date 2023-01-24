@@ -347,6 +347,10 @@
       margin-left: 5px;
     }
 
+    .route li.stop .bus[d="true"] svg {
+      transition: opacity 0.3s;
+    }
+
     .route li.stop .bus[l="1"] svg {
       opacity: 1;
     }
@@ -418,7 +422,7 @@
       color: var(--g-333333);
       -webkit-user-select: none;
       user-select: none;
-
+      transition: 0.3s;
     }
 
     .route li.stop .status[status="0"] {
@@ -1275,6 +1279,7 @@
         var thiscontent = route_container_content['h_' + s.b]['b_' + k[w].StopID]
         if (!(thiscontent.bvhash === bvhash)) {
           $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
+          $(selector + ' .bus .busicon').html(bv.icon)
         }
         if (!(thiscontent.statushash === statushash)) {
           $(selector + ' .status').attr('status', status.status).text(status.text)
@@ -1282,9 +1287,6 @@
         route_container_content['h_' + s.b]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash }
       }
     }
-
-
-
 
     if (!htm.hasOwnProperty('h_0')) {
       htm['h_0'] = ['發生錯誤']
