@@ -1492,7 +1492,6 @@
 
   }
   function updateBusEventJson() {
-
     $.ajax({
       type: 'GET', url: busevent_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -1506,7 +1505,6 @@
 
       }
     });
-
   }
 
   function getStops() {
@@ -2078,6 +2076,7 @@
   function opensearch() {
     search_page_is_open = 1
     $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+    getStops()
   }
 
   function closeopensearch() {
