@@ -1557,7 +1557,9 @@
   function getRoutes(immediate_update) {
     var t = new Date().getTime()
     var g = 60 * 60 * 24 * 1 * 1000
-
+    if (immediate_update) {
+      routes_json.loaded = false
+    }
     if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
       if (!immediate_update) {
         if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
