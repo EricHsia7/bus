@@ -1556,7 +1556,7 @@
 
   function getRoutes() {
     var t = new Date().getTime()
-    var g = 60 * 60 * 24 * 14 * 1000
+    var g = 60 * 60 * 24 * 1 * 1000
     if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
       if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
         var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
@@ -1598,7 +1598,7 @@
                 json_lite['b_' + id] = this_json_k
               }
               else {
-                if (!(this_json_k.pid === json_lite['b_' + id]['pid'])) {
+                if (!(this_json_k.pid === json_lite['b_' + id]['pid']) || !(json_lite['b_' + id]['pid'].indexOf(',' + this_json_k.pid) > -1)) {
                   json_lite['b_' + id]['pid'] = json_lite['b_' + id]['pid'] + ',' + this_json_k.pid
                 }
               }
