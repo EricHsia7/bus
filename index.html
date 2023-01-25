@@ -1280,6 +1280,7 @@
     printStop(j, 'skeleton')
     skeletonScreenStatus = 1
   }
+
   function setRouteD() {
     if (routes_json.loaded) {
       var this_route = routes_json.c['b_' + c_routeid]
@@ -1302,6 +1303,7 @@
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
+
   function bString(h, u) {
     var e = '"'
     if (u === 1) {
@@ -2208,8 +2210,8 @@
       var this_stop = snapshot[u]
       if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
         var s = stops_json.c['b_' + this_stop.StopID]
-        lon_s = s.lon
-        lat_s = s.lat
+        lon_s = parseFloat(s.lon)
+        lat_s = parseFloat(s.lat)
         this_stop.lon = lon_s
         this_stop.lat = lat_s
       }
