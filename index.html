@@ -1295,6 +1295,16 @@
     return e + h + e
   }
   function printStop(k, c, bp) {
+    var checkStop = function (h) {
+      if (h.length <= 0) {
+        return {}
+      }
+      else {
+        if (h[0].distance <= 500) {
+          return h[0]
+        }
+      }
+    }
     var fg = function (b) {
       s = { 'goBack': b }
       displayName = ''
@@ -1308,8 +1318,15 @@
     var htm = {}
     var l = k.length
     var g = false
+    var nearest_stops_list = { 'o_0': [], 'o_1': [] }
+    var nearest_stops_d = { 'o_0': [], 'o_1': [] }
     if (c === 'skeleton') {
       g = true
+    }
+    if (!g) {
+      nearest_stops_list = getNearestStops()
+      nearest_stops_d['o_0'] = checkStop(nearest_stops_list.o_0)
+      nearest_stops_d['o_1'] = checkStop(nearest_stops_list.o_1)
     }
     for (var w = 0; w < l; w++) {
       var selector = ''
@@ -1353,6 +1370,17 @@
         var status = timeStatus(k[w].EstimateTime)
       }
 
+      if (g) {
+        var nh = false
+      }
+      else {
+        if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
+          var nh = true
+        }
+        else {
+          var nh = false
+        }
+      }
       var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status }
       var hash = md5(JSON.stringify(jn))
       var bvhash = md5(JSON.stringify(bv))
@@ -1360,7 +1388,7 @@
 
       if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" nh="' + nh + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -2173,13 +2201,13 @@
     var snapshot = current_route_stops.slice(0)
     var len = snapshot.length
     var len2 = 5
-    var res = []
+    var res = { 'o_0': [], 'o_1': [] }
     if (len < 5) {
       len2 = 3
     }
 
     if (len <= 0 || !(stops_json.loaded === true)) {
-      return res
+      return {}
     }
 
     for (var u = 0; u < len; u++) {
@@ -2190,6 +2218,7 @@
         lat_s = parseFloat(s.latitude)
         this_stop.lon = lon_s
         this_stop.lat = lat_s
+        this_stop.goBack_s = s.goBack
       }
       var lon_d = Math.abs(lon_s - lon)
       var lat_d = Math.abs(lat_s - lat)
@@ -2206,7 +2235,7 @@
       var this_stop = snapshot[w]
       var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
       this_stop.distance = distance
-      res.push(this_stop)
+      res['o_' + this_stop.goBack_s].push(this_stop)
     }
     return res
   }
