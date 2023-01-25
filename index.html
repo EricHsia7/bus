@@ -2186,6 +2186,7 @@
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
   function updatePosition(lat, lon) {
+    console.log(getNearestStops(lat, lon))
   }
 
   function getNearestStops(lat, lon) {
