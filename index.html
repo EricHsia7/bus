@@ -2217,9 +2217,7 @@
       var this_stop = snapshot[w]
       var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
       this_stop.distance = distance
-      if (distance <= 1000) {
-        res.push(this_stop)
-      }
+      res.push(this_stop)
     }
     return res
   }
