@@ -381,6 +381,90 @@
       user-select: none;
     }
 
+    .route li.stop .position {
+      position: absolute;
+      top: 7.5px;
+      right: 93.5px;
+      width: 20px;
+      height: 20px;
+      background: #f7f7f7;
+      border-radius: 20px;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    .route li.stop .position::before {
+      content: '';
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 20px;
+      height: 20px;
+      background: rgba(20, 126, 251, 0.5);
+      animation-name: position;
+      animation-duration: 1.3s;
+      animation-timing-function: ease-out;
+      animation-iteration-count: infinite;
+      border-radius: 30px;
+      z-index: -1
+    }
+
+    .route li.stop .position::after {
+      content: '';
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 20px;
+      height: 20px;
+      background: #147efb;
+      border-radius: 20px;
+      box-sizing: border-box;
+      transform: scale(0.5);
+      animation-name: position_d;
+      animation-duration: 2.5s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      z-index: 1;
+    }
+
+    .route li.stop .position[p="true"] {
+      display: block;
+    }
+
+    @keyframes position {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes position_d {
+      0% {
+        transform: scale(0.5);
+      }
+
+      50% {
+        transform: scale(0.8);
+      }
+
+      70% {
+        transform: scale(0.8);
+      }
+
+      95% {
+        transform: scale(0.5);
+      }
+
+      100% {
+        transform: scale(0.5);
+      }
+    }
+
     .route li.stop .bus {
       display: block;
       position: absolute;
