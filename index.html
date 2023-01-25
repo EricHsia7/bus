@@ -2200,19 +2200,30 @@
       len2 = 3
     }
 
-    if (len <= 0) {
+    if (len <= 0 || !(stops_json.loaded === true)) {
       return res
     }
+
     for (var u = 0; u < len; u++) {
-      var lon_d = Math.abs(snapshot.lon - lon)
-      var lat_d = Math.abs(snapshot.lat - lat)
+      var this_stop = snapshot[w]
+      if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
+        var s = stops_json.c['b_' + this_stop.StopID]
+        lon_s = s.lon
+        lat_s = s.lat
+        snapshot.lon = lon_s
+        snapshot.lat = lat_s
+      }
+      var lon_d = Math.abs(lon_s - lon)
+      var lat_d = Math.abs(lat_s - lat)
       snapshot.rd = lon_d + lat_d
     }
+    
     snapshot = snapshot.sort(function (a, b) {
       var c = a.rd
       var d = b.rd
       return c - d
     })
+
     for (var w = 0; w < len2; w++) {
       var this_stop = snapshot[w]
       var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
