@@ -406,7 +406,7 @@
       animation-timing-function: ease-out;
       animation-iteration-count: infinite;
       border-radius: 30px;
-      z-index: -1
+      transform: scale(1) translateZ(-1px);
     }
 
     .route li.stop .position::after {
@@ -419,7 +419,7 @@
       background: #147efb;
       border-radius: 20px;
       box-sizing: border-box;
-      transform: scale(0.5);
+      transform: scale(0.5) translateZ(1px);
       animation-name: position_d;
       animation-duration: 2.5s;
       animation-timing-function: ease-in-out;
@@ -433,35 +433,35 @@
 
     @keyframes position {
       0% {
-        transform: scale(1);
+        transform: scale(1) translateZ(-1px);
         opacity: 1;
       }
 
       100% {
-        transform: scale(2);
+        transform: scale(2) translateZ(-1px);
         opacity: 0;
       }
     }
 
     @keyframes position_d {
       0% {
-        transform: scale(0.5);
+        transform: scale(0.5) translateZ(1px);
       }
 
       50% {
-        transform: scale(0.8);
+        transform: scale(0.8) translateZ(1px);
       }
 
       70% {
-        transform: scale(0.8);
+        transform: scale(0.8) translateZ(1px);
       }
 
       95% {
-        transform: scale(0.5);
+        transform: scale(0.5) translateZ(1px);
       }
 
       100% {
-        transform: scale(0.5);
+        transform: scale(0.5) translateZ(1px);
       }
     }
 
