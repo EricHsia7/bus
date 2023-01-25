@@ -1103,6 +1103,7 @@
   var routes_json = { 'loaded': false, 'c': {} }
   var search_index = { 'loaded': false, 'c': {} }
   var route_container_content = { 'h_0': {}, 'h_1': {} }
+  var current_route_stops = []
   var c_routeid = 0
   var c_routeid_p = 0
   var o_routeid
@@ -1127,8 +1128,8 @@
     { 'source': 'goBack', 'short': 'b' },
     { 'source': 'nameEn', 'short': false },
     { 'source': 'address', 'short': false },
-    { 'source': 'longitude', 'short': false },
-    { 'source': 'latitude', 'short': false },
+    { 'source': 'longitude', 'short': 'lon' },
+    { 'source': 'latitude', 'short': 'lat' },
     { 'source': 'showLon', 'short': false },
     { 'source': 'showLat', 'short': false },
     { 'source': 'vector', 'short': false },
@@ -1182,9 +1183,11 @@
   let sdsn_len = stopsDataShortName.length
   let rdsn_len = routesDataShortName.length
   let update_interval = 15000
+
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
   }
+
   function gid(n) {
     var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
     var genid = "";
@@ -1198,12 +1201,14 @@
     }
     return genid + '' + new Date().getTime();
   }
+
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
     var str = g.toString(36)
     return str
   }
+
   function sendError(err) {
     var position = 'L' + err.line + ',C' + err.column
     gtag('event', 'error_feedback', {
@@ -1222,6 +1227,18 @@
       }
     }
     return unicode_arr
+  }
+
+  function getDistance(lat1, lon1, lat2, lon2) {
+    var R = 6378.137;
+    var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d * 1000;
   }
 
   function updateRefreshProgress() {
@@ -1475,6 +1492,7 @@
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
             printStop(s, '', bb)
+            current_route_stops = s
             realtime_last_update = new Date().getTime()
             if (refresh_progress_l === 0) {
               refresh_progress_l = 1
@@ -2167,8 +2185,38 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-  function updatePosition() {
 
+  function updatePosition(lat, lon) {
+    var snapshot = current_route_stops.slice(0)
+    var len = snapshot.length
+    var len2 = 5
+    var res = []
+    if (len < 5) {
+      len2 = 3
+    }
+
+    if (len <= 0) {
+      return res
+    }
+    for (var u = 0; u < len; u++) {
+      var lon_d = Math.abs(snapshot.lon - lon)
+      var lat_d = Math.abs(snapshot.lat - lat)
+      snapshot.rd = lon_d + lat_d
+    }
+    snapshot = snapshot.sort(function (a, b) {
+      var c = a.rd
+      var d = b.rd
+      return c - d
+    })
+    for (var w = 0; w < len2; w++) {
+      var this_stop = snapshot(w)
+      var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
+      this_stop.distance = distance
+      if (distance <= 550) {
+        res.push(this_stop)
+      }
+    }
+    return res
   }
 
   function initialize() {
@@ -2282,13 +2330,13 @@
     });
     setSearchSize()
     getRoutes(false)
-    /*
+
     if (navigator.geolocation) {
       var watch_position = navigator.geolocation.watchPosition(function (position) {
         updatePosition(position.coords.latitude, position.coords.longitude)
       });
     }
-    */
+
   }
   initialize()
 </script>
