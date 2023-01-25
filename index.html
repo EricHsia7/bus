@@ -2185,8 +2185,10 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-
   function updatePosition(lat, lon) {
+  }
+
+  function getNearestStops(lat, lon) {
     var snapshot = current_route_stops.slice(0)
     var len = snapshot.length
     var len2 = 5
