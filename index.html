@@ -1466,7 +1466,7 @@
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
-      type: 'GET', url: realtime_api(), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
@@ -1482,7 +1482,7 @@
             }
           }
           if (!(immediate_update === true)) {
-            setTimeout(function () { updateRealtimeJson(false) }, 20000);
+            setTimeout(function () { updateRealtimeJson(false) }, 10000);
           }
         });
       }, error: function () {
