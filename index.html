@@ -1255,10 +1255,10 @@
     var j = []
     var ll = Math.floor(window.innerHeight / 45) + 5
     for (var y = 0; y < ll; y++) {
-      j.push({ 'sk': true, 'b': 0 })
+      j.push({ 'sk': true, 'goBack': 0 })
     }
     for (var y = 0; y < ll; y++) {
-      j.push({ 'sk': true, 'b': 1 })
+      j.push({ 'sk': true, 'goBack': 1 })
     }
     printStop(j, 'skeleton')
     skeletonScreenStatus = 1
@@ -1296,7 +1296,7 @@
   }
   function printStop(k, c, bp) {
     var fg = function (b) {
-      s = { 'b': b }
+      s = { 'goBack': b }
       displayName = ''
       bv.h = true
     }
@@ -1317,7 +1317,7 @@
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       if (g) {
-        fg(k[w].b)
+        fg(k[w].goBack)
       }
       else {
         if (stops_json.loaded) {
@@ -1343,8 +1343,8 @@
         }
       }
 
-      if (!(htm.hasOwnProperty('h_' + s.b))) {
-        htm['h_' + s.b] = []
+      if (!(htm.hasOwnProperty('h_' + s.goBack))) {
+        htm['h_' + s.goBack] = []
       }
       if (g) {
         var status = { 'status': 10, 'text': '', 'tr': false }
@@ -1358,20 +1358,20 @@
       var bvhash = md5(JSON.stringify(bv))
       var statushash = md5(JSON.stringify(status))
 
-      if (!(route_container_content['h_' + s.b].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
-        route_container_content['h_' + s.b]['b_' + k[w].StopID] = {}
-        htm['h_' + s.b].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+      if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
-      if (!(route_container_content['h_' + s.b]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
-        if (s.b === 0) {
+      if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
+        if (s.goBack === 0) {
           selector = '.route_container .route[direction="departure"]'
         }
-        if (s.b === 1) {
+        if (s.goBack === 1) {
           selector = '.route_container .route[direction="destination"]'
         }
         selector += ' .stop[stop-id="' + k[w].StopID + '"]'
-        var thiscontent = route_container_content['h_' + s.b]['b_' + k[w].StopID]
+        var thiscontent = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]
         if (!(thiscontent.bvhash === bvhash)) {
           $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
           $(selector + ' .bus .busicon').html(bv.icon)
@@ -1383,7 +1383,7 @@
           }
           $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
         }
-        route_container_content['h_' + s.b]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
     }
 
