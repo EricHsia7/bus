@@ -1122,23 +1122,6 @@
   var skeletonScreenStatus = 0
   var pos_lat = 0
   var pos_lon = 0
-  let stopsDataShortName = [
-    { 'source': 'routeId', 'short': 'r' },
-    { 'source': 'nameZh', 'short': 'n' },
-    { 'source': 'nameEn', 'short': false },
-    { 'source': 'seqNo', 'short': 's' },
-    { 'source': 'goBack', 'short': 'b' },
-    { 'source': 'nameEn', 'short': false },
-    { 'source': 'address', 'short': false },
-    { 'source': 'longitude', 'short': 'lon' },
-    { 'source': 'latitude', 'short': 'lat' },
-    { 'source': 'showLon', 'short': false },
-    { 'source': 'showLat', 'short': false },
-    { 'source': 'vector', 'short': false },
-    { 'source': 'Id', 'short': false },
-    { 'source': 'pgp', 'short': false },
-    { 'source': 'stopLocationId', 'short': false }
-  ]
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1182,7 +1165,7 @@
     { 'source': 'genus', 'short': false },
     { 'source': 'Id', 'short': false }
   ]
-  let sdsn_len = stopsDataShortName.length
+
   let rdsn_len = routesDataShortName.length
   let update_interval = 15000
 
@@ -1340,7 +1323,7 @@
         if (stops_json.loaded) {
           if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
             s = stops_json.c['b_' + k[w].StopID]
-            displayName = s.n
+            displayName = s.nameZh
           }
           else {
             continue;
@@ -1460,10 +1443,10 @@
       var c = -1
       var d = 0
       if (stops_json.c.hasOwnProperty('b_' + a.StopID)) {
-        c = stops_json.c['b_' + a.StopID].s
+        c = stops_json.c['b_' + a.StopID].seqNo
       }
       if (stops_json.c.hasOwnProperty('b_' + b.StopID)) {
-        d = stops_json.c['b_' + b.StopID].s
+        d = stops_json.c['b_' + b.StopID].seqNo
       }
       return c - d
     });
@@ -1538,21 +1521,14 @@
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
             var o = JSON.parse(z).BusInfo
-            var json_lite = {}
+            var json_processed = {}
             var pl = o.length
             for (var j = 0; j < pl; j++) {
               var this_json_k = o[j]
               var id = o[j].Id
-              for (var g = 0; g < sdsn_len; g++) {
-                var thsS = stopsDataShortName[g]
-                if (!(thsS.short === false)) {
-                  this_json_k[thsS.short] = this_json_k[thsS.source]
-                }
-                delete this_json_k[thsS.source]
-              }
-              json_lite['b_' + id] = o[j]
+              json_processed['b_' + id] = o[j]
             }
-            stops_json['c_' + stops_data_city] = json_lite
+            stops_json['c_' + stops_data_city] = json_processed
             stops_json['c_' + stops_data_city + '_loaded'] = true
             if (stops_data_city === 0) {
               stops_json.c = stops_json['c_0']
@@ -1607,7 +1583,7 @@
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
             var o = JSON.parse(z).BusInfo
-            var json_lite = {}
+            var json_processed = {}
             var pl = o.length
             for (var j = 0; j < pl; j++) {
               var this_json_k = o[j]
@@ -1621,17 +1597,17 @@
                   delete this_json_k[thsS.source]
                 }
               }
-              if (!json_lite.hasOwnProperty('b_' + id)) {
-                json_lite['b_' + id] = this_json_k
+              if (!json_processed.hasOwnProperty('b_' + id)) {
+                json_processed['b_' + id] = this_json_k
               }
               else {
-                if (!(this_json_k.pid === json_lite['b_' + id]['pid']) || !(String(json_lite['b_' + id]['pid']).indexOf(',' + this_json_k.pid) > -1)) {
-                  json_lite['b_' + id]['pid'] = json_lite['b_' + id]['pid'] + ',' + this_json_k.pid
+                if (!(this_json_k.pid === json_processed['b_' + id]['pid']) || !(String(json_processed['b_' + id]['pid']).indexOf(',' + this_json_k.pid) > -1)) {
+                  json_processed['b_' + id]['pid'] = json_processed['b_' + id]['pid'] + ',' + this_json_k.pid
                 }
               }
             }
-            routes_json['c_' + routes_data_city] = json_lite
-            LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_lite))
+            routes_json['c_' + routes_data_city] = json_processed
+            LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_processed))
             LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
             if (routes_data_city === 0) {
               routes_data_city = 1
@@ -1639,8 +1615,8 @@
             }
             if (routes_data_city === 1) {
               routes_json.loaded = true
-              routes_json['c_1'] = json_lite
-              routes_json.c = Object.assign(routes_json['c_0'], json_lite);
+              routes_json['c_1'] = json_processed
+              routes_json.c = Object.assign(routes_json['c_0'], json_processed);
               createSearchIndex(routes_json)
               c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
               setRouteD()
