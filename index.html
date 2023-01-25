@@ -1538,8 +1538,8 @@
               getStops()
             }
             if (stops_data_city === 1) {
-              stops_json.loaded = true
               stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
+              stops_json.loaded = true
               if (realtime_lo === 0) {
                 realtime_lo = 1
                 updateRealtimeJson(false)
@@ -1628,7 +1628,6 @@
     skeletonScreen(false)
     c_routeid = id
     getRoutes()
-    getStops()
   }
 
   function switchDirection(d) {
@@ -2270,6 +2269,7 @@
     });
     setSearchSize()
     getRoutes()
+    getStops()
   }
 
   initialize()
