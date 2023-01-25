@@ -2334,11 +2334,9 @@
     setSearchSize()
     getRoutes(false)
 
-    if (navigator.geolocation) {
-      var watch_position = navigator.geolocation.watchPosition(function (position) {
-        updatePosition(position.coords.latitude, position.coords.longitude)
-      });
-    }
+    var watch_position = navigator.geolocation.watchPosition(function (position) {
+      updatePosition(position.coords.latitude, position.coords.longitude)
+    });
 
   }
   initialize()
