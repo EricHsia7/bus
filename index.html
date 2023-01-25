@@ -1557,17 +1557,17 @@
   function getRoutes(immediate_update) {
     var t = new Date().getTime()
     var g = 60 * 60 * 24 * 1 * 1000
-    if (immediate_update) {
-      g = -1
-    }
+
     if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
-      if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
-        var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
-        var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
-        routes_json['c_0'] = cc0
-        routes_json['c_1'] = cc1
-        routes_json.c = Object.assign(cc0, cc1);
-        routes_json.loaded = true
+      if (!immediate_update) {
+        if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
+          var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
+          var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
+          routes_json['c_0'] = cc0
+          routes_json['c_1'] = cc1
+          routes_json.c = Object.assign(cc0, cc1);
+          routes_json.loaded = true
+        }
       }
     }
 
