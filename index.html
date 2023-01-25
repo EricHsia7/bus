@@ -2041,6 +2041,7 @@
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
+        getStops()
         showRoute(parseInt(i))
         if (stops_json.loaded) {
           updateRealtimeJson(true)
@@ -2269,7 +2270,6 @@
     });
     setSearchSize()
     getRoutes()
-    getStops()
   }
 
   initialize()
