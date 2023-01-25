@@ -2162,6 +2162,10 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
+  function updatePosition() {
+
+  }
+
   function initialize() {
     initializeKeyboard()
     $('.bus_info_box').scroll(function () {
@@ -2273,8 +2277,14 @@
     });
     setSearchSize()
     getRoutes()
+    /*
+    if (navigator.geolocation) {
+      var watch_position = navigator.geolocation.watchPosition(function (position) {
+        updatePosition(position.coords.latitude, position.coords.longitude)
+      });
+    }
+    */
   }
-
   initialize()
 </script>
 
