@@ -1233,8 +1233,8 @@
 
   function getDistance(lat1, lon1, lat2, lon2) {
     var R = 6378.137;
-    var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
-    var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    var dLat = Math.abs(lat2 * Math.PI / 180 - lat1 * Math.PI / 180);
+    var dLon = Math.abs(lon2 * Math.PI / 180 - lon1 * Math.PI / 180);
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
