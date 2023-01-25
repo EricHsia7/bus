@@ -1325,7 +1325,7 @@
       g = true
     }
     if (!g) {
-      nearest_stops_list = getNearestStops(pos_lat,pos_lon)
+      nearest_stops_list = getNearestStops(pos_lat, pos_lon)
       nearest_stops_d['o_0'] = checkStop(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = checkStop(nearest_stops_list.o_1)
     }
@@ -1334,6 +1334,7 @@
       var displayName = k[w].StopID
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
+      var nh = false
       if (g) {
         fg(k[w].goBack)
       }
@@ -1342,6 +1343,9 @@
           if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
             s = stops_json.c['b_' + k[w].StopID]
             displayName = s.nameZh
+            if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
+              nh = true
+            }
           }
           else {
             continue;
@@ -1371,17 +1375,7 @@
         var status = timeStatus(k[w].EstimateTime)
       }
 
-      if (g) {
-        var nh = false
-      }
-      else {
-        if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
-          var nh = true
-        }
-        else {
-          var nh = false
-        }
-      }
+
       var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
       var hash = md5(JSON.stringify(jn))
       var bvhash = md5(JSON.stringify(bv))
