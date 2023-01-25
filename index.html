@@ -358,6 +358,13 @@
       user-select: none;
     }
 
+    .route li.stop[nh="true"] {
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-perspective: 5px;
+      perspective: 5px;
+    }
+
     .route li.stop:last-child {
       border: none;
       margin-bottom: var(--o-safe-area-bottom);
@@ -392,6 +399,8 @@
       box-sizing: border-box;
       display: none;
       transform: translateZ(0px);
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
     }
 
     .route li.stop .position::before {
@@ -408,6 +417,8 @@
       animation-iteration-count: infinite;
       border-radius: 30px;
       transform: scale(1) translateZ(-1px);
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
     }
 
     .route li.stop .position::after {
@@ -425,7 +436,8 @@
       animation-duration: 2.5s;
       animation-timing-function: ease-in-out;
       animation-iteration-count: infinite;
-      z-index: 1;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
     }
 
     .route li.stop .position[d="true"] {
