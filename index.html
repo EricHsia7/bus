@@ -1381,7 +1381,7 @@
           var nh = false
         }
       }
-      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status }
+      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
       var hash = md5(JSON.stringify(jn))
       var bvhash = md5(JSON.stringify(bv))
       var statushash = md5(JSON.stringify(status))
@@ -1410,6 +1410,9 @@
             status_s = true
           }
           $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
+        }
+        if (!(thiscontent.nh === nh)) {
+          $(selector).attr('nh', nh)
         }
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
