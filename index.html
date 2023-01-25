@@ -1181,7 +1181,7 @@
   ]
   let sdsn_len = stopsDataShortName.length
   let rdsn_len = routesDataShortName.length
-
+  let update_interval = 10000
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
   }
@@ -1226,7 +1226,7 @@
 
   function updateRefreshProgress() {
     var t = new Date().getTime()
-    var p = Math.abs(t - realtime_last_update) / 20000
+    var p = Math.abs(t - realtime_last_update) / update_interval
     if (p < 0) {
       p = 0
     }
@@ -1482,7 +1482,7 @@
             }
           }
           if (!(immediate_update === true)) {
-            setTimeout(function () { updateRealtimeJson(false) }, 10000);
+            setTimeout(function () { updateRealtimeJson(false) }, update_interval);
           }
         });
       }, error: function () {
