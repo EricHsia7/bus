@@ -1440,8 +1440,10 @@
           if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
             s = stops_json.c['b_' + k[w].StopID]
             displayName = s.nameZh
-            if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
-              nh = true
+            if (nearest_stops_d['o_' + s.goBack].hasOwnProperty('StopID')) {
+              if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
+                nh = true
+              }
             }
           }
           else {
