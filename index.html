@@ -1603,7 +1603,7 @@
                 json_lite['b_' + id] = this_json_k
               }
               else {
-                if (!(this_json_k.pid === json_lite['b_' + id]['pid']) || !(json_lite['b_' + id]['pid'].indexOf(',' + this_json_k.pid) > -1)) {
+                if (!(this_json_k.pid === json_lite['b_' + id]['pid']) || !(String(json_lite['b_' + id]['pid']).indexOf(',' + this_json_k.pid) > -1)) {
                   json_lite['b_' + id]['pid'] = json_lite['b_' + id]['pid'] + ',' + this_json_k.pid
                 }
               }
