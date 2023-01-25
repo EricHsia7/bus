@@ -2205,7 +2205,7 @@
     }
 
     for (var u = 0; u < len; u++) {
-      var this_stop = snapshot[w]
+      var this_stop = snapshot[u]
       if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
         var s = stops_json.c['b_' + this_stop.StopID]
         lon_s = s.lon
@@ -2217,7 +2217,7 @@
       var lat_d = Math.abs(lat_s - lat)
       snapshot.rd = lon_d + lat_d
     }
-    
+
     snapshot = snapshot.sort(function (a, b) {
       var c = a.rd
       var d = b.rd
