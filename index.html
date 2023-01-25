@@ -1393,7 +1393,6 @@
   }
   function printStop(k, c, bp) {
     var checkStop = function (h) {
-      console.log(h)
       if (h.length <= 0) {
         return {}
       }
@@ -1440,7 +1439,8 @@
           if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
             s = stops_json.c['b_' + k[w].StopID]
             displayName = s.nameZh
-            if (nearest_stops_d['o_' + s.goBack].hasOwnProperty('StopID')) {
+            console.log(s.goBack)
+            if (nearest_stops_d.hasOwnProperty('o_' + s.goBack)) {
               if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
                 nh = true
               }
