@@ -1319,12 +1319,12 @@
     var l = k.length
     var g = false
     var nearest_stops_list = { 'o_0': [], 'o_1': [] }
-    var nearest_stops_d = { 'o_0': [], 'o_1': [] }
+    var nearest_stops_d = { 'o_0': [{}], 'o_1': [{}] }
     if (c === 'skeleton') {
       g = true
     }
     if (!g) {
-      nearest_stops_list = getNearestStops()
+      nearest_stops_list = getNearestStops(pos_lat,pos_lon)
       nearest_stops_d['o_0'] = checkStop(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = checkStop(nearest_stops_list.o_1)
     }
