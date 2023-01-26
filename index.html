@@ -2332,9 +2332,13 @@
 
     for (var w = 0; w < len2; w++) {
       var this_stop = snapshot[w]
+      var gb = this_stop.goBack_s
       var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
       this_stop.distance = distance
-      res['o_' + this_stop.goBack_s].push(this_stop)
+      if (!(res.hasOwnProperty('o_' + gb))) {
+        res['o_' + gb] = []
+      }
+      res['o_' + gb].push(this_stop)
     }
     return res
   }
