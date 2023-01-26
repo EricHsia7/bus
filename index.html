@@ -1386,6 +1386,24 @@
     }
   }
 
+  function scrollToStop(seqNo, direction) {
+    var direction_selector = '.route_container .route[direction="' + direction + '"]'
+    var pl_width = 50
+    var route_container_height = $(direction_selector).height()
+    var stop_offset_top = seqNo * pl_width
+    var route_content_height = document.querySelector(selector).scrollHeight
+    var scrolltop = 0
+    if (stop_offset_top > (route_container_height - pl_width) / 2 && (route_content_height - stop_offset_top - pl_width) > (route_container_height - pl_width) / 2) {
+      scrolltop = ((route_container_height - pl_width) / 2 - stop_offset_top) * (-1)
+    }
+    else {
+      if (stop_offset_top > (route_content_height - stop_offset_top - pl_width)) {
+        scrolltop = route_content_height - route_container_height
+      }
+    }
+    $('.history-filter').animate({ 'scrollLeft': scrolltop }, 300)
+  }
+
   function bString(h, u) {
     var e = '"'
     if (u === 1) {
@@ -1393,6 +1411,7 @@
     }
     return e + h + e
   }
+
   function printStops(k, c, bp) {
     var pos_checkStops = function (h) {
       if (h.length <= 0) {
@@ -1595,6 +1614,7 @@
     }
     return res
   }
+
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
