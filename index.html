@@ -1389,7 +1389,7 @@
   function scrollToStop(seqNo, direction) {
     var direction_selector = '.route_container .route[direction="' + direction + '"]'
     var pl_width = 50
-    var route_container_height = $(direction_selector).height()
+    var route_container_height = $(selector).height()
     var stop_offset_top = seqNo * pl_width
     var route_content_height = document.querySelector(selector).scrollHeight
     var scrolltop = 0
@@ -1401,7 +1401,7 @@
         scrolltop = route_content_height - route_container_height
       }
     }
-    $('.history-filter').animate({ 'scrollLeft': scrolltop }, 300)
+    $(selector).animate({ 'scrollLeft': scrolltop }, 300)
   }
 
   function bString(h, u) {
