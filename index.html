@@ -1406,12 +1406,14 @@
     $(selector).animate({ 'scrollTop': scrolltop }, 450)
   }
   function scrollToNearestStop(direction) {
-    var selector = '.route_container .route[direction="' + direction + '"] .stop[nh="true"]'
-    var ff = $(selector)
-    var len = ff.length
-    if (len > 0) {
-      route_container_scrolled = 1
-      scrollToStop(parseInt(ff.eq(0).attr('no')), direction)
+    if (route_container_scrolled === 0) {
+      var selector = '.route_container .route[direction="' + direction + '"] .stop[nh="true"]'
+      var ff = $(selector)
+      var len = ff.length
+      if (len > 0) {
+        route_container_scrolled = 1
+        scrollToStop(parseInt(ff.eq(0).attr('no')), direction)
+      }
     }
   }
   function bString(h, u) {
@@ -1805,12 +1807,12 @@
       b = 0
     }
     route_direction = d
-    scrollToNearestStop(route_direction)
     $('.route_container .routes').attr('class', 'routes ' + d)
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
+    scrollToNearestStop(route_direction)
   }
 
   function standaloneStatusBarColor(a) {
