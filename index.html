@@ -1194,7 +1194,7 @@
   ['橘', '小', '7', '8', '9'],
   ['更多', '幹線', '清空', '0', '刪除']]
   let icon_bus = '<svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M12.5474 64C11.8175 64 11.1719 63.7895 10.6105 63.3684C10.0491 62.9474 9.76842 62.4 9.76842 61.7263L9.76842 54.6526C8.14035 53.7544 6.94737 52.4632 6.18947 50.7789C5.43158 49.0947 5.05263 47.2982 5.05263 45.3895L5.05263 11.9579C5.05263 7.80351 7.2 4.77193 11.4947 2.86316C15.7895 0.954386 22.6526 0 32.0842 0C41.4035 0 48.2105 0.954386 52.5053 2.86316C56.8 4.77193 58.9474 7.80351 58.9474 11.9579L58.9474 45.3895C58.9474 47.2982 58.5684 49.0947 57.8105 50.7789C57.0526 52.4632 55.8596 53.7544 54.2316 54.6526L54.2316 61.7263C54.2316 62.4 53.9509 62.9474 53.3895 63.3684C52.8281 63.7895 52.1825 64 51.4526 64L49.8526 64C49.0667 64 48.393 63.7895 47.8316 63.3684C47.2702 62.9474 46.9895 62.4 46.9895 61.7263L46.9895 57.0947L17.0105 57.0947L17.0105 61.7263C17.0105 62.4 16.7298 62.9474 16.1684 63.3684C15.607 63.7895 14.9333 64 14.1474 64L12.5474 64ZM10.1053 29.3895L53.8947 29.3895L53.8947 14.8211L10.1053 14.8211L10.1053 29.3895ZM19.0316 47.8316C20.3228 47.8316 21.4175 47.3825 22.3158 46.4842C23.214 45.586 23.6632 44.4912 23.6632 43.2C23.6632 41.9088 23.214 40.814 22.3158 39.9158C21.4175 39.0175 20.3228 38.5684 19.0316 38.5684C17.7404 38.5684 16.6456 39.0175 15.7474 39.9158C14.8491 40.814 14.4 41.9088 14.4 43.2C14.4 44.4912 14.8491 45.586 15.7474 46.4842C16.6456 47.3825 17.7404 47.8316 19.0316 47.8316ZM44.9684 47.8316C46.2596 47.8316 47.3544 47.3825 48.2526 46.4842C49.1509 45.586 49.6 44.4912 49.6 43.2C49.6 41.9088 49.1509 40.814 48.2526 39.9158C47.3544 39.0175 46.2596 38.5684 44.9684 38.5684C43.6772 38.5684 42.5825 39.0175 41.6842 39.9158C40.786 40.814 40.3368 41.9088 40.3368 43.2C40.3368 44.4912 40.786 45.586 41.6842 46.4842C42.5825 47.3825 43.6772 47.8316 44.9684 47.8316Z" fill="var(--g-333333)" fill-rule="nonzero" opacity="1" stroke="none"/></svg>'
-  var realtime_json = {}
+  var realtime_json = { 'loaded': false, 'c': {} }
   var busevent_json = { 'loaded': false, 'c': {} }
   var stops_json = { 'loaded': false, 'c': {} }
   var routes_json = { 'loaded': false, 'c': {} }
@@ -1597,8 +1597,8 @@
     return res
   }
   function updateRouteContent() {
-    if (stops_json.loaded) {
-      var s = findStop(realtime_json, c_routeid, c_routeid_p)
+    if (stops_json.loaded && realtime_json.loaded) {
+      var s = findStop(realtime_json.c, c_routeid, c_routeid_p)
       var bb = findBus(busevent_json, c_routeid, c_routeid_p)
       printStop(s, '', bb)
       current_route_stops = s
@@ -1616,7 +1616,8 @@
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
-          realtime_json = JSON.parse(z)
+          realtime_json.c = JSON.parse(z)
+          realtime_json.loaded = true
           updateRouteContent()
           if (!(immediate_update === true)) {
             setTimeout(function () { updateRealtimeJson(false) }, update_interval);
@@ -1626,7 +1627,6 @@
         setTimeout(function () { updateRealtimeJson(false) }, 1000);
       }
     });
-
   }
   function updateBusEventJson() {
     $.ajax({
