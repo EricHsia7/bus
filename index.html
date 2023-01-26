@@ -1407,12 +1407,13 @@
   }
   function scrollToNearestStop(direction) {
     if (route_container_scrolled === 0) {
-      var selector = '.route_container .route[direction="' + direction + '"] .stop[nh="true"]'
-      var ff = $(selector)
+      var selector = '.route_container .route[direction="' + direction + '"]'
+      var ff = $(selector + ' .stop[nh="true"]')
       var len = ff.length
       if (len > 0) {
+        var uu = parseInt($(selector + ' .stop').eq(0).attr('no'))
         route_container_scrolled = 1
-        scrollToStop(parseInt(ff.eq(0).attr('no')), direction)
+        scrollToStop(Math.abs(parseInt(ff.eq(0).attr('no')) - uu), direction)
       }
     }
   }
