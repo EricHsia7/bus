@@ -437,8 +437,10 @@
       display: block;
     }
 
-    .route li.stop[bus="true"] .position {
-      background: var(--g-147efb);
+    .route li.stop[bus="true"] .position .position-signal {
+      animation: none;
+      transform: scale(2);
+      opacity: 0.8;
     }
 
     @keyframes position {
@@ -448,7 +450,7 @@
       }
 
       100% {
-        transform: scale(2) translateZ(-1px);
+        transform: scale(2.5) translateZ(-1px);
         opacity: 0;
       }
     }
@@ -462,12 +464,15 @@
       50% {
         transform: scale(0.8);
       }
+
       70% {
         transform: scale(0.8);
       }
+
       95% {
         transform: scale(0.65);
       }
+
       100% {
         transform: scale(0.65);
       }
