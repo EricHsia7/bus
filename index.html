@@ -1219,8 +1219,10 @@
   var skeletonScreenStatus = 0
   var watch_position
   var watch_position_permission_requested = 0
+  var route_container_scrolled = 0
   var pos_lat = 0
   var pos_lon = 0
+  var route_direction = 'departure'
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1401,9 +1403,17 @@
         scrolltop = route_content_height - route_container_height
       }
     }
-    $(selector).animate({ 'scrollTop': scrolltop }, 300)
+    $(selector).animate({ 'scrollTop': scrolltop }, 450)
   }
-
+  function scrollToNearestStop(direction) {
+    var selector = '.route_container .route[direction="' + direction + '"] .stop[nh="true"]'
+    var ff = $(selector)
+    var len = ff.length
+    if (len > 0) {
+      route_container_scrolled = 1
+      scrollToStop(parseInt(ff.eq(0).attr('no')), direction)
+    }
+  }
   function bString(h, u) {
     var e = '"'
     if (u === 1) {
@@ -1503,7 +1513,7 @@
 
       if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '" nh="' + nh + '" no="' + s.seqNo + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -1529,6 +1539,8 @@
         }
         if (!(thiscontent.nh === nh)) {
           $(selector + ' .position').attr('d', nh)
+          $(selector).attr('nh', nh)
+
         }
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
@@ -1543,6 +1555,7 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
+    scrollToNearestStop(route_direction)
   }
 
   function timeStatus(t) {
@@ -1791,6 +1804,8 @@
       a = 1
       b = 0
     }
+    route_direction = d
+    scrollToNearestStop(route_direction)
     $('.route_container .routes').attr('class', 'routes ' + d)
     $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
@@ -2191,6 +2206,7 @@
       'event_callback': function () {
         city = c
         routeinfo_loaded = 0
+        route_container_scrolled = 0
         $('.route_container').css({ 'display': 'block' })
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
