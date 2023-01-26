@@ -358,13 +358,6 @@
       user-select: none;
     }
 
-    .route li.stop[nh="true"] {
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
-      -webkit-perspective: 1000px;
-      perspective: 1000px;
-    }
-
     .route li.stop:last-child {
       border: none;
       margin-bottom: var(--o-safe-area-bottom);
@@ -392,22 +385,26 @@
       position: absolute;
       top: 15px;
       right: 93.5px;
-      width: 20px;
-      height: 20px;
-      background: #ffffff;
-      border-radius: 20px;
+      width: 50px;
+      height: 50px;
       box-sizing: border-box;
       display: none;
-      transform: translateZ(2px);
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
     }
 
-    .route li.stop .position::before {
-      content: '';
+    .position .position-white {
       position: absolute;
-      left: 0px;
-      top: 0px;
+      top: 15px;
+      left: 15px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 20px;
+    }
+
+    .position .position-signal {
+      position: absolute;
+      left: 15px;
+      top: 15px;
       width: 20px;
       height: 20px;
       background: rgba(20, 126, 251, 0.5);
@@ -416,28 +413,22 @@
       animation-timing-function: ease-out;
       animation-iteration-count: infinite;
       border-radius: 30px;
-      transform: scale(1) translateZ(1px);
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
     }
 
-    .route li.stop .position::after {
-      content: '';
+    .position .position-blue {
       position: absolute;
-      left: 0px;
-      top: 0px;
+      left: 15px;
+      top: 15px;
       width: 20px;
       height: 20px;
       background: #147efb;
       border-radius: 20px;
       box-sizing: border-box;
-      transform: scale(0.5) translateZ(3px);
+      transform: scale(0.5);
       animation-name: position_d;
       animation-duration: 2.5s;
       animation-timing-function: ease-in-out;
       animation-iteration-count: infinite;
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
     }
 
     .route li.stop .position[d="true"] {
@@ -1483,7 +1474,7 @@
 
       if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" nh="' + nh + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -1508,7 +1499,6 @@
         }
         if (!(thiscontent.nh === nh)) {
           $(selector + ' .position').attr('d', nh)
-          $(selector).attr('nh', nh)
         }
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
