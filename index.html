@@ -76,6 +76,7 @@
       --g-888888: #888888;
       --g-c7c7c7: #c7c7c7;
       --g-e3e3e3: #e3e3e3;
+      --g-147efb: #147efb;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -88,6 +89,7 @@
         --g-888888: #888888;
         --g-c7c7c7: #383838;
         --g-e3e3e3: #262626;
+        --g-147efb: #147efb;
       }
     }
 
@@ -407,7 +409,7 @@
       top: 15px;
       width: 20px;
       height: 20px;
-      background: rgba(20, 126, 251, 0.5);
+      background: var(--g-147efb);
       animation-name: position;
       animation-duration: 1.3s;
       animation-timing-function: ease-out;
@@ -421,7 +423,7 @@
       top: 15px;
       width: 20px;
       height: 20px;
-      background: #147efb;
+      background: var(--g-147efb);
       border-radius: 20px;
       box-sizing: border-box;
       transform: scale(0.5);
@@ -435,10 +437,14 @@
       display: block;
     }
 
+    .route li.stop[bus="true"] .position {
+      background: var(--g-147efb);
+    }
+
     @keyframes position {
       0% {
         transform: scale(1) translateZ(-1px);
-        opacity: 1;
+        opacity: 0.5;
       }
 
       100% {
@@ -1474,7 +1480,7 @@
 
       if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -1487,6 +1493,7 @@
         selector += ' .stop[stop-id="' + k[w].StopID + '"]'
         var thiscontent = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]
         if (!(thiscontent.bvhash === bvhash)) {
+          $(selector).attr('bus', bv.h)
           $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
           $(selector + ' .bus .busicon').html(bv.icon)
         }
