@@ -1792,8 +1792,6 @@
   }
 
   function showRoute(id) {
-    $('.route_container .route[direction="departure"]').scrollTop(0).html('')
-    $('.route_container .route[direction="destination"]').scrollTop(0).html('')
     route_container_content = { 'h_0': {}, 'h_1': {} }
     skeletonScreen(false)
     c_routeid = id
@@ -2131,6 +2129,8 @@
       'event_category': 'close_route',
       'event_label': c_routeid,
       'event_callback': function () {
+        $('.route_container .route[direction="departure"]').scrollTop(0).html('')
+        $('.route_container .route[direction="destination"]').scrollTop(0).html('')
         $('.route_container').css({ 'display': 'none' })
       }
     });
