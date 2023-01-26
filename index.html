@@ -1216,6 +1216,7 @@
   var search_page_is_open = 0
   var skeletonScreenStatus = 0
   var watch_position
+  var watch_position_permission_requested = 0
   var pos_lat = 0
   var pos_lon = 0
   let routesDataShortName = [
@@ -2181,6 +2182,7 @@
         if (refreshProgresPause === 0) {
           updateRefreshProgress()
         }
+        n_watchPosition()
       }
     });
   }
@@ -2335,6 +2337,16 @@
     return res
   }
 
+  function n_watchPosition() {
+    if (watch_position_permission_requested === 0) {
+      watch_position_permission_requested = 1
+      watch_position = navigator.geolocation.watchPosition(function (position) {
+        pos_lat = position.coords.latitude
+        pos_lon = position.coords.longitude
+      });
+    }
+  }
+
   function initialize() {
     initializeKeyboard()
     $('.bus_info_box').scroll(function () {
@@ -2446,10 +2458,6 @@
     });
     setSearchSize()
     getRoutes(false)
-    watch_position = navigator.geolocation.watchPosition(function (position) {
-      pos_lat = position.coords.latitude
-      pos_lon = position.coords.longitude
-    });
   }
   initialize()
 </script>
