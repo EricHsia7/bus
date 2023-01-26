@@ -1606,8 +1606,8 @@
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            printStops(s, '', bb)
             current_route_stops = s
+            printStops(s, '', bb)
             realtime_last_update = new Date().getTime()
             if (refresh_progress_l === 0) {
               refresh_progress_l = 1
