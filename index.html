@@ -1215,6 +1215,7 @@
   var refreshProgresPause = 0
   var search_page_is_open = 0
   var skeletonScreenStatus = 0
+  var watch_position
   var pos_lat = 0
   var pos_lon = 0
   let routesDataShortName = [
@@ -2445,12 +2446,10 @@
     });
     setSearchSize()
     getRoutes(false)
-
-    var watch_position = navigator.geolocation.watchPosition(function (position) {
+    watch_position = navigator.geolocation.watchPosition(function (position) {
       pos_lat = position.coords.latitude
       pos_lon = position.coords.longitude
     });
-
   }
   initialize()
 </script>
