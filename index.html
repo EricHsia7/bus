@@ -1596,6 +1596,19 @@
     }
     return res
   }
+  function updateRouteContent() {
+    if (stops_json.loaded) {
+      var s = findStop(realtime_json, c_routeid, c_routeid_p)
+      var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+      printStop(s, '', bb)
+      current_route_stops = s
+      realtime_last_update = new Date().getTime()
+      if (refresh_progress_l === 0) {
+        refresh_progress_l = 1
+        $('.refresh_progress_box').attr('l', '1')
+      }
+    }
+  }
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
@@ -1604,17 +1617,7 @@
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
-          if (stops_json.loaded) {
-            var s = findStop(realtime_json, c_routeid, c_routeid_p)
-            var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            printStop(s, '', bb)
-            current_route_stops = s
-            realtime_last_update = new Date().getTime()
-            if (refresh_progress_l === 0) {
-              refresh_progress_l = 1
-              $('.refresh_progress_box').attr('l', '1')
-            }
-          }
+          updateRouteContent()
           if (!(immediate_update === true)) {
             setTimeout(function () { updateRealtimeJson(false) }, update_interval);
           }
@@ -1672,7 +1675,7 @@
                 updateRealtimeJson(false)
               }
               else {
-                updateRealtimeJson(true)
+                updateRouteContent()
               }
             }
           });
@@ -2179,7 +2182,7 @@
         getStops()
         showRoute(parseInt(i))
         if (stops_json.loaded) {
-          updateRealtimeJson(true)
+          updateRouteContent()
         }
         if (refreshProgresPause === 0) {
           updateRefreshProgress()
