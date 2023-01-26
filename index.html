@@ -1387,17 +1387,17 @@
   }
 
   function scrollToStop(seqNo, direction) {
-    var direction_selector = '.route_container .route[direction="' + direction + '"]'
-    var pl_width = 50
+    var selector = '.route_container .route[direction="' + direction + '"]'
+    var stop_height = 50
     var route_container_height = $(selector).height()
-    var stop_offset_top = seqNo * pl_width
+    var stop_offset_top = seqNo * stop_height
     var route_content_height = document.querySelector(selector).scrollHeight
     var scrolltop = 0
-    if (stop_offset_top > (route_container_height - pl_width) / 2 && (route_content_height - stop_offset_top - pl_width) > (route_container_height - pl_width) / 2) {
-      scrolltop = ((route_container_height - pl_width) / 2 - stop_offset_top) * (-1)
+    if (stop_offset_top > (route_container_height - stop_height) / 2 && (route_content_height - stop_offset_top - stop_height) > (route_container_height - stop_height) / 2) {
+      scrolltop = ((route_container_height - stop_height) / 2 - stop_offset_top) * (-1)
     }
     else {
-      if (stop_offset_top > (route_content_height - stop_offset_top - pl_width)) {
+      if (stop_offset_top > (route_content_height - stop_offset_top - stop_height)) {
         scrolltop = route_content_height - route_container_height
       }
     }
