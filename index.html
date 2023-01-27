@@ -1404,12 +1404,14 @@ return source+(y_min+y)/(y_max-y_min)*(aim-source)
 }
 
 if(t<endTime) {
-element.scrollTop = s(t)
+var k = s(t)
+element.scrollTop = k
+if(Math.abs(element.scrollTop/k-1) < 0.05) {
   t = new Date().getTime()
-  console.log(s(t))
   window.requestAnimationFrame(function() {
 scrollToY(element,source,aim,startTime,endTime,t)  
 })
+}
 }
 }
 function scrollTo(element,aim,duration) {
