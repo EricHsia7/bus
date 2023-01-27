@@ -1406,7 +1406,7 @@ return source+(y_min+y)/(y_max-y_min)*(aim-source)
 if(t<endTime) {
 var k = s(t)
 element.scrollTop = k
-if(Math.abs(element.scrollTop/k-1) < 0.05) {
+if(Math.abs(element.scrollTop/k-1) < 0.1) {
   t = new Date().getTime()
   window.requestAnimationFrame(function() {
 scrollToY(element,source,aim,startTime,endTime,t)  
