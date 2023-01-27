@@ -1390,10 +1390,10 @@
   
 function scrollToY(element,source,aim,startTime,endTime,t) {
   var f = function(x) {
-return 41.3+32.5*x-0.292*x*x
+return -315+156*x-4.03*x*x+0.0287*x*x*x
 }
-var x_min = -1.25
-var x_max = 45.5
+var x_min = 2.14
+var x_max = 30
 var y_min = f(x_min)
 var y_max = f(x_max)
 var s = function (time) {
