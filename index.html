@@ -1387,7 +1387,34 @@
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
+  
+function scrollToY(element,source,aim,startTime,endTime,t) {
+  var f = function(x) {
+return 41.3+32.5*x-0.292*x*x
+}
+var x_min = -1.25
+var x_max = 45.5
+var y_min = f(x_min)
+var y_max = f(x_max)
+var s = function (time) {
+var x = x_min+(time-startTime)/(endTime-startTime)*(x_max-x_min)
+var y = f(x)
+return (y_min+y)/(y_max-y_min)*(aim-source)
+}
 
+if(t<endTime) {
+element.scrollTop = s(t)
+  t = new Date().getTime()
+  console.log(s(t))
+  window.requestAnimationFrame(function() {
+scrollToY(element,source,aim,startTime,endTime,t)  
+})
+}
+}
+function scrollTo(element,aim,duration) {
+  var t = new Date().getTime()
+scrollToY(element,element.scrollTop,aim,t,t+duration,t)
+}
   function scrollToStop(seqNo, direction) {
     var selector = '.route_container .route[direction="' + direction + '"]'
     var stop_height = 50
@@ -1403,8 +1430,9 @@
         scrolltop = route_content_height - route_container_height
       }
     }
-    $(selector).animate({ 'scrollTop': scrolltop }, 450)
+    scrollTo(document.querySelector(selector),scrolltop,450)
   }
+  
   function scrollToNearestStop(direction) {
     if (route_container_scrolled === 0) {
       var selector = '.route_container .route[direction="' + direction + '"]'
