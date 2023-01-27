@@ -1399,7 +1399,7 @@ var y_max = f(x_max)
 var s = function (time) {
 var x = x_min+(time-startTime)/(endTime-startTime)*(x_max-x_min)
 var y = f(x)
-return (y_min+y)/(y_max-y_min)*(aim-source)
+return source+(y_min+y)/(y_max-y_min)*(aim-source)
 }
 
 if(t<endTime) {
