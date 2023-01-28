@@ -1410,12 +1410,12 @@ var g = element.scrollTop
 if(g <=0) {
 g = 1
 }
-if(Math.abs(g/k-1) < 0.1) {
+
   t = new Date().getTime()
   window.requestAnimationFrame(function() {
 scrollToY(element,source,aim,startTime,endTime,t)  
 })
-}
+
 }
 }
 function scrollTo(element,aim,duration) {
