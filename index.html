@@ -1406,10 +1406,7 @@ return source+(y_min+y)/(y_max-y_min)*(aim-source)
 if(t<endTime) {
 var k = s(t)
 element.scrollTop = k
-var g = element.scrollTop
-if(g <=0) {
-g = 1
-}
+
 
   t = new Date().getTime()
   window.requestAnimationFrame(function() {
