@@ -1216,7 +1216,6 @@
   var routeinfo_loaded = 0
   var refreshProgresPause = 0
   var search_page_is_open = 0
-  var route_page_is_open = 0
   var skeletonScreenStatus = 0
   var watch_position
   var watch_position_permission_requested = 0
@@ -1225,14 +1224,6 @@
   var pos_lat = 0
   var pos_lon = 0
   var route_direction = 'departure'
-  var routes_container = document.querySelector('.routes_container')
-  var route_container_s = document.querySelector('.routes')
-  var route_x1, route_y1, route_x2, route_y2, route_min_X, route_min_Y, route_max_X, route_max_Y, animation_speed
-  var offsetX = 0
-  var start_offsetX = 0
-  var de = document.documentElement
-  var horizontal_slide = false
-
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1389,45 +1380,45 @@
       w.push('--tab-line-destination-width:' + r_des_w)
 
       $('#routes_animation_css').html(':root{' + w.join(';') + '}')
-      $('.routes .tabs .tab[direction="departure"] span').text(des)
-      $('.routes .tabs .tab[direction="destination"] span').text(dep)
-      $('.routes .title .routename').text(name)
-      $('.routes .tabs').attr('l', '1')
-      $('.routes .title .routename').attr('l', '1')
+      $('.route_container .tabs .tab[direction="departure"] span').text(des)
+      $('.route_container .tabs .tab[direction="destination"] span').text(dep)
+      $('.route_container .title .routename').text(name)
+      $('.route_container .tabs').attr('l', '1')
+      $('.route_container .title .routename').attr('l', '1')
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
+  
+function scrollToY(element,source,aim,startTime,endTime,t) {
+  var f = function(x) {
+return -15.4+9.11*x-0.0285*x*x
+}
+var x_min = 1.7
+var x_max = 163.02
+var y_min = f(x_min)
+var y_max = f(x_max)
+var s = function (time) {
+var x = x_min+(time-startTime)/(endTime-startTime)*(x_max-x_min)
+var y = f(x)
+return source+(y_min+y)/(y_max-y_min)*(aim-source)
+}
 
-  function scrollToY(element, source, aim, startTime, endTime, t) {
-    var f = function (x) {
-      return -15.4 + 9.11 * x - 0.0285 * x * x
-    }
-    var x_min = 1.7
-    var x_max = 163.02
-    var y_min = f(x_min)
-    var y_max = f(x_max)
-    var s = function (time) {
-      var x = x_min + (time - startTime) / (endTime - startTime) * (x_max - x_min)
-      var y = f(x)
-      return source + (y_min + y) / (y_max - y_min) * (aim - source)
-    }
-
-    if (t < endTime) {
-      var k = s(t)
-      element.scrollTop = k
+if(t<endTime) {
+var k = s(t)
+element.scrollTop = k
 
 
-      t = new Date().getTime()
-      window.requestAnimationFrame(function () {
-        scrollToY(element, source, aim, startTime, endTime, t)
-      })
+  t = new Date().getTime()
+  window.requestAnimationFrame(function() {
+scrollToY(element,source,aim,startTime,endTime,t)  
+})
 
-    }
-  }
-  function scrollTo(element, aim, duration) {
-    var t = new Date().getTime()
-    scrollToY(element, element.scrollTop, aim, t, t + duration, t)
-  }
+}
+}
+function scrollTo(element,aim,duration) {
+  var t = new Date().getTime()
+scrollToY(element,element.scrollTop,aim,t,t+duration,t)
+}
   function scrollToStop(seqNo, direction) {
     var selector = '.route_container .route[direction="' + direction + '"]'
     var stop_height = 50
@@ -1443,9 +1434,9 @@
         scrolltop = route_content_height - route_container_height
       }
     }
-    scrollTo(document.querySelector(selector), scrolltop, 555)
+    scrollTo(document.querySelector(selector),scrolltop,555)
   }
-
+  
   function scrollToNearestStop(direction) {
     if (route_container_scrolled === 0) {
       var selector = '.route_container .route[direction="' + direction + '"]'
@@ -1484,8 +1475,8 @@
     }
     if (skeletonScreenStatus === 1) {
       skeletonScreenStatus = 0
-      $('.routes .route[direction="departure"]').html('')
-      $('.routes .route[direction="destination"]').html('')
+      $('.route_container .route[direction="departure"]').html('')
+      $('.route_container .route[direction="destination"]').html('')
     }
     var htm = {}
     var l = k.length
@@ -1597,8 +1588,8 @@
       htm['h_1'] = ['']
     }
 
-    $('.routes .route[direction="departure"]').append(htm['h_0'].join(''))
-    $('.routes .route[direction="destination"]').append(htm['h_1'].join(''))
+    $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
     scrollToNearestStop(route_direction)
   }
 
@@ -1848,9 +1839,9 @@
     }
     route_direction = d
     route_container_scrolled = 0
-    $('.routes .routes').attr('class', 'routes ' + d)
-    $('.routes .tabs .tab[direction="departure"]').attr('g', a)
-    $('.routes .tabs .tab[direction="destination"]').attr('g', b)
+    $('.route_container .routes').attr('class', 'routes ' + d)
+    $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
+    $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
     scrollToNearestStop(route_direction)
@@ -2170,10 +2161,9 @@
       'event_category': 'close_route',
       'event_label': c_routeid,
       'event_callback': function () {
-        route_page_is_open = 0
-        $('.routes .route[direction="departure"]').scrollTop(0).html('')
-        $('.routes .route[direction="destination"]').scrollTop(0).html('')
-        $('.routes').css({ 'display': 'none' })
+        $('.route_container .route[direction="departure"]').scrollTop(0).html('')
+        $('.route_container .route[direction="destination"]').scrollTop(0).html('')
+        $('.route_container').css({ 'display': 'none' })
       }
     });
   }
@@ -2253,10 +2243,9 @@
         city = c
         routeinfo_loaded = 0
         route_container_scrolled = 0
-        route_page_is_open = 1
-        $('.routes').css({ 'display': 'block' })
-        $('.routes .tabs').attr('l', '0')
-        $('.routes .title .routename').attr('l', '0')
+        $('.route_container').css({ 'display': 'block' })
+        $('.route_container .tabs').attr('l', '0')
+        $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
         getStops()
         showRoute(parseInt(i))
@@ -2377,13 +2366,7 @@
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-  function setRouteSlideSize() {
-    route_min_X = 0
-    route_min_Y = 95
-    route_max_X = window.innerWidth + route_max_X
-    route_max_Y = window.innerHeight - 95 + route_min_Y
-    animation_speed = (route_max_X - route_min_X) / 700
-  }
+
   function getNearestStops(lat, lon) {
     var snapshot = current_route_stops.slice(0)
     var len = snapshot.length
@@ -2438,66 +2421,6 @@
         pos_lat = position.coords.latitude
         pos_lon = position.coords.longitude
       });
-    }
-  }
-
-  function checkSlideCoordinate(route_min, p, route_max) {
-    if (p < route_min) {
-      return route_min - route_min
-    }
-    if (p > route_max) {
-      return route_max - route_min
-    }
-    return p - route_min
-  }
-
-  function calcSlideScale() {
-    var p1 = Math.abs(route_max_X - route_min_X) / 2
-    var f = route_x2 - route_x1
-    var s = f / p1
-    if (s < 0) {
-      //route_container_s slide to right
-      var w = s / ((route_x1) / p1)
-    }
-    if (s > 0) {
-      //route_container_s slide to left
-      var w = s / ((route_max_X - route_min_X - route_x1) / p1)
-    }
-    if (w < -1) {
-      w = -1
-    }
-    if (w > 1) {
-      w = 1
-    }
-    return w
-  }
-
-  function touchStart() {
-    $('.routes').css({ 'transition': '0ms' });
-  }
-  function touchMove() {
-    $('.routes').css({ 'transform': `translateX(${(route_max_X) * calcSlideScale() + offsetX}px)` });
-  }
-  function touchEnd() {
-    if (horizontal_slide) {
-      var w = calcSlideScale()
-      var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
-      var q = ((1 + calcSlideScale()) / 2)
-      if (w < -0.5 || w > 0.5) {
-        if (w < 0.5) {
-          w = -1
-          offsetX = (route_max_X - route_min_X) * (-1)
-        }
-        if (w > 0.5) {
-          w = 0
-          offsetX = (route_max_X - route_min_X) * (0)
-        }
-        $('.routes').css({ 'transform': `translateX(${(route_max_X - route_min_X) * w}px)`, 'transition': `${d / animation_speed}ms` });
-      }
-      else {
-        $('.routes').css({ 'transform': `translateX(${start_offsetX}px)`, 'transition': `${d / animation_speed}ms` });
-      }
-      horizontal_slide = false
     }
   }
 
@@ -2612,35 +2535,7 @@
     });
     setSearchSize()
     getRoutes(false)
-
-    document.addEventListener('touchstart', function (e) {
-      horizontal_slide = false
-      touchStart()
-      route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-      route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-      start_offsetX = offsetX
-    });
-
-    document.addEventListener('touchmove', function (e) {
-      if (route_page_is_open) {
-        route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-        route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-        if (horizontal_slide) {
-          touchMove()
-        }
-        else {
-          var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
-          if (a <= 30) {
-            horizontal_slide = true
-          }
-        }
-      }
-    });
-    document.addEventListener('touchend', function (e) {
-      touchEnd()
-    });
   }
-  setRouteSlideSize()
   initialize()
 </script>
 
