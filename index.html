@@ -1848,9 +1848,9 @@
     }
     route_direction = d
     route_container_scrolled = 0
-    $('.routes .routes').attr('class', 'routes ' + d)
-    $('.routes .tabs .tab[direction="departure"]').attr('g', a)
-    $('.routes .tabs .tab[direction="destination"]').attr('g', b)
+    $('.route_container .routes').attr('class', 'routes ' + d)
+    $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
+    $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
     scrollToNearestStop(route_direction)
@@ -2173,7 +2173,7 @@
         route_page_is_open = 0
         $('.routes .route[direction="departure"]').scrollTop(0).html('')
         $('.routes .route[direction="destination"]').scrollTop(0).html('')
-        $('.routes').css({ 'display': 'none' })
+        $('.route_container').css({ 'display': 'none' })
       }
     });
   }
@@ -2254,9 +2254,9 @@
         routeinfo_loaded = 0
         route_container_scrolled = 0
         route_page_is_open = 1
-        $('.routes').css({ 'display': 'block' })
-        $('.routes .tabs').attr('l', '0')
-        $('.routes .title .routename').attr('l', '0')
+        $('.route_container').css({ 'display': 'block' })
+        $('.route_container .tabs').attr('l', '0')
+        $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
         getStops()
         showRoute(parseInt(i))
