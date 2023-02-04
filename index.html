@@ -2612,7 +2612,7 @@
     });
     setSearchSize()
     getRoutes(false)
-
+try {
     document.addEventListener('touchstart', function (e) {
       console.log('1')
       horizontal_slide = false
@@ -2644,6 +2644,10 @@
       console.log('3')
       touchEnd()
     });
+  }
+  catch(e) {
+    console.log(e)
+  }
     setRouteSlideSize()
   }
   initialize()
