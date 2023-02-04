@@ -1389,11 +1389,11 @@
       w.push('--tab-line-destination-width:' + r_des_w)
 
       $('#routes_animation_css').html(':root{' + w.join(';') + '}')
-      $('.routes .tabs .tab[direction="departure"] span').text(des)
-      $('.routes .tabs .tab[direction="destination"] span').text(dep)
-      $('.routes .title .routename').text(name)
-      $('.routes .tabs').attr('l', '1')
-      $('.routes .title .routename').attr('l', '1')
+      $('.route_container.tabs .tab[direction="departure"] span').text(des)
+      $('.route_container.tabs .tab[direction="destination"] span').text(dep)
+      $('.route_container.title .routename').text(name)
+      $('.route_container.tabs').attr('l', '1')
+      $('.route_container.title .routename').attr('l', '1')
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
     }
   }
@@ -1484,8 +1484,8 @@
     }
     if (skeletonScreenStatus === 1) {
       skeletonScreenStatus = 0
-      $('.routes .route[direction="departure"]').html('')
-      $('.routes .route[direction="destination"]').html('')
+      $('.route_container.route[direction="departure"]').html('')
+      $('.route_container.route[direction="destination"]').html('')
     }
     var htm = {}
     var l = k.length
@@ -1597,8 +1597,8 @@
       htm['h_1'] = ['']
     }
 
-    $('.routes .route[direction="departure"]').append(htm['h_0'].join(''))
-    $('.routes .route[direction="destination"]').append(htm['h_1'].join(''))
+    $('.route_container.route[direction="departure"]').append(htm['h_0'].join(''))
+    $('.route_container.route[direction="destination"]').append(htm['h_1'].join(''))
     scrollToNearestStop(route_direction)
   }
 
@@ -2171,8 +2171,8 @@
       'event_label': c_routeid,
       'event_callback': function () {
         route_page_is_open = 0
-        $('.routes .route[direction="departure"]').scrollTop(0).html('')
-        $('.routes .route[direction="destination"]').scrollTop(0).html('')
+        $('.route_container.route[direction="departure"]').scrollTop(0).html('')
+        $('.route_container.route[direction="destination"]').scrollTop(0).html('')
         $('.route_container').css({ 'display': 'none' })
       }
     });
