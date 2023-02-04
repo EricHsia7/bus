@@ -2613,7 +2613,7 @@
     setSearchSize()
     getRoutes(false)
 
-    route_container_s.addEventListener('touchstart', function (e) {
+    document.addEventListener('touchstart', function (e) {
       console.log('1')
       horizontal_slide = false
       touchStart()
@@ -2622,7 +2622,7 @@
       start_offsetX = offsetX
     });
 
-    route_container_s.addEventListener('touchmove', function (e) {
+    document.addEventListener('touchmove', function (e) {
       console.log('2')
 
       if (route_page_is_open === 1) {
@@ -2640,7 +2640,7 @@
         }
       }
     });
-    route_container_s.addEventListener('touchend', function (e) {
+    document.addEventListener('touchend', function (e) {
       console.log('3')
       touchEnd()
     });
