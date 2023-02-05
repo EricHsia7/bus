@@ -1388,6 +1388,9 @@
   function setRouteD() {
     if (routes_json.loaded) {
       var this_route = routes_json.c['b_' + c_routeid]
+      if (!routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+        return ''
+      }
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
       var name = this_route.n
@@ -1833,7 +1836,9 @@
               routes_json['c_1'] = json_processed
               routes_json.c = Object.assign(routes_json['c_0'], json_processed);
               createSearchIndex(routes_json)
-              c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+                c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              }
               setRouteD()
             }
           });
