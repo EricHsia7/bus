@@ -2483,7 +2483,7 @@
   function touchStart(e) {
 
   }
-  function touchMove() {
+  function touchMove(e) {
     console.log('2')
     if (route_page_is_open === 1) {
       route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
