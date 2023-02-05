@@ -2503,152 +2503,155 @@
 
   }
 
-  function initialize() {
-    initializeKeyboard()
-    $('.bus_info_box').scroll(function () {
-      var scrolltop = $('.bus_info_box').scrollTop()
-      if ($('.bus_info').offset().top < 0) {
-        if (businfo_scroll_1 === 0) {
-          $('.bus_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          businfo_scroll_1 = 1
-        }
+  /* initialize */
+
+  initializeKeyboard()
+  $('.bus_info_box').scroll(function () {
+    var scrolltop = $('.bus_info_box').scrollTop()
+    if ($('.bus_info').offset().top < 0) {
+      if (businfo_scroll_1 === 0) {
+        $('.bus_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        businfo_scroll_1 = 1
       }
-      else {
-        if (businfo_scroll_1 === 1) {
-          $('.bus_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          businfo_scroll_1 = 0
-        }
+    }
+    else {
+      if (businfo_scroll_1 === 1) {
+        $('.bus_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        businfo_scroll_1 = 0
       }
-      if (scrolltop < 5) {
-        if (businfo_scroll === 0) {
-          closeBus()
-          businfo_scroll = 1
-        }
-      }
-    })
-    $('.bus_info_box').click(function (e) {
-      e.stopPropagation()
+    }
+    if (scrolltop < 5) {
       if (businfo_scroll === 0) {
         closeBus()
         businfo_scroll = 1
       }
-    });
-    $('.bus_info').click(function (e) {
-      e.stopPropagation()
-    })
-    $('.route_info_box').scroll(function () {
-      var scrolltop = $('.route_info_box').scrollTop()
+    }
+  })
+  $('.bus_info_box').click(function (e) {
+    e.stopPropagation()
+    if (businfo_scroll === 0) {
+      closeBus()
+      businfo_scroll = 1
+    }
+  });
+  $('.bus_info').click(function (e) {
+    e.stopPropagation()
+  })
+  $('.route_info_box').scroll(function () {
+    var scrolltop = $('.route_info_box').scrollTop()
 
-      if ($('.route_info').offset().top < 0) {
-        if (routeinfo_scroll_1 === 0) {
-          $('.route_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          routeinfo_scroll_1 = 1
-        }
+    if ($('.route_info').offset().top < 0) {
+      if (routeinfo_scroll_1 === 0) {
+        $('.route_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        routeinfo_scroll_1 = 1
       }
-      else {
-        if (routeinfo_scroll_1 === 1) {
-          $('.route_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          routeinfo_scroll_1 = 0
-        }
+    }
+    else {
+      if (routeinfo_scroll_1 === 1) {
+        $('.route_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        routeinfo_scroll_1 = 0
       }
-      if (scrolltop < 5) {
-        if (routeinfo_scroll === 0) {
-          closeRouteInfo()
-          routeinfo_scroll = 1
-        }
-      }
-    });
-    $('.route_info_box').click(function (e) {
-      e.stopPropagation()
+    }
+    if (scrolltop < 5) {
       if (routeinfo_scroll === 0) {
         closeRouteInfo()
         routeinfo_scroll = 1
       }
-    });
+    }
+  });
+  $('.route_info_box').click(function (e) {
+    e.stopPropagation()
+    if (routeinfo_scroll === 0) {
+      closeRouteInfo()
+      routeinfo_scroll = 1
+    }
+  });
 
-    $('.route_info').click(function (e) {
-      e.stopPropagation()
-    })
+  $('.route_info').click(function (e) {
+    e.stopPropagation()
+  })
 
-    $('#search_routes').click(function (e) {
-      e.stopPropagation()
-      if (!($('.search').attr('p') === '1')) {
-        var n = new Date().getTime()
-        opensearch()
-      }
-    });
+  $('#search_routes').click(function (e) {
+    e.stopPropagation()
+    if (!($('.search').attr('p') === '1')) {
+      var n = new Date().getTime()
+      opensearch()
+    }
+  });
 
 
-    $(window).resize(function () {
-      setSearchSize()
-    })
-
-    document.querySelector('#search_routes').addEventListener("paste", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("cut", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
+  $(window).resize(function () {
     setSearchSize()
-    getRoutes(false)
-    document.addEventListener('touchstart', function (e) {
-      console.log('1')
-      horizontal_slide = false
-      $('.routes').css({ 'transition': '0ms' });
-      route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-      route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-      start_offsetX = offsetX
-      document.addEventListener('touchmove', touchMove);
-    }, { passive: true });
-    document.addEventListener('touchend', function (e) {
-      if (horizontal_slide) {
-        var w = calcSlideScale()
-        var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
-        var q = ((1 + calcSlideScale()) / 2)
-        if (w < -0.5 || w > 0.5) {
-          if (w < 0.5) {
-            w = -1
-            offsetX = (route_max_X - route_min_X) * (-1)
-          }
-          if (w > 0.5) {
-            w = 0
-            offsetX = (route_max_X - route_min_X) * (0)
-          }
-          $('.routes').css({ 'transform': `translateX(${(route_max_X - route_min_X) * w}px)`, 'transition': `${d / animation_speed}ms` });
+  })
+
+  document.querySelector('#search_routes').addEventListener("paste", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("cut", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  setSearchSize()
+  getRoutes(false)
+  setRouteSlideSize()
+
+
+  document.addEventListener('touchstart', function (e) {
+    console.log('1')
+    horizontal_slide = false
+    $('.routes').css({ 'transition': '0ms' });
+    route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+    route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+    start_offsetX = offsetX
+    document.addEventListener('touchmove', touchMove);
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (horizontal_slide) {
+      var w = calcSlideScale()
+      var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
+      var q = ((1 + calcSlideScale()) / 2)
+      if (w < -0.5 || w > 0.5) {
+        if (w < 0.5) {
+          w = -1
+          offsetX = (route_max_X - route_min_X) * (-1)
         }
-        else {
-          $('.routes').css({ 'transform': `translateX(${start_offsetX}px)`, 'transition': `${d / animation_speed}ms` });
+        if (w > 0.5) {
+          w = 0
+          offsetX = (route_max_X - route_min_X) * (0)
         }
-        horizontal_slide = false
+        $('.routes').css({ 'transform': `translateX(${(route_max_X - route_min_X) * w}px)`, 'transition': `${d / animation_speed}ms` });
       }
-      document.removeEventListener('touchmove', touchMove)
-    }, { passive: true });
-    setRouteSlideSize()
-  }
-  initialize()
+      else {
+        $('.routes').css({ 'transform': `translateX(${start_offsetX}px)`, 'transition': `${d / animation_speed}ms` });
+      }
+      horizontal_slide = false
+    }
+    document.removeEventListener('touchmove', touchMove)
+  }, { passive: true });
+
+
 </script>
 
 </html>
