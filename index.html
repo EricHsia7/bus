@@ -343,6 +343,10 @@
       transform: translateX(var(--j-translateX-p));
     }
 
+    .routes[slide="2"] {
+      transition: transform 450ms;
+    }
+
     .route {
       height: 100%;
       background: var(--g-ffffff);
@@ -1878,6 +1882,7 @@
     function switchDirection(d) {
       var a = 0
       var b = 1
+      offsetX = (route_max_X - route_min_X) * (0)
       if (d === 'destination') {
         a = 1
         b = 0
@@ -1885,12 +1890,15 @@
       }
       route_direction = d
       route_container_scrolled = 0
-      $('.route_container .routes').attr('class', 'routes ' + d)
+      $('.route_container .routes').attr('class', 'routes ' + d).attr('slide', '2')
       $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
       $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
       $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
       $(".tab-line").attr('class', 'tab-line ' + d)
       scrollToNearestStop(route_direction)
+      document.querySelector('.routes').addEventListener('transitionend', function () {
+        $('.route_container .routes').attr('slide', '-1')
+      }, { once: true })
     }
 
     function standaloneStatusBarColor(a) {
