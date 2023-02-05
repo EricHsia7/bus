@@ -1792,7 +1792,9 @@
 
     if (routes_json.loaded) {
       createSearchIndex(routes_json)
+      if(routes_json.c.hasOwnProperty('b_' + c_routeid)) {
       c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+      }
       setRouteD()
     }
     else {
