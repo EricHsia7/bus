@@ -2685,9 +2685,11 @@
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
         $('.routes').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
-        document.querySelector('.routes').addEventListener('transitionend', function () {
-          $('.routes').attr('slide', '-1')
-        }, { once: true })
+        /*
+          document.querySelector('.routes').addEventListener('transitionend', function () {
+            $('.routes').attr('slide', '-1')
+          }, { once: true })
+          */
         switchDirection(direction)
         horizontal_slide = false
       }
