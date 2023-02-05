@@ -1134,6 +1134,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script>
   /*
   var ajax_event = { 'sent': {}, 'successful': {} }
@@ -1226,7 +1227,7 @@
   var pos_lon = 0
   var route_direction = 'departure'
   var route_container = document.querySelector('.route_container')
-  var route_container_s = document.querySelectorAll('.routes')[0]
+  var route_container_s = document.querySelector('.routes')
   var route_x1 = 0
   var route_y1 = 0
   var route_x2 = 0
@@ -2480,13 +2481,13 @@
     return w
   }
 
-  
+
   function touchMove(e) {
     if (route_page_is_open === 1) {
-      route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-    route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+      route_x2 = checkSlideCoordinate(route_min_X, e.center.x + de.scrollLeft, route_max_X)
+      route_y2 = checkSlideCoordinate(route_min_Y, e.center.y + de.scrollTop, route_max_Y)
       if (horizontal_slide) {
-$('.route').css({'overflow':'hidden'})
+        $('.route').css({ 'overflow': 'hidden' })
         $('.routes').css({ 'transform': `translateX(${(route_max_X) * calcSlideScale() + offsetX}px)` });
       }
       else {
@@ -2613,15 +2614,22 @@ $('.route').css({'overflow':'hidden'})
   getRoutes(false)
   setRouteSlideSize()
 
-  document.addEventListener('touchstart', function (e) {
+  var mc = new Hammer(route_container_s);
+  mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+  mc.on('tap press', function (e) {
     horizontal_slide = false
     $('.routes').css({ 'transition': '0ms' });
-    route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-    route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+    route_x1 = checkSlideCoordinate(route_min_X, e.center.x + de.scrollLeft, route_max_X)
+    route_y1 = checkSlideCoordinate(route_min_Y, e.center.y + de.scrollTop, route_max_Y)
     start_offsetX = offsetX
-    document.addEventListener('touchmove', touchMove,{passive:false});
-  }, {passive:false});
-  document.addEventListener('touchend', function (e) {
+  });
+
+  mc.on('panleft panright panup pandown tap press', function (e) {
+    touchMove(e)
+  });
+  
+  mc.on('panend', function (e) {
     if (horizontal_slide) {
       var w = calcSlideScale()
       var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
@@ -2642,10 +2650,8 @@ $('.route').css({'overflow':'hidden'})
       }
       horizontal_slide = false
     }
-    $('.route').css({'overflow':'scroll'})
-    document.removeEventListener('touchmove', touchMove)
-  }, {passive:false});
-
+    $('.route').css({ 'overflow': 'scroll' })
+    });
 </script>
 
 </html>
