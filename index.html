@@ -623,7 +623,7 @@
       font-weight: 500;
     }
 
-    .route li.stop .status[tr="true"] {
+    .routes[slide="0"] .route li.stop .status[tr="true"] {
       transition: 0.3s;
     }
 
@@ -1879,6 +1879,7 @@
       if (d === 'destination') {
         a = 1
         b = 0
+        offsetX = (route_max_X - route_min_X) * (-1)
       }
       route_direction = d
       route_container_scrolled = 0
