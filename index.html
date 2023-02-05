@@ -1170,6 +1170,7 @@
 </script>
 
 <script>
+  try {
   var getUrlString = location.href;
   var url = new URL(getUrlString);
   function urlparams(p) {
@@ -2665,7 +2666,10 @@
     $('.route').css({ 'overflow': 'scroll' })
     document.removeEventListener('touchmove', touchMove)
   }, { passive: false });
-
+  }
+  catch(e) {
+    console.log(e)
+  }
 </script>
 
 </html>
