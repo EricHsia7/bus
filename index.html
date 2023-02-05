@@ -1101,8 +1101,8 @@
       </button>
     </div>
     <div class="tabs" l="0">
-      <button class="tab" direction="departure" onclick="switchDirection('departure')" g="0"><span></span></button>
-      <button class="tab" direction="destination" onclick="switchDirection('destination')" g="1"><span></span></button>
+      <button class="tab" direction="departure" onclick="switchDirection('departure',event)" g="0"><span></span></button>
+      <button class="tab" direction="destination" onclick="switchDirection('destination',event)" g="1"><span></span></button>
       <div class="tab-line-box">
         <div class="tab-line-box2">
           <div class="tab-line"></div>
@@ -1879,7 +1879,12 @@
       getRoutes(false)
     }
 
-    function switchDirection(d) {
+    function switchDirection(d, event) {
+      if (!(event === undefined) && !(event === null)) {
+        if (event.type === 'click') {
+          $('.routes').attr('slide', '0')
+        }
+      }
       var a = 0
       var b = 1
       offsetX = (route_max_X - route_min_X) * (0)
@@ -2690,7 +2695,7 @@
             $('.routes').attr('slide', '-1')
           }, { once: true })
           */
-        switchDirection(direction)
+        switchDirection(direction, e)
         horizontal_slide = false
       }
       document.removeEventListener('touchmove', touchMove)
