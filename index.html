@@ -2613,15 +2613,15 @@ $('.route').css({'overflow':'hidden'})
   getRoutes(false)
   setRouteSlideSize()
 
-  document.addEventListener('touchstart', function (e) {
+  document.addEventListener('pointerdown', function (e) {
     horizontal_slide = false
     $('.routes').css({ 'transition': '0ms' });
     route_x1 = checkSlideCoordinate(route_min_X, e.changedTouches[0].pageX + de.scrollLeft, route_max_X)
     route_y1 = checkSlideCoordinate(route_min_Y, e.changedTouches[0].pageY + de.scrollTop, route_max_Y)
     start_offsetX = offsetX
-    document.addEventListener('touchmove', touchMove,{passive:false});
+    document.addEventListener('pointermove', touchMove,{passive:false});
   }, {passive:false});
-  document.addEventListener('touchend', function (e) {
+  document.addEventListener('pointerleave', function (e) {
     if (horizontal_slide) {
       var w = calcSlideScale()
       var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
@@ -2643,7 +2643,7 @@ $('.route').css({'overflow':'hidden'})
       horizontal_slide = false
     }
     $('.route').css({'overflow':'scroll'})
-    document.removeEventListener('touchmove', touchMove)
+    document.removeEventListener('pointermove', touchMove)
   }, {passive:false});
 
 </script>
