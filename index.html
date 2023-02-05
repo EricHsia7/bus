@@ -2645,16 +2645,15 @@
           offsetX = (route_max_X - route_min_X) * (0)
           d = 'departure'
         }
-        document.querySelector('.routes').addEventListener('transitionend', function () {
-          switchDirection(d)
-        })
-        $('.routes').css({ 'transform': `translateX(${((route_max_X - route_min_X) * w) / (route_max_X - route_min_X) * 50}%)`, 'transition': `${d / animation_speed}ms` });
+        $('.routes').css({ 'transform': 'none', 'transition': `${d / animation_speed}ms` });
+        // $('.routes').css({ 'transform': `translateX(${((route_max_X - route_min_X) * w) / (route_max_X - route_min_X) * 50}%)`, 'transition': `${d / animation_speed}ms` });
       }
       else {
-        $('.routes').css({ 'transform': `translateX(${start_offsetX / (route_max_X - route_min_X) * 50}%)`, 'transition': `${d / animation_speed}ms` });
+        //$('.routes').css({ 'transform': `translateX(${start_offsetX / (route_max_X - route_min_X) * 50}%)`, 'transition': `${d / animation_speed}ms` });
       }
+      $('.routes').css({ 'transform': 'none', 'transition': `${d / animation_speed}ms` });
+      switchDirection(d)
       horizontal_slide = false
-
     }
     $('.route').css({ 'overflow': 'scroll' })
     document.removeEventListener('touchmove', touchMove)
