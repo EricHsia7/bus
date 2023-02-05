@@ -2670,10 +2670,10 @@
             offsetX = (route_max_X - route_min_X) * (0)
             d = 'departure'
           }
-          $('.routes').css({ '--j-translateX-p': `${((route_max_X - route_min_X) * w)}px)`, 'transition': `${d / animation_speed}ms` });
+          $('.routes').css({ '--j-translateX-p': `${((route_max_X - route_min_X) * w)}px)` });
         }
         else {
-          $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)`, 'transition': `${d / animation_speed}ms` });
+          $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
         $('.routes').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
         switchDirection(d)
