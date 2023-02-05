@@ -1170,7 +1170,6 @@
 </script>
 
 <script>
-  try {
   var getUrlString = location.href;
   var url = new URL(getUrlString);
   function urlparams(p) {
@@ -1290,6 +1289,7 @@
 
   let rdsn_len = routesDataShortName.length
   let update_interval = 15000
+  try {
 
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
