@@ -2407,6 +2407,7 @@
 
     for (var u = 0; u < len; u++) {
       var this_stop = snapshot[u]
+      var lon_d, lat_d
       if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
         var s = stops_json.c['b_' + this_stop.StopID]
         lon_s = parseFloat(s.longitude)
@@ -2414,9 +2415,13 @@
         this_stop.lon = lon_s
         this_stop.lat = lat_s
         this_stop.goBack_s = s.goBack
+        lon_d = Math.abs(lon_s - lon)
+        lat_d = Math.abs(lat_s - lat)
       }
-      var lon_d = Math.abs(lon_s - lon)
-      var lat_d = Math.abs(lat_s - lat)
+      else {
+        lon_d = 0
+        lat_d = 0
+      }
       this_stop.rd = lon_d + lat_d
     }
 
