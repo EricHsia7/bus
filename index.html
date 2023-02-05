@@ -2480,15 +2480,14 @@
     return w
   }
 
-  function touchStart(e) {
-
-  }
+  
   function touchMove(e) {
     console.log('2')
     if (route_page_is_open === 1 || true) {
       route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
       route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
       if (horizontal_slide) {
+$('.route').css({'overflow':'hidden'})
         $('.routes').css({ 'transform': `translateX(${(route_max_X) * calcSlideScale() + offsetX}px)` });
       }
       else {
@@ -2499,9 +2498,7 @@
       }
     }
   }
-  function touchEnd() {
 
-  }
 
   /* initialize */
 
@@ -2624,8 +2621,8 @@
     route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
     route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
     start_offsetX = offsetX
-    document.addEventListener('touchmove', touchMove);
-  }, {passive:true});
+    document.addEventListener('touchmove', touchMove,{passive:false});
+  }, {passive:false});
   document.addEventListener('touchend', function (e) {
     if (horizontal_slide) {
       var w = calcSlideScale()
@@ -2647,8 +2644,9 @@
       }
       horizontal_slide = false
     }
+    $('.route').css({'overflow':'scroll'})
     document.removeEventListener('touchmove', touchMove)
-  }, {passive:true});
+  }, {passive:false});
 
 </script>
 
