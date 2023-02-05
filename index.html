@@ -324,11 +324,11 @@
       background: var(--g-ffffff);
     }
 
-    .routes.departure[slide="0"] {
+    .routes.departure[slide="-1"] {
       transform: translateX(0%);
     }
 
-    .routes.destination[slide="0"] {
+    .routes.destination[slide="-1"] {
       transform: translateX(-50%);
     }
 
@@ -351,7 +351,7 @@
       display: none;
     }
 
-    .routes[slide="0"] .route {
+    .routes[slide="-1"] .route {
       overflow-y: scroll;
       overflow-x: hidden;
     }
@@ -623,7 +623,7 @@
       font-weight: 500;
     }
 
-    .routes[slide="0"] .route li.stop .status[tr="true"] {
+    .routes[slide="-1"] .route li.stop .status[tr="true"] {
       transition: 0.3s;
     }
 
@@ -2663,7 +2663,6 @@
             w = -1
             offsetX = (route_max_X - route_min_X) * (-1)
             direction = 'destination'
-
           }
           if (w > 0.35) {
             w = 0
@@ -2676,14 +2675,14 @@
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
         $('.routes').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
+        document.querySelector('.routes').addEventListener('transitionend', function () {
+          $('.routes').attr('slide', '-1')
+        }, { once: true })
         switchDirection(direction)
         horizontal_slide = false
       }
       document.removeEventListener('touchmove', touchMove)
     }, { passive: false });
-
-
-
   }
   catch (e) {
     console.log(e)
