@@ -258,7 +258,7 @@
     }
 
     .tabs[l="1"] .tab-line-box2[slide="0"] {
-      transition: transform 0.45s;
+      transition: var(--j-transition-p);
     }
 
     .tabs[l="1"] .tab-line-box2.departure[slide="-1"],
@@ -1893,8 +1893,7 @@
     function switchDirection(d, event) {
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
-          $('.tab-line-box2').attr('slide', '0')
-          $('.routes').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms' })
+          $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms' })
           scrollToNearestStop(route_direction)
         }
       }
@@ -2716,8 +2715,7 @@
         else {
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
-        $('.tab-line-box2').attr('slide', '0')
-        $('.routes').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
+        $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
         /*
           document.querySelector('.routes').addEventListener('transitionend', function () {
             $('.routes').attr('slide', '-1')
