@@ -295,7 +295,7 @@
       width: var(--tab-line-destination-width);
     }
 
-    .tab-line.initialization {
+    .tab-line-box2[slide="-1"] .tab-line.initialization {
       width: var(--j-initialization-width);
     }
 
@@ -1124,7 +1124,7 @@
       <button class="tab" direction="departure" onclick="switchDirection('departure',event)" g="0"><span></span></button>
       <button class="tab" direction="destination" onclick="switchDirection('destination',event)" g="1"><span></span></button>
       <div class="tab-line-box">
-        <div class="tab-line-box2">
+        <div class="tab-line-box2" slide="-1">
           <div class="tab-line"></div>
         </div>
       </div>
