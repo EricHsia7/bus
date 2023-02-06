@@ -283,19 +283,28 @@
       border-radius: 15px 15px 0px 0px;
       user-select: none;
       -webkit-user-select: none;
-      transition: 0.45s;
     }
 
-    .tabs[l="1"] .tab-line.departure {
+    .tabs[l="1"] .tab-line.departure[slide="-1"],
+    .tabs[l="1"] .tab-line.departure[slide="0"] {
       width: var(--tab-line-depature-width);
     }
 
-    .tabs[l="1"] .tab-line.destination {
+    .tabs[l="1"] .tab-line.destination[slide="-1"],
+    .tabs[l="1"] .tab-line.destination[slide="0"] {
       width: var(--tab-line-destination-width);
     }
 
     .tab-line.initialization {
       width: var(--j-initialization-width);
+    }
+
+    .tabs[l="1"] .tab-line[slide="1"] {
+      transition: none;
+    }
+
+    .tabs[l="1"] .tab-line[slide="0"] {
+      transition: var(--j-transition-p);
     }
 
     .tabs[l="0"] .tab-line {
