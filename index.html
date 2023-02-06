@@ -238,14 +238,12 @@
     .tabs[slide="-1"] .tab[g="0"] {
       color: var(--g-333333);
       -webkit-text-stroke: 0.3px var(--g-333333);
-      transition: color 0.45s;
     }
 
     .tabs[slide="0"] .tab[g="1"],
     .tabs[slide="-1"] .tab[g="1"] {
       color: var(--g-888888);
       -webkit-text-stroke: 0px var(--g-ffffff);
-      transition: color 0.45s;
     }
 
     .tabs[slide="1"] .tab {
@@ -253,7 +251,9 @@
       color: var(--j-slide-scale-c-p);
       -webkit-text-stroke: var(--j-slide-scale-ts-p) var(--j-slide-scale-c-p);
     }
-
+.tabs[slide="0"] .tab {
+  transition: var(--j-transition-a-p);
+}
     .tab-line-box {
       position: absolute;
       left: 0px;
@@ -1140,7 +1140,7 @@
         </svg>
       </button>
     </div>
-    <div class="tabs" l="0">
+    <div class="tabs" l="0" slide="-1">
       <button class="tab" direction="departure" onclick="switchDirection('departure',event)" g="0"><span></span></button>
       <button class="tab" direction="destination" onclick="switchDirection('destination',event)" g="1"><span></span></button>
       <div class="tab-line-box">
@@ -1930,7 +1930,7 @@
     function switchDirection(d, event) {
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
-          $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms' })
+          $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms','--j-transition-a-p': `all 450ms`})
           scrollToNearestStop(route_direction)
         }
       }
@@ -2794,7 +2794,7 @@
         else {
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
-        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms` });
+        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms` ,'--j-transition-a-p': `all ${d / animation_speed}ms`});
         /*
           document.querySelector('.routes').addEventListener('transitionend', function () {
             $('.routes').attr('slide', '-1')
