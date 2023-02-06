@@ -2550,8 +2550,8 @@
           else {
             rf = (1 - w)
           }
-          $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px`, '--j-slide-scale-rf-p': rf }).attr('slide', '1')
-          $('')
+          $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
+          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': rf })
         }
         else {
           var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
