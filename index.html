@@ -1891,6 +1891,7 @@
     function switchDirection(d, event) {
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
+          $('.tabs').attr('slide','0')
           $('.routes').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms' })
           scrollToNearestStop(route_direction)
         }
@@ -2551,6 +2552,7 @@
             rf = (1 - w)
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
+          $('.tabs').attr('slide','1')
           $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf*100}%` })
         }
         else {
@@ -2712,6 +2714,7 @@
         else {
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
+        $('.tabs').attr('slide','0')
         $('.routes').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
         /*
           document.querySelector('.routes').addEventListener('transitionend', function () {
