@@ -1377,33 +1377,35 @@
     }
     return genid + '' + new Date().getTime();
   }
-
   function ripple(Allelement, color, duration) {
     if (Allelement.length === undefined) {
       Allelement = [Allelement]
     }
     for (var k = 0; k < Allelement.length; k++) {
-      var element = Allelement[k]
-      var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
-      var ripple_id = "";
-      for (var i = 0; i < 8; i++) {
-        var idrandomNumber = Math.floor(Math.random() * idchars.length);
-        ripple_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
-      }
+      rp(Allelement[k], color, duration)
+    }
+  }
+  function rp(element, color, duration) {
+    var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var ripple_id = "";
+    for (var i = 0; i < 8; i++) {
+      var idrandomNumber = Math.floor(Math.random() * idchars.length);
+      ripple_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
+    }
 
-      element.addEventListener('click', function (event) {
-        var scroll_x = document.documentElement.scrollLeft
-        var scroll_y = document.documentElement.scrollTop
-        var x = event.pageX
-        var y = event.pageY
-        var element_x = element.offsetLeft
-        var element_y = element.offsetTop
-        var element_width = element.clientWidth
-        var element_height = element.clientHeight
-        var relative_x = x - element_x - scroll_x
-        var relative_y = y - element_y - scroll_y
-        var ripple_size = Math.max(element_width, element_height)
-        var css = `.ripple-element-${ripple_id} {
+    element.addEventListener('click', function (event) {
+      var scroll_x = document.documentElement.scrollLeft
+      var scroll_y = document.documentElement.scrollTop
+      var x = event.pageX
+      var y = event.pageY
+      var element_x = element.offsetLeft
+      var element_y = element.offsetTop
+      var element_width = element.clientWidth
+      var element_height = element.clientHeight
+      var relative_x = x - element_x - scroll_x
+      var relative_y = y - element_y - scroll_y
+      var ripple_size = Math.max(element_width, element_height)
+      var css = `.ripple-element-${ripple_id} {
         position:relative;
         overflow:hidden;
     width:${element_width}px;
@@ -1443,22 +1445,22 @@ outline:none;
   }
 }
     `
-        element.classList.add(`ripple-element-${ripple_id}`)
-        var css_style_element = document.createElement("style")
-        css_style_element.innerHTML = css
-        css_style_element.id = `ripple-css-${ripple_id}`
-        element.appendChild(css_style_element)
-        var ripple_element_ripple = document.createElement("div")
-        ripple_element_ripple.id = `ripple-element-ripple-${ripple_id}`
-        ripple_element_ripple.classList.add(`ripple-element-ripple-${ripple_id}`)
-        element.appendChild(ripple_element_ripple)
-        document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
-          element.classList.remove(`ripple-element-${ripple_id}`)
-          document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
-          document.getElementById(`ripple-css-${ripple_id}`).remove()
-        }, { once: true })
-      })
-    }
+      element.classList.add(`ripple-element-${ripple_id}`)
+      var css_style_element = document.createElement("style")
+      css_style_element.innerHTML = css
+      css_style_element.id = `ripple-css-${ripple_id}`
+      element.appendChild(css_style_element)
+      var ripple_element_ripple = document.createElement("div")
+      ripple_element_ripple.id = `ripple-element-ripple-${ripple_id}`
+      ripple_element_ripple.classList.add(`ripple-element-ripple-${ripple_id}`)
+      element.appendChild(ripple_element_ripple)
+      document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
+        element.classList.remove(`ripple-element-${ripple_id}`)
+        document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+        document.getElementById(`ripple-css-${ripple_id}`).remove()
+      }, { once: true })
+    })
+
   }
 
   function api_url_parameter(cahce_time) {
@@ -2884,7 +2886,7 @@ outline:none;
     document.querySelector('.routes').addEventListener('touchmove', touchMove)
   }, { passive: false });
 
-  ripple(document.querySelectorAll('.tabs .tab'),'var(--g-333333)',450)
+  ripple(document.querySelectorAll('.tabs .tab'), 'var(--g-333333)', 450)
 
 </script>
 
