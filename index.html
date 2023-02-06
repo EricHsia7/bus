@@ -257,11 +257,9 @@
       -webkit-user-select: none;
     }
 
-    .tabs[slide="0"] .tab-line-box2 {
+    .tabs[l="1"] .tab-line-box2[slide="0"] {
       transition: transform 0.45s;
     }
-
-
 
     .tabs[l="1"] .tab-line-box2.departure[slide="-1"],
     .tabs[l="1"] .tab-line-box2.departure[slide="0"] {
@@ -270,7 +268,6 @@
 
     .tabs[l="1"] .tab-line-box2.destination[slide="-1"],
     .tabs[l="1"] .tab-line-box2.destination[slide="0"] {
-
       transform: translateX(100%);
     }
 
