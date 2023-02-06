@@ -1406,7 +1406,7 @@
       var relative_x = x - element_x
       var relative_y = y - element_y
       var ripple_size = Math.max(element_width, element_height)
-      var element_position = element.style.position
+      var element_position = getComputedStyle(element).getPropertyValue('position')
       if (!(element_position === 'absolute') || !(element_position === 'fixed')) {
         element_position = 'relative'
       }
