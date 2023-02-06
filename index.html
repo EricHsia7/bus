@@ -285,13 +285,13 @@
       -webkit-user-select: none;
     }
 
-    .tabs[l="1"] .tab-line.departure[slide="-1"],
-    .tabs[l="1"] .tab-line.departure[slide="0"] {
+    .tabs[l="1"] .tab-line-box2[slide="-1"] .tab-line.departure,
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line.departure {
       width: var(--tab-line-depature-width);
     }
 
-    .tabs[l="1"] .tab-line.destination[slide="-1"],
-    .tabs[l="1"] .tab-line.destination[slide="0"] {
+    .tabs[l="1"] .tab-line-box2[slide="-1"] .tab-line.destination,
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line.destination {
       width: var(--tab-line-destination-width);
     }
 
@@ -299,12 +299,12 @@
       width: var(--j-initialization-width);
     }
 
-    .tabs[l="1"] .tab-line[slide="1"] {
+    .tabs[l="1"] .tab-line-box2[slide="1"] .tab-line {
       transition: none;
     }
 
-    .tabs[l="1"] .tab-line[slide="0"] {
-      transition: var(--j-transition-p);
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line {
+      transition: var(--j-transition-w-p);
     }
 
     .tabs[l="0"] .tab-line {
@@ -1902,7 +1902,7 @@
     function switchDirection(d, event) {
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
-          $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms' })
+          $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'transform 450ms' })
           scrollToNearestStop(route_direction)
         }
       }
@@ -2724,7 +2724,7 @@
         else {
           $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
         }
-        $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms` });
+        $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms` });
         /*
           document.querySelector('.routes').addEventListener('transitionend', function () {
             $('.routes').attr('slide', '-1')
