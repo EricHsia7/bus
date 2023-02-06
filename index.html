@@ -251,9 +251,11 @@
       color: var(--j-slide-scale-c-p);
       -webkit-text-stroke: var(--j-slide-scale-ts-p) var(--j-slide-scale-c-p);
     }
-.tabs[slide="0"] .tab {
-  transition: var(--j-transition-a-p);
-}
+
+    .tabs[slide="0"] .tab {
+      transition: var(--j-transition-a-p);
+    }
+
     .tab-line-box {
       position: absolute;
       left: 0px;
@@ -1359,1457 +1361,1447 @@
 
   let rdsn_len = routesDataShortName.length
   let update_interval = 15000
-  try {
 
-    function isRunningStandalone() {
-      return (window.matchMedia('(display-mode: standalone)').matches);
+  function isRunningStandalone() {
+    return (window.matchMedia('(display-mode: standalone)').matches);
+  }
+
+  function gid(n) {
+    var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var genid = "";
+    for (var i = 0; i < 16; i++) {
+      var genrandomNumber = Math.floor(Math.random() * genidchars.length);
+      genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
     }
-
-    function gid(n) {
-      var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
-      var genid = "";
-      for (var i = 0; i < 16; i++) {
-        var genrandomNumber = Math.floor(Math.random() * genidchars.length);
-        genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
-      }
-      if (!(n === undefined)) {
-        n = n.replaceAll('_', '-')
-        return n + '-' + genid + '' + new Date().getTime();
-      }
-      return genid + '' + new Date().getTime();
+    if (!(n === undefined)) {
+      n = n.replaceAll('_', '-')
+      return n + '-' + genid + '' + new Date().getTime();
     }
+    return genid + '' + new Date().getTime();
+  }
 
-    function api_url_parameter(cahce_time) {
-      var t = new Date().getTime()
-      var g = (t / cahce_time).toFixed(0) * cahce_time
-      var str = g.toString(36)
-      return str
-    }
+  function api_url_parameter(cahce_time) {
+    var t = new Date().getTime()
+    var g = (t / cahce_time).toFixed(0) * cahce_time
+    var str = g.toString(36)
+    return str
+  }
 
-    function sendError(err) {
-      var position = 'L' + err.line + ',C' + err.column
-      gtag('event', 'error_feedback', {
-        'event_category': position,
-        'event_label': position + ' | ' + err.message,
-      });
-    }
+  function sendError(err) {
+    var position = 'L' + err.line + ',C' + err.column
+    gtag('event', 'error_feedback', {
+      'event_category': position,
+      'event_label': position + ' | ' + err.message,
+    });
+  }
 
-    function unicode_arr(str) {
-      var str_len = str.length
-      var unicode_arr = []
-      for (var t = 0; t < str_len; t++) {
-        var unicode = str.charCodeAt(t)
-        if (!(unicode_arr.indexOf(unicode) > -1)) {
-          unicode_arr.push(unicode)
-        }
-      }
-      return unicode_arr
-    }
-
-    function getDistance(lat1, lon1, lat2, lon2) {
-      var R = 6378.137;
-      var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180
-      var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180
-      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      var d = R * c;
-      return d * 1000;
-    }
-
-    function updateRefreshProgress() {
-      var t = new Date().getTime()
-      var p = Math.abs(t - realtime_last_update) / update_interval
-      if (p < 0) {
-        p = 0
-      }
-      if (p > 1) {
-        p = 1
-      }
-      $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
-      if (refreshProgresPause === 0) {
-        window.requestAnimationFrame(updateRefreshProgress)
-      }
-      else {
-        refreshProgresPause = 0
+  function unicode_arr(str) {
+    var str_len = str.length
+    var unicode_arr = []
+    for (var t = 0; t < str_len; t++) {
+      var unicode = str.charCodeAt(t)
+      if (!(unicode_arr.indexOf(unicode) > -1)) {
+        unicode_arr.push(unicode)
       }
     }
-    function getTextWidth(text, font) {
-      const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-      const context = canvas.getContext("2d");
-      context.font = font;
-      const metrics = context.measureText(text);
-      return metrics.width;
+    return unicode_arr
+  }
+
+  function getDistance(lat1, lon1, lat2, lon2) {
+    var R = 6378.137;
+    var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180
+    var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d * 1000;
+  }
+
+  function updateRefreshProgress() {
+    var t = new Date().getTime()
+    var p = Math.abs(t - realtime_last_update) / update_interval
+    if (p < 0) {
+      p = 0
+    }
+    if (p > 1) {
+      p = 1
+    }
+    $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
+    if (refreshProgresPause === 0) {
+      window.requestAnimationFrame(updateRefreshProgress)
+    }
+    else {
+      refreshProgresPause = 0
+    }
+  }
+  function getTextWidth(text, font) {
+    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  }
+
+  function skeletonScreen() {
+    var j = []
+    var ll = Math.floor(window.innerHeight / 45) + 5
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'goBack': 0 })
+    }
+    for (var y = 0; y < ll; y++) {
+      j.push({ 'sk': true, 'goBack': 1 })
+    }
+    printStops(j, 'skeleton')
+    skeletonScreenStatus = 1
+  }
+
+  function setRouteD() {
+    if (routes_json.loaded) {
+      var this_route = routes_json.c['b_' + c_routeid]
+      if (!routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+        return ''
+      }
+      var dep = '往' + this_route.dep
+      var des = '往' + this_route.des
+      var name = this_route.n
+      var w = []
+      var font = "500 16px 'Noto Sans', sans-serif"
+      route_tab_dep_width = getTextWidth(des, font)
+      route_tab_des_width = getTextWidth(dep, font)
+      w.push(`--tab-line-depature-width:${route_tab_dep_width}px`)
+      w.push(`--tab-line-destination-width:${route_tab_des_width}px`)
+
+      $('#routes_animation_css').html(':root{' + w.join(';') + '}')
+      $('.route_container .tabs .tab[direction="departure"] span').text(des)
+      $('.route_container .tabs .tab[direction="destination"] span').text(dep)
+      $('.route_container .title .routename').text(name)
+      $('.route_container .tabs').attr('l', '1')
+      $('.route_container .title .routename').attr('l', '1')
+      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
+    }
+  }
+
+  function scrollToY(element, source, aim, startTime, endTime, t) {
+    var f = function (x) {
+      return -15.4 + 9.11 * x - 0.0285 * x * x
+    }
+    var x_min = 1.7
+    var x_max = 163.02
+    var y_min = f(x_min)
+    var y_max = f(x_max)
+    var s = function (time) {
+      var x = x_min + (time - startTime) / (endTime - startTime) * (x_max - x_min)
+      var y = f(x)
+      return source + (y_min + y) / (y_max - y_min) * (aim - source)
     }
 
-    function skeletonScreen() {
-      var j = []
-      var ll = Math.floor(window.innerHeight / 45) + 5
-      for (var y = 0; y < ll; y++) {
-        j.push({ 'sk': true, 'goBack': 0 })
-      }
-      for (var y = 0; y < ll; y++) {
-        j.push({ 'sk': true, 'goBack': 1 })
-      }
-      printStops(j, 'skeleton')
-      skeletonScreenStatus = 1
+    if (t < endTime) {
+      var k = s(t)
+      element.scrollTop = k
+
+
+      t = new Date().getTime()
+      window.requestAnimationFrame(function () {
+        scrollToY(element, source, aim, startTime, endTime, t)
+      })
+
     }
-
-    function setRouteD() {
-      if (routes_json.loaded) {
-        var this_route = routes_json.c['b_' + c_routeid]
-        if (!routes_json.c.hasOwnProperty('b_' + c_routeid)) {
-          return ''
-        }
-        var dep = '往' + this_route.dep
-        var des = '往' + this_route.des
-        var name = this_route.n
-        var w = []
-        var font = "500 16px 'Noto Sans', sans-serif"
-        route_tab_dep_width = getTextWidth(des, font)
-        route_tab_des_width = getTextWidth(dep, font)
-        w.push(`--tab-line-depature-width:${route_tab_dep_width}px`)
-        w.push(`--tab-line-destination-width:${route_tab_des_width}px`)
-
-        $('#routes_animation_css').html(':root{' + w.join(';') + '}')
-        $('.route_container .tabs .tab[direction="departure"] span').text(des)
-        $('.route_container .tabs .tab[direction="destination"] span').text(dep)
-        $('.route_container .title .routename').text(name)
-        $('.route_container .tabs').attr('l', '1')
-        $('.route_container .title .routename').attr('l', '1')
-        $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
+  }
+  function scrollTo(element, aim, duration) {
+    var t = new Date().getTime()
+    scrollToY(element, element.scrollTop, aim, t, t + duration, t)
+  }
+  function scrollToStop(seqNo, direction) {
+    var selector = '.route_container .route[direction="' + direction + '"]'
+    var stop_height = 50
+    var route_container_height = $(selector).height()
+    var stop_offset_top = seqNo * stop_height
+    var route_content_height = document.querySelector(selector).scrollHeight
+    var scrolltop = 0
+    if (stop_offset_top > (route_container_height - stop_height) / 2 && (route_content_height - stop_offset_top - stop_height) > (route_container_height - stop_height) / 2) {
+      scrolltop = ((route_container_height - stop_height) / 2 - stop_offset_top) * (-1)
+    }
+    else {
+      if (stop_offset_top > (route_content_height - stop_offset_top - stop_height)) {
+        scrolltop = route_content_height - route_container_height
       }
     }
+    scrollTo(document.querySelector(selector), scrolltop, 555)
+  }
 
-    function scrollToY(element, source, aim, startTime, endTime, t) {
-      var f = function (x) {
-        return -15.4 + 9.11 * x - 0.0285 * x * x
-      }
-      var x_min = 1.7
-      var x_max = 163.02
-      var y_min = f(x_min)
-      var y_max = f(x_max)
-      var s = function (time) {
-        var x = x_min + (time - startTime) / (endTime - startTime) * (x_max - x_min)
-        var y = f(x)
-        return source + (y_min + y) / (y_max - y_min) * (aim - source)
-      }
-
-      if (t < endTime) {
-        var k = s(t)
-        element.scrollTop = k
-
-
-        t = new Date().getTime()
-        window.requestAnimationFrame(function () {
-          scrollToY(element, source, aim, startTime, endTime, t)
-        })
-
-      }
-    }
-    function scrollTo(element, aim, duration) {
-      var t = new Date().getTime()
-      scrollToY(element, element.scrollTop, aim, t, t + duration, t)
-    }
-    function scrollToStop(seqNo, direction) {
+  function scrollToNearestStop(direction) {
+    if (route_container_scrolled === 0) {
       var selector = '.route_container .route[direction="' + direction + '"]'
-      var stop_height = 50
-      var route_container_height = $(selector).height()
-      var stop_offset_top = seqNo * stop_height
-      var route_content_height = document.querySelector(selector).scrollHeight
-      var scrolltop = 0
-      if (stop_offset_top > (route_container_height - stop_height) / 2 && (route_content_height - stop_offset_top - stop_height) > (route_container_height - stop_height) / 2) {
-        scrolltop = ((route_container_height - stop_height) / 2 - stop_offset_top) * (-1)
+      var ff = $(selector + ' .stop[nh="true"]')
+      var len = ff.length
+      if (len > 0) {
+        var uu = parseInt($(selector + ' .stop').eq(0).attr('no'))
+        route_container_scrolled = 1
+        scrollToStop(Math.abs(parseInt(ff.eq(0).attr('no')) - uu), direction)
+      }
+    }
+  }
+  function bString(h, u) {
+    var e = '"'
+    if (u === 1) {
+      e = "'"
+    }
+    return e + h + e
+  }
+
+  function printStops(k, c, bp) {
+    var pos_checkStops = function (h) {
+      if (h.length <= 0) {
+        return {}
       }
       else {
-        if (stop_offset_top > (route_content_height - stop_offset_top - stop_height)) {
-          scrolltop = route_content_height - route_container_height
-        }
-      }
-      scrollTo(document.querySelector(selector), scrolltop, 555)
-    }
-
-    function scrollToNearestStop(direction) {
-      if (route_container_scrolled === 0) {
-        var selector = '.route_container .route[direction="' + direction + '"]'
-        var ff = $(selector + ' .stop[nh="true"]')
-        var len = ff.length
-        if (len > 0) {
-          var uu = parseInt($(selector + ' .stop').eq(0).attr('no'))
-          route_container_scrolled = 1
-          scrollToStop(Math.abs(parseInt(ff.eq(0).attr('no')) - uu), direction)
+        if (h[0].distance <= 500) {
+          return h[0]
         }
       }
     }
-    function bString(h, u) {
-      var e = '"'
-      if (u === 1) {
-        e = "'"
-      }
-      return e + h + e
+    var fg = function (b) {
+      s = { 'goBack': b }
+      displayName = ''
+      bv.h = true
     }
-
-    function printStops(k, c, bp) {
-      var pos_checkStops = function (h) {
-        if (h.length <= 0) {
-          return {}
-        }
-        else {
-          if (h[0].distance <= 500) {
-            return h[0]
-          }
-        }
+    if (skeletonScreenStatus === 1) {
+      skeletonScreenStatus = 0
+      $('.route_container .route[direction="departure"]').html('')
+      $('.route_container .route[direction="destination"]').html('')
+    }
+    var htm = {}
+    var l = k.length
+    var g = false
+    var nearest_stops_list = { 'o_0': [], 'o_1': [] }
+    var nearest_stops_d = { 'o_0': {}, 'o_1': {} }
+    if (c === 'skeleton') {
+      g = true
+    }
+    if (!g) {
+      nearest_stops_list = getNearestStops(pos_lat, pos_lon)
+      nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
+      nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
+    }
+    for (var w = 0; w < l; w++) {
+      var selector = ''
+      var displayName = k[w].StopID
+      var s = {}
+      var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
+      var nh = false
+      if (g) {
+        fg(k[w].goBack)
       }
-      var fg = function (b) {
-        s = { 'goBack': b }
-        displayName = ''
-        bv.h = true
-      }
-      if (skeletonScreenStatus === 1) {
-        skeletonScreenStatus = 0
-        $('.route_container .route[direction="departure"]').html('')
-        $('.route_container .route[direction="destination"]').html('')
-      }
-      var htm = {}
-      var l = k.length
-      var g = false
-      var nearest_stops_list = { 'o_0': [], 'o_1': [] }
-      var nearest_stops_d = { 'o_0': {}, 'o_1': {} }
-      if (c === 'skeleton') {
-        g = true
-      }
-      if (!g) {
-        nearest_stops_list = getNearestStops(pos_lat, pos_lon)
-        nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
-        nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
-      }
-      for (var w = 0; w < l; w++) {
-        var selector = ''
-        var displayName = k[w].StopID
-        var s = {}
-        var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
-        var nh = false
-        if (g) {
-          fg(k[w].goBack)
-        }
-        else {
-          if (stops_json.loaded) {
-            if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
-              s = stops_json.c['b_' + k[w].StopID]
-              displayName = s.nameZh
-              if (nearest_stops_d.hasOwnProperty('o_' + s.goBack)) {
-                if (!(nearest_stops_d['o_' + s.goBack] === undefined)) {
-                  if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
-                    nh = true
-                  }
+      else {
+        if (stops_json.loaded) {
+          if (stops_json.c.hasOwnProperty('b_' + k[w].StopID)) {
+            s = stops_json.c['b_' + k[w].StopID]
+            displayName = s.nameZh
+            if (nearest_stops_d.hasOwnProperty('o_' + s.goBack)) {
+              if (!(nearest_stops_d['o_' + s.goBack] === undefined)) {
+                if (nearest_stops_d['o_' + s.goBack].StopID === k[w].StopID) {
+                  nh = true
                 }
               }
             }
-            else {
-              continue;
-            }
           }
-          if (busevent_json.loaded) {
-            if (bp.hasOwnProperty('s_' + k[w].StopID)) {
-              var thisbv = bp['s_' + k[w].StopID]
-              bv.h = true
-              bv.n = thisbv.BusID
-              bv.icon = icon_bus
-              bv.l = thisbv.CarOnStop
-              bv.ty = thisbv.CarType
-              bv.time = thisbv.DataTime
-              bv.status = thisbv.BusStatus
-            }
+          else {
+            continue;
           }
         }
-
-        if (!(htm.hasOwnProperty('h_' + s.goBack))) {
-          htm['h_' + s.goBack] = []
-        }
-        if (g) {
-          var status = { 'status': 10, 'text': '', 'tr': false }
-        }
-        else {
-          var status = timeStatus(k[w].EstimateTime)
-        }
-
-        var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
-        var hash = md5(JSON.stringify(jn))
-        var bvhash = md5(JSON.stringify(bv))
-        var statushash = md5(JSON.stringify(status))
-
-        if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-          htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '" nh="' + nh + '" no="' + s.seqNo + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
-        }
-
-        if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
-          if (s.goBack === 0) {
-            selector = '.route_container .route[direction="departure"]'
+        if (busevent_json.loaded) {
+          if (bp.hasOwnProperty('s_' + k[w].StopID)) {
+            var thisbv = bp['s_' + k[w].StopID]
+            bv.h = true
+            bv.n = thisbv.BusID
+            bv.icon = icon_bus
+            bv.l = thisbv.CarOnStop
+            bv.ty = thisbv.CarType
+            bv.time = thisbv.DataTime
+            bv.status = thisbv.BusStatus
           }
-          if (s.goBack === 1) {
-            selector = '.route_container .route[direction="destination"]'
-          }
-          selector += ' .stop[stop-id="' + k[w].StopID + '"]'
-          var thiscontent = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]
-          if (!(thiscontent.bvhash === bvhash)) {
-            $(selector).attr('bus', bv.h)
-            $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
-            $(selector + ' .bus .busicon').html(bv.icon)
-          }
-          if (!(thiscontent.statushash === statushash)) {
-            var status_s = status.tr
-            if (thiscontent.status <= 3 && status.status === 0 || 3) {
-              status_s = true
-            }
-            $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
-          }
-          if (!(thiscontent.nh === nh)) {
-            $(selector + ' .position').attr('d', nh)
-            $(selector).attr('nh', nh)
-
-          }
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
         }
       }
 
-      if (!htm.hasOwnProperty('h_0')) {
-        htm['h_0'] = ['']
+      if (!(htm.hasOwnProperty('h_' + s.goBack))) {
+        htm['h_' + s.goBack] = []
       }
-      if (!htm.hasOwnProperty('h_1')) {
-        htm['h_1'] = ['']
-      }
-
-      $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
-      $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
-      scrollToNearestStop(route_direction)
-    }
-
-    function timeStatus(t) {
-      t = parseInt(t)
-      var minute = Math.round(t / 60) + '分'
-      if (t === -3) {
-        return { status: 6, text: '末班駛離', tr: false }
-      }
-      if (t === -4) {
-        return { status: 5, text: '今日停駛', tr: false }
-      }
-      if (t === -2) {
-        return { status: 4, text: '交通管制', tr: false }
-      }
-      if (t === -1) {
-        return { status: 3, text: '未發車', tr: false }
-      }
-      if (t <= 180) {
-        if (t <= 100) {
-          return { status: 2, text: '進站中', tr: true }
-        }
-        else {
-          return { status: 1, text: minute, tr: true }
-        }
+      if (g) {
+        var status = { 'status': 10, 'text': '', 'tr': false }
       }
       else {
-        return { status: 0, text: minute, tr: false }
-      }
-    }
-    function findStop(j, id, pid) {
-      var res = []
-      if (!stops_json.loaded) {
-        return res
-      }
-      var o = j.BusInfo
-      var l = o.length
-      for (var w = 0; w < l; w++) {
-        var this_id = parseInt(o[w].RouteID)
-        if (this_id === id || pid.indexOf(String(this_id)) > -1 || this_id === id * 10) {
-          res.push(o[w])
-        }
+        var status = timeStatus(k[w].EstimateTime)
       }
 
-      res.sort(function (a, b) {
-        var c = -1
-        var d = 0
-        if (stops_json.c.hasOwnProperty('b_' + a.StopID)) {
-          c = stops_json.c['b_' + a.StopID].seqNo
+      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
+      var hash = md5(JSON.stringify(jn))
+      var bvhash = md5(JSON.stringify(bv))
+      var statushash = md5(JSON.stringify(status))
+
+      if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
+        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '" nh="' + nh + '" no="' + s.seqNo + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+      }
+
+      if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
+        if (s.goBack === 0) {
+          selector = '.route_container .route[direction="departure"]'
         }
-        if (stops_json.c.hasOwnProperty('b_' + b.StopID)) {
-          d = stops_json.c['b_' + b.StopID].seqNo
+        if (s.goBack === 1) {
+          selector = '.route_container .route[direction="destination"]'
         }
-        return c - d
-      });
+        selector += ' .stop[stop-id="' + k[w].StopID + '"]'
+        var thiscontent = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]
+        if (!(thiscontent.bvhash === bvhash)) {
+          $(selector).attr('bus', bv.h)
+          $(selector + ' .bus').attr('d', bv.h).attr('l', bv.l).attr('onclick', 'displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')')
+          $(selector + ' .bus .busicon').html(bv.icon)
+        }
+        if (!(thiscontent.statushash === statushash)) {
+          var status_s = status.tr
+          if (thiscontent.status <= 3 && status.status === 0 || 3) {
+            status_s = true
+          }
+          $(selector + ' .status').attr('tr', status_s).attr('status', status.status).text(status.text)
+        }
+        if (!(thiscontent.nh === nh)) {
+          $(selector + ' .position').attr('d', nh)
+          $(selector).attr('nh', nh)
+
+        }
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
+      }
+    }
+
+    if (!htm.hasOwnProperty('h_0')) {
+      htm['h_0'] = ['']
+    }
+    if (!htm.hasOwnProperty('h_1')) {
+      htm['h_1'] = ['']
+    }
+
+    $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
+    $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
+    scrollToNearestStop(route_direction)
+  }
+
+  function timeStatus(t) {
+    t = parseInt(t)
+    var minute = Math.round(t / 60) + '分'
+    if (t === -3) {
+      return { status: 6, text: '末班駛離', tr: false }
+    }
+    if (t === -4) {
+      return { status: 5, text: '今日停駛', tr: false }
+    }
+    if (t === -2) {
+      return { status: 4, text: '交通管制', tr: false }
+    }
+    if (t === -1) {
+      return { status: 3, text: '未發車', tr: false }
+    }
+    if (t <= 180) {
+      if (t <= 100) {
+        return { status: 2, text: '進站中', tr: true }
+      }
+      else {
+        return { status: 1, text: minute, tr: true }
+      }
+    }
+    else {
+      return { status: 0, text: minute, tr: false }
+    }
+  }
+  function findStop(j, id, pid) {
+    var res = []
+    if (!stops_json.loaded) {
       return res
     }
-    function findBus(j, id, pid) {
-      if (!j.loaded || !routes_json.loaded) {
-        return {}
+    var o = j.BusInfo
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      var this_id = parseInt(o[w].RouteID)
+      if (this_id === id || pid.indexOf(String(this_id)) > -1 || this_id === id * 10) {
+        res.push(o[w])
       }
-      var res = {}
-      var o = j.c
-      var l = o.length
-      for (var w = 0; w < l; w++) {
-        var ro = parseInt(o[w].RouteID)
-        if (ro === id || pid.indexOf(String(ro)) > -1 || ro === id * 10) {
-          res['s_' + o[w].StopID] = o[w]
-        }
-      }
-      return res
     }
 
-    function updateRealtimeJson(immediate_update) {
-      updateBusEventJson()
-      $.ajax({
-        type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
-          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-          b.arrayBuffer().then(bf => {
-            var z = pako.inflate(bf, { to: 'string' })
-            realtime_json = JSON.parse(z)
-            if (stops_json.loaded) {
-              var s = findStop(realtime_json, c_routeid, c_routeid_p)
-              var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-              current_route_stops = s
-              printStops(s, '', bb)
-              realtime_last_update = new Date().getTime()
-              if (refresh_progress_l === 0) {
-                refresh_progress_l = 1
-                $('.refresh_progress_box').attr('l', '1')
-              }
-            }
-            if (!(immediate_update === true)) {
-              setTimeout(function () { updateRealtimeJson(false) }, update_interval);
-            }
-          });
-        }, error: function () {
-          setTimeout(function () { updateRealtimeJson(false) }, 1000);
-        }
-      });
-
+    res.sort(function (a, b) {
+      var c = -1
+      var d = 0
+      if (stops_json.c.hasOwnProperty('b_' + a.StopID)) {
+        c = stops_json.c['b_' + a.StopID].seqNo
+      }
+      if (stops_json.c.hasOwnProperty('b_' + b.StopID)) {
+        d = stops_json.c['b_' + b.StopID].seqNo
+      }
+      return c - d
+    });
+    return res
+  }
+  function findBus(j, id, pid) {
+    if (!j.loaded || !routes_json.loaded) {
+      return {}
     }
-    function updateBusEventJson() {
+    var res = {}
+    var o = j.c
+    var l = o.length
+    for (var w = 0; w < l; w++) {
+      var ro = parseInt(o[w].RouteID)
+      if (ro === id || pid.indexOf(String(ro)) > -1 || ro === id * 10) {
+        res['s_' + o[w].StopID] = o[w]
+      }
+    }
+    return res
+  }
+
+  function updateRealtimeJson(immediate_update) {
+    updateBusEventJson()
+    $.ajax({
+      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          realtime_json = JSON.parse(z)
+          if (stops_json.loaded) {
+            var s = findStop(realtime_json, c_routeid, c_routeid_p)
+            var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+            current_route_stops = s
+            printStops(s, '', bb)
+            realtime_last_update = new Date().getTime()
+            if (refresh_progress_l === 0) {
+              refresh_progress_l = 1
+              $('.refresh_progress_box').attr('l', '1')
+            }
+          }
+          if (!(immediate_update === true)) {
+            setTimeout(function () { updateRealtimeJson(false) }, update_interval);
+          }
+        });
+      }, error: function () {
+        setTimeout(function () { updateRealtimeJson(false) }, 1000);
+      }
+    });
+
+  }
+  function updateBusEventJson() {
+    $.ajax({
+      type: 'GET', url: busevent_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+        b.arrayBuffer().then(bf => {
+          var z = pako.inflate(bf, { to: 'string' })
+          var o = JSON.parse(z).BusInfo
+          busevent_json.c = o
+          busevent_json.loaded = true
+        });
+      }, error: function () {
+
+      }
+    });
+  }
+
+  function getStops() {
+    var t = new Date().getTime()
+    if (!stops_json['c_' + stops_data_city + '_loaded']) {
       $.ajax({
-        type: 'GET', url: busevent_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+        type: 'GET', url: stops_api() + '?_=' + api_url_parameter(60 * 60 * 24 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
           b.arrayBuffer().then(bf => {
             var z = pako.inflate(bf, { to: 'string' })
             var o = JSON.parse(z).BusInfo
-            busevent_json.c = o
-            busevent_json.loaded = true
+            var json_processed = {}
+            var pl = o.length
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              json_processed['b_' + id] = o[j]
+            }
+            stops_json['c_' + stops_data_city] = json_processed
+            stops_json['c_' + stops_data_city + '_loaded'] = true
+            if (stops_data_city === 0) {
+              stops_json.c = stops_json['c_0']
+              stops_data_city = 1
+              getStops()
+            }
+            if (stops_data_city === 1) {
+              stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
+              stops_json.loaded = true
+              if (realtime_lo === 0) {
+                realtime_lo = 1
+                updateRealtimeJson(false)
+              }
+              else {
+                updateRealtimeJson(true)
+              }
+            }
           });
-        }, error: function () {
-
         }
       });
     }
+  }
 
-    function getStops() {
-      var t = new Date().getTime()
-      if (!stops_json['c_' + stops_data_city + '_loaded']) {
-        $.ajax({
-          type: 'GET', url: stops_api() + '?_=' + api_url_parameter(60 * 60 * 24 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
-            var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-            b.arrayBuffer().then(bf => {
-              var z = pako.inflate(bf, { to: 'string' })
-              var o = JSON.parse(z).BusInfo
-              var json_processed = {}
-              var pl = o.length
-              for (var j = 0; j < pl; j++) {
-                var this_json_k = o[j]
-                var id = o[j].Id
-                json_processed['b_' + id] = o[j]
-              }
-              stops_json['c_' + stops_data_city] = json_processed
-              stops_json['c_' + stops_data_city + '_loaded'] = true
-              if (stops_data_city === 0) {
-                stops_json.c = stops_json['c_0']
-                stops_data_city = 1
-                getStops()
-              }
-              if (stops_data_city === 1) {
-                stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
-                stops_json.loaded = true
-                if (realtime_lo === 0) {
-                  realtime_lo = 1
-                  updateRealtimeJson(false)
-                }
-                else {
-                  updateRealtimeJson(true)
-                }
-              }
-            });
-          }
-        });
+  function getRoutes(immediate_update) {
+    var t = new Date().getTime()
+    var g = 60 * 60 * 24 * 1 * 1000
+    if (immediate_update) {
+      routes_json.loaded = false
+    }
+    if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
+      if (!immediate_update) {
+        if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
+          var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
+          var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
+          routes_json['c_0'] = cc0
+          routes_json['c_1'] = cc1
+          routes_json.c = Object.assign(cc0, cc1);
+          routes_json.loaded = true
+        }
       }
     }
 
-    function getRoutes(immediate_update) {
-      var t = new Date().getTime()
-      var g = 60 * 60 * 24 * 1 * 1000
-      if (immediate_update) {
-        routes_json.loaded = false
+    if (routes_json.loaded) {
+      createSearchIndex(routes_json)
+      if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+        c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
       }
-      if (LS.hasOwnProperty('bus_routes_t_' + 0) && LS.hasOwnProperty('bus_routes_t_' + 1)) {
-        if (!immediate_update) {
-          if (t - parseInt(String(LS.getItem('bus_routes_t_' + 0))) < g && t - parseInt(String(LS.getItem('bus_routes_t_' + 1))) < g && !(routes_json.loaded === true)) {
-            var cc0 = JSON.parse(String(LS.getItem('bus_routes_' + 0)))
-            var cc1 = JSON.parse(String(LS.getItem('bus_routes_' + 1)))
-            routes_json['c_0'] = cc0
-            routes_json['c_1'] = cc1
-            routes_json.c = Object.assign(cc0, cc1);
-            routes_json.loaded = true
-          }
+      setRouteD()
+    }
+    else {
+      $.ajax({
+        type: 'GET', url: routes_api(routes_data_city), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var json_processed = {}
+            var pl = o.length
+            for (var j = 0; j < pl; j++) {
+              var this_json_k = o[j]
+              var id = o[j].Id
+              for (var g = 0; g < rdsn_len; g++) {
+                var thsS = routesDataShortName[g]
+                if (this_json_k.hasOwnProperty(thsS.source)) {
+                  if (!(thsS.short === false)) {
+                    this_json_k[thsS.short] = this_json_k[thsS.source]
+                  }
+                  delete this_json_k[thsS.source]
+                }
+              }
+              if (!json_processed.hasOwnProperty('b_' + id)) {
+                json_processed['b_' + id] = this_json_k
+              }
+              else {
+                if (!(this_json_k.pid === json_processed['b_' + id]['pid']) || !(String(json_processed['b_' + id]['pid']).indexOf(',' + this_json_k.pid) > -1)) {
+                  json_processed['b_' + id]['pid'] = json_processed['b_' + id]['pid'] + ',' + this_json_k.pid
+                }
+              }
+            }
+            routes_json['c_' + routes_data_city] = json_processed
+            LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_processed))
+            LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
+            if (routes_data_city === 0) {
+              routes_data_city = 1
+              getRoutes(immediate_update)
+            }
+            if (routes_data_city === 1) {
+              routes_json.loaded = true
+              routes_json['c_1'] = json_processed
+              routes_json.c = Object.assign(routes_json['c_0'], json_processed);
+              createSearchIndex(routes_json)
+              if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+                c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              }
+              setRouteD()
+            }
+          });
         }
-      }
+      });
+    }
+  }
 
-      if (routes_json.loaded) {
-        createSearchIndex(routes_json)
-        if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
-          c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
-        }
-        setRouteD()
+  function showRoute(id) {
+    route_container_content = { 'h_0': {}, 'h_1': {} }
+    skeletonScreen(false)
+    c_routeid = id
+    getRoutes(false)
+  }
+
+  function switchDirection(d, event) {
+    if (!(event === undefined) && !(event === null)) {
+      if (event.type === 'click') {
+        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
+        scrollToNearestStop(route_direction)
+      }
+    }
+    var a = 0
+    var b = 1
+    offsetX = (route_max_X - route_min_X) * (0)
+    if (d === 'destination') {
+      a = 1
+      b = 0
+      offsetX = (route_max_X - route_min_X) * (-1)
+    }
+    route_direction = d
+    route_container_scrolled = 0
+    $('.route_container .routes').attr('class', 'routes ' + d)
+    $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
+    $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
+    $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
+    $(".tab-line").attr('class', 'tab-line ' + d)
+    document.querySelector('.routes').addEventListener('transitionend', function () {
+      $('.route_container .routes').attr('slide', '-1')
+      $('.tab-line-box2,.tabs').attr('slide', '-1')
+    }, { once: true })
+  }
+
+  function standaloneStatusBarColor(a) {
+    var c = '#ffffff'
+    var d = '#101010'
+    if (a === 1) {
+      c = '#7f7f7f'
+      d = '#080808'
+    }
+    $('head meta[kji="light"]').attr('content', c)
+    $('head meta[kji="dark"]').attr('content', d)
+  }
+
+  function closeBus() {
+    if (businfo_close === 0) {
+      businfo_close = 1
+      $('.bus_info_box').attr('p', '0')
+      $('.bus_info_mask').css({ 'opacity': '0' })
+      standaloneStatusBarColor(0)
+      setTimeout(() => {
+        $('.bus_info_mask').css({ 'display': 'none' })
+        businfo_close = 0
+      }, 480);
+    }
+  }
+  function displayBus(id, onstop, type, status, update) {
+    gtag('event', 'display_bus_info', {
+      'event_category': onstop,
+      'event_label': id,
+      'event_callback': function () {
+      }
+    });
+    businfo_scroll = 0
+    businfo_scroll_1 = 0
+    let sel = '.bus_info_box .bus_info .bus_info_list li'
+    if (onstop === '0') {
+      onstop = '離站'
+    }
+    if (onstop === '1') {
+      onstop = '進站'
+    }
+    if (type === '0') {
+      type = '一般'
+    }
+    if (type === '1') {
+      type = '低底盤'
+    }
+    if (type === '2') {
+      type = '大復康巴士'
+    }
+    if (type === '3') {
+      type = '狗狗友善專車'
+    }
+    if (status === '0') {
+      status = '正常'
+    }
+    if (status === '1') {
+      status = '車禍'
+    }
+    if (status === '2') {
+      status = '故障'
+    }
+    if (status === '3') {
+      status = '塞車'
+    }
+    if (status === '4') {
+      status = '緊急求援'
+    }
+    if (status === '5') {
+      status = '加油'
+    }
+    if (status === '99') {
+      status = '非營運狀態'
+    }
+    $(sel + '[f="bus_id"]').text(id)
+    $(sel + '[f="bus_onstopstatus"]').text(onstop)
+    $(sel + '[f="bus_type"]').text(type)
+    $(sel + '[f="bus_status"]').text(status)
+    $(sel + '[f="bus_update"]').text(update)
+    $('.bus_info_box').scrollTop(50).attr('p', '1')
+    $('.bus_info_title').attr('sticky', '0')
+    $('.bus_info_mask').css({ 'display': 'block' })
+    setTimeout(() => {
+      $('.bus_info_mask').css({ 'opacity': '1' })
+      standaloneStatusBarColor(1)
+    }, 1);
+  }
+
+  function closeRouteInfo() {
+    if (routeinfo_close === 0) {
+      routeinfo_close = 1
+      $('.route_info_box').attr('p', '0')
+      $('.route_info_mask').css({ 'opacity': '0' })
+      standaloneStatusBarColor(0)
+      setTimeout(() => {
+        $('.route_info_mask').css({ 'display': 'none' })
+        routeinfo_close = 0
+      }, 480);
+    }
+  }
+  function displayRouteInfo() {
+    var ct = 60 * 60 * 24 * 1000
+    routeinfo_scroll = 0
+    routeinfo_scroll_1 = 0
+    let sel = '.route_info_box .route_info .route_info_list li'
+    $('.route_info_box').scrollTop(50).attr('p', '1')
+    $('.route_info_title').attr('sticky', '0')
+    $('.route_info_mask').css({ 'display': 'block' })
+    setTimeout(() => {
+      $('.route_info_mask').css({ 'opacity': '1' })
+      standaloneStatusBarColor(1)
+    }, 1);
+
+    var setF = function (f, v) {
+      if (v === null || v === undefined || v === '' || v === ' ') {
+        v = ''
+      }
+      var l = String(v).length
+      if (l <= 0) {
+        $(sel + '[f="' + f + '"]').attr('d', '0')
       }
       else {
-        $.ajax({
-          type: 'GET', url: routes_api(routes_data_city), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
-            var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-            b.arrayBuffer().then(bf => {
-              var z = pako.inflate(bf, { to: 'string' })
-              var o = JSON.parse(z).BusInfo
-              var json_processed = {}
-              var pl = o.length
-              for (var j = 0; j < pl; j++) {
-                var this_json_k = o[j]
-                var id = o[j].Id
-                for (var g = 0; g < rdsn_len; g++) {
-                  var thsS = routesDataShortName[g]
-                  if (this_json_k.hasOwnProperty(thsS.source)) {
-                    if (!(thsS.short === false)) {
-                      this_json_k[thsS.short] = this_json_k[thsS.source]
+        $(sel + '[f="' + f + '"]').attr('d', '1').text(v)
+      }
+    }
+    var minute = function (s) {
+      return parseInt(s) + '分'
+    }
+    var hw = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var min = minute(str.substring(0, 2))
+        var max = minute(str.substring(2, 4))
+        return min + '-' + max
+      }
+      if (l === 2) {
+        return minute(str)
+      }
+      return str
+    }
+    var time24h = function (str) {
+      str = String(str)
+      var l = str.length
+      if (l === 4) {
+        var hh = str.substring(0, 2)
+        var mm = str.substring(2, 4)
+        return hh + ':' + mm
+      }
+      return str
+    }
+
+    if (routeinfo_loaded === 0) {
+      routeinfoloadtime_t1 = new Date().getTime()
+      $('.route_info_box').attr('l', '0')
+      $(sel).attr('d', '1')
+      $.ajax({
+        type: 'GET', url: routes_api(city) + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            var o = JSON.parse(z).BusInfo
+            var l = o.length
+            var u
+            for (var i = 0; i < l; i++) {
+              var this_route = o[i]
+              if (this_route.Id === c_routeid) {
+                u = this_route
+                break;
+              }
+              else {
+                continue;
+              }
+            }
+
+            $.ajax({
+              type: 'GET', url: provider_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data2) {
+                var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
+                b2.arrayBuffer().then(bf2 => {
+                  var z2 = pako.inflate(bf2, { to: 'string' })
+                  var o2 = JSON.parse(z2).BusInfo
+                  var l2 = o.length
+                  var u2
+                  for (var i = 0; i < l; i++) {
+                    var this_provider = o2[i]
+                    if (this_provider.id === u.providerId) {
+                      u2 = this_provider
+                      break;
                     }
-                    delete this_json_k[thsS.source]
-                  }
-                }
-                if (!json_processed.hasOwnProperty('b_' + id)) {
-                  json_processed['b_' + id] = this_json_k
-                }
-                else {
-                  if (!(this_json_k.pid === json_processed['b_' + id]['pid']) || !(String(json_processed['b_' + id]['pid']).indexOf(',' + this_json_k.pid) > -1)) {
-                    json_processed['b_' + id]['pid'] = json_processed['b_' + id]['pid'] + ',' + this_json_k.pid
-                  }
-                }
-              }
-              routes_json['c_' + routes_data_city] = json_processed
-              LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_processed))
-              LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
-              if (routes_data_city === 0) {
-                routes_data_city = 1
-                getRoutes(immediate_update)
-              }
-              if (routes_data_city === 1) {
-                routes_json.loaded = true
-                routes_json['c_1'] = json_processed
-                routes_json.c = Object.assign(routes_json['c_0'], json_processed);
-                createSearchIndex(routes_json)
-                if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
-                  c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
-                }
-                setRouteD()
-              }
-            });
-          }
-        });
-      }
-    }
-
-    function showRoute(id) {
-      route_container_content = { 'h_0': {}, 'h_1': {} }
-      skeletonScreen(false)
-      c_routeid = id
-      getRoutes(false)
-    }
-
-    function switchDirection(d, event) {
-      if (!(event === undefined) && !(event === null)) {
-        if (event.type === 'click') {
-          $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms','--j-transition-a-p': `all 450ms`})
-          scrollToNearestStop(route_direction)
-        }
-      }
-      var a = 0
-      var b = 1
-      offsetX = (route_max_X - route_min_X) * (0)
-      if (d === 'destination') {
-        a = 1
-        b = 0
-        offsetX = (route_max_X - route_min_X) * (-1)
-      }
-      route_direction = d
-      route_container_scrolled = 0
-      $('.route_container .routes').attr('class', 'routes ' + d)
-      $('.route_container .tabs .tab[direction="departure"]').attr('g', a)
-      $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
-      $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
-      $(".tab-line").attr('class', 'tab-line ' + d)
-      document.querySelector('.routes').addEventListener('transitionend', function () {
-        $('.route_container .routes').attr('slide', '-1')
-        $('.tab-line-box2,.tabs').attr('slide', '-1')
-      }, { once: true })
-    }
-
-    function standaloneStatusBarColor(a) {
-      var c = '#ffffff'
-      var d = '#101010'
-      if (a === 1) {
-        c = '#7f7f7f'
-        d = '#080808'
-      }
-      $('head meta[kji="light"]').attr('content', c)
-      $('head meta[kji="dark"]').attr('content', d)
-    }
-
-    function closeBus() {
-      if (businfo_close === 0) {
-        businfo_close = 1
-        $('.bus_info_box').attr('p', '0')
-        $('.bus_info_mask').css({ 'opacity': '0' })
-        standaloneStatusBarColor(0)
-        setTimeout(() => {
-          $('.bus_info_mask').css({ 'display': 'none' })
-          businfo_close = 0
-        }, 480);
-      }
-    }
-    function displayBus(id, onstop, type, status, update) {
-      gtag('event', 'display_bus_info', {
-        'event_category': onstop,
-        'event_label': id,
-        'event_callback': function () {
-        }
-      });
-      businfo_scroll = 0
-      businfo_scroll_1 = 0
-      let sel = '.bus_info_box .bus_info .bus_info_list li'
-      if (onstop === '0') {
-        onstop = '離站'
-      }
-      if (onstop === '1') {
-        onstop = '進站'
-      }
-      if (type === '0') {
-        type = '一般'
-      }
-      if (type === '1') {
-        type = '低底盤'
-      }
-      if (type === '2') {
-        type = '大復康巴士'
-      }
-      if (type === '3') {
-        type = '狗狗友善專車'
-      }
-      if (status === '0') {
-        status = '正常'
-      }
-      if (status === '1') {
-        status = '車禍'
-      }
-      if (status === '2') {
-        status = '故障'
-      }
-      if (status === '3') {
-        status = '塞車'
-      }
-      if (status === '4') {
-        status = '緊急求援'
-      }
-      if (status === '5') {
-        status = '加油'
-      }
-      if (status === '99') {
-        status = '非營運狀態'
-      }
-      $(sel + '[f="bus_id"]').text(id)
-      $(sel + '[f="bus_onstopstatus"]').text(onstop)
-      $(sel + '[f="bus_type"]').text(type)
-      $(sel + '[f="bus_status"]').text(status)
-      $(sel + '[f="bus_update"]').text(update)
-      $('.bus_info_box').scrollTop(50).attr('p', '1')
-      $('.bus_info_title').attr('sticky', '0')
-      $('.bus_info_mask').css({ 'display': 'block' })
-      setTimeout(() => {
-        $('.bus_info_mask').css({ 'opacity': '1' })
-        standaloneStatusBarColor(1)
-      }, 1);
-    }
-
-    function closeRouteInfo() {
-      if (routeinfo_close === 0) {
-        routeinfo_close = 1
-        $('.route_info_box').attr('p', '0')
-        $('.route_info_mask').css({ 'opacity': '0' })
-        standaloneStatusBarColor(0)
-        setTimeout(() => {
-          $('.route_info_mask').css({ 'display': 'none' })
-          routeinfo_close = 0
-        }, 480);
-      }
-    }
-    function displayRouteInfo() {
-      var ct = 60 * 60 * 24 * 1000
-      routeinfo_scroll = 0
-      routeinfo_scroll_1 = 0
-      let sel = '.route_info_box .route_info .route_info_list li'
-      $('.route_info_box').scrollTop(50).attr('p', '1')
-      $('.route_info_title').attr('sticky', '0')
-      $('.route_info_mask').css({ 'display': 'block' })
-      setTimeout(() => {
-        $('.route_info_mask').css({ 'opacity': '1' })
-        standaloneStatusBarColor(1)
-      }, 1);
-
-      var setF = function (f, v) {
-        if (v === null || v === undefined || v === '' || v === ' ') {
-          v = ''
-        }
-        var l = String(v).length
-        if (l <= 0) {
-          $(sel + '[f="' + f + '"]').attr('d', '0')
-        }
-        else {
-          $(sel + '[f="' + f + '"]').attr('d', '1').text(v)
-        }
-      }
-      var minute = function (s) {
-        return parseInt(s) + '分'
-      }
-      var hw = function (str) {
-        str = String(str)
-        var l = str.length
-        if (l === 4) {
-          var min = minute(str.substring(0, 2))
-          var max = minute(str.substring(2, 4))
-          return min + '-' + max
-        }
-        if (l === 2) {
-          return minute(str)
-        }
-        return str
-      }
-      var time24h = function (str) {
-        str = String(str)
-        var l = str.length
-        if (l === 4) {
-          var hh = str.substring(0, 2)
-          var mm = str.substring(2, 4)
-          return hh + ':' + mm
-        }
-        return str
-      }
-
-      if (routeinfo_loaded === 0) {
-        routeinfoloadtime_t1 = new Date().getTime()
-        $('.route_info_box').attr('l', '0')
-        $(sel).attr('d', '1')
-        $.ajax({
-          type: 'GET', url: routes_api(city) + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
-            var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-            b.arrayBuffer().then(bf => {
-              var z = pako.inflate(bf, { to: 'string' })
-              var o = JSON.parse(z).BusInfo
-              var l = o.length
-              var u
-              for (var i = 0; i < l; i++) {
-                var this_route = o[i]
-                if (this_route.Id === c_routeid) {
-                  u = this_route
-                  break;
-                }
-                else {
-                  continue;
-                }
-              }
-
-              $.ajax({
-                type: 'GET', url: provider_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data2) {
-                  var b2 = new Blob([data2.slice(0, data2.size)], { type: 'application/gzip' });
-                  b2.arrayBuffer().then(bf2 => {
-                    var z2 = pako.inflate(bf2, { to: 'string' })
-                    var o2 = JSON.parse(z2).BusInfo
-                    var l2 = o.length
-                    var u2
-                    for (var i = 0; i < l; i++) {
-                      var this_provider = o2[i]
-                      if (this_provider.id === u.providerId) {
-                        u2 = this_provider
-                        break;
-                      }
-                      else {
-                        continue;
-                      }
+                    else {
+                      continue;
                     }
+                  }
 
-                    $.ajax({
-                      type: 'GET', url: timetable_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data3) {
-                        var b3 = new Blob([data3.slice(0, data3.size)], { type: 'application/gzip' });
-                        b3.arrayBuffer().then(bf3 => {
-                          var z3 = pako.inflate(bf3, { to: 'string' })
-                          var o3 = JSON.parse(z3).BusInfo
-                          var l3 = o3.length
-                          var u3 = { 'u_weekday': {}, 'u_specialday': {}, 'u_holiday': {} }
-                          var u3_l_w = 0
-                          var u3_l_h = 0
+                  $.ajax({
+                    type: 'GET', url: timetable_api() + '?_=' + api_url_parameter(ct), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data3) {
+                      var b3 = new Blob([data3.slice(0, data3.size)], { type: 'application/gzip' });
+                      b3.arrayBuffer().then(bf3 => {
+                        var z3 = pako.inflate(bf3, { to: 'string' })
+                        var o3 = JSON.parse(z3).BusInfo
+                        var l3 = o3.length
+                        var u3 = { 'u_weekday': {}, 'u_specialday': {}, 'u_holiday': {} }
+                        var u3_l_w = 0
+                        var u3_l_h = 0
 
-                          for (var i = 0; i < l3; i++) {
-                            var this_timetable = o3[i]
-                            var this_pid = this_timetable.PathAttributeId
-                            if (this_pid === c_routeid_p || this_pid === c_routeid || this_pid === c_routeid * 10) {
-                              var dateval = this_timetable.DateValue
-                              var depTime = this_timetable.DepartureTime
-                              if (this_timetable.DateType === '0') {
-                                if (dateval === '1' || dateval === '7') {
-                                  u3['u_holiday']['t_' + depTime] = this_timetable
-                                  u3_l_h += 1
-                                }
-                                else {
-                                  u3['u_weekday']['t_' + depTime] = this_timetable
-                                  u3_l_w += 1
-                                }
+                        for (var i = 0; i < l3; i++) {
+                          var this_timetable = o3[i]
+                          var this_pid = this_timetable.PathAttributeId
+                          if (this_pid === c_routeid_p || this_pid === c_routeid || this_pid === c_routeid * 10) {
+                            var dateval = this_timetable.DateValue
+                            var depTime = this_timetable.DepartureTime
+                            if (this_timetable.DateType === '0') {
+                              if (dateval === '1' || dateval === '7') {
+                                u3['u_holiday']['t_' + depTime] = this_timetable
+                                u3_l_h += 1
                               }
                               else {
-                                u3['u_specialday']['t_' + depTime] = this_timetable
+                                u3['u_weekday']['t_' + depTime] = this_timetable
+                                u3_l_w += 1
                               }
                             }
                             else {
-                              continue;
+                              u3['u_specialday']['t_' + depTime] = this_timetable
                             }
                           }
-                          var weekday_timetable = []
-                          var holiday_timetable = []
-                          var specialday_timetable = []
-                          var weekday_timetable_str = ''
-                          var holiday_timetable_str = ''
+                          else {
+                            continue;
+                          }
+                        }
+                        var weekday_timetable = []
+                        var holiday_timetable = []
+                        var specialday_timetable = []
+                        var weekday_timetable_str = ''
+                        var holiday_timetable_str = ''
 
-                          if (u3_l_w >= 1) {
-                            for (var f in u3['u_weekday']) {
-                              var this_f = u3['u_weekday'][f]
-                              weekday_timetable.push(time24h(this_f.DepartureTime))
-                            }
-                            weekday_timetable.sort(function (a, b) {
-                              var c = a.split(':')
-                              var d = b.split(':')
-                              var e = parseInt(c[0]) * 60 + parseInt(c[1])
-                              var f = parseInt(d[0]) * 60 + parseInt(d[1])
-                              return e - f
-                            })
-                            weekday_timetable_str = weekday_timetable.join('|')
+                        if (u3_l_w >= 1) {
+                          for (var f in u3['u_weekday']) {
+                            var this_f = u3['u_weekday'][f]
+                            weekday_timetable.push(time24h(this_f.DepartureTime))
                           }
-                          if (u3_l_h >= 1) {
-                            for (var f in u3['u_holiday']) {
-                              var this_f = u3['u_holiday'][f]
-                              holiday_timetable.push(time24h(this_f.DepartureTime))
-                            }
-                            holiday_timetable.sort(function (a, b) {
-                              var c = a.split(':')
-                              var d = b.split(':')
-                              var e = parseInt(c[0]) * 60 + parseInt(c[1])
-                              var f = parseInt(d[0]) * 60 + parseInt(d[1])
-                              return e - f
-                            })
-                            holiday_timetable_str = holiday_timetable.join('|')
+                          weekday_timetable.sort(function (a, b) {
+                            var c = a.split(':')
+                            var d = b.split(':')
+                            var e = parseInt(c[0]) * 60 + parseInt(c[1])
+                            var f = parseInt(d[0]) * 60 + parseInt(d[1])
+                            return e - f
+                          })
+                          weekday_timetable_str = weekday_timetable.join('|')
+                        }
+                        if (u3_l_h >= 1) {
+                          for (var f in u3['u_holiday']) {
+                            var this_f = u3['u_holiday'][f]
+                            holiday_timetable.push(time24h(this_f.DepartureTime))
                           }
-                          var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
-                          if ((u.peakHeadway).length <= 0) {
-                            r_weekday = undefined
+                          holiday_timetable.sort(function (a, b) {
+                            var c = a.split(':')
+                            var d = b.split(':')
+                            var e = parseInt(c[0]) * 60 + parseInt(c[1])
+                            var f = parseInt(d[0]) * 60 + parseInt(d[1])
+                            return e - f
+                          })
+                          holiday_timetable_str = holiday_timetable.join('|')
+                        }
+                        var r_weekday = '尖峰:' + hw(u.peakHeadway) + '|離峰:' + hw(u.offPeakHeadway)
+                        if ((u.peakHeadway).length <= 0) {
+                          r_weekday = undefined
+                        }
+                        var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
+                        if ((u.holidayPeakHeadway).length <= 0) {
+                          r_holiday = undefined
+                        }
+                        setF("route_name", u.nameZh)
+                        setF("route_departure", u.departureZh)
+                        setF("route_destination", u.destinationZh)
+                        setF("route_weekday_first", time24h(u.goFirstBusTime))
+                        setF("route_weekday_last", time24h(u.goLastBusTime))
+                        setF("route_weekday", r_weekday)
+                        setF("route_weekday_timetable", weekday_timetable_str)
+                        setF("route_holiday_timetable", holiday_timetable_str)
+                        setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
+                        setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
+                        setF("route_holiday", r_holiday)
+                        setF("route_price", u.ticketPriceDescriptionZh)
+                        setF("route_buffer", u.segmentBufferZh)
+                        setF("route_provider", u.providerName)
+                        setF("route_tel", u2.phoneInfo)
+                        setF("route_email", u2.email)
+                        $('.route_info_box').attr('l', '1')
+                        routeinfo_loaded = 1
+                        routeinfoloadtime_t2 = new Date().getTime()
+                        routeinfoloadtime = routeinfoloadtime_t2 - routeinfoloadtime_t1
+                        gtag('event', 'display_route_info', {
+                          'event_category': c_routeid,
+                          'complete_time': routeinfoloadtime,
+                          'event_callback': function () {
                           }
-                          var r_holiday = '尖峰:' + hw(u.holidayPeakHeadway) + '|離峰:' + hw(u.holidayOffPeakHeadway)
-                          if ((u.holidayPeakHeadway).length <= 0) {
-                            r_holiday = undefined
-                          }
-                          setF("route_name", u.nameZh)
-                          setF("route_departure", u.departureZh)
-                          setF("route_destination", u.destinationZh)
-                          setF("route_weekday_first", time24h(u.goFirstBusTime))
-                          setF("route_weekday_last", time24h(u.goLastBusTime))
-                          setF("route_weekday", r_weekday)
-                          setF("route_weekday_timetable", weekday_timetable_str)
-                          setF("route_holiday_timetable", holiday_timetable_str)
-                          setF("route_holiday_first", time24h(u.holidayGoFirstBusTime))
-                          setF("route_holiday_last", time24h(u.holidayGoLastBusTime))
-                          setF("route_holiday", r_holiday)
-                          setF("route_price", u.ticketPriceDescriptionZh)
-                          setF("route_buffer", u.segmentBufferZh)
-                          setF("route_provider", u.providerName)
-                          setF("route_tel", u2.phoneInfo)
-                          setF("route_email", u2.email)
-                          $('.route_info_box').attr('l', '1')
-                          routeinfo_loaded = 1
-                          routeinfoloadtime_t2 = new Date().getTime()
-                          routeinfoloadtime = routeinfoloadtime_t2 - routeinfoloadtime_t1
-                          gtag('event', 'display_route_info', {
-                            'event_category': c_routeid,
-                            'complete_time': routeinfoloadtime,
-                            'event_callback': function () {
-                            }
-                          });
-                        })
-                      }
-                    });
-                  })
-                }
-              });
+                        });
+                      })
+                    }
+                  });
+                })
+              }
+            });
 
-            })
-          }
-        });
-      }
-
-    }
-    function closeRoute() {
-      refreshProgresPause = 1
-      gtag('event', 'back_to_previous_page', {
-        'event_category': 'close_route',
-        'event_label': c_routeid,
-        'event_callback': function () {
-          route_page_is_open = 0
-          $('.route_container .route[direction="departure"]').scrollTop(0).html('')
-          $('.route_container .route[direction="destination"]').scrollTop(0).html('')
-          $('.route_container').css({ 'display': 'none' })
+          })
         }
       });
     }
-    function createSearchIndex(j) {
-      if (j.loaded) {
-        j = j.c
-        var arr = []
-        for (var p in j) {
-          var this_p = j[p]
-          var id = String(p).replace('b_', '')
-          var ct = undefined
-          this_p['id'] = id
-          this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
 
-          if (routes_json['c_0'].hasOwnProperty(p)) {
-            ct = 0
-          }
-          if (routes_json['c_1'].hasOwnProperty(p)) {
-            ct = 1
-          }
-          this_p['city'] = ct
-          arr.push(this_p)
-        }
-        search_index.c = arr
-        search_index.loaded = true
+  }
+  function closeRoute() {
+    refreshProgresPause = 1
+    gtag('event', 'back_to_previous_page', {
+      'event_category': 'close_route',
+      'event_label': c_routeid,
+      'event_callback': function () {
+        route_page_is_open = 0
+        $('.route_container .route[direction="departure"]').scrollTop(0).html('')
+        $('.route_container .route[direction="destination"]').scrollTop(0).html('')
+        $('.route_container').css({ 'display': 'none' })
       }
+    });
+  }
+  function createSearchIndex(j) {
+    if (j.loaded) {
+      j = j.c
+      var arr = []
+      for (var p in j) {
+        var this_p = j[p]
+        var id = String(p).replace('b_', '')
+        var ct = undefined
+        this_p['id'] = id
+        this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
+
+        if (routes_json['c_0'].hasOwnProperty(p)) {
+          ct = 0
+        }
+        if (routes_json['c_1'].hasOwnProperty(p)) {
+          ct = 1
+        }
+        this_p['city'] = ct
+        arr.push(this_p)
+      }
+      search_index.c = arr
+      search_index.loaded = true
     }
+  }
 
-    function search_result(q, search_index) {
-      if (!(String(q).length > 0)) {
-        return []
-      }
-      var res_1 = []
-      var q_u = unicode_arr(q)
-      var q_u_len = q_u.length
-      var search_index_len = search_index.length
-      for (var s = 0; s < search_index_len; s++) {
-        var this_s = search_index[s]
-        var this_s_u = this_s.unicode
-        var res_t = false
-        for (var f = 0; f < q_u_len; f++) {
-          if (this_s_u.indexOf(q_u[f]) > -1) {
-            res_t = true
-            break;
-          }
+  function search_result(q, search_index) {
+    if (!(String(q).length > 0)) {
+      return []
+    }
+    var res_1 = []
+    var q_u = unicode_arr(q)
+    var q_u_len = q_u.length
+    var search_index_len = search_index.length
+    for (var s = 0; s < search_index_len; s++) {
+      var this_s = search_index[s]
+      var this_s_u = this_s.unicode
+      var res_t = false
+      for (var f = 0; f < q_u_len; f++) {
+        if (this_s_u.indexOf(q_u[f]) > -1) {
+          res_t = true
+          break;
         }
-        if (!(res_t)) {
+      }
+      if (!(res_t)) {
+        continue;
+      }
+      else {
+        if (String(this_s.n).indexOf(q) > -1) {
+          res_1.push(this_s)
           continue;
         }
         else {
-          if (String(this_s.n).indexOf(q) > -1) {
+          if (String(this_s.dep).indexOf(q) > -1) {
             res_1.push(this_s)
             continue;
           }
           else {
-            if (String(this_s.dep).indexOf(q) > -1) {
+            if (String(this_s.des).indexOf(q) > -1) {
               res_1.push(this_s)
               continue;
             }
-            else {
-              if (String(this_s.des).indexOf(q) > -1) {
-                res_1.push(this_s)
-                continue;
-              }
-            }
           }
         }
       }
-      return res_1
     }
+    return res_1
+  }
 
-    function openRoute(c, i) {
-      gtag('event', 'open_route', {
-        'event_category': c,
-        'event_label': i,
-        'event_callback': function () {
-          city = c
-          routeinfo_loaded = 0
-          route_container_scrolled = 0
-          route_page_is_open = 1
-          $('.route_container').css({ 'display': 'block' })
-          $('.route_container .tabs').attr('l', '0')
-          $('.route_container .title .routename').attr('l', '0')
-          switchDirection('departure')
-          getStops()
-          showRoute(parseInt(i))
-          if (stops_json.loaded) {
-            updateRealtimeJson(true)
-          }
-          if (refreshProgresPause === 0) {
-            updateRefreshProgress()
-          }
+  function openRoute(c, i) {
+    gtag('event', 'open_route', {
+      'event_category': c,
+      'event_label': i,
+      'event_callback': function () {
+        city = c
+        routeinfo_loaded = 0
+        route_container_scrolled = 0
+        route_page_is_open = 1
+        $('.route_container').css({ 'display': 'block' })
+        $('.route_container .tabs').attr('l', '0')
+        $('.route_container .title .routename').attr('l', '0')
+        switchDirection('departure')
+        getStops()
+        showRoute(parseInt(i))
+        if (stops_json.loaded) {
+          updateRealtimeJson(true)
         }
-      });
-    }
-
-    function printSearchResult(result) {
-      var result_len = result.length
-      var f = []
-      for (var e = 0; e < result_len; e++) {
-        var thisres = result[e]
-        var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
-        f.push(htm)
-      }
-      return f.join('')
-    }
-
-    function update_search_result() {
-      var q = $('#search_routes').val()
-      var res = search_result(q, search_index.c)
-      $('.search_routes_result').html(printSearchResult(res))
-      var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
-      var text_width = getTextWidth(q, font)
-      $('.search').css({ '--cursor-offset': text_width + 'px' })
-    }
-
-    function opensearch() {
-      search_page_is_open = 1
-      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
-      n_watchPosition()
-    }
-
-    function closeopensearch() {
-      search_page_is_open = 0
-      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
-    }
-
-    function initializeKeyboard() {
-      var htm = []
-      var row_len = routes_keyboard_keys.length
-      for (var o = 0; o < row_len; o++) {
-        var this_row = routes_keyboard_keys[o]
-        var this_row_len = this_row.length
-        for (var w = 0; w < this_row_len; w++) {
-          var this_key = this_row[w]
-          var onclick = "keyboard_add('" + this_key + "')"
-          if (this_key === '刪除') {
-            onclick = "keyboard_delete()"
-          }
-          if (this_key === '清空') {
-            onclick = "keyboard_clear()"
-          }
-          htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
+        if (refreshProgresPause === 0) {
+          updateRefreshProgress()
         }
       }
-      $('.routes_keyboard').html(htm.join(''))
-    }
+    });
+  }
 
-    function keyboard_add(k) {
-      var v = $('#search_routes').val()
-      v += k
-      $('#search_routes').val(v)
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
+  function printSearchResult(result) {
+    var result_len = result.length
+    var f = []
+    for (var e = 0; e < result_len; e++) {
+      var thisres = result[e]
+      var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
+      f.push(htm)
     }
+    return f.join('')
+  }
 
-    function keyboard_delete() {
-      var v = $('#search_routes').val()
-      v = v.substring(0, v.length - 1)
-      $('#search_routes').val(v)
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    }
+  function update_search_result() {
+    var q = $('#search_routes').val()
+    var res = search_result(q, search_index.c)
+    $('.search_routes_result').html(printSearchResult(res))
+    var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
+    var text_width = getTextWidth(q, font)
+    $('.search').css({ '--cursor-offset': text_width + 'px' })
+  }
 
-    function keyboard_clear() {
-      $('#search_routes').val('')
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    }
+  function opensearch() {
+    search_page_is_open = 1
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+    n_watchPosition()
+  }
 
-    function setSearchSize() {
-      function fl(n) {
-        return Math.floor(n)
-      }
-      function clamp(w, min, df, max) {
-        var y = df * w
-        var p = y
-        if (y > max) {
-          p = max
+  function closeopensearch() {
+    search_page_is_open = 0
+    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+  }
+
+  function initializeKeyboard() {
+    var htm = []
+    var row_len = routes_keyboard_keys.length
+    for (var o = 0; o < row_len; o++) {
+      var this_row = routes_keyboard_keys[o]
+      var this_row_len = this_row.length
+      for (var w = 0; w < this_row_len; w++) {
+        var this_key = this_row[w]
+        var onclick = "keyboard_add('" + this_key + "')"
+        if (this_key === '刪除') {
+          onclick = "keyboard_delete()"
         }
-        if (y < min) {
-          p = min
+        if (this_key === '清空') {
+          onclick = "keyboard_clear()"
         }
-        return fl(p)
+        htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
       }
-      var w = []
-      var ww = window.innerWidth
-      var wh = window.innerHeight
-      w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
-      w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
-      w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
-      w.push('--k-window-w:' + ww + 'px')
-      w.push('--k-window-h:' + wh + 'px')
-      w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
-      w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
-      w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
-      w.push('--k-scale-h:' + 55 / 45)
-      w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
-      $('#search_size_css').html(':root{' + w.join(';') + '}')
     }
-    function setRouteSlideSize() {
-      route_min_X = 0
-      route_min_Y = 95
-      route_max_X = window.innerWidth + route_min_X
-      route_max_Y = window.innerHeight - 95 + route_min_Y
-      animation_speed = (route_max_X - route_min_X) / 700
+    $('.routes_keyboard').html(htm.join(''))
+  }
+
+  function keyboard_add(k) {
+    var v = $('#search_routes').val()
+    v += k
+    $('#search_routes').val(v)
+    if (search_page_is_open === 1) {
+      update_search_result()
     }
-    function getNearestStops(lat, lon) {
-      var snapshot = current_route_stops.slice(0)
-      var len = snapshot.length
-      var len2 = 5
-      var res = { 'o_0': [], 'o_1': [] }
-      if (len < 5) {
-        len2 = 3
-      }
+  }
 
-      if (len <= 0 || !(stops_json.loaded === true)) {
-        return res
-      }
+  function keyboard_delete() {
+    var v = $('#search_routes').val()
+    v = v.substring(0, v.length - 1)
+    $('#search_routes').val(v)
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  }
 
-      for (var u = 0; u < len; u++) {
-        var this_stop = snapshot[u]
-        var lon_d, lat_d
-        if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
-          var s = stops_json.c['b_' + this_stop.StopID]
-          lon_s = parseFloat(s.longitude)
-          lat_s = parseFloat(s.latitude)
-          this_stop.lon = lon_s
-          this_stop.lat = lat_s
-          this_stop.goBack_s = s.goBack
-          lon_d = Math.abs(lon_s - lon)
-          lat_d = Math.abs(lat_s - lat)
-        }
-        else {
-          lon_d = 0
-          lat_d = 0
-        }
-        this_stop.rd = lon_d + lat_d
-      }
+  function keyboard_clear() {
+    $('#search_routes').val('')
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  }
 
-      snapshot = snapshot.sort(function (a, b) {
-        var c = a.rd
-        var d = b.rd
-        return c - d
-      })
-
-      for (var w = 0; w < len2; w++) {
-        var this_stop = snapshot[w]
-        var gb = this_stop.goBack_s
-        var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
-        this_stop.distance = distance
-        if (!(res.hasOwnProperty('o_' + gb))) {
-          res['o_' + gb] = []
-        }
-        res['o_' + gb].push(this_stop)
+  function setSearchSize() {
+    function fl(n) {
+      return Math.floor(n)
+    }
+    function clamp(w, min, df, max) {
+      var y = df * w
+      var p = y
+      if (y > max) {
+        p = max
       }
+      if (y < min) {
+        p = min
+      }
+      return fl(p)
+    }
+    var w = []
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+    w.push('--k-width:' + clamp(ww, 150, 0.8, 300) + 'px')
+    w.push('--k-search-left:' + fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-search-top:' + fl(wh * 0.28) + 'px')
+    w.push('--k-window-w:' + ww + 'px')
+    w.push('--k-window-h:' + wh + 'px')
+    w.push('--k-offset-top:' + -1 * fl(wh * 0.28) + 'px')
+    w.push('--k-offset-left:' + -1 * fl((ww - clamp(ww, 150, 0.8, 300)) / 2) + 'px')
+    w.push('--k-scale-w:' + ww / clamp(ww, 150, 0.8, 300))
+    w.push('--k-scale-h:' + 55 / 45)
+    w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
+    $('#search_size_css').html(':root{' + w.join(';') + '}')
+  }
+  function setRouteSlideSize() {
+    route_min_X = 0
+    route_min_Y = 95
+    route_max_X = window.innerWidth + route_min_X
+    route_max_Y = window.innerHeight - 95 + route_min_Y
+    animation_speed = (route_max_X - route_min_X) / 700
+  }
+  function getNearestStops(lat, lon) {
+    var snapshot = current_route_stops.slice(0)
+    var len = snapshot.length
+    var len2 = 5
+    var res = { 'o_0': [], 'o_1': [] }
+    if (len < 5) {
+      len2 = 3
+    }
+
+    if (len <= 0 || !(stops_json.loaded === true)) {
       return res
     }
 
-    function n_watchPosition() {
-      if (watch_position_permission_requested === 0) {
-        watch_position_permission_requested = 1
-        watch_position = navigator.geolocation.watchPosition(function (position) {
-          pos_lat = position.coords.latitude
-          pos_lon = position.coords.longitude
-        });
-      }
-    }
-
-    function checkSlideCoordinate(route_min, p, route_max) {
-      if (p < route_min) {
-        return route_min - route_min
-      }
-      if (p > route_max) {
-        return route_max - route_min
-      }
-      return p - route_min
-    }
-
-    function calcSlideScale() {
-      var p1 = Math.abs(route_max_X - route_min_X) / 2
-      var f = route_x2 - route_x1
-      var s = f / p1
-      if (s < 0) {
-        //route_container_s slide to right
-        var w = s / ((route_x1) / p1)
-      }
-      if (s > 0) {
-        //route_container_s slide to left
-        var w = s / ((route_max_X - route_min_X - route_x1) / p1)
-      }
-      if (w < -1) {
-        w = -1
-      }
-      if (w > 1) {
-        w = 1
-      }
-      return w
-    }
-
-
-    function touchMove(e) {
-      if (route_page_is_open === 1) {
-        route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-        route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-        if (horizontal_slide && !vertical_slide) {
-          var w = calcSlideScale()
-          var rf = w * 1
-          var yw = route_tab_des_width * 1
-          var wy = route_tab_dep_width * 1
-          var dep_e = 0.3
-          var des_e = 0
-          var dep_color_r = 0
-          var dep_color_g = 0
-          var dep_color_b = 0
-          var des_color_r = 0
-          var des_color_g = 0
-          var des_color_b = 0
-          if (w < 0) {
-            rf = w * -1
-            yw = route_tab_dep_width * 1
-            wy = route_tab_des_width * 1
-            dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
-            dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
-            dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
-            des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
-            des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
-            des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
-            dep_e = 0.3 * (1 - Math.abs(w))
-            des_e = 0.3 * (Math.abs(w))
-          }
-          else {
-            rf = (1 - w)
-            yw = route_tab_des_width * 1
-            wy = route_tab_dep_width * 1
-            des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
-            des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
-            des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
-            dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
-            dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
-            dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
-            dep_e = 0.3 * (Math.abs(w))
-            des_e = 0.3 * (1 - Math.abs(w))
-          }
-          $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
-          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
-          $('.tabs').attr('slide', '1')
-          $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)`, '--j-slide-scale-ts-p': dep_e + 'px' })
-          $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)`, '--j-slide-scale-ts-p': des_e + 'px' })
-        }
-        else {
-          var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
-          if (a <= 30) {
-            horizontal_slide = true
-          }
-          else {
-            vertical_slide = true
-          }
-        }
-      }
-    }
-
-    function mixA(a, b, l) {
-      return Math.floor(a * l + b * (1 - l))
-    }
-    /* initialize */
-
-    initializeKeyboard()
-    $('.bus_info_box').scroll(function () {
-      var scrolltop = $('.bus_info_box').scrollTop()
-      if ($('.bus_info').offset().top < 0) {
-        if (businfo_scroll_1 === 0) {
-          $('.bus_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          businfo_scroll_1 = 1
-        }
+    for (var u = 0; u < len; u++) {
+      var this_stop = snapshot[u]
+      var lon_d, lat_d
+      if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
+        var s = stops_json.c['b_' + this_stop.StopID]
+        lon_s = parseFloat(s.longitude)
+        lat_s = parseFloat(s.latitude)
+        this_stop.lon = lon_s
+        this_stop.lat = lat_s
+        this_stop.goBack_s = s.goBack
+        lon_d = Math.abs(lon_s - lon)
+        lat_d = Math.abs(lat_s - lat)
       }
       else {
-        if (businfo_scroll_1 === 1) {
-          $('.bus_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          businfo_scroll_1 = 0
-        }
+        lon_d = 0
+        lat_d = 0
       }
-      if (scrolltop < 5) {
-        if (businfo_scroll === 0) {
-          closeBus()
-          businfo_scroll = 1
-        }
-      }
+      this_stop.rd = lon_d + lat_d
+    }
+
+    snapshot = snapshot.sort(function (a, b) {
+      var c = a.rd
+      var d = b.rd
+      return c - d
     })
-    $('.bus_info_box').click(function (e) {
-      e.stopPropagation()
+
+    for (var w = 0; w < len2; w++) {
+      var this_stop = snapshot[w]
+      var gb = this_stop.goBack_s
+      var distance = getDistance(this_stop.lat, this_stop.lon, lat, lon)
+      this_stop.distance = distance
+      if (!(res.hasOwnProperty('o_' + gb))) {
+        res['o_' + gb] = []
+      }
+      res['o_' + gb].push(this_stop)
+    }
+    return res
+  }
+
+  function n_watchPosition() {
+    if (watch_position_permission_requested === 0) {
+      watch_position_permission_requested = 1
+      watch_position = navigator.geolocation.watchPosition(function (position) {
+        pos_lat = position.coords.latitude
+        pos_lon = position.coords.longitude
+      });
+    }
+  }
+
+  function checkSlideCoordinate(route_min, p, route_max) {
+    if (p < route_min) {
+      return route_min - route_min
+    }
+    if (p > route_max) {
+      return route_max - route_min
+    }
+    return p - route_min
+  }
+
+  function calcSlideScale() {
+    var p1 = Math.abs(route_max_X - route_min_X) / 2
+    var f = route_x2 - route_x1
+    var s = f / p1
+    if (s < 0) {
+      //route_container_s slide to right
+      var w = s / ((route_x1) / p1)
+    }
+    if (s > 0) {
+      //route_container_s slide to left
+      var w = s / ((route_max_X - route_min_X - route_x1) / p1)
+    }
+    if (w < -1) {
+      w = -1
+    }
+    if (w > 1) {
+      w = 1
+    }
+    return w
+  }
+
+
+  function touchMove(e) {
+    if (route_page_is_open === 1) {
+      route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+      route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+      if (horizontal_slide && !vertical_slide) {
+        var w = calcSlideScale()
+        var rf = w * 1
+        var yw = route_tab_des_width * 1
+        var wy = route_tab_dep_width * 1
+        var dep_e = 0.3
+        var des_e = 0
+        var dep_color_r = 0
+        var dep_color_g = 0
+        var dep_color_b = 0
+        var des_color_r = 0
+        var des_color_g = 0
+        var des_color_b = 0
+        if (w < 0) {
+          rf = w * -1
+          yw = route_tab_dep_width * 1
+          wy = route_tab_des_width * 1
+          dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+          dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+          dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+          des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+          des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+          des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+          dep_e = 0.3 * (1 - Math.abs(w))
+          des_e = 0.3 * (Math.abs(w))
+        }
+        else {
+          rf = (1 - w)
+          yw = route_tab_des_width * 1
+          wy = route_tab_dep_width * 1
+          des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+          des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+          des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+          dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+          dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+          dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+          dep_e = 0.3 * (Math.abs(w))
+          des_e = 0.3 * (1 - Math.abs(w))
+        }
+        $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
+        $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
+        $('.tabs').attr('slide', '1')
+        $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)`, '--j-slide-scale-ts-p': dep_e + 'px' })
+        $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)`, '--j-slide-scale-ts-p': des_e + 'px' })
+      }
+      else {
+        var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
+        if (a <= 30) {
+          horizontal_slide = true
+        }
+        else {
+          vertical_slide = true
+        }
+      }
+    }
+  }
+
+  function mixA(a, b, l) {
+    return Math.floor(a * l + b * (1 - l))
+  }
+  /* initialize */
+
+  initializeKeyboard()
+  $('.bus_info_box').scroll(function () {
+    var scrolltop = $('.bus_info_box').scrollTop()
+    if ($('.bus_info').offset().top < 0) {
+      if (businfo_scroll_1 === 0) {
+        $('.bus_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        businfo_scroll_1 = 1
+      }
+    }
+    else {
+      if (businfo_scroll_1 === 1) {
+        $('.bus_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        businfo_scroll_1 = 0
+      }
+    }
+    if (scrolltop < 5) {
       if (businfo_scroll === 0) {
         closeBus()
         businfo_scroll = 1
       }
-    });
-    $('.bus_info').click(function (e) {
-      e.stopPropagation()
-    })
-    $('.route_info_box').scroll(function () {
-      var scrolltop = $('.route_info_box').scrollTop()
+    }
+  })
+  $('.bus_info_box').click(function (e) {
+    e.stopPropagation()
+    if (businfo_scroll === 0) {
+      closeBus()
+      businfo_scroll = 1
+    }
+  });
+  $('.bus_info').click(function (e) {
+    e.stopPropagation()
+  })
+  $('.route_info_box').scroll(function () {
+    var scrolltop = $('.route_info_box').scrollTop()
 
-      if ($('.route_info').offset().top < 0) {
-        if (routeinfo_scroll_1 === 0) {
-          $('.route_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          routeinfo_scroll_1 = 1
-        }
+    if ($('.route_info').offset().top < 0) {
+      if (routeinfo_scroll_1 === 0) {
+        $('.route_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        routeinfo_scroll_1 = 1
       }
-      else {
-        if (routeinfo_scroll_1 === 1) {
-          $('.route_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          routeinfo_scroll_1 = 0
-        }
+    }
+    else {
+      if (routeinfo_scroll_1 === 1) {
+        $('.route_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        routeinfo_scroll_1 = 0
       }
-      if (scrolltop < 5) {
-        if (routeinfo_scroll === 0) {
-          closeRouteInfo()
-          routeinfo_scroll = 1
-        }
-      }
-    });
-    $('.route_info_box').click(function (e) {
-      e.stopPropagation()
+    }
+    if (scrolltop < 5) {
       if (routeinfo_scroll === 0) {
         closeRouteInfo()
         routeinfo_scroll = 1
       }
-    });
+    }
+  });
+  $('.route_info_box').click(function (e) {
+    e.stopPropagation()
+    if (routeinfo_scroll === 0) {
+      closeRouteInfo()
+      routeinfo_scroll = 1
+    }
+  });
 
-    $('.route_info').click(function (e) {
-      e.stopPropagation()
-    })
+  $('.route_info').click(function (e) {
+    e.stopPropagation()
+  })
 
-    $('#search_routes').click(function (e) {
-      e.stopPropagation()
-      if (!($('.search').attr('p') === '1')) {
-        var n = new Date().getTime()
-        opensearch()
-      }
-    });
+  $('#search_routes').click(function (e) {
+    e.stopPropagation()
+    if (!($('.search').attr('p') === '1')) {
+      var n = new Date().getTime()
+      opensearch()
+    }
+  });
 
 
-    $(window).resize(function () {
-      setSearchSize()
-      setRouteSlideSize()
-    })
-
-    document.querySelector('#search_routes').addEventListener("paste", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("cut", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
+  $(window).resize(function () {
     setSearchSize()
-    getRoutes(false)
     setRouteSlideSize()
+  })
 
-    document.querySelector('.routes').addEventListener('touchstart', function (e) {
+  document.querySelector('#search_routes').addEventListener("paste", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("cut", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  setSearchSize()
+  getRoutes(false)
+  setRouteSlideSize()
+
+  document.querySelector('.routes').addEventListener('touchstart', function (e) {
+    horizontal_slide = false
+    vertical_slide = false
+    route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+    route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+    start_offsetX = offsetX
+    route_tab_color_333333_r = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-r'))
+    route_tab_color_333333_g = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-g'))
+    route_tab_color_333333_b = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-b'))
+    route_tab_color_888888_r = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-r'))
+    route_tab_color_888888_g = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-g'))
+    route_tab_color_888888_b = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-b'))
+
+    document.querySelector('.routes').addEventListener('touchmove', touchMove, { passive: false });
+  }, { passive: false });
+
+  document.querySelector('.routes').addEventListener('touchend', function (e) {
+    if (horizontal_slide && !vertical_slide) {
+      var w = calcSlideScale()
+      var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
+      var q = ((1 + calcSlideScale()) / 2)
+      var direction = route_direction
+      if (w < -0.35 || w > 0.35) {
+        if (w < -0.35) {
+          w = -1
+          offsetX = (route_max_X - route_min_X) * (-1)
+          direction = 'destination'
+        }
+        if (w > 0.35) {
+          w = 0
+          offsetX = (route_max_X - route_min_X) * (0)
+          direction = 'departure'
+        }
+        $('.routes').css({ '--j-translateX-p': `${((route_max_X - route_min_X) * w)}px)` });
+      }
+      else {
+        $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
+      }
+      $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms`, '--j-transition-a-p': `all ${d / animation_speed}ms` });
+      switchDirection(direction, e)
       horizontal_slide = false
       vertical_slide = false
-      route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-      route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-      start_offsetX = offsetX
-      route_tab_color_333333_r = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-r'))
-      route_tab_color_333333_g = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-g'))
-      route_tab_color_333333_b = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-b'))
-      route_tab_color_888888_r = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-r'))
-      route_tab_color_888888_g = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-g'))
-      route_tab_color_888888_b = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-b'))
-
-      document.querySelector('.routes').addEventListener('touchmove', touchMove, { passive: false });
-    }, { passive: false });
-
-    document.querySelector('.routes').addEventListener('touchend', function (e) {
-      if (horizontal_slide && !vertical_slide) {
-        var w = calcSlideScale()
-        var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
-        var q = ((1 + calcSlideScale()) / 2)
-        var direction = route_direction
-        if (w < -0.35 || w > 0.35) {
-          if (w < -0.35) {
-            w = -1
-            offsetX = (route_max_X - route_min_X) * (-1)
-            direction = 'destination'
-          }
-          if (w > 0.35) {
-            w = 0
-            offsetX = (route_max_X - route_min_X) * (0)
-            direction = 'departure'
-          }
-          $('.routes').css({ '--j-translateX-p': `${((route_max_X - route_min_X) * w)}px)` });
-        }
-        else {
-          $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
-        }
-        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms` ,'--j-transition-a-p': `all ${d / animation_speed}ms`});
-        /*
-          document.querySelector('.routes').addEventListener('transitionend', function () {
-            $('.routes').attr('slide', '-1')
-          }, { once: true })
-          */
-        switchDirection(direction, e)
-        horizontal_slide = false
-        vertical_slide = false
-      }
-      document.querySelector('.routes').addEventListener('touchmove', touchMove)
-    }, { passive: false });
-  }
-  catch (e) {
-    console.log(e)
-  }
+    }
+    document.querySelector('.routes').addEventListener('touchmove', touchMove)
+  }, { passive: false });
 </script>
 
 </html>
