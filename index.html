@@ -69,11 +69,17 @@
   <style>
     :root {
       --g-333333: #333333;
+      --g-333333-r: 51;
+      --g-333333-g: 51;
+      --g-333333-b: 51;
       --g-f5f5f5: #f5f5f5;
       --g-14b1ff: #14b1ff;
       --g-c7ecff: #c7ecff;
       --g-ffffff: #ffffff;
       --g-888888: #888888;
+      --g-888888-r: 136;
+      --g-888888-g: 136;
+      --g-888888-b: 136;
       --g-c7c7c7: #c7c7c7;
       --g-e3e3e3: #e3e3e3;
     }
@@ -81,11 +87,17 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --g-333333: #ffffff;
+        --g-333333-r: 255;
+        --g-333333-g: 255;
+        --g-333333-b: 255;
         --g-f5f5f5: #1f1f1f;
         --g-14b1ff: #2f92cc;
         --g-c7ecff: #2e4a59;
         --g-ffffff: #101010;
         --g-888888: #888888;
+        --g-888888-r: 136;
+        --g-888888-g: 136;
+        --g-888888-b: 136;
         --g-c7c7c7: #383838;
         --g-e3e3e3: #262626;
       }
@@ -222,16 +234,26 @@
       transition: none;
     }
 
-    .tab[g="0"] {
+    .tabs[slide="0"] .tab[g="0"],
+    .tabs[slide="-1"] .tab[g="0"] {
       color: var(--g-333333);
-      font-weight: 500;
-      transition: color 0.45s;
+      -webkit-text-stroke: 0.3px var(--g-333333);
     }
 
-    .tab[g="1"] {
+    .tabs[slide="0"] .tab[g="1"],
+    .tabs[slide="-1"] .tab[g="1"] {
       color: var(--g-888888);
-      font-weight: 400;
-      transition: color 0.45s;
+      -webkit-text-stroke: 0px var(--g-ffffff);
+    }
+
+    .tabs[slide="1"] .tab {
+      transition: none;
+      color: var(--j-slide-scale-c-p);
+      -webkit-text-stroke: var(--j-slide-scale-ts-p) var(--j-slide-scale-c-p);
+    }
+
+    .tabs[slide="0"] .tab {
+      transition: var(--j-transition-a-p);
     }
 
     .tab-line-box {
@@ -255,15 +277,25 @@
       align-items: center;
       user-select: none;
       -webkit-user-select: none;
-      transition: transform 0.45s;
     }
 
-    .tabs[l="1"] .tab-line-box2.departure {
+    .tabs[l="1"] .tab-line-box2[slide="0"] {
+      transition: var(--j-transition-p);
+    }
+
+    .tabs[l="1"] .tab-line-box2.departure[slide="-1"],
+    .tabs[l="1"] .tab-line-box2.departure[slide="0"] {
       transform: translateX(0%);
     }
 
-    .tabs[l="1"] .tab-line-box2.destination {
+    .tabs[l="1"] .tab-line-box2.destination[slide="-1"],
+    .tabs[l="1"] .tab-line-box2.destination[slide="0"] {
       transform: translateX(100%);
+    }
+
+    .tabs[l="1"] .tab-line-box2[slide="1"] {
+      transition: none;
+      transform: translateX(var(--j-slide-scale-rf-p));
     }
 
     .tab-line {
@@ -273,19 +305,29 @@
       border-radius: 15px 15px 0px 0px;
       user-select: none;
       -webkit-user-select: none;
-      transition: 0.45s;
     }
 
-    .tabs[l="1"] .tab-line.departure {
+    .tabs[l="1"] .tab-line-box2[slide="-1"] .tab-line.departure,
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line.departure {
       width: var(--tab-line-depature-width);
     }
 
-    .tabs[l="1"] .tab-line.destination {
+    .tabs[l="1"] .tab-line-box2[slide="-1"] .tab-line.destination,
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line.destination {
       width: var(--tab-line-destination-width);
     }
 
-    .tab-line.initialization {
+    .tab-line-box2[slide="-1"] .tab-line.initialization {
       width: var(--j-initialization-width);
+    }
+
+    .tabs[l="1"] .tab-line-box2[slide="1"] .tab-line {
+      transition: none;
+      width: var(--j-slide-scale-yu-p);
+    }
+
+    .tabs[l="1"] .tab-line-box2[slide="0"] .tab-line {
+      transition: var(--j-transition-w-p);
     }
 
     .tabs[l="0"] .tab-line {
@@ -322,26 +364,48 @@
       -webkit-user-select: none;
       user-select: none;
       background: var(--g-ffffff);
-      transition: transform 0.45s;
     }
 
-    .routes.departure {
+    .routes.departure[slide="0"],
+    .routes.departure[slide="-1"] {
       transform: translateX(0%);
     }
 
-    .routes.destination {
+    .routes.destination[slide="0"],
+    .routes.destination[slide="-1"] {
       transform: translateX(-50%);
+    }
+
+    .routes[slide="0"] {
+      transition: var(--j-transition-p);
+    }
+
+    .routes[slide="1"] {
+      transition: none;
+      transform: translateX(var(--j-translateX-p));
+    }
+
+    .routes[slide="2"] {
+      transition: transform 450ms;
     }
 
     .route {
       height: 100%;
-      overflow-y: scroll;
-      overflow-x: hidden;
       background: var(--g-ffffff);
+      overflow: hidden;
     }
 
     .route::-webkit-scrollbar {
       display: none;
+    }
+
+    .routes[slide="-1"] .route {
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    .routes[slide="1"] .route {
+      overflow: hidden;
     }
 
     .route li.stop {
@@ -607,7 +671,7 @@
       font-weight: 500;
     }
 
-    .route li.stop .status[tr="true"] {
+    .routes[slide="-1"] .route li.stop .status[tr="true"] {
       transition: 0.3s;
     }
 
@@ -1061,7 +1125,7 @@
   <div class="routes_keyboard"></div>
 
   <div class="route_container">
-    <div class="routes" display="departure">
+    <div class="routes" display="departure" slide="-1">
       <div class="route" direction="departure"></div>
       <div class="route" direction="destination"></div>
     </div>
@@ -1078,11 +1142,11 @@
         </svg>
       </button>
     </div>
-    <div class="tabs" l="0">
-      <button class="tab" direction="departure" onclick="switchDirection('departure')" g="0"><span></span></button>
-      <button class="tab" direction="destination" onclick="switchDirection('destination')" g="1"><span></span></button>
+    <div class="tabs" l="0" slide="-1">
+      <button class="tab" direction="departure" onclick="switchDirection('departure',event)" g="0"><span></span></button>
+      <button class="tab" direction="destination" onclick="switchDirection('destination',event)" g="1"><span></span></button>
       <div class="tab-line-box">
-        <div class="tab-line-box2">
+        <div class="tab-line-box2" slide="-1">
           <div class="tab-line"></div>
         </div>
       </div>
@@ -1216,6 +1280,7 @@
   var routeinfo_loaded = 0
   var refreshProgresPause = 0
   var search_page_is_open = 0
+  var route_page_is_open = 0
   var skeletonScreenStatus = 0
   var watch_position
   var watch_position_permission_requested = 0
@@ -1224,6 +1289,30 @@
   var pos_lat = 0
   var pos_lon = 0
   var route_direction = 'departure'
+  var route_container = document.querySelector('.route_container')
+  var route_container_s = document.querySelectorAll('.routes')[0]
+  var route_x1 = 0
+  var route_y1 = 0
+  var route_x2 = 0
+  var route_y2 = 0
+  var route_min_X = 0
+  var route_min_Y = 0
+  var route_max_X = 0
+  var route_max_Y = 0
+  var animation_speed = 0
+  var offsetX = 0
+  var start_offsetX = 0
+  var de = document.documentElement
+  var horizontal_slide = false
+  var vertical_slide = false
+  var route_tab_dep_width = 0
+  var route_tab_des_width = 0
+  var route_tab_color_333333_r = 0
+  var route_tab_color_333333_g = 0
+  var route_tab_color_333333_b = 0
+  var route_tab_color_888888_r = 0
+  var route_tab_color_888888_g = 0
+  var route_tab_color_888888_b = 0
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1369,15 +1458,18 @@
   function setRouteD() {
     if (routes_json.loaded) {
       var this_route = routes_json.c['b_' + c_routeid]
+      if (!routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+        return ''
+      }
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
       var name = this_route.n
       var w = []
       var font = "500 16px 'Noto Sans', sans-serif"
-      var r_dep_w = getTextWidth(des, font) + 'px'
-      var r_des_w = getTextWidth(dep, font) + 'px'
-      w.push('--tab-line-depature-width:' + r_dep_w)
-      w.push('--tab-line-destination-width:' + r_des_w)
+      route_tab_dep_width = getTextWidth(des, font)
+      route_tab_des_width = getTextWidth(dep, font)
+      w.push(`--tab-line-depature-width:${route_tab_dep_width}px`)
+      w.push(`--tab-line-destination-width:${route_tab_des_width}px`)
 
       $('#routes_animation_css').html(':root{' + w.join(';') + '}')
       $('.route_container .tabs .tab[direction="departure"] span').text(des)
@@ -1385,40 +1477,40 @@
       $('.route_container .title .routename').text(name)
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
-      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
+      $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
     }
   }
-  
-function scrollToY(element,source,aim,startTime,endTime,t) {
-  var f = function(x) {
-return -15.4+9.11*x-0.0285*x*x
-}
-var x_min = 1.7
-var x_max = 163.02
-var y_min = f(x_min)
-var y_max = f(x_max)
-var s = function (time) {
-var x = x_min+(time-startTime)/(endTime-startTime)*(x_max-x_min)
-var y = f(x)
-return source+(y_min+y)/(y_max-y_min)*(aim-source)
-}
 
-if(t<endTime) {
-var k = s(t)
-element.scrollTop = k
+  function scrollToY(element, source, aim, startTime, endTime, t) {
+    var f = function (x) {
+      return -15.4 + 9.11 * x - 0.0285 * x * x
+    }
+    var x_min = 1.7
+    var x_max = 163.02
+    var y_min = f(x_min)
+    var y_max = f(x_max)
+    var s = function (time) {
+      var x = x_min + (time - startTime) / (endTime - startTime) * (x_max - x_min)
+      var y = f(x)
+      return source + (y_min + y) / (y_max - y_min) * (aim - source)
+    }
+
+    if (t < endTime) {
+      var k = s(t)
+      element.scrollTop = k
 
 
-  t = new Date().getTime()
-  window.requestAnimationFrame(function() {
-scrollToY(element,source,aim,startTime,endTime,t)  
-})
+      t = new Date().getTime()
+      window.requestAnimationFrame(function () {
+        scrollToY(element, source, aim, startTime, endTime, t)
+      })
 
-}
-}
-function scrollTo(element,aim,duration) {
-  var t = new Date().getTime()
-scrollToY(element,element.scrollTop,aim,t,t+duration,t)
-}
+    }
+  }
+  function scrollTo(element, aim, duration) {
+    var t = new Date().getTime()
+    scrollToY(element, element.scrollTop, aim, t, t + duration, t)
+  }
   function scrollToStop(seqNo, direction) {
     var selector = '.route_container .route[direction="' + direction + '"]'
     var stop_height = 50
@@ -1434,9 +1526,9 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
         scrolltop = route_content_height - route_container_height
       }
     }
-    scrollTo(document.querySelector(selector),scrolltop,555)
+    scrollTo(document.querySelector(selector), scrolltop, 555)
   }
-  
+
   function scrollToNearestStop(direction) {
     if (route_container_scrolled === 0) {
       var selector = '.route_container .route[direction="' + direction + '"]'
@@ -1769,7 +1861,9 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
 
     if (routes_json.loaded) {
       createSearchIndex(routes_json)
-      c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+      if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+        c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+      }
       setRouteD()
     }
     else {
@@ -1814,7 +1908,9 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
               routes_json['c_1'] = json_processed
               routes_json.c = Object.assign(routes_json['c_0'], json_processed);
               createSearchIndex(routes_json)
-              c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
+                c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
+              }
               setRouteD()
             }
           });
@@ -1830,12 +1926,20 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
     getRoutes(false)
   }
 
-  function switchDirection(d) {
+  function switchDirection(d, event) {
+    if (!(event === undefined) && !(event === null)) {
+      if (event.type === 'click') {
+        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
+        scrollToNearestStop(route_direction)
+      }
+    }
     var a = 0
     var b = 1
+    offsetX = (route_max_X - route_min_X) * (0)
     if (d === 'destination') {
       a = 1
       b = 0
+      offsetX = (route_max_X - route_min_X) * (-1)
     }
     route_direction = d
     route_container_scrolled = 0
@@ -1844,7 +1948,10 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
     $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
     $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
     $(".tab-line").attr('class', 'tab-line ' + d)
-    scrollToNearestStop(route_direction)
+    document.querySelector('.routes').addEventListener('transitionend', function () {
+      $('.route_container .routes').attr('slide', '-1')
+      $('.tab-line-box2,.tabs').attr('slide', '-1')
+    }, { once: true })
   }
 
   function standaloneStatusBarColor(a) {
@@ -2161,6 +2268,7 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
       'event_category': 'close_route',
       'event_label': c_routeid,
       'event_callback': function () {
+        route_page_is_open = 0
         $('.route_container .route[direction="departure"]').scrollTop(0).html('')
         $('.route_container .route[direction="destination"]').scrollTop(0).html('')
         $('.route_container').css({ 'display': 'none' })
@@ -2243,6 +2351,7 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
         city = c
         routeinfo_loaded = 0
         route_container_scrolled = 0
+        route_page_is_open = 1
         $('.route_container').css({ 'display': 'block' })
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
@@ -2366,7 +2475,13 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
     w.push('--k-keyboard-h:' + clamp(wh, 200, 0.36, 270) + 'px')
     $('#search_size_css').html(':root{' + w.join(';') + '}')
   }
-
+  function setRouteSlideSize() {
+    route_min_X = 0
+    route_min_Y = 95
+    route_max_X = window.innerWidth + route_min_X
+    route_max_Y = window.innerHeight - 95 + route_min_Y
+    animation_speed = (route_max_X - route_min_X) / 700
+  }
   function getNearestStops(lat, lon) {
     var snapshot = current_route_stops.slice(0)
     var len = snapshot.length
@@ -2382,6 +2497,7 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
 
     for (var u = 0; u < len; u++) {
       var this_stop = snapshot[u]
+      var lon_d, lat_d
       if (stops_json.c.hasOwnProperty('b_' + this_stop.StopID)) {
         var s = stops_json.c['b_' + this_stop.StopID]
         lon_s = parseFloat(s.longitude)
@@ -2389,9 +2505,13 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
         this_stop.lon = lon_s
         this_stop.lat = lat_s
         this_stop.goBack_s = s.goBack
+        lon_d = Math.abs(lon_s - lon)
+        lat_d = Math.abs(lat_s - lat)
       }
-      var lon_d = Math.abs(lon_s - lon)
-      var lat_d = Math.abs(lat_s - lat)
+      else {
+        lon_d = 0
+        lat_d = 0
+      }
       this_stop.rd = lon_d + lat_d
     }
 
@@ -2424,119 +2544,262 @@ scrollToY(element,element.scrollTop,aim,t,t+duration,t)
     }
   }
 
-  function initialize() {
-    initializeKeyboard()
-    $('.bus_info_box').scroll(function () {
-      var scrolltop = $('.bus_info_box').scrollTop()
-      if ($('.bus_info').offset().top < 0) {
-        if (businfo_scroll_1 === 0) {
-          $('.bus_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          businfo_scroll_1 = 1
+  function checkSlideCoordinate(route_min, p, route_max) {
+    if (p < route_min) {
+      return route_min - route_min
+    }
+    if (p > route_max) {
+      return route_max - route_min
+    }
+    return p - route_min
+  }
+
+  function calcSlideScale() {
+    var p1 = Math.abs(route_max_X - route_min_X) / 2
+    var f = route_x2 - route_x1
+    var s = f / p1
+    if (s < 0) {
+      //route_container_s slide to right
+      var w = s / ((route_x1) / p1)
+    }
+    if (s > 0) {
+      //route_container_s slide to left
+      var w = s / ((route_max_X - route_min_X - route_x1) / p1)
+    }
+    if (w < -1) {
+      w = -1
+    }
+    if (w > 1) {
+      w = 1
+    }
+    return w
+  }
+
+
+  function touchMove(e) {
+    if (route_page_is_open === 1) {
+      route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+      route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+      if (horizontal_slide && !vertical_slide) {
+        var w = calcSlideScale()
+        var rf = w * 1
+        var yw = route_tab_des_width * 1
+        var wy = route_tab_dep_width * 1
+        var dep_e = 0.3
+        var des_e = 0
+        var dep_color_r = 0
+        var dep_color_g = 0
+        var dep_color_b = 0
+        var des_color_r = 0
+        var des_color_g = 0
+        var des_color_b = 0
+        if (w < 0) {
+          rf = w * -1
+          yw = route_tab_dep_width * 1
+          wy = route_tab_des_width * 1
+          dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+          dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+          dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+          des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+          des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+          des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+          dep_e = 0.3 * (1 - Math.abs(w))
+          des_e = 0.3 * (Math.abs(w))
         }
+        else {
+          rf = (1 - w)
+          yw = route_tab_des_width * 1
+          wy = route_tab_dep_width * 1
+          des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+          des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+          des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+          dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+          dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+          dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+          dep_e = 0.3 * (Math.abs(w))
+          des_e = 0.3 * (1 - Math.abs(w))
+        }
+        $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
+        $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
+        $('.tabs').attr('slide', '1')
+        $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)`, '--j-slide-scale-ts-p': dep_e + 'px' })
+        $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)`, '--j-slide-scale-ts-p': des_e + 'px' })
       }
       else {
-        if (businfo_scroll_1 === 1) {
-          $('.bus_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          businfo_scroll_1 = 0
+        var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
+        if (a <= 30) {
+          horizontal_slide = true
+        }
+        else {
+          vertical_slide = true
         }
       }
-      if (scrolltop < 5) {
-        if (businfo_scroll === 0) {
-          closeBus()
-          businfo_scroll = 1
-        }
+    }
+  }
+
+  function mixA(a, b, l) {
+    return Math.floor(a * l + b * (1 - l))
+  }
+  /* initialize */
+
+  initializeKeyboard()
+  $('.bus_info_box').scroll(function () {
+    var scrolltop = $('.bus_info_box').scrollTop()
+    if ($('.bus_info').offset().top < 0) {
+      if (businfo_scroll_1 === 0) {
+        $('.bus_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        businfo_scroll_1 = 1
       }
-    })
-    $('.bus_info_box').click(function (e) {
-      e.stopPropagation()
+    }
+    else {
+      if (businfo_scroll_1 === 1) {
+        $('.bus_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        businfo_scroll_1 = 0
+      }
+    }
+    if (scrolltop < 5) {
       if (businfo_scroll === 0) {
         closeBus()
         businfo_scroll = 1
       }
-    });
-    $('.bus_info').click(function (e) {
-      e.stopPropagation()
-    })
-    $('.route_info_box').scroll(function () {
-      var scrolltop = $('.route_info_box').scrollTop()
+    }
+  })
+  $('.bus_info_box').click(function (e) {
+    e.stopPropagation()
+    if (businfo_scroll === 0) {
+      closeBus()
+      businfo_scroll = 1
+    }
+  });
+  $('.bus_info').click(function (e) {
+    e.stopPropagation()
+  })
+  $('.route_info_box').scroll(function () {
+    var scrolltop = $('.route_info_box').scrollTop()
 
-      if ($('.route_info').offset().top < 0) {
-        if (routeinfo_scroll_1 === 0) {
-          $('.route_info_title').attr('sticky', '1')
-          standaloneStatusBarColor(0)
-          routeinfo_scroll_1 = 1
-        }
+    if ($('.route_info').offset().top < 0) {
+      if (routeinfo_scroll_1 === 0) {
+        $('.route_info_title').attr('sticky', '1')
+        standaloneStatusBarColor(0)
+        routeinfo_scroll_1 = 1
       }
-      else {
-        if (routeinfo_scroll_1 === 1) {
-          $('.route_info_title').attr('sticky', '0')
-          standaloneStatusBarColor(1)
-          routeinfo_scroll_1 = 0
-        }
+    }
+    else {
+      if (routeinfo_scroll_1 === 1) {
+        $('.route_info_title').attr('sticky', '0')
+        standaloneStatusBarColor(1)
+        routeinfo_scroll_1 = 0
       }
-      if (scrolltop < 5) {
-        if (routeinfo_scroll === 0) {
-          closeRouteInfo()
-          routeinfo_scroll = 1
-        }
-      }
-    });
-    $('.route_info_box').click(function (e) {
-      e.stopPropagation()
+    }
+    if (scrolltop < 5) {
       if (routeinfo_scroll === 0) {
         closeRouteInfo()
         routeinfo_scroll = 1
       }
-    });
+    }
+  });
+  $('.route_info_box').click(function (e) {
+    e.stopPropagation()
+    if (routeinfo_scroll === 0) {
+      closeRouteInfo()
+      routeinfo_scroll = 1
+    }
+  });
 
-    $('.route_info').click(function (e) {
-      e.stopPropagation()
-    })
+  $('.route_info').click(function (e) {
+    e.stopPropagation()
+  })
 
-    $('#search_routes').click(function (e) {
-      e.stopPropagation()
-      if (!($('.search').attr('p') === '1')) {
-        var n = new Date().getTime()
-        opensearch()
-      }
-    });
+  $('#search_routes').click(function (e) {
+    e.stopPropagation()
+    if (!($('.search').attr('p') === '1')) {
+      var n = new Date().getTime()
+      opensearch()
+    }
+  });
 
 
-    $(window).resize(function () {
-      setSearchSize()
-    })
-
-    document.querySelector('#search_routes').addEventListener("paste", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("cut", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.addEventListener("selectionchange", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
-    document.querySelector('#search_routes').addEventListener("keyup", function (e) {
-      if (search_page_is_open === 1) {
-        update_search_result()
-      }
-    });
+  $(window).resize(function () {
     setSearchSize()
-    getRoutes(false)
-  }
-  initialize()
+    setRouteSlideSize()
+  })
+
+  document.querySelector('#search_routes').addEventListener("paste", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("cut", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.addEventListener("selectionchange", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  document.querySelector('#search_routes').addEventListener("keyup", function (e) {
+    if (search_page_is_open === 1) {
+      update_search_result()
+    }
+  });
+  setSearchSize()
+  getRoutes(false)
+  setRouteSlideSize()
+
+  document.querySelector('.routes').addEventListener('touchstart', function (e) {
+    horizontal_slide = false
+    vertical_slide = false
+    route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+    route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+    start_offsetX = offsetX
+    route_tab_color_333333_r = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-r'))
+    route_tab_color_333333_g = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-g'))
+    route_tab_color_333333_b = parseInt(getComputedStyle(de).getPropertyValue('--g-333333-b'))
+    route_tab_color_888888_r = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-r'))
+    route_tab_color_888888_g = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-g'))
+    route_tab_color_888888_b = parseInt(getComputedStyle(de).getPropertyValue('--g-888888-b'))
+
+    document.querySelector('.routes').addEventListener('touchmove', touchMove, { passive: false });
+  }, { passive: false });
+
+  document.querySelector('.routes').addEventListener('touchend', function (e) {
+    if (horizontal_slide && !vertical_slide) {
+      var w = calcSlideScale()
+      var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
+      var q = ((1 + calcSlideScale()) / 2)
+      var direction = route_direction
+      if (w < -0.35 || w > 0.35) {
+        if (w < -0.35) {
+          w = -1
+          offsetX = (route_max_X - route_min_X) * (-1)
+          direction = 'destination'
+        }
+        if (w > 0.35) {
+          w = 0
+          offsetX = (route_max_X - route_min_X) * (0)
+          direction = 'departure'
+        }
+        $('.routes').css({ '--j-translateX-p': `${((route_max_X - route_min_X) * w)}px)` });
+      }
+      else {
+        $('.routes').css({ '--j-translateX-p': `${start_offsetX}px)` });
+      }
+      $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': `transform ${d / animation_speed}ms`, '--j-transition-w-p': `width ${d / animation_speed}ms`, '--j-transition-a-p': `all ${d / animation_speed}ms` });
+      switchDirection(direction, e)
+      horizontal_slide = false
+      vertical_slide = false
+    }
+    document.querySelector('.routes').addEventListener('touchmove', touchMove)
+  }, { passive: false });
 </script>
 
 </html>
