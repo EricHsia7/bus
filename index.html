@@ -1884,6 +1884,7 @@
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
           $('.routes').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms' })
+          scrollToNearestStop(route_direction)
         }
       }
       var a = 0
@@ -1901,7 +1902,6 @@
       $('.route_container .tabs .tab[direction="destination"]').attr('g', b)
       $(".tab-line-box2").attr('class', 'tab-line-box2 ' + d)
       $(".tab-line").attr('class', 'tab-line ' + d)
-      scrollToNearestStop(route_direction)
       document.querySelector('.routes').addEventListener('transitionend', function () {
         $('.route_container .routes').attr('slide', '-1')
       }, { once: true })
