@@ -1421,9 +1421,9 @@ outline:none;
     height:${ripple_size}px;
     border-radius:50%;
     position:absolute;
-    top:${relative_y - 0.5 * ripple_size}px;
-    left:${relative_x - 0.5 * ripple_size}px;
-    transform:scale(0);
+    top:${relative_y}px;
+    left:${relative_x}px;
+    transform:translateX(-0.5 * ripple_size) translateY(-0.5 * ripple_size) scale(0);
     opacity:0;
     animation-duration: ${duration}ms;
   animation-name: ripple-animation-${ripple_id};
@@ -1432,15 +1432,15 @@ outline:none;
     }
     @keyframes ripple-animation-${ripple_id} {
   0% {
-    transform:scale(0);
+    transform:translateX(-0.5 * ripple_size) translateY(-0.5 * ripple_size) scale(0);
     opacity:0;
   }
   10% {
-    transform:scale(${1.25 * 0.1});
+    transform:translateX(-0.5 * ripple_size) translateY(-0.5 * ripple_size) scale(${1.25 * 0.1});
     opacity:0.35;
   }
   100% {
-    transform:scale(1.25);
+    transform:translateX(-0.5 * ripple_size) translateY(-0.5 * ripple_size) scale(1.25);
     opacity:0;
   }
 }
