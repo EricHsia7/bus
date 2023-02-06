@@ -237,20 +237,21 @@
     .tabs[slide="0"] .tab[g="0"],
     .tabs[slide="-1"] .tab[g="0"] {
       color: var(--g-333333);
-      font-weight: 500;
+      -webkit-text-stroke: 0.3px var(--g-333333);
       transition: color 0.45s;
     }
 
     .tabs[slide="0"] .tab[g="1"],
     .tabs[slide="-1"] .tab[g="1"] {
       color: var(--g-888888);
-      font-weight: 400;
+      -webkit-text-stroke: 0px var(--g-ffffff);
       transition: color 0.45s;
     }
 
     .tabs[slide="1"] .tab {
       transition: none;
       color: var(--j-slide-scale-c-p);
+      -webkit-text-stroke: var(--j-slide-scale-ts-p) var(--j-slide-scale-c-p);
     }
 
     .tab-line-box {
@@ -1950,7 +1951,7 @@
       $(".tab-line").attr('class', 'tab-line ' + d)
       document.querySelector('.routes').addEventListener('transitionend', function () {
         $('.route_container .routes').attr('slide', '-1')
-        $('.tab-line-box2').attr('slide', '-1')
+        $('.tab-line-box2,.tabs').attr('slide', '-1')
       }, { once: true })
     }
 
@@ -2585,6 +2586,8 @@
           var rf = w * 1
           var yw = route_tab_des_width * 1
           var wy = route_tab_dep_width * 1
+          var dep_e = 0.3
+          var des_e = 0
           var dep_color_r = 0
           var dep_color_g = 0
           var dep_color_b = 0
@@ -2601,7 +2604,8 @@
             des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
             des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
             des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
-
+            dep_e = 0.3 * (1 - Math.abs(w))
+            des_e = 0.3 * (Math.abs(w))
           }
           else {
             rf = (1 - w)
@@ -2613,6 +2617,8 @@
             dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
             dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
             dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+            dep_e = 0.3 * (Math.abs(w))
+            des_e = 0.3 * (1 - Math.abs(w))
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
           $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
