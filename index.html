@@ -69,11 +69,17 @@
   <style>
     :root {
       --g-333333: #333333;
+      --g-333333-r: 51;
+      --g-333333-g: 51;
+      --g-333333-b: 51;
       --g-f5f5f5: #f5f5f5;
       --g-14b1ff: #14b1ff;
       --g-c7ecff: #c7ecff;
       --g-ffffff: #ffffff;
       --g-888888: #888888;
+      --g-888888-r: 136;
+      --g-888888-g: 136;
+      --g-888888-b: 136;
       --g-c7c7c7: #c7c7c7;
       --g-e3e3e3: #e3e3e3;
     }
@@ -81,11 +87,17 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --g-333333: #ffffff;
+        --g-333333-r: 255;
+        --g-333333-g: 255;
+        --g-333333-b: 255;
         --g-f5f5f5: #1f1f1f;
         --g-14b1ff: #2f92cc;
         --g-c7ecff: #2e4a59;
         --g-ffffff: #101010;
         --g-888888: #888888;
+        --g-888888-r: 136;
+        --g-888888-g: 136;
+        --g-888888-b: 136;
         --g-c7c7c7: #383838;
         --g-e3e3e3: #262626;
       }
@@ -222,16 +234,23 @@
       transition: none;
     }
 
-    .tab[g="0"] {
+    .tabs[slide="0"] .tab[g="0"],
+    .tabs[slide="-1"] .tab[g="0"] {
       color: var(--g-333333);
       font-weight: 500;
       transition: color 0.45s;
     }
 
-    .tab[g="1"] {
+    .tabs[slide="0"] .tab[g="1"],
+    .tabs[slide="-1"] .tab[g="1"] {
       color: var(--g-888888);
       font-weight: 400;
       transition: color 0.45s;
+    }
+
+    .tabs[slide="1"] {
+      transition: none;
+      color: var(--j-slide-scale-c-p);
     }
 
     .tab-line-box {
@@ -1287,6 +1306,12 @@
   var vertical_slide = false
   var route_tab_dep_width = 0
   var route_tab_des_width = 0
+  var route_tab_color_333333_r = 0
+  var route_tab_color_333333_g = 0
+  var route_tab_color_333333_b = 0
+  var route_tab_color_888888_r = 0
+  var route_tab_color_888888_g = 0
+  var route_tab_color_888888_b = 0
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1452,7 +1477,7 @@
         $('.route_container .title .routename').text(name)
         $('.route_container .tabs').attr('l', '1')
         $('.route_container .title .routename').attr('l', '1')
-        $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px'})
+        $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
       }
     }
 
@@ -2560,18 +2585,39 @@
           var rf = w * 1
           var yw = route_tab_des_width * 1
           var wy = route_tab_dep_width * 1
+          var dep_color_r = 0
+          var dep_color_g = 0
+          var dep_color_b = 0
+          var des_color_r = 0
+          var des_color_g = 0
+          var des_color_b = 0
           if (w < 0) {
             rf = w * -1
             yw = route_tab_dep_width * 1
             wy = route_tab_des_width * 1
+            dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+            dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+            dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+            des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+            des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+            des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+
           }
           else {
             rf = (1 - w)
             yw = route_tab_des_width * 1
             wy = route_tab_dep_width * 1
+            des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+            des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+            des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+            dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+            dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+            dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
           $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
+          $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)` })
+          $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)` })
         }
         else {
           var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
@@ -2585,7 +2631,9 @@
       }
     }
 
-
+    function mixA(a, b, l) {
+      return a * l + b * (1 - l)
+    }
     /* initialize */
 
     initializeKeyboard()
@@ -2707,6 +2755,13 @@
       route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
       route_y1 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
       start_offsetX = offsetX
+      route_tab_color_333333_r = parseInt(getComputedStyle(document.documentElement, '--g-333333-r'))
+      route_tab_color_333333_g = parseInt(getComputedStyle(document.documentElement, '--g-333333-g'))
+      route_tab_color_333333_b = parseInt(getComputedStyle(document.documentElement, '--g-333333-b'))
+      route_tab_color_888888_r = parseInt(getComputedStyle(document.documentElement, '--g-888888-r'))
+      route_tab_color_888888_g = parseInt(getComputedStyle(document.documentElement, '--g-888888-g'))
+      route_tab_color_888888_b = parseInt(getComputedStyle(document.documentElement, '--g-888888-b'))
+
       document.querySelector('.routes').addEventListener('touchmove', touchMove, { passive: false });
     }, { passive: false });
 
