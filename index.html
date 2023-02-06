@@ -1398,12 +1398,13 @@
       var scroll_y = document.documentElement.scrollTop
       var x = event.pageX
       var y = event.pageY
-      var element_x = element.offsetLeft
-      var element_y = element.offsetTop
+      var element_rect = elem.getBoundingClientRect()
+      var element_x = element_rect.x
+      var element_y = element_rect.y
       var element_width = element.clientWidth
       var element_height = element.clientHeight
-      var relative_x = x - element_x - scroll_x
-      var relative_y = y - element_y - scroll_y
+      var relative_x = x - element_x
+      var relative_y = y - element_y
       var ripple_size = Math.max(element_width, element_height)
       var css = `.ripple-element-${ripple_id} {
         position:relative;
