@@ -1441,10 +1441,10 @@
         var name = this_route.n
         var w = []
         var font = "500 16px 'Noto Sans', sans-serif"
-        route_tab_dep_width = getTextWidth(des, font) + 'px'
-        route_tab_des_width = getTextWidth(dep, font) + 'px'
-        w.push('--tab-line-depature-width:' + route_tab_dep_width)
-        w.push('--tab-line-destination-width:' + route_tab_des_width)
+        route_tab_dep_width = getTextWidth(des, font)
+        route_tab_des_width = getTextWidth(dep, font)
+        w.push(`--tab-line-depature-width:${route_tab_dep_width}px`)
+        w.push(`--tab-line-destination-width:${route_tab_des_width}px`)
 
         $('#routes_animation_css').html(':root{' + w.join(';') + '}')
         $('.route_container .tabs .tab[direction="departure"] span').text(des)
@@ -2571,7 +2571,7 @@
             wy = route_tab_dep_width * 1
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
-          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}` }).attr('slide', '1')
+          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
         }
         else {
           var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
