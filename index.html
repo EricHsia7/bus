@@ -1284,7 +1284,8 @@
   var de = document.documentElement
   var horizontal_slide = false
   var vertical_slide = false
-
+  var route_tab_dep_width = 0
+  var route_tab_des_width = 0
   let routesDataShortName = [
     { 'source': 'providerId', 'short': false },
     { 'source': 'providerName', 'short': false },
@@ -1439,10 +1440,10 @@
         var name = this_route.n
         var w = []
         var font = "500 16px 'Noto Sans', sans-serif"
-        var r_dep_w = getTextWidth(des, font) + 'px'
-        var r_des_w = getTextWidth(dep, font) + 'px'
-        w.push('--tab-line-depature-width:' + r_dep_w)
-        w.push('--tab-line-destination-width:' + r_des_w)
+        route_tab_dep_width = getTextWidth(des, font) + 'px'
+        route_tab_des_width = getTextWidth(dep, font) + 'px'
+        w.push('--tab-line-depature-width:' + route_tab_dep_width)
+        w.push('--tab-line-destination-width:' + route_tab_des_width)
 
         $('#routes_animation_css').html(':root{' + w.join(';') + '}')
         $('.route_container .tabs .tab[direction="departure"] span').text(des)
@@ -1450,7 +1451,7 @@
         $('.route_container .title .routename').text(name)
         $('.route_container .tabs').attr('l', '1')
         $('.route_container .title .routename').attr('l', '1')
-        $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': r_dep_w })
+        $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width })
       }
     }
 
@@ -1902,7 +1903,7 @@
     function switchDirection(d, event) {
       if (!(event === undefined) && !(event === null)) {
         if (event.type === 'click') {
-          $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'transform 450ms' })
+          $('.routes,.tab-line-box2').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms' })
           scrollToNearestStop(route_direction)
         }
       }
@@ -2556,14 +2557,20 @@
         if (horizontal_slide && !vertical_slide) {
           var w = calcSlideScale()
           var rf = w * 1
+          var yw = route_tab_des_width * 1
+          var wy = route_tab_dep_width * 1
           if (w < 0) {
             rf = w * -1
+            yw = route_tab_dep_width * 1
+            wy = route_tab_des_width * 1
           }
           else {
             rf = (1 - w)
+            yw = route_tab_des_width * 1
+            wy = route_tab_dep_width * 1
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
-          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%` }).attr('slide', '1')
+          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}` }).attr('slide', '1')
         }
         else {
           var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
