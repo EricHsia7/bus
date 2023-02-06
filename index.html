@@ -248,7 +248,7 @@
       transition: color 0.45s;
     }
 
-    .tabs[slide="1"] {
+    .tabs[slide="1"] .tab {
       transition: none;
       color: var(--j-slide-scale-c-p);
     }
@@ -2616,7 +2616,7 @@
           }
           $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
           $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
-          $('.tabs').attr('slide','1')
+          $('.tabs').attr('slide', '1')
           $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)` })
           $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)` })
         }
