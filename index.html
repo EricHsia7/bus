@@ -1417,17 +1417,19 @@ background:var(--g-ffffff);
     }
   }
   function gid(n) {
-    var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var genidchars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
     var genid = "";
     for (var i = 0; i < 16; i++) {
       var genrandomNumber = Math.floor(Math.random() * genidchars.length);
       genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
     }
+    var time = parseInt(new Date().getTime())
+    var time_str = time.toString(36)
     if (!(n === undefined)) {
       n = n.replaceAll('_', '-')
-      return n + '-' + genid + '' + new Date().getTime();
+      return n + '-' + genid + '-' + time_str;
     }
-    return genid + '' + new Date().getTime();
+    return 'id-' + genid + '-' + time_str;
   }
   function ripple(Allelement, color, duration) {
     if (Allelement.length === undefined) {
