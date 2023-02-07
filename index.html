@@ -1477,14 +1477,26 @@
       }
       else {
         document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
-          element.classList.remove(`ripple-element-${ripple_id}`)
-          document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
-          document.getElementById(`ripple-css-${ripple_id}`).remove()
+          if (!(document.getElementById(`ripple-element-ripple-${ripple_id}`) === null)) {
+
+
+            element.classList.remove(`ripple-element-${ripple_id}`)
+            document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+            document.getElementById(`ripple-css-${ripple_id}`).remove()
+          }
         }, { once: true })
+        setTimeout(function () {
+          if (!(document.getElementById(`ripple-element-ripple-${ripple_id}`) === null)) {
+
+            element.classList.remove(`ripple-element-${ripple_id}`)
+            document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+            document.getElementById(`ripple-css-${ripple_id}`).remove()
+          }
+        }, duration + 50);
       }
     })
   }
-  function fade(element, type, display,callback) {
+  function fade(element, type, display, callback) {
     var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
     var fade_id = "";
     for (var i = 0; i < 8; i++) {
@@ -1510,10 +1522,10 @@
       element.classList.add(`fade${type}-${fade_id}-start`)
     }, 1)
     element.addEventListener('transitionend', function () {
-      if(!(callback === undefined)) {
-      if(typeof callback === "function") {
-      callback()
-      }
+      if (!(callback === undefined)) {
+        if (typeof callback === "function") {
+          callback()
+        }
       }
       element.classList.remove(`fade${type}-${fade_id}-start`)
       element.classList.remove(`fade${type}-${fade_id}`)
@@ -2412,11 +2424,11 @@
       'event_label': c_routeid,
       'event_callback': function () {
         //$('.route_container').css({ 'display': 'none' })
-fade(document.querySelector('.route_container'),'Out','none',function() {
-  route_page_is_open = 0
-        $('.route_container .route[direction="departure"]').scrollTop(0).html('')
-        $('.route_container .route[direction="destination"]').scrollTop(0).html('')
-  })
+        fade(document.querySelector('.route_container'), 'Out', 'none', function () {
+          route_page_is_open = 0
+          $('.route_container .route[direction="departure"]').scrollTop(0).html('')
+          $('.route_container .route[direction="destination"]').scrollTop(0).html('')
+        })
       }
     });
   }
@@ -2498,7 +2510,7 @@ fade(document.querySelector('.route_container'),'Out','none',function() {
         route_container_scrolled = 0
         route_page_is_open = 1
         //$('.route_container').css({ 'display': 'block' })
-        fade(document.querySelector('.route_container'),'In','block')
+        fade(document.querySelector('.route_container'), 'In', 'block')
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
