@@ -1800,7 +1800,7 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" id="${bus_element_id}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
+        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
