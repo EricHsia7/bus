@@ -1435,16 +1435,20 @@
         document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationstart', function (e) {
           setTimeout(function () {
             eval(ripple_evt)
+            element.classList.remove(`ripple-element-${ripple_id}`)
+            document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+            document.getElementById(`ripple-css-${ripple_id}`).remove()
           }, duration * 0.75)
         }, { once: true });
       }
-      document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
-        element.classList.remove(`ripple-element-${ripple_id}`)
-        document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
-        document.getElementById(`ripple-css-${ripple_id}`).remove()
-      }, { once: true })
+      else {
+        document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
+          element.classList.remove(`ripple-element-${ripple_id}`)
+          document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+          document.getElementById(`ripple-css-${ripple_id}`).remove()
+        }, { once: true })
+      }
     })
-
   }
 
   function api_url_parameter(cahce_time) {
