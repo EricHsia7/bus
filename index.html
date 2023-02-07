@@ -1364,7 +1364,14 @@
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
   }
-
+  function supportTouch() {
+    if ('ontouchstart' in document.documentElement) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
   function gid(n) {
     var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
     var genid = "";
@@ -1394,7 +1401,7 @@
       ripple_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
     }
     var eventlistener = 'mousedown'
-    if ('ontouchstart' in document.documentElement) {
+    if (supportTouch()) {
       eventlistener = 'touchstart'
     }
     element.addEventListener(eventlistener, function (event) {
@@ -2469,10 +2476,15 @@
         if (this_key === '清空') {
           onclick = "keyboard_clear()"
         }
-        htm.push('<button class="routes_keyboard_key" style="--key-display-str:' + "'" + this_key + "'" + '" onclick="' + onclick + '"></button>')
+        var onclick_event = 'onmousedown'
+        if (supportTouch()) {
+          onclick_event = 'ontouchstart'
+        }
+        htm.push(`<button class="routes_keyboard_key" style="--key-display-str:${this_key}" ${onclick_event}="${onclick}"></button>`)
       }
     }
     $('.routes_keyboard').html(htm.join(''))
+    ripple(document.querySelectorAll(''))
   }
 
   function keyboard_add(k) {
