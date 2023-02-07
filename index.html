@@ -2409,7 +2409,8 @@
         route_page_is_open = 0
         $('.route_container .route[direction="departure"]').scrollTop(0).html('')
         $('.route_container .route[direction="destination"]').scrollTop(0).html('')
-        $('.route_container').css({ 'display': 'none' })
+        //$('.route_container').css({ 'display': 'none' })
+fade(document.querySelector('.route_container'),'Out','none')
       }
     });
   }
@@ -2490,8 +2491,8 @@
         routeinfo_loaded = 0
         route_container_scrolled = 0
         route_page_is_open = 1
-        $('.route_container').css({ 'display': 'block' })
-        //fade(document.querySelector('.route_container'),'In','block')
+        //$('.route_container').css({ 'display': 'block' })
+        fade(document.querySelector('.route_container'),'In','block')
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
