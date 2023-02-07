@@ -1837,7 +1837,7 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
-    if (routes_auto_scroll === 0) {
+    if (routes_auto_scroll === 0 && !g) {
       routes_auto_scroll = 1
       scrollToNearestStop('departure')
       scrollToNearestStop('destination')
