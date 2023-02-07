@@ -1499,7 +1499,7 @@
     var class_str = element.getAttribute('class')
     element.setAttribute('class', class_str.replaceAll(/fade-display-[a-z-]*[^\s]/gm, ''))
     var style_str = element.getAttribute('style')
-    element.setAttribute('style', style_str.replaceAll(/display[\s]*:[\sa-z-]*[;]{1,1}[^\s]/gm, ''))
+    element.setAttribute('style', style_str.replaceAll(/display[\s]*:{1,1}[\sa-z-]*;{1,1}[^\s]/gm, ''))
     element.classList.add(`fade${type}-${fade_id}`)
     var css = `.fadeIn-${fade_id} {display:${element_display};opacity:0} .fadeIn-${fade_id}-start{transition:${duration}ms;opacity:1;}`
     var css_style_element = document.createElement("style")
