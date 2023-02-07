@@ -1427,17 +1427,17 @@
     }
   }
   function rp(element, color, duration) {
-    var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
-    var ripple_id = "";
-    for (var i = 0; i < 8; i++) {
-      var idrandomNumber = Math.floor(Math.random() * idchars.length);
-      ripple_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
-    }
     var eventlistener = 'mousedown'
     if (supportTouch()) {
       eventlistener = 'touchstart'
     }
     element.addEventListener(eventlistener, function (event) {
+      var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+      var ripple_id = "";
+      for (var i = 0; i < 8; i++) {
+        var idrandomNumber = Math.floor(Math.random() * idchars.length);
+        ripple_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
+      }
       var scroll_x = document.documentElement.scrollLeft
       var scroll_y = document.documentElement.scrollTop
       var x = event.pageX
