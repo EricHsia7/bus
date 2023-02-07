@@ -2445,18 +2445,21 @@
   function printSearchResult(result) {
     var result_len = result.length
     var f = []
+    var search_result_id = gid('search_result')
     for (var e = 0; e < result_len; e++) {
       var thisres = result[e]
-      var htm = '<li class="search_result_r"><button onclick="openRoute(' + thisres.city + ',' + thisres.id + ')"><div class="search_result_r_name">' + thisres.n + '</div><div class="search_result_r_dep_to_des">' + thisres.des + ' - ' + thisres.dep + '</div></a></li>'
+      var htm = `<li class="search_result_r" s-id="${search_result_id}"><button ripple-evt="openRoute(${thisres.city},${thisres.id})"><div class="search_result_r_name">${thisres.n}</div><div class="search_result_r_dep_to_des">${thisres.des} - ${thisres.dep}</div></a></li>`
       f.push(htm)
     }
-    return f.join('')
+    return [f.join(''), search_result_id]
   }
 
   function update_search_result() {
     var q = $('#search_routes').val()
     var res = search_result(q, search_index.c)
-    $('.search_routes_result').html(printSearchResult(res))
+    var reshtml = printSearchResult(res)
+    $('.search_routes_result').html(reshtml[0])
+    ripple(document.querySelectorAll(`.search_routes_result .search_result_r[s-id="${reshtml[1]}"]`), 'var(--g-333333)', 450)
     var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
     var text_width = getTextWidth(q, font)
     $('.search').css({ '--cursor-offset': text_width + 'px' })
