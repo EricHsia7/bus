@@ -1315,6 +1315,7 @@
   var refreshProgresPause = 0
   var search_page_is_open = 0
   var route_page_is_open = 0
+  var routes_auto_scroll = 0
   var skeletonScreenStatus = 0
   var watch_position
   var watch_position_permission_requested = 0
@@ -1836,7 +1837,11 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
-    //scrollToNearestStop(route_direction)
+    if (routes_auto_scroll === 0) {
+      routes_auto_scroll = 1
+      scrollToNearestStop('departure')
+      scrollToNearestStop('destination')
+    }
   }
 
   function timeStatus(t) {
@@ -2508,6 +2513,7 @@
         routeinfo_loaded = 0
         route_container_scrolled = 0
         route_page_is_open = 1
+        routes_auto_scroll = 0
         //$('.route_container').css({ 'display': 'block' })
         fade(document.querySelector('.route_container'), 'In', 'block')
         $('.route_container .tabs').attr('l', '0')
@@ -2922,7 +2928,6 @@
 
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
-
       horizontal_slide = false
       vertical_slide = false
       route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
