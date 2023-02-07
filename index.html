@@ -1740,6 +1740,7 @@
       nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
     }
+    var ripple_selector_list = []
     for (var w = 0; w < l; w++) {
       var selector = ''
       var displayName = k[w].StopID
@@ -1797,7 +1798,9 @@
 
       if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        htm['h_' + s.goBack].push('<li class="stop" l="' + g + '" stop-id="' + k[w].StopID + '" bus="' + bv.h + '" nh="' + nh + '" no="' + s.seqNo + '"><div class="name">' + displayName + '</div><div class="position" d="' + nh + '"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="' + bv.h + '" l="' + bv.l + '" onclick="displayBus(' + bString(bv.n, 1) + ',' + bString(bv.l, 1) + ',' + bString(bv.ty, 1) + ',' + bString(bv.status, 1) + ',' + bString(bv.time, 1) + ')"><div class="busicon">' + bv.icon + '</div></button><div class="status" status="' + status.status + '" tr="' + status.tr + '">' + status.text + '</div></li>')
+        var bus_element_id = gid('bus')
+        ripple_selector_list.push(`#${bus_element_id}`)
+        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" id="${bus_element_id}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -1829,7 +1832,6 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
       }
     }
-
     if (!htm.hasOwnProperty('h_0')) {
       htm['h_0'] = ['']
     }
@@ -1839,6 +1841,9 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
+    if(ripple_selector_list.length > 0) {
+      ripple(document.querySelectorAll(ripple_selector_list.join(',')),'var(--g-)'
+    }
     if (route_dep_auto_scroll === 0 && !g) {
       route_dep_auto_scroll = 1
       scrollToNearestStop('departure')
