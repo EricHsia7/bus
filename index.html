@@ -1316,7 +1316,8 @@
   var refreshProgresPause = 0
   var search_page_is_open = 0
   var route_page_is_open = 0
-  var routes_auto_scroll = 0
+  var route_dep_auto_scroll = 0
+  var route_des_auto_scroll = 0
   var skeletonScreenStatus = 0
   var watch_position
   var watch_position_permission_requested = 0
@@ -1838,10 +1839,9 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
-    if (routes_auto_scroll === 0 && !g) {
-      routes_auto_scroll = 1
+    if (route_dep_auto_scroll === 0 && !g) {
+      route_dep_auto_scroll = 1
       scrollToNearestStop('departure')
-      scrollToNearestStop('destination')
     }
   }
 
@@ -2946,7 +2946,6 @@
 
   document.querySelector('.routes').addEventListener('touchend', function (e) {
     if (route_page_is_open === 1) {
-
       if (horizontal_slide && !vertical_slide) {
         var w = calcSlideScale()
         var d = (1 - Math.abs(calcSlideScale())) * (route_max_X - route_min_X)
