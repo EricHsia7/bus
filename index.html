@@ -1506,7 +1506,9 @@
     css_style_element.innerHTML = css
     css_style_element.id = `fade-css-${fade_id}`
     element.appendChild(css_style_element)
-    element.classList.add(`fade${type}-${fade_id}-start`)
+    setTimeout(function () {
+      element.classList.add(`fade${type}-${fade_id}-start`)
+    }, 1)
     element.addEventListener('transitionend', function () {
       element.classList.remove(`fade${type}-${fade_id}-start`)
       element.classList.remove(`fade${type}-${fade_id}`)
