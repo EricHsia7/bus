@@ -1109,7 +1109,32 @@
       border-radius: 30px;
       background: var(--g-f5f5f5);
     }
+
+    .fade-display-none {
+      display: none;
+    }
+
+    .fade-display-flex {
+      display: flex;
+    }
+
+    .fade-display-inline {
+      display: inline;
+    }
+
+    .fade-display-block {
+      display: block;
+    }
+
+    .fade-display-inline-flex {
+      display: inline-flex;
+    }
+
+    .fade-display-inline-block {
+      display: inline-block;
+    }
   </style>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XX5QF4D2J"></script>
   <script>
@@ -1459,7 +1484,34 @@
       }
     })
   }
-
+  function fade(element, type, display) {
+    var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var ripple_id = "";
+    for (var i = 0; i < 8; i++) {
+      var idrandomNumber = Math.floor(Math.random() * idchars.length);
+      fade_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
+    }
+    var element_display = getComputedStyle(element).getPropertyValue('display')
+    if (element_display === 'none') {
+      element_display = 'inline-block'
+    }
+    var duration = 500
+    var class_str = element.getAttribute('class')
+    element.setAttribute('class', class_str.replaceAll(/fade-display-[a-z-]*[^\s]/gm, ''))
+    element.classList.add(`fade${type}-${fade_id}`)
+    var css = `.fadeIn-${fade_id} {display:${element_display};opacity:0} .fadeIn-${fade_id}-start{transition:${duration}ms;opacity:1;}`
+    var css_style_element = document.createElement("style")
+    css_style_element.innerHTML = css
+    css_style_element.id = `fade-css-${ripple_id}`
+    element.appendChild(css_style_element)
+    element.classList.add(`fade${type}-${fade_id}-start`)
+    element.addEventListener('transitionend', function () {
+      element.classList.remove(`fade${type}-${fade_id}-start`)
+      element.classList.remove(`fade${type}-${fade_id}`)
+      document.getElementById(`fade-css-${fade_id}`).remove()
+      element.classList.add(`fade-display-${display}`)
+    }, { once: true })
+  }
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
