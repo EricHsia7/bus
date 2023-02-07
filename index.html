@@ -1504,7 +1504,7 @@
     var css = `.fadeIn-${fade_id} {display:${element_display};opacity:0} .fadeIn-${fade_id}-start{transition:${duration}ms;opacity:1;}`
     var css_style_element = document.createElement("style")
     css_style_element.innerHTML = css
-    css_style_element.id = `fade-css-${ripple_id}`
+    css_style_element.id = `fade-css-${fade_id}`
     element.appendChild(css_style_element)
     element.classList.add(`fade${type}-${fade_id}-start`)
     element.addEventListener('transitionend', function () {
