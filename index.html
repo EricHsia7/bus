@@ -1484,7 +1484,7 @@
       }
     })
   }
-  function fade(element, type, display) {
+  function fade(element, type, display,callback) {
     var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
     var fade_id = "";
     for (var i = 0; i < 8; i++) {
@@ -1514,6 +1514,11 @@
       element.classList.remove(`fade${type}-${fade_id}`)
       document.getElementById(`fade-css-${fade_id}`).remove()
       element.classList.add(`fade-display-${display}`)
+      if(!(callback === undefined)) {
+      if(typeof callback === "function") {
+      callback()
+      }
+      }
     }, { once: true })
   }
   function api_url_parameter(cahce_time) {
@@ -2406,11 +2411,12 @@
       'event_category': 'close_route',
       'event_label': c_routeid,
       'event_callback': function () {
-        route_page_is_open = 0
+        //$('.route_container').css({ 'display': 'none' })
+fade(document.querySelector('.route_container'),'Out','none',function() {
+  route_page_is_open = 0
         $('.route_container .route[direction="departure"]').scrollTop(0).html('')
         $('.route_container .route[direction="destination"]').scrollTop(0).html('')
-        //$('.route_container').css({ 'display': 'none' })
-fade(document.querySelector('.route_container'),'Out','none')
+  })
       }
     });
   }
