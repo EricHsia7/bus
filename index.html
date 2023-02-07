@@ -818,6 +818,14 @@
       -webkit-user-select: none;
     }
 
+    .search_routes_result li.search_result_r button {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
     .search_routes_result li.search_result_r:last-child {
       border: none;
       margin-bottom: var(--k-keyboard-h);
@@ -2459,7 +2467,7 @@
     var res = search_result(q, search_index.c)
     var reshtml = printSearchResult(res)
     $('.search_routes_result').html(reshtml[0])
-    ripple(document.querySelectorAll(`.search_routes_result .search_result_r[s-id="${reshtml[1]}"]`), 'var(--g-333333)', 450)
+    ripple(document.querySelectorAll(`.search_routes_result .search_result_r[s-id="${reshtml[1]}"] button`), 'var(--g-333333)', 450)
     var font = 500 + " " + 18 + "px 'Noto Sans', sans-serif"
     var text_width = getTextWidth(q, font)
     $('.search').css({ '--cursor-offset': text_width + 'px' })
