@@ -399,7 +399,8 @@
       display: none;
     }
 
-    .routes[slide="-1"] .route {
+    .routes[slide="-1"] .route,
+    .routes[slide="0"] .route {
       overflow-y: scroll;
       overflow-x: hidden;
     }
@@ -2002,10 +2003,8 @@
   function switchDirection(d, event) {
     if (!(event === undefined) && !(event === null)) {
       if (event.type === 'click') {
-        document.querySelector('.routes').addEventListener('transitionstart', function () {
-          $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
-          scrollToNearestStop(route_direction)
-        }, { once: true });
+        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
+        scrollToNearestStop(route_direction)
       }
     }
     var a = 0
