@@ -2480,7 +2480,7 @@
         if (supportTouch()) {
           onclick_event = 'ontouchstart'
         }
-        htm.push(`<button class="routes_keyboard_key" style="--key-display-str:${this_key}" ${onclick_event}="${onclick}"></button>`)
+        htm.push(`<button class="routes_keyboard_key" style="--key-display-str:'${this_key}'" ${onclick_event}="${onclick}"></button>`)
       }
     }
     $('.routes_keyboard').html(htm.join(''))
