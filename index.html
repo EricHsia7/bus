@@ -895,9 +895,9 @@
     .routes_keyboard {
       position: fixed;
       left: 0px;
-      bottom: 0px;
+      bottom: var(--o-safe-area-bottom);
       width: 100%;
-      height: var(--k-keyboard-h);
+      height: calc(var(--k-keyboard-h) - var(--o-safe-area-bottom));
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-gap: 0px;
@@ -911,7 +911,15 @@
       user-select: none;
       -webkit-user-select: none;
     }
-
+.routes_keyboard[p="1"]::after {
+content:'';
+position:absolute;
+left:0px;
+top:calc(var(--k-keyboard-h) - var(--o-safe-area-bottom));
+width:100%;
+height:var(--o-safe-area-bottom);
+background:var(--g-ffffff);
+}
     .routes_keyboard[p="1"] {
       transform: translateY(0px);
     }
