@@ -1486,7 +1486,7 @@
   }
   function fade(element, type, display) {
     var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
-    var ripple_id = "";
+    var fade_id = "";
     for (var i = 0; i < 8; i++) {
       var idrandomNumber = Math.floor(Math.random() * idchars.length);
       fade_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
@@ -2487,6 +2487,7 @@
         route_container_scrolled = 0
         route_page_is_open = 1
         $('.route_container').css({ 'display': 'block' })
+        //fade(document.querySelector('.route_container'),'In','block')
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
         switchDirection('departure')
