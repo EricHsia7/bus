@@ -1510,15 +1510,15 @@
       element.classList.add(`fade${type}-${fade_id}-start`)
     }, 1)
     element.addEventListener('transitionend', function () {
-      element.classList.remove(`fade${type}-${fade_id}-start`)
-      element.classList.remove(`fade${type}-${fade_id}`)
-      document.getElementById(`fade-css-${fade_id}`).remove()
-      element.classList.add(`fade-display-${display}`)
       if(!(callback === undefined)) {
       if(typeof callback === "function") {
       callback()
       }
       }
+      element.classList.remove(`fade${type}-${fade_id}-start`)
+      element.classList.remove(`fade${type}-${fade_id}`)
+      document.getElementById(`fade-css-${fade_id}`).remove()
+      element.classList.add(`fade-display-${display}`)
     }, { once: true })
   }
   function api_url_parameter(cahce_time) {
