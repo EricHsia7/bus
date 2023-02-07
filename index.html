@@ -1841,8 +1841,8 @@
 
     $('.route_container .route[direction="departure"]').append(htm['h_0'].join(''))
     $('.route_container .route[direction="destination"]').append(htm['h_1'].join(''))
-    if(ripple_selector_list.length > 0) {
-      ripple(document.querySelectorAll(ripple_selector_list.join(',')),'var(--g-)'
+    if (ripple_selector_list.length > 0) {
+      ripple(document.querySelectorAll(ripple_selector_list.join(',')), 'var(--g-333333)', 450)
     }
     if (route_dep_auto_scroll === 0 && !g) {
       route_dep_auto_scroll = 1
