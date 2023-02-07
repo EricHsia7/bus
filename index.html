@@ -1843,6 +1843,10 @@
       route_dep_auto_scroll = 1
       scrollToNearestStop('departure')
     }
+    if (route_des_auto_scroll === 0 && !g) {
+      route_des_auto_scroll = 1
+      scrollToNearestStop('destination')
+    }
   }
 
   function timeStatus(t) {
@@ -2090,7 +2094,6 @@
     if (!(event === undefined) && !(event === null)) {
       if (event.type === 'click') {
         $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
-        scrollToNearestStop(d)
       }
     }
     var a = 0
@@ -2112,6 +2115,11 @@
       $('.route_container .routes').attr('slide', '-1')
       $('.tab-line-box2,.tabs').attr('slide', '-1')
     }, { once: true })
+    if (!(event === undefined) && !(event === null)) {
+      if (event.type === 'click') {
+        scrollToNearestStop(d)
+      }
+    }
   }
 
   function standaloneStatusBarColor(a) {
