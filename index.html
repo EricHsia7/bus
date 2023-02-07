@@ -1430,6 +1430,14 @@
       ripple_element_ripple.id = `ripple-element-ripple-${ripple_id}`
       ripple_element_ripple.classList.add(`ripple-element-ripple-${ripple_id}`)
       element.appendChild(ripple_element_ripple)
+      var ripple_evt = element.getAttribute('ripple-evt');
+      if (!(ripple_evt === '')) {
+        document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationstart', function (e) {
+          setTimeout(function () {
+            eval(ripple_evt)
+          }, duration * 0.75)
+        }, { once: true });
+      }
       document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
         element.classList.remove(`ripple-element-${ripple_id}`)
         document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
