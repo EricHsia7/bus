@@ -910,8 +910,7 @@
       position: relative;
     }
 
-    .routes_keyboard_key::after {
-      content: var(--key-display-str);
+    .routes_keyboard_key .routes_keyboard_key_block {
       position: absolute;
       top: 5px;
       left: 5px;
@@ -2480,11 +2479,11 @@
         if (supportTouch()) {
           onclick_event = 'ontouchstart'
         }
-        htm.push(`<button class="routes_keyboard_key" style="--key-display-str:'${this_key}'" ${onclick_event}="${onclick}"></button>`)
+        htm.push(`<button class="routes_keyboard_key" ${onclick_event}="${onclick}"><div class="routes_keyboard_key_block">${this_key}</div></button>`)
       }
     }
     $('.routes_keyboard').html(htm.join(''))
-    ripple(document.querySelectorAll('.routes_keyboard .routes_keyboard_key'), 'var(--g-333333)', 450)
+    ripple(document.querySelectorAll('.routes_keyboard .routes_keyboard_key .routes_keyboard_key_block'), 'var(--g-333333)', 450)
   }
 
   function keyboard_add(k) {
