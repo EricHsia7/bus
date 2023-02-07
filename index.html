@@ -1478,8 +1478,6 @@
       else {
         document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationend', function (e) {
           if (!(document.getElementById(`ripple-element-ripple-${ripple_id}`) === null)) {
-
-
             element.classList.remove(`ripple-element-${ripple_id}`)
             document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
             document.getElementById(`ripple-css-${ripple_id}`).remove()
@@ -1487,7 +1485,6 @@
         }, { once: true })
         setTimeout(function () {
           if (!(document.getElementById(`ripple-element-ripple-${ripple_id}`) === null)) {
-
             element.classList.remove(`ripple-element-${ripple_id}`)
             document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
             document.getElementById(`ripple-css-${ripple_id}`).remove()
