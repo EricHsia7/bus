@@ -2002,8 +2002,10 @@
   function switchDirection(d, event) {
     if (!(event === undefined) && !(event === null)) {
       if (event.type === 'click') {
-        $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
-        scrollToNearestStop(route_direction)
+        document.querySelector('.routes').addEventListener('transitionstart', function () {
+          $('.routes,.tab-line-box2,.tabs').attr('slide', '0').css({ '--j-transition-p': 'transform 450ms', '--j-transition-w-p': 'width 450ms', '--j-transition-a-p': `all 450ms` })
+          scrollToNearestStop(route_direction)
+        }, { once: true });
       }
     }
     var a = 0
