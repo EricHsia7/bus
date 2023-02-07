@@ -1469,9 +1469,11 @@
         document.getElementById(`ripple-element-ripple-${ripple_id}`).addEventListener('animationstart', function (e) {
           setTimeout(function () {
             eval(ripple_evt)
-            element.classList.remove(`ripple-element-${ripple_id}`)
-            document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
-            document.getElementById(`ripple-css-${ripple_id}`).remove()
+            if (!(document.getElementById(`ripple-element-ripple-${ripple_id}`) === null)) {
+              element.classList.remove(`ripple-element-${ripple_id}`)
+              document.getElementById(`ripple-element-ripple-${ripple_id}`).remove()
+              document.getElementById(`ripple-css-${ripple_id}`).remove()
+            }
           }, duration * 0.75)
         }, { once: true });
       }
