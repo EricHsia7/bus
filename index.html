@@ -1626,14 +1626,14 @@
             if (start_stop >= 2) {
               start_stop = 0
               if (current_direction === 'all') {
-                buffers['o_0'].push({ name: pervious_stop, d: 0 })
-                buffers['o_0'].push({ name: match[t], d: 1 })
-                buffers['o_1'].push({ name: pervious_stop, d: 0 })
-                buffers['o_1'].push({ name: match[t], d: 1 })
+                buffers['o_0'].push({ n: pervious_stop, d: 0 })
+                buffers['o_0'].push({ n: match[t], d: 1 })
+                buffers['o_1'].push({ n: pervious_stop, d: 0 })
+                buffers['o_1'].push({ n: match[t], d: 1 })
               }
               else {
-                buffers[current_direction].push({ name: pervious_stop, d: 0 })
-                buffers[current_direction].push({ name: match[t], d: 1 })
+                buffers[current_direction].push({ n: pervious_stop, d: 0 })
+                buffers[current_direction].push({ n: match[t], d: 1 })
               }
               current_direction = 'all'
             }
