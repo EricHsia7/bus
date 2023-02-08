@@ -1247,7 +1247,7 @@ localStorage.setItem('bus_network_stats','0')
 }
 function NetworkStats_add(o) {
 var n = parseFloat(String(localStorage.getItem('bus_network_stats')))
-n = n + (o/1024).toFixed(3)
+n += parseFloat((o/1024).toFixed(3))
 localStorage.setItem('bus_network_stats',n)
 }
   var ajax_event = { 'sent': {}, 'successful': {} }
