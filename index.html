@@ -1800,7 +1800,7 @@
       bu = bu['o_' + direction]
       var bu_len = bu.length
       for (var p = 0; p < bu_len; p++) {
-        if (String(bu[p].n).indexOf(str) > -1 || String(str).indexOf(bu[p].n) > -1) {
+        if (String(bu[p].n).indexOf(str) > -1 && String(str).indexOf(bu[p].n) > -1) {
           return { 'g': true, 'j': bu[p] }
         }
       }
@@ -1826,7 +1826,6 @@
       nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
       if (routes_json.loaded && stops_json.loaded) {
-        console.log(routes_json.c['b_' + c_routeid])
         buffers = getPathBuffer(routes_json.c['b_' + c_routeid].s)
         if (buffers.length > 0) {
           buffers_g = true
@@ -1842,7 +1841,6 @@
       var nh = false
       var buffer_g = false
       var buffer_d = 0
-      console.log(buffer_g, buffer_d)
       if (g) {
         fg(k[w].goBack)
       }
@@ -1893,8 +1891,6 @@
           buffer_d = bf_c.j.d
         }
       }
-      console.log(buffer_g, buffer_d)
-
       var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
       var hash = md5(JSON.stringify(jn))
       var bvhash = md5(JSON.stringify(bv))
