@@ -1249,7 +1249,7 @@ var ls_key = `bus_network_stats_${dd_suffix}`
 if(!(localStorage.hasOwnProperty(ls_key))){
 localStorage.setItem(ls_key,'0')
 }
-var n = parseFloat(String(localStorage.getItem(ls_key))).toFixed(3)
+var n = parseFloat(parseFloat(String(localStorage.getItem(ls_key))).toFixed(3))
 var g = parseFloat((o/1024).toFixed(3))
 n += g
 localStorage.setItem(ls_key,n)
