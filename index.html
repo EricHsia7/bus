@@ -1793,6 +1793,15 @@
       displayName = ''
       bv.h = true
     }
+    var isBuffer = function (bu, str) {
+      var bu_len = bu.length
+      for (var p = 0; p < bu_len; p++) {
+        if (String(bu[p]).indexOf(str) > -1 && String(str).indexOf(bu[p])) {
+          return { 'g': true, 'j': bu[p] }
+        }
+      }
+      return { 'g': false, 'j': {} }
+    }
     if (skeletonScreenStatus === 1) {
       skeletonScreenStatus = 0
       $('.route_container .route[direction="departure"]').html('')
@@ -1803,6 +1812,8 @@
     var g = false
     var nearest_stops_list = { 'o_0': [], 'o_1': [] }
     var nearest_stops_d = { 'o_0': {}, 'o_1': {} }
+    var buffers = []
+    var buffers_g = false
     if (c === 'skeleton') {
       g = true
     }
@@ -1810,6 +1821,12 @@
       nearest_stops_list = getNearestStops(pos_lat, pos_lon)
       nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
+      if (routes_json.loaded) {
+        buffers = getPathBuffer(routes_json.c['b_' + c_routeid].s)
+        if (buffers.length > 0) {
+          buffers_g = true
+        }
+      }
     }
     var ripple_selector_list = []
     for (var w = 0; w < l; w++) {
@@ -1818,6 +1835,8 @@
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       var nh = false
+      var buffer_g = false
+      var buffer_d = 0
       if (g) {
         fg(k[w].goBack)
       }
@@ -1861,6 +1880,13 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
+      if (!g) {
+        var bf_c = isBuffer(buffers, displayName)
+        if (bf_c.g) {
+          buffer_g = true
+          buffer_d = bf_c.j.d
+        }
+      }
 
       var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
       var hash = md5(JSON.stringify(jn))
@@ -1871,7 +1897,7 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
+        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}" buffer-type="${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
