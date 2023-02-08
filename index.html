@@ -1800,7 +1800,7 @@
       bu = bu['o_' + direction]
       var bu_len = bu.length
       for (var p = 0; p < bu_len; p++) {
-        if (String(bu[p]).indexOf(str) > -1 || String(str).indexOf(bu[p]) > -1) {
+        if (String(bu[p].n).indexOf(str) > -1 || String(str).indexOf(bu[p].n) > -1) {
           return { 'g': true, 'j': bu[p] }
         }
       }
