@@ -1396,7 +1396,7 @@
     { 'source': 'ticketPriceDescriptionEn', 'short': false },
     { 'source': 'peakHeadway', 'short': false },
     { 'source': 'ttiaPathId', 'short': false },
-    { 'source': 'segmentBufferZh', 'short': false },
+    { 'source': 'segmentBufferZh', 'short': 's' },
     { 'source': 'busTimeDesc', 'short': false },
     { 'source': 'distance', 'short': false },
     { 'source': 'NId', 'short': false },
@@ -1585,11 +1585,22 @@
     var d = R * c;
     return d * 1000;
   }
+  function StopName2ID(str, ccc) {
+    if (stops_json.loaded) {
+      var arr = stops_json['c_' + ccc + '_arr']
+      var arr_len = arr.length
+      for (var o = 0; o < arr_len; o++) {
+        if (str === arr[o].nameZh) {
+          return arr[o].Id
+        }
+      }
+    }
+  }
   function getPathBuffer(str) {
     var re = {
       'buffer': false,
-      'departure': {},
-      'destination': {}
+      'departure': [],
+      'destination': []
     }
     if (str.length < 1) {
       return re
@@ -1608,8 +1619,8 @@
       }
       k = k.replaceAll('－', '-')
       var hj = k.split('-')
-      re[direction]['b_' + md5(hj[0])] = { 'name': hj[0], 'd': 'start' }
-      re[direction]['b_' + md5(hj[1])] = { 'name': hj[1], 'd': 'start' }
+      re[direction].push({ 'n': hj[0], 'd': 0 })
+      re[direction].push({ 'n': hj[1], 'd': 1 })
     }
     str = sh(String(str))
     var arr = str.split('、')
@@ -2056,6 +2067,7 @@
             }
             stops_json['c_' + stops_data_city] = json_processed
             stops_json['c_' + stops_data_city + '_loaded'] = true
+            stops_json['c_' + stops_data_city + '_arr'] = o
             if (stops_data_city === 0) {
               stops_json.c = stops_json['c_0']
               stops_data_city = 1
@@ -2064,6 +2076,8 @@
             if (stops_data_city === 1) {
               stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
               stops_json.loaded = true
+              stops_json['c_arr'] = stops_json['c_' + 0 + '_arr'].concat(stops_json['c_' + 1 + '_arr'])
+              getRoutes(false)
               if (realtime_lo === 0) {
                 realtime_lo = 1
                 updateRealtimeJson(false)
@@ -2124,6 +2138,26 @@
                   }
                   delete this_json_k[thsS.source]
                 }
+                if (thsS === 'segmentBufferZh') {
+                  var this_seg = this_json_k.segmentBufferZh
+                  var buffers = getPathBuffer(this_seg)
+                  var processed_buffer = { 'dep': [], 'des': [] }
+                  if (buffers.buffer) {
+                    var buf_dep_len = buffers.departure.length
+                    var buf_des_len = buffers.destination.length
+                    for (var w = 0; w < buf_dep_len; w++) {
+                      var this_buffer = buffers.departure[w]
+                      this_buffer.n = StopName2ID(str, routes_data_city)
+                      processed_buffer.dep.push(this_buffer)
+                    }
+                    for (var w = 0; w < buf_des_len; w++) {
+                      var this_buffer = buffers.destination[w]
+                      this_buffer.n = StopName2ID(str, routes_data_city)
+                      processed_buffer.des.push(this_buffer)
+                    }
+                    this_json_k.bf = processed_buffer
+                  }
+                }
               }
               if (!json_processed.hasOwnProperty('b_' + id)) {
                 json_processed['b_' + id] = this_json_k
@@ -2134,6 +2168,7 @@
                 }
               }
             }
+
             routes_json['c_' + routes_data_city] = json_processed
             LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_processed))
             LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
@@ -3007,9 +3042,8 @@
     }
   });
   setSearchSize()
-  getRoutes(false)
   setRouteSlideSize()
-
+  getStops()
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
       horizontal_slide = false
