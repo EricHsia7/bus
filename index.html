@@ -1585,7 +1585,61 @@
     var d = R * c;
     return d * 1000;
   }
-
+  function getPathBuffer(str) {
+    var re = {
+      'buffer': false,
+      'departure': {},
+      'destination': {}
+    }
+    if (str.length < 1) {
+      return re
+    }
+    else {
+      re.buffer = true
+    }
+    var sh = function (s) {
+      var y = s.replaceAll(/\s/gmi, '')
+      return y
+    }
+    var direction = 'all'
+    var eg = function (k, fg) {
+      if (fg) {
+        k = k.substring(3, k.length - 1)
+      }
+      k = k.replaceAll('－', '-')
+      var hj = k.split('-')
+      re[direction]['b_' + md5(hj[0])] = { 'name': hj[0], 'd': 'start' }
+      re[direction]['b_' + md5(hj[1])] = { 'name': hj[1], 'd': 'start' }
+    }
+    str = sh(String(str))
+    var arr = str.split('、')
+    var arr_len = arr.length
+    for (var i = 0; i < arr_len; i++) {
+      var this_a = String(arr[i])
+      direction = 'all'
+      if (!(this_a.match(/往程.*「.*-.*」/gm) === null)) {
+        direction = 'departure'
+      }
+      else {
+        if (!(this_a.match(/返程.*「.*-.*」/gm) === null)) {
+          direction = 'destination'
+        }
+        else {
+          direction = 'all'
+        }
+      }
+      if (direction === 'all') {
+        direction = 'departure'
+        eg(this_a, false)
+        direction = 'destination'
+        eg(this_a, false)
+      }
+      else {
+        eg(this_a, true)
+      }
+    }
+    return re
+  }
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / update_interval
