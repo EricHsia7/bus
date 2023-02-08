@@ -911,15 +911,17 @@
       user-select: none;
       -webkit-user-select: none;
     }
-.routes_keyboard[p="1"]::after {
-content:'';
-position:absolute;
-left:0px;
-top:calc(var(--k-keyboard-h) - var(--o-safe-area-bottom));
-width:100%;
-height:var(--o-safe-area-bottom);
-background:var(--g-ffffff);
-}
+
+    .routes_keyboard[p="1"]::after {
+      content: '';
+      position: absolute;
+      left: 0px;
+      top: calc(var(--k-keyboard-h) - var(--o-safe-area-bottom));
+      width: 100%;
+      height: var(--o-safe-area-bottom);
+      background: var(--g-ffffff);
+    }
+
     .routes_keyboard[p="1"] {
       transform: translateY(0px);
     }
@@ -1242,37 +1244,36 @@ background:var(--g-ffffff);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>
-function NetworkStats_add(o) {
-var dd = new Date()
-var dd_suffix = `${dd.getFullYear()}_${(dd.getMonth()+1)}_${dd.getDate()}`
-var ls_key = `bus_network_stats_${dd_suffix}`
-if(!(localStorage.hasOwnProperty(ls_key))){
-localStorage.setItem(ls_key,'0')
-}
-var n = parseFloat(parseFloat(String(localStorage.getItem(ls_key))).toFixed(3))
-var g = parseFloat((o/1024).toFixed(3))
-n += g
-localStorage.setItem(ls_key,n)
-}
+  function NetworkStats_add(o) {
+    var dd = new Date()
+    var dd_suffix = `${dd.getFullYear()}_${(dd.getMonth() + 1)}_${dd.getDate()}`
+    var ls_key = `bus_network_stats_${dd_suffix}`
+    if (!(localStorage.hasOwnProperty(ls_key))) {
+      localStorage.setItem(ls_key, '0')
+    }
+    var n = parseFloat(parseFloat(String(localStorage.getItem(ls_key))).toFixed(3))
+    var g = parseFloat((o / 1024).toFixed(3))
+    n += g
+    localStorage.setItem(ls_key, n)
+  }
   var ajax_event = { 'sent': {}, 'successful': {} }
   $(document).ajaxSend(function (event, jqxhr, settings) {
-  var u = settings.url
-  if (!(u.indexOf('google-analytics') > -1)) {
-  var time = event.timeStamp
-  var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
-  ajax_event.sent['ajax_' + uid] = { 'time': time }
-  }
+    var u = settings.url
+    if (!(u.indexOf('google-analytics') > -1)) {
+      var time = event.timeStamp
+      var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+      ajax_event.sent['ajax_' + uid] = { 'time': time }
+    }
   });
 
   $(document).ajaxSuccess(function (event, xhr, settings) {
-  var u = settings.url
-  var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
-  if (ajax_event.sent.hasOwnProperty('ajax_' + uid)) {
-  delete ajax_event.sent['ajax_' + uid]
-  NetworkStats_add(xhr.getResponseHeader('Content-Length'))
-  }
+    var u = settings.url
+    var uid = btoa(encodeURIComponent(String(settings.url))).replaceAll('=', '')
+    if (ajax_event.sent.hasOwnProperty('ajax_' + uid)) {
+      delete ajax_event.sent['ajax_' + uid]
+      NetworkStats_add(xhr.getResponseHeader('Content-Length'))
+    }
   });
- 
 </script>
 
 <script>
@@ -1404,7 +1405,7 @@ localStorage.setItem(ls_key,n)
   ]
 
   let rdsn_len = routesDataShortName.length
-  let update_interval = 15000
+  var update_interval = 15000
 
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
@@ -1938,11 +1939,14 @@ localStorage.setItem(ls_key,n)
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
-      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data, statusText, xhr) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
+          var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
+          var now = new Date()
+          update_interval = Math.abs((last_modified.getTime() + 60 * 1000) - now.getTime())
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
