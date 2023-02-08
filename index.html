@@ -418,14 +418,17 @@
       position: relative;
       margin: 0px;
       padding: 0px;
-      border-bottom: solid 1px var(--g-f5f5f5);
+      border-top: solid 1px var(--g-f5f5f5);
       background: var(--g-ffffff);
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .route li.stop:last-child {
+    .route li.stop:first-child {
       border: none;
+    }
+
+    .route li.stop:last-child {
       margin-bottom: var(--o-safe-area-bottom);
     }
 
@@ -542,6 +545,46 @@
       100% {
         transform: scale(0.65);
       }
+    }
+
+    .route li.stop[buffer="true-0"] {
+      border-top: dashed 1px var(--g-f5f5f5);
+    }
+
+    .route li.stop[buffer="true-0"] {
+      border-bottom: dashed 1px var(--g-f5f5f5);
+    }
+
+    .route li.stop[buffer="true-0"]::after {
+      content: '緩衝區 開始';
+      position: absolute;
+      height: 15px;
+      width: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -7.5px;
+      background: var(--g-ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--g-f5f5f5);
+      font-size: 15px;
+    }
+
+    .route li.stop[buffer="true-1"]::after {
+      content: '緩衝區 結束';
+      position: absolute;
+      height: 15px;
+      width: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 42.5px;
+      background: var(--g-ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--g-f5f5f5);
+      font-size: 15px;
     }
 
     .route li.stop .bus {
@@ -1900,7 +1943,7 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}" buffer-type="${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
+        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
