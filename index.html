@@ -1794,7 +1794,7 @@
       bv.h = true
     }
     var isBuffer = function (bu, str, direction) {
-      bu = bu['c_' + direction]
+      bu = bu['o_' + direction]
       var bu_len = bu.length
       for (var p = 0; p < bu_len; p++) {
         if (String(bu[p]).indexOf(str) > -1 || String(str).indexOf(bu[p]) > -1) {
