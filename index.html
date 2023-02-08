@@ -1597,59 +1597,53 @@
     }
   }
   function getPathBuffer(str) {
-    var re = {
-      'buffer': false,
-      'departure': [],
-      'destination': []
-    }
-    if (str.length < 1) {
-      return re
-    }
-    else {
-      re.buffer = true
-    }
-    var sh = function (s) {
-      var y = s.replaceAll(/\s/gmi, '')
-      return y
-    }
-    var direction = 'all'
-    var eg = function (k, fg) {
-      if (fg) {
-        k = k.substring(3, k.length - 1)
+    var t_match = str.match(/[\(（][往返程][\)|）]/gm)
+    if (!(t_match === null)) {
+      for (var w = 0; w < t_match.length; w++) {
+        str = str.replaceAll(t_match[w], t_match[w] + ' ')
       }
-      k = k.replaceAll('－', '-')
-      var hj = k.split('-')
-      re[direction].push({ 'n': hj[0], 'd': 0 })
-      re[direction].push({ 'n': hj[1], 'd': 1 })
     }
-    str = sh(String(str))
-    var arr = str.split('、')
-    var arr_len = arr.length
-    for (var i = 0; i < arr_len; i++) {
-      var this_a = String(arr[i])
-      direction = 'all'
-      if (!(this_a.match(/往程.*「.*-.*」/gm) === null)) {
-        direction = 'departure'
-      }
-      else {
-        if (!(this_a.match(/返程.*「.*-.*」/gm) === null)) {
-          direction = 'destination'
+    var match = str.match(/[\u4E00-\u9FFF\(\)（）]*/gm)
+    if (!(match === null)) {
+      var match_len = match.length
+      var current_direction = 'all'
+      var start_stop = 0
+      var pervious_stop = ''
+      var buffers = { 'departure': [], 'destination': [] }
+      for (var t = 0; t < match_len; t++) {
+        if (match[t].length < 1) {
+          continue;
+        }
+        if (match[t].indexOf('往') > -1) {
+          current_direction = 'departure'
         }
         else {
-          direction = 'all'
+          if (match[t].indexOf('返') > -1) {
+            current_direction = 'destination'
+          }
+          else {
+            start_stop += 1
+            if (start_stop >= 2) {
+              start_stop = 0
+              if (current_direction === 'all') {
+                buffers['departure'].push({ name: pervious_stop, d: 0 })
+                buffers['departure'].push({ name: match[t], d: 1 })
+                buffers['destination'].push({ name: pervious_stop, d: 0 })
+                buffers['destination'].push({ name: match[t], d: 1 })
+              }
+              else {
+                buffers[current_direction].push({ name: pervious_stop, d: 0 })
+                buffers[current_direction].push({ name: match[t], d: 1 })
+              }
+              current_direction = 'all'
+            }
+            pervious_stop = match[t]
+          }
         }
-      }
-      if (direction === 'all') {
-        direction = 'departure'
-        eg(this_a, false)
-        direction = 'destination'
-        eg(this_a, false)
-      }
-      else {
-        eg(this_a, true)
+
       }
     }
-    return re
+    return buffers
   }
   function updateRefreshProgress() {
     var t = new Date().getTime()
