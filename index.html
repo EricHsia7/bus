@@ -2138,8 +2138,8 @@
                   }
                   delete this_json_k[thsS.source]
                 }
-                if (thsS === 'segmentBufferZh') {
-                  var this_seg = this_json_k.segmentBufferZh
+                if (thsS.source === 'segmentBufferZh') {
+                  var this_seg = this_json_k.s
                   var buffers = getPathBuffer(this_seg)
                   var processed_buffer = { 'dep': [], 'des': [] }
                   if (buffers.buffer) {
