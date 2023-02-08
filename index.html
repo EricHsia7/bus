@@ -1794,6 +1794,9 @@
       bv.h = true
     }
     var isBuffer = function (bu, str, direction) {
+      if (!(bu.hasOwnProperty('o_' + direction))) {
+        return { 'g': false, 'j': {} }
+      }
       bu = bu['o_' + direction]
       var bu_len = bu.length
       for (var p = 0; p < bu_len; p++) {
