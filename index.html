@@ -1938,11 +1938,14 @@ localStorage.setItem(ls_key,n)
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
-      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data) {
+      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data,statusText,xhr) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
         b.arrayBuffer().then(bf => {
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
+          var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
+var now = new Date()
+          update_interval = Math.abs((last_modified.getTime()+60*1000)-now.getTime())
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
