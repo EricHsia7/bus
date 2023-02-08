@@ -1242,13 +1242,21 @@ background:var(--g-ffffff);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>
-if(!(localStorage.hasOwnProperty('bus_network_stats'))){
-localStorage.setItem('bus_network_stats','0')
-}
+
 function NetworkStats_add(o) {
-var n = parseFloat(String(localStorage.getItem('bus_network_stats')))
-n += parseFloat((o/1024).toFixed(3))
-localStorage.setItem('bus_network_stats',n)
+var dd = new Date()
+var dd_suffix = `${dd.getFullYear()}_${(dd.getMonth()+1)}_${dd.getDate()}`
+var ls_key = `bus_network_stats_${dd_suffix}`
+if(!(localStorage.hasOwnProperty(ls_key))){
+localStorage.setItem(ls_key,'0')
+}
+var n = parseFloat(String(localStorage.getItem(ls_key)))
+var g = 0
+try {
+ g = parseFloat((o/1024).toFixed(3))
+}
+n += g
+localStorage.setItem(ls_key,n)
 }
   var ajax_event = { 'sent': {}, 'successful': {} }
   $(document).ajaxSend(function (event, jqxhr, settings) {
