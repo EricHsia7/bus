@@ -2077,7 +2077,6 @@
               stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
               stops_json.loaded = true
               stops_json['c_arr'] = stops_json['c_' + 0 + '_arr'].concat(stops_json['c_' + 1 + '_arr'])
-              getRoutes(false)
               if (realtime_lo === 0) {
                 realtime_lo = 1
                 updateRealtimeJson(false)
@@ -2137,27 +2136,6 @@
                     this_json_k[thsS.short] = this_json_k[thsS.source]
                   }
                   delete this_json_k[thsS.source]
-                }
-                if (thsS.source === 'segmentBufferZh') {
-                  var this_seg = this_json_k.s
-                  var buffers = getPathBuffer(this_seg)
-                  var processed_buffer = { 'dep': [], 'des': [] }
-                  if (buffers.buffer) {
-                    var buf_dep_len = buffers.departure.length
-                    var buf_des_len = buffers.destination.length
-                    for (var w = 0; w < buf_dep_len; w++) {
-                      var this_buffer = buffers.departure[w]
-                      this_buffer.n = StopName2ID(str, routes_data_city)
-                      processed_buffer.dep.push(this_buffer)
-                    }
-                    for (var w = 0; w < buf_des_len; w++) {
-                      var this_buffer = buffers.destination[w]
-                      this_buffer.n = StopName2ID(str, routes_data_city)
-                      processed_buffer.des.push(this_buffer)
-                    }
-                    this_json_k.bf = processed_buffer
-                    delete this_json_k]
-                  }
                 }
               }
               if (!json_processed.hasOwnProperty('b_' + id)) {
@@ -3044,7 +3022,7 @@
   });
   setSearchSize()
   setRouteSlideSize()
-  getStops()
+  getRoutes(false)
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
       horizontal_slide = false
