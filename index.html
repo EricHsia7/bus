@@ -559,12 +559,12 @@
       content: '緩衝區 開始';
       position: absolute;
       height: 15px;
-      width: 80px;
+      width: auto;
       left: 50%;
       transform: translateX(-50%);
       top: -7.5px;
       background: var(--g-ffffff);
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       color: var(--g-888888);
@@ -575,17 +575,21 @@
       content: '緩衝區 結束';
       position: absolute;
       height: 15px;
-      width: 80px;
+      width: auto;
       left: 50%;
       transform: translateX(-50%);
       top: 42.5px;
       background: var(--g-ffffff);
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       color: var(--g-888888);
       font-size: 15px;
       z-index: 1;
+    }
+
+    .route li.stop[buffer="true-1"]+.route li.stop[buffer="false-0"] {
+      border: none;
     }
 
     .route li.stop .bus {
