@@ -1951,6 +1951,7 @@
         ripple_selector_list.push(`#${bus_element_id}`)
 var buffer_start_html = ``
 var buffer_end_html = ``
+console.log(buffers_g)
 if(buffers_g) {
         if(buffer_closed === 0) {
             buffer_start_html = `<div class="buffer-group">`
@@ -1965,6 +1966,7 @@ if(buffers_g) {
             }
         htm['h_' + s.goBack].push(`${buffer_start_html}<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>${buffer_end_html}`)
       }
+      console.log(buffer_closed,buffer_start_html,buffer_end_html)
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
         if (s.goBack === 0) {
