@@ -1676,8 +1676,8 @@
               if (current_direction === 'all') {
                 buffers['o_0'].push({ n: pervious_stop, d: 0 })
                 buffers['o_0'].push({ n: match[t], d: 1 })
-                buffers['o_1'].push({ n: pervious_stop, d: 0 })
-                buffers['o_1'].push({ n: match[t], d: 1 })
+                buffers['o_1'].push({ n: match[t], d: 0 })
+                buffers['o_1'].push({ n: pervious_stop, d: 1 })
               }
               else {
                 buffers[current_direction].push({ n: pervious_stop, d: 0 })
