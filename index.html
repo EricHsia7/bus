@@ -547,15 +547,15 @@
       }
     }
 
-    .route li.stop[buffer="true-0"] {
+    .route .buffer-group li.stop::first-child {
       border-top: dashed 1.2px var(--g-e3e3e3);
     }
 
-    .route li.stop[buffer="true-1"] {
+    .route .buffer-group li.stop:last-child {
       border-bottom: dashed 1.2px var(--g-e3e3e3);
     }
 
-    .route li.stop[buffer="true-0"]::after {
+    .route .buffer-group li.stop::after {
       content: '緩衝區 開始';
       position: absolute;
       height: 15px;
@@ -571,7 +571,7 @@
       font-size: 15px;
     }
 
-    .route li.stop[buffer="true-1"]::after {
+    .route .buffer-group li.stop:last-child::after {
       content: '緩衝區 結束';
       position: absolute;
       height: 15px;
@@ -588,7 +588,7 @@
       z-index: 1;
     }
 
-    .route li.stop[buffer="true-1"]+li.stop[buffer="false-0"] {
+    .route .buffer-group +li.stop {
       border: none;
     }
 
@@ -1866,6 +1866,7 @@
     var nearest_stops_d = { 'o_0': {}, 'o_1': {} }
     var buffers = []
     var buffers_g = false
+    var buffer_closed = 0
     if (c === 'skeleton') {
       g = true
     }
@@ -1948,7 +1949,23 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
+var buffer_start_html = ``
+var buffer_end_html = ``
+        if(buffer_closed === 0) {
+          if(buffers_g) {
+            buffer_start_html = `<div class="buffer_group">`
+            buffer_closed = 1
+            }
+          }
+          else {
+            if(buffer_closed === 1) {
+              if(buffers_g) {
+            buffer_end_html = `</div>`
+            buffer_closed = 0
+            }
+              }
+            }
+        htm['h_' + s.goBack].push(`${buffer_start_html}<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>${buffer_end_html}`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
