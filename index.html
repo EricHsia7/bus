@@ -546,8 +546,13 @@
         transform: scale(0.65);
       }
     }
-
-    .route .buffer-group li.stop::first-child {
+.route .buffer-group {
+position:relative;
+width:100%;
+height:auto;
+display:inline-block;
+}
+    .route .buffer-group li.stop:first-child {
       border-top: dashed 1.2px var(--g-e3e3e3);
     }
 
@@ -555,7 +560,7 @@
       border-bottom: dashed 1.2px var(--g-e3e3e3);
     }
 
-    .route .buffer-group li.stop::after {
+    .route .buffer-group li.stop:first-child::after {
       content: '緩衝區 開始';
       position: absolute;
       height: 15px;
@@ -588,7 +593,7 @@
       z-index: 1;
     }
 
-    .route .buffer-group +li.stop {
+    .route .buffer-group + li.stop {
       border: none;
     }
 
