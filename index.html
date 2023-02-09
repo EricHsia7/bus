@@ -1880,9 +1880,6 @@ display:inline-block;
       nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
       if (routes_json.loaded && stops_json.loaded) {
         buffers = getPathBuffer(routes_json.c['b_' + c_routeid].s)
-        if (buffers.length > 0) {
-          buffers_g = true
-        }
       }
     }
     var ripple_selector_list = []
@@ -1892,8 +1889,6 @@ display:inline-block;
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       var nh = false
-      var buffer_g = false
-      var buffer_d = 0
       var buffer_start_html = ``
       var buffer_end_html = ``
       if (g) {
@@ -1942,8 +1937,6 @@ display:inline-block;
       if (!g) {
         var bf_c = isBuffer(buffers, displayName, s.goBack)
         if (bf_c.g) {
-          buffer_g = true
-          buffer_d = bf_c.j.d
         if(buffer_closed === 0) {
             buffer_start_html = `<div class="buffer-group">`
             buffer_closed = 1
@@ -1965,7 +1958,7 @@ display:inline-block;
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`${buffer_start_html}<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>${buffer_end_html}`)
+        htm['h_' + s.goBack].push(`${buffer_start_html}<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>${buffer_end_html}`)
       }
       
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
