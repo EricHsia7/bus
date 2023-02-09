@@ -1888,7 +1888,7 @@
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       var nh = false
-      var buffer_g = false
+       buffer_g = false
       var buffer_d = 0
       var buffer_start_html = ``
       var buffer_end_html = ``
@@ -1940,8 +1940,7 @@
         if (bf_c.g) {
           buffer_g = true
           buffer_d = bf_c.j.d
-console.log(buffers_g)
-if(buffers_g) {
+          
         if(buffer_closed === 0) {
             buffer_start_html = `<div class="buffer-group">`
             buffer_closed = 1
@@ -1951,7 +1950,6 @@ if(buffers_g) {
             buffer_end_html = `</div>`
             buffer_closed = 0
               }
-            }
             }
             
             
