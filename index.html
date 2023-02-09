@@ -418,14 +418,17 @@
       position: relative;
       margin: 0px;
       padding: 0px;
-      border-bottom: solid 1px var(--g-f5f5f5);
+      border-top: solid 1px var(--g-f5f5f5);
       background: var(--g-ffffff);
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .route li.stop:last-child {
+    .route li.stop:first-child {
       border: none;
+    }
+
+    .route li.stop:last-child {
       margin-bottom: var(--o-safe-area-bottom);
     }
 
@@ -542,6 +545,51 @@
       100% {
         transform: scale(0.65);
       }
+    }
+
+    .route li.stop[buffer="true-0"] {
+      border-top: dashed 1.2px var(--g-e3e3e3);
+    }
+
+    .route li.stop[buffer="true-1"] {
+      border-bottom: dashed 1.2px var(--g-e3e3e3);
+    }
+
+    .route li.stop[buffer="true-0"]::after {
+      content: '緩衝區 開始';
+      position: absolute;
+      height: 15px;
+      width: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -7.5px;
+      background: var(--g-ffffff);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--g-888888);
+      font-size: 15px;
+    }
+
+    .route li.stop[buffer="true-1"]::after {
+      content: '緩衝區 結束';
+      position: absolute;
+      height: 15px;
+      width: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 42.5px;
+      background: var(--g-ffffff);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--g-888888);
+      font-size: 15px;
+      z-index: 1;
+    }
+
+    .route li.stop[buffer="true-1"]+li.stop[buffer="false-0"] {
+      border: none;
     }
 
     .route li.stop .bus {
@@ -1396,7 +1444,7 @@
     { 'source': 'ticketPriceDescriptionEn', 'short': false },
     { 'source': 'peakHeadway', 'short': false },
     { 'source': 'ttiaPathId', 'short': false },
-    { 'source': 'segmentBufferZh', 'short': false },
+    { 'source': 'segmentBufferZh', 'short': 's' },
     { 'source': 'busTimeDesc', 'short': false },
     { 'source': 'distance', 'short': false },
     { 'source': 'NId', 'short': false },
@@ -1585,7 +1633,66 @@
     var d = R * c;
     return d * 1000;
   }
+  function StopName2ID(str, ccc) {
+    if (stops_json.loaded) {
+      var arr = stops_json['c_' + ccc + '_arr']
+      var arr_len = arr.length
+      for (var o = 0; o < arr_len; o++) {
+        if (str === arr[o].nameZh) {
+          return arr[o].Id
+        }
+      }
+    }
+  }
+  function getPathBuffer(str) {
+    var t_match = str.match(/[\(（][往返程][\)|）]/gm)
+    if (!(t_match === null)) {
+      for (var w = 0; w < t_match.length; w++) {
+        str = str.replaceAll(t_match[w], t_match[w] + ' ')
+      }
+    }
+    var match = str.match(/[\u4E00-\u9FFF\(\)（）]*/gm)
+    if (!(match === null)) {
+      var match_len = match.length
+      var current_direction = 'all'
+      var start_stop = 0
+      var pervious_stop = ''
+      var buffers = { 'o_0': [], 'o_1': [] }
+      for (var t = 0; t < match_len; t++) {
+        if (match[t].length < 1) {
+          continue;
+        }
+        if (match[t].indexOf('往') > -1) {
+          current_direction = 'o_0'
+        }
+        else {
+          if (match[t].indexOf('返') > -1) {
+            current_direction = 'o_1'
+          }
+          else {
+            start_stop += 1
+            if (start_stop >= 2) {
+              start_stop = 0
+              if (current_direction === 'all') {
+                buffers['o_0'].push({ n: pervious_stop, d: 0 })
+                buffers['o_0'].push({ n: match[t], d: 1 })
+                buffers['o_1'].push({ n: match[t], d: 0 })
+                buffers['o_1'].push({ n: pervious_stop, d: 1 })
+              }
+              else {
+                buffers[current_direction].push({ n: pervious_stop, d: 0 })
+                buffers[current_direction].push({ n: match[t], d: 1 })
+              }
+              current_direction = 'all'
+            }
+            pervious_stop = match[t]
+          }
+        }
 
+      }
+    }
+    return buffers
+  }
   function updateRefreshProgress() {
     var t = new Date().getTime()
     var p = Math.abs(t - realtime_last_update) / update_interval
@@ -1734,6 +1841,19 @@
       displayName = ''
       bv.h = true
     }
+    var isBuffer = function (bu, str, direction) {
+      if (!(bu.hasOwnProperty('o_' + direction))) {
+        return { 'g': false, 'j': {} }
+      }
+      bu = bu['o_' + direction]
+      var bu_len = bu.length
+      for (var p = 0; p < bu_len; p++) {
+        if (String(bu[p].n).indexOf(str) > -1 && String(str).indexOf(bu[p].n) > -1) {
+          return { 'g': true, 'j': bu[p] }
+        }
+      }
+      return { 'g': false, 'j': {} }
+    }
     if (skeletonScreenStatus === 1) {
       skeletonScreenStatus = 0
       $('.route_container .route[direction="departure"]').html('')
@@ -1744,6 +1864,8 @@
     var g = false
     var nearest_stops_list = { 'o_0': [], 'o_1': [] }
     var nearest_stops_d = { 'o_0': {}, 'o_1': {} }
+    var buffers = []
+    var buffers_g = false
     if (c === 'skeleton') {
       g = true
     }
@@ -1751,6 +1873,12 @@
       nearest_stops_list = getNearestStops(pos_lat, pos_lon)
       nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
       nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
+      if (routes_json.loaded && stops_json.loaded) {
+        buffers = getPathBuffer(routes_json.c['b_' + c_routeid].s)
+        if (buffers.length > 0) {
+          buffers_g = true
+        }
+      }
     }
     var ripple_selector_list = []
     for (var w = 0; w < l; w++) {
@@ -1759,6 +1887,8 @@
       var s = {}
       var bv = { 'h': false, 'n': '', 'icon': '', 'l': '', 'ty': '', 'time': '', 'status': '' }
       var nh = false
+      var buffer_g = false
+      var buffer_d = 0
       if (g) {
         fg(k[w].goBack)
       }
@@ -1802,7 +1932,13 @@
       else {
         var status = timeStatus(k[w].EstimateTime)
       }
-
+      if (!g) {
+        var bf_c = isBuffer(buffers, displayName, s.goBack)
+        if (bf_c.g) {
+          buffer_g = true
+          buffer_d = bf_c.j.d
+        }
+      }
       var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
       var hash = md5(JSON.stringify(jn))
       var bvhash = md5(JSON.stringify(bv))
@@ -1812,7 +1948,7 @@
         route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
         var bus_element_id = gid('bus')
         ripple_selector_list.push(`#${bus_element_id}`)
-        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
+        htm['h_' + s.goBack].push(`<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>`)
       }
 
       if (!(route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['hash'] === hash) && !(g === true)) {
@@ -2002,6 +2138,7 @@
             }
             stops_json['c_' + stops_data_city] = json_processed
             stops_json['c_' + stops_data_city + '_loaded'] = true
+            stops_json['c_' + stops_data_city + '_arr'] = o
             if (stops_data_city === 0) {
               stops_json.c = stops_json['c_0']
               stops_data_city = 1
@@ -2010,6 +2147,7 @@
             if (stops_data_city === 1) {
               stops_json.c = Object.assign(stops_json['c_0'], stops_json['c_1']);
               stops_json.loaded = true
+              stops_json['c_arr'] = stops_json['c_' + 0 + '_arr'].concat(stops_json['c_' + 1 + '_arr'])
               if (realtime_lo === 0) {
                 realtime_lo = 1
                 updateRealtimeJson(false)
@@ -2080,6 +2218,7 @@
                 }
               }
             }
+
             routes_json['c_' + routes_data_city] = json_processed
             LS.setItem('bus_routes_' + routes_data_city, JSON.stringify(json_processed))
             LS.setItem('bus_routes_t_' + routes_data_city, new Date().getTime())
@@ -2953,9 +3092,8 @@
     }
   });
   setSearchSize()
-  getRoutes(false)
   setRouteSlideSize()
-
+  getRoutes(false)
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
       horizontal_slide = false
