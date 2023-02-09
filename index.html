@@ -1938,18 +1938,8 @@
         if (bf_c.g) {
           buffer_g = true
           buffer_d = bf_c.j.d
-        }
-      }
-      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
-      var hash = md5(JSON.stringify(jn))
-      var bvhash = md5(JSON.stringify(bv))
-      var statushash = md5(JSON.stringify(status))
-
-      if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
-        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
-        var bus_element_id = gid('bus')
-        ripple_selector_list.push(`#${bus_element_id}`)
-var buffer_start_html = ``
+          
+          var buffer_start_html = ``
 var buffer_end_html = ``
 console.log(buffers_g)
 if(buffers_g) {
@@ -1964,6 +1954,19 @@ if(buffers_g) {
               }
             }
             }
+            
+            
+        }
+      }
+      var jn = { 'id': k[w].StopID, 'name': displayName, 'bv': bv, 'status': status, 'nh': nh }
+      var hash = md5(JSON.stringify(jn))
+      var bvhash = md5(JSON.stringify(bv))
+      var statushash = md5(JSON.stringify(status))
+
+      if (!(route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) || g === true) {
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = {}
+        var bus_element_id = gid('bus')
+        ripple_selector_list.push(`#${bus_element_id}`)
         htm['h_' + s.goBack].push(`${buffer_start_html}<li class="stop" l="${g}" stop-id="${k[w].StopID}" bus="${bv.h}" nh="${nh}" no="${s.seqNo}" buffer="${buffer_g}-${buffer_d}"><div class="name">${displayName}</div><div class="position" d="${nh}"><div class="position-signal"></div><div class="position-white"></div><div class="position-blue"></div></div><button class="bus" d="${bv.h}" l="${bv.l}" id="${bus_element_id}" onclick="displayBus('${bv.n}','${bv.l}','${bv.ty}','${bv.status}','${bv.time}')"><div class="busicon">${bv.icon}</div></button><div class="status" status="${status.status}" tr="${status.tr}">${status.text}</div></li>${buffer_end_html}`)
       }
       console.log(buffer_closed,buffer_start_html,buffer_end_html)
