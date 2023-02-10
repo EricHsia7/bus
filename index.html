@@ -2106,6 +2106,9 @@
           var now = new Date()
           var jn = (30000 - Math.round(status_time_f.reduce((a, b) => a + b, 0) / status_time_f.length * 1000))
           update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 30000)
+          if (update_interval === 'NaN') {
+            update_interval = 30000
+          }
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
