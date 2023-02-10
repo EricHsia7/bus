@@ -2117,7 +2117,7 @@
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
           var now = new Date()
           var jn = (30000 - Math.round(status_time_f.reduce((a, b) => a + b, 0) / status_time_f.length * 1000))
-          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 30000)
+          update_interval = Math.min(Math.max(5000, last_modified.getTime() + jn - now.getTime()), 30000)
           if (isNaN(update_interval)) {
             update_interval = 30000
           }
