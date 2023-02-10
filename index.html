@@ -1997,7 +1997,7 @@
           }
           //if (!(status_time_g === route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time)) {
           if (route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID) && !g) {
-            if (route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time')) {
+            if (route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time') && status_time_g > 0) {
               status_time_f.push(Math.abs(status_time_g - route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time))
             }
           }
