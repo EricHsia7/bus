@@ -1832,7 +1832,7 @@
     }
     return e + h + e
   }
-
+  var status_time_f = [5]
   function printStops(k, c, bp) {
     var pos_checkStops = function (h) {
       if (h.length <= 0) {
@@ -1932,10 +1932,12 @@
         htm['h_' + s.goBack] = []
       }
       if (g) {
+        var status_time_g = 0
         var status = { 'status': 10, 'text': '', 'tr': false }
       }
       else {
-        var status = timeStatus(k[w].EstimateTime)
+        var status_time_g = k[w].EstimateTime
+        var status = timeStatus(status_time_g)
       }
       if (!g) {
         var bf_c = isBuffer(buffers, displayName, s.goBack)
@@ -1988,9 +1990,13 @@
         if (!(thiscontent.nh === nh)) {
           $(selector + ' .position').attr('d', nh)
           $(selector).attr('nh', nh)
-
         }
-        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
+        //if (!(status_time_g === route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time)) {
+        if (route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID) && !g) {
+          status_time_f.push(Math.abs(status_time_g - route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time))
+        }
+        //}
+        route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'status_time': status_time_g }
       }
     }
     if (!htm.hasOwnProperty('h_0')) {
@@ -2084,9 +2090,7 @@
     }
     return res
   }
-  var update_time_log = []
-  var update_time_f = [20000]
-  var data_md5 = ''
+
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
@@ -2096,23 +2100,9 @@
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
-          var current_md5 = md5(z)
-          if (!(data_md5 === current_md5)) {
-            data_md5 = String(current_md5)
-            update_time_log.push(last_modified.getTime())
-          }
-          if (update_time_log.length >= 2) {
-            update_time_f.push(update_time_log[update_time_log.length - 1] - update_time_log[update_time_log.length - 2])
-          }
           var now = new Date()
-          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + Math.round(update_time_f.reduce((a, b) => a + b, 0) / update_time_f.length) - now.getTime())), 30000)
-          if (update_time_log.length >= 15) {
-            update_time_log = update_time_log.slice(update_time_log.length - 11, update_time_log.length - 1)
-          }
-          if (update_time_f.length >= 15) {
-            update_time_f = update_time_f.slice(update_time_f.length - 11, update_time_f.length - 1)
-          }
-
+          var jn = (30000 - Math.round(status_time_f.reduce((a, b) => a + b, 0) / status_time_f.length * 1000))
+          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 30000)
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
