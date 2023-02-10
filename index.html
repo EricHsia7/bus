@@ -2084,7 +2084,7 @@
     }
     return res
   }
-
+var update_time_log = []
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
@@ -2095,7 +2095,8 @@
           realtime_json = JSON.parse(z)
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
           var now = new Date()
-          update_interval = Math.abs((last_modified.getTime() + 60 * 1000) - now.getTime())
+          update_interval = Math.abs((last_modified.getTime() + 20 * 1000) - now.getTime())
+update_time_log.push(last_modified.getTime())
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
             var bb = findBus(busevent_json, c_routeid, c_routeid_p)
