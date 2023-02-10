@@ -2105,7 +2105,7 @@
             update_time_f.push(update_time_log[update_time_log.length - 1] - update_time_log[update_time_log.length - 2])
           }
           var now = new Date()
-          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + Math.round(update_time_f.reduce((a, b) => a + b, 0) / update_time_f.length) - now.getTime())),30000)
+          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + Math.round(update_time_f.reduce((a, b) => a + b, 0) / update_time_f.length) - now.getTime())), 30000)
           if (update_time_log.length >= 15) {
             update_time_log = update_time_log.slice(update_time_log.length - 11, update_time_log.length - 1)
           }
