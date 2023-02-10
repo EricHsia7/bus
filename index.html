@@ -1887,6 +1887,9 @@
     }
     var ripple_selector_list = []
     for (var w = 0; w < l; w++) {
+      if (!k[w].hasOwnProperty('StopID') || !k[w].hasOwnProperty('EstimateTime')) {
+        continue;
+      }
       var selector = ''
       var displayName = k[w].StopID
       var s = {}
