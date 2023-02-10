@@ -1879,6 +1879,9 @@
         g = true
       }
       if (!g) {
+        if (status_time_f.length > l) {
+          status_time_f = status_time_f.slice(status_time_f.length - 1 - status_time_f, status_time_f.length - 1)
+        }
         nearest_stops_list = getNearestStops(pos_lat, pos_lon)
         nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
         nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
