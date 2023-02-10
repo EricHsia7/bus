@@ -2086,6 +2086,7 @@
   }
   var update_time_log = []
   var update_time_f = [20000]
+var data_md5 = ''
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
@@ -2095,7 +2096,11 @@
           var z = pako.inflate(bf, { to: 'string' })
           realtime_json = JSON.parse(z)
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
+          var current_md5 = md5(z)
+if(!(data_md5 === current_md5)) {
+       data_md5 =  String(current_md5)
           update_time_log.push(last_modified.getTime())
+          }
           if(update_time_log.length >= 2) {
 update_time_f.push(update_time_log[update_time_log.length-1]-update_time_log[update_time_log.length-2])
 }
