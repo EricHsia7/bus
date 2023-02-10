@@ -2086,7 +2086,7 @@
   }
   var update_time_log = []
   var update_time_f = [20000]
-var data_md5 = ''
+  var data_md5 = ''
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
     $.ajax({
@@ -2097,21 +2097,21 @@ var data_md5 = ''
           realtime_json = JSON.parse(z)
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
           var current_md5 = md5(z)
-if(!(data_md5 === current_md5)) {
-       data_md5 =  String(current_md5)
-          update_time_log.push(last_modified.getTime())
+          if (!(data_md5 === current_md5)) {
+            data_md5 = String(current_md5)
+            update_time_log.push(last_modified.getTime())
           }
-          if(update_time_log.length >= 2) {
-update_time_f.push(update_time_log[update_time_log.length-1]-update_time_log[update_time_log.length-2])
-}
+          if (update_time_log.length >= 2) {
+            update_time_f.push(update_time_log[update_time_log.length - 1] - update_time_log[update_time_log.length - 2])
+          }
           var now = new Date()
-          update_interval = Math.abs((last_modified.getTime() + (update_time_f.reduce((a,b) => a + b, 0) / update_time_f.length)) - now.getTime())
-          if(update_time_log.length >= 15) {
-update_time_log = update_time_log.slice(update_time_log.length-11,update_time_log.length-1)
-}
-if(update_time_f.length >= 15) {
-update_time_f = update_time_f.slice(update_time_f.length-11,update_time_f.length-1)
-}
+          update_interval = Math.abs((last_modified.getTime() + Math.min(Math.max(5000, Math.round(update_time_f.reduce((a, b) => a + b, 0) / update_time_f.length)), 30000)) - now.getTime())
+          if (update_time_log.length >= 15) {
+            update_time_log = update_time_log.slice(update_time_log.length - 11, update_time_log.length - 1)
+          }
+          if (update_time_f.length >= 15) {
+            update_time_f = update_time_f.slice(update_time_f.length - 11, update_time_f.length - 1)
+          }
 
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
