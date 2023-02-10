@@ -1936,7 +1936,7 @@
         var status = { 'status': 10, 'text': '', 'tr': false }
       }
       else {
-        var status_time_g = k[w].EstimateTime
+        var status_time_g = parseInt(k[w].EstimateTime)
         var status = timeStatus(status_time_g)
       }
       if (!g) {
