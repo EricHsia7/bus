@@ -2107,7 +2107,7 @@
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
           var now = new Date()
           var jn = 10000
-          update_interval = Math.min(Math.max(10000, Math.abs(last_modified.getTime() + jn - now.getTime())), 30000)
+          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 15000)
           if (isNaN(update_interval)) {
             update_interval = 10000
           }
