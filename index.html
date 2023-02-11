@@ -1461,7 +1461,7 @@
   ]
 
   let rdsn_len = routesDataShortName.length
-  var update_interval = 15000
+  var update_interval = 10000
 
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
@@ -1832,7 +1832,7 @@
     }
     return e + h + e
   }
-  var status_time_f = [5]
+  
   function printStops(k, c, bp) {
     try {
       var pos_checkStops = function (h) {
@@ -1879,9 +1879,6 @@
         g = true
       }
       if (!g) {
-        if (status_time_f.length > l * 0.3) {
-          status_time_f = status_time_f.slice(status_time_f.length - 1 - Math.floor(l * 0.3), status_time_f.length - 1)
-        }
         nearest_stops_list = getNearestStops(pos_lat, pos_lon)
         nearest_stops_d['o_0'] = pos_checkStops(nearest_stops_list.o_0)
         nearest_stops_d['o_1'] = pos_checkStops(nearest_stops_list.o_1)
@@ -2000,17 +1997,7 @@
             $(selector + ' .position').attr('d', nh)
             $(selector).attr('nh', nh)
           }
-          //if (!(status_time_g === route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time)) {
-          if (route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID) && !g) {
-            if (route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time')) {
-              var this_status_time_f = Math.abs(status_time_g - route_container_content['h_' + s.goBack]['b_' + k[w].StopID].status_time)
-              if (this_status_time_f < 60 * 5) {
-                status_time_f.push(this_status_time_f)
-              }
-            }
-          }
-          //}
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'status_time': status_time_g }
+          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status}
         }
       }
       if (!htm.hasOwnProperty('h_0')) {
@@ -2119,10 +2106,10 @@
           realtime_json = JSON.parse(z)
           var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
           var now = new Date()
-          var jn = (90000 - Math.round(status_time_f.reduce((a, b) => a + b, 0) / status_time_f.length * 1000))
+          var jn = 10000
           update_interval = Math.min(Math.max(10000, Math.abs(last_modified.getTime() + jn - now.getTime())), 30000)
           if (isNaN(update_interval)) {
-            update_interval = 30000
+            update_interval = 10000
           }
           if (stops_json.loaded) {
             var s = findStop(realtime_json, c_routeid, c_routeid_p)
@@ -2724,8 +2711,6 @@
         route_page_is_open = 1
         route_dep_auto_scroll = 0
         route_des_auto_scroll = 0
-        status_time_f = [10]
-        //$('.route_container').css({ 'display': 'block' })
         fade(document.querySelector('.route_container'), 'In', 'block')
         $('.route_container .tabs').attr('l', '0')
         $('.route_container .title .routename').attr('l', '0')
