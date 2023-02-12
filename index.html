@@ -149,6 +149,7 @@
       height: 1.2px;
       width: 100%;
       transform: translateX(var(--o-refresh-progress));
+      
     }
 
     .refresh_progress_box[l="0"] .refresh_progress {
@@ -160,6 +161,7 @@
       width: 100%;
       overflow: hidden;
       background: #c7424b;
+      transition :0.35s;
     }
 
 .refresh_progress_box[status="2"] {
@@ -167,6 +169,7 @@
       width: 100%;
       overflow: hidden;
       background: #42c78b;
+      transition :0.35s;
     }
     
 .refresh_progress_box[status="3"] {
@@ -174,6 +177,7 @@
       width: 100%;
       overflow: hidden;
       background: #555;
+      transition :0.35s;
     }
     
 .refresh_progress_box[status="4"] {
@@ -181,23 +185,9 @@
       width: 100%;
       overflow: hidden;
       background: #42c78b;
-   
+   transition :0.35s;
     }
     
-.refresh_progress_box[status="1"]::after {
-  content:'';
-      height: 1.2px;
-      width: 100%;
-      overflow: hidden;
-  position:absolute;
-  top:0px;
-  left:0px;
-  font-size:16px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:rgba(0,0,0,0);
-    }
 .refresh_progress_box[status="1"]::after ,
 .refresh_progress_box[status="2"]::after ,
 .refresh_progress_box[status="3"]::after ,
@@ -214,6 +204,7 @@
   display:flex;
   justify-content:center;
   align-items:center;
+  transition :0.35s;
     }
 
 .refresh_progress_box[status="1"]::after {
