@@ -2173,8 +2173,8 @@
   }
 
   function updateRealtimeJson(immediate_update) {
-    updateBusEventJson()
     if(update_status === 0) {
+      updateBusEventJson()
     $.ajax({
       type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data, statusText, xhr) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -3259,6 +3259,7 @@ update_status = 3
             });
 
             ifvisible.wakeup(function(){
+              update_status = 0
               setTimeout(function() {
                  $('.refresh_progress_box').attr('status','4')
 },500)
@@ -3266,7 +3267,7 @@ update_status = 3
                  $('.refresh_progress_box').attr('status','0')
 },1500)
             });
-            update_status = 0
+            
 </script>
 
 </html>
