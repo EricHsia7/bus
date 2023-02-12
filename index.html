@@ -1537,6 +1537,7 @@
 
   let rdsn_len = routesDataShortName.length
   var update_interval = 10000
+  var update_status = 0
 
   function isRunningStandalone() {
     return (window.matchMedia('(display-mode: standalone)').matches);
@@ -2173,6 +2174,7 @@
 
   function updateRealtimeJson(immediate_update) {
     updateBusEventJson()
+    if(update_status === 0) {
     $.ajax({
       type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data, statusText, xhr) {
         var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -2205,7 +2207,12 @@
         setTimeout(function () { updateRealtimeJson(false) }, 1000);
       }
     });
-
+}
+else {
+if (!(immediate_update === true)) {
+            setTimeout(function () { updateRealtimeJson(false) }, update_interval);
+          }
+}
   }
   function updateBusEventJson() {
     $.ajax({
@@ -3247,6 +3254,7 @@
 
   ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
 ifvisible.idle(function(){
+update_status = 3
                 $('.refresh_progress_box').attr('status','3')
             });
 
@@ -3258,6 +3266,7 @@ ifvisible.idle(function(){
                  $('.refresh_progress_box').attr('status','0')
 },1500)
             });
+            update_status = 0
 </script>
 
 </html>
