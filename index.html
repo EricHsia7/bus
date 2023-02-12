@@ -154,6 +154,80 @@
     .refresh_progress_box[l="0"] .refresh_progress {
       background: rgba(0, 0, 0, 0);
     }
+    
+    .refresh_progress_box[status="1"] {
+      height: 35px;
+      width: 100%;
+      overflow: hidden;
+      background: #c7424b;
+    }
+
+.refresh_progress_box[status="2"] {
+      height: 35px;
+      width: 100%;
+      overflow: hidden;
+      background: #42c78b;
+    }
+    
+.refresh_progress_box[status="3"] {
+      height: 35px;
+      width: 100%;
+      overflow: hidden;
+      background: #555;
+    }
+    
+.refresh_progress_box[status="4"] {
+      height: 35px;
+      width: 100%;
+      overflow: hidden;
+      background: #42c78b;
+   
+    }
+    
+.refresh_progress_box[status="1"]::after {
+  content:'';
+      height: 1.2px;
+      width: 100%;
+      overflow: hidden;
+  position:absolute;
+  top:0px;
+  left:0px;
+  font-size:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:rgba(0,0,0,0);
+    }
+.refresh_progress_box[status="1"]::after ,
+.refresh_progress_box[status="2"]::after ,
+.refresh_progress_box[status="3"]::after ,
+.refresh_progress_box[status="4"]::after {
+  content:'';
+      height: 35px;
+      width: 100%;
+      overflow: hidden;
+  color:#fff;
+  position:absolute;
+  top:0px;
+  left:0px;
+  font-size:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+    }
+
+.refresh_progress_box[status="1"]::after {
+  content:'網路錯誤'
+}
+.refresh_progress_box[status="2"]::after {
+  content:'已恢復網路連線'
+}
+.refresh_progress_box[status="3"]::after {
+  content:'已暫停自動更新'
+}
+.refresh_progress_box[status="4"]::after {
+  content:'已恢復自動更新'
+}
 
     .route_container {
       position: fixed;
@@ -1299,6 +1373,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ifvisible/1.0.6/ifvisible.min.js"></script>
 <script>
   function NetworkStats_add(o) {
     var dd = new Date()
@@ -3171,7 +3246,18 @@
   }, { passive: false });
 
   ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
+ifvisible.idle(function(){
+                $('.refresh_progress_box').attr('status','3')
+            });
 
+            ifvisible.wakeup(function(){
+              setTimeout(function() {
+                 $('.refresh_progress_box').attr('status','4')
+},500)
+              setTimeout(function() {
+                 $('.refresh_progress_box').attr('status','0')
+},1500)
+            });
 </script>
 
 </html>
