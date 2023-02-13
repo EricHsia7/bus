@@ -1888,8 +1888,10 @@
       }
       element.classList.remove(`fade${type}-${fade_id}-start`)
       element.classList.remove(`fade${type}-${fade_id}`)
-      document.getElementById(`fade-css-${fade_id}`).remove()
       element.classList.add(`fade-display-${display}`)
+      if (!(document.getElementById(`fade-css-${fade_id}`) === null)) {
+        document.getElementById(`fade-css-${fade_id}`).remove()
+      }
     }, { once: true })
   }
   function prompt_message(message, duration) {
@@ -3088,9 +3090,9 @@
   function opensearch() {
     if (search_page_is_open === 0) {
       search_page_is_open = 1
+      fade(document.querySelector('.search_routes_result'), 'In', 'block')
       $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
       n_watchPosition()
-      fade(document.querySelector('.search_routes_result'), 'In', 'block')
     }
 
   }
