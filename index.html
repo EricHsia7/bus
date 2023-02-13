@@ -1564,7 +1564,7 @@
       <div class="options_group_title">顯示設定</div>
       <li class="option" b="0">
         <div class="option_title">顯示到站時間的秒數</div>
-        <label for="options_reveal_estimate_time_exact_seconds" class="options_switch">
+        <label for="options_reveal_estimate_time_exact_seconds" class="options_switch" onclick="saveOptions()">
           <input type="checkbox" id="options_reveal_estimate_time_exact_seconds" name="options_reveal_estimate_time_exact_seconds">
           <div class="options_switch_box"></div>
           <div class="options_switch_internal_box"></div>
@@ -3335,6 +3335,18 @@
   function mixA(a, b, l) {
     return Math.floor(a * l + b * (1 - l))
   }
+  
+  function saveOptions() {
+var options = $('.options_container input[type="checkbox"]')
+var options_len = options.length
+for(var h = 0;h<options_len;h++){
+var checked = options.eq(h).prop('checked')
+LS.setItem('bus_opt_' + options.eq(h).attr('name'),checked)
+}
+prompt_message('已儲存變更')
+}
+  
+  
   /* initialize */
 
   initializeKeyboard()
@@ -3498,7 +3510,9 @@
     }
   }, { passive: false });
 
-  ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
+ ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
+ ripple(document.querySelectorAll('.options_content label.options_switch'), 'var(--g-14b1ff)', 450)
+ 
   ifvisible.idle(function () {
     update_status = 3
   });
