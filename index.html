@@ -854,7 +854,7 @@
       top: 55px;
       left: 0px;
       width: 100%;
-      height: calc(100% - 55px);
+      height: calc(100% - 55px - clamp(200px, 36%, 270px));
       overflow: scroll;
       display: none;
       user-select: none;
@@ -890,7 +890,6 @@
 
     .search_routes_result li.search_result_r:last-child {
       border: none;
-      margin-bottom: calc(clamp(200px, calc((100% + 55px) * 0.36), 270px) + var(--o-safe-area-bottom))
     }
 
     .search_result_r_dep_to_des {
