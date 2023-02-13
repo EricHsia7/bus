@@ -1892,7 +1892,14 @@
       duration = 1200
     }
     message = String(message)
-    var at = 375
+    var all_prompt = document.querySelectorAll('.prompt')
+    if(!(all_prompt === null)) {
+      var all_prompt_len = all_prompt.length
+      for(var e = 0;e<all_prompt_len;e++) {
+        all_prompt[e].remove()
+        }
+      }
+    var at = 270
     translateY = -10
     var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
     var prompt_id = "";
