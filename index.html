@@ -860,7 +860,9 @@
       transition: 0.35s;
       transform: translateX(0px) translateY(calc(var(--k-search-top) + 45px));
     }
-
+    .search_routes_result[p="1"] {
+      display: block;
+    }
     .search_routes_result li.search_result_r {
       list-style: none;
       margin: 0px;
@@ -3078,7 +3080,6 @@
   function opensearch() {
     if (search_page_is_open === 0) {
       search_page_is_open = 1
-      fade(document.querySelector('.search_routes_result'), 'In', 'block')
       $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
       n_watchPosition()
     }
