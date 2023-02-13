@@ -864,15 +864,16 @@
       width: 100%;
       height: calc(var(--k-window-h) - 55px);
       overflow: scroll;
-      display: none;
+      display: block;
       user-select: none;
       -webkit-user-select: none;
       transition: 0.35s;
+      opacity: 0;
+      transform: translateX(0px) translateY(calc(var(--k-search-top) + 45px));
     }
 
     .search_routes_result[p="1"] {
       position: fixed;
-      display: block;
     }
 
     .search_routes_result li.search_result_r {
@@ -1898,12 +1899,12 @@
     }
     message = String(message)
     var all_prompt = document.querySelectorAll('.prompt')
-    if(!(all_prompt === null)) {
+    if (!(all_prompt === null)) {
       var all_prompt_len = all_prompt.length
-      for(var e = 0;e<all_prompt_len;e++) {
+      for (var e = 0; e < all_prompt_len; e++) {
         all_prompt[e].remove()
-        }
       }
+    }
     var at = 270
     translateY = -10
     var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -3347,18 +3348,18 @@
   function mixA(a, b, l) {
     return Math.floor(a * l + b * (1 - l))
   }
-  
+
   function saveOptions() {
-var options = $('.options_container input[type="checkbox"]')
-var options_len = options.length
-for(var h = 0;h<options_len;h++){
-var checked = options.eq(h).prop('checked')
-LS.setItem('bus_opt_' + options.eq(h).attr('name'),checked)
-}
-prompt_message('已儲存變更')
-}
-  
-  
+    var options = $('.options_container input[type="checkbox"]')
+    var options_len = options.length
+    for (var h = 0; h < options_len; h++) {
+      var checked = options.eq(h).prop('checked')
+      LS.setItem('bus_opt_' + options.eq(h).attr('name'), checked)
+    }
+    prompt_message('已儲存變更')
+  }
+
+
   /* initialize */
 
   initializeKeyboard()
@@ -3522,9 +3523,9 @@ prompt_message('已儲存變更')
     }
   }, { passive: false });
 
- ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
- ripple(document.querySelectorAll('.options_content label.options_switch'), 'var(--g-14b1ff)', 450)
- 
+  ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
+  ripple(document.querySelectorAll('.options_content label.options_switch'), 'var(--g-14b1ff)', 450)
+
   ifvisible.idle(function () {
     update_status = 3
   });
