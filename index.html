@@ -139,8 +139,8 @@
       width: 100%;
       overflow: hidden;
       background: var(--g-e3e3e3);
-      transition :0.35s;
-      transform:translateX(0px) translateY(0px);
+      transition: 0.35s;
+      transform: translateX(0px) translateY(0px);
     }
 
     .refresh_progress {
@@ -151,76 +151,81 @@
       height: 1.2px;
       width: 100%;
       transform: translateX(var(--o-refresh-progress));
-      
+
     }
-    
-  .refresh_progress_box[status="0"] .refresh_progress {
+
+    .refresh_progress_box[status="0"] .refresh_progress {
       background: var(--g-c7c7c7);
     }
-    
+
     .refresh_progress_box[l="0"] .refresh_progress {
       background: rgba(0, 0, 0, 0);
     }
-    
-       .refresh_progress_box[status="1"] ,
-             .refresh_progress_box[status="2"] ,
-                     .refresh_progress_box[status="3"] ,
-                             .refresh_progress_box[status="4"] {
+
+    .refresh_progress_box[status="1"],
+    .refresh_progress_box[status="2"],
+    .refresh_progress_box[status="3"],
+    .refresh_progress_box[status="4"] {
       height: 35px;
       overflow: hidden;
     }
-    
-      
+
+
     .refresh_progress_box[status="1"] {
       background: #c7424b;
     }
 
-.refresh_progress_box[status="2"] {
+    .refresh_progress_box[status="2"] {
       background: #42c78b;
     }
-    
-.refresh_progress_box[status="3"] {
+
+    .refresh_progress_box[status="3"] {
       background: #555;
     }
-    
-.refresh_progress_box[status="4"] {
+
+    .refresh_progress_box[status="4"] {
       background: #42c78b;
     }
-    
-.refresh_progress_box[status="1"]::after ,
-.refresh_progress_box[status="2"]::after ,
-.refresh_progress_box[status="3"]::after ,
-.refresh_progress_box[status="4"]::after {
-  content:'';
+
+    .refresh_progress_box[status="1"]::after,
+    .refresh_progress_box[status="2"]::after,
+    .refresh_progress_box[status="3"]::after,
+    .refresh_progress_box[status="4"]::after {
+      content: '';
       height: 35px;
       width: 100%;
       overflow: hidden;
-  color:#fff;
-  position:absolute;
-  top:0px;
-  left:0px;
-  font-size:16px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition :0.35s;
+      color: #fff;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.35s;
     }
-.refresh_progress_box[status="0"]::after{
-  height: 1.2px;
-  color:rgba(0,0,0,0);
-}
-.refresh_progress_box[status="1"]::after {
-  content:'網路錯誤'
-}
-.refresh_progress_box[status="2"]::after {
-  content:'已恢復網路連線'
-}
-.refresh_progress_box[status="3"]::after {
-  content:'已暫停自動更新'
-}
-.refresh_progress_box[status="4"]::after {
-  content:'已恢復自動更新'
-}
+
+    .refresh_progress_box[status="0"]::after {
+      height: 1.2px;
+      color: rgba(0, 0, 0, 0);
+    }
+
+    .refresh_progress_box[status="1"]::after {
+      content: '網路錯誤'
+    }
+
+    .refresh_progress_box[status="2"]::after {
+      content: '已恢復網路連線'
+    }
+
+    .refresh_progress_box[status="3"]::after {
+      content: '已暫停自動更新'
+    }
+
+    .refresh_progress_box[status="4"]::after {
+      content: '已恢復自動更新'
+    }
 
     .route_container {
       position: fixed;
@@ -1901,7 +1906,7 @@
     }
     return e + h + e
   }
-  
+
   function printStops(k, c, bp) {
     try {
       var pos_checkStops = function (h) {
@@ -2066,7 +2071,7 @@
             $(selector + ' .position').attr('d', nh)
             $(selector).attr('nh', nh)
           }
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status}
+          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
         }
       }
       if (!htm.hasOwnProperty('h_0')) {
@@ -2166,46 +2171,46 @@
   }
 
   function updateRealtimeJson(immediate_update) {
-    if(update_status === 0) {
+    if (update_status === 0) {
       updateBusEventJson()
-    $.ajax({
-      type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data, statusText, xhr) {
-        var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
-        b.arrayBuffer().then(bf => {
-          var z = pako.inflate(bf, { to: 'string' })
-          realtime_json = JSON.parse(z)
-          var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
-          var now = new Date()
-          var jn = 10000
-          update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 15000)
-          if (isNaN(update_interval)) {
-            update_interval = 10000
-          }
-          if (stops_json.loaded) {
-            var s = findStop(realtime_json, c_routeid, c_routeid_p)
-            var bb = findBus(busevent_json, c_routeid, c_routeid_p)
-            current_route_stops = s
-            printStops(s, '', bb)
-            realtime_last_update = new Date().getTime()
-            if (refresh_progress_l === 0) {
-              refresh_progress_l = 1
-              $('.refresh_progress_box').attr('l', '1')
+      $.ajax({
+        type: 'GET', url: realtime_api() + '?_=' + api_url_parameter(5 * 1000), async: true, cache: true, xhrFields: { responseType: 'blob' }, success: function (data, statusText, xhr) {
+          var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
+          b.arrayBuffer().then(bf => {
+            var z = pako.inflate(bf, { to: 'string' })
+            realtime_json = JSON.parse(z)
+            var last_modified = new Date(String(xhr.getResponseHeader('last-modified')))
+            var now = new Date()
+            var jn = 10000
+            update_interval = Math.min(Math.max(5000, Math.abs(last_modified.getTime() + jn - now.getTime())), 15000)
+            if (isNaN(update_interval)) {
+              update_interval = 10000
             }
-          }
-          if (!(immediate_update === true)) {
-            setTimeout(function () { updateRealtimeJson(false) }, update_interval);
-          }
-        });
-      }, error: function () {
+            if (stops_json.loaded) {
+              var s = findStop(realtime_json, c_routeid, c_routeid_p)
+              var bb = findBus(busevent_json, c_routeid, c_routeid_p)
+              current_route_stops = s
+              printStops(s, '', bb)
+              realtime_last_update = new Date().getTime()
+              if (refresh_progress_l === 0) {
+                refresh_progress_l = 1
+                $('.refresh_progress_box').attr('l', '1')
+              }
+            }
+            if (!(immediate_update === true)) {
+              setTimeout(function () { updateRealtimeJson(false) }, update_interval);
+            }
+          });
+        }, error: function () {
+          setTimeout(function () { updateRealtimeJson(false) }, 1000);
+        }
+      });
+    }
+    else {
+      if (!(immediate_update === true)) {
         setTimeout(function () { updateRealtimeJson(false) }, 1000);
       }
-    });
-}
-else {
-if (!(immediate_update === true)) {
-            setTimeout(function () { updateRealtimeJson(false) }, 1000);
-          }
-}
+    }
   }
   function updateBusEventJson() {
     $.ajax({
@@ -3246,22 +3251,22 @@ if (!(immediate_update === true)) {
   }, { passive: false });
 
   ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
-ifvisible.idle(function(){
-update_status = 3
-                $('.refresh_progress_box').attr('status','3')
-            });
+  ifvisible.idle(function () {
+    update_status = 3
+    $('.refresh_progress_box').attr('status', '3')
+  });
 
-            ifvisible.wakeup(function(){
-              update_status = 0
-              updateRealtimeJson(true)
-              setTimeout(function() {
-                 $('.refresh_progress_box').attr('status','4')
-},500)
-              setTimeout(function() {
-                 $('.refresh_progress_box').attr('status','0')
-},1500)
-            });
-            
+  ifvisible.wakeup(function () {
+    update_status = 0
+    updateRealtimeJson(true)
+    setTimeout(function () {
+      $('.refresh_progress_box').attr('status', '4')
+    }, 500)
+    setTimeout(function () {
+      $('.refresh_progress_box').attr('status', '0')
+    }, 1500)
+  });
+
 </script>
 
 </html>
