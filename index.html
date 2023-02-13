@@ -804,8 +804,8 @@
     .search[p="1"]::after {
       content: '';
       position: absolute;
-      top: 5px;
-      left: 0px;
+      top: 15px;
+      left: 55px;
       height: 25px;
       width: 1.5px;
       background: var(--g-333333);
@@ -816,6 +816,7 @@
       animation-iteration-count: infinite;
       transform-origin: top left;
       display: block;
+      transform: translateX(var(--cursor-offset));
     }
 
     @keyframes cursor {
