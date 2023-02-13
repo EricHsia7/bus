@@ -1418,6 +1418,39 @@
       width: 20px;
       height: 20px;
     }
+
+    .promptcenter {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--g-333333);
+      font-size: 15px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .promptcenter * {
+      color: var(--g-333333);
+      font-size: 15px;
+    }
+
+    .prompt {
+      width: clamp(180px, calc(100% - 20px), 450px);
+      height: 60px;
+      border-radius: 15px;
+      position: fixed;
+      left: 50%;
+      bottom: 0px;
+      opacity: 0;
+      transform: translateX(-50%) translateY(0px) scale(0.75);
+      background: rgba(var(--g-888888-r), var(--g-888888-g), var(--g-888888-b), 0.6);
+      will-change: transform, opacity;
+      -webkit-user-select: none;
+      user-select: none;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+    }
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -1842,6 +1875,37 @@
       element.classList.add(`fade-display-${display}`)
     }, { once: true })
   }
+  function prompt_message(message, duration) {
+    if (isNaN(duration)) {
+      duration = 1200
+    }
+    message = String(message)
+    var at = 375
+    translateY = -20
+    var idchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var prompt_id = "";
+    for (var i = 0; i < 8; i++) {
+      var idrandomNumber = Math.floor(Math.random() * idchars.length);
+      prompt_id += idchars.substring(idrandomNumber, idrandomNumber + 1);
+    }
+    var prompt_element = document.createElement('div')
+    prompt_element.id = prompt_id
+    prompt_element.classList.add('prompt')
+    var prompt_center_element = document.createElement('div')
+    prompt_center_element.classList.add('promptcenter')
+    prompt_center_element.innerText = message
+    prompt_element.appendChild(prompt_center_element)
+    var prompt_css = `.prompt_animation${prompt_id}{animation-name:prompt${prompt_id};animation-duration:${(duration + at * 2)}ms;animation-fill-mode:forwards;animation-timing-function:ease-in-out}@keyframes prompt${prompt_id}{0%{opacity:0;transform:translateX(-50%) translateY(${60}px) scale(1);}${Math.floor((at) / (duration + at + 150) * 100)}%{opacity:1;transform:translateX(-50%) translateY(${translateY}px) scale(1);}${Math.floor((at + duration) / (duration + at + 150) * 100)}%{opacity:1;transform:translateX(-50%) translateY(${translateY}px) scale(1);}100%{opacity:0;transform:translateX(-50%) translateY(${60}px) scale(1);}}`
+    var prompt_css_element = document.createElement('style')
+    prompt_element.appendChild(prompt_css_element)
+    document.body.appendChild(prompt_element)
+    document.getElementById(prompt_id).addEventListener('animationend', function () {
+      if (!(document.getElementById(prompt_id) === null)) {
+        document.getElementById(prompt_id).remove()
+      }
+    }, { once: true })
+  }
+
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
