@@ -140,6 +140,40 @@
       background: var(--g-ffffff);
     }
 
+    .back_btn,
+    .info_btn,
+    .search_back_btn {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+      border-radius: 35px;
+    }
+
+    .back_btn,
+    .search_back_btn {
+      top: 7.5px;
+      left: 7.5px;
+    }
+
+    .info_btn {
+      top: 7.5px;
+      right: 7.5px;
+    }
+
+    .back_btn svg,
+    .info_btn svg,
+    .search_back_btn svg {
+      width: 22px;
+      height: 22px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
     .refresh_progress_box {
       position: fixed;
       top: 95px;
@@ -930,11 +964,11 @@
     }
 
     .search_back_btn {
-      display: none
+      display: none;
     }
 
     .search_back_btn[p="1"] {
-      display: block;
+      display: flex;
     }
 
     .routes_keyboard {
@@ -990,39 +1024,7 @@
       color: var(--g-333333);
     }
 
-    .back_btn,
-    .info_btn,
-    .search_back_btn {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      user-select: none;
-      -webkit-user-select: none;
-      border-radius: 35px;
-    }
 
-    .back_btn,
-    .search_back_btn {
-      top: 7.5px;
-      left: 7.5px;
-    }
-
-    .info_btn {
-      top: 7.5px;
-      right: 7.5px;
-    }
-
-    .back_btn svg,
-    .info_btn svg,
-    .search_back_btn svg {
-      width: 22px;
-      height: 22px;
-      user-select: none;
-      -webkit-user-select: none;
-    }
 
     .bus_info_mask,
     .route_info_mask {
