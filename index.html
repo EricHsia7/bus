@@ -182,7 +182,6 @@
       width: 100%;
       overflow: hidden;
       background: #555;
-      
     }
     
 .refresh_progress_box[status="4"] {
@@ -190,7 +189,6 @@
       width: 100%;
       overflow: hidden;
       background: #42c78b;
-   
     }
     
 .refresh_progress_box[status="1"]::after ,
@@ -211,7 +209,10 @@
   align-items:center;
   transition :0.35s;
     }
-
+.refresh_progress_box[status="0"]::after{
+  height: 1.2px;
+  color:rgba(0,0,0,0)
+      }
 .refresh_progress_box[status="1"]::after {
   content:'網路錯誤'
 }
