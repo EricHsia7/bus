@@ -147,86 +147,12 @@
       position: absolute;
       top: 0px;
       left: 0px;
-      background: rgba(0, 0, 0, 0);
+      background: var(--g-c7c7c7);
       height: 1.2px;
       width: 100%;
       transform: translateX(var(--o-refresh-progress));
-
     }
-
-    .refresh_progress_box[status="0"] .refresh_progress {
-      background: var(--g-c7c7c7);
-    }
-
-    .refresh_progress_box[l="0"] .refresh_progress {
-      background: rgba(0, 0, 0, 0);
-    }
-
-    .refresh_progress_box[status="1"],
-    .refresh_progress_box[status="2"],
-    .refresh_progress_box[status="3"],
-    .refresh_progress_box[status="4"] {
-      height: 35px;
-      overflow: hidden;
-    }
-
-
-    .refresh_progress_box[status="1"] {
-      background: #c7424b;
-    }
-
-    .refresh_progress_box[status="2"] {
-      background: #42c78b;
-    }
-
-    .refresh_progress_box[status="3"] {
-      background: #555;
-    }
-
-    .refresh_progress_box[status="4"] {
-      background: #42c78b;
-    }
-
-    .refresh_progress_box[status="1"]::after,
-    .refresh_progress_box[status="2"]::after,
-    .refresh_progress_box[status="3"]::after,
-    .refresh_progress_box[status="4"]::after {
-      content: '';
-      height: 35px;
-      width: 100%;
-      overflow: hidden;
-      color: #fff;
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      font-size: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.35s;
-    }
-
-    .refresh_progress_box[status="0"]::after {
-      height: 1.2px;
-      color: rgba(0, 0, 0, 0);
-    }
-
-    .refresh_progress_box[status="1"]::after {
-      content: '網路錯誤'
-    }
-
-    .refresh_progress_box[status="2"]::after {
-      content: '已恢復網路連線'
-    }
-
-    .refresh_progress_box[status="3"]::after {
-      content: '已暫停自動更新'
-    }
-
-    .refresh_progress_box[status="4"]::after {
-      content: '已恢復自動更新'
-    }
-
+    
     .route_container {
       position: fixed;
       top: 0px;
@@ -3253,18 +3179,11 @@
   ripple(document.querySelectorAll('.tabs .tab,.back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
   ifvisible.idle(function () {
     update_status = 3
-    $('.refresh_progress_box').attr('status', '3')
   });
 
   ifvisible.wakeup(function () {
     update_status = 0
     updateRealtimeJson(true)
-    setTimeout(function () {
-      $('.refresh_progress_box').attr('status', '4')
-    }, 500)
-    setTimeout(function () {
-      $('.refresh_progress_box').attr('status', '0')
-    }, 1500)
   });
 
 </script>
