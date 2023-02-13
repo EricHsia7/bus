@@ -140,6 +140,7 @@
       overflow: hidden;
       background: var(--g-e3e3e3);
       transition :0.35s;
+      transform:translateX(0px) translateY(0px);
     }
 
     .refresh_progress {
@@ -161,33 +162,31 @@
       background: rgba(0, 0, 0, 0);
     }
     
-    .refresh_progress_box[status="1"] {
+       .refresh_progress_box[status="1"] ,
+             .refresh_progress_box[status="2"] ,
+                     .refresh_progress_box[status="3"] ,
+                             .refresh_progress_box[status="4"] {
+      transform:translateX(5px) translateY(5px);
+      border-radius:8px;
       height: 35px;
-      width: 100%;
+      width: calc(100% - 10px);
       overflow: hidden;
-      background: #c7424b;
+    }
+    
       
+    .refresh_progress_box[status="1"] {
+      background: #c7424b;
     }
 
 .refresh_progress_box[status="2"] {
-      height: 35px;
-      width: 100%;
-      overflow: hidden;
       background: #42c78b;
-      
     }
     
 .refresh_progress_box[status="3"] {
-      height: 35px;
-      width: 100%;
-      overflow: hidden;
       background: #555;
     }
     
 .refresh_progress_box[status="4"] {
-      height: 35px;
-      width: 100%;
-      overflow: hidden;
       background: #42c78b;
     }
     
@@ -211,8 +210,8 @@
     }
 .refresh_progress_box[status="0"]::after{
   height: 1.2px;
-  color:rgba(0,0,0,0)
-      }
+  color:rgba(0,0,0,0);
+}
 .refresh_progress_box[status="1"]::after {
   content:'網路錯誤'
 }
