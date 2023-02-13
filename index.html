@@ -3073,7 +3073,7 @@
   function opensearch() {
     if (search_page_is_open === 0) {
       search_page_is_open = 1
-      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+      $('.search,.search_routes_result,.routes_keyboard').attr('p', '1')
       n_watchPosition()
     }
 
@@ -3082,7 +3082,7 @@
   function closeopensearch() {
     if (search_page_is_open === 1) {
       search_page_is_open = 0
-      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+      $('.search,.search_routes_result,.routes_keyboard').attr('p', '0')
     }
   }
   function openoptions() {
