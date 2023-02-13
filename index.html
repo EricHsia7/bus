@@ -864,16 +864,15 @@
       width: 100%;
       height: calc(var(--k-window-h) - 55px);
       overflow: scroll;
-      display: block;
+      display: none;
       user-select: none;
       -webkit-user-select: none;
       transition: 0.35s;
-      opacity: 0;
       transform: translateX(0px) translateY(calc(var(--k-search-top) + 45px));
     }
 
     .search_routes_result[p="1"] {
-      position: fixed;
+      transform: translateX(0px) translateY(0px);
     }
 
     .search_routes_result li.search_result_r {
@@ -3087,14 +3086,21 @@
   }
 
   function opensearch() {
-    search_page_is_open = 1
-    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
-    n_watchPosition()
+    if (search_page_is_open === 0) {
+      search_page_is_open = 1
+      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '1')
+      n_watchPosition()
+      fade(document.querySelector('.search_routes_result'), 'In', 'block')
+    }
+
   }
 
   function closeopensearch() {
-    search_page_is_open = 0
-    $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+    if (search_page_is_open === 1) {
+      search_page_is_open = 0
+      $('.search,.search_routes_result,.routes_keyboard,#search_routes,.input_placeholder,.back_btn').attr('p', '0')
+      fade(document.querySelector('.search_routes_result'), 'Out', 'none')
+    }
   }
   function openoptions() {
     fade(document.querySelector('.options_container'), 'In', 'block')
