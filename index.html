@@ -142,7 +142,8 @@
 
     .back_btn,
     .info_btn,
-    .search_back_btn {
+    .search_back_btn,
+    .options_btn {
       position: absolute;
       width: 40px;
       height: 40px;
@@ -160,14 +161,16 @@
       left: 7.5px;
     }
 
-    .info_btn {
+    .info_btn,
+    .options_btn {
       top: 7.5px;
       right: 7.5px;
     }
 
     .back_btn svg,
     .info_btn svg,
-    .search_back_btn svg {
+    .search_back_btn svg,
+    .options_btn svg {
       width: 22px;
       height: 22px;
       user-select: none;
@@ -1463,6 +1466,12 @@
 </head>
 
 <body>
+<button class="options_btn" onclick="openOptions()">
+        <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path d="M29.84 48L34.64 48L34.64 28.8L29.84 28.8L29.84 48ZM32 22.88C32.7467 22.88 33.3733 22.64 33.88 22.16C34.3867 21.68 34.64 21.0667 34.64 20.32C34.64 19.5733 34.3867 18.9333 33.88 18.4C33.3733 17.8667 32.7467 17.6 32 17.6C31.2533 17.6 30.6267 17.8667 30.12 18.4C29.6133 18.9333 29.36 19.5733 29.36 20.32C29.36 21.0667 29.6133 21.68 30.12 22.16C30.6267 22.64 31.2533 22.88 32 22.88ZM32 64C27.6267 64 23.4933 63.16 19.6 61.48C15.7067 59.8 12.3067 57.5067 9.4 54.6C6.49333 51.6933 4.2 48.2933 2.52 44.4C0.84 40.5067 1.77636e-15 36.3467 1.77636e-15 31.92C1.77636e-15 27.5467 0.84 23.4133 2.52 19.52C4.2 15.6267 6.49333 12.24 9.4 9.36C12.3067 6.48 15.7067 4.2 19.6 2.52C23.4933 0.84 27.6533 1.77636e-15 32.08 1.77636e-15C36.4533 1.77636e-15 40.5867 0.84 44.48 2.52C48.3733 4.2 51.76 6.48 54.64 9.36C57.52 12.24 59.8 15.6267 61.48 19.52C63.16 23.4133 64 27.5733 64 32C64 36.3733 63.16 40.5067 61.48 44.4C59.8 48.2933 57.52 51.6933 54.64 54.6C51.76 57.5067 48.3733 59.8 44.48 61.48C40.5867 63.16 36.4267 64 32 64ZM32.08 59.2C39.6 59.2 46 56.5467 51.28 51.24C56.56 45.9333 59.2 39.4933 59.2 31.92C59.2 24.4 56.56 18 51.28 12.72C46 7.44 39.5733 4.8 32 4.8C24.48 4.8 18.0667 7.44 12.76 12.72C7.45333 18 4.8 24.4267 4.8 32C4.8 39.52 7.45333 45.9333 12.76 51.24C18.0667 56.5467 24.5067 59.2 32.08 59.2Z" fill="var(--g-333333)" fill-rule="nonzero" opacity="1" stroke="none" />
+        </svg>
+      </button>
+      
   <div class="search" p="0">
     <div class="input_placeholder">搜尋路線</div>
     <input type="text" placeholder="搜尋路線" id="search_routes" readonly="readonly">
@@ -3480,7 +3489,7 @@
     }
   }, { passive: false });
 
-  ripple(document.querySelectorAll('.tabs .tab,.back_btn,.search_back_btn,.route_container .title .info_btn'), 'var(--g-333333)', 450)
+  ripple(document.querySelectorAll('.tabs .tab,.back_btn,.search_back_btn,.route_container .title .info_btn,.options_btn'), 'var(--g-333333)', 450)
   ripple(document.querySelectorAll('.options_content label.options_switch'), 'var(--g-14b1ff)', 450)
 
   ifvisible.idle(function () {
