@@ -2369,7 +2369,7 @@
       }
     t = parseInt(t)
     if (getOption('options_reveal_estimate_time_exact_seconds')) {
-      var time = padding((t - (t % 60))/ 60) + ':' + (t % 60)
+      var time = padding((t - (t % 60))/ 60) + ':' + padding(t % 60)
     }
     else {
       var time = Math.round(t / 60) + '分'
