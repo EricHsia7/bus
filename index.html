@@ -2361,7 +2361,7 @@
   function timeStatus(t) {
     t = parseInt(t)
     if (getOption('options_reveal_estimate_time_exact_seconds')) {
-      var time = (t - (t % 60))/ 60 '分' + (t % 60) + '秒'
+      var time = (t - (t % 60))/ 60 + '分' + (t % 60) + '秒'
     }
     else {
       var time = Math.round(t / 60) + '分'
