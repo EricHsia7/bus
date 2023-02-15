@@ -2359,9 +2359,17 @@
   }
 
   function timeStatus(t) {
+    var padding = function(j) {
+      if(j<10) {
+        return '0' + j
+        }
+        else {
+          return j
+          }
+      }
     t = parseInt(t)
     if (getOption('options_reveal_estimate_time_exact_seconds')) {
-      var time = (t - (t % 60))/ 60 + '分' + (t % 60) + '秒'
+      var time = padding((t - (t % 60))/ 60) + ':' + (t % 60)
     }
     else {
       var time = Math.round(t / 60) + '分'
