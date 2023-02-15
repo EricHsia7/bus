@@ -3353,7 +3353,7 @@
         if (options.hasOwnProperty(key)) {
           if (LS.hasOwnProperty(key)) {
             option = String(LS.getItem(key))
-            if (!isNaN(parseFloat(option))) {
+            if (isNaN(parseFloat(option))) {
               if (option === 'true') {
                 option = true
               }
