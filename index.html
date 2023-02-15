@@ -1626,7 +1626,7 @@
 
   const LS = window.localStorage
   const SS = window.sessionStorage
-  let options_list = ['bus_opt_options_reveal_estimate_time_exact_seconds']
+  let options_list = ['options_reveal_estimate_time_exact_seconds']
   var options = {
     'bus_opt_options_reveal_estimate_time_exact_seconds': false
   }
@@ -3346,7 +3346,7 @@
     return options[key]
   }
   function initializeAllOptions() {
-    var initializeOption = function (name) {
+    var initializeOption = function (key) {
       var key = 'bus_opt_' + name
       var option = false
       if (options_list.indexOf(key) > -1) {
