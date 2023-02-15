@@ -1628,7 +1628,7 @@
   const SS = window.sessionStorage
   let options_list = ['options_reveal_estimate_time_exact_seconds']
   var options = {
-    'bus_opt_options_reveal_estimate_time_exact_seconds': false
+    'options_reveal_estimate_time_exact_seconds': false
   }
 
   let cities = ['blobbus', 'ntpcbus']
@@ -3342,15 +3342,14 @@
   }
 
   function getOption(name) {
-    var key = 'bus_opt_' + name
-    return options[key]
+    return options[name]
   }
   function initializeAllOptions() {
     var initializeOption = function (name) {
       var key = 'bus_opt_' + name
       var option = false
-      if (options_list.indexOf(key) > -1) {
-        if (options.hasOwnProperty(key)) {
+      if (options_list.indexOf(name) > -1) {
+        if (options.hasOwnProperty(name)) {
           if (LS.hasOwnProperty(key)) {
             option = String(LS.getItem(key))
             if (isNaN(parseFloat(option))) {
