@@ -2368,7 +2368,8 @@
           }
       }
     t = parseInt(t)
-    if (getOption('options_reveal_estimate_time_exact_seconds')) {
+    var opt = getOption('options_reveal_estimate_time_exact_seconds')
+    if (opt) {
       var time = padding((t - (t % 60))/ 60) + ':' + padding(t % 60)
     }
     else {
@@ -2388,8 +2389,13 @@
     }
     if (t <= 180) {
       if (t <= 100) {
+        if(opt) {
+          return return { status: 2, text: time , tr: true }
+        }
+        else {
         return { status: 2, text: '進站中', tr: true }
       }
+        }
       else {
         return { status: 1, text: time, tr: true }
       }
