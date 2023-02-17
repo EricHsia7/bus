@@ -1630,7 +1630,7 @@
   var options = {
     'options_reveal_estimate_time_exact_seconds': false
   }
-
+  var options_pulled = 0
   let cities = ['blobbus', 'ntpcbus']
   var city = 0
   var routes_data_city = 0
@@ -2359,18 +2359,18 @@
   }
 
   function timeStatus(t) {
-    var padding = function(j) {
-      if(j<10) {
+    var padding = function (j) {
+      if (j < 10) {
         return '0' + j
-        }
-        else {
-          return j
-          }
       }
+      else {
+        return j
+      }
+    }
     t = parseInt(t)
     var opt = getOption('options_reveal_estimate_time_exact_seconds')
     if (opt) {
-      var time = padding((t - (t % 60))/ 60) + ':' + padding(t % 60)
+      var time = padding((t - (t % 60)) / 60) + ':' + padding(t % 60)
     }
     else {
       var time = Math.round(t / 60) + '分'
@@ -2389,18 +2389,18 @@
     }
     if (t <= 180) {
       if (t <= 100) {
-        if(opt) {
-          if(t <= 10) {
-            return { status: 2, text: '進站中' , tr: true }
-            }
-            else {
-          return { status: 2, text: time , tr: true }
+        if (opt) {
+          if (t <= 10) {
+            return { status: 2, text: '進站中', tr: true }
+          }
+          else {
+            return { status: 2, text: time, tr: true }
           }
         }
         else {
-        return { status: 2, text: '進站中', tr: true }
-      }
+          return { status: 2, text: '進站中', tr: true }
         }
+      }
       else {
         return { status: 1, text: time, tr: true }
       }
@@ -3129,6 +3129,10 @@
   }
   function openoptions() {
     fade(document.querySelector('.options_container'), 'In', 'block')
+    if (options_pulled === 0) {
+      options_pulled = 1
+      pullOptionsFromLS()
+    }
   }
   function closeoptions() {
     fade(document.querySelector('.options_container'), 'Out', 'none')
@@ -3365,17 +3369,16 @@
 
     for (var h = 0; h < options_element_len; h++) {
       var checked = LS.getItem('bus_opt_' + options_element.eq(h).attr('name'))
-      if(checked === 'true') {
+      if (checked === 'true') {
         checked = true
       }
       else {
-        if(checked === 'false') {
+        if (checked === 'false') {
           checked = false
         }
       }
-      options_element.eq(h).prop('checked',checked)
+      options_element.eq(h).prop('checked', checked)
     }
-    prompt_message('已儲存變更')
   }
 
   function getOption(name) {
