@@ -3457,7 +3457,7 @@
   }
   function refreshPage() {
     var current_url = new URL(location.href)
-    current_url.searchParams.set('v', gid())
+    current_url.searchParams.set('v', String(LS.getItem('bus_version')))
     location.replace(current_url.toString())
   }
 
