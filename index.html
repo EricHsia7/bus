@@ -3359,6 +3359,24 @@
     }
     prompt_message('已儲存變更')
   }
+  function pullOptionsFromLS() {
+    var options_element = $('.options_container input[type="checkbox"]')
+    var options_element_len = options_element.length
+
+    for (var h = 0; h < options_element_len; h++) {
+      var checked = LS.getItem('bus_opt_' + options_element.eq(h).attr('name'))
+      if(checked === 'true') {
+        checked = true
+      }
+      else {
+        if(checked === 'false') {
+          checked = false
+        }
+      }
+      options_element.eq(h).prop('checked',checked)
+    }
+    prompt_message('已儲存變更')
+  }
 
   function getOption(name) {
     return options[name]
