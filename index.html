@@ -1569,6 +1569,16 @@
           <div class="options_switch_internal_checkmark b"></div>
         </label>
       </li>
+      <li class="option" b="0">
+        <div class="option_title">顯示目前位置</div>
+        <label for="options_display_user_current_position" class="options_switch" onclick="saveOptions()">
+          <input type="checkbox" id="options_display_user_current_position" name="options_display_user_current_position">
+          <div class="options_switch_box"></div>
+          <div class="options_switch_internal_box"></div>
+          <div class="options_switch_internal_checkmark a"></div>
+          <div class="options_switch_internal_checkmark b"></div>
+        </label>
+      </li>
 
       <div class="options_group_title">版本</div>
       <li class="option" b="0">
@@ -1647,10 +1657,11 @@
 
   const LS = window.localStorage
   const SS = window.sessionStorage
-  let options_list = ['options_reveal_estimate_time_exact_seconds', 'options_automatic_refresh']
+  let options_list = ['options_reveal_estimate_time_exact_seconds', 'options_automatic_refresh', 'options_display_user_current_position']
   var options = {
     'options_reveal_estimate_time_exact_seconds': false,
-    'options_automatic_refresh': true
+    'options_automatic_refresh': true,
+    'options_display_user_current_position': false
   }
   var options_pulled = 0
   let cities = ['blobbus', 'ntpcbus']
@@ -3270,7 +3281,7 @@
   }
 
   function n_watchPosition() {
-    if (watch_position_permission_requested === 0) {
+    if (watch_position_permission_requested === 0 && getOption('options_display_user_current_position')) {
       watch_position_permission_requested = 1
       watch_position = navigator.geolocation.watchPosition(function (position) {
         pos_lat = position.coords.latitude
