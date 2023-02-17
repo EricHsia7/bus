@@ -3369,12 +3369,14 @@
 
     for (var h = 0; h < options_element_len; h++) {
       var checked = LS.getItem('bus_opt_' + options_element.eq(h).attr('name'))
-      if (checked === 'true') {
-        checked = true
-      }
-      else {
-        if (checked === 'false') {
-          checked = false
+      if (isNaN(parseFloat(checked))) {
+        if (checked === 'true') {
+          checked = true
+        }
+        else {
+          if (checked === 'false') {
+            checked = false
+          }
         }
       }
       options_element.eq(h).prop('checked', checked)
