@@ -3457,7 +3457,7 @@
         type: 'GET', url: version_identification_feed_url + '&_=' + api_url_parameter(60 * 60 * 5 * 1000), async: true, cache: true, xhrFields: { responseType: 'text' }, success: function (data) {
           data = data.trim()
           if (LS.hasOwnProperty('bus_version')) {
-            if (String(LS.getItem('bus_version')) === data) {
+            if (!(String(LS.getItem('bus_version')) === data)) {
               refreshPage()
             }
           }
