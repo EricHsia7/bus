@@ -3367,6 +3367,7 @@
       LS.setItem('bus_opt_' + options.eq(h).attr('name'), checked)
     }
     prompt_message('已儲存變更')
+    initializeAllOptions()
   }
   function pullOptionsFromLS() {
     var options_element = $('.options_container input[type="checkbox"]')
