@@ -1569,8 +1569,19 @@
           <div class="options_switch_internal_checkmark b"></div>
         </label>
       </li>
-      <div class="options_group_title">其他</div>
-      <li class="option" b="0" onclick="location.reload()">
+
+      <div class="options_group_title">版本</div>
+      <li class="option" b="0">
+        <div class="option_title">自動更新</div>
+        <label for="options_automatic_refresh" class="options_automatic_refresh" onclick="saveOptions()">
+          <input type="checkbox" id="options_automatic_refresh" name="options_automatic_refresh">
+          <div class="options_switch_box"></div>
+          <div class="options_switch_internal_box"></div>
+          <div class="options_switch_internal_checkmark a"></div>
+          <div class="options_switch_internal_checkmark b"></div>
+        </label>
+      </li>
+      <li class="option" b="0" onclick="refreshPage()">
         <div class="option_title">重新整理</div>
         <div class="option_icon"></div>
       </li>
@@ -1629,11 +1640,17 @@
     return url.searchParams.get(p)
   }
 
+  function customurlprams(str, p) {
+    var url = new URL(str);
+    return url.searchParams.get(p)
+  }
+
   const LS = window.localStorage
   const SS = window.sessionStorage
-  let options_list = ['options_reveal_estimate_time_exact_seconds']
+  let options_list = ['options_reveal_estimate_time_exact_seconds', 'options_automatic_refresh']
   var options = {
-    'options_reveal_estimate_time_exact_seconds': false
+    'options_reveal_estimate_time_exact_seconds': false,
+    'options_automatic_refresh': true
   }
   var options_pulled = 0
   let cities = ['blobbus', 'ntpcbus']
@@ -3369,6 +3386,7 @@
     prompt_message('已儲存變更')
     initializeAllOptions()
   }
+
   function pullOptionsFromLS() {
     var options_element = $('.options_container input[type="checkbox"]')
     var options_element_len = options_element.length
@@ -3392,12 +3410,14 @@
   function getOption(name) {
     return options[name]
   }
+
   function initializeAllOptions() {
     var initializeOption = function (name) {
       var key = 'bus_opt_' + name
       var option = false
       if (options_list.indexOf(name) > -1) {
         if (options.hasOwnProperty(name)) {
+          option = options[name]
           if (LS.hasOwnProperty(key)) {
             option = String(LS.getItem(key))
             if (isNaN(parseFloat(option))) {
@@ -3424,7 +3444,31 @@
       initializeOption(options_list[i])
     }
   }
+  function refreshPage() {
+    var current_url = new URL(location.href)
+    current_url.searchParams.set('v', gid())
+    location.replace(current_url.toString())
+  }
 
+  function checkVersion() {
+    if (getOption('options_automatic_refresh')) {
+      var version_identification_feed_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFLTdqR4_v6EtiuDBtVqsvErHwfhJ0oVd9jSZn-3ByKTzkM31DXZiTYG2Jw5RK8HBu5T5_PGoPyk8I/pub?gid=0&single=true&output=csv'
+      $.ajax({
+        type: 'GET', url: version_identification_feed_url + '&_=' + api_url_parameter(60 * 60 * 5 * 1000), async: true, cache: true, xhrFields: { responseType: 'text' }, success: function (data) {
+          data = data.trim()
+          if (LS.hasOwnProperty('bus_version')) {
+            if (String(LS.getItem('bus_version')) === data) {
+              refreshPage()
+            }
+          }
+          else {
+            refreshPage()
+          }
+          LS.setItem('bus_version', data)
+        }
+      });
+    }
+  }
   /* initialize */
 
   initializeAllOptions()
@@ -3598,6 +3642,8 @@
     update_status = 0
     updateRealtimeJson(true)
   });
+
+  checkVersion()
 
 </script>
 
