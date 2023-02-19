@@ -1977,7 +1977,15 @@
       }
     }, { once: true })
   }
-
+function searchItemsbyname(name) {
+    var gh = []
+    for (var t in LS) {
+      if (String(t).indexOf(name) > -1) {
+        gh.push(t)
+      }
+    }
+    return gh
+  }
   function api_url_parameter(cahce_time) {
     var t = new Date().getTime()
     var g = (t / cahce_time).toFixed(0) * cahce_time
