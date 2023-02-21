@@ -2215,7 +2215,7 @@ function searchItemsbyname(name) {
     }
     return e + h + e
   }
-
+var realtime_last_update_a = 0
   function printStops(k, c, bp, api_update_time_ms,now_time_ms) {
     try {
       var pos_checkStops = function (h) {
@@ -2322,13 +2322,22 @@ function searchItemsbyname(name) {
         }
         if (g) {
           var status_time_g = 0
+          var status_time_r = 0
           var status = { 'status': 10, 'text': '', 'tr': false }
         }
         else {
-          
-          var status_time_g = parseInt(k[w].EstimateTime)
+          var status_time_p = -200
+          if(route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time_r')) {
+            status_time_p = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['status_time_r']
+            }
+
+          var status_time_r = parseInt(k[w].EstimateTime)
+          var status_time_g = status_time_r*1000
+          if(Math.abs(status_time_p-status_time_r)>0) {
+            realtime_last_update_a = api_update_time_ms
+            }
           if(status_time_g>0) {
-            status_time_g = (status_time_g*1000+api_update_time_ms-now_time_ms)/1000
+            status_time_g = (status_time_g+api_update_time_ms-now_time_ms)/1000
             if(status_time_g<0) {
               status_time_g = 0
               }
@@ -2387,7 +2396,7 @@ function searchItemsbyname(name) {
             $(selector + ' .position').attr('d', nh)
             $(selector).attr('nh', nh)
           }
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status }
+          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status ,'source_status_time':status_time_r}
         }
       }
       if (!htm.hasOwnProperty('h_0')) {
