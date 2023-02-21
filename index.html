@@ -2216,7 +2216,7 @@ function searchItemsbyname(name) {
     return e + h + e
   }
 
-  function printStops(k, c, bp) {
+  function printStops(k, c, bp, api_update_time_ms) {
     try {
       var pos_checkStops = function (h) {
         if (h.length <= 0) {
@@ -2325,7 +2325,14 @@ function searchItemsbyname(name) {
           var status = { 'status': 10, 'text': '', 'tr': false }
         }
         else {
+          
           var status_time_g = parseInt(k[w].EstimateTime)
+          if(status_time_g>0) {
+            status_time_g = (status_time_g*1000+api_update_time_ms-now_time_ms)/1000
+            if(status_time_g<0) {
+              status_time_g = 0
+              }
+            }
           var status = timeStatus(status_time_g)
         }
         if (!g) {
@@ -2523,7 +2530,7 @@ function searchItemsbyname(name) {
               var s = findStop(realtime_json, c_routeid, c_routeid_p)
               var bb = findBus(busevent_json, c_routeid, c_routeid_p)
               current_route_stops = s
-              printStops(s, '', bb)
+              printStops(s, '', bb,last_modified.getTime(),now.getTime())
               realtime_last_update = new Date().getTime()
               if (refresh_progress_l === 0) {
                 refresh_progress_l = 1
