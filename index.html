@@ -2215,8 +2215,11 @@
     }
     return e + h + e
   }
-  var realtime_last_update_a = 0
+  var realtime_last_update_a = 0;
   function printStops(k, c, bp, api_update_time_ms, now_time_ms) {
+    if(realtime_last_update_a === 0) {
+      realtime_last_update_a = api_update_time_ms
+    }
     try {
       var pos_checkStops = function (h) {
         if (h.length <= 0) {
@@ -2339,7 +2342,7 @@
             realtime_last_update_a = api_update_time_ms
           }
           if (status_time_g > 0) {
-            status_time_g = (status_time_g + api_update_time_ms - now_time_ms) / 1000
+            status_time_g = (status_time_g + realtime_last_update_a - now_time_ms) / 1000
             if (status_time_g < 0) {
               status_time_g = 0
             }
