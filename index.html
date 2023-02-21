@@ -2337,14 +2337,14 @@
           }
 
           var status_time_r = parseInt(k[w].EstimateTime)
-          var status_time_g = status_time_r * 1000
+          var status_time_g = status_time_r*1
           if (!isNaN(status_time_p)) {
             if (Math.abs(status_time_p - status_time_r) > 0) {
               realtime_last_update_a = api_update_time_ms
             }
           }
-          if (status_time_g > 0) {
-            status_time_g = (status_time_g + realtime_last_update_a - now_time_ms) / 1000
+          if (status_time_r > 0) {
+            status_time_g = (status_time_g*1000 + realtime_last_update_a - now_time_ms) / 1000
             if (status_time_g < 0) {
               status_time_g = 0
             }
