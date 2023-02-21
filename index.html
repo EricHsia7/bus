@@ -1579,8 +1579,8 @@
           <div class="options_switch_internal_checkmark b"></div>
         </label>
       </li>
-<div class="options_group_title">資料</div>
-<li class="option" b="0" onclick="getRoutes(true)">
+      <div class="options_group_title">資料</div>
+      <li class="option" b="0" onclick="getRoutes(true)">
         <div class="option_title">立即更新路線資料</div>
         <div class="option_icon"></div>
       </li>
@@ -1604,7 +1604,7 @@
         <div class="option_title">重新整理</div>
         <div class="option_icon"></div>
       </li>
-      
+
     </div>
     <div class="options_title">
       選項
@@ -1977,7 +1977,7 @@
       }
     }, { once: true })
   }
-function searchItemsbyname(name) {
+  function searchItemsbyname(name) {
     var gh = []
     for (var t in LS) {
       if (String(t).indexOf(name) > -1) {
@@ -2215,8 +2215,8 @@ function searchItemsbyname(name) {
     }
     return e + h + e
   }
-var realtime_last_update_a = 0
-  function printStops(k, c, bp, api_update_time_ms,now_time_ms) {
+  var realtime_last_update_a = 0
+  function printStops(k, c, bp, api_update_time_ms, now_time_ms) {
     try {
       var pos_checkStops = function (h) {
         if (h.length <= 0) {
@@ -2327,21 +2327,23 @@ var realtime_last_update_a = 0
         }
         else {
           var status_time_p = -200
-          if(route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time_r')) {
-            status_time_p = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['status_time_r']
+          if (route_container_content['h_' + s.goBack].hasOwnProperty('b_' + k[w].StopID)) {
+            if (route_container_content['h_' + s.goBack]['b_' + k[w].StopID].hasOwnProperty('status_time_r')) {
+              status_time_p = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['status_time_r']
             }
+          }
 
           var status_time_r = parseInt(k[w].EstimateTime)
-          var status_time_g = status_time_r*1000
-          if(Math.abs(status_time_p-status_time_r)>0) {
+          var status_time_g = status_time_r * 1000
+          if (Math.abs(status_time_p - status_time_r) > 0) {
             realtime_last_update_a = api_update_time_ms
-            }
-          if(status_time_g>0) {
-            status_time_g = (status_time_g+api_update_time_ms-now_time_ms)/1000
-            if(status_time_g<0) {
+          }
+          if (status_time_g > 0) {
+            status_time_g = (status_time_g + api_update_time_ms - now_time_ms) / 1000
+            if (status_time_g < 0) {
               status_time_g = 0
-              }
             }
+          }
           var status = timeStatus(status_time_g)
         }
         if (!g) {
@@ -2396,7 +2398,7 @@ var realtime_last_update_a = 0
             $(selector + ' .position').attr('d', nh)
             $(selector).attr('nh', nh)
           }
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status ,'source_status_time':status_time_r}
+          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'source_status_time': status_time_r }
         }
       }
       if (!htm.hasOwnProperty('h_0')) {
@@ -2539,7 +2541,7 @@ var realtime_last_update_a = 0
               var s = findStop(realtime_json, c_routeid, c_routeid_p)
               var bb = findBus(busevent_json, c_routeid, c_routeid_p)
               current_route_stops = s
-              printStops(s, '', bb,new Date(realtime_json.EssentialInfo.UpdateTime).getTime(),now.getTime())
+              printStops(s, '', bb, new Date(realtime_json.EssentialInfo.UpdateTime).getTime(), now.getTime())
               realtime_last_update = new Date().getTime()
               if (refresh_progress_l === 0) {
                 refresh_progress_l = 1
@@ -2646,9 +2648,9 @@ var realtime_last_update_a = 0
       setRouteD()
     }
     else {
-      if(immediate_update) {
-                prompt_message('更新路線資料中')
-                }
+      if (immediate_update) {
+        prompt_message('更新路線資料中')
+      }
       $.ajax({
         type: 'GET', url: routes_api(routes_data_city), async: true, cache: false, xhrFields: { responseType: 'blob' }, success: function (data) {
           var b = new Blob([data.slice(0, data.size)], { type: 'application/gzip' });
@@ -2694,9 +2696,9 @@ var realtime_last_update_a = 0
               if (routes_json.c.hasOwnProperty('b_' + c_routeid)) {
                 c_routeid_p = String(routes_json.c['b_' + c_routeid].pid).split(',')
               }
-              if(immediate_update) {
+              if (immediate_update) {
                 prompt_message('路線資料更新成功')
-                }
+              }
               setRouteD()
             }
           });
