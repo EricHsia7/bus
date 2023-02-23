@@ -2393,7 +2393,7 @@
             $(selector).attr('nh', nh)
           }
           if(Math.abs(status_time_p-status_time_g)>0) {
-            status_time_change = new Date()
+            status_time_change = new Date().getTime()
             }
           route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'status_time_g': status_time_g ,'status_time_change':(status_time_change)}
         }
