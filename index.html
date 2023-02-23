@@ -2336,7 +2336,7 @@
               status_time_change = route_container_content['h_' + s.goBack]['b_' + k[w].StopID]['status_time_change']
             }
           }
-          
+
           var status_time_g = parseInt(k[w].EstimateTime)
           var status = timeStatus(status_time_g)
         }
@@ -2392,10 +2392,10 @@
             $(selector + ' .position').attr('d', nh)
             $(selector).attr('nh', nh)
           }
-          if(Math.abs(status_time_p-status_time_g)>0) {
+          if (Math.abs(status_time_p - status_time_g) > 0) {
             status_time_change = new Date().getTime()
-            }
-          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'status_time_g': status_time_g ,'status_time_change':(status_time_change)}
+          }
+          route_container_content['h_' + s.goBack]['b_' + k[w].StopID] = { 'hash': hash, 'bvhash': bvhash, 'statushash': statushash, 'status': status, 'status_time_g': status_time_g, 'status_time_change': (status_time_change) }
         }
       }
       if (!htm.hasOwnProperty('h_0')) {
@@ -3516,6 +3516,68 @@
       });
     }
   }
+
+  function createNetworkStatsChart() {
+    var stats_datas = searchItemsbyname('bus_network_stats_')
+    for (var o = 0; o < stats_datas.length; o++) {
+      if (LS.hasOwnProperty(stats_datas[o])) {
+        var data = parseFloat(String(LS.getItem(stats_datas[o])))
+        var date = String(stats_datas[o]).replaceAll('bus_network_stats_', '')
+        labels.push(date)
+        values.push(data)
+      }
+    }
+    var ctx = document.getElementById('stats_chart').getContext('2d');
+    var stats_chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'kb',
+          data: values,
+          cubicInterpolationMode: 'monotone',
+          tension: 0.9,
+          borderColor: 'rgba(var(--g-888888-r),var(--g-888888-g),var(--g-888888-b), 1)',
+          pointStyle: 'circle',
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 1.1,
+          fill: true,
+          backgroundColor: 'rgba(var(--g-888888-r),var(--g-888888-g),var(--g-888888-b), 0.5)'
+        }]
+      },
+      options: {
+        devicePixelRatio: window.devicePixelRatio * 3,
+        animation: true,
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            display: true,
+            grid: {
+              display: false
+            }
+          },
+          x: {
+            display: true,
+            grid: {
+              display: true
+            },
+            ticks: {
+              display: true
+            }
+          }
+        },
+        plugins: {
+          legend: false
+        },
+        tooltip: {
+          display: false
+        }
+      }
+    });
+  }
+
   /* initialize */
 
   initializeAllOptions()
