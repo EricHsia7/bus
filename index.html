@@ -1275,7 +1275,8 @@
       background-position-x: 100%;
     }
 
-    .options_container {
+    .options_container,.
+    .network_stats_container{
       position: fixed;
       top: 0px;
       left: 0px;
@@ -1288,7 +1289,7 @@
       display: none;
     }
 
-    .options_title {
+    .options_title,.network_stats_title {
       position: absolute;
       top: 0px;
       left: 0px;
@@ -1308,7 +1309,7 @@
       overflow: hidden;
     }
 
-    .options_content {
+    .options_content ,.network_stats_content{
       position: absolute;
       top: 55px;
       left: 0px;
@@ -1317,7 +1318,7 @@
       overflow: scroll;
     }
 
-    .options_content .options_group_title {
+    .options_content .options_group_title ,.network_stats_content .network_stats_title{
       color: var(--g-888888);
       user-select: none;
       -webkit-user-select: none;
@@ -1615,6 +1616,20 @@
       </button>
     </div>
   </div>
+  
+  
+    <div class="network_stats_container">
+    <div class="network_stats_content"></div>
+    <div class="network_stats_title">
+      網路用量統計
+      <button class="back_btn" onclick="closeoptions()">
+        <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path d="M32 64L0 32L32 0L36.2 4.2L11.4 29L64 29L64 35L11.4 35L36.2 59.8L32 64Z" fill="var(--g-333333)" fill-rule="evenodd" opacity="1" stroke="none" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
