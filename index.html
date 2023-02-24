@@ -3580,7 +3580,7 @@
 
     for (var o = 0; o < original_datas.length; o++) {
       labels.push(`${(original_datas[o].d.getMonth() + 1)}/${(original_datas[o].d.getDate())}`)
-      values.push(formatDataSize(original_datas[o].v))
+      values.push(original_datas[o].v)
     }
 
     var ctx = document.getElementById('stats_chart').getContext('2d');
