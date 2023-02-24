@@ -1432,6 +1432,52 @@
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
     }
+
+    .chart {
+      position: relative;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 300px;
+    }
+
+    .chart .chart_contents {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(var(--chart-datas-length), 1fr);
+
+    }
+
+    .chart .chart_contents .chart_bar {
+      position: relative;
+    }
+
+    .chart .chart_contents .chart_bar .block {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      width: clamp(5px, 80%, 45px);
+      height: calc((100% - 25px) * var(--chart-bar-height));
+      border-radius: 5px;
+    }
+
+    .chart .chart_contents .chart_bar .label {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      width: 100%;
+      height: 25px;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
   <style>
     .fade-display-none {
@@ -1623,7 +1669,7 @@
 
   <div class="network_stats_container">
     <div class="network_stats_content">
-      <canvas id="stats_chart"></canvas>
+      <canvas id="chart"></canvas>
     </div>
     <div class="network_stats_title">
       網路用量統計
@@ -1640,7 +1686,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ifvisible/1.0.6/ifvisible.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
   function NetworkStats_add(o) {
     var dd = new Date()
@@ -3582,56 +3627,26 @@
       labels.push(`${(original_datas[o].d.getMonth() + 1)}/${(original_datas[o].d.getDate())}`)
       values.push(original_datas[o].v)
     }
+    var manufactureBars = function (labels, values, max, min) {
+      var html = []
+      var identifies = []
+      var data_length = labels.length // labels.length === values.length
 
-    var ctx = document.getElementById('stats_chart').getContext('2d');
-    stats_chart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'size',
-          data: values,
-          cubicInterpolationMode: 'monotone',
-          tension: 0.9,
-          borderColor: getComputedStyle(document.documentElement).getPropertyValue('--g-14b1ff'),
-          pointStyle: 'circle',
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          borderWidth: 1.1,
-          fill: true,
-          backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--g-c7ecff')
-        }]
-      },
-      options: {
-        devicePixelRatio: window.devicePixelRatio * 3,
-        animation: true,
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            display: true,
-            grid: {
-              display: false
-            }
-          },
-          x: {
-            display: true,
-            grid: {
-              display: true
-            },
-            ticks: {
-              display: true
-            }
-          }
-        },
-        plugins: {
-          legend: false
-        },
-        tooltip: {
-          display: false
-        }
+      for (var f = 0; f < data_length; f++) {
+        var bar_id = gid('chart-bar')
+        var bar_html = `<div class="chart_bar" original-value="${values[f]}" id="${bar_id}"><div class="block" style="--chart-bar-height:${values[f] / (max)};"></div><div class="label">${labels[f]}</div></div>`
+        html.push(bar_html)
+        identifies.push(bar_id)
       }
-    });
+      return [html.join(''), identifies]
+    }
+
+    var chart_contents_html = manufactureBars(labels, values, Math.max(...values))
+    var chart_contents = document.createElement('div')
+    chart_contents.classList.add('chart_contents')
+    chart_contents.style.setProperty('--chart-datas-length', chart_contents_html[1].length)
+    chart_contents.innerHTML = chart_contents_html[0]
+    document.querySelector('.chart').appendChild(chart_contents)
   }
 
   /* initialize */
