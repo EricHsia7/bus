@@ -3281,7 +3281,9 @@
   }
   function closenetworkstats() {
     fade(document.querySelector('.network_stats_container'), 'Out', 'none', function () {
-      stats_chart.destroy();
+      if (!(document.querySelector('.chart .chart_contents') === null)) {
+        document.querySelector('.chart_contents').remove()
+      }
     })
   }
   function initializeKeyboard() {
@@ -3639,9 +3641,9 @@
       }
       return [html.join(''), identifies]
     }
-if(!(document.querySelector('.chart .chart_contents') === null)) {
-  document.querySelector('.chart_contents').remove()
-}
+    if (!(document.querySelector('.chart .chart_contents') === null)) {
+      document.querySelector('.chart_contents').remove()
+    }
     var chart_contents_html = manufactureBars(labels, values, Math.max(...values))
     var chart_contents = document.createElement('div')
     chart_contents.classList.add('chart_contents')
