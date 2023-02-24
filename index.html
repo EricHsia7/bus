@@ -3547,6 +3547,8 @@
   }
 
   function createNetworkStatsChart() {
+    var labels = []
+    var values = []
     var stats_datas = searchItemsbyname('bus_network_stats_')
     for (var o = 0; o < stats_datas.length; o++) {
       if (LS.hasOwnProperty(stats_datas[o])) {
