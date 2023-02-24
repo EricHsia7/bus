@@ -1812,7 +1812,7 @@
     { 'source': 'genus', 'short': false },
     { 'source': 'Id', 'short': false }
   ]
-
+var stats_chart
   let rdsn_len = routesDataShortName.length
   var update_interval = 10000
   var update_status = 0
@@ -3236,7 +3236,9 @@
     
   }
   function closenetworkstats() {
-    fade(document.querySelector('.network_stats_container'), 'Out', 'none')
+    fade(document.querySelector('.network_stats_container'), 'Out', 'none',function() {
+stats_chart.destroy();
+      })
   }
   function initializeKeyboard() {
     var htm = []
@@ -3559,7 +3561,7 @@
       }
     }
     var ctx = document.getElementById('stats_chart').getContext('2d');
-    var stats_chart = new Chart(ctx, {
+  stats_chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: labels,
