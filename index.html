@@ -3233,7 +3233,7 @@ var stats_chart
   
     function opennetworkstats() {
     fade(document.querySelector('.network_stats_container'), 'In', 'block')
-    
+    createNetworkStatsChart()
   }
   function closenetworkstats() {
     fade(document.querySelector('.network_stats_container'), 'Out', 'none',function() {
