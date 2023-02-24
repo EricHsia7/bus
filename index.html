@@ -3230,6 +3230,14 @@
   function closeoptions() {
     fade(document.querySelector('.options_container'), 'Out', 'none')
   }
+  
+    function opennetworkstats() {
+    fade(document.querySelector('.network_stats_container'), 'In', 'block')
+    
+  }
+  function closenetworkstats() {
+    fade(document.querySelector('.network_stats_container'), 'Out', 'none')
+  }
   function initializeKeyboard() {
     var htm = []
     var row_len = routes_keyboard_keys.length
