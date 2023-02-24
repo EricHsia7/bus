@@ -3617,7 +3617,7 @@
         var data = parseFloat(String(LS.getItem(stats_datas[o])))
         var date = String(stats_datas[o]).replaceAll('bus_network_stats_', '').split('_')
         date = new Date(parseInt(date[0]), (parseInt(date[1]) - 1), parseInt(date[2]), 0, 0, 0)
-        original_datas.push({ 'd': date, 'v': (data / 1024).toFixed(1) })
+        original_datas.push({ 'd': date, 'v': data })
       }
     }
     original_datas = original_datas.sort(function (a, b) {
