@@ -3562,9 +3562,9 @@
 
   function createNetworkStatsChart() {
     var original_datas = []
-    var arranged_datas = []
     var labels = []
     var values = []
+    
     var stats_datas = searchItemsbyname('bus_network_stats_')
     for (var o = 0; o < stats_datas.length; o++) {
       if (LS.hasOwnProperty(stats_datas[o])) {
@@ -3582,6 +3582,7 @@
       labels.push(`${(original_datas[o].d.getMonth() + 1)}/${(original_datas[o].d.getDate())}`)
       values.push(formatDataSize(original_datas[o].v))
     }
+
     var ctx = document.getElementById('stats_chart').getContext('2d');
     stats_chart = new Chart(ctx, {
       type: 'line',
