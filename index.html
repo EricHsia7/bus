@@ -1460,10 +1460,15 @@
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--g-14b1ff);
+      background: var(--g-c7ecff);
       width: clamp(5px, 80%, 45px);
       height: calc((100% - 25px) * var(--chart-bar-height));
       border-radius: 5px;
+      transition: 0.35s;
+    }
+
+    .chart .chart_contents[select="1"] .chart_bar .block {
+      background: var(--g-e3e3e3);
     }
 
     .chart .chart_contents .chart_bar .label {
@@ -1476,7 +1481,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color:var(--g-333333)
+      color: var(--g-333333);
+    }
+
+    .chart .chart_contents[select="1"] .chart_bar[select="1"] .block {
+      background: var(--g-14b1ff);
     }
   </style>
   <style>
@@ -3606,11 +3615,13 @@
 
     return `${formattedSize.toFixed(1)}${units[unitIndex]}`;
   }
-
+  var network_stats_datas_json = {}
   function createNetworkStatsChart() {
+    network_stats_datas_json = {}
     var original_datas = []
     var labels = []
     var values = []
+    var keys = []
 
     var stats_datas = searchItemsbyname('bus_network_stats_')
     for (var o = 0; o < stats_datas.length; o++) {
@@ -3618,7 +3629,9 @@
         var data = parseFloat(String(LS.getItem(stats_datas[o])))
         var date = String(stats_datas[o]).replaceAll('bus_network_stats_', '').split('_')
         date = new Date(parseInt(date[0]), (parseInt(date[1]) - 1), parseInt(date[2]), 0, 0, 0)
-        original_datas.push({ 'd': date, 'v': data })
+        var j = { 'd': date, 'v': data, 'k': o }
+        original_datas.push(j)
+        network_stats_datas_json[o] = j
       }
     }
     original_datas = original_datas.sort(function (a, b) {
@@ -3628,6 +3641,7 @@
     for (var o = 0; o < original_datas.length; o++) {
       labels.push(`${(original_datas[o].d.getMonth() + 1)}/${(original_datas[o].d.getDate())}`)
       values.push(original_datas[o].v)
+      keys.push(original_datas[o].k)
     }
     var manufactureBars = function (labels, values, max, min) {
       var html = []
@@ -3636,9 +3650,9 @@
 
       for (var f = 0; f < data_length; f++) {
         var bar_id = gid('chart-bar')
-        var bar_html = `<div class="chart_bar" original-value="${values[f]}" id="${bar_id}"><div class="block" style="--chart-bar-height:${values[f] / (max)};"></div><div class="label">${labels[f]}</div></div>`
+        var bar_html = `<div class="chart_bar" original-value="${values[f]}" id="${bar_id}" onclick="displaySpecificDayNetworkStats('${bar_id}','${keys[f]}')"><div class="block" style="--chart-bar-height:${values[f] / (max)};"></div><div class="label">${labels[f]}</div></div>`
         html.push(bar_html)
-        identifies.push(bar_id)
+        identifies.push('#' + bar_id)
       }
       return [html.join(''), identifies]
     }
@@ -3650,9 +3664,23 @@
     chart_contents.classList.add('chart_contents')
     chart_contents.style.setProperty('--chart-datas-length', chart_contents_html[1].length)
     chart_contents.innerHTML = chart_contents_html[0]
+    var identifies = chart_contents_html[1]
+    var identifies_len = identifies.length
     document.querySelector('.chart').appendChild(chart_contents)
+    ripple(document.querySelectorAll(identifies.join(',')), 'var(--g-14b1ff)', 450)
   }
-
+  function displaySpecificDayNetworkStats(element_id, data_key) {
+    var element = document.querySelector(element_id)
+    var chart_contents = document.querySelector('.chart_contents')
+    if (element.getAttribute('select') === '1') {
+      element.setAttribute('select', '0')
+      chart_contents.setAttribute('select', '0')
+    }
+    else {
+      element.setAttribute('select', '1')
+      chart_contents.setAttribute('select', '1')
+    }
+  }
   /* initialize */
 
   initializeAllOptions()
