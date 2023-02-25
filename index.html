@@ -3670,11 +3670,12 @@
     ripple(document.querySelectorAll(identifies.join(',')), 'var(--g-14b1ff)', 450)
   }
   function displaySpecificDayNetworkStats(element_id, data_key) {
-    var element = $('#' + element_id)
+   var element = $('#' + element_id)
+   var select = String(element.attr('select'))
     var allBars = $('.chart .chart_contents .chart_bar')
     var chart_contents = $('.chart_contents')
     allBars.attr('select','0')
-    if (element.attr('select') === '1') {
+    if (select === '1') {
       element.attr('select', '0')
       chart_contents.attr('select', '0')
     }
