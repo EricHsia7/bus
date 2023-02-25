@@ -3673,10 +3673,10 @@
     var element = $('#' + element_id)
     var allBars = $('.chart .chart_contents .chart_bar')
     var chart_contents = $('.chart_contents')
+    allBars.attr('select','0')
     if (element.attr('select') === '1') {
       element.attr('select', '0')
       chart_contents.attr('select', '0')
-      allBars.attr('select','0')
     }
     else {
       element.attr('select', '1')
