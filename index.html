@@ -3670,15 +3670,17 @@
     ripple(document.querySelectorAll(identifies.join(',')), 'var(--g-14b1ff)', 450)
   }
   function displaySpecificDayNetworkStats(element_id, data_key) {
-    var element = document.getElementById(element_id)
-    var chart_contents = document.querySelector('.chart_contents')
-    if (element.getAttribute('select') === '1') {
-      element.setAttribute('select', '0')
-      chart_contents.setAttribute('select', '0')
+    var element = $('#' + element_id)
+    var allBars = $('.chart .chart_contents .chart_bar')
+    var chart_contents = $('.chart_contents')
+    if (element.attr('select') === '1') {
+      element.attr('select', '0')
+      chart_contents.attr('select', '0')
+      allBars.attr('select','0')
     }
     else {
-      element.setAttribute('select', '1')
-      chart_contents.setAttribute('select', '1')
+      element.attr('select', '1')
+      chart_contents.attr('select', '1')
     }
   }
   /* initialize */
