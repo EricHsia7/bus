@@ -3646,6 +3646,7 @@
     var manufactureBars = function (labels, values, max, min) {
       var html = []
       var identifies = []
+      var ripple_selectors = []
       var data_length = labels.length // labels.length === values.length
 
       for (var f = 0; f < data_length; f++) {
@@ -3653,8 +3654,9 @@
         var bar_html = `<div class="chart_bar" original-value="${values[f]}" id="${bar_id}" onclick="displaySpecificDayNetworkStats('${bar_id}','${keys[f]}')"><div class="block" style="--chart-bar-height:${values[f] / (max)};"></div><div class="label">${labels[f]}</div></div>`
         html.push(bar_html)
         identifies.push('#' + bar_id)
+        ripple_selectors.push('#' + bar_id + ' .block')
       }
-      return [html.join(''), identifies]
+      return [html.join(''), ripple_selectors]
     }
     if (!(document.querySelector('.chart .chart_contents') === null)) {
       document.querySelector('.chart_contents').remove()
@@ -3664,10 +3666,9 @@
     chart_contents.classList.add('chart_contents')
     chart_contents.style.setProperty('--chart-datas-length', chart_contents_html[1].length)
     chart_contents.innerHTML = chart_contents_html[0]
-    var identifies = chart_contents_html[1]
-    var identifies_len = identifies.length
     document.querySelector('.chart').appendChild(chart_contents)
-    ripple(document.querySelectorAll(identifies.join(',')), 'var(--g-14b1ff)', 450)
+var ripple_selectors = chart_contents_html[1]
+    ripple(document.querySelectorAll(ripple_selectors.join(',')), 'var(--g-14b1ff)', 450)
   }
   function displaySpecificDayNetworkStats(element_id, data_key) {
    var element = $('#' + element_id)
