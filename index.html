@@ -2222,18 +2222,23 @@
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
     }
   }
+function bezier(p0, p1, p2, p3, x) {
+  var a = p3 - 3 * p2 + 3 * p1 - p0;
+  var b = 3 * p2 - 6 * p1 + 3 * p0;
+  var c = 3 * p1 - 3 * p0;
+  var d = p0;
+  var y = a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d;
 
+  return y;
+}
   function scrollToY(element, source, aim, startTime, endTime, t) {
-    var f = function (x) {
-      return -15.4 + 9.11 * x - 0.0285 * x * x
-    }
     var x_min = 1.7
     var x_max = 163.02
     var y_min = f(x_min)
     var y_max = f(x_max)
     var s = function (time) {
       var x = x_min + (time - startTime) / (endTime - startTime) * (x_max - x_min)
-      var y = f(x)
+      var y = bezier(0.78, 0.43, 0.16, 0.8,x)
       return source + (y_min + y) / (y_max - y_min) * (aim - source)
     }
 
