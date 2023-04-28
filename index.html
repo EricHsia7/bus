@@ -1557,29 +1557,24 @@
   <style>
     .dynamic-color,
     .routes[slide="-1"] li.stop .status[status="2"] {
-      animation-duration: 10s;
+      background: var(--dynamic-color-s1);
+      animation-duration: 7s;
       animation-name: turn;
+      animation-timing-function: linear;
       animation-iteration-count: infinite;
       animation-direction: alternate;
+      background-size: 1200% 100%;
+      background-position: 0% 0%;
+      background-repeat: no-repeat;
     }
 
     @keyframes turn {
       0% {
-        background: var(--dynamic-color-s1);
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-      }
-
-      50% {
-        background: var(--dynamic-color-s2);
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+        background-position: 0% 0%;
       }
 
       100% {
-        background: var(--dynamic-color-s3);
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+        background-position: 100% 0%;
       }
     }
 
@@ -4444,22 +4439,13 @@
     }
   }
   function setUpDynamicColor() {
-    var colorsss = []
-    for (var t = 0; t < 3; t++) {
-      colorstops = []
-      var c = colorScale('#14b1ff', 2, 15)
-      for (var e = 0; e < c.length; e++) {
-        colorstops.push({ color: c[e], pos: 100 / (c.length - 1) * e })
-      }
-      drawGradients(Math.random() * 360, 300, 150)
-      var canvasBlur = new CanvasFastBlur({
-        blur: 6
-      });
-      canvasBlur.initCanvas(canvas);
-      canvasBlur.gBlur(4);
-      colorsss.push(canvas.toDataURL())
+    var colorC = []
+    var c = colorScale('#14b1ff', 10, 15)
+    for (var o = 0; o < c.length; o++) {
+      colorC.push(`${c[o]} ${100 * (o / (c.length - 1))}%`)
     }
-    var css = `:root {--dynamic-color-s1:url(${colorsss[0]});--dynamic-color-s2:url(${colorsss[1]});--dynamic-color-s3:url(${colorsss[2]});}`
+    var bg = `linear-gradient(${45}deg, ${colorC.join(',')})`
+    var css = `:root {--dynamic-color-s1:${bg};}`
     document.querySelector('#dynamic-color').innerHTML = css
   }
 </script>
