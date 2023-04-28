@@ -1119,11 +1119,25 @@
       width: 100%;
       min-height: clamp(180px, 36%, 300px);
       height: auto;
-      background: var(--g-ffffff);
+      background: rgba(0, 0, 0, 0);
       border-radius: 20px 20px 0px 0px;
       user-select: none;
       -webkit-user-select: none;
       box-sizing: border-box;
+    }
+
+    .bus_info_blur_mask,
+    .route_info_blur_mask {
+      position: absolute;
+      top: calc(100% - clamp(180px, 36%, 300px));
+      left: 0px;
+      width: 100%;
+      height: calc(100% + 50px);
+      border-radius: 20px 20px 0px 0px;
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     .bus_info_title,
@@ -1649,6 +1663,7 @@
 
   <div class="bus_info_mask"></div>
   <div class="bus_info_box">
+    <div class="bus_info_blur_mask"></div>
     <div class="bus_info">
       <div class="bus_info_title">關於這輛公車</div>
       <div class="bus_info_list">
@@ -1662,6 +1677,7 @@
   </div>
   <div class="route_info_mask"></div>
   <div class="route_info_box" l="0">
+    <div class="route_info_blur_mask"></div>
     <div class="route_info">
       <div class="route_info_title">關於這條路線</div>
       <div class="route_info_list">
