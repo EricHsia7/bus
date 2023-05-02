@@ -1555,8 +1555,7 @@
   </style>
   <style id="dynamic-color"></style>
   <style>
-    .dynamic-color,
-    .routes[slide="-1"] li.stop .status[status="2"] {
+    .dynamic-color {
       background: var(--dynamic-color-s1);
       animation-duration: 7s;
       animation-name: turn;
@@ -3211,6 +3210,21 @@
       }
     });
   }
+
+  function getUkey(str) {
+    var s = str.match(/[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm) || []
+    s = s.join('')
+    var r = str.replaceAll(/[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm, '') || ""
+    var e = String(encodeURIComponent(r)).split('%')
+    var t = 0
+    var e_len = e.length
+    for (var w = 0; w < e_len; w++) {
+      t += parseInt(e[w], 16) || 0
+    }
+    t = parseInt(t).toString(36)
+    return s + '' + t
+  }
+
   function createSearchIndex(j) {
     if (j.loaded) {
       j = j.c
@@ -3221,7 +3235,7 @@
         var ct = undefined
         this_p['id'] = id
         this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
-
+        this_p['mark_id'] = getUkey(this_p['n'])
         if (routes_json['c_0'].hasOwnProperty(p)) {
           ct = 0
         }
