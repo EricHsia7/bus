@@ -3223,7 +3223,7 @@
       t += parseInt(e[w], 16) || 0
     }
     t = parseInt(t).toString(36)
-    return s + '' + t
+    return (s + '' + t).toLowerCase()
   }
 
   function createSearchIndex(j) {
