@@ -3214,7 +3214,7 @@
   function getUkey(str) {
     var regex = /[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm
     var s = str.match(regex) || []
-    s = s.join('').replaceAll(/[\-\_\.\!\~\*\'\(\)]*/gm, "")
+    s = s.join('').replaceAll(/[\-\.\!\~\*\'\(\)]*/gm, "_")
     var r = str.replaceAll(regex, '') || ""
     var e = String(encodeURIComponent(r)).split('%')
     var t = 0
