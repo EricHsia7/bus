@@ -1143,12 +1143,26 @@
       top: 0px;
       left: 0px;
     }
+    
 
     .bus_info_title[sticky="1"],
     .route_info_title[sticky="1"] {
       z-index: 10;
       background: var(--g-ffffff);
     }
+    
+    .route_info_title {
+      height:18px;
+      }
+      .route_info_bar {
+        height:7px;
+        width:60px;
+        background:var(--g-f5f5f5);
+        border-radius:7px;
+        }
+        .route_info_title[sticky="1"] .route_info_bar {
+          opacity:0;
+          }
 
     .bus_info_list,
     .route_info_list {
@@ -1649,7 +1663,9 @@
   <div class="bus_info_mask"></div>
   <div class="bus_info_box">
     <div class="bus_info">
-      <div class="bus_info_title">關於這輛公車</div>
+      <div class="bus_info_title">
+        關於這輛公車
+      </div>
       <div class="bus_info_list">
         <li f="bus_id" style="--li-name:'車牌號碼'"></li>
         <li f="bus_onstopstatus" style="--li-name:'到離站狀態'"></li>
@@ -1662,7 +1678,9 @@
   <div class="route_info_mask"></div>
   <div class="route_info_box" l="0">
     <div class="route_info">
-      <div class="route_info_title">關於這條路線</div>
+      <div class="route_info_title">
+        <div class="route_info_bar"></div>
+      </div>
       <div class="route_info_list">
         <li f="route_name" style="--li-name:'路線名稱'"></li>
         <li f="route_departure" style="--li-name:'起點'"></li>
