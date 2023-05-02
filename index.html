@@ -3212,9 +3212,10 @@
   }
 
   function getUkey(str) {
-    var s = str.match(/[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm) || []
-    s = s.join('')
-    var r = str.replaceAll(/[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm, '') || ""
+    var regex = /[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm
+    var s = str.match(regex) || []
+    s = s.join('').replaceAll(/[\-\_\.\!\~\*\'\(\)]*/gm, "")
+    var r = str.replaceAll(regex, '') || ""
     var e = String(encodeURIComponent(r)).split('%')
     var t = 0
     var e_len = e.length
