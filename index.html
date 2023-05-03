@@ -1794,7 +1794,7 @@
         <div class="route_info_bar"></div>
       </div>
       <div class="actions">
-        <div class="action" status="0" style="--action-theme:#FFB703" onclick="action_status('favorite');addRouteToFavorite()" m="favorite">
+        <div class="action" status="0" style="--action-theme:#FFB703" onclick="action_status('favorite');set_favorite_route_status()" m="favorite">
           <div class="action_filter"></div>
           <div class="action_icon">
             <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="0">
@@ -1807,7 +1807,7 @@
           <div class="action_name">收藏路線</div>
         </div>
 
-        <div class="action" status="0" style="--action-theme:#3DA9C7" onclick="action_status('tracking-user-location');addRouteToFavorite()" m="tracking-user-location">
+        <div class="action" status="0" style="--action-theme:#3DA9C7" onclick="action_status('tracking-user-location');set_favorite_route_status()" m="tracking-user-location">
           <div class="action_filter"></div>
           <div class="action_icon">
             <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="0">
@@ -3952,14 +3952,14 @@
     }
   }
 
-  function addRouteToFavorite() {
+  function set_favorite_route_status() {
     var lk = `bus_favorite_route_${c_route_local_key}`
     var json = {}
     if (LS.hasOwnProperty(lk)) {
       json = JSON.parse(String(LS.getItem(lk)))
       if (json.local_key === c_route_local_key && !(c_route_name === json.n)) {
         prompt_message('發生錯誤')
-        sendPotentialError('addRouteToFavorite_local_key_repeat')
+        sendPotentialError('set_favorite_route_status_local_key_repeat')
       }
       else {
         LS.removeItem(lk)
