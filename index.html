@@ -4112,7 +4112,7 @@
       return b.t - a.t
     })
     for (var e = 0; e < list_k_len; e++) {
-      var j = JSON.parse(String(LS.getItem(list[e])))
+      var j = list[e]
       var name = j.n
       var res = search_result(name, search_index.c)
       res = (res.length > 0 ? res[0] : false)
