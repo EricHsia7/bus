@@ -824,6 +824,7 @@
       width: clamp(150px, 85%, 300px);
       height: auto;
       display: inline-block;
+      transform: translateX(-50%);
     }
 
     .personal_block {
@@ -2107,6 +2108,7 @@
   var routes_json = { 'loaded': false, 'c': {} }
   var search_index = { 'loaded': false, 'c': {} }
   var route_container_content = { 'h_0': {}, 'h_1': {} }
+  var personal_blocks_initialized = 0
   var current_route_stops = []
   var c_routeid = 0
   var c_routeid_p = 0
@@ -4095,17 +4097,20 @@
     }
     return [`${html.join('')}`, '#' + identifies.join(',#')]
   }
-  
+
   function initializePersonalBlocks() {
-    var container = document.querySelector('.personal_blocks')
-    var b_favorite = composeFavoriteBlock()
-    var b_favorite_html = b_favorite[0]
-    var b_favorite_elt = document.createElement('div')
-    b_favorite_elt.classList.add('personal_block')
-    b_favorite_elt.innerHTML = b_favorite_html
-    container.appendChild(b_favorite_elt)
-    var b_favorite_selector = document.querySelectorAll(b_favorite[1])
-    ripple(b_favorite_selector, 'var(--g-333333)', 450)
+    if (personal_blocks_initialized === 0) {
+      personal_blocks_initialized = 1
+      var container = document.querySelector('.personal_blocks')
+      var b_favorite = composeFavoriteBlock()
+      var b_favorite_html = b_favorite[0]
+      var b_favorite_elt = document.createElement('div')
+      b_favorite_elt.classList.add('personal_block')
+      b_favorite_elt.innerHTML = `<div class="personal_block_title">收藏的路線</div><div class="personal_block_contents">${b_favorite_html}</div>`
+      container.appendChild(b_favorite_elt)
+      var b_favorite_selector = document.querySelectorAll(b_favorite[1])
+      ripple(b_favorite_selector, 'var(--g-333333)', 450)
+    }
   }
 
 
