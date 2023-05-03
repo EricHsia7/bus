@@ -1143,27 +1143,29 @@
       top: 0px;
       left: 0px;
     }
-    
+
 
     .bus_info_title[sticky="1"],
     .route_info_title[sticky="1"] {
       z-index: 10;
       background: var(--g-ffffff);
     }
-    
+
     .route_info_title {
-      height:18px;
-      border-bottom:none;
-      }
-      .route_info_bar {
-        height:5px;
-        width:47px;
-        background:var(--g-888888);
-        border-radius:7px;
-        }
-        .route_info_title[sticky="1"] .route_info_bar{
-          opacity:0;
-          }
+      height: 18px;
+      border-bottom: none;
+    }
+
+    .route_info_bar {
+      height: 5px;
+      width: 47px;
+      background: var(--g-888888);
+      border-radius: 7px;
+    }
+
+    .route_info_title[sticky="1"] .route_info_bar {
+      opacity: 0;
+    }
 
     .bus_info_list,
     .route_info_list {
@@ -1227,6 +1229,119 @@
       height: 25px;
       border-radius: 30px;
       background: var(--g-f5f5f5);
+    }
+
+
+    .actions {
+      position: relative;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 55px;
+      display: grid;
+      grid-auto-columns: clamp(150px, calc((100% - 20px) / 3), 300px);
+      grid-auto-rows: 1fr;
+      grid-column-gap: 10px;
+      grid-auto-flow: column;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
+      overflow: scroll;
+    }
+
+    .action {
+      position: relative;
+      background-color: var(--g-f5f5f5);
+      border-radius: 10px;
+      overflow: hidden;
+      box-sizing: border-box;
+      display: inline-block;
+      transition: background-color 0.25s;
+    }
+
+    .action[status="1"] {
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    .action_icon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 35px;
+      height: 35px;
+      box-sizing: border-box;
+    }
+
+    .action_icon svg {
+      position: absolute;
+      top: 2.5px;
+      left: 2.5px;
+      width: 30px;
+      height: 30px;
+    }
+
+    .action_icon svg path {
+      transition: opacity 0.25s;
+    }
+
+    .action .action_icon svg[fill="0"] path {
+      fill: var(--g-333333);
+    }
+
+    .action .action_icon svg[fill="1"] path {
+      fill: var(--action-theme);
+    }
+
+    .action[status="0"] .action_icon svg[fill="0"] path {
+      opacity: 1;
+    }
+
+    .action[status="0"] .action_icon svg[fill="1"] path {
+      opacity: 0;
+    }
+
+    .action[status="1"] .action_icon svg[fill="1"] path {
+      opacity: 1;
+    }
+
+    .action[status="1"] .action_icon svg[fill="0"] path {
+      opacity: 0;
+    }
+
+    .action_name {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: calc(100% - 55px);
+      height: 35px;
+      color: var(--g-333333);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      font-size: 18px;
+      transition: color 0.25s;
+    }
+
+    .action[status="1"] .action_name {
+      color: var(--action-theme);
+    }
+
+    .action .action_filter {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      background: var(--action-theme);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .action[status="1"] .action_filter {
+      opacity: 0.11;
     }
 
     .options_content li.option label.options_switch {
@@ -1682,6 +1797,50 @@
       <div class="route_info_title">
         <div class="route_info_bar"></div>
       </div>
+      <div class="actions">
+        <div class="action" status="0" style="--action-theme:#FFB703" onclick="action_status('favorite');addRouteToFavorite()" m="favorite">
+          <div class="action_filter"></div>
+          <div class="action_icon">
+            <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="0">
+              <path d="M19.44 52.4L32 44.88L44.56 52.48L41.2 38.24L52.24 28.64L37.68 27.36L32 13.92L26.32 27.28L11.76 28.56L22.8 38.16L19.44 52.4ZM12.24 62.4L17.44 39.92L0 24.8L23.04 22.8L32 1.6L40.96 22.8L64 24.8L46.56 39.92L51.76 62.4L32 50.48L12.24 62.4Z" fill-rule="nonzero" stroke="none" />
+            </svg>
+            <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="1">
+              <path d="M12.24 62.4L17.44 39.92L0 24.8L23.04 22.8L32 1.6L40.96 22.8L64 24.8L46.56 39.92L51.76 62.4L32 50.48L12.24 62.4Z" fill-rule="nonzero" stroke="none" />
+            </svg>
+          </div>
+          <div class="action_name">收藏路線</div>
+        </div>
+
+        <div class="action" status="0" style="--action-theme:#3DA9C7" onclick="action_status('tracking-user-location');addRouteToFavorite()" m="tracking-user-location">
+          <div class="action_filter"></div>
+          <div class="action_icon">
+            <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="0">
+              <path d="M29.8125 0L29.8125 5.46875C23.1397 6.15064 17.5885 8.72398 13.1562 13.1562C8.72398 17.5885 6.15064 23.1397 5.46875 29.8125L0 29.8125L0 34.1875L5.46875 34.1875C6.15064 40.8603 8.72398 46.4115 13.1562 50.8438C17.5885 55.276 23.1397 57.8494 29.8125 58.5312L29.8125 64L34.1875 64L34.1875 58.5312C40.8603 57.8494 46.4115 55.276 50.8438 50.8438C55.276 46.4115 57.8494 40.8603 58.5312 34.1875L64 34.1875L64 29.8125L58.5312 29.8125C57.8494 23.1397 55.276 17.5885 50.8438 13.1562C46.4115 8.72398 40.8603 6.15064 34.1875 5.46875L34.1875 0L29.8125 0ZM32 9.78125C38.0883 9.78125 43.297 11.9845 47.6562 16.3438C52.0155 20.703 54.2188 25.9117 54.2188 32C54.2188 38.0883 52.0155 43.297 47.6562 47.6562C43.297 52.0155 38.0883 54.2188 32 54.2188C25.9117 54.2188 20.703 52.0155 16.3438 47.6562C11.9845 43.297 9.78125 38.0883 9.78125 32C9.78125 25.9117 11.9845 20.703 16.3438 16.3438C20.703 11.9845 25.9117 9.78125 32 9.78125Z" fill-rule="nonzero" stroke="none" />
+              <path d="M32 21.0312C25.947 21.0312 21.0312 25.947 21.0312 32C21.0312 38.053 25.947 42.9688 32 42.9688C38.053 42.9687 42.9688 38.053 42.9688 32C42.9687 25.947 38.053 21.0312 32 21.0312ZM32 25.4375C35.6313 25.4375 38.5625 28.3687 38.5625 32C38.5625 35.6313 35.6313 38.5625 32 38.5625C28.3687 38.5625 25.4375 35.6313 25.4375 32C25.4375 28.3687 28.3687 25.4375 32 25.4375Z" fill-rule="nonzero" stroke="none" />
+            </svg>
+            <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="1">
+              <path d="M29.8125 0L29.8125 5.46875C23.1397 6.15064 17.5885 8.72398 13.1562 13.1562C8.72398 17.5885 6.15064 23.1397 5.46875 29.8125L0 29.8125L0 34.1875L5.46875 34.1875C6.15064 40.8603 8.72398 46.4115 13.1562 50.8438C17.5885 55.276 23.1397 57.8494 29.8125 58.5312L29.8125 64L34.1875 64L34.1875 58.5312C40.8603 57.8494 46.4115 55.276 50.8438 50.8438C55.276 46.4115 57.8494 40.8603 58.5312 34.1875L64 34.1875L64 29.8125L58.5312 29.8125C57.8494 23.1397 55.276 17.5885 50.8438 13.1562C46.4115 8.72398 40.8603 6.15064 34.1875 5.46875L34.1875 0L29.8125 0ZM32 9.78125C38.0883 9.78125 43.297 11.9845 47.6562 16.3438C52.0155 20.703 54.2188 25.9117 54.2188 32C54.2188 38.0883 52.0155 43.297 47.6562 47.6562C43.297 52.0155 38.0883 54.2188 32 54.2188C25.9117 54.2188 20.703 52.0155 16.3438 47.6562C11.9845 43.297 9.78125 38.0883 9.78125 32C9.78125 25.9117 11.9845 20.703 16.3438 16.3438C20.703 11.9845 25.9117 9.78125 32 9.78125Z" fill-rule="nonzero" stroke="none" />
+              <path d="M32 21.0312C25.947 21.0312 21.0312 25.947 21.0312 32C21.0312 38.053 25.947 42.9688 32 42.9688C38.053 42.9687 42.9688 38.053 42.9688 32C42.9687 25.947 38.053 21.0312 32 21.0312Z" fill-rule="nonzero" stroke="none" />
+            </svg>
+          </div>
+          <div class="action_name">位置跟蹤</div>
+        </div>
+
+        <div class="action">
+          <div class="action_icon">
+            <img src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/refresh/default/48px.svg">
+          </div>
+          <div class="action_name">重新整理</div>
+        </div>
+
+        <div class="action">
+          <div class="action_icon">
+            <img src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/sms_failed/default/48px.svg">
+          </div>
+          <div class="action_name">意見回饋</div>
+        </div>
+      </div>
+
       <div class="route_info_list">
         <li f="route_name" style="--li-name:'路線名稱'"></li>
         <li f="route_departure" style="--li-name:'起點'"></li>
@@ -3790,6 +3949,23 @@
       chart_contents.attr('select', '1')
     }
   }
+
+  function addRouteToFavorite() {
+
+  }
+
+  function action_status(m) {
+    var e = document.querySelectorAll('.action[m="' + m + '"]')[0]
+    var s = e.getAttribute('status')
+    if (s === '0') {
+      e.setAttribute('status', '1')
+    }
+    else {
+      e.setAttribute('status', '0')
+    }
+  }
+
+
   /* initialize */
 
   initializeAllOptions()
