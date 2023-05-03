@@ -3958,18 +3958,18 @@
     if (LS.hasOwnProperty(lk)) {
       json = JSON.parse(String(LS.getItem(lk)))
       if (json.local_key === c_route_local_key && !(c_route_name === json.n)) {
-        message('發生錯誤')
+        prompt_message('發生錯誤')
         sendPotentialError('addRouteToFavorite_local_key_repeat')
       }
       else {
         LS.removeItem(lk)
-        message('已取消收藏路線')
+        prompt_message('已取消收藏路線')
       }
     }
     else {
       json = { local_key: c_route_local_key, n: c_route_name, t: new Date().getTime() }
       LS.setItem(lk, JSON.stringify(json))
-      message('已收藏路線')
+      prompt_message('已收藏路線')
     }
   }
 
