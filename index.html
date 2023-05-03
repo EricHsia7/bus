@@ -4091,7 +4091,7 @@
         continue
       }
       var id = gid('pb')
-      var h = `<div class="personal_block_favorite_route" onclick="openRoute(${res.city},${res.id})" id="${id}"><div class="personal_block_favorite_route_name>${res.n}</div><div class="personal_block_favorite_route_dep_to_des">${res.des} - ${res.dep}</div></div>`
+      var h = `<div class="personal_block_favorite_route" onclick="openRoute(${res.city},${res.id})" id="${id}"><div class="personal_block_favorite_route_name">${res.n}</div><div class="personal_block_favorite_route_dep_to_des">${res.des} - ${res.dep}</div></div>`
       html.push(h)
       identifies.push(id)
     }
