@@ -4099,11 +4099,19 @@
   }
 
   function composeFavoriteBlock() {
-    var list = searchItemsbyname('bus_favorite_route')
-    var list_len = list.length
+    var list_k = searchItemsbyname('bus_favorite_route')
+    var list_k_len = list_k.length
+    var list = []
     var html = []
     var identifies = []
-    for (var e = 0; e < list_len; e++) {
+    for (var e = 0; e < list_k_len; e++) {
+      var j = JSON.parse(String(LS.getItem(list_k[e])))
+      list.push(j)
+    }
+    list.sort(function (a, b) {
+      return b.t - a.t
+    })
+    for (var e = 0; e < list_k_len; e++) {
       var j = JSON.parse(String(LS.getItem(list[e])))
       var name = j.n
       var res = search_result(name, search_index.c)
