@@ -1906,7 +1906,7 @@
           <div class="action_name">收藏路線</div>
         </div>
 
-        <div class="action" status="0" style="--action-theme:#3DA9C7" onclick="action_status('tracking-user-location');set_favorite_route_status()" m="tracking-user-location">
+        <div class="action" status="0" style="--action-theme:#3DA9C7" onclick="action_status('tracking-user-location')" m="tracking-user-location">
           <div class="action_filter"></div>
           <div class="action_icon">
             <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="0">
@@ -2571,6 +2571,19 @@
       $('.route_container .tabs').attr('l', '1')
       $('.route_container .title .routename').attr('l', '1')
       $(".tab-line").attr('class', 'tab-line initialization').css({ '--j-initialization-width': route_tab_dep_width + 'px' })
+      var lk = `bus_favorite_route_${c_route_local_key}`
+      if (LS.hasOwnProperty(lk)) {
+        json = JSON.parse(String(LS.getItem(lk)))
+        if (!(json.local_key === c_route_local_key && !(c_route_name === json.n))) {
+          $('.route_info_box .actions .action[m="favorite"]').attr('status', '1')
+        }
+        else {
+          sendPotentialError('set_favorite_route_status_local_key_repeat')
+        }
+      }
+      else {
+        $('.route_info_box .actions .action[m="favorite"]').attr('status', '0')
+      }
     }
   }
 
