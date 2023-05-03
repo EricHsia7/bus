@@ -2021,6 +2021,8 @@
   var c_routeid = 0
   var c_routeid_p = 0
   var o_routeid
+  var c_route_local_key = ''
+  var c_route_name = ''
   var realtime_lo = 0
   var realtime_last_update = new Date().getTime()
   var refresh_progress_l = 0
@@ -2320,7 +2322,9 @@
       'event_label': position + ' | ' + err.message,
     });
   }
+  function sendPotentialError(label) {
 
+  }
   function unicode_arr(str) {
     var str_len = str.length
     var unicode_arr = []
@@ -2451,6 +2455,8 @@
       var dep = '往' + this_route.dep
       var des = '往' + this_route.des
       var name = this_route.n
+      c_route_local_key = getLocalKey(name)
+      c_route_name = String(name)
       var w = []
       var font = "500 16px 'Noto Sans', sans-serif"
       route_tab_dep_width = getTextWidth(des, font)
@@ -3387,7 +3393,7 @@
     });
   }
 
-  function getUkey(str) {
+  function getLocalKey(str) {
     var regex = /[A-Za-z0-9\-\_\.\!\~\*\'\(\)]*/gm
     var s = str.match(regex) || []
     s = s.join('').replaceAll(/[\-\.\!\~\*\'\(\)]/gm, "_")
@@ -3412,7 +3418,6 @@
         var ct = undefined
         this_p['id'] = id
         this_p['unicode'] = unicode_arr(this_p.n + this_p.dep + this_p.des)
-        this_p['mark_id'] = getUkey(this_p['n'])
         if (routes_json['c_0'].hasOwnProperty(p)) {
           ct = 0
         }
@@ -3487,7 +3492,6 @@
         switchDirection('departure')
         getStops()
         showRoute(parseInt(i))
-        setUpDynamicColor()
         if (stops_json.loaded) {
           updateRealtimeJson(true)
         }
@@ -3949,7 +3953,24 @@
   }
 
   function addRouteToFavorite() {
-
+    var lk = `bus_favorite_route_${c_route_local_key}`
+    var json = {}
+    if (LS.hasOwnProperty(lk)) {
+      json = JSON.parse(String(LS.getItem(lk)))
+      if (json.local_key === c_route_local_key && !(c_route_name === json.n)) {
+        message('發生錯誤')
+        sendPotentialError('addRouteToFavorite_local_key_repeat')
+      }
+      else {
+        LS.removeItem(lk)
+        message('已取消收藏路線')
+      }
+    }
+    else {
+      json = { local_key: c_route_local_key, n: c_route_name, t: new Date().getTime() }
+      LS.setItem(lk, JSON.stringify(json))
+      message('已收藏路線')
+    }
   }
 
   function action_status(m) {
