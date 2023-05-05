@@ -2269,8 +2269,8 @@
       var x = event.pageX
       var y = event.pageY
       var element_rect = element.getBoundingClientRect()
-      var element_x = element_rect.x-scroll_x
-      var element_y = element_rect.y-scroll_y
+      var element_x = element_rect.x+scroll_x
+      var element_y = element_rect.y+scroll_y
       var element_width = element.clientWidth
       var element_height = element.clientHeight
       var relative_x = x - element_x
