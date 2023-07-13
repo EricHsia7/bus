@@ -4148,8 +4148,6 @@
 
   /* initialize */
 
-  initializeAllOptions()
-  initializeKeyboard()
   $('.bus_info_box').scroll(function () {
     var scrolltop = $('.bus_info_box').scrollTop()
     if ($('.bus_info').offset().top < 0) {
@@ -4257,8 +4255,7 @@
       update_search_result()
     }
   });
-  setRouteSlideSize()
-  getRoutes(false)
+ 
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
       horizontal_slide = false
@@ -4319,6 +4316,11 @@
     update_status = 0
     updateRealtimeJson(true)
   });
+  
+  initializeAllOptions()
+  initializeKeyboard()
+  setRouteSlideSize()
+  getRoutes(false) 
   checkVersion()
 
   function rgb2hex(a, r, t) {
