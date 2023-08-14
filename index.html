@@ -2164,6 +2164,7 @@
   var de = document.documentElement
   var horizontal_slide = false
   var vertical_slide = false
+  var route_page_is_sliding = false
   var route_tab_dep_width = 0
   var route_tab_des_width = 0
   var route_tab_color_333333_r = 0
@@ -3832,6 +3833,7 @@
 
   function touchMove(e) {
     if (route_page_is_open === 1) {
+      if(route_page_is_sliding) {
       route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
       route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
       if (horizontal_slide && !vertical_slide) {
@@ -3889,6 +3891,10 @@
         }
       }
     }
+  }
+  else {
+    route_page_is_sliding = false
+  }
   }
 
   function mixA(a, b, l) {
@@ -4258,6 +4264,7 @@
  
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
+      route_page_is_sliding = true
       horizontal_slide = false
       vertical_slide = false
       route_x1 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
@@ -4274,6 +4281,7 @@
   }, { passive: false });
 
   document.querySelector('.routes').addEventListener('touchend', function (e) {
+    route_page_is_sliding = false
     if (route_page_is_open === 1) {
       if (horizontal_slide && !vertical_slide) {
         var w = calcSlideScale()
