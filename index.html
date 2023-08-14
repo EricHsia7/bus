@@ -479,7 +479,7 @@
       background: var(--g-ffffff);
       overflow: hidden;
       -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+      overscroll-behavior: contain;
     }
 
     .route::-webkit-scrollbar {
@@ -2272,8 +2272,8 @@
       var x = event.pageX
       var y = event.pageY
       var element_rect = element.getBoundingClientRect()
-      var element_x = element_rect.x+scroll_x
-      var element_y = element_rect.y+scroll_y
+      var element_x = element_rect.x + scroll_x
+      var element_y = element_rect.y + scroll_y
       var element_width = element.clientWidth
       var element_height = element.clientHeight
       var relative_x = x - element_x
@@ -2919,7 +2919,7 @@
   }
   function findStop(j, id, pid) {
     var res = []
-    if (!stops_json.loaded) {
+    if (!stops_json.loaded || !(typeof pid === 'object' && Array.isArray(pid))) {
       return res
     }
     var o = j.BusInfo
@@ -3833,68 +3833,68 @@
 
   function touchMove(e) {
     if (route_page_is_open === 1) {
-      if(route_page_is_sliding) {
-      route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
-      route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
-      if (horizontal_slide && !vertical_slide) {
-        var w = calcSlideScale()
-        var rf = w * 1
-        var yw = route_tab_des_width * 1
-        var wy = route_tab_dep_width * 1
-        var dep_e = 0.3
-        var des_e = 0
-        var dep_color_r = 0
-        var dep_color_g = 0
-        var dep_color_b = 0
-        var des_color_r = 0
-        var des_color_g = 0
-        var des_color_b = 0
-        if (w < 0) {
-          rf = w * -1
-          yw = route_tab_dep_width * 1
-          wy = route_tab_des_width * 1
-          dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
-          dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
-          dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
-          des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
-          des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
-          des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
-          dep_e = 0.3 * (1 - Math.abs(w))
-          des_e = 0.3 * (Math.abs(w))
+      if (route_page_is_sliding) {
+        route_x2 = checkSlideCoordinate(route_min_X, e.pageX + de.scrollLeft, route_max_X)
+        route_y2 = checkSlideCoordinate(route_min_Y, e.pageY + de.scrollTop, route_max_Y)
+        if (horizontal_slide && !vertical_slide) {
+          var w = calcSlideScale()
+          var rf = w * 1
+          var yw = route_tab_des_width * 1
+          var wy = route_tab_dep_width * 1
+          var dep_e = 0.3
+          var des_e = 0
+          var dep_color_r = 0
+          var dep_color_g = 0
+          var dep_color_b = 0
+          var des_color_r = 0
+          var des_color_g = 0
+          var des_color_b = 0
+          if (w < 0) {
+            rf = w * -1
+            yw = route_tab_dep_width * 1
+            wy = route_tab_des_width * 1
+            dep_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+            dep_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+            dep_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+            des_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+            des_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+            des_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+            dep_e = 0.3 * (1 - Math.abs(w))
+            des_e = 0.3 * (Math.abs(w))
+          }
+          else {
+            rf = (1 - w)
+            yw = route_tab_des_width * 1
+            wy = route_tab_dep_width * 1
+            des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
+            des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
+            des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
+            dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
+            dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
+            dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
+            dep_e = 0.3 * (Math.abs(w))
+            des_e = 0.3 * (1 - Math.abs(w))
+          }
+          $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
+          $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
+          $('.tabs').attr('slide', '1')
+          $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)`, '--j-slide-scale-ts-p': dep_e + 'px' })
+          $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)`, '--j-slide-scale-ts-p': des_e + 'px' })
         }
         else {
-          rf = (1 - w)
-          yw = route_tab_des_width * 1
-          wy = route_tab_dep_width * 1
-          des_color_r = mixA(route_tab_color_888888_r, route_tab_color_333333_r, Math.abs(w))
-          des_color_g = mixA(route_tab_color_888888_g, route_tab_color_333333_g, Math.abs(w))
-          des_color_b = mixA(route_tab_color_888888_b, route_tab_color_333333_b, Math.abs(w))
-          dep_color_r = mixA(route_tab_color_333333_r, route_tab_color_888888_r, Math.abs(w))
-          dep_color_g = mixA(route_tab_color_333333_g, route_tab_color_888888_g, Math.abs(w))
-          dep_color_b = mixA(route_tab_color_333333_b, route_tab_color_888888_b, Math.abs(w))
-          dep_e = 0.3 * (Math.abs(w))
-          des_e = 0.3 * (1 - Math.abs(w))
-        }
-        $('.routes').css({ '--j-translateX-p': `${((route_max_X) * w + offsetX)}px` }).attr('slide', '1')
-        $('.tab-line-box2').css({ '--j-slide-scale-rf-p': `${rf * 100}%`, '--j-slide-scale-yu-p': `${yw + (wy - yw) * Math.abs(w)}px` }).attr('slide', '1')
-        $('.tabs').attr('slide', '1')
-        $('.tabs .tab[direction="departure"]').css({ '--j-slide-scale-c-p': `rgba(${dep_color_r},${dep_color_g},${dep_color_b},1)`, '--j-slide-scale-ts-p': dep_e + 'px' })
-        $('.tabs .tab[direction="destination"]').css({ '--j-slide-scale-c-p': `rgba(${des_color_r},${des_color_g},${des_color_b},1)`, '--j-slide-scale-ts-p': des_e + 'px' })
-      }
-      else {
-        var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
-        if (a <= 30) {
-          horizontal_slide = true
-        }
-        else {
-          vertical_slide = true
+          var a = Math.abs(Math.atan((route_y2 - route_y1) / (route_x2 - route_x1)) * 180 / Math.PI)
+          if (a <= 30) {
+            horizontal_slide = true
+          }
+          else {
+            vertical_slide = true
+          }
         }
       }
     }
-  }
-  else {
-    route_page_is_sliding = false
-  }
+    else {
+      route_page_is_sliding = false
+    }
   }
 
   function mixA(a, b, l) {
@@ -4261,7 +4261,7 @@
       update_search_result()
     }
   });
- 
+
   document.querySelector('.routes').addEventListener('touchstart', function (e) {
     if (route_page_is_open === 1) {
       route_page_is_sliding = true
@@ -4324,11 +4324,11 @@
     update_status = 0
     updateRealtimeJson(true)
   });
-  
+
   initializeAllOptions()
   initializeKeyboard()
   setRouteSlideSize()
-  getRoutes(false) 
+  getRoutes(false)
   checkVersion()
 
   function rgb2hex(a, r, t) {
