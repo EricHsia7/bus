@@ -4132,7 +4132,7 @@
       html.push(h)
       identifies.push(id)
     }
-    return [`${html.join('')}`, '#' + identifies.join(',#')]
+    return [`${html.join('')}`, '#' + identifies.join(',#'), list_k_len]
   }
 
   function initializePersonalBlocks() {
@@ -4140,13 +4140,15 @@
       personal_blocks_initialized = 1
       var container = document.querySelector('.personal_blocks')
       var b_favorite = composeFavoriteBlock()
-      var b_favorite_html = b_favorite[0]
-      var b_favorite_elt = document.createElement('div')
-      b_favorite_elt.classList.add('personal_block')
-      b_favorite_elt.innerHTML = `<div class="personal_block_title">收藏的路線</div><div class="personal_block_contents">${b_favorite_html}</div>`
-      container.appendChild(b_favorite_elt)
-      var b_favorite_selector = document.querySelectorAll(b_favorite[1])
-      ripple(b_favorite_selector, 'var(--g-333333)', 450)
+      if (b_favorite[2] > 0) {
+        var b_favorite_html = b_favorite[0]
+        var b_favorite_elt = document.createElement('div')
+        b_favorite_elt.classList.add('personal_block')
+        b_favorite_elt.innerHTML = `<div class="personal_block_title">收藏的路線</div><div class="personal_block_contents">${b_favorite_html}</div>`
+        container.appendChild(b_favorite_elt)
+        var b_favorite_selector = document.querySelectorAll(b_favorite[1])
+        ripple(b_favorite_selector, 'var(--g-333333)', 450)
+      }
     }
   }
 
