@@ -4,66 +4,66 @@ const localforage = require('localforage');
 
 function simplifyRoute(Route: object): object {
   var result = {};
-  let RouteShortName = [
-    { original: 'providerId', shorten: false },
-    { original: 'providerName', shorten: false },
-    { original: 'nameZh', short: 'n', shorten: true },
-    { original: 'nameEn', shorten: false },
-    { original: 'aliasName', shorten: false },
-    { original: 'pathAttributeId', short: 'pid', shorten: true },
-    { original: 'pathAttributeName', shorten: false },
-    { original: 'pathAttributeEname', shorten: false },
-    { original: 'buildPeriod', shorten: false },
-    { original: 'departureZh', short: 'dep', shorten: true },
-    { original: 'destinationZh', short: 'des', shorten: true },
-    { original: 'departureEn', shorten: false },
-    { original: 'destinationEn', shorten: false },
-    { original: 'goFirstBusTime', shorten: false },
-    { original: 'goLastBusTime', shorten: false },
-    { original: 'backFirstBusTime', shorten: false },
-    { original: 'backLastBusTime', shorten: false },
-    { original: 'offPeakHeadway', shorten: false },
-    { original: 'roadMapUrl', shorten: false },
-    { original: 'headwayDesc', shorten: false },
-    { original: 'holidayGoFirstBusTime', shorten: false },
-    { original: 'holidayBackFirstBusTime', shorten: false },
-    { original: 'holidayBackLastBusTime', shorten: false },
-    { original: 'holidayGoLastBusTime', shorten: false },
-    { original: 'holidayBusTimeDesc', shorten: false },
-    { original: 'realSequence', shorten: false },
-    { original: 'holidayHeadwayDesc', shorten: false },
-    { original: 'holidayOffPeakHeadway', shorten: false },
-    { original: 'holidayPeakHeadway', shorten: false },
-    { original: 'segmentBufferEn', shorten: false },
-    { original: 'ticketPriceDescriptionZh', shorten: false },
-    { original: 'ticketPriceDescriptionEn', shorten: false },
-    { original: 'peakHeadway', shorten: false },
-    { original: 'ttiaPathId', shorten: false },
-    { original: 'segmentBufferZh', short: 's', shorten: true },
-    { original: 'busTimeDesc', shorten: false },
-    { original: 'distance', shorten: false },
-    { original: 'NId', shorten: false },
-    { original: 'genus', shorten: false },
-    { original: 'Id', shorten: true, short:'Id'}
+  let RouteRename = [
+    { original: 'providerid', rename: false },
+    { original: 'providerName', rename: false },
+    { original: 'nameZh', rename: 'n', rename: true },
+    { original: 'nameEn', rename: false },
+    { original: 'aliasName', rename: false },
+    { original: 'pathAttributeid', rename: 'pid', rename: true },
+    { original: 'pathAttributeName', rename: false },
+    { original: 'pathAttributeEname', rename: false },
+    { original: 'buildPeriod', rename: false },
+    { original: 'departureZh', rename: 'dep', rename: true },
+    { original: 'destinationZh', rename: 'des', rename: true },
+    { original: 'departureEn', rename: false },
+    { original: 'destinationEn', rename: false },
+    { original: 'goFirstBusTime', rename: false },
+    { original: 'goLastBusTime', rename: false },
+    { original: 'backFirstBusTime', rename: false },
+    { original: 'backLastBusTime', rename: false },
+    { original: 'offPeakHeadway', rename: false },
+    { original: 'roadMapUrl', rename: false },
+    { original: 'headwayDesc', rename: false },
+    { original: 'holidayGoFirstBusTime', rename: false },
+    { original: 'holidayBackFirstBusTime', rename: false },
+    { original: 'holidayBackLastBusTime', rename: false },
+    { original: 'holidayGoLastBusTime', rename: false },
+    { original: 'holidayBusTimeDesc', rename: false },
+    { original: 'realSequence', rename: false },
+    { original: 'holidayHeadwayDesc', rename: false },
+    { original: 'holidayOffPeakHeadway', rename: false },
+    { original: 'holidayPeakHeadway', rename: false },
+    { original: 'segmentBufferEn', rename: false },
+    { original: 'ticketPriceDescriptionZh', rename: false },
+    { original: 'ticketPriceDescriptionEn', rename: false },
+    { original: 'peakHeadway', rename: false },
+    { original: 'ttiaPathid', rename: false },
+    { original: 'segmentBufferZh', rename: 's', rename: true },
+    { original: 'busTimeDesc', rename: false },
+    { original: 'distance', rename: false },
+    { original: 'Nid', rename: false },
+    { original: 'genus', rename: false },
+    { original: 'id', rename: true, rename:'id'}
   ];
 
   for (var item of Route) {
-    //shorten the properties' key
-    for (var toShorten of RouteShortName) {
-      if (item.hasOwnProperty(toShorten.original)) {
-        if (toShorten.shorten) {
-          //copy the original property to shorted path
-          item[toShorten.short] = item[toShorten.original];
+    //rename the properties' key
+    for (var toRename of RouteRename) {
+      if (item.hasOwnProperty(toRename.original)) {
+        if (toRename.rename) {
+          //copy the original property to renamed path
+          item[toRename.rename] = item[toRename.original];
         }
-        delete item[toShorten.original];
+        delete item[toRename.original];
       }
     }
     item.pid = [item.pid];
 
-    if (!result.hasOwnProperty('r_' + item.Id)) {
-      result['r_' + item.Id] = item;
+    if (!result.hasOwnProperty('r_' + item.id)) {
+      result['r_' + item.id] = item;
     } else {
-      result['r_' + item.Id]['pid'] = result['r_' + item.Id]['pid'].concat(item.pid);
+      result['r_' + item.id]['pid'] = result['r_' + item.id]['pid'].concat(item.pid);
     }
   }
   return result;
