@@ -1,5 +1,5 @@
-export function getAPIURL(city: Number, api: Number) {
-  function api_url_parameter(interval) {
+export function getAPIURL(city: number, api: number, interval: number = 5000) {
+  function APIURLParameter(interval: number) {
     var t = new Date().getTime();
     var g = (t / interval).toFixed(0) * interval;
     var str = g.toString(36);
@@ -9,5 +9,5 @@ export function getAPIURL(city: Number, api: Number) {
   //blobbus → Taipei City
   //ntpcbus → New Taipei City
   const buckets = ['BusData', 'BusEvent', 'CarInfo', 'CarUnusual', 'EstimateTime', 'IStop', 'IStopPath', 'OrgPathAttribute', 'PathDetail', 'Provider', 'Route', 'Stop', 'SemiTimeTable', 'StopLocation', 'TimeTable'];
-  return `https://tcgbusfs.blob.core.windows.net/${cities[city]}/Get${buckets[api]}.gz?_=${api_url_parameter(5000)}`;
+  return `https://tcgbusfs.blob.core.windows.net/${cities[city]}/Get${buckets[api]}.gz?_=${APIURLParameter(interval)}`;
 }

@@ -1,10 +1,10 @@
-import { getBusData } from './apis/getBusData.ts';
-import { getEstimateTime } from './apis/getEstimateTime.ts';
-import { getStop } from './apis/getStop.ts';
-import { getBusEvent } from './apis/getBusEvent.ts';
-import { getRoute } from './apis/getRoute.ts';
-import { getProvider } from './apis/getProvider.ts';
-import { getTimeTable } from './apis/getTimeTable.ts';
+import { getBusData } from './getBusData.ts';
+import { getEstimateTime } from './getEstimateTime.ts';
+import { getStop } from './getStop.ts';
+import { getBusEvent } from './getBusEvent.ts';
+import { getRoute } from './getRoute.ts';
+import { getProvider } from './getProvider.ts';
+import { getTimeTable } from './getTimeTable.ts';
 
 function processStop(Stop: object): object {
   var result = {};
@@ -58,7 +58,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
   return result;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: [number]) {
+export async function integrateRoute(RouteID: number, PathAttributeId: [number]): object {
   var Route = await getRoute(true);
   var Stop = await getStop();
   var EstimateTime = await getEstimateTime();
@@ -67,7 +67,18 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number])
   var processedBusEvent = processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedStop = processStop(Stop);
   var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, RouteID, PathAttributeId);
-  return processedEstimateTime;
+  var thisRoute = Route[`r_${RouteID}`];
+  var thisRouteName = thisRoute.n;
+  var thisRouteDeparture = thisRoute.dep;
+  var thisRouteDestination = thisRoute.des;
+  return {
+    items: processedEstimateTime,
+    RouteName: thisRouteName,
+    RouteEndPoints: {
+      RouteDeparture: thisRouteDeparture,
+      RouteDestination: thisRouteDestination
+    }
+  };
 }
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: number) {

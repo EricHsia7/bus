@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData } from '../loader.ts';
+import { fetchData } from './loader.ts';
 const localforage = require('localforage');
 
 function simplifyRoute(Route: object): object {
