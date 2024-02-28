@@ -8,8 +8,8 @@ window.bus.test = function () {
   getRoute().then((e) => {
     var rf = {};
     for (var o in e) {
-      if (e[o].n === '236') {
-        rf.id = n.split('_')[1];
+      if (String(e[o].n).indexOf('236')>-1) {
+        rf.id = parseInt(n.split('_')[1]);
         rf.pid = e[o].pid;
       }
       break;
