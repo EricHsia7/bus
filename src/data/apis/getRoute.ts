@@ -59,11 +59,11 @@ function simplifyRoute(Route: object): object {
         delete item[toRename.original];
       }
     }
-
+    item.pid = [item.pid];
     if (!result.hasOwnProperty('r_' + item.id)) {
-      result['r_' + item.id] = [item];
+      result['r_' + item.id] = item;
     } else {
-      result['r_' + item.id]['pid'].push(item.pid);
+      result['r_' + item.id]['pid'] = result['r_' + item.id]['pid'].concat(item.pid);
     }
   }
   return result;
@@ -83,7 +83,7 @@ export async function getRoute(simplify: boolean = true): object {
     return result;
   }
   if (simplify === false) {
-    return await getData()
+    return await getData();
   }
   var cache_time = 60 * 60 * 24 * 1 * 1000;
   var cache_key = 'bus_route_cache';
