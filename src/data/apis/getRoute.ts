@@ -7,15 +7,15 @@ function simplifyRoute(Route: object): object {
   let RouteRename = [
     { original: 'providerid', rename: false },
     { original: 'providerName', rename: false },
-    { original: 'nameZh', rename: 'n', rename: true },
+    { original: 'nameZh', newName: 'n', rename: true },
     { original: 'nameEn', rename: false },
     { original: 'aliasName', rename: false },
-    { original: 'pathAttributeid', rename: 'pid', rename: true },
+    { original: 'pathAttributeid', newName: 'pid', rename: true },
     { original: 'pathAttributeName', rename: false },
     { original: 'pathAttributeEname', rename: false },
     { original: 'buildPeriod', rename: false },
-    { original: 'departureZh', rename: 'dep', rename: true },
-    { original: 'destinationZh', rename: 'des', rename: true },
+    { original: 'departureZh', newName: 'dep', rename: true },
+    { original: 'destinationZh', newName: 'des', rename: true },
     { original: 'departureEn', rename: false },
     { original: 'destinationEn', rename: false },
     { original: 'goFirstBusTime', rename: false },
@@ -39,12 +39,12 @@ function simplifyRoute(Route: object): object {
     { original: 'ticketPriceDescriptionEn', rename: false },
     { original: 'peakHeadway', rename: false },
     { original: 'ttiaPathid', rename: false },
-    { original: 'segmentBufferZh', rename: 's', rename: true },
+    { original: 'segmentBufferZh', newName: 's', rename: true },
     { original: 'busTimeDesc', rename: false },
     { original: 'distance', rename: false },
     { original: 'Nid', rename: false },
     { original: 'genus', rename: false },
-    { original: 'id', rename: true, rename:'id'}
+    { original: 'id', rename: true, newName:'id'}
   ];
 
   for (var item of Route) {
@@ -53,7 +53,7 @@ function simplifyRoute(Route: object): object {
       if (item.hasOwnProperty(toRename.original)) {
         if (toRename.rename) {
           //copy the original property to renamed path
-          item[toRename.rename] = item[toRename.original];
+          item[toRename.newName] = item[toRename.original];
         }
         delete item[toRename.original];
       }
