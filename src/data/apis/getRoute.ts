@@ -58,9 +58,9 @@ function simplifyRoute(Route: object): object {
         delete item[toShorten.original];
       }
     }
+    item.pid = [item.pid];
 
     if (!result.hasOwnProperty('r_' + item.Id)) {
-      item.pid = [item.pid];
       result['r_' + item.Id] = item;
     } else {
       if (!item.pid.indexOf(result['r_' + item.Id]['pid'])) {
