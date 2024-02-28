@@ -23,7 +23,7 @@ function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [nu
   return result;
 }
 
-function processEstimateTime(EstimateTime: object, Stop: object, BusEvent:object,RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
@@ -31,7 +31,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent:object
       if (Stop.hasOwnProperty('stop_' + item.StopID)) {
         item['_Stop'] = Stop['stop_' + item.StopID];
       }
-      if(BusEvent.hasOwnProperty('stop_' + item.StopID)) {
+      if (BusEvent.hasOwnProperty('stop_' + item.StopID)) {
         item['_BusEvent'] = BusEvent['stop_' + item.StopID];
       }
       result.push(item);
@@ -59,6 +59,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number])
   var BusData = await getBusData();
   var BusEvent = await getBusEvent();
   var processedBusEvent = processBusEvent(BusEvent, RouteID, PathAttributeId);
-  var processedEstimateTime = processEstimateTime(EstimateTime, processStop(Stop), RouteID, PathAttributeId);
+  var processedStop = processStop(Stop);
+  var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, RouteID, PathAttributeId);
   return processedEstimateTime;
 }
