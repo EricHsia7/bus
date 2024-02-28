@@ -11,7 +11,7 @@ function simplifyRoute(Route: object): object {
     { original: 'nameEn', rename: false },
     { original: 'aliasName', rename: false },
     { original: 'pathAttributeId', newName: 'pid', rename: true },
-{ original: 'pathAttributeNId',rename: false },
+    { original: 'pathAttributeNId', rename: false },
     { original: 'pathAttributeName', rename: false },
     { original: 'pathAttributeEname', rename: false },
     { original: 'buildPeriod', rename: false },
@@ -45,7 +45,7 @@ function simplifyRoute(Route: object): object {
     { original: 'distance', rename: false },
     { original: 'NId', rename: false },
     { original: 'genus', rename: false },
-    { original: 'Id', rename: true, newName:'id'}
+    { original: 'Id', rename: true, newName: 'id' }
   ];
 
   for (var item of Route) {
@@ -59,12 +59,11 @@ function simplifyRoute(Route: object): object {
         delete item[toRename.original];
       }
     }
-    item.pid = [item.pid];
 
     if (!result.hasOwnProperty('r_' + item.id)) {
-      result['r_' + item.id] = item;
+      result['r_' + item.id] = [item];
     } else {
-      result['r_' + item.id]['pid'] = result['r_' + item.id]['pid'].concat(item.pid);
+      result['r_' + item.id]['pid'].push(item.pid);
     }
   }
   return result;

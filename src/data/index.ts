@@ -17,7 +17,11 @@ function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [nu
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      result['stop_' + item.StopID] = item;
+      if (!result.hasOwnProperty('stop_' + item.StopID)) {
+        result['stop_' + item.StopID] = [item];
+      } else {
+        result['stop_' + item.StopID].push(item);
+      }
     }
   }
   return result;
