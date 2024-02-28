@@ -5,12 +5,13 @@ const localforage = require('localforage');
 function simplifyRoute(Route: object): object {
   var result = {};
   let RouteRename = [
-    { original: 'providerid', rename: false },
+    { original: 'providerId', rename: false },
     { original: 'providerName', rename: false },
     { original: 'nameZh', newName: 'n', rename: true },
     { original: 'nameEn', rename: false },
     { original: 'aliasName', rename: false },
-    { original: 'pathAttributeid', newName: 'pid', rename: true },
+    { original: 'pathAttributeId', newName: 'pid', rename: true },
+{ original: 'pathAttributeNId',rename: false },
     { original: 'pathAttributeName', rename: false },
     { original: 'pathAttributeEname', rename: false },
     { original: 'buildPeriod', rename: false },
@@ -38,11 +39,11 @@ function simplifyRoute(Route: object): object {
     { original: 'ticketPriceDescriptionZh', rename: false },
     { original: 'ticketPriceDescriptionEn', rename: false },
     { original: 'peakHeadway', rename: false },
-    { original: 'ttiaPathid', rename: false },
+    { original: 'ttiaPathId', rename: false },
     { original: 'segmentBufferZh', newName: 's', rename: true },
     { original: 'busTimeDesc', rename: false },
     { original: 'distance', rename: false },
-    { original: 'Nid', rename: false },
+    { original: 'NId', rename: false },
     { original: 'genus', rename: false },
     { original: 'Id', rename: true, newName:'id'}
   ];
