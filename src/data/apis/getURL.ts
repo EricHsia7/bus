@@ -9,5 +9,5 @@ export function getAPIURL(city: Number, api: Number) {
   //blobbus → Taipei City
   //ntpcbus → New Taipei City
   const buckets = ['BusData', 'BusEvent', 'CarInfo', 'CarUnusual', 'EstimateTime', 'IStop', 'IStopPath', 'OrgPathAttribute', 'PathDetail', 'Provider', 'Route', 'Stop', 'SemiTimeTable', 'StopLocation'];
-  return `https://tcgbusfs.blob.core.windows.net/${cities[city]}/${bucket[api]}.gz?_=${api_url_parameter(5000)}`;
+  return `https://tcgbusfs.blob.core.windows.net/${cities[city]}/${buckets[api]}.gz?_=${api_url_parameter(5000)}`;
 }
