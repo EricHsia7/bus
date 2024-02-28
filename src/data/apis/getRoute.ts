@@ -44,7 +44,7 @@ function simplifyRoute(Route: object): object {
     { original: 'distance', rename: false },
     { original: 'Nid', rename: false },
     { original: 'genus', rename: false },
-    { original: 'id', rename: true, newName:'id'}
+    { original: 'Id', rename: true, newName:'id'}
   ];
 
   for (var item of Route) {
