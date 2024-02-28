@@ -9,7 +9,7 @@ export async function fetchData(url: string): object {
 
   const blob = await response.blob();
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
-  const buffer = gzip_blob.arrayBuffer();
+  const buffer = await gzip_blob.arrayBuffer();
 
   const inflatedData = pako.inflate(buffer, { to: 'string' }); // Inflate and convert to string
 
