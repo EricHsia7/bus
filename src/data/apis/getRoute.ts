@@ -63,9 +63,7 @@ function simplifyRoute(Route: object): object {
     if (!result.hasOwnProperty('r_' + item.Id)) {
       result['r_' + item.Id] = item;
     } else {
-      if (!item.pid.indexOf(result['r_' + item.Id]['pid'])) {
-        result['r_' + item.Id]['pid'] = result['r_' + item.Id]['pid'].concat(item.pid);
-      }
+      result['r_' + item.Id]['pid'] = result['r_' + item.Id]['pid'].concat(item.pid);
     }
   }
   return result;
