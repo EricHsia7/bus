@@ -9,7 +9,7 @@ window.bus.test = function () {
     var rf = {};
     for (var o in e) {
       if (String(e[o].n).indexOf('236')>-1) {
-        rf.id = parseInt(n.split('_')[1]);
+        rf.id = parseInt(o.split('_')[1]);
         rf.pid = e[o].pid;
       }
       break;
