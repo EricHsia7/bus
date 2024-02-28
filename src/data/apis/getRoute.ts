@@ -49,7 +49,7 @@ function simplifyRoute(Route: object): object {
 
   for (var item of Route) {
     //shorten the properties' key
-    for (toShorten of RouteShortName) {
+    for (var toShorten of RouteShortName) {
       if (item.hasOwnProperty(toShorten.original)) {
         if (toShorten.shorten) {
           //copy the original property to shorted path
