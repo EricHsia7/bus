@@ -11,5 +11,5 @@ export async function getEstimateTime() {
     var data = await fetchData(api);
     result = result.concat(data.BusInfo);
   }
-  return processEstimateTime(result);
+  return result;
 }
