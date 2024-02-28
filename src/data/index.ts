@@ -1,6 +1,6 @@
 import { getBusData } from './apis/getBusData.ts';
 import { getEstimateTime } from './apis/getEstimateTime.ts';
-import { getStop } from './apis/getEstimateTime.ts';
+import { getStop } from './apis/getStop.ts';
 
 function processStop(Stop: object): object {
   var result = {};
