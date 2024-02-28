@@ -6,7 +6,7 @@ window.bus.initialize = function () {};
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.test = function () {
-  getRoute().then((e) => {
+  getRoute(true).then((e) => {
     console.log(e);
     var rf = {};
     for (var o in e) {

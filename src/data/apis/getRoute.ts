@@ -5,7 +5,7 @@ const localforage = require('localforage');
 function simplifyRoute(Route: object): object {
   var result = {};
   let RouteRename = [
-    { original: 'providerId', rename: false },
+    { original: 'providerId', rename: true, newName: 'pd' },
     { original: 'providerName', rename: false },
     { original: 'nameZh', newName: 'n', rename: true },
     { original: 'nameEn', rename: false },
@@ -69,7 +69,7 @@ function simplifyRoute(Route: object): object {
   return result;
 }
 
-export async function getRoute() {
+export async function getRoute(simplify: boolean = true): object {
   async function getData() {
     var apis = [
       [0, 10],
@@ -81,6 +81,9 @@ export async function getRoute() {
       result = result.concat(data.BusInfo);
     }
     return result;
+  }
+  if (simplify === false) {
+    return await getData()
   }
   var cache_time = 60 * 60 * 24 * 1 * 1000;
   var cache_key = 'bus_route_cache';
