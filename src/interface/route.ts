@@ -61,20 +61,11 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
-  var groupQuantity = 0
-  var itemQuantity = 0
-  var groupedItems = {}
-  if (skeletonScreen) {
-    var quantity = Math.floor(FieldHeight / 50) + 5
-    groupQuantity = 2
-    itemQuantity = { g_0: quantity, g_1: quantity }
-    groupedItems = { g_0: [], g_1: [] }
-  }
-  else {
-    groupQuantity = formattedRoute.groupQuantity;
-    itemQuantity = formattedRoute.itemQuantity;
-    groupedItems = formattedRoute.groupedItems;
-  }
+  
+    var groupQuantity = formattedRoute.groupQuantity;
+   var itemQuantity = formattedRoute.itemQuantity;
+  var groupedItems = formattedRoute.groupedItems;
+  
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
