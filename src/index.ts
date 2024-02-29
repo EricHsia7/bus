@@ -38,10 +38,14 @@ window.bus.test = function () {
     console.log(e);
     integrateRoute(e[0].id, e[0].pid).then((f) => {
       console.log(f);
-    });
+    }).catch((e)=>{
+console.log(e)
+});
     displayRoute(e[0].id, e[0].pid).then((f) => {
       console.log(f);
-    });
+    }).catch((e)=>{
+console.log(e)
+})
   });
 };
 export default window.bus;
