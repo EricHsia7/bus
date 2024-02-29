@@ -85,7 +85,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
-      console.log('item', capacity)
+      console.log('item', itemQuantity[groupKey], currentItemSeatQuantity, capacity)
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
