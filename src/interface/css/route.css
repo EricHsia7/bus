@@ -64,9 +64,9 @@
 }
 .route_field .route_groups .route_grouped_items .item .status {
   position: absolute;
-  top: 5px;
+  top: 7.5px;
   left: 10px;
-  height: 40px;
+  height: 35px;
   width: 70px;
   white-space: nowrap;
   word-break: keep-all;
