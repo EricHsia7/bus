@@ -74,20 +74,20 @@
   display: flex;
   align-items: center;
   color: var(--b-333333);
-  font-size: 23px;
+  font-size: 16px;
   font-weight: 500;
   -webkit-user-select: none;
   user-select: none;
-  border-radius:25px;
+  border-radius: 25px;
   background: var(--b-e5e5ea);
   }
   
 .route_field .route_groups .route_grouped_items .item .name {
   position: absolute;
   top: 5px;
-  left: 80px;
+  left: 90px;
   height: 40px;
-  width: calc(100% - 20px - 70px - 35px);
+  width: calc(100% - 20px - 70px - 40px - 20px);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
