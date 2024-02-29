@@ -103,11 +103,13 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       var thisItem = groupedItems[groupKey][j];
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
-      thisElement.querySelector('.status').innerText = thisItem.status.text;
-      thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.bus').setAttribute('is-there', thisItem.bus === null ? 'false' : 'true');
-      thisElement.querySelector('.bus').innerHTML = thisItem.bus === null ? '' : icons.bus;
+      if (!skeletonScreen) {
+        thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
+        thisElement.querySelector('.status').innerText = thisItem.status.text;
+        thisElement.querySelector('.name').innerText = thisItem.name;
+        thisElement.querySelector('.bus').setAttribute('is-there', thisItem.bus === null ? 'false' : 'true');
+        thisElement.querySelector('.bus').innerHTML = thisItem.bus === null ? '' : icons.bus;
+      }
     }
   }
 }
