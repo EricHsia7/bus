@@ -1,8 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRoute } from './data/search/searchRoute.ts';
-import { displayRoute } from './interface/route.ts';
-
+import { displayRoute, updateRouteField, formatRoute } from './interface/route.ts';
 
 //for development
 
@@ -26,26 +25,31 @@ window.onerror = async function (message, source, lineno, colno, error) {
   });
 };
 
-
 window.bus = {};
 window.bus.initialize = function () {};
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRoute = searchRoute;
+window.bus.updateRouteField = updateRouteField;
+window.bus.formatRoute = formatRoute;
 
 window.bus.test = function () {
   searchRoute('236').then((e) => {
     console.log(e);
-    integrateRoute(e[0].id, e[0].pid).then((f) => {
-      console.log(f);
-    }).catch((e)=>{
-console.log(e)
-});
-    displayRoute(e[0].id, e[0].pid).then((f) => {
-      console.log(f);
-    }).catch((e)=>{
-console.log(e)
-})
+    integrateRoute(e[0].id, e[0].pid)
+      .then((f) => {
+        console.log(f);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    displayRoute(e[0].id, e[0].pid)
+      .then((f) => {
+        console.log(f);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   });
 };
 export default window.bus;
