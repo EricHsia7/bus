@@ -124,6 +124,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
+console.log(i,j,thisItem)
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
