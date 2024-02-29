@@ -48,8 +48,10 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   var itemQuantity = 0
   var groupedItems = {}
   if (skeletonScreen) {
+    var quantity = Math.floor(FieldHeight / 50) + 5
     groupQuantity = 2
-    itemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 }
+    itemQuantity = { g_0: quantity, g_1: quantity }
+    groupedItems = { g_0: [], g_1: [] }
   }
   else {
     groupQuantity = formattedRoute.groupQuantity;
@@ -100,10 +102,10 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisItem = groupedItems[groupKey][j];
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       if (!skeletonScreen) {
+        var thisItem = groupedItems[groupKey][j];
         thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
         thisElement.querySelector('.status').innerText = thisItem.status.text;
         thisElement.querySelector('.name').innerText = thisItem.name;
