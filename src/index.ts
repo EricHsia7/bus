@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRoute } from './data/search/searchRoute.ts';
-import {displayRoute} from './interface/route.ts'
+import { displayRoute } from './interface/route.ts';
 window.bus = {};
 window.bus.initialize = function () {};
 window.bus.getRoute = getRoute;
@@ -14,9 +14,9 @@ window.bus.test = function () {
     integrateRoute(e[0].id, e[0].pid).then((f) => {
       console.log(f);
     });
-    displayRoute(e[0].id, e[0].pid).then((f)=>{
+    displayRoute(e[0].id, e[0].pid).then((f) => {
       console.log(f);
-    })
+    });
   });
 };
 export default window.bus;

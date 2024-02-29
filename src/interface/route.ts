@@ -1,4 +1,4 @@
-import { integrateRoute } from '../data/index.ts';
+import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 var md5 = require('md5');
 
