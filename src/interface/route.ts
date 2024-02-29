@@ -40,14 +40,17 @@ function setUpRouteField(Field: HTMLElement) {
 }
 */
 
-export function updateRouteField(Field: HTMLElement, formattedRoute: object) {
+export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
   var groupQuantity = formattedRoute.groupQuantity;
   var itemQuantity = formattedRoute.itemQuantity;
   var groupedItems = formattedRoute.groupedItems;
-
+  if (skeletonScreen) {
+    groupQuantity = 2
+    itemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 }
+  }
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
@@ -94,7 +97,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object) {
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisItem = groupedItems[groupKey][j];
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
-      thisElement.setAttribute('skeleton-screen', 'false');
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
@@ -187,8 +190,9 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
 
 export async function displayRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
+  updateRouteField(Field, {}, true);
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
   console.log(formattedRoute);
-  updateRouteField(Field, formattedRoute);
+  updateRouteField(Field, formattedRoute, false);
   return 'Successfully displayed the route.';
 }
