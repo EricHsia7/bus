@@ -169,7 +169,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
   var groupQuantity = 0;
   var itemQuantity = {};
   for (var group in groupedItems) {
-    for (var item in group) {
+    for (var item of group) {
       if (!itemQuantity.hasOwnProperty(group)) {
         itemQuantity[group] = 0;
       }
