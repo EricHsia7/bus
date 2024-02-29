@@ -135,8 +135,8 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
       return { code: 3, text: '未發車' };
     }
     if (time <= 180) {
-      if (t <= 100) {
-        if (t <= 10) {
+      if (time <= 100) {
+        if (time <= 10) {
           return { code: 2, text: '進站中' };
         } else {
           return { code: 2, text: formatTime(time, mode) };
