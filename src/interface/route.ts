@@ -71,14 +71,14 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object) {
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
           currentRouteField[groupKey].push(thisElement);
-          Field.querySelector(`.route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
         }
       } else {
         currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
@@ -113,7 +113,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
       if (mode === 1) {
         var minutes = String((time - (time % 60)) / 60);
         var seconds = String(time % 60);
-        return [minutes.padStart(2, '0'), ':', seconds.padStart(2, '0')];
+        return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
       }
       if (mode === 2) {
         var minutes = String(Math.floor(time / 60));
@@ -191,6 +191,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
 export async function displayRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
+  console.log(formattedRoute)
   updateRouteField(Field, formattedRoute);
   return 'Successfully displayed the route.';
 }
