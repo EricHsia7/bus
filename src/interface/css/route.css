@@ -62,11 +62,30 @@
 .route_field .route_groups .route_grouped_items .item:last-child {
   margin-bottom: var(--o-safe-area-bottom);
 }
-
-.route_field .route_groups .route_grouped_items .item .name {
+.route_field .route_groups .route_grouped_items .item .status {
   position: absolute;
   top: 5px;
   left: 10px;
+  height: 40px;
+  width: 70px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: var(--b-333333);
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius:25px;
+  background: var(--b-e5e5ea);
+  }
+  
+.route_field .route_groups .route_grouped_items .item .name {
+  position: absolute;
+  top: 5px;
+  left: 80px;
   height: 40px;
   width: calc(100% - 20px - 70px - 35px);
   white-space: nowrap;
@@ -84,9 +103,9 @@
 .route_field .route_groups .route_grouped_items .item .bus {
   position: absolute;
   top: 0px;
-  right: 77.5px;
-  width: 50px;
-  height: 50px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
   box-sizing: border-box;
   display: none;
 }
