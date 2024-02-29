@@ -64,6 +64,13 @@ if (time === -3) {
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
     groupedItems[group] = formattedItem;
   }
+var groupQuantity = 0
+for(var group in groupedItems) {
+groupQuantity += 1
+}
+return {
+groupedItems,groupQuantity
+}
 }
 
 export function displayRoute(RouteID: number, PathAttributeId: number) {}
