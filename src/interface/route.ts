@@ -22,7 +22,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
 }
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldRect = element.getBoundingClientRect();
+  const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
   var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
