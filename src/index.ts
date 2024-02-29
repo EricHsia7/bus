@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRoute } from './data/search/searchRoute.ts';
-
+import {displayRoute} from './interface/route.ts'
 window.bus = {};
 window.bus.initialize = function () {};
 window.bus.getRoute = getRoute;
