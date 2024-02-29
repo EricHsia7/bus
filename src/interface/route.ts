@@ -20,25 +20,42 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
     id: identifier
   };
 }
-/*
-function setUpRouteField(Field: HTMLElement) {
+
+function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
   const FieldRect = element.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
   var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   var defaultGroupQuantity = 2;
-  var elements = {};
+  var groupedItems = {};
   for (var i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
-    elements[groupKey] = [];
+    groupedItems[groupKey] = [];
     for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
-      var thisElement = generateElementOfItem({}, true);
-      elements[groupKey].push(thisElement);
+      groupedItems[groupKey].push({
+        name: '',
+        status: { code: -1, text: '' },
+        bus: null,
+        sequence: j,
+        location: {
+          latitude: null,
+          longitude: null
+        }
+      });
     }
   }
-  currentRouteField = elements;
+  updateRouteField(Field, {
+    groupedItems: groupedItems,
+    groupQuantity: defaultGroupQuantity,
+    itemQuantity: defaultItemQuantity,
+    RouteName: '',
+    RouteEndPoints: {
+      RouteDeparture: '',
+      RouteDestination: ''
+    }
+  }, true)
 }
-*/
+
 
 export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
   const FieldRect = Field.getBoundingClientRect();
@@ -106,14 +123,12 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      if (!skeletonScreen) {
-        var thisItem = groupedItems[groupKey][j];
-        thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
-        thisElement.querySelector('.status').innerText = thisItem.status.text;
-        thisElement.querySelector('.name').innerText = thisItem.name;
-        thisElement.querySelector('.bus').setAttribute('is-there', thisItem.bus === null ? 'false' : 'true');
-        thisElement.querySelector('.bus').innerHTML = thisItem.bus === null ? '' : icons.bus;
-      }
+      var thisItem = groupedItems[groupKey][j];
+      thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
+      thisElement.querySelector('.status').innerText = thisItem.status.text;
+      thisElement.querySelector('.name').innerText = thisItem.name;
+      thisElement.querySelector('.bus').setAttribute('is-there', thisItem.bus === null ? 'false' : 'true');
+      thisElement.querySelector('.bus').innerHTML = thisItem.bus === null ? '' : icons.bus;
     }
   }
 }
@@ -199,11 +214,21 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
   };
 }
 
-export async function displayRoute(RouteID: number, PathAttributeId: number): string {
+export async function refreshRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
-  //updateRouteField(Field, {}, true);
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
-  console.log(formattedRoute);
   updateRouteField(Field, formattedRoute, false);
-  return 'Successfully displayed the route.';
+  return 'Successfully refreshed the route.';
+}
+
+export function openRoute(RouteID: number, PathAttributeId: number) {
+  var Field = document.querySelector('.route_field');
+  setUpRouteFieldSkeletonScreen(Field)
+  setInterval(function () {
+    refreshRoute(RouteID, PathAttributeId).then(result => {
+      console.log(result)
+    }).catch(err => {
+      console.log(err)
+    })
+  }, 2 * 1000 * 10)
 }

@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRoute } from './data/search/searchRoute.ts';
-import { displayRoute, updateRouteField, formatRoute } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute } from './interface/route.ts';
 
 import './interface/css/theme.css'
 import './interface/css/route.css'
@@ -35,24 +35,11 @@ window.bus.integrateRoute = integrateRoute;
 window.bus.searchRoute = searchRoute;
 window.bus.updateRouteField = updateRouteField;
 window.bus.formatRoute = formatRoute;
+window.bus.openRoute = openRoute
 
 window.bus.test = function () {
   searchRoute('236').then((e) => {
-    console.log(e);
-    integrateRoute(e[0].id, e[0].pid)
-      .then((f) => {
-        console.log(f);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    displayRoute(e[0].id, e[0].pid)
-      .then((f) => {
-        console.log(f);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    openRoute(e[0].id, e[0].pid)
   });
 };
 export default window.bus;
