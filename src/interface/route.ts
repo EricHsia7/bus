@@ -41,7 +41,7 @@ function setUpRouteField(Field: HTMLElement) {
 */
 
 export function updateRouteField(Field: HTMLElement, formattedRoute: object) {
-  const FieldRect = element.getBoundingClientRect();
+  const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
   var groupQuantity = formattedRoute.groupQuantity;
