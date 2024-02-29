@@ -169,11 +169,8 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
   var groupQuantity = 0;
   var itemQuantity = {};
   for (var group in groupedItems) {
-    for (var item of group) {
-      if (!itemQuantity.hasOwnProperty(group)) {
-        itemQuantity[group] = 0;
-      }
-      itemQuantity[group] = itemQuantity[group] + 1;
+    if (!itemQuantity.hasOwnProperty(group)) {
+      itemQuantity[group] = groupedItems[group].length;
     }
     groupQuantity += 1;
   }
@@ -191,7 +188,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
 export async function displayRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
-  console.log(formattedRoute)
+  console.log(formattedRoute);
   updateRouteField(Field, formattedRoute);
   return 'Successfully displayed the route.';
 }
