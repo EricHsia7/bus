@@ -73,8 +73,9 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content:center;
   color: var(--b-333333);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   -webkit-user-select: none;
   user-select: none;
