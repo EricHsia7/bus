@@ -1,0 +1,60 @@
+:root {
+  --b-main-color: #24aff5;
+
+  --b-ffffff: #ffffff;
+  --b-ffffff-r: 255;
+  --b-ffffff-g: 255;
+  --b-ffffff-b: 255;
+
+  --b-f9f9fb: #f9f9fb;
+  --b-f9f9fb-r: 249;
+  --b-f9f9fb-g: 249;
+  --b-f9f9fb-b: 251;
+
+  --b-e5e5ea: #e5e5ea;
+  --b-e5e5ea-r: 229;
+  --b-e5e5ea-g: 229;
+  --b-e5e5ea-b: 234;
+
+  --b-aeaeb2: #aeaeb2;
+  --b-aeaeb2-r: 174;
+  --b-aeaeb2-g: 174;
+  --b-aeaeb2-b: 178;
+
+  --b-333333: #333333;
+  --b-333333-r: 51;
+  --b-333333-g: 51;
+  --b-333333-b: 51;
+
+  --b-border-radius-default: 15px;
+  --b-border-radius-small: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --b-ffffff: #050506;
+    --b-ffffff-r: 5;
+    --b-ffffff-g: 5;
+    --b-ffffff-b: 6;
+
+    --b-f9f9fb: #0e0e11;
+    --b-f9f9fb-r: 14;
+    --b-f9f9fb-g: 14;
+    --b-f9f9fb-b: 17;
+
+    --b-e5e5ea: #23232a;
+    --b-e5e5ea-r: 35;
+    --b-e5e5ea-g: 35;
+    --b-e5e5ea-b: 42;
+
+    --b-aeaeb2: #5a5a6c;
+    --b-aeaeb2-r: 90;
+    --b-aeaeb2-g: 90;
+    --b-aeaeb2-b: 108;
+
+    --b-333333: #f9f9fb;
+    --b-333333-r: 255;
+    --b-333333-g: 255;
+    --b-333333-b: 255;
+  }
+}

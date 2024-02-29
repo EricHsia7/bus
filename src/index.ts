@@ -3,6 +3,9 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRoute } from './data/search/searchRoute.ts';
 import { displayRoute, updateRouteField, formatRoute } from './interface/route.ts';
 
+import './interface/css/theme.css'
+import './interface/css/route.css'
+
 //for development
 
 const ErrorStackParser = require('error-stack-parser');
@@ -26,7 +29,7 @@ window.onerror = async function (message, source, lineno, colno, error) {
 };
 
 window.bus = {};
-window.bus.initialize = function () {};
+window.bus.initialize = function () { };
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRoute = searchRoute;
