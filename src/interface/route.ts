@@ -93,7 +93,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       } else {
         currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
         for (var o = 0; o < Math.abs(capacity); o++) {
-          Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[o].remove();
+          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
         }
       }
     }
