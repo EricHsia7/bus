@@ -201,7 +201,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
 
 export async function displayRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
-  updateRouteField(Field, {}, true);
+  //updateRouteField(Field, {}, true);
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
   console.log(formattedRoute);
   updateRouteField(Field, formattedRoute, false);
