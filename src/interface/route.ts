@@ -1,5 +1,6 @@
 import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
+import { searchRouteByName } from '../data/search/index.ts';
 var md5 = require('md5');
 
 var currentRouteField = {};
@@ -11,6 +12,14 @@ var routeSliding = {
   scrollLog: [],
   fieldWidth: 0,
   fieldHeight: 0
+};
+var routeUpdateTimer = {
+  interval: 15 * 1000,
+  timer: null
+};
+var currentRouteIDSet = {
+  RouteID: 0,
+  PathAttributeId: 0
 };
 
 function getTextWidth(text, font) {
@@ -370,24 +379,42 @@ export async function refreshRoute(RouteID: number, PathAttributeId: number): st
 }
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
+  currentRouteIDSet.RouteID = RouteID;
+  currentRouteField.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
   setUpRouteFieldSkeletonScreen(Field);
-  refreshRoute(RouteID, PathAttributeId)
+  refreshRoute(currentRouteIDSet.RouteID, currentRouteField.PathAttributeId)
     .then((result) => {
       console.log(result);
     })
     .catch((err) => {
       console.log(err);
     });
-  setInterval(function () {
-    refreshRoute(RouteID, PathAttributeId)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, 2 * 1000 * 10);
+  if (routeUpdateTimer.timer === null) {
+    routeUpdateTimer.timer = setInterval(function () {
+      refreshRoute(currentRouteField.RouteID, currentRouteField.PathAttributeId)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, routeUpdateTimer.interval);
+  }
+}
+
+export function closeRoute() {
+  clearInterval(routeUpdateTimer.timer);
+  routeUpdateTimer.timer = null;
+}
+
+export function openRouteByURLScheme() {
+  var current_url = new URL(location.href);
+  if (current_url.searchParams.get('open_route_by_name') === 'true') {
+    searchRouteByName(current_url.searchParams.get('route_name')).then((e) => {
+      openRoute(e[0].id, e[0].pid);
+    });
+  }
 }
 
 export function stretchItemBody(itemID: string): void {

@@ -17,6 +17,27 @@
   box-sizing: border-box;
 }
 
+
+.route_field .route_head .route_button_left {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.route_field .route_head .route_button_left svg {
+  height: 20px;
+  width: 20px;
+}
+
+.route_field .route_head .route_button_left svg path {
+  fill: var(--b-333333);
+}
+
 .route_field .route_head .route_name {
   position: absolute;
   top: 5px;
