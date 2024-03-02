@@ -52,6 +52,8 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
     }
     if (Stop.hasOwnProperty('stop_' + item.StopID)) {
       item['_BusEvent'] = BusEvent['stop_' + item.StopID];
+    } else {
+      item['_BusEvent'] = [];
     }
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
       result.push(item);
