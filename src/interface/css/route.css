@@ -28,6 +28,7 @@
   align-items: center;
   font-size: 23px;
   font-weight: 500;
+  color: var(--b-333333);
 }
 
 .route_field .route_head .route_group_tabs {

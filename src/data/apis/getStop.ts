@@ -1,5 +1,6 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
+const localforage = require('localforage');
 
 export async function getStop(): object {
   async function getData() {
