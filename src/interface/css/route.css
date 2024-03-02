@@ -153,6 +153,7 @@
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
+  transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="1"] {
@@ -160,12 +161,21 @@
   font-size: 15px;
   font-weight: 700;
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.28);
+  transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
+}
+
+.route_field .route_groups .route_grouped_items .item .head .status[code="0.5"] {
+  color: var(--b-333333);
+  font-size: 15px;
+  font-weight: 700;
+  transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
+  transition: none;
 }
 
 .route_field .route_groups .route_grouped_items .item .name {
