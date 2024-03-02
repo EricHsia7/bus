@@ -1,6 +1,6 @@
 import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
-import { searchRouteByName } from '../data/search/index.ts';
+import { searchRouteByName } from '../data/search/searchRoute.ts';
 var md5 = require('md5');
 
 var currentRouteField = {};
