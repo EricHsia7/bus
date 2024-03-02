@@ -150,7 +150,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
-    updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[routeSliding.currentGroup].width);
+    updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
