@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme } from './interface/route.ts';
 import { FieldResize } from './interface/index.ts';
 
 import './interface/css/theme.css';
@@ -37,12 +37,12 @@ window.bus = {
     window.addEventListener('resize', (event) => {
       FieldResize();
     });
-    openRouteByURLScheme()
+    openRouteByURLScheme();
   },
   route: {
     stretchItemBody: stretchItemBody,
-    closeRoute: closeRoute,
-    openRoute: openRoute
+    openRoute: openRoute,
+    closeRoute: closeRoute
   }
 };
 window.bus.searchRouteByName = searchRouteByName;
