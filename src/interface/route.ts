@@ -39,7 +39,6 @@ function updateRouteCSS(groupQuantity: number, percentage: number, width: number
   var time = new Date().getTime()
   var percentage = Math.min(1,Math.max(0,Math.abs(t - realtime_last_update) / routeUpdateTimer.interval))
   document.querySelector('.update_timer').style.setProperty("--b-update-timer", percentage);
-  $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
   window.requestAnimationFrame(updateUpdateTimer)
 }
 
