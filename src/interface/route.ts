@@ -127,7 +127,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.bus').setAttribute('is-there', thisItem.bus === null ? 'false' : 'true');
       thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '目前沒有公車' : item.buses.map(bus => `<div class="bus">
       <div class="bus_title">
           <div class="car_icon">${icons.bus}</div>
@@ -244,7 +243,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
       result.RouteName = object.RouteName
       return result
     }
-    for(var bus of buses) {
+    for (var bus of buses) {
       result.push(formatBus(bus))
     }
     return result
