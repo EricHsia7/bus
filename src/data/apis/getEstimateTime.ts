@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
 
-export async function getEstimateTime() {
+export async function getEstimateTime(): [] {
   var apis = [
     [0, 4],
     [1, 4]

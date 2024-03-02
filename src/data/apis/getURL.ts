@@ -1,4 +1,4 @@
-export function getAPIURL(city: number, api: number, interval: number = 5000) {
+export function getAPIURL(city: number, api: number, interval: number = 5000): string {
   function APIURLParameter(interval: number) {
     var t = new Date().getTime();
     var g = (t / interval).toFixed(0) * interval;

@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
 
-export async function getTimeTable() {
+export async function getTimeTable(): [] {
   var apis = [
     [0, 9],
     [1, 9]

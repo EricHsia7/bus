@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
 
-export async function getBusEvent() {
+export async function getBusEvent(): [] {
   var apis = [
     [0, 1],
     [1, 1]

@@ -118,10 +118,10 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
       itemQuantity: defaultItemQuantity,
-      RouteName: '',
+      RouteName: '載入中',
       RouteEndPoints: {
-        RouteDeparture: '',
-        RouteDestination: ''
+        RouteDeparture: '載入中',
+        RouteDestination: '載入中'
       }
     },
     true
@@ -149,7 +149,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   Field.querySelector('.route_name').innerText = formattedRoute.RouteName;
-  
+
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;

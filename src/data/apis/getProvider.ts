@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
 
-export async function getProvider() {
+export async function getProvider(): [] {
   var apis = [
     [0, 9],
     [1, 9]
