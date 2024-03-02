@@ -43,7 +43,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
       groupedItems[groupKey].push({
         name: '',
         status: { code: -1, text: '' },
-        bus: null,
+        buses: null,
         sequence: j,
         location: {
           latitude: null,
