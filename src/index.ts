@@ -2,7 +2,7 @@ import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { displayRoute, updateRouteField, formatRoute, openRoute } from './interface/route.ts';
-
+import { CSSResize } from './interface/index.ts'
 import './interface/css/theme.css'
 import './interface/css/route.css'
 
@@ -29,13 +29,19 @@ window.onerror = async function (message, source, lineno, colno, error) {
 };
 
 window.bus = {};
-window.bus.initialize = function () { };
+window.bus.initialize = function () {
+  CSSResize()
+  window.addEventListener("resize", (event) => {
+    CSSResize()
+  });
+};
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRouteByName = searchRouteByName;
 window.bus.updateRouteField = updateRouteField;
 window.bus.formatRoute = formatRoute;
 window.bus.openRoute = openRoute
+window.bus.CSSResize = CSSResize
 
 window.bus.test = function () {
   searchRouteByName('236').then((e) => {
