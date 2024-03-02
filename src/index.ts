@@ -51,7 +51,7 @@ window.bus.openRoute = openRoute
 window.bus.CSSResize = CSSResize
 
 window.bus.test = function () {
-  searchRouteByName('236').then((e) => {
+  searchRouteByName('羅斯').then((e) => {
     openRoute(e[0].id, e[0].pid)
   });
 };
