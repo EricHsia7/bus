@@ -13,7 +13,6 @@
   left: 0px;
   width: 100%;
   height: 95px;
-  border-bottom: 1px solid var(--b-e5e5ea);
   box-sizing: border-box;
 }
 
@@ -75,7 +74,7 @@
 .route_field .route_head .route_group_tab_line_track {
   position: absolute;
   left: 0px;
-  bottom: 0px;
+  bottom: 1px;
   width: 100%;
   height: 2px;
 }
@@ -106,14 +105,15 @@
   width: 100%;
   height: 1px;
   overflow: hidden;
+  background: var(--b-e5e5ea);
 }
 
 .route_field .route_head .update_timer_box .update_timer {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: var(--b-e5e5ea);
-  height: 1px;
+  background: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), 0.5);
+  height: 1.2px;
   width: 100%;
   transform: translateX(calc(var(--b-update-timer) * 100%));
 }

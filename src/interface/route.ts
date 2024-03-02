@@ -38,7 +38,7 @@ function updateRouteCSS(groupQuantity: number, percentage: number, width: number
 function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = Math.min(1, Math.max(0, Math.abs(time - routeUpdateTimer.lastUpdate) / routeUpdateTimer.interval));
-  document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
+  document.querySelector('.update_timer').style.setProperty('--b-update-timer', 1 - percentage);
   window.requestAnimationFrame(updateUpdateTimer);
 }
 
