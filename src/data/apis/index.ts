@@ -102,7 +102,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number])
   var Route = await getRoute(true);
   var Stop = await getStop();
   var EstimateTime = await getEstimateTime();
-  var BusData = await getBusData();
   var BusEvent = await getBusEvent();
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedStop = processStop(Stop);
