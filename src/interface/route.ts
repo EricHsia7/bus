@@ -179,7 +179,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         var groupIndex = currentGroupSeatQuantity - 1 - o;
         delete currentRouteField[`g_${groupIndex}`];
         Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
-        Field.querySelectorAll(`.route_head .route_group_tabs`)[groupIndex].remove();
+        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
       }
     }
   }
