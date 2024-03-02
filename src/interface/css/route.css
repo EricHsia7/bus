@@ -239,7 +239,9 @@
   margin-right: 5px;
   scroll-snap-align: center;
 }
-
+.route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
+  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.15);
+}
 .route_field .route_groups .route_grouped_items .item .bus:last-child {
   margin-right: 0px;
 }

@@ -20,10 +20,10 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      item.on_this_route = true;
+      item.onThisRoute = true;
       item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
-      item.on_this_route = false;
+      item.onThisRoute = false;
       item.index = String(item.BusID).charCodeAt(0);
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
