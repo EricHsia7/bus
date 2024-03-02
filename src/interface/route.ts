@@ -68,8 +68,8 @@ export function initializeRouteSliding() {
     } else {
       routeSliding.targetGroup = routeSliding.currentGroup - 1;
     }
-    var current_size = routeSliding.groupStyles[`g_${routeSliding.currentGroup}`];
-    var target_size = routeSliding.groupStyles[`g_${routeSliding.targetGroup}`];
+    var current_size = routeSliding.groupStyles[`g_${routeSliding.currentGroup}`] || { width: 0 };
+    var target_size = routeSliding.groupStyles[`g_${routeSliding.targetGroup}`] || { width: 0 };
     var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
@@ -143,7 +143,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   for (var i = 0; i < groupQuantity; i++) {
     routeSliding.groupStyles[`g_${i}`] = {
-      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map(e=> `往${e}`)[i], `23px "Noto Sans", sans-serif`)
+      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 19px "Noto Sans", sans-serif`)
     };
   }
 
@@ -196,7 +196,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = Field.querySelectorAll(`.route_field .route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerText = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map(e=> `往${e}`)[i];
+    thisTabElement.innerText = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.route_field .route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
