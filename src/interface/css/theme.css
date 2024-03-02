@@ -32,7 +32,7 @@
   --b-border-radius-default: 15px;
   --b-border-radius-small: 8px;
 
-  --b-transition-duration:0.5s;
+  --b-transition-duration:0.3s;
 }
 
 @media (prefers-color-scheme: dark) {

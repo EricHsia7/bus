@@ -52,18 +52,21 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
       });
     }
   }
-  updateRouteField(Field, {
-    groupedItems: groupedItems,
-    groupQuantity: defaultGroupQuantity,
-    itemQuantity: defaultItemQuantity,
-    RouteName: '',
-    RouteEndPoints: {
-      RouteDeparture: '',
-      RouteDestination: ''
-    }
-  }, true)
+  updateRouteField(
+    Field,
+    {
+      groupedItems: groupedItems,
+      groupQuantity: defaultGroupQuantity,
+      itemQuantity: defaultItemQuantity,
+      RouteName: '',
+      RouteEndPoints: {
+        RouteDeparture: '',
+        RouteDestination: ''
+      }
+    },
+    true
+  );
 }
-
 
 export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
   const FieldRect = Field.getBoundingClientRect();
@@ -124,7 +127,12 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '目前沒有公車' : thisItem.buses.map(bus => `<div class="bus" on-this-route="${bus.onThisRoute}">
+      thisElement.querySelector('.buses').innerHTML =
+        thisItem.buses === null
+          ? '目前沒有公車'
+          : thisItem.buses
+              .map(
+                (bus) => `<div class="bus" on-this-route="${bus.onThisRoute}">
       <div class="bus_title">
           <div class="car_icon">${icons.bus}</div>
           <div class="car_number">${bus.carNumber}</div>
@@ -134,7 +142,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
           <div class="car_status">狀態：${bus.status.text}</div>
           <div class="car_type">類型：${bus.type}</div>
         </div>
-      </div>`).join('');
+      </div>`
+              )
+              .join('');
     }
   }
 }
@@ -183,68 +193,71 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
       return { code: 0, text: formatTime(time, mode) };
     }
   }
-  function formatBusEvent(buses: []): [] {
-    var result = []
+  function formatBusEvent(buses: []): [] | null {
+    if (buses.length === 0) {
+      return null;
+    }
+    var result = [];
     function formatBus(object: object): object {
-      var result = {}
-      var CarType = parseInt(object.CarType)
+      var result = {};
+      var CarType = parseInt(object.CarType);
       if (CarType === 0) {
-        result.type = '一般'
+        result.type = '一般';
       }
       if (CarType === 1) {
-        result.type = '低底盤'
+        result.type = '低底盤';
       }
       if (CarType === 2) {
-        result.type = '大復康巴士'
+        result.type = '大復康巴士';
       }
       if (CarType === 3) {
-        result.type = '狗狗友善專車'
+        result.type = '狗狗友善專車';
       }
-      var CarOnStop = parseInt(object.CarOnStop)
-      var onStop = ''
+      var CarOnStop = parseInt(object.CarOnStop);
+      var onStop = '';
       if (CarOnStop === 0) {
-        onStop = '離站'
+        onStop = '離站';
       }
       if (CarOnStop === 1) {
-        onStop = '進站'
+        onStop = '進站';
       }
-      var BusStatus = parseInt(object.BusStatus)
-      var situation = ''
+      var BusStatus = parseInt(object.BusStatus);
+      var situation = '';
       if (BusStatus === 0) {
-        situation = '正常'
+        situation = '正常';
       }
       if (BusStatus === 1) {
-        situation = '車禍'
+        situation = '車禍';
       }
       if (BusStatus === 2) {
-        situation = '故障'
+        situation = '故障';
       }
       if (BusStatus === 3) {
-        situation = '塞車'
+        situation = '塞車';
       }
       if (BusStatus === 4) {
-        situation = '緊急求援'
+        situation = '緊急求援';
       }
       if (BusStatus === 5) {
-        situation = '加油'
+        situation = '加油';
       }
       if (BusStatus === 99) {
-        situation = '非營運狀態'
+        situation = '非營運狀態';
       }
-      result.carNumber = object.BusID
+      result.carNumber = object.BusID;
       result.status = {
         onStop: onStop,
         situation: situation,
         text: `${onStop} | ${situation}`
-      }
-      result.RouteName = object.RouteName
-      result.onThisRoute = object.onThisRoute
-      return result
+      };
+      result.RouteName = object.RouteName;
+      result.onThisRoute = object.onThisRoute;
+      return result;
     }
     for (var bus of buses) {
-      result.push(formatBus(bus))
+      result.push(formatBus(bus));
     }
-    return result
+    return result;
   }
   var integration = await integrateRoute(RouteID, PathAttributeId);
   var groupedItems = {};
@@ -292,22 +305,23 @@ export async function refreshRoute(RouteID: number, PathAttributeId: number): st
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
   var Field = document.querySelector('.route_field');
-  setUpRouteFieldSkeletonScreen(Field)
+  setUpRouteFieldSkeletonScreen(Field);
   setInterval(function () {
-    refreshRoute(RouteID, PathAttributeId).then(result => {
-      console.log(result)
-    }).catch(err => {
-      console.log(err)
-    })
-  }, 2 * 1000 * 10)
+    refreshRoute(RouteID, PathAttributeId)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, 2 * 1000 * 10);
 }
 
 export function stretchItemBody(itemID: string): void {
-  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`)
+  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
-    itemElement.setAttribute('stretched', false)
-  }
-  else {
-    itemElement.setAttribute('stretched', true)
+    itemElement.setAttribute('stretched', false);
+  } else {
+    itemElement.setAttribute('stretched', true);
   }
 }
