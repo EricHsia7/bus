@@ -398,7 +398,7 @@ export async function refreshRoute(RouteID: number, PathAttributeId: number): st
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.RouteID = RouteID;
-  currentRouteField.PathAttributeId = PathAttributeId;
+  currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
   setUpRouteFieldSkeletonScreen(Field);
   refreshRoute(currentRouteIDSet.RouteID, currentRouteField.PathAttributeId)
@@ -410,7 +410,7 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
     });
   if (routeUpdateTimer.timer === null) {
     routeUpdateTimer.timer = setInterval(function () {
-      refreshRoute(currentRouteField.RouteID, currentRouteField.PathAttributeId)
+      refreshRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId)
         .then((result) => {
           console.log(result);
         })
