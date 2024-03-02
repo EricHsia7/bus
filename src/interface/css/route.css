@@ -1,11 +1,3 @@
-body {
-  font-family: "Noto Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-}
-
 .route_field {
   position: fixed;
   top: 0px;
@@ -233,6 +225,7 @@ body {
   scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;
+  border-radius: 15px;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus {
@@ -245,6 +238,10 @@ body {
   display: inline-flex;
   margin-right: 5px;
   scroll-snap-align: center;
+}
+
+.route_field .route_groups .route_grouped_items .item .bus:last-child {
+  margin-right: 0px;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .bus_title {

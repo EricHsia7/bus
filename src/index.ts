@@ -3,7 +3,9 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { displayRoute, updateRouteField, formatRoute, openRoute, stretchItemBody } from './interface/route.ts';
 import { CSSResize } from './interface/index.ts'
+
 import './interface/css/theme.css'
+import './interface/css/index.css'
 import './interface/css/route.css'
 
 //for development
