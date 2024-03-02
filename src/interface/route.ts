@@ -20,7 +20,7 @@ var routeUpdateTimer = {
 };
 var currentRouteIDSet = {
   RouteID: 0,
-  PathAttributeId: 0
+  PathAttributeId: []
 };
 
 function getTextWidth(text, font) {
