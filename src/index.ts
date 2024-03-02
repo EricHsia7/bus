@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute, stretchItemBody } from './interface/route.ts';
 import { CSSResize } from './interface/index.ts'
 import './interface/css/theme.css'
 import './interface/css/route.css'
@@ -28,15 +28,20 @@ window.onerror = async function (message, source, lineno, colno, error) {
   });
 };
 
-window.bus = {};
-window.bus.initialize = function () {
-  CSSResize()
-  window.addEventListener("resize", (event) => {
+window.bus = {
+  initialize: function () {
     CSSResize()
-  });
+    window.addEventListener("resize", (event) => {
+      CSSResize()
+    });
+  },
+  route: {
+    stretchItemBody: stretchItemBody
+  }
 };
-window.bus.route.stretchItemBody = stretchItemBody
 
+
+window.bus.route.stretchItemBody = stretchItemBody
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRouteByName = searchRouteByName;

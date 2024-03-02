@@ -14,7 +14,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.innerHTML = `<div class="head">
   <div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div>
   <div class="name">${skeletonScreen ? '' : item.name}</div>
-  <div class="stretch" onclick="stretchItemBody(event)" item-id="${identifier}">${icons.expand}</div>
+  <div class="stretch" onclick="bus.stretchItemBody(event)" item-id="${identifier}">${icons.expand}</div>
   </div>
   <div class="body">
   <div class="tabs">
