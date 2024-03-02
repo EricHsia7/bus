@@ -5,6 +5,7 @@ import { getBusEvent } from './getBusEvent.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
 import { getTimeTable } from './getTimeTable.ts';
+import { searchRouteByPathAttributeId } from '../search/searchRoute.ts'
 
 function processStop(Stop: object): object {
   var result = {};
@@ -14,17 +15,36 @@ function processStop(Stop: object): object {
   return result;
 }
 
-function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
+async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
   var result = {};
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      if (!result.hasOwnProperty('stop_' + item.StopID)) {
-        result['stop_' + item.StopID] = [item];
-      } else {
-        result['stop_' + item.StopID].push(item);
-      }
+      item.on_this_route = true
     }
+    else {
+      item.on_this_route = false
+    }
+    var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID)
+    item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : ''
+    if (!result.hasOwnProperty('stop_' + item.StopID)) {
+      result['stop_' + item.StopID] = [item];
+    } else {
+      result['stop_' + item.StopID].push(item);
+    }
+  }
+  for (var key in result) {
+    result[key] = result[key].sort(function (a, b) {
+      var c = String(a.BusID).charCodeAt(0);
+      var d = String(b.BusID).charCodeAt(0);
+      if (a.on_this_route) {
+        c *= Math.pow(10, -5)
+      }
+      if (b.on_this_route) {
+        d *= Math.pow(10, -5)
+      }
+      return c - d
+    })
   }
   return result;
 }
@@ -64,7 +84,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number])
   var EstimateTime = await getEstimateTime();
   var BusData = await getBusData();
   var BusEvent = await getBusEvent();
-  var processedBusEvent = processBusEvent(BusEvent, RouteID, PathAttributeId);
+  var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedStop = processStop(Stop);
   var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];
