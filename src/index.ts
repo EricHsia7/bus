@@ -1,12 +1,12 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, stretchItemBody } from './interface/route.ts';
-import { FieldResize } from './interface/index.ts'
+import { displayRoute, updateRouteField, formatRoute, openRoute, stretchItemBody, initializeRouteSliding } from './interface/route.ts';
+import { FieldResize } from './interface/index.ts';
 
-import './interface/css/theme.css'
-import './interface/css/index.css'
-import './interface/css/route.css'
+import './interface/css/theme.css';
+import './interface/css/index.css';
+import './interface/css/route.css';
 
 //for development
 
@@ -32,9 +32,10 @@ window.onerror = async function (message, source, lineno, colno, error) {
 
 window.bus = {
   initialize: function () {
-    FieldResize()
-    window.addEventListener("resize", (event) => {
-      FieldResize()
+    initializeRouteSliding();
+    FieldResize();
+    window.addEventListener('resize', (event) => {
+      FieldResize();
     });
   },
   route: {
@@ -42,19 +43,18 @@ window.bus = {
   }
 };
 
-
-window.bus.route.stretchItemBody = stretchItemBody
+window.bus.route.stretchItemBody = stretchItemBody;
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRouteByName = searchRouteByName;
 window.bus.updateRouteField = updateRouteField;
 window.bus.formatRoute = formatRoute;
-window.bus.openRoute = openRoute
-window.bus.FieldResize = FieldResize
+window.bus.openRoute = openRoute;
+window.bus.FieldResize = FieldResize;
 
 window.bus.test = function () {
   searchRouteByName('羅斯').then((e) => {
-    openRoute(e[0].id, e[0].pid)
+    openRoute(e[0].id, e[0].pid);
   });
 };
 export default window.bus;
