@@ -53,6 +53,7 @@
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
+  transition: height var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] {
@@ -73,11 +74,12 @@
   left: 0px;
   width: 100%;
   height: 171px;
-  display: none;
+  opacity: 0;
+  transition: opacity var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .body {
-  display: block;
+  opacity: 1;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs {
@@ -202,6 +204,8 @@
 .route_field .route_groups .route_grouped_items .item .head .stretch svg {
   width: 17px;
   height: 17px;
+  transform: rotate(0deg);
+  transition: transform var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .stretch svg path {
@@ -239,9 +243,11 @@
   margin-right: 5px;
   scroll-snap-align: center;
 }
+
 .route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.15);
 }
+
 .route_field .route_groups .route_grouped_items .item .bus:last-child {
   margin-right: 0px;
 }
@@ -283,6 +289,9 @@
   display: flex;
   align-items: center;
   font-size: 20px;
+  color: var(--b-333333);
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .car_attributes {
@@ -301,6 +310,10 @@
   left: 0px;
   width: 100%;
   height: 22px;
+  color: var(--b-333333);
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .car_attributes .car_route {
@@ -313,8 +326,4 @@
 
 .route_field .route_groups .route_grouped_items .item .bus .car_attributes .car_type {
   top: 44px;
-}
-
-.route_field .route_groups .route_grouped_items .item .bus[is-there="true"] {
-  display: block;
 }
