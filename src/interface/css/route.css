@@ -41,12 +41,12 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-
   scroll-snap-align: center;
 }
 
 .route_field .route_groups .route_grouped_items::-webkit-scrollbar,
-.route_field .route_groups::-webkit-scrollbar {
+.route_field .route_groups::-webkit-scrollbar,
+.route_field .route_grouped .route_grouped_items .item .body .buses::-webkit-scrollbar {
   display: none;
 }
 
@@ -165,10 +165,7 @@ body {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
-  background: rgba(var(--b-main-color-r),
-      var(--b-main-color-g),
-      var(--b-main-color-b),
-      0.28);
+  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.28);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="0"] {
@@ -231,6 +228,11 @@ body {
   height: 121px;
   overflow-x: scroll;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus {
@@ -238,11 +240,11 @@ body {
   width: calc(var(--b-ww) * 0.6);
   height: 121px;
   box-sizing: border-box;
-  background: rgba(var(--b-e5e5ea-r),
-      var(--b-e5e5ea-g),
-      var(--b-e5e5ea-b),
-      0.6);
+  background: rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.6);
   border-radius: 15px;
+  display: inline-flex;
+  margin-right: 5px;
+  scroll-snap-align: center;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .bus_title {
