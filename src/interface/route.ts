@@ -22,7 +22,7 @@ function getTextWidth(text, font) {
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#bus_route`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width}px;}`;
+  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width}px;}`;
 }
 
 export function initializeRouteSliding() {

@@ -1,8 +1,12 @@
-export function CSSResize(): void {
-  document.querySelector('#bus_sizing').innerHTML = `
+export function FieldResize(): void {
+  var Field = document.querySelector('.route_field');
+  const FieldRect = Field.getBoundingClientRect();
+  const FieldWidth = FieldRect.width;
+  const FieldHeight = FieldRect.height;
+  document.querySelector('#field_size').innerHTML = `
  :root {
- --b-ww:${window.innerWidth}px;
- --b-wh:${window.innerHeight}px;
+ --b-fw:${FieldWidth}px;
+ --b-fh:${FieldHeight}px;
  }
  `;
 }
