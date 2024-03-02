@@ -14,7 +14,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.innerHTML = `<div class="head">
   <div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div>
   <div class="name">${skeletonScreen ? '' : item.name}</div>
-  <div class="stretch" onclick="bus.route.stretchItemBody(event)" item-id="${identifier}">${icons.expand}</div>
+  <div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div>
   </div>
   <div class="body">
   <div class="tabs">
@@ -301,9 +301,8 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   }, 2 * 1000 * 10)
 }
 
-export function stretchItemBody(event: Event) {
-  var itemID = event.target.getAttribute('item-id')
-  var itemElement = document.querySelector(`.route_field .route_groups #${itemID}`)
+export function stretchItemBody(itemID: string): void {
+  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`)
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false)
   }
