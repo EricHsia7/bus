@@ -127,7 +127,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '目前沒有公車' : item.buses.map(bus => `<div class="bus">
+      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '目前沒有公車' : thisItem.buses.map(bus => `<div class="bus">
       <div class="bus_title">
           <div class="car_icon">${icons.bus}</div>
           <div class="car_number">${bus.carNumber}</div>
