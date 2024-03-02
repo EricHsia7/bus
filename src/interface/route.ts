@@ -170,7 +170,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         thisElement.classList.add('route_grouped_items');
         thisElement.setAttribute('group', currentGroupSeatQuantity + o);
         var tabElement = document.createElement('div');
-        thisElement.classList.add('route_group_tab');
+        tabElement.classList.add('route_group_tab');
         Field.querySelector(`.route_groups`).appendChild(thisElement);
         Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
       }
