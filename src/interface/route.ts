@@ -142,7 +142,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   routeSliding.fieldHeight = FieldHeight;
 
   for (var i = 0; i < groupQuantity; i++) {
-    routeSliding.groupStyles[key] = {
+    routeSliding.groupStyles[`g_${i}`] = {
       width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''][i], `23px "Noto Sans", sans-serif`)
     };
   }
