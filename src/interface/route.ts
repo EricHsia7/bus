@@ -15,7 +15,8 @@ var routeSliding = {
 };
 var routeUpdateTimer = {
   interval: 15 * 1000,
-  timer: null
+  timer: null,
+  lastUpdate:0
 };
 var currentRouteIDSet = {
   RouteID: 0,
@@ -32,6 +33,22 @@ function getTextWidth(text, font) {
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
   document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
+}
+
+ function updateUpdateTimer() {
+  var time = new Date().getTime()
+  var percentage = Math.min(1,Math.max(0,Math.abs(t - realtime_last_update) / routeUpdateTimer.interval))
+  document.querySelector('.update_timer').style.setProperty("--b-update-timer", percentage);
+  $('.refresh_progress').css({ '--o-refresh-progress': (1 - p) * -100 + '%' })
+  window.requestAnimationFrame(updateUpdateTimer)
+}
+
+export function ResizeRouteField(): void {
+  var Field = document.querySelector('.route_field');
+  const FieldRect = Field.getBoundingClientRect();
+  const FieldWidth = FieldRect.width;
+  const FieldHeight = FieldRect.height;
+  document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
 }
 
 export function initializeRouteSliding() {
@@ -82,6 +99,7 @@ export function initializeRouteSliding() {
     var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
+  updateUpdateTimer()
 }
 
 function generateElementOfItem(item: object, skeletonScreen: boolean): object {
@@ -375,6 +393,7 @@ export async function refreshRoute(RouteID: number, PathAttributeId: number): st
   var Field = document.querySelector('.route_field');
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
   updateRouteField(Field, formattedRoute, false);
+  routeUpdateTimer.lastUpdate = new Date().getTime()
   return 'Successfully refreshed the route.';
 }
 

@@ -17,7 +17,6 @@
   box-sizing: border-box;
 }
 
-
 .route_field .route_head .route_button_left {
   position: absolute;
   top: 5px;
@@ -100,6 +99,25 @@
   transform: scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
+.route_field .route_head .update_timer_box {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 1px;
+  overflow: hidden;
+}
+
+.route_field .route_head .update_timer_box .update_timer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: var(--b-e5e5ea);
+  height: 1px;
+  width: 100%;
+  transform: translateX(calc(var(--b-update-timer) * 100%));
+}
+
 .route_field .route_groups {
   position: absolute;
   top: 95px;
@@ -131,7 +149,7 @@
 
 .route_field .route_groups .route_grouped_items::-webkit-scrollbar,
 .route_field .route_groups::-webkit-scrollbar,
-.route_field .route_grouped .route_grouped_items .item .body .buses::-webkit-scrollbar {
+.route_field .route_groups .route_grouped_items .item .body .buses::-webkit-scrollbar {
   display: none;
 }
 
@@ -339,7 +357,6 @@
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
   display: none;
 }
-
 
 .route_field .route_groups .route_grouped_items .item .buses {
   position: absolute;
