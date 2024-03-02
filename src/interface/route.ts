@@ -77,7 +77,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
-    console.log('group', capacity)
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
@@ -101,7 +100,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
-      console.log('item', itemQuantity[groupKey], currentItemSeatQuantity, capacity)
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
@@ -123,7 +121,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
-      console.log(i, j, thisItem)
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;

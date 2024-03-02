@@ -1,5 +1,8 @@
 :root {
   --b-main-color: #24aff5;
+  --b-main-color-r: 36;
+  --b-main-color-g: 175;
+  --b-main-color-b: 245;
 
   --b-ffffff: #ffffff;
   --b-ffffff-r: 255;
