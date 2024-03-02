@@ -35,6 +35,8 @@ window.bus.initialize = function () {
     CSSResize()
   });
 };
+window.bus.route.stretchItemBody = stretchItemBody
+
 window.bus.getRoute = getRoute;
 window.bus.integrateRoute = integrateRoute;
 window.bus.searchRouteByName = searchRouteByName;

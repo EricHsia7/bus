@@ -60,6 +60,7 @@ body {
   background: var(--b-ffffff);
   -webkit-user-select: none;
   user-select: none;
+  overflow: hidden;
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] {
@@ -80,6 +81,11 @@ body {
   left: 0px;
   width: 100%;
   height: 171px;
+  display: none;
+}
+
+.route_field .route_groups .route_grouped_items .item[stretched="true"] .body {
+  display: block;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs {
