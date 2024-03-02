@@ -1,4 +1,3 @@
-import { getBusData } from './getBusData.ts';
 import { getEstimateTime } from './getEstimateTime.ts';
 import { getStop } from './getStop.ts';
 import { getBusEvent } from './getBusEvent.ts';
