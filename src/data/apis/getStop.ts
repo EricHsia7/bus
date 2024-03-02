@@ -22,17 +22,17 @@ export async function getStop(): object {
   if (cached_time === null) {
     var result = await getData();
     await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
-    await localforage.setItem(`${cache_key}`, JSON.stringify(result));
+    await localforage.setItem(`${cache_key}`, JSON.stringify({ data: result }));
     return result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
       await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
-      await localforage.setItem(`${cache_key}`, JSON.stringify(result));
+      await localforage.setItem(`${cache_key}`, JSON.stringify({ data: result }));
       return result;
     } else {
       var cache = await localforage.getItem(`${cache_key}`);
-      return JSON.parse(cache);
+      return JSON.parse(cache).data;
     }
   }
 }
