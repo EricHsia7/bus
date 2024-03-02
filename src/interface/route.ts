@@ -64,12 +64,12 @@ export function initializeRouteSliding() {
   element.addEventListener('scroll', function (event) {
     var slidingGroupIndex = event.target.scrollLeft / routeSliding.fieldWidth;
     if (slidingGroupIndex > routeSliding.currentGroup) {
-      target_group = routeSliding.currentGroup + 1;
+      routeSliding.targetGroup = routeSliding.currentGroup + 1;
     } else {
-      target_group = routeSliding.currentGroup - 1;
+      routeSliding.targetGroup = routeSliding.currentGroup - 1;
     }
     var current_size = routeSliding.groupStyles[`g_${routeSliding.currentGroup}`];
-    var target_size = routeSliding.groupStyles[`g_${target_group}`];
+    var target_size = routeSliding.groupStyles[`g_${routeSliding.targetGroup}`];
     var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
