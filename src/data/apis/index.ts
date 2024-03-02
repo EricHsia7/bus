@@ -50,7 +50,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
     if (Stop.hasOwnProperty('stop_' + item.StopID)) {
       item['_Stop'] = Stop['stop_' + item.StopID];
     }
-    if (Stop.hasOwnProperty('stop_' + item.StopID)) {
+    if (BusEvent.hasOwnProperty('stop_' + item.StopID)) {
       item['_BusEvent'] = BusEvent['stop_' + item.StopID];
     } else {
       item['_BusEvent'] = [];
