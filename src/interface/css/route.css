@@ -324,7 +324,7 @@
   transition: transform var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
   background: var(--b-f9f9fb);
 }
 
