@@ -61,7 +61,15 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
   for (var item of result) {
     if (item.hasOwnProperty('_Stop')) {
       item._overlappingRouteStops = array.filter((e) => {
-        e._Stop.stopLocationId === item._Stop.stopLocationId ? true : false;
+        if (e.hasOwnProperty('_Stop')) {
+          if (e._Stop.stopLocationId === item._Stop.stopLocationId) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
       });
       for (var stop of item._overlappingRouteStops) {
         if (BusEvent.hasOwnProperty('stop_' + stop.StopID)) {
