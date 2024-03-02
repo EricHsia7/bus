@@ -306,6 +306,13 @@ export async function refreshRoute(RouteID: number, PathAttributeId: number): st
 export function openRoute(RouteID: number, PathAttributeId: number) {
   var Field = document.querySelector('.route_field');
   setUpRouteFieldSkeletonScreen(Field);
+  refreshRoute(RouteID, PathAttributeId)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   setInterval(function () {
     refreshRoute(RouteID, PathAttributeId)
       .then((result) => {
