@@ -175,19 +175,19 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.route_field .route_groups .route_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
           currentRouteField[groupKey].push(thisElement);
-          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          Field.querySelector(`.route_field .route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
         }
       } else {
         currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
         for (var o = 0; o < Math.abs(capacity); o++) {
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
+          Field.querySelectorAll(`.route_field .route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
         }
       }
     }
@@ -195,8 +195,10 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
+    var thisTabElement = Field.querySelectorAll(`.route_field .route_head .route_group_tabs .route_group_tab`)[i];
+    thisTabElement.innerText = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''][i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.route_grouped_items[group="${i}"] .item`)[j];
+      var thisElement = Field.querySelectorAll(`.route_field .route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
