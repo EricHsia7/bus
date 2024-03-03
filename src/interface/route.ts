@@ -398,7 +398,7 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     updateRouteField(Field, formattedRoute, false);
     routeRefreshTimer.lastUpdate = new Date().getTime();
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
-    return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId, callback: callback, errorCallback: errorCallback };
+    return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
   }
   refreshRoute(RouteID, PathAttributeId)
     .then((result) => {
