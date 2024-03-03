@@ -241,7 +241,6 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
         },
         RouteID: route.id
       };
-      console.log(array, route, formattedItem);
       result.push(formattedItem);
     }
     return result;
@@ -417,7 +416,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
       thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
-      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '目前沒有路線可顯示' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_name">${route.name}</div><div class="overlapping_route_endpoints">${route.RouteEndPoints.text}</div></div>`);
+      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '目前沒有路線可顯示' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_name">${route.name}</div><div class="overlapping_route_endpoints">${route.RouteEndPoints.text}</div></div>`).join('');
     }
   }
 }
