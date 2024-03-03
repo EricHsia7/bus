@@ -3,7 +3,7 @@ var md5 = require('md5');
 
 var dataReceivingProgress = {};
 // Define an async function that takes a url as an argument
-async function fetchData(url: string, requestID: string): object {
+export async function fetchData(url: string, requestID: string): object {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
