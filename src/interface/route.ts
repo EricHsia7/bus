@@ -45,7 +45,7 @@ function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = 0;
   if (routeRefreshTimer.refreshing) {
-    percentage = getDataReceivingProgress(routeRefreshTimer.currentRequestID) - 1;
+    percentage = getDataReceivingProgress(routeRefreshTimer.currentRequestID);
   } else {
     percentage = Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
   }
