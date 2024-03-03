@@ -2,7 +2,7 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData } from './loader.ts';
 const localforage = require('localforage');
 
-export async function getStop(): object {
+export async function getStop(requestID: string): object {
   async function getData() {
     var apis = [
       [0, 11],

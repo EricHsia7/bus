@@ -97,11 +97,11 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
   return result2;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: [number]): object {
-  var Route = await getRoute(true);
-  var Stop = await getStop();
-  var EstimateTime = await getEstimateTime();
-  var BusEvent = await getBusEvent();
+export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
+  var Route = await getRoute(requestID, true);
+  var Stop = await getStop(requestID);
+  var EstimateTime = await getEstimateTime(requestID);
+  var BusEvent = await getBusEvent(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedStop = processStop(Stop);
   var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, RouteID, PathAttributeId);

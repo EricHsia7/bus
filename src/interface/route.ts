@@ -1,6 +1,7 @@
 import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
+import { getDataReceivingProgress } from '../data/loader.ts';
 var md5 = require('md5');
 
 var currentRouteField = {};
@@ -18,7 +19,9 @@ var routeRefreshTimer = {
   retryInterval: 5 * 1000,
   flowing: false,
   lastUpdate: 0,
-  nextUpdate: 0
+  nextUpdate: 0,
+  refreshing: false,
+  currentRequestID: ''
 };
 
 var currentRouteIDSet = {
@@ -40,7 +43,12 @@ function updateRouteCSS(groupQuantity: number, percentage: number, width: number
 
 function updateUpdateTimer() {
   var time = new Date().getTime();
-  var percentage = Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+  var percentage = 0;
+  if (routeRefreshTimer.refreshing) {
+    percentage = -1 * getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+  } else {
+    percentage = Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+  }
   document.querySelector('.update_timer').style.setProperty('--b-update-timer', -1 * percentage);
   window.requestAnimationFrame(updateUpdateTimer);
 }
@@ -240,7 +248,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   }
 }
 
-export async function formatRoute(RouteID: number, PathAttributeId: number) {
+export async function formatRoute(RouteID: number, PathAttributeId: number, requestID: string) {
   function formatEstimateTime(EstimateTime: string, mode: number = 1) {
     function formatTime(time: number, mode: number) {
       if (mode === 0) {
@@ -354,7 +362,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
     }
     return result;
   }
-  var integration = await integrateRoute(RouteID, PathAttributeId);
+  var integration = await integrateRoute(RouteID, PathAttributeId, requestID);
   var groupedItems = {};
   for (var item of integration.items) {
     var formattedItem = {};
@@ -393,11 +401,14 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
 
 export function streamRoute(RouteID: number, PathAttributeId: number): void {
   async function refreshRoute(RouteID: number, PathAttributeId: number): object {
+    routeRefreshTimer.refreshing = true;
+    routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
     var Field = document.querySelector('.route_field');
     var formattedRoute = await formatRoute(RouteID, PathAttributeId);
     updateRouteField(Field, formattedRoute, false);
     routeRefreshTimer.lastUpdate = new Date().getTime();
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+    routeRefreshTimer.refreshing = false;
     return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
   }
   refreshRoute(RouteID, PathAttributeId)
