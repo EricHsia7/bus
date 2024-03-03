@@ -77,7 +77,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
     ].map((e) => getAPIURL(e[0], e[1]));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api);
+      var data = await fetchData(api, requestID);
       result = result.concat(data.BusInfo);
     }
     return result;
