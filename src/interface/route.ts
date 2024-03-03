@@ -45,11 +45,11 @@ function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = 0;
   if (routeRefreshTimer.refreshing) {
-    percentage = getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
   } else {
-    percentage = Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
   }
-  document.querySelector('.update_timer').style.setProperty('--b-update-timer', -1 * percentage);
+  document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(updateUpdateTimer);
 }
 
