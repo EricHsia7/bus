@@ -80,7 +80,9 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
           item['_BusEvent'] = item['_BusEvent'].concat(BusEvent['stop_' + stop.StopID]);
         }
         if (Route.hasOwnProperty(`r_${stop.RouteID}`)) {
-          item['_overlappingRoutes'] = item['_overlappingRoutes'].concat([Object.assign({ id: stop.RouteId }, Route[`r_${stop.RouteId}`])]);
+          var thisOverlappingRoute = Route[`r_${stop.RouteId}`];
+          thisOverlappingRoute.id = stop.RouteId;
+          item['_overlappingRoutes'] = item['_overlappingRoutes'].concat([thisOverlappingRoute]);
         }
       }
     }
