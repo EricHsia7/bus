@@ -41,7 +41,7 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
-function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: object, RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: object, Route: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   var array = [];
   for (var item of EstimateTime) {
@@ -54,6 +54,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
     } else {
       item['_BusEvent'] = [];
     }
+    item['_overlappingRoutes'] = [];
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
       result.push(item);
     } else {
@@ -77,6 +78,9 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
       for (var stop of item._overlappingRouteStops) {
         if (BusEvent.hasOwnProperty('stop_' + stop.StopID)) {
           item['_BusEvent'] = item['_BusEvent'].concat(BusEvent['stop_' + stop.StopID]);
+        }
+        if (Route.hasOwnProperty(`r_${stop.routeId}`)) {
+          item['_outes'] = item['_overlappingRoutes'].concat(Object.assign({ id: stop.routeId }, Route[`r_${stop.routeId}`]));
         }
       }
     }
@@ -104,7 +108,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var BusEvent = await getBusEvent(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedStop = processStop(Stop);
-  var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, RouteID, PathAttributeId);
+  var processedEstimateTime = processEstimateTime(EstimateTime, processedStop, processedBusEvent, Route, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;

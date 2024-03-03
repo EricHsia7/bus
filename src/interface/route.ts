@@ -244,6 +244,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').innerText = thisItem.status.text;
       thisElement.querySelector('.name').innerText = thisItem.name;
       thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null?'目前沒有路線可顯示':thisItem.overlappingRoutes.map(route=>`<div class="overlapping_route"><div class="overlapping_route_name">${route.name}</div><div class="overlapping_route_endpoints">${route.RouteEndPoints.text}</div></div>`)
     }
   }
 }
@@ -362,6 +363,21 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
     }
     return result;
   }
+  function formatOverlappingRoutes(array: []): [] {
+    var result = [];
+    for (var route of array) {
+      var formattedItem = {
+        name: route.n,
+        RouteEndPoints: {
+          RouteDeparture: route.dep,
+          RouteDestination: route.des,
+          text: `${route.dep} \u21CC ${route.des}` //u21CC -> '⇌'
+        },
+        RouteID: route.id
+      };
+    }
+    return result;
+  }
   var integration = await integrateRoute(RouteID, PathAttributeId, requestID);
   var groupedItems = {};
   for (var item of integration.items) {
@@ -369,6 +385,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
     formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
     formattedItem.status = formatEstimateTime(item.EstimateTime);
     formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
+    formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
     formattedItem.location = {
       latitude: item.hasOwnProperty('_Stop') ? item._Stop.latitude : null,
