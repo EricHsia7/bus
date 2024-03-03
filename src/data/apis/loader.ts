@@ -16,7 +16,8 @@ export async function fetchData(url: string, requestID: string): object {
   // Try to fetch the data from the url using the signal option
   try {
     // Start the fetch request and get the response object
-    const response = await fetch(url, { signal });
+    const request = await fetch(url, { signal });
+    const response = request.clone();
     // Check if the response is ok
     if (response.ok) {
       // Get the content length from the response headers
