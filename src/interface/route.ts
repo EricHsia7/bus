@@ -404,7 +404,7 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     routeRefreshTimer.refreshing = true;
     routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
     var Field = document.querySelector('.route_field');
-    var formattedRoute = await formatRoute(RouteID, PathAttributeId);
+    var formattedRoute = await formatRoute(RouteID, PathAttributeId, routeRefreshTimer.currentRequestID);
     updateRouteField(Field, formattedRoute, false);
     routeRefreshTimer.lastUpdate = new Date().getTime();
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
