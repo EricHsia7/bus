@@ -104,7 +104,6 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
       return simplified_result;
     } else {
       var cache = await localforage.getItem(`${cache_key}`);
-      setDataReceivingProgress(requestID, 'getRoute', 1);
       return JSON.parse(cache);
     }
   }

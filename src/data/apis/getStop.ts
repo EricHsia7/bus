@@ -32,7 +32,6 @@ export async function getStop(requestID: string): object {
       return result;
     } else {
       var cache = await localforage.getItem(`${cache_key}`);
-      setDataReceivingProgress(requestID, 'getStop', 1);
       return JSON.parse(cache).data;
     }
   }
