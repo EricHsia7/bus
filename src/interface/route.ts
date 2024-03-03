@@ -241,6 +241,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
         },
         RouteID: route.id
       };
+      console.log(formattedItem)
       result.push(formattedItem);
     }
     return result;
