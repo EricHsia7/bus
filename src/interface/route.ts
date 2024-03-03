@@ -13,11 +13,14 @@ var routeSliding = {
   fieldWidth: 0,
   fieldHeight: 0
 };
-var routeUpdateTimer = {
+var routeRefreshTimer = {
   interval: 15 * 1000,
-  timer: null,
-  lastUpdate: 0
+  retryInterval: 5 * 1000,
+  flowing: false,
+  lastUpdate: 0,
+  nextUpdate: 0
 };
+
 var currentRouteIDSet = {
   RouteID: 0,
   PathAttributeId: []
@@ -37,8 +40,8 @@ function updateRouteCSS(groupQuantity: number, percentage: number, width: number
 
 function updateUpdateTimer() {
   var time = new Date().getTime();
-  var percentage = Math.min(1, Math.max(0, Math.abs(time - routeUpdateTimer.lastUpdate) / routeUpdateTimer.interval));
-  document.querySelector('.update_timer').style.setProperty('--b-update-timer', -1*percentage);
+  var percentage = Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+  document.querySelector('.update_timer').style.setProperty('--b-update-timer', -1 * percentage);
   window.requestAnimationFrame(updateUpdateTimer);
 }
 
@@ -388,42 +391,55 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
   };
 }
 
-export async function refreshRoute(RouteID: number, PathAttributeId: number): string {
+async function refreshRoute(RouteID: number, PathAttributeId: number): string {
   var Field = document.querySelector('.route_field');
   var formattedRoute = await formatRoute(RouteID, PathAttributeId);
   updateRouteField(Field, formattedRoute, false);
-  routeUpdateTimer.lastUpdate = new Date().getTime();
+  routeRefreshTimer.lastUpdate = new Date().getTime();
+  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
   return 'Successfully refreshed the route.';
+}
+
+export function streamRoute(RouteID: number, PathAttributeId: number, callback: Function, errorCallback: Function): void {
+  refreshRoute(currentRouteIDSet.RouteID, currentRouteField.PathAttributeId)
+    .then((result) => {
+      if (typeof callback === 'function') {
+        callback(RouteID, PathAttributeId, callback, errorCallback);
+      }
+    })
+    .catch((err) => {
+      if (typeof errorCallback === 'function') {
+        errorCallback(RouteID, PathAttributeId, callback, errorCallback);
+      }
+    });
 }
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
+  routeRefreshTimer.flowing = true;
   var Field = document.querySelector('.route_field');
   setUpRouteFieldSkeletonScreen(Field);
-  refreshRoute(currentRouteIDSet.RouteID, currentRouteField.PathAttributeId)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  if (routeUpdateTimer.timer === null) {
-    routeUpdateTimer.timer = setInterval(function () {
-      refreshRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, routeUpdateTimer.interval);
-  }
+  streamRoute(
+    currentRouteIDSet.RouteID,
+    currentRouteIDSet.PathAttributeId,
+    function (RouteID, PathAttributeId, callback, errorCallback) {
+      if (routeRefreshTimer.flowing) {
+        setTimeout(function () {
+          streamRoute(RouteID, PathAttributeId, callback, errorCallback);
+        }, Math.min(routeRefreshTimer.interval, Math.max(0, routeRefreshTimer.nextUpdate - new Date().getTime())));
+      }
+    },
+    function (RouteID, PathAttributeId, callback, errorCallback) {
+      setTimeout(function () {
+        streamRoute(RouteID, PathAttributeId, callback, errorCallback);
+      }, routeRefreshTimer.retryInterval);
+    }
+  );
 }
 
 export function closeRoute() {
-  clearInterval(routeUpdateTimer.timer);
-  routeUpdateTimer.timer = null;
+  routeRefreshTimer.flowing = false;
 }
 
 export function openRouteByURLScheme() {
