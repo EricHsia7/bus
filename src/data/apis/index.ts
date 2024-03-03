@@ -83,6 +83,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, BusEvent: objec
           var thisOverlappingRoute = Route[`r_${stop.RouteId}`];
           thisOverlappingRoute.id = stop.RouteId;
           item['_overlappingRoutes'] = item['_overlappingRoutes'].concat([thisOverlappingRoute]);
+       console.log(Route[`r_${stop.RouteID}`])
         }
       }
     }
