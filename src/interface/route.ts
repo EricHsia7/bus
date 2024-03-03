@@ -29,38 +29,6 @@ var currentRouteIDSet = {
   PathAttributeId: []
 };
 
-function getTextWidth(text, font) {
-  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
-  context.font = font;
-  const metrics = context.measureText(text);
-  return metrics.width;
-}
-
-function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
-}
-
-function updateUpdateTimer() {
-  var time = new Date().getTime();
-  var percentage = 0;
-  if (routeRefreshTimer.refreshing) {
-    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
-  } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
-  }
-  document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
-  window.requestAnimationFrame(updateUpdateTimer);
-}
-
-export function ResizeRouteField(): void {
-  var Field = document.querySelector('.route_field');
-  const FieldRect = Field.getBoundingClientRect();
-  const FieldWidth = FieldRect.width;
-  const FieldHeight = FieldRect.height;
-  document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
-}
-
 export function initializeRouteSliding() {
   var element = document.querySelector('.route_groups');
   function calculateStandardDeviation(arr) {
@@ -112,141 +80,36 @@ export function initializeRouteSliding() {
   updateUpdateTimer();
 }
 
-function generateElementOfItem(item: object, skeletonScreen: boolean): object {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
-  var element = document.createElement('div');
-  element.classList.add('item');
-  element.id = identifier;
-  element.setAttribute('skeleton-screen', skeletonScreen);
-  element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true">經過此站的公車</div><div class="tab" selected="false">經過此站的路線</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
-  return {
-    element: element,
-    id: identifier
-  };
-}
-
-function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
+export function ResizeRouteField(): void {
+  var Field = document.querySelector('.route_field');
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
-  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
-  var defaultGroupQuantity = 2;
-  var groupedItems = {};
-  for (var i = 0; i < defaultGroupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    groupedItems[groupKey] = [];
-    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
-      groupedItems[groupKey].push({
-        name: '',
-        status: { code: -1, text: '' },
-        buses: null,
-        sequence: j,
-        location: {
-          latitude: null,
-          longitude: null
-        }
-      });
-    }
-  }
-  updateRouteField(
-    Field,
-    {
-      groupedItems: groupedItems,
-      groupQuantity: defaultGroupQuantity,
-      itemQuantity: defaultItemQuantity,
-      RouteName: '載入中',
-      RouteEndPoints: {
-        RouteDeparture: '載入中',
-        RouteDestination: '載入中'
-      }
-    },
-    true
-  );
+  document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
 }
 
-export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
-  const FieldRect = Field.getBoundingClientRect();
-  const FieldWidth = FieldRect.width;
-  const FieldHeight = FieldRect.height;
+function getTextWidth(text, font) {
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
+  const context = canvas.getContext('2d');
+  context.font = font;
+  const metrics = context.measureText(text);
+  return metrics.width;
+}
 
-  var groupQuantity = formattedRoute.groupQuantity;
-  var itemQuantity = formattedRoute.itemQuantity;
-  var groupedItems = formattedRoute.groupedItems;
+function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
+  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
+}
 
-  routeSliding.groupQuantity = groupQuantity;
-  routeSliding.fieldWidth = FieldWidth;
-  routeSliding.fieldHeight = FieldHeight;
-
-  for (var i = 0; i < groupQuantity; i++) {
-    routeSliding.groupStyles[`g_${i}`] = {
-      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
-    };
+function updateUpdateTimer() {
+  var time = new Date().getTime();
+  var percentage = 0;
+  if (routeRefreshTimer.refreshing) {
+    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+  } else {
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
   }
-
-  updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  Field.querySelector('.route_name').innerText = formattedRoute.RouteName;
-
-  var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
-  if (!(groupQuantity === currentGroupSeatQuantity)) {
-    var capacity = currentGroupSeatQuantity - groupQuantity;
-    if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity + o;
-        currentRouteField[`g_${groupIndex}`] = [];
-        var thisElement = document.createElement('div');
-        thisElement.classList.add('route_grouped_items');
-        thisElement.setAttribute('group', currentGroupSeatQuantity + o);
-        var tabElement = document.createElement('div');
-        tabElement.classList.add('route_group_tab');
-        Field.querySelector(`.route_groups`).appendChild(thisElement);
-        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
-      }
-    } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity - 1 - o;
-        delete currentRouteField[`g_${groupIndex}`];
-        Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
-        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
-      }
-    }
-  }
-
-  for (var i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
-    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
-      if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem({}, true);
-          currentRouteField[groupKey].push(thisElement);
-          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
-        }
-      } else {
-        currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
-        for (var o = 0; o < Math.abs(capacity); o++) {
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
-        }
-      }
-    }
-  }
-
-  for (var i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerText = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i];
-    for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = groupedItems[groupKey][j];
-      thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
-      thisElement.querySelector('.status').innerText = thisItem.status.text;
-      thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
-      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '目前沒有路線可顯示' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_name">${route.name}</div><div class="overlapping_route_endpoints">${route.RouteEndPoints.text}</div></div>`);
-    }
-  }
+  document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
+  window.requestAnimationFrame(updateUpdateTimer);
 }
 
 export async function formatRoute(RouteID: number, PathAttributeId: number, requestID: string) {
@@ -418,6 +281,143 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
     RouteName,
     RouteEndPoints
   };
+}
+
+function generateElementOfItem(item: object, skeletonScreen: boolean): object {
+  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('item');
+  element.id = identifier;
+  element.setAttribute('skeleton-screen', skeletonScreen);
+  element.setAttribute('stretched', false);
+  element.innerHTML = `<div class="head"><div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true">經過此站的公車</div><div class="tab" selected="false">經過此站的路線</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
+function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
+  const FieldRect = Field.getBoundingClientRect();
+  const FieldWidth = FieldRect.width;
+  const FieldHeight = FieldRect.height;
+  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
+  var defaultGroupQuantity = 2;
+  var groupedItems = {};
+  for (var i = 0; i < defaultGroupQuantity; i++) {
+    var groupKey = `g_${i}`;
+    groupedItems[groupKey] = [];
+    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
+      groupedItems[groupKey].push({
+        name: '',
+        status: { code: -1, text: '' },
+        buses: null,
+        sequence: j,
+        location: {
+          latitude: null,
+          longitude: null
+        }
+      });
+    }
+  }
+  updateRouteField(
+    Field,
+    {
+      groupedItems: groupedItems,
+      groupQuantity: defaultGroupQuantity,
+      itemQuantity: defaultItemQuantity,
+      RouteName: '載入中',
+      RouteEndPoints: {
+        RouteDeparture: '載入中',
+        RouteDestination: '載入中'
+      }
+    },
+    true
+  );
+}
+
+export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
+  const FieldRect = Field.getBoundingClientRect();
+  const FieldWidth = FieldRect.width;
+  const FieldHeight = FieldRect.height;
+
+  var groupQuantity = formattedRoute.groupQuantity;
+  var itemQuantity = formattedRoute.itemQuantity;
+  var groupedItems = formattedRoute.groupedItems;
+
+  routeSliding.groupQuantity = groupQuantity;
+  routeSliding.fieldWidth = FieldWidth;
+  routeSliding.fieldHeight = FieldHeight;
+
+  for (var i = 0; i < groupQuantity; i++) {
+    routeSliding.groupStyles[`g_${i}`] = {
+      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
+    };
+  }
+
+  updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+  Field.querySelector('.route_name').innerText = formattedRoute.RouteName;
+
+  var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
+  if (!(groupQuantity === currentGroupSeatQuantity)) {
+    var capacity = currentGroupSeatQuantity - groupQuantity;
+    if (capacity < 0) {
+      for (var o = 0; o < Math.abs(capacity); o++) {
+        var groupIndex = currentGroupSeatQuantity + o;
+        currentRouteField[`g_${groupIndex}`] = [];
+        var thisElement = document.createElement('div');
+        thisElement.classList.add('route_grouped_items');
+        thisElement.setAttribute('group', currentGroupSeatQuantity + o);
+        var tabElement = document.createElement('div');
+        tabElement.classList.add('route_group_tab');
+        Field.querySelector(`.route_groups`).appendChild(thisElement);
+        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
+      }
+    } else {
+      for (var o = 0; o < Math.abs(capacity); o++) {
+        var groupIndex = currentGroupSeatQuantity - 1 - o;
+        delete currentRouteField[`g_${groupIndex}`];
+        Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
+        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
+      }
+    }
+  }
+
+  for (var i = 0; i < groupQuantity; i++) {
+    var groupKey = `g_${i}`;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
+      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+      if (capacity < 0) {
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          var thisElement = generateElementOfItem({}, true);
+          currentRouteField[groupKey].push(thisElement);
+          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+        }
+      } else {
+        currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
+        }
+      }
+    }
+  }
+
+  for (var i = 0; i < groupQuantity; i++) {
+    var groupKey = `g_${i}`;
+    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
+    thisTabElement.innerText = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i];
+    for (var j = 0; j < itemQuantity[groupKey]; j++) {
+      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+      var thisItem = groupedItems[groupKey][j];
+      thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
+      thisElement.querySelector('.status').innerText = thisItem.status.text;
+      thisElement.querySelector('.name').innerText = thisItem.name;
+      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '目前沒有路線可顯示' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_name">${route.name}</div><div class="overlapping_route_endpoints">${route.RouteEndPoints.text}</div></div>`);
+    }
+  }
 }
 
 export function streamRoute(RouteID: number, PathAttributeId: number): void {
