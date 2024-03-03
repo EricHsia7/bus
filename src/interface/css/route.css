@@ -112,7 +112,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), 0.33);
+  background: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-d));
   height: 1.5px;
   width: 100%;
   transform: translateX(calc(var(--b-update-timer) * 100%));
@@ -254,7 +254,7 @@
 .route_field .route_groups .route_grouped_items .item .head .status[code="5"],
 .route_field .route_groups .route_grouped_items .item .head .status[code="4"],
 .route_field .route_groups .route_grouped_items .item .head .status[code="3"] {
-  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), 0.6);
+  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
   font-size: 13px;
   font-weight: 500;
 }
@@ -271,7 +271,7 @@
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.28);
+  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-c));
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
@@ -329,7 +329,7 @@
   -webkit-user-select: none;
   user-select: none;
   border-radius: 25px;
-  background: var(--b-e5e5ea);
+  background: var(--b-f9f9fb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -347,7 +347,7 @@
 }
 
 .route_field .route_groups .route_grouped_items .item .head .stretch svg path {
-  fill: var(--b-333333);
+  fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .head .stretch svg {
@@ -379,7 +379,7 @@
   width: calc(var(--b-fw) * 0.6);
   height: 121px;
   box-sizing: border-box;
-  background: rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.6);
+  background: var(--b-f9f9fb);
   border-radius: 15px;
   display: inline-flex;
   margin-right: 5px;
@@ -387,7 +387,7 @@
 }
 
 .route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), 0.15);
+  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
 .route_field .route_groups .route_grouped_items .item .bus:last-child {
@@ -479,7 +479,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), 0.6);
+  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
