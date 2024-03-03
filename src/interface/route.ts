@@ -391,26 +391,25 @@ export async function formatRoute(RouteID: number, PathAttributeId: number) {
   };
 }
 
-async function refreshRoute(RouteID: number, PathAttributeId: number): string {
-  var Field = document.querySelector('.route_field');
-  var formattedRoute = await formatRoute(RouteID, PathAttributeId);
-  updateRouteField(Field, formattedRoute, false);
-  routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
-  return 'Successfully refreshed the route.';
-}
-
-export function streamRoute(RouteID: number, PathAttributeId: number, callback: Function, errorCallback: Function): void {
-  refreshRoute(currentRouteIDSet.RouteID, currentRouteField.PathAttributeId)
+export function streamRoute(RouteID: number, PathAttributeId: number): void {
+  async function refreshRoute(RouteID: number, PathAttributeId: number): object {
+    var Field = document.querySelector('.route_field');
+    var formattedRoute = await formatRoute(RouteID, PathAttributeId);
+    updateRouteField(Field, formattedRoute, false);
+    routeRefreshTimer.lastUpdate = new Date().getTime();
+    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+    return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId, callback: callback, errorCallback: errorCallback };
+  }
+  refreshRoute(RouteID, PathAttributeId)
     .then((result) => {
-      if (typeof callback === 'function') {
-        callback(RouteID, PathAttributeId, callback, errorCallback);
+      if (routeRefreshTimer.flowing) {
+        setTimeout(function () {
+          streamRoute(result.RouteID, result.PathAttributeId);
+        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
       }
     })
     .catch((err) => {
-      if (typeof errorCallback === 'function') {
-        errorCallback(RouteID, PathAttributeId, callback, errorCallback);
-      }
+      console.log(err);
     });
 }
 
@@ -420,22 +419,7 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   routeRefreshTimer.flowing = true;
   var Field = document.querySelector('.route_field');
   setUpRouteFieldSkeletonScreen(Field);
-  streamRoute(
-    currentRouteIDSet.RouteID,
-    currentRouteIDSet.PathAttributeId,
-    function (RouteID, PathAttributeId, callback, errorCallback) {
-      if (routeRefreshTimer.flowing) {
-        setTimeout(function () {
-          streamRoute(RouteID, PathAttributeId, callback, errorCallback);
-        }, Math.min(routeRefreshTimer.interval, Math.max(0, routeRefreshTimer.nextUpdate - new Date().getTime())));
-      }
-    },
-    function (RouteID, PathAttributeId, callback, errorCallback) {
-      setTimeout(function () {
-        streamRoute(RouteID, PathAttributeId, callback, errorCallback);
-      }, routeRefreshTimer.retryInterval);
-    }
-  );
+  streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
 }
 
 export function closeRoute() {
