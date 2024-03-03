@@ -3,10 +3,7 @@ var md5 = require('md5');
 
 var dataReceivingProgress = {};
 
-export async function fetchData(url: string, requestID: string): object {
-  if (!dataReceivingProgress.hasOwnProperty(requestID)) {
-    dataReceivingProgress[requestID] = {};
-  }
+export async function fetchData(url: string, requestID: string, urlName: string): object {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -22,7 +19,7 @@ export async function fetchData(url: string, requestID: string): object {
     }
     chunks.push(value);
     receivedLength += value.length;
-    dataReceivingProgress[requestID][`u_${md5(url)}`] = receivedLength / contentLength;
+    setDataReceivingProgress(requestID, urlName, receivedLength / contentLength);
   }
 
   // Concatenate all the chunks into a single Uint8Array
@@ -54,4 +51,11 @@ export function getDataReceivingProgress(requestID: string): number {
     }
   }
   return 0;
+}
+
+export function setDataReceivingProgress(requestID: string, urlName: string, progress: number): void {
+  if (!dataReceivingProgress.hasOwnProperty(requestID)) {
+    dataReceivingProgress[requestID] = {};
+  }
+  dataReceivingProgress[requestID][`u_${md5(urlName)}`] = progress;
 }

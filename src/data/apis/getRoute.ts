@@ -1,5 +1,6 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData } from './loader.ts';
+import { fetchData, setDataReceivingProgress } from './loader.ts';
+
 const localforage = require('localforage');
 
 function simplifyRoute(Route: object): object {
@@ -77,7 +78,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
     ].map((e) => getAPIURL(e[0], e[1]));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api, requestID);
+      var data = await fetchData(api, requestID, 'getRoute');
       result = result.concat(data.BusInfo);
     }
     return result;
@@ -103,6 +104,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
       return simplified_result;
     } else {
       var cache = await localforage.getItem(`${cache_key}`);
+      setDataReceivingProgress(requestID, 'getRoute', 1);
       return JSON.parse(cache);
     }
   }

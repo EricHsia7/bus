@@ -8,7 +8,7 @@ export async function getProvider(requestID: string): [] {
   ].map((e) => getAPIURL(e[0], e[1], 8 * 60 * 60 * 1000));
   var result = [];
   for (var api of apis) {
-    var data = await fetchData(api, requestID);
+    var data = await fetchData(api, requestID, 'getProvider');
     result = result.concat(data.BusInfo);
   }
   return result;

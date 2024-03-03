@@ -1,7 +1,7 @@
 import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
-import { getDataReceivingProgress } from '../data/apis/loader.ts';
+import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
 var md5 = require('md5');
 
 var currentRouteField = {};
@@ -403,8 +403,11 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
   async function refreshRoute(RouteID: number, PathAttributeId: number): object {
     routeRefreshTimer.refreshing = true;
     routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-    var Field = document.querySelector('.route_field');
+    ['getRoute', 'getStop', 'getEstimateTime', 'getBusEvent'].forEach((e) => {
+      setDataReceivingProgress(routeRefreshTimer.currentRequestID, e, 0);
+    });
     var formattedRoute = await formatRoute(RouteID, PathAttributeId, routeRefreshTimer.currentRequestID);
+    var Field = document.querySelector('.route_field');
     updateRouteField(Field, formattedRoute, false);
     routeRefreshTimer.lastUpdate = new Date().getTime();
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;

@@ -8,7 +8,7 @@ export async function getEstimateTime(requestID: string): [] {
   ].map((e) => getAPIURL(e[0], e[1]));
   var result = [];
   for (var api of apis) {
-    var data = await fetchData(api, requestID);
+    var data = await fetchData(api, requestID, 'getEstimateTime');
     result = result.concat(data.BusInfo);
   }
   return result;
