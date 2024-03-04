@@ -399,7 +399,8 @@
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_grouped_items .item .bus:last-child .route_field .route_groups .route_grouped_items .item .overlapping_route:last-child {
+.route_field .route_groups .route_grouped_items .item .bus:last-child,
+.route_field .route_groups .route_grouped_items .item .overlapping_route:last-child {
   margin-right: 0px;
 }
 
