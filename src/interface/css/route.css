@@ -410,7 +410,7 @@
   top: 10px;
   left: 10px;
   width: calc(100% - 20px);
-  height: 30px;
+  height: 20px;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon,
@@ -418,8 +418,8 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -440,8 +440,8 @@
 .route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_title .overlapping_route_name {
   position: absolute;
   top: 0px;
-  left: 30px;
-  width: calc(100% - 30px);
+  left: 25px;
+  width: calc(100% - 35px);
   height: 30px;
   display: flex;
   align-items: center;
@@ -449,13 +449,14 @@
   color: var(--b-333333);
   white-space: nowrap;
   word-break: keep-all;
+  overflow: hidden;
 }
 
 .route_field .route_groups .route_grouped_items .item .bus .car_attributes {
   position: absolute;
   top: 40px;
-  left: 15px;
-  width: calc(100% - 30px);
+  left: 10px;
+  width: calc(100% - 20px);
   height: 66px;
 }
 
@@ -504,8 +505,8 @@
 .route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_endpoints {
   position: absolute;
   top: 40px;
-  left: 15px;
-  width: calc(100% - 30px);
+  left: 10px;
+  width: calc(100% - 20px);
   height: 30px;
   font-size: 20px;
   display: inline-flex;
@@ -519,8 +520,8 @@
 .route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_actions {
   position: absolute;
   top: 70px;
-  left: 15px;
-  width: calc(100% - 30px);
+  left: 10px;
+  width: calc(100% - 20px);
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 36px;
