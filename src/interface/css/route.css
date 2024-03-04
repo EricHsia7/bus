@@ -511,12 +511,13 @@
   width: calc(100% - 20px);
   height: 40px;
   font-size: 20px;
-  display: inline-flex;
+  display: flex;
   white-space: nowrap;
   word-break: keep-all;
   justify-content: space-between;
   color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
   overflow: hidden;
+  align-items: center;
 }
 
 .route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_actions {
