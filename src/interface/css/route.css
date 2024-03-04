@@ -380,7 +380,7 @@
 .route_field .route_groups .route_grouped_items .item .buses[displayed="true"],
 .route_field .route_groups .route_grouped_items .item .overlapping_routes[displayed="true"] {
   display: block;
-  }
+}
 
 .route_field .route_groups .route_grouped_items .item .bus,
 .route_field .route_groups .route_grouped_items .item .overlapping_route {
@@ -399,12 +399,12 @@
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_grouped_items .item .bus:last-child 
-.route_field .route_groups .route_grouped_items .item .overlapping_route:last-child {
+.route_field .route_groups .route_grouped_items .item .bus:last-child .route_field .route_groups .route_grouped_items .item .overlapping_route:last-child {
   margin-right: 0px;
 }
 
-.route_field .route_groups .route_grouped_items .item .bus .bus_title {
+.route_field .route_groups .route_grouped_items .item .bus .bus_title,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_title {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -412,7 +412,8 @@
   height: 30px;
 }
 
-.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon {
+.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -423,16 +424,19 @@
   align-items: center;
 }
 
-.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon svg path {
+.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon svg path,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_title .overlapping_route_icon svg path {
   fill: var(--b-333333);
 }
 
-.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon svg {
+.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_icon svg,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_title .overlapping_route_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_number {
+.route_field .route_groups .route_grouped_items .item .bus .bus_title .car_number,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_title .overlapping_route_name {
   position: absolute;
   top: 0px;
   left: 30px;
@@ -480,7 +484,8 @@
   top: 44px;
 }
 
-.route_field .route_groups .route_grouped_items .item .buses .buses_message {
+.route_field .route_groups .route_grouped_items .item .buses .buses_message,
+.route_field .route_groups .route_grouped_items .item .buses .overlapping_route_message {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -493,4 +498,38 @@
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
+}
+
+.route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_endpoints {
+  position: absolute;
+  top: 40px;
+  left: 15px;
+  width: calc(100% - 30px);
+  height: 30px;
+  font-size: 20px;
+  display: inline-flex;
+  white-space: nowrap;
+  word-break: keep-all;
+  justify-content: space-between;
+  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b))
+}
+
+.route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_actions {
+  position: absolute;
+  top: 70px;
+  left: 15px;
+  width: calc(100% - 30px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 36px;
+  padding: 0px;
+  grid-column-gap: 5px;
+}
+
+.route_field .route_groups .route_grouped_items .item .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--b-aeaeb2);
+  border-radius: 30px;
 }
