@@ -1,7 +1,7 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
@@ -41,7 +41,8 @@ window.bus = {
   route: {
     stretchItemBody: stretchItemBody,
     openRoute: openRoute,
-    closeRoute: closeRoute
+    closeRoute: closeRoute,
+    switchRouteBodyTab: switchRouteBodyTab
   }
 };
 window.bus.searchRouteByName = searchRouteByName;

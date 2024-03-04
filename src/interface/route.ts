@@ -290,7 +290,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true">經過此站的公車</div><div class="tab" selected="false">經過此站的路線</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -474,5 +474,21 @@ export function stretchItemBody(itemID: string): void {
     itemElement.setAttribute('stretched', false);
   } else {
     itemElement.setAttribute('stretched', true);
+  }
+}
+
+export function switchRouteBodyTab(itemID: string, tabCode: number): void {
+  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`);
+  var tabs = itemElement.querySelector('.tabs');
+  var tab = tabs.querySelectorAll('.tab[selected="true"]');
+  for (var t of tab) {
+    t.setAttribute('selected', 'false');
+  }
+  tabs.querySelector(`.tab[code="${tabCode}"]`).setAttribute('selected', 'true');
+  if (code === 0) {
+    itemElement.querySelector('.buses').setAttribute('displayed', 'true');
+  }
+  if (code === 1) {
+    itemElement.querySelector('.overlapping_route').setAttribute('displayed', 'true');
   }
 }
