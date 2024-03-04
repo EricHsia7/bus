@@ -149,7 +149,8 @@
 
 .route_field .route_groups .route_grouped_items::-webkit-scrollbar,
 .route_field .route_groups::-webkit-scrollbar,
-.route_field .route_groups .route_grouped_items .item .body .buses::-webkit-scrollbar {
+.route_field .route_groups .route_grouped_items .item .body .buses::-webkit-scrollbar,
+.route_field .route_groups .route_grouped_items .item .body .overlapping_routes::-webkit-scrollbar {
   display: none;
 }
 
@@ -358,7 +359,8 @@
   display: none;
 }
 
-.route_field .route_groups .route_grouped_items .item .buses {
+.route_field .route_groups .route_grouped_items .item .buses,
+.route_field .route_groups .route_grouped_items .item .overlapping_routes {
   position: absolute;
   top: 45px;
   left: 10px;
@@ -372,9 +374,16 @@
   white-space: nowrap;
   word-break: keep-all;
   border-radius: 15px;
+  display: none;
 }
 
-.route_field .route_groups .route_grouped_items .item .bus {
+.route_field .route_groups .route_grouped_items .item .buses[displayed="true"],
+.route_field .route_groups .route_grouped_items .item .overlapping_routes[displayed="true"] {
+  display: block;
+  }
+
+.route_field .route_groups .route_grouped_items .item .bus,
+.route_field .route_groups .route_grouped_items .item .overlapping_route {
   position: relative;
   width: calc(var(--b-fw) * 0.6);
   height: 121px;
@@ -390,7 +399,8 @@
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_grouped_items .item .bus:last-child {
+.route_field .route_groups .route_grouped_items .item .bus:last-child 
+.route_field .route_groups .route_grouped_items .item .overlapping_route:last-child {
   margin-right: 0px;
 }
 
