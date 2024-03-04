@@ -489,6 +489,6 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
     itemElement.querySelector('.buses').setAttribute('displayed', 'true');
   }
   if (tabCode === 1) {
-    itemElement.querySelector('.overlapping_route').setAttribute('displayed', 'true');
+    itemElement.querySelector('.overlapping_routes').setAttribute('displayed', 'true');
   }
 }
