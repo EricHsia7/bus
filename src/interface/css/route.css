@@ -473,7 +473,6 @@
   white-space: nowrap;
   word-break: keep-all;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
