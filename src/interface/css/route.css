@@ -533,4 +533,5 @@
   align-items: center;
   background: var(--b-e5e5ea);
   border-radius: 30px;
+  color: var(--b-333333);
 }
