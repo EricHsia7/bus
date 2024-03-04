@@ -485,10 +485,10 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
     t.setAttribute('selected', 'false');
   }
   tabs.querySelector(`.tab[code="${tabCode}"]`).setAttribute('selected', 'true');
-  if (code === 0) {
+  if (tabCode === 0) {
     itemElement.querySelector('.buses').setAttribute('displayed', 'true');
   }
-  if (code === 1) {
+  if (tabCode === 1) {
     itemElement.querySelector('.overlapping_route').setAttribute('displayed', 'true');
   }
 }
