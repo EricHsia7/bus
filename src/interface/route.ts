@@ -4,7 +4,7 @@ import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
 var md5 = require('md5');
 
-var currentRouteField = {};
+var currentFormattedData = {}
 var routeSliding = {
   currentGroup: 0,
   targetGroup: 0,
@@ -366,7 +366,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
-        currentRouteField[`g_${groupIndex}`] = [];
         var thisElement = document.createElement('div');
         thisElement.classList.add('route_grouped_items');
         thisElement.setAttribute('group', currentGroupSeatQuantity + o);
@@ -378,7 +377,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        delete currentRouteField[`g_${groupIndex}`];
         Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
         Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
       }
@@ -393,11 +391,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          currentRouteField[groupKey].push(thisElement);
           Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
         }
       } else {
-        currentRouteField[groupKey] = currentRouteField[groupKey].slice(Math.abs(capacity));
         for (var o = 0; o < Math.abs(capacity); o++) {
           Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
         }
@@ -420,6 +416,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
   }
+currentFormattedData = formattedRoute;
 }
 
 export function streamRoute(RouteID: number, PathAttributeId: number): void {
