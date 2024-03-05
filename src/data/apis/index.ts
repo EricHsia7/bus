@@ -59,9 +59,13 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
             item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
           }
         }
-        item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r.map((routeId) => {
-          return Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
-        });
+        item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
+          .map((routeId) => {
+            return Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
+          })
+          .filter((e) => {
+            return e.id === RouteID ? false : true;
+          });
       }
     }
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
