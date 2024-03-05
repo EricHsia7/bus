@@ -61,7 +61,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
         }
         item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
           .map((routeId) => {
-            Route.hasOwnProperty('r_' + routeId) ? Route[`r_${estimate.RouteID}`] : false;
+            Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : false;
           })
           .filter((e) => e);
       }
