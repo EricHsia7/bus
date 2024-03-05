@@ -75,6 +75,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     }
     return c - d;
   });
+  console.log(result)
   return result;
 }
 
