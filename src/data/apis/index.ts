@@ -62,6 +62,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
         });
       }
     }
+    result.push(item)
   }
 
   result = result.sort(function (a, b) {
