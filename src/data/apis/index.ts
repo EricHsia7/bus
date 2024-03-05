@@ -62,7 +62,9 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
         });
       }
     }
-    result.push(item)
+    if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
+      result.push(item);
+    }
   }
 
   result = result.sort(function (a, b) {
@@ -76,7 +78,6 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     }
     return c - d;
   });
-  console.log(result)
   return result;
 }
 
