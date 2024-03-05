@@ -50,7 +50,9 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
       if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
         if (Stop.hasOwnProperty('s_' + item.StopID)) {
           item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
-          item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s;
+          item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
+            return e === item.StopID ? false : true;
+          });
           item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
           item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
           for (var routeStopId of item['_overlappingRouteStops']) {
