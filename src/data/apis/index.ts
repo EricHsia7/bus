@@ -47,19 +47,19 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
 
     if (Stop.hasOwnProperty('s_' + item.StopID)) {
       item['_Stop'] = Stop['s_' + item.StopID];
-      console.log(item)
+      console.log(item);
       if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
         if (Stop.hasOwnProperty('s_' + item.StopID)) {
           item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
           item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s;
           item['_BusEvent'] = item['_BusEvent'].concat(
             item['_overlappingRouteStops'].map((routeStopId) => {
-              BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : {};
+              return BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : {};
             })
           );
         }
         item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r.map((routeId) => {
-          Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
+          return Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
         });
       }
     }
