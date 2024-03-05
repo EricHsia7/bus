@@ -47,6 +47,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
 
     if (Stop.hasOwnProperty('s_' + item.StopID)) {
       item['_Stop'] = Stop['s_' + item.StopID];
+      console.log(item)
       if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
         if (Stop.hasOwnProperty('s_' + item.StopID)) {
           item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
