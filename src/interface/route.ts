@@ -256,8 +256,8 @@ export async function formatRoute(RouteID: number, PathAttributeId: number, requ
     formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
     formattedItem.location = {
-      latitude: item.hasOwnProperty('_Stop') ? item._Stop.latitude : null,
-      longitude: item.hasOwnProperty('_Stop') ? item._Stop.longitude : null
+      latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
+      longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
     };
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
     if (!groupedItems.hasOwnProperty(group)) {
