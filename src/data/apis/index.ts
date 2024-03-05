@@ -39,29 +39,30 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   var array = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
-    if (Stop.hasOwnProperty('s_' + item.StopID)) {
-      item['_Stop'] = Stop['s_' + item.StopID];
-    }
     if (BusEvent.hasOwnProperty('s_' + item.StopID)) {
       item['_BusEvent'] = BusEvent['s_' + item.StopID];
     } else {
       item['_BusEvent'] = [];
     }
-    console.log(item._Stop);
-    if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
-      if (Stop.hasOwnProperty('s_' + item.StopID)) {
-        item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
-        item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s
-          .map((routeStopId) => {
-            BusEvent.hasOwnProperty('s_' + routeStopId) ? (item['_BusEvent'] = item['_BusEvent'].concat(BusEvent['s_' + routeStopId])) : false;
+
+    if (Stop.hasOwnProperty('s_' + item.StopID)) {
+      item['_Stop'] = Stop['s_' + item.StopID];
+      console.log(item._Stop);
+      if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
+        if (Stop.hasOwnProperty('s_' + item.StopID)) {
+          item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+          item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s
+            .map((routeStopId) => {
+              BusEvent.hasOwnProperty('s_' + routeStopId) ? (item['_BusEvent'] = item['_BusEvent'].concat(BusEvent['s_' + routeStopId])) : false;
+            })
+            .filter((e) => e);
+        }
+        item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
+          .map((routeId) => {
+            BusEvent.hasOwnProperty('r_' + routeId) ? Route[`r_${estimate.RouteID}`] : false;
           })
           .filter((e) => e);
       }
-      item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
-        .map((routeId) => {
-          BusEvent.hasOwnProperty('r_' + routeId) ? Route[`r_${estimate.RouteID}`] : false;
-        })
-        .filter((e) => e);
     }
   }
 
