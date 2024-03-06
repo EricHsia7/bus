@@ -477,6 +477,7 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
   async function refreshRoute(RouteID: number, PathAttributeId: number): object {
     routeRefreshTimer.refreshing = true;
     routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+    
     var formattedRoute = await formatRoute(RouteID, PathAttributeId, routeRefreshTimer.currentRequestID);
     var Field = document.querySelector('.route_field');
     updateRouteField(Field, formattedRoute, false);

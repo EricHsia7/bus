@@ -2,6 +2,8 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress } from './loader.ts';
 const localforage = require('localforage');
 
+var LocationAPIVariableCache = { available: false, data: {} };
+
 function simplifyLocation(array: []): object {
   var result = {};
   for (var item of array) {
@@ -48,6 +50,11 @@ export async function getLocation(requestID: string): object {
     var simplified_result = simplifyLocation(result);
     await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
     await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+    if (!LocationAPIVariableCache.available) {
+      LocationAPIVariableCache.available = true;
+      LocationAPIVariableCache.data = simplified_result;
+    }
+    setDataReceivingProgress(requestID, 'getLocation', false);
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
@@ -55,10 +62,19 @@ export async function getLocation(requestID: string): object {
       var simplified_result = simplifyLocation(result);
       await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
       await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+      if (!LocationAPIVariableCache.available) {
+        LocationAPIVariableCache.available = true;
+        LocationAPIVariableCache.data = simplified_result;
+      }
       return simplified_result;
     } else {
-      var cache = await localforage.getItem(`${cache_key}`);
-      return JSON.parse(cache);
+      if (!LocationAPIVariableCache.available) {
+        var cache = await localforage.getItem(`${cache_key}`);
+        LocationAPIVariableCache.available = true;
+        LocationAPIVariableCache.data = JSON.parse(cache);
+      }
+      setDataReceivingProgress(requestID, 'getLocation', false);
+      return LocationAPIVariableCache.data;
     }
   }
 }

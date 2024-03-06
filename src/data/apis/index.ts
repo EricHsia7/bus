@@ -6,6 +6,7 @@ import { getProvider } from './getProvider.ts';
 import { getTimeTable } from './getTimeTable.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
+import { setDataReceivingProgress } from './loader.ts';
 
 async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
   var result = {};
@@ -88,11 +89,16 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
+  setDataReceivingProgress(requestID, 'getRoute', 0);
+  setDataReceivingProgress(requestID, 'getStop', 0);
+  setDataReceivingProgress(requestID, 'getLocation', 0);
+  setDataReceivingProgress(requestID, 'getEstimateTime', 0);
+  setDataReceivingProgress(requestID, 'getBusEvent', 0);
   var Route = await getRoute(requestID, true);
   var Stop = await getStop(requestID);
+  var Location = await getLocation(requestID);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
-  var Location = await getLocation(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];

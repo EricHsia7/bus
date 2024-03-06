@@ -44,8 +44,12 @@ export function getDataReceivingProgress(requestID: string): number {
       var total = 0;
       var received = 0;
       for (var key in dataReceivingProgress[requestID]) {
-        total += 1;
-        received += dataReceivingProgress[requestID][key];
+        if (dataReceivingProgress[requestID][key] === false) {
+          continue;
+        } else {
+          total += 1;
+          received += dataReceivingProgress[requestID][key];
+        }
       }
       return received / total;
     }
@@ -53,7 +57,7 @@ export function getDataReceivingProgress(requestID: string): number {
   return 0;
 }
 
-export function setDataReceivingProgress(requestID: string, urlName: string, progress: number): void {
+export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }

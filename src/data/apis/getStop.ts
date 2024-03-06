@@ -2,6 +2,8 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress } from './loader.ts';
 const localforage = require('localforage');
 
+var StopAPIVariableCache = { available: false, data: {} };
+
 function simplifyStop(array: []): object {
   var result = {};
   for (var item of array) {
@@ -37,6 +39,11 @@ export async function getStop(requestID: string): object {
     var simplified_result = simplifyStop(result);
     await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
     await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+    if (!s.available) {
+      StopAPIVariableCache.available = true;
+      StopAPIVariableCache.data = simplified_result;
+    }
+    setDataReceivingProgress(requestID, 'getStop', false);
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
@@ -46,8 +53,13 @@ export async function getStop(requestID: string): object {
       await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
       return simplified_result;
     } else {
-      var cache = await localforage.getItem(`${cache_key}`);
-      return JSON.parse(cache);
+      if (!StopAPIVariableCache.available) {
+        var cache = await localforage.getItem(`${cache_key}`);
+        StopAPIVariableCache.available = true;
+        StopAPIVariableCache.data = JSON.parse(cache);
+      }
+      setDataReceivingProgress(requestID, 'getStop', false);
+      return StopAPIVariableCache.data;
     }
   }
 }
