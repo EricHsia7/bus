@@ -1,7 +1,8 @@
 import { getRoute } from '../apis/getRoute.ts';
 
 export async function searchRouteByName(query: string): Array {
-  var Route = await getRoute(true);
+  var requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
     if (String(Route[key].n).indexOf(query) > -1) {
@@ -14,10 +15,11 @@ export async function searchRouteByName(query: string): Array {
       });
     }
   }
-  return result
+  return result;
 }
 export async function searchRouteByPathAttributeId(PathAttributeId: number) {
-  var Route = await getRoute(true);
+  var requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
     if (String(Route[key].pid).indexOf(PathAttributeId) > -1) {
@@ -30,5 +32,5 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number) {
       });
     }
   }
-  return result
+  return result;
 }
