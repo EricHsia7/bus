@@ -346,7 +346,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 if(currentFormattedData==={}) {
 currentFormattedData = formattedRoute
 }
-console.log(formattedRoute);
+console.log(currentFormattedData);
 
   var groupQuantity = formattedRoute.groupQuantity;
   var itemQuantity = formattedRoute.itemQuantity;
