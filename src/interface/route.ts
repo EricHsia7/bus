@@ -343,6 +343,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
+console.log(currentFormattedData)
 
   var groupQuantity = formattedRoute.groupQuantity;
   var itemQuantity = formattedRoute.itemQuantity;
