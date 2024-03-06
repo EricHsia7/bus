@@ -1,6 +1,6 @@
 var md5 = require('md5');
 
-export function compareString(a: string, b: string): boolean{
+export function compareThings(a: string, b: string): boolean{
 var hash_a = md5(a);
 var hash_b = md5(b);
 const length = 32
