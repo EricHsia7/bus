@@ -61,7 +61,7 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   }
   var key = `u_${md5(urlName)}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
-    var change = progress - dataReceivingProgress[requestID][key];
+    var change = progress - dataReceivingProgress[requestID][key].progress;
     if (change < 0) {
       dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key] + 1;
     }
