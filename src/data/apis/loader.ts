@@ -61,5 +61,9 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  dataReceivingProgress[requestID][`u_${md5(urlName)}`] = progress;
+  if (dataReceivingProgress[requestID].hasOwnProperty(`u_${md5(urlName)}`)) {
+    dataReceivingProgress[requestID][`u_${md5(urlName)}`] = dataReceivingProgress[requestID][`u_${md5(urlName)}`] + Math.abs(progress - dataReceivingProgress[requestID][`u_${md5(urlName)}`]);
+  } else {
+    dataReceivingProgress[requestID][`u_${md5(urlName)}`] = progress;
+  }
 }
