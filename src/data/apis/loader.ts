@@ -63,14 +63,16 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;
+    } else {
+      dataReceivingProgress[requestID][key].expel = false;
+      var change = 0;
+      var change = progress - dataReceivingProgress[requestID][key].progress;
+      if (change < 0) {
+        dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
+      }
+      dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
     }
-    var change = 0;
-    var change = progress - dataReceivingProgress[requestID][key].progress;
-    if (change < 0) {
-      dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
-    }
-    dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
   } else {
-    dataReceivingProgress[requestID][key] = { progress: progress, total: 1 };
+    dataReceivingProgress[requestID][key] = { progress: progress, total: 1, expel: false };
   }
 }
