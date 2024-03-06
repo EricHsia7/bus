@@ -1,4 +1,5 @@
 import { getRoute } from '../apis/getRoute.ts';
+var md5 = require('md5');
 
 export async function searchRouteByName(query: string): Array {
   var requestID = `r_${md5(Math.random() * new Date().getTime())}`;
