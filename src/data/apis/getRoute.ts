@@ -2,7 +2,7 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress } from './loader.ts';
 
 const localforage = require('localforage');
-
+var RouteAPIVariableCache = { available: false, data: {} }
 function simplifyRoute(Route: object): object {
   var result = {};
   let RouteRename = [
@@ -94,6 +94,10 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
     var simplified_result = simplifyRoute(result);
     await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
     await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+if(!RouteAPIVariableCache.available) {
+RouteAPIVariableCache.available = true
+RouteAPIVariableCache.data = simplified_result;
+}
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
@@ -101,10 +105,18 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
       var simplified_result = simplifyRoute(result);
       await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
       await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+if(!RouteAPIVariableCache.available) {
+RouteAPIVariableCache.available = true
+RouteAPIVariableCache.data = simplified_result;
+}
       return simplified_result;
     } else {
+if(!RouteAPIVariableCache.available) {
       var cache = await localforage.getItem(`${cache_key}`);
-      return JSON.parse(cache);
+RouteAPIVariableCache.available = true
+RouteAPIVariableCache.data = JSON.parse(cache);
+}
+      return RouteAPIVariableCache.data
     }
   }
 }
