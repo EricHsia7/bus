@@ -54,7 +54,6 @@ export async function getLocation(requestID: string): object {
       LocationAPIVariableCache.available = true;
       LocationAPIVariableCache.data = simplified_result;
     }
-    setDataReceivingProgress(requestID, 'getLocation', 1);
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {

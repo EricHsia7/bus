@@ -43,7 +43,6 @@ export async function getStop(requestID: string): object {
       StopAPIVariableCache.available = true;
       StopAPIVariableCache.data = simplified_result;
     }
-    setDataReceivingProgress(requestID, 'getStop', 0, true);
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
