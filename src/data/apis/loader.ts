@@ -4,7 +4,6 @@ var md5 = require('md5');
 var dataReceivingProgress = {};
 
 export async function fetchData(url: string, requestID: string, urlName: string): object {
-  console.log(url, requestID, urlName);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
