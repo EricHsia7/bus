@@ -61,11 +61,14 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   }
   var key = `u_${md5(urlName)}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
-    var change = progress - dataReceivingProgress[requestID][key].progress;
-    if (change <= 0 || change >= 1) {
-      dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
+    var change = 0;
+    if (!(progress === false)) {
+      var change = progress - dataReceivingProgress[requestID][key].progress;
+      if (change <= 0 || change >= 1) {
+        dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
+      }
+      dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
     }
-    dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1 };
   }
