@@ -2,10 +2,10 @@ import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
-import { compareThings } from '../tools/index.ts'
+import { compareThings } from '../tools/index.ts';
 var md5 = require('md5');
 
-var currentFormattedData = {}
+var currentFormattedRoute = {};
 var routeSliding = {
   currentGroup: 0,
   targetGroup: 0,
@@ -343,6 +343,10 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
+  if (currentFormattedRoute === {}) {
+    currentFormattedRoute = formattedRoute;
+  }
+  console.log(currentFormattedRoute);
 
   var groupQuantity = formattedRoute.groupQuantity;
   var itemQuantity = formattedRoute.itemQuantity;
@@ -410,13 +414,24 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
-      thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
-      thisElement.querySelector('.status').innerText = thisItem.status.text;
-      thisElement.querySelector('.name').innerText = thisItem.name;
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
-thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
-}
+      if (!(thisItem.status.code === currentFormattedRoute.groupedItems[groupKey][j].status.code)) {
+        thisElement.querySelector('.status').setAttribute('code', thisItem.status.code);
+      }
+      if (!compareThings(currentFormattedRoute.groupedItems[groupKey][j].status.text, thisItem.status.text)) {
+        thisElement.querySelector('.status').innerText = thisItem.status.text;
+      }
+      if (!compareThings(currentFormattedRoute.groupedItems[groupKey][j].name, thisItem.name)) {
+        thisElement.querySelector('.name').innerText = thisItem.name;
+      }
+      if (!compareThings(currentFormattedRoute.groupedItems[groupKey][j].buses, thisItem.buses)) {
+        thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      }
+      if (!compareThings(currentFormattedRoute.groupedItems[groupKey][j].overlappingRoutes, thisItem.overlappingRoutes)) {
+        thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+      }
+    }
   }
+  currentFormattedRoute = formattedRoute;
 }
 
 export function streamRoute(RouteID: number, PathAttributeId: number): void {
