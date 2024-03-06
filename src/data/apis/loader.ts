@@ -44,12 +44,8 @@ export function getDataReceivingProgress(requestID: string): number {
       var total = 0;
       var received = 0;
       for (var key in dataReceivingProgress[requestID]) {
-        if (dataReceivingProgress[requestID][key] === false) {
-          continue;
-        } else {
-          total += 1;
-          received += dataReceivingProgress[requestID][key];
-        }
+        total += dataReceivingProgress[requestID][key].total;
+        received += dataReceivingProgress[requestID][key].progress;
       }
       return received / total;
     }
@@ -61,9 +57,14 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  if (dataReceivingProgress[requestID].hasOwnProperty(`u_${md5(urlName)}`)) {
-    dataReceivingProgress[requestID][`u_${md5(urlName)}`] = dataReceivingProgress[requestID][`u_${md5(urlName)}`] + Math.abs(progress - dataReceivingProgress[requestID][`u_${md5(urlName)}`]);
+  var key = `u_${md5(urlName)}`;
+  if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
+    var change = progress - dataReceivingProgress[requestID][key];
+    if (change < 0) {
+      dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key] + 1;
+    }
+    dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
   } else {
-    dataReceivingProgress[requestID][`u_${md5(urlName)}`] = progress;
+    dataReceivingProgress[requestID][key] = { progress: progress, total: 1 };
   }
 }
