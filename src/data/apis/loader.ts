@@ -66,7 +66,6 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
       dataReceivingProgress[requestID][key].expel = true;
     } else {
       dataReceivingProgress[requestID][key].expel = false;
-      var change = 0;
       var change = progress - dataReceivingProgress[requestID][key].previous_progress;
       if (change < 0) {
         dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
@@ -77,5 +76,4 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
   }
-  console.log(dataReceivingProgress);
 }
