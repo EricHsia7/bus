@@ -62,4 +62,5 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
     dataReceivingProgress[requestID] = {};
   }
   dataReceivingProgress[requestID][`u_${md5(urlName)}`] = progress;
+  console.log(dataReceivingProgress[requestID])
 }
