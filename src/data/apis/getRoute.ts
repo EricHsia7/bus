@@ -99,7 +99,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
       RouteAPIVariableCache.available = true;
       RouteAPIVariableCache.data = simplified_result;
     }
-    setDataReceivingProgress(requestID, 'getRoute', false);
+    setDataReceivingProgress(requestID, 'getRoute', 0, false);
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
@@ -118,7 +118,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
         RouteAPIVariableCache.available = true;
         RouteAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getRoute', false);
+      setDataReceivingProgress(requestID, 'getRoute', 0, false);
       return RouteAPIVariableCache.data;
     }
   }

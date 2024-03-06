@@ -73,7 +73,7 @@ export async function getLocation(requestID: string): object {
         LocationAPIVariableCache.available = true;
         LocationAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getLocation', false);
+      setDataReceivingProgress(requestID, 'getLocation', 0, false);
       return LocationAPIVariableCache.data;
     }
   }
