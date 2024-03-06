@@ -49,7 +49,7 @@ export function getDataReceivingProgress(requestID: string): number {
           received += dataReceivingProgress[requestID][key].progress;
         }
       }
-      return received / total;
+      return Math.min(Math.max(received / total, 0), 1);
     }
   }
   return 0;
