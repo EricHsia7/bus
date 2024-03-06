@@ -39,7 +39,7 @@ export async function getStop(requestID: string): object {
     var simplified_result = simplifyStop(result);
     await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
     await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
-    if (!s.available) {
+    if (!StopAPIVariableCache.available) {
       StopAPIVariableCache.available = true;
       StopAPIVariableCache.data = simplified_result;
     }
