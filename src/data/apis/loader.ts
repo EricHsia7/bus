@@ -46,6 +46,7 @@ export function getDataReceivingProgress(requestID: string): number {
       for (var key in dataReceivingProgress[requestID]) {
         if (dataReceivingProgress[requestID][key] === false) {
           total += 1;
+          received += 1;
         } else {
           total += 1;
           received += dataReceivingProgress[requestID][key];
