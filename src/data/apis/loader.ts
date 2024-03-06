@@ -75,4 +75,5 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, expel: false };
   }
+  console.log(dataReceivingProgress)
 }
