@@ -454,10 +454,14 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
-      if (previousFormattedRoute.groupedItems.hasOwnProperty(groupKey)) {
-        if (previousFormattedRoute.groupedItems[groupKey][j]) {
-          var previousItem = previousFormattedRoute.groupedItems[groupKey][j];
-          updateItem(thisElement, thisItem, previousItem);
+      if (previousFormattedRoute.hasOwnProperty('groupedItems')) {
+        if (previousFormattedRoute.groupedItems.hasOwnProperty(groupKey)) {
+          if (previousFormattedRoute.groupedItems[groupKey][j]) {
+            var previousItem = previousFormattedRoute.groupedItems[groupKey][j];
+            updateItem(thisElement, thisItem, previousItem);
+          } else {
+            updateItem(thisElement, thisItem, null);
+          }
         } else {
           updateItem(thisElement, thisItem, null);
         }
