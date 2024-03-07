@@ -50,6 +50,10 @@
   color: var(--b-333333);
 }
 
+.route_field[skeleton-screen="true"] .route_head .route_name {
+  color: rgba(0,0,0,0);
+  background: var(--b-f9f9fb);
+  }
 .route_field .route_head .route_group_tabs {
   position: absolute;
   bottom: 5px;
@@ -69,6 +73,11 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-333333);
+}
+
+.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
+  color: rgba(0,0,0,0);
+  background: var(--b-f9f9fb);
 }
 
 .route_field .route_head .route_group_tab_line_track {
