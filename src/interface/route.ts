@@ -384,7 +384,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
-Field.setAttribute('skeleton-screen', skeletonScreen)
+
   if (previousFormattedRoute === {}) {
     previousFormattedRoute = formattedRoute;
   }
@@ -404,7 +404,8 @@ Field.setAttribute('skeleton-screen', skeletonScreen)
   }
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  Field.querySelector('.route_name').innerText = formattedRoute.RouteName;
+  Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
+  Field.setAttribute('skeleton-screen', skeletonScreen)
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
