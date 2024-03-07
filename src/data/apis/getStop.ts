@@ -1,7 +1,6 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress } from './loader.ts';
-const localforage = require('localforage');
-
+import { lfSetItem, lfGetItem } from '../storage/index.ts';
 var StopAPIVariableCache = { available: false, data: {} };
 
 function simplifyStop(array: []): object {
@@ -33,12 +32,12 @@ export async function getStop(requestID: string): object {
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_key = 'bus_stop_cache';
-  var cached_time = await localforage.getItem(`${cache_key}_timestamp`);
+  var cached_time = await lfGetItem(`${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
     var simplified_result = simplifyStop(result);
-    await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
-    await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+    await lfSetItem(`${cache_key}_timestamp`, new Date().getTime());
+    await lfSetItem(`${cache_key}`, JSON.stringify(simplified_result));
     if (!StopAPIVariableCache.available) {
       StopAPIVariableCache.available = true;
       StopAPIVariableCache.data = simplified_result;
@@ -48,12 +47,12 @@ export async function getStop(requestID: string): object {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
       var simplified_result = simplifyStop(result);
-      await localforage.setItem(`${cache_key}_timestamp`, new Date().getTime());
-      await localforage.setItem(`${cache_key}`, JSON.stringify(simplified_result));
+      await lfSetItem(`${cache_key}_timestamp`, new Date().getTime());
+      await lfSetItem(`${cache_key}`, JSON.stringify(simplified_result));
       return simplified_result;
     } else {
       if (!StopAPIVariableCache.available) {
-        var cache = await localforage.getItem(`${cache_key}`);
+        var cache = await lfGetItem(`${cache_key}`);
         StopAPIVariableCache.available = true;
         StopAPIVariableCache.data = JSON.parse(cache);
       }
