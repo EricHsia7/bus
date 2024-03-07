@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - v2
-      - v2-bus-stops-data-optimization
+      - v2-storage
 jobs:
   build:
     runs-on: ubuntu-latest
