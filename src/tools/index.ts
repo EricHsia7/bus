@@ -11,7 +11,7 @@ export function compareThings(a: any, b: any): boolean {
     var hash_a = md5(ax);
     var hash_b = md5(bx);
 
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < 8; i++) {
       var a_i = hash_a.charAt(i);
       var b_i = hash_b.charAt(i);
       var equal = true;
