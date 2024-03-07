@@ -384,6 +384,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldRect = Field.getBoundingClientRect();
   const FieldWidth = FieldRect.width;
   const FieldHeight = FieldRect.height;
+Field.setAttribute('skeleton-screen', skeletonScreen)
   if (previousFormattedRoute === {}) {
     previousFormattedRoute = formattedRoute;
   }
