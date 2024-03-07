@@ -53,6 +53,7 @@
 .route_field[skeleton-screen="true"] .route_head .route_name span {
   color: rgba(0,0,0,0);
   background: var(--b-f9f9fb);
+  border-radius:30px;
   }
 .route_field .route_head .route_group_tabs {
   position: absolute;
@@ -78,6 +79,7 @@
 .route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
   color: rgba(0,0,0,0);
   background: var(--b-f9f9fb);
+    border-radius:30px;
 }
 
 .route_field .route_head .route_group_tab_line_track {
@@ -107,6 +109,9 @@
   transform: scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
+.route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line {
+  background: rgba(0,0,0,0);
+  }
 .route_field .route_head .update_timer_box {
   position: absolute;
   left: 0px;
