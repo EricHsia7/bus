@@ -487,19 +487,19 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   previousFormattedRoute = formattedRoute;
 }
 
-export function streamRoute(): void {
-  async function refreshRoute(): object {
-    routeRefreshTimer.refreshing = true;
-    routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-    var formattedRoute = await formatRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
-    var Field = document.querySelector('.route_field');
-    updateRouteField(Field, formattedRoute, false);
-    routeRefreshTimer.lastUpdate = new Date().getTime();
-    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
-    routeRefreshTimer.refreshing = false;
-    return { status: 'Successfully refreshed the route.' };
-  }
+async function refreshRoute(): object {
+  routeRefreshTimer.refreshing = true;
+  routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  var formattedRoute = await formatRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
+  var Field = document.querySelector('.route_field');
+  updateRouteField(Field, formattedRoute, false);
+  routeRefreshTimer.lastUpdate = new Date().getTime();
+  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+  routeRefreshTimer.refreshing = false;
+  return { status: 'Successfully refreshed the route.' };
+}
 
+export function streamRoute(): void {
   refreshRoute()
     .then((result) => {
       if (routeRefreshTimer.streaming) {
@@ -521,6 +521,7 @@ export function openRoute(RouteID: number, PathAttributeId: [number]) {
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
+  refreshRoute();
   if (!routeRefreshTimer.streaming) {
     routeRefreshTimer.streaming = true;
     if (routeRefreshTimer.timer === null) {
