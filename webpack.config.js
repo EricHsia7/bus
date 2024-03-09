@@ -114,11 +114,6 @@ module.exports = (env, argv) => {
             priority: -20,
             reuseExistingChunk: true
           },
-          vendor: {
-            test: /\/node_modules\//,
-            priority: 0,
-            enforce: true
-          }
           // Add more cache groups if needed
         }
       }
