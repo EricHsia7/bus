@@ -1,5 +1,5 @@
 import { openKeyboard, closeKeyboard } from './keyboard.ts';
-import { prepareForSearch } from '.../data/search/searchRoute.ts';
+import { prepareForSearch } from '../../data/search/searchRoute.ts';
 
 const searchPageField = document.querySelector('.search_page_field');
 const searchInputElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
