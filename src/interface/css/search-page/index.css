@@ -5,6 +5,11 @@
   width: 100%;
   height: 100%;
   background: var(--b-f9f9fb);
+  display: none;
+}
+
+.search_page_field[displayed="true"] {
+  display: block;
 }
 
 .search_page_field .search_page_head {
@@ -37,6 +42,11 @@
   padding: 0px;
   margin: 0px;
   caret-color: var(--b-main-color);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
 }
 
 .search_page_field .search_page_head .search_page_button_left {
