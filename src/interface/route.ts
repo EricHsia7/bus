@@ -22,7 +22,8 @@ var routeRefreshTimer = {
   lastUpdate: 0,
   nextUpdate: 0,
   refreshing: false,
-  currentRequestID: ''
+  currentRequestID: '',
+  timer: null
 };
 
 var currentRouteIDSet = {
@@ -503,9 +504,13 @@ export function streamRoute(RouteID: number, PathAttributeId: [number]): void {
   refreshRoute(RouteID, PathAttributeId)
     .then((result) => {
       if (routeRefreshTimer.streaming) {
-        setTimeout(function () {
-          streamRoute(result.RouteID, result.PathAttributeId);
-        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        if (routeRefreshTimer.timer === null) {
+          routeRefreshTimer.timer = setTimeout(function () {
+            streamRoute(result.RouteID, result.PathAttributeId);
+          }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }
+      } else {
+        routeRefreshTimer.timer = null;
       }
     })
     .catch((err) => {
