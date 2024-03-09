@@ -1,0 +1,31 @@
+.search_page_keyboard {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: clamp(200px, 36%, 270px);
+  padding: 5px;
+  box-sizing: border-box;
+  background: var(--b-ffffff);
+  user-select: none;
+  -webkit-user-select: none;
+  display: none;
+}
+
+.search_page_keyboard[displayed="true"] {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  grid-template-rows: auto;
+}
+
+.search_page_keyboard .search_page_keyboard_key {
+  position: relative;
+  background: var(--b-e5e5ea);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  font-size: 20px;
+  color: var(--b-333333);
+}
