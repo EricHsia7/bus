@@ -80,11 +80,18 @@ export function initializeRouteSliding() {
   });
 }
 
+function queryRouteFieldSize(): object {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+}
+
 export function ResizeRouteField(): void {
   var Field = document.querySelector('.route_field');
-  const FieldRect = Field.getBoundingClientRect();
-  const FieldWidth = FieldRect.width;
-  const FieldHeight = FieldRect.height;
+  const FieldSize = queryRouteFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
   document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
 }
 
@@ -303,9 +310,9 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
 }
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldRect = Field.getBoundingClientRect();
-  const FieldWidth = FieldRect.width;
-  const FieldHeight = FieldRect.height;
+  const FieldSize = queryRouteFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
   var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   var defaultGroupQuantity = 2;
   var groupedItems = {};
@@ -384,9 +391,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
     }
   }
-  const FieldRect = Field.getBoundingClientRect();
-  const FieldWidth = FieldRect.width;
-  const FieldHeight = FieldRect.height;
+  const FieldSize = queryRouteFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
 
   if (previousFormattedRoute === {}) {
     previousFormattedRoute = formattedRoute;
