@@ -9,6 +9,7 @@ import './interface/css/theme.css';
 import './interface/css/index.css';
 import './interface/css/route.css';
 import './interface/css/home-page.css';
+import './interface/css/search-page/index.css';
 import './interface/css/search-page/keyboard.css';
 
 //for development
