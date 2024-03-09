@@ -6,6 +6,7 @@ import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, str
 import './interface/css/theme.css';
 import './interface/css/index.css';
 import './interface/css/route.css';
+import './interface/css/home-page.css';
 
 //for development
 
