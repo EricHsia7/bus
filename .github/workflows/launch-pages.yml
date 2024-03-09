@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - v2
-      - v2-home-page
+      - v2-search-page
 jobs:
   build:
     runs-on: ubuntu-latest
