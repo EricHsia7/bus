@@ -501,18 +501,18 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
   if (!routeRefreshTimer.streaming) {
     routeRefreshTimer.streaming = true;
     updateUpdateTimer();
-    refreshRoute(RouteID, PathAttributeId)
-      .then((result) => {
-        if (routeRefreshTimer.streaming) {
-          setTimeout(function () {
-            streamRoute(result.RouteID, result.PathAttributeId);
-          }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }
+  refreshRoute(RouteID, PathAttributeId)
+    .then((result) => {
+      if (routeRefreshTimer.streaming) {
+        setTimeout(function () {
+          streamRoute(result.RouteID, result.PathAttributeId);
+        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
@@ -521,7 +521,9 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
-  streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+  if (!routeRefreshTimer.streaming) {
+    streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+  }
 }
 
 export function closeRoute() {
