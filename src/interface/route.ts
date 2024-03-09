@@ -488,23 +488,25 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     routeRefreshTimer.refreshing = false;
     return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
   }
-  refreshRoute(RouteID, PathAttributeId)
-    .then((result) => {
-      if (routeRefreshTimer.flowing) {
-        setTimeout(function () {
-          streamRoute(result.RouteID, result.PathAttributeId);
-        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (!routeRefreshTimer.flowing) {
+    routeRefreshTimer.flowing = true;
+    refreshRoute(RouteID, PathAttributeId)
+      .then((result) => {
+        if (routeRefreshTimer.flowing) {
+          setTimeout(function () {
+            streamRoute(result.RouteID, result.PathAttributeId);
+          }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 
 export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
-  routeRefreshTimer.flowing = true;
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
