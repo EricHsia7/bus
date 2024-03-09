@@ -405,7 +405,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
-  Field.setAttribute('skeleton-screen', skeletonScreen)
+  Field.setAttribute('skeleton-screen', skeletonScreen);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
@@ -479,7 +479,7 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
   async function refreshRoute(RouteID: number, PathAttributeId: number): object {
     routeRefreshTimer.refreshing = true;
     routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-    
+
     var formattedRoute = await formatRoute(RouteID, PathAttributeId, routeRefreshTimer.currentRequestID);
     var Field = document.querySelector('.route_field');
     updateRouteField(Field, formattedRoute, false);
@@ -506,12 +506,14 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   routeRefreshTimer.flowing = true;
   var Field = document.querySelector('.route_field');
+  Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
   streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
 }
 
 export function closeRoute() {
   routeRefreshTimer.flowing = false;
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openRouteByURLScheme() {
