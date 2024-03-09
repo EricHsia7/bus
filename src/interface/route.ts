@@ -512,8 +512,9 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
 }
 
 export function closeRoute() {
-  routeRefreshTimer.flowing = false;
+  var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'false');
+  routeRefreshTimer.flowing = false;
 }
 
 export function openRouteByURLScheme() {

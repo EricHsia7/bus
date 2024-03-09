@@ -8,7 +8,6 @@ import './interface/css/index.css';
 import './interface/css/route.css';
 import './interface/css/home-page.css';
 
-
 //for development
 
 const ErrorStackParser = require('error-stack-parser');
