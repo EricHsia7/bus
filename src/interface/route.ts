@@ -123,7 +123,7 @@ function updateUpdateTimer() {
   });
 }
 
-export async function formatRoute(RouteID: number, PathAttributeId: number, requestID: string) {
+export async function formatRoute(RouteID: number, PathAttributeId: [number], requestID: string) {
   function formatEstimateTime(EstimateTime: string, mode: number = 1) {
     function formatTime(time: number, mode: number) {
       if (mode === 0) {
@@ -485,8 +485,8 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   previousFormattedRoute = formattedRoute;
 }
 
-export function streamRoute(RouteID: number, PathAttributeId: number): void {
-  async function refreshRoute(RouteID: number, PathAttributeId: number): object {
+export function streamRoute(RouteID: number, PathAttributeId: [number]): void {
+  async function refreshRoute(RouteID: number, PathAttributeId: [number]): object {
     routeRefreshTimer.refreshing = true;
     routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
 
@@ -515,7 +515,7 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     });
 }
 
-export function openRoute(RouteID: number, PathAttributeId: number) {
+export function openRoute(RouteID: number, PathAttributeId: [number]) {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
