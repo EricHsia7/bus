@@ -504,13 +504,9 @@ export function streamRoute(RouteID: number, PathAttributeId: [number]): void {
   refreshRoute(RouteID, PathAttributeId)
     .then((result) => {
       if (routeRefreshTimer.streaming) {
-        if (routeRefreshTimer.timer === null) {
-          routeRefreshTimer.timer = setTimeout(function () {
-            streamRoute(result.RouteID, result.PathAttributeId);
-          }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
-        }
-      } else {
-        routeRefreshTimer.timer = null;
+        routeRefreshTimer.timer = setTimeout(function () {
+          streamRoute(result.RouteID, result.PathAttributeId);
+        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
       }
     })
     .catch((err) => {
@@ -526,6 +522,9 @@ export function openRoute(RouteID: number, PathAttributeId: [number]) {
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer.streaming) {
     routeRefreshTimer.streaming = true;
+    if (!(routeRefreshTimer.timer === null)) {
+      clearTimeout(routeRefreshTimer.timer);
+    }
     streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
     updateUpdateTimer();
   }
