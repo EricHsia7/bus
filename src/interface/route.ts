@@ -452,7 +452,8 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
+          var itemIndex = currentItemSeatQuantity - 1 - o;
+          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
         }
       }
     }
