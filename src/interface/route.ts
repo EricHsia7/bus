@@ -23,7 +23,7 @@ var routeRefreshTimer = {
   nextUpdate: 0,
   refreshing: false,
   currentRequestID: '',
-  timer: null
+  streamStarted: false
 };
 
 var currentRouteIDSet = {
@@ -507,7 +507,7 @@ export function streamRoute(): void {
           streamRoute();
         }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
       } else {
-        routeRefreshTimer.timer = null;
+        routeRefreshTimer.streamStarted = false;
       }
     })
     .catch((err) => {
@@ -521,11 +521,13 @@ export function openRoute(RouteID: number, PathAttributeId: [number]) {
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
-  refreshRoute();
   if (!routeRefreshTimer.streaming) {
     routeRefreshTimer.streaming = true;
-    if (routeRefreshTimer.timer === null) {
+    if (!routeRefreshTimer.streamStarted) {
+      routeRefreshTimer.streamStarted = true;
       streamRoute();
+    } else {
+      refreshRoute();
     }
     updateUpdateTimer();
   }
