@@ -499,10 +499,7 @@ export function streamRoute(RouteID: number, PathAttributeId: [number]): void {
     routeRefreshTimer.refreshing = false;
     return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
   }
-  if (!routeRefreshTimer.streaming) {
-    routeRefreshTimer.streaming = true;
-    updateUpdateTimer();
-  }
+
   refreshRoute(RouteID, PathAttributeId)
     .then((result) => {
       if (routeRefreshTimer.streaming) {
@@ -523,7 +520,9 @@ export function openRoute(RouteID: number, PathAttributeId: [number]) {
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer.streaming) {
+    routeRefreshTimer.streaming = true;
     streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+    updateUpdateTimer();
   }
 }
 
