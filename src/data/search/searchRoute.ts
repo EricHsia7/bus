@@ -44,15 +44,13 @@ export async function prepareForSearch() {
   var Route = await getRoute(requestID, true);
   var index = [];
   for (var key in Route) {
-    if (String(Route[key].pid).indexOf(PathAttributeId) > -1) {
-      index.push({
-        id: parseInt(key.split('_')[1]),
-        pid: Route[key].pid,
-        dep: Route[key].dep,
-        des: Route[key].des,
-        n: Route[key].n
-      });
-    }
+    index.push({
+      id: parseInt(key.split('_')[1]),
+      pid: Route[key].pid,
+      dep: Route[key].dep,
+      des: Route[key].des,
+      n: Route[key].n
+    });
   }
   return new Fuse(index, { keys: ['n', 'dep', 'des'] });
 }

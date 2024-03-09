@@ -1,0 +1,78 @@
+.search_page_field {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--b-f9f9fb);
+}
+
+.search_page_field .search_page_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-e5e5ea);
+  box-sizing: border-box;
+  background: var(--b-ffffff);
+}
+
+.search_page_field .search_page_head .search_page_search_input {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px);
+  height: 55px;
+}
+
+.search_page_field .search_page_head .search_page_search_input input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  border-radius: none;
+  color: var(--b-333333);
+  font-size: 20px;
+  padding: 0px;
+  margin: 0px;
+  caret-color: var(--b-main-color);
+}
+
+.search_page_field .search_page_head .search_page_button_left {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search_page_field .search_page_head .search_page_button_left {
+  top: 0px;
+  left: 0px;
+}
+
+.search_page_field .search_page_head .search_page_button_right {
+  top: 0px;
+  right: 0px;
+}
+
+.search_page_field .search_page_head .search_page_button_left svg {
+  width: 20px;
+  height: 20px;
+}
+
+.search_page_field .search_page_head .search_page_button_left svg path {
+  fill: var(--b-333333);
+}
+
+.search_page_field .search_page_body {
+  position: absolute;
+  top: 55px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}

@@ -3,6 +3,7 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
@@ -49,7 +50,10 @@ window.bus = {
   },
   searchPage: {
     openSearchPage,
-    closeSearchPage
+    closeSearchPage,
+    typeTextIntoInput,
+    deleteCharFromInout,
+    emptyInput
   }
 };
 window.bus.searchRouteByName = searchRouteByName;
