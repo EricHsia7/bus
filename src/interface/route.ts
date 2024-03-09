@@ -509,8 +509,11 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
-  setUpRouteFieldSkeletonScreen(Field);
-  streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+  //ensure that browser has time to calculate element size
+  setTimeout(function () {
+    setUpRouteFieldSkeletonScreen(Field);
+    streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+  }, 1);
 }
 
 export function closeRoute() {
