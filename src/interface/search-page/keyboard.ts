@@ -1,3 +1,5 @@
+import { updateSearchResult } from './index.ts';
+
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
@@ -37,14 +39,19 @@ export function closeKeyboard() {
 
 export function typeTextIntoInput(value): void {
   var currentValue = String(searchInputElement.value);
-  searchInputElement.value = `${currentValue}${value}`;
+  var newValue = `${currentValue}${value}`;
+  searchInputElement.value = newValue;
+  updateSearchResult(newValue);
 }
 
 export function deleteCharFromInout(): void {
   var currentValue = String(searchInputElement.value);
-  searchInputElement.value = currentValue.substring(0, currentValue.length - 1);
+  var newValue = currentValue.substring(0, currentValue.length - 1);
+  searchInputElement.value = newValue;
+  updateSearchResult(newValue);
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
+  updateSearchResult('');
 }

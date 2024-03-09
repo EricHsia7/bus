@@ -19,7 +19,7 @@ export function closeSearchPage(): void {
   searchPageField.setAttribute('displayed', 'false');
 }
 
-function updateSearchResult(query: string): void {
+export function updateSearchResult(query: string): void {
   var searchResults = currentFuse.search(query);
   var html = [];
   for (var result of searchResults) {
