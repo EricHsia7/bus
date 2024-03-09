@@ -18,7 +18,7 @@ var routeSliding = {
 var routeRefreshTimer = {
   interval: 15 * 1000,
   retryInterval: 5 * 1000,
-  flowing: false,
+  streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
   refreshing: false,
@@ -78,7 +78,6 @@ export function initializeRouteSliding() {
     var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
-  updateUpdateTimer();
 }
 
 export function ResizeRouteField(): void {
@@ -110,7 +109,11 @@ function updateUpdateTimer() {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
   }
   document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
-  window.requestAnimationFrame(updateUpdateTimer);
+  window.requestAnimationFrame(function () {
+    if (routeRefreshTimer.streaming) {
+      updateUpdateTimer();
+    }
+  });
 }
 
 export async function formatRoute(RouteID: number, PathAttributeId: number, requestID: string) {
@@ -488,11 +491,12 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     routeRefreshTimer.refreshing = false;
     return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
   }
-  if (!routeRefreshTimer.flowing) {
-    routeRefreshTimer.flowing = true;
+  if (!routeRefreshTimer.streaming) {
+    routeRefreshTimer.streaming = true;
+    updateUpdateTimer();
     refreshRoute(RouteID, PathAttributeId)
       .then((result) => {
-        if (routeRefreshTimer.flowing) {
+        if (routeRefreshTimer.streaming) {
           setTimeout(function () {
             streamRoute(result.RouteID, result.PathAttributeId);
           }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
@@ -509,17 +513,14 @@ export function openRoute(RouteID: number, PathAttributeId: number) {
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
-  //ensure that browser has time to calculate element size
-  setTimeout(function () {
-    setUpRouteFieldSkeletonScreen(Field);
-    streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
-  }, 1);
+  setUpRouteFieldSkeletonScreen(Field);
+  streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
 }
 
 export function closeRoute() {
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'false');
-  routeRefreshTimer.flowing = false;
+  routeRefreshTimer.streaming = false;
 }
 
 export function openRouteByURLScheme() {
