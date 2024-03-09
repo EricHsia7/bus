@@ -14,12 +14,12 @@ function initializeKeyboard(): void {
   var result = [];
   for (var row of keyboard_keys) {
     for (var column of row) {
-      var onclickScript = `searchPage.typeTextIntoInput('${column}')`;
+      var onclickScript = `bus.searchPage.typeTextIntoInput('${column}')`;
       if (column === '刪除') {
-        onclickScript = 'searchPage.deleteCharFromInout()';
+        onclickScript = 'bus.searchPage.deleteCharFromInout()';
       }
       if (column === '清空') {
-        onclickScript = 'searchPage.emptyInput()';
+        onclickScript = 'bus.searchPage.emptyInput()';
       }
       result.push(`<div class="search_page_keyboard_key" onclick="${onclickScript}">${column}</div>`);
     }
