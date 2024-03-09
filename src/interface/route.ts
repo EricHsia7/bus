@@ -507,6 +507,8 @@ export function streamRoute(RouteID: number, PathAttributeId: [number]): void {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute(result.RouteID, result.PathAttributeId);
         }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+      } else {
+        routeRefreshTimer.timer = null;
       }
     })
     .catch((err) => {
