@@ -26,7 +26,7 @@ export function updateSearchResult(query: string): void {
     var name = result.item.n;
     var endPoints = `${result.item.dep} \u21CC ${result.item.des}`;
     var onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
-    html.push(`<div class="search_page_search_result" onclick="${onclickScript}">${name}</div>`);
+    html.push(`<div class="search_page_search_result" onclick="${onclickScript}"><div class="search_page_search_result_route_name">${name}</div><div class="search_page_search_result_endpoints">${endPoints}</div></div>`);
   }
   searchResultsElement.innerHTML = html.join('');
 }
