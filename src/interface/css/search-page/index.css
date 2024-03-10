@@ -39,6 +39,7 @@
   border-radius: none;
   color: var(--b-333333);
   font-size: 20px;
+  font-weight: 400;
   padding: 0px;
   margin: 0px;
   caret-color: var(--b-main-color);

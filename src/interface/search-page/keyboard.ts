@@ -43,6 +43,7 @@ export function typeTextIntoInput(value): void {
   var newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
+  uodateCursor(newValue);
 }
 
 export function deleteCharFromInout(): void {
@@ -50,11 +51,16 @@ export function deleteCharFromInout(): void {
   var newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
+  uodateCursor(newValue);
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult('');
+  uodateCursor('');
 }
 
-function uodateCursor(value) {}
+function uodateCursor(value) {
+  var offset = getTextWidth(value, `400 20px "Noto Sans", sans-serif`);
+  document.querySelector('#search_style').innerHTML = `:root {--cursor-offset:${offset}px}`;
+}
