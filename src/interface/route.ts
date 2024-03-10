@@ -246,7 +246,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
           html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
         },
         RouteID: route.id,
-        PathAttributeId: route.pid
+        PathAttributeId: route.pid ? route.id : []
       };
       result.push(formattedItem);
     }
