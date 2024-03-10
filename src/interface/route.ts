@@ -2,7 +2,8 @@ import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
-import { compareThings } from '../tools/index.ts';
+import { compareThings, getTextWidth } from '../tools/index.ts';
+
 var md5 = require('md5');
 
 var previousFormattedRoute = {};
@@ -22,7 +23,8 @@ var routeRefreshTimer = {
   lastUpdate: 0,
   nextUpdate: 0,
   refreshing: false,
-  currentRequestID: ''
+  currentRequestID: '',
+  streamStarted: false
 };
 
 var currentRouteIDSet = {
@@ -95,14 +97,6 @@ export function ResizeRouteField(): void {
   document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
 }
 
-function getTextWidth(text, font) {
-  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
-  context.font = font;
-  const metrics = context.measureText(text);
-  return metrics.width;
-}
-
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
   document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
 }
@@ -123,7 +117,7 @@ function updateUpdateTimer() {
   });
 }
 
-export async function formatRoute(RouteID: number, PathAttributeId: number, requestID: string) {
+export async function formatRoute(RouteID: number, PathAttributeId: [number], requestID: string) {
   function formatEstimateTime(EstimateTime: string, mode: number = 1) {
     function formatTime(time: number, mode: number) {
       if (mode === 0) {
@@ -452,7 +446,8 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[o].remove();
+          var itemIndex = currentItemSeatQuantity - 1 - o;
+          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
         }
       }
     }
@@ -485,29 +480,27 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   previousFormattedRoute = formattedRoute;
 }
 
-export function streamRoute(RouteID: number, PathAttributeId: number): void {
-  async function refreshRoute(RouteID: number, PathAttributeId: number): object {
-    routeRefreshTimer.refreshing = true;
-    routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+async function refreshRoute(): object {
+  routeRefreshTimer.refreshing = true;
+  routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  var formattedRoute = await formatRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
+  var Field = document.querySelector('.route_field');
+  updateRouteField(Field, formattedRoute, false);
+  routeRefreshTimer.lastUpdate = new Date().getTime();
+  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+  routeRefreshTimer.refreshing = false;
+  return { status: 'Successfully refreshed the route.' };
+}
 
-    var formattedRoute = await formatRoute(RouteID, PathAttributeId, routeRefreshTimer.currentRequestID);
-    var Field = document.querySelector('.route_field');
-    updateRouteField(Field, formattedRoute, false);
-    routeRefreshTimer.lastUpdate = new Date().getTime();
-    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
-    routeRefreshTimer.refreshing = false;
-    return { status: 'Successfully refreshed the route.', RouteID: RouteID, PathAttributeId: PathAttributeId };
-  }
-  if (!routeRefreshTimer.streaming) {
-    routeRefreshTimer.streaming = true;
-    updateUpdateTimer();
-  }
-  refreshRoute(RouteID, PathAttributeId)
+export function streamRoute(): void {
+  refreshRoute()
     .then((result) => {
       if (routeRefreshTimer.streaming) {
-        setTimeout(function () {
-          streamRoute(result.RouteID, result.PathAttributeId);
+        routeRefreshTimer.timer = setTimeout(function () {
+          streamRoute();
         }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+      } else {
+        routeRefreshTimer.streamStarted = false;
       }
     })
     .catch((err) => {
@@ -515,14 +508,21 @@ export function streamRoute(RouteID: number, PathAttributeId: number): void {
     });
 }
 
-export function openRoute(RouteID: number, PathAttributeId: number) {
+export function openRoute(RouteID: number, PathAttributeId: [number]) {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer.streaming) {
-    streamRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId);
+    routeRefreshTimer.streaming = true;
+    if (!routeRefreshTimer.streamStarted) {
+      routeRefreshTimer.streamStarted = true;
+      streamRoute();
+    } else {
+      refreshRoute();
+    }
+    updateUpdateTimer();
   }
 }
 

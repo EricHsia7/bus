@@ -45,6 +45,7 @@
     "md5": "^2.3.0",
     "fontfaceobserver": "^2.3.0",
     "pako": "^2.1.0",
-    "localforage": "^1.10.0"
+    "localforage": "^1.10.0",
+    "fuse.js": "^7.0.0"
   }
 }

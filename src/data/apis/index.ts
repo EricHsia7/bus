@@ -115,7 +115,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   };
 }
 /*
-async function integrateRouteInfo(RouteID: number, PathAttributeId: number) {
+async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
   var minuteToStr = function (s) {
     return parseInt(s) + '分';
   };
