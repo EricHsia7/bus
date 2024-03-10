@@ -6,7 +6,7 @@
   height: clamp(200px, 36%, 270px);
   padding: 5px;
   box-sizing: border-box;
-  background: var(--b-ffffff);
+  background: var(--b-f9f9fb);
   user-select: none;
   -webkit-user-select: none;
   display: none;
@@ -21,7 +21,7 @@
 
 .search_page_keyboard .search_page_keyboard_key {
   position: relative;
-  background: var(--b-e5e5ea);
+  background: var(--b-ffffff);
   display: flex;
   justify-content: center;
   align-items: center;
