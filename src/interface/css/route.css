@@ -186,6 +186,10 @@
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
+  transition: none;
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="false"] {
   transition: height var(--b-transition-duration);
 }
 
