@@ -55,12 +55,6 @@
   color: var(--b-333333);
 }
 
-.route_field[skeleton-screen="true"] .route_head .route_name span {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
-  border-radius: 30px;
-}
-
 .route_field .route_head .route_group_tabs {
   position: absolute;
   bottom: 5px;
@@ -80,12 +74,6 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-333333);
-}
-
-.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
-  border-radius: 30px;
 }
 
 .route_field .route_head .route_group_tab_line_track {
@@ -113,10 +101,6 @@
   height: 2px;
   border-radius: 0px;
   transform: scaleX(calc(var(--b-route-tab-width) / 30));
-}
-
-.route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line {
-  background: rgba(0, 0, 0, 0);
 }
 
 .route_field .route_head .update_timer_box {
@@ -187,10 +171,6 @@
   user-select: none;
   overflow: hidden;
   transition: none;
-}
-
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="false"] {
-  transition: height var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] {
@@ -315,11 +295,6 @@
   transition: none;
 }
 
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
-}
-
 .route_field .route_groups .route_grouped_items .item .name {
   position: absolute;
   top: 5px;
@@ -336,14 +311,6 @@
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;
-}
-
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
-  top: 7.5px;
-  height: 35px;
-  border-radius: 30px;
 }
 
 .route_field .route_groups .route_grouped_items .item .head .stretch {
@@ -368,20 +335,12 @@
   transition: transform var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
-  background: var(--b-f9f9fb);
-}
-
 .route_field .route_groups .route_grouped_items .item .head .stretch svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .head .stretch svg {
   transform: rotate(180deg);
-}
-
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
-  display: none;
 }
 
 .route_field .route_groups .route_grouped_items .item .buses,
@@ -564,4 +523,72 @@
   background: var(--b-e5e5ea);
   border-radius: 30px;
   color: var(--b-333333);
+}
+
+.route_field[skeleton-screen="true"] .route_head .route_name span {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-f9f9fb);
+  border-radius: 30px;
+}
+
+.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-f9f9fb);
+  border-radius: 30px;
+}
+
+.route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line {
+  background: rgba(0, 0, 0, 0);
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="false"] {
+  transition: height var(--b-transition-duration);
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-f9f9fb);
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-f9f9fb);
+  top: 7.5px;
+  height: 35px;
+  border-radius: 30px;
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
+  background: var(--b-f9f9fb);
+}
+
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
+  display: none;
+}
+
+.route_field[skeleton-screen="true"] .route_head .route_name span,
+.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
+.route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
+  -webkit-mask-image: linear-gradient(75deg, #000 30%, rgba(0, 0, 0, 0.65) 80%);
+  mask-image: linear-gradient(75deg, #000 30%, rgba(0, 0, 0, 0.65) 80%);
+  -webkit-mask-size: 200%;
+  mask-size: 200%;
+  animation: skeleton-loading;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    -webkit-mask-position: 200%;
+    mask-position: 200%;
+  }
+
+  100% {
+    -webkit-mask-position: 0%;
+    mask-position: 0%;
+  }
 }
