@@ -572,7 +572,7 @@
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
-  background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.65) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
+  background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
   animation: skeleton-loading;
