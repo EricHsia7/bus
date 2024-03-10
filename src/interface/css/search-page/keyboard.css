@@ -6,7 +6,7 @@
   height: clamp(200px, 36%, 270px);
   padding: 5px;
   box-sizing: border-box;
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
   user-select: none;
   -webkit-user-select: none;
   display: none;
