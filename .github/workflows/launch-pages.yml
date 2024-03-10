@@ -1,0 +1,46 @@
+name: Launch Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - v2
+      - v2-search-page
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Copy index.html to root dictionary
+        run: cp dist/index.html .
+
+#      - name: Install canvas package
+#        run: npm install canvas
+
+#      - name: Generate splash screen
+#        run: node generate_splash_screen.js
+
+#      - name: Uninstall canvas package
+#        run: npm uninstall canvas
+
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b v2-gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
