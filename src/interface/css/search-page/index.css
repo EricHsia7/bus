@@ -92,7 +92,7 @@
   top: 0px;
   left: 0px;
   width: 100%;
-  height: calc(100% - 55px - clamp(200px, 36%, 270px));
+  height: calc(100% - clamp(200px, 36%, 270px));
   overflow: scroll;
   user-select: none;
   -webkit-user-select: none;
