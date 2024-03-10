@@ -26,8 +26,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy index.html to root dictionary
-        run: cp dist/index.html .
+      - name: Copy things to dist
+        run: |
+          cp -r ./pwaicon2/ ./dist/pwaicon2/
+          cp -r ./splash_screen/ ./dist/splash_screen/
+          cp -r ./manifest.json ./dist/manifest.json
 
 #      - name: Install canvas package
 #        run: npm install canvas
