@@ -1,4 +1,5 @@
 import { updateSearchResult } from './index.ts';
+import { getTextWidth } from '../../tools/index.ts';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -55,3 +56,5 @@ export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult('');
 }
+
+function uodateCursor(value) {}

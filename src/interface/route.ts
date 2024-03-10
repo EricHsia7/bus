@@ -2,7 +2,8 @@ import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
-import { compareThings } from '../tools/index.ts';
+import { compareThings, getTextWidth } from '../tools/index.ts';
+
 var md5 = require('md5');
 
 var previousFormattedRoute = {};
@@ -94,14 +95,6 @@ export function ResizeRouteField(): void {
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
   document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
-}
-
-function getTextWidth(text, font) {
-  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
-  context.font = font;
-  const metrics = context.measureText(text);
-  return metrics.width;
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
