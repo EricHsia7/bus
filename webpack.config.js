@@ -17,23 +17,21 @@ function generateRandomString(length) {
   return result;
 }
 
-
-
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[name].[contenthash].min.css', // Output CSS filename
+        filename: '[name].[contenthash].min.css' // Output CSS filename
       }),
       new HtmlWebpackPlugin({
         template: './src/index.html', // Path to your custom HTML template file
-        inject: 'head', // Specify 'body' to insert the script tags just before the closing </body> tag
+        inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          VERSION: JSON.stringify(generateRandomString(16)), // You can adjust the length of the random string here (e.g., 8 characters)
-        },
+          VERSION: JSON.stringify(generateRandomString(16)) // You can adjust the length of the random string here (e.g., 8 characters)
+        }
       }),
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
@@ -43,14 +41,14 @@ module.exports = (env, argv) => {
         cacheId: `bus-${generateRandomString(16)}`,
         runtimeCaching: [
           {
-            urlPattern: new RegExp('^https://fonts\.googleapis\.com'),
+            urlPattern: new RegExp('^https://fonts.googleapis.com'),
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'google-fonts-stylesheets',
-            },
-          },
-        ],
-      }),
+              cacheName: 'google-fonts-stylesheets'
+            }
+          }
+        ]
+      })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
     mode: 'production', // Set the mode to 'production' or 'development'
@@ -58,13 +56,13 @@ module.exports = (env, argv) => {
     output: {
       filename: isProduction ? '[name].[contenthash].min.js' : 'index.js', // Output bundle filename
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
-      publicPath: 'https://erichsia7.github.io/bus/dist/',
+      publicPath: 'https://erichsia7.github.io/bus/',
       library: {
         name: 'bus',
         type: 'umd',
         umdNamedDefine: true,
-        export: 'default',
-      },
+        export: 'default'
+      }
     },
     module: {
       rules: [
@@ -75,19 +73,19 @@ module.exports = (env, argv) => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env', '@babel/preset-flow', 'babel-preset-modules', '@babel/preset-typescript'],
-              plugins: ['@babel/plugin-syntax-flow'],
-            },
-          },
+              plugins: ['@babel/plugin-syntax-flow']
+            }
+          }
         },
         {
           test: /\.css|less?$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
-        },
-      ],
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
+        }
+      ]
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'], // File extensions to resolve
-      mainFields: ['browser', 'module', 'main'],
+      mainFields: ['browser', 'module', 'main']
     },
     optimization: {
       minimize: isProduction,
@@ -100,9 +98,9 @@ module.exports = (env, argv) => {
               'default',
               AdvancedPreset,
               {
-                discardComments: { removeAll: true },
-              },
-            ],
+                discardComments: { removeAll: true }
+              }
+            ]
           }
         })
       ],
@@ -114,17 +112,17 @@ module.exports = (env, argv) => {
           default: {
             minChunks: 2,
             priority: -20,
-            reuseExistingChunk: true,
+            reuseExistingChunk: true
           },
           // Add more cache groups if needed
-        },
-      },
+        }
+      }
     },
     devtool: 'source-map',
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
-      hot: true,
-    },
+      hot: true
+    }
     // Add any additional plugins and configurations as needed
-  }
-}
+  };
+};

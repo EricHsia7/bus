@@ -7,13 +7,13 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode=production",
-    "deploy": "gh-pages -d ."
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/EricHsia7/bus.git"
   },
-  "keywords": [ "typescript", "progressive", "web", "application"],
+  "keywords": ["typescript", "progressive", "web", "application"],
   "author": "EricHsia7",
   "bugs": {
     "url": "https://github.com/erichsia7/bus/issues"
@@ -43,6 +43,9 @@
   },
   "dependencies": {
     "md5": "^2.3.0",
-    "fontfaceobserver": "^2.3.0"
+    "fontfaceobserver": "^2.3.0",
+    "pako": "^2.1.0",
+    "localforage": "^1.10.0",
+    "fuse.js": "^7.0.0"
   }
 }
