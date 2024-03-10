@@ -23,10 +23,10 @@
 
 .route_field .route_head .route_button_left {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 40px;
-  height: 40px;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,10 +43,10 @@
 
 .route_field .route_head .route_name {
   position: absolute;
-  top: 5px;
-  left: 45px;
-  width: calc(100% - 90px);
-  height: 40px;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 110px);
+  height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -510,7 +510,7 @@
 }
 
 .route_field .route_groups .route_grouped_items .item .buses .buses_message,
-.route_field .route_groups .route_grouped_items .item .buses .overlapping_route_message {
+.route_field .route_groups .route_grouped_items .item .overlapping_routes .overlapping_route_message {
   position: absolute;
   top: 0px;
   left: 0px;
