@@ -114,7 +114,7 @@
   height: 60px;
   box-sizing: border-box;
   position: relative;
-  border-bottom: 1px solid var(--b-e5e5ea);
+  border-bottom: 1px solid var(--b-f9f9fb);
   user-select: none;
   -webkit-user-select: none;
 }
