@@ -41,6 +41,10 @@ window.bus = {
     window.addEventListener('resize', (event) => {
       ResizeRouteField();
     });
+screen.orientation.addEventListener("change", (event) => {
+      ResizeRouteField();
+});
+
     openRouteByURLScheme();
   },
   route: {
