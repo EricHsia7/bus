@@ -132,13 +132,15 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
+  var thisRouteSegmentBuffer = processSegmentBuffer(thisRoute.s);
   return {
     items: processedEstimateTime,
     RouteName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
       RouteDestination: thisRouteDestination
-    }
+    },
+RouteSegmentBuffer:thisRouteSegmentBuffer
   };
 }
 /*
