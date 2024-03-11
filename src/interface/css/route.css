@@ -53,6 +53,9 @@
   font-size: 20px;
   font-weight: 500;
   color: var(--b-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
 }
 
 .route_field .route_head .route_group_tabs {
