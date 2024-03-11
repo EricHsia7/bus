@@ -21,15 +21,13 @@ current_group = 0
 if(match[0].indexOf('返')>-1 || match[0].indexOf('回')>-1){
 current_group = 1
 }
+}
 var key = `g_${current_group}`
 if(!result.hasOwnProperty(key)) {
 result[key] = []
 }
 result[key].push(match[0].replaceAll(directionRegex,''))
 }
-
-}
-
     return result
 }
 
