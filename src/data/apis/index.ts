@@ -10,11 +10,11 @@ import { setDataReceivingProgress } from './loader.ts';
 
 function processSegmentBuffer(buffer: string): object {
 const regex = /[\u4E00-\u9FFF\(\)（）]*/gm
-const hasDirectionRegex  = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm
+const directionRegex  = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm
 var result = {}
 var current_group = 0
 while ((match = regex.exec(buffer)) !== null) {
-if(hasDirectionRegex.test(match[0])) {
+if(directionRegex.test(match[0])) {
 if(match[0].indexOf('往')>-1 || match[0].indexOf('去')>-1){
 current_group = 0
 }
@@ -25,7 +25,7 @@ var key = `g_${current_group}`
 if(!result.hasOwnProperty(key)) {
 result[key] = []
 }
-result[key].push(match.replaceAll(hasDirectionRegex,''))
+result[key].push(match[0].replaceAll(directionRegex,''))
 }
 
 }
