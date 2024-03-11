@@ -40,37 +40,41 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   var array = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
-    if (BusEvent.hasOwnProperty('s_' + item.StopID)) {
-      item['_BusEvent'] = BusEvent['s_' + item.StopID];
-    } else {
-      item['_BusEvent'] = [];
-    }
-
-    if (Stop.hasOwnProperty('s_' + item.StopID)) {
-      item['_Stop'] = Stop['s_' + item.StopID];
-      if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
-        if (Stop.hasOwnProperty('s_' + item.StopID)) {
-          item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
-          item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
-            return e === item.StopID ? false : true;
-          });
-          item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
-          item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
-          for (var routeStopId of item['_overlappingRouteStops']) {
-            item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
-          }
-        }
-        item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
-          .map((routeId) => {
-            return Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
-          })
-          .filter((e) => {
-            return e.id === RouteID ? false : true;
-          });
-      }
-    }
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      result.push(item);
+      if (BusEvent.hasOwnProperty('s_' + item.StopID)) {
+        item['_BusEvent'] = BusEvent['s_' + item.StopID];
+      } else {
+        item['_BusEvent'] = [];
+      }
+
+      if (Stop.hasOwnProperty('s_' + item.StopID)) {
+        item['_Stop'] = Stop['s_' + item.StopID];
+        if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
+          if (Stop.hasOwnProperty('s_' + item.StopID)) {
+            item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+            item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
+              return e === item.StopID ? false : true;
+            });
+            item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
+            item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
+            for (var routeStopId of item['_overlappingRouteStops']) {
+              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
+            }
+          }
+          item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
+            .map((routeId) => {
+              return Route.hasOwnProperty('r_' + routeId) ? Route[`r_${routeId}`] : {};
+            })
+            .filter((e) => {
+              return e.id === RouteID ? false : true;
+            });
+        }
+      }
+      if(item.hasOwnProperty('_Stop')) {
+        if(item._Stop.hasOwnProperty('nameZh')) {
+          result.push(item);
+        }
+      }
     }
   }
 
