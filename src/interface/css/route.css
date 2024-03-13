@@ -196,12 +196,12 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  color: var(--b-e5e5ea);
+  color: var(--b-aeaeb2);
   font-size: 15px;
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="1"] {
-  border-bottom: dashed 1.2px var(--b-f9f9fb);
+  border-bottom: dashed 1.2px var(--b-aeaeb2);
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="1"]::after {
@@ -216,7 +216,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  color: var(--b-e5e5ea);
+  color: var(--b-aeaeb2);
   font-size: 15px;
   z-index: 1;
 }
