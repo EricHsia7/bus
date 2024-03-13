@@ -31,7 +31,7 @@ function processSegmentBuffer(buffer: string): object {
       result[key].push(match[0].replaceAll(directionRegex, ''));
     }
   }
-  return result;
+  return { result, buffer };
 }
 
 async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
