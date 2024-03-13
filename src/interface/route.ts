@@ -515,6 +515,7 @@ export function streamRoute(): void {
       }
     })
     .catch((err) => {
+      console.log(err)
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
