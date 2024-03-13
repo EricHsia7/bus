@@ -124,10 +124,10 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     return c - d;
   });
   var result2 = [];
-  var endpointCount = 0
+  var endpointCount = 0;
   for (var item of result) {
     if (item._segmentBuffer) {
-endpointCount += 1
+      endpointCount += 1;
     }
     if (endpointCount % 2 === 1) {
       item._segmentBuffer = true;
