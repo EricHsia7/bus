@@ -265,6 +265,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
       latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
       longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
     };
+    formattedItem.segmentBuffer = item._segmentBuffer;
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
     if (!groupedItems.hasOwnProperty(group)) {
       groupedItems[group] = [];
@@ -352,6 +353,10 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
     function updateStatusText(thisElement: HTMLElement, thisItem: object): void {
       thisElement.querySelector('.status').innerText = thisItem.status.text;
     }
+    function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer.endpoint);
+      thisElement.setAttribute('segment-buffer-type', thisItem.segmentBuffer.type);
+    }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
       thisElement.querySelector('.name').innerText = thisItem.name;
     }
@@ -373,6 +378,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       updateName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
       updateOverlappingRoutes(thisElement, thisItem);
+      updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.status.code === previousItem.status.code)) {
@@ -389,6 +395,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
         updateOverlappingRoutes(thisElement, thisItem);
+      }
+      if (!(previousItem.segmentBuffer.endpoint === thisItem.segmentBuffer.endpoint) || !(previousItem.segmentBuffer.type === thisItem.segmentBuffer.type)) {
+        updateSegmentBuffer(thisElement, thisItem);
       }
       updateStretch(thisElement, skeletonScreen);
     }
@@ -512,7 +521,7 @@ export function streamRoute(): void {
       }
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();

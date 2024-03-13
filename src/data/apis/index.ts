@@ -84,7 +84,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
             item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`]) || [];
-            console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
+            //console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
             if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
               var counterKey = `g_${item._Stop.goBack}`;
               if (!pairedSegmentBufferCount.hasOwnProperty(counterKey)) {
@@ -152,7 +152,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
-  console.log(processedEstimateTime);
   return {
     items: processedEstimateTime,
     RouteName: thisRouteName,
