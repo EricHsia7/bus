@@ -13,20 +13,23 @@ function processSegmentBuffer(buffer: string): object {
   const directionRegex = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm;
   var result = {};
   var current_group = 0;
-  while ((match = regex.exec(buffer)) !== null) {
-    if (directionRegex.test(match[0])) {
-      if (match[0].indexOf('往') > -1 || match[0].indexOf('去') > -1) {
-        current_group = 0;
+  var matches = buffer.matchAll(regex);
+  for (var match of matches) {
+    if (!(match === null)) {
+      if (directionRegex.test(match[0])) {
+        if (match[0].indexOf('往') > -1 || match[0].indexOf('去') > -1) {
+          current_group = 0;
+        }
+        if (match[0].indexOf('返') > -1 || match[0].indexOf('回') > -1) {
+          current_group = 1;
+        }
       }
-      if (match[0].indexOf('返') > -1 || match[0].indexOf('回') > -1) {
-        current_group = 1;
+      var key = `g_${current_group}`;
+      if (!result.hasOwnProperty(key)) {
+        result[key] = [];
       }
+      result[key].push(match[0].replaceAll(directionRegex, ''));
     }
-    var key = `g_${current_group}`;
-    if (!result.hasOwnProperty(key)) {
-      result[key] = [];
-    }
-    result[key].push(match[0].replaceAll(directionRegex, ''));
   }
   return result;
 }
