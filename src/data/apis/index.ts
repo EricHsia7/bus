@@ -67,7 +67,6 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
 function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   var array = [];
-  var pairedSegmentBufferCount = {};
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
@@ -76,7 +75,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
       } else {
         item['_BusEvent'] = [];
       }
-      item['_segmentBuffer'] = { endpoint: false, type: null }; //0→starting of the range; 1→ending of the range
+      item['_segmentBuffer'] = false; //0→starting of the range; 1→ending of the range
 
       if (Stop.hasOwnProperty('s_' + item.StopID)) {
         item['_Stop'] = Stop['s_' + item.StopID];
@@ -86,13 +85,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
             //console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
             if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
-              var counterKey = `g_${item._Stop.goBack}`;
-              if (!pairedSegmentBufferCount.hasOwnProperty(counterKey)) {
-                pairedSegmentBufferCount[counterKey] = 0;
-              }
-              item['_segmentBuffer'].endpoint = true;
-              item['_segmentBuffer'].type = pairedSegmentBufferCount[counterKey] % 2;
-              pairedSegmentBufferCount[counterKey] = pairedSegmentBufferCount[counterKey] + 1;
+              item['_segmentBuffer'] = true;
             }
             item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
               return e === item.StopID ? false : true;
@@ -131,6 +124,29 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     }
     return c - d;
   });
+  var result2 = [];
+  var segmentBufferRangeOpened = false;
+  var segmentBufferRangeClosed = false;
+  for (var item of result) {
+    if (segmentBufferRangeOpened && segmentBufferRangeClosed) {
+      segmentBufferRangeOpened = false;
+      segmentBufferRangeClosed = false;
+    }
+    if (item.segmentBuffer) {
+      if (!segmentBufferRangeOpened) {
+        segmentBufferRangeOpened = true;
+      } else {
+        if (!segmentBufferRangeClosed) {
+          segmentBufferRangeClosed = true;
+        }
+      }
+    } else {
+      if (segmentBufferRangeOpened && !segmentBufferRangeClosed) {
+        item.segmentBuffer = true;
+      }
+    }
+    result2.push(item);
+  }
   return result;
 }
 

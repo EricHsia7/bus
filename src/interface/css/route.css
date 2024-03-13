@@ -180,45 +180,8 @@
   height: 221px;
 }
 
-.route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="0"] {
-  border-top: dashed 1.2px var(--b-f9f9fb);
-}
-
-.route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="0"]::after {
-  content: '緩衝區 開始';
-  position: absolute;
-  height: 15px;
-  width: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -7.5px;
-  background: var(--b-ffffff);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--b-aeaeb2);
-  font-size: 15px;
-}
-
-.route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="1"] {
-  border-bottom: dashed 1.2px var(--b-aeaeb2);
-}
-
-.route_field .route_groups .route_grouped_items .item[segment-buffer="true"][segment-buffer-type="1"]::after {
-  content: '緩衝區 結束';
-  position: absolute;
-  height: 15px;
-  width: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 42.5px;
-  background: var(--b-ffffff);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--b-aeaeb2);
-  font-size: 15px;
-  z-index: 1;
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] {
+  background: rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.2);
 }
 
 .route_field .route_groups .route_grouped_items .item .head {

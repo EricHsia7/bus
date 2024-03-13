@@ -358,8 +358,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       thisElement.querySelector('.status').innerText = thisItem.status.text;
     }
     function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer.endpoint);
-      thisElement.setAttribute('segment-buffer-type', thisItem.segmentBuffer.type);
+      thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
       thisElement.querySelector('.name').innerText = thisItem.name;
@@ -400,7 +399,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
         updateOverlappingRoutes(thisElement, thisItem);
       }
-      if (!(previousItem.segmentBuffer.endpoint === thisItem.segmentBuffer.endpoint) || !(previousItem.segmentBuffer.type === thisItem.segmentBuffer.type)) {
+      if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisElement, thisItem);
       }
       updateStretch(thisElement, skeletonScreen);
