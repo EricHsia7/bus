@@ -128,8 +128,8 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   var segmentBufferRangeClosed = false;
   var index = 0;
   for (var item of result) {
-    var previousItem = result[index - 1] || { segmentBuffer: false };
-    var nextItem = result[index + 1] || { segmentBuffer: false };
+    var previousItem = result[index - 1] || { segmentBuffer: false ,_Stop:{seqNo:-1}};
+    var nextItem = result[index + 1] || { segmentBuffer: false, _Stop:{seqNo:-1} };
     if (!(previousItem._Stop.seqNo === item._Stop.seqNo)) {
       segmentBufferRangeOpened = false;
       segmentBufferRangeClosed = false;
