@@ -281,12 +281,14 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
   }
   var RouteName = integration.RouteName;
   var RouteEndPoints = integration.RouteEndPoints;
+  var RouteSegmentBuffer = integration.RouteSegmentBuffer
   return {
     groupedItems,
     groupQuantity,
     itemQuantity,
     RouteName,
-    RouteEndPoints
+    RouteEndPoints,
+    RouteSegmentBuffer
   };
 }
 
@@ -497,6 +499,7 @@ async function refreshRoute(): object {
   routeRefreshTimer.lastUpdate = new Date().getTime();
   routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
   routeRefreshTimer.refreshing = false;
+  console.log(formattedRoute.RouteSegmentBuffer)
   return { status: 'Successfully refreshed the route.' };
 }
 
