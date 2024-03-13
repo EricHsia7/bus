@@ -28,7 +28,10 @@ function processSegmentBuffer(buffer: string): object {
       if (!result.hasOwnProperty(key)) {
         result[key] = [];
       }
-      result[key].push(match[0].replaceAll(directionRegex, ''));
+      var extratedName = String(match[0].replaceAll(directionRegex, '')).trim();
+      if (extratedName.length > 0) {
+        result[key].push(extratedName);
+      }
     }
   }
   return { result, buffer };
@@ -61,9 +64,10 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
-function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   var array = [];
+  var pairedSegmentBufferCount = {};
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
@@ -72,12 +76,23 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
       } else {
         item['_BusEvent'] = [];
       }
+      item['_segmentBuffer'] = { endpoint: false, type: null }; //0→starting of the range; 1→ending of the range
 
       if (Stop.hasOwnProperty('s_' + item.StopID)) {
         item['_Stop'] = Stop['s_' + item.StopID];
         if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
             item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+            var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`]) || [];
+            if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh)) {
+              var counterKey = `g_${item._Stop.goBack}`;
+              if (!pairedSegmentBufferCount.hasOwnProperty(counterKey)) {
+                pairedSegmentBufferCount[counterKey] = 0;
+              }
+              item['_segmentBuffer'].endpoint = true;
+              item['_segmentBuffer'].type = pairedSegmentBufferCount[counterKey] % 2;
+              pairedSegmentBufferCount[counterKey] = pairedSegmentBufferCount[counterKey] + 1;
+            }
             item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
               return e === item.StopID ? false : true;
             });
@@ -130,20 +145,19 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
-  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, RouteID, PathAttributeId);
+  var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
-  var thisRouteSegmentBuffer = processSegmentBuffer(thisRoute.s);
   return {
     items: processedEstimateTime,
     RouteName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
       RouteDestination: thisRouteDestination
-    },
-    RouteSegmentBuffer: thisRouteSegmentBuffer
+    }
   };
 }
 /*
