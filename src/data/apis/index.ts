@@ -147,7 +147,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     }
     result2.push(item);
   }
-  return result;
+  return result2;
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
