@@ -66,7 +66,6 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
 
 function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
-  var array = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
@@ -127,25 +126,26 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   var result2 = [];
   var segmentBufferRangeOpened = false;
   var segmentBufferRangeClosed = false;
+  var index = 0;
   for (var item of result) {
-    if (segmentBufferRangeOpened && segmentBufferRangeClosed) {
+    var previousItem = result[index - 1] || { segmentBuffer: false };
+    var nextItem = result[index + 1] || { segmentBuffer: false };
+    if (!(previousItem._Stop.seqNo === item._Stop.seqNo)) {
       segmentBufferRangeOpened = false;
       segmentBufferRangeClosed = false;
     }
     if (item.segmentBuffer) {
-      if (!segmentBufferRangeOpened) {
-        segmentBufferRangeOpened = true;
-      } else {
-        if (!segmentBufferRangeClosed) {
-          segmentBufferRangeClosed = true;
-        }
-      }
-    } else {
-      if (segmentBufferRangeOpened && !segmentBufferRangeClosed) {
-        item.segmentBuffer = true;
-      }
+      segmentBufferRangeOpened = true;
+    }
+    if (nextItem.segmentBuffer === false && segmentBufferRangeOpened) {
+      item.segmentBuffer = true;
+    }
+    if (nextItem.segmentBuffer === true && segmentBufferRangeOpened) {
+      item.segmentBuffer = true;
+      segmentBufferRangeClosed = true;
     }
     result2.push(item);
+    index += 1;
   }
   return result2;
 }
