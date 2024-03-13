@@ -34,7 +34,7 @@ function processSegmentBuffer(buffer: string): object {
       }
     }
   }
-  return { result, buffer };
+  return result;
 }
 
 async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
@@ -84,7 +84,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
             item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`]) || [];
-            console.log(segmentBuffer,segmentBufferOfThisGroup,item['_Stop'].nameZh)
+            console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
             if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
               var counterKey = `g_${item._Stop.goBack}`;
               if (!pairedSegmentBufferCount.hasOwnProperty(counterKey)) {
