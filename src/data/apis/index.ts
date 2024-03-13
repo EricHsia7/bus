@@ -126,9 +126,6 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   var result2 = [];
   var endpointCount = 0
   for (var item of result) {
-    if (!(previousItem._Stop.seqNo === item._Stop.seqNo)) {
-      endpointCount = 0
-    }
     if (item.segmentBuffer) {
 endpointCount += 1
     }
