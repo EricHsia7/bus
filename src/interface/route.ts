@@ -325,6 +325,10 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
         location: {
           latitude: null,
           longitude: null
+        },
+        segmentBuffer: {
+          endpoint: false,
+          type: null
         }
       });
     }
