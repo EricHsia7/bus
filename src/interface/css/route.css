@@ -310,11 +310,19 @@
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="0.5"] {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="0"] {
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .name {
