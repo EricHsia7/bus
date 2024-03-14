@@ -276,7 +276,7 @@
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="5"],
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="4"],
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="3"] {
-  background: var(--b-main-color-inflected);
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="2"] {
