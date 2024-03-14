@@ -181,7 +181,7 @@
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] {
-  background: var(--b-f7faf9);
+  background: var(--b-f9f9fb-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .head {
