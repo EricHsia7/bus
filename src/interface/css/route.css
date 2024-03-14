@@ -272,6 +272,13 @@
   font-weight: 500;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="6"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="5"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="4"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="3"] {
+  background: var(--b-main-color-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="2"] {
   color: var(--b-ffffff);
   font-size: 15px;
@@ -280,12 +287,20 @@
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="2"] {
+  background: var(--b-main-color-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="1"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-c));
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="1"] {
+  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-c));
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="0.5"] {
