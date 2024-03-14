@@ -125,7 +125,7 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
   });
   var result2 = [];
   var endpointCount = 0;
-  var multipleEndpoints = segmentBuffer.length % 2 === 0 ? true : false;
+  var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
   for (var item of result) {
     if (multipleEndpoints) {
       if (item._segmentBuffer) {
