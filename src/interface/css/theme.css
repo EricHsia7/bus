@@ -62,7 +62,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-
     --b-main-color-opacity-a: 1;
     --b-main-color-opacity-b: 0.8;
     --b-main-color-opacity-c: 0.28;
@@ -87,6 +86,11 @@
     --b-e5e5ea-r: 35;
     --b-e5e5ea-g: 35;
     --b-e5e5ea-b: 42;
+
+    --b-e5e5ea-inflected: #232a27;
+    --b-e5e5ea-inflected-r: 35;
+    --b-e5e5ea-inflected-g: 42;
+    --b-e5e5ea-inflected-b: 39;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;
