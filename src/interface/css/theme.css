@@ -4,6 +4,11 @@
   --b-main-color-g: 175;
   --b-main-color-b: 245;
 
+  --b-main-color-inflected: #1dc1e6;
+  --b-main-color-inflected-r: 29;
+  --b-main-color-inflected-g: 193;
+  --b-main-color-inflected-b: 230;
+
   --b-main-color-opacity-a: 1;
   --b-main-color-opacity-b: 0.8;
   --b-main-color-opacity-c: 0.28;
@@ -19,10 +24,21 @@
   --b-f9f9fb-g: 249;
   --b-f9f9fb-b: 251;
 
+  --b-f9f9fb-inflected: #f7faf9;
+  --b-f9f9fb-inflected-r: 247;
+  --b-f9f9fb-inflected-g: 250;
+  --b-f9f9fb-inflected-b: 249;
+
   --b-e5e5ea: #e5e5ea;
   --b-e5e5ea-r: 229;
   --b-e5e5ea-g: 229;
   --b-e5e5ea-b: 234;
+  --b-e5e5ea-opacity-a: 0.5;
+
+  --b-e5e5ea-inflected: #dfebe6;
+  --b-e5e5ea-inflected-r: 223;
+  --b-e5e5ea-inflected-g: 235;
+  --b-e5e5ea-inflected-b: 230;
 
   --b-aeaeb2: #aeaeb2;
   --b-aeaeb2-r: 174;
@@ -47,7 +63,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-
     --b-main-color-opacity-a: 1;
     --b-main-color-opacity-b: 0.8;
     --b-main-color-opacity-c: 0.28;
@@ -63,10 +78,20 @@
     --b-f9f9fb-g: 14;
     --b-f9f9fb-b: 17;
 
+    --b-f9f9fb-inflected: #050e0d;
+    --b-f9f9fb-inflected-r: 5;
+    --b-f9f9fb-inflected-g: 14;
+    --b-f9f9fb-inflected-b: 13;
+
     --b-e5e5ea: #23232a;
     --b-e5e5ea-r: 35;
     --b-e5e5ea-g: 35;
     --b-e5e5ea-b: 42;
+
+    --b-e5e5ea-inflected: #1f2925;
+    --b-e5e5ea-inflected-r: 31;
+    --b-e5e5ea-inflected-g: 47;
+    --b-e5e5ea-inflected-b: 37;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;

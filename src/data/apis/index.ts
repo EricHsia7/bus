@@ -8,6 +8,35 @@ import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress } from './loader.ts';
 
+function processSegmentBuffer(buffer: string): object {
+  const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
+  const directionRegex = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm;
+  var result = {};
+  var current_group = 0;
+  var matches = buffer.matchAll(regex);
+  for (var match of matches) {
+    if (!(match === null)) {
+      if (directionRegex.test(match[0])) {
+        if (match[0].indexOf('往') > -1 || match[0].indexOf('去') > -1) {
+          current_group = 0;
+        }
+        if (match[0].indexOf('返') > -1 || match[0].indexOf('回') > -1) {
+          current_group = 1;
+        }
+      }
+      var key = `g_${current_group}`;
+      if (!result.hasOwnProperty(key)) {
+        result[key] = [];
+      }
+      var extratedName = String(match[0].replaceAll(directionRegex, '')).trim();
+      if (extratedName.length > 0) {
+        result[key].push(extratedName);
+      }
+    }
+  }
+  return result;
+}
+
 async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
   var result = {};
   for (var item of BusEvent) {
@@ -35,9 +64,8 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
-function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
-  var array = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
@@ -46,12 +74,18 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
       } else {
         item['_BusEvent'] = [];
       }
+      item['_segmentBuffer'] = false; //0→starting of the range; 1→ending of the range
 
       if (Stop.hasOwnProperty('s_' + item.StopID)) {
         item['_Stop'] = Stop['s_' + item.StopID];
         if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
             item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+            var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
+            //console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
+            if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
+              item['_segmentBuffer'] = true;
+            }
             item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
               return e === item.StopID ? false : true;
             });
@@ -70,8 +104,8 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
             });
         }
       }
-      if(item.hasOwnProperty('_Stop')) {
-        if(item._Stop.hasOwnProperty('nameZh')) {
+      if (item.hasOwnProperty('_Stop')) {
+        if (item._Stop.hasOwnProperty('nameZh')) {
           result.push(item);
         }
       }
@@ -89,7 +123,21 @@ function processEstimateTime(EstimateTime: object, Stop: object, Location: objec
     }
     return c - d;
   });
-  return result;
+  var result2 = [];
+  var endpointCount = 0;
+  var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
+  for (var item of result) {
+    if (multipleEndpoints) {
+      if (item._segmentBuffer) {
+        endpointCount += 1;
+      }
+      if (endpointCount % 2 === 1) {
+        item._segmentBuffer = true;
+      }
+    }
+    result2.push(item);
+  }
+  return result2;
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
@@ -104,7 +152,8 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
-  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, RouteID, PathAttributeId);
+  var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;

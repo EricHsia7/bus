@@ -180,6 +180,10 @@
   height: 221px;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] {
+  background: var(--b-f9f9fb-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head {
   position: absolute;
   top: 0px;
@@ -229,13 +233,13 @@
   font-size: 14px;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .body .tabs .tab {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .body .tabs .tab[selected="true"] {
   background: var(--b-333333);
   color: var(--b-ffffff);
-}
-
-.route_field .route_groups .route_grouped_items .item:last-child {
-  margin-bottom: var(--o-safe-area-bottom);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status {
@@ -268,12 +272,23 @@
   font-weight: 500;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="6"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="5"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="4"],
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="3"] {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="2"] {
   color: var(--b-ffffff);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="2"] {
+  background: var(--b-main-color-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status[code="1"] {
@@ -284,6 +299,10 @@
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="1"] {
+  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-c));
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="0.5"] {
   color: var(--b-333333);
   font-size: 15px;
@@ -291,11 +310,19 @@
   transition: color var(--b-transition-duration), background-color var(--b-transition-duration);
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="0.5"] {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .status[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status[code="0"] {
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .name {
@@ -329,6 +356,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .stretch {
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .stretch svg {
@@ -382,8 +413,18 @@
   scroll-snap-align: center;
 }
 
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .bus,
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .overlapping_route {
+  background: rgba(var(--b-e5e5ea-inflected-r), var(--b-e5e5ea-inflected-g), var(--b-e5e5ea-inflected-b), var(--b-e5e5ea-opacity-a))
+}
+
 .route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .bus[on-this-route="true"] {
+  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-d));
 }
 
 .route_field .route_groups .route_grouped_items .item .bus:last-child,
@@ -526,6 +567,10 @@
   background: var(--b-e5e5ea);
   border-radius: 30px;
   color: var(--b-333333);
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field[skeleton-screen="true"] .route_head .route_name span {
