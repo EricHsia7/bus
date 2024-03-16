@@ -233,13 +233,13 @@
   font-size: 14px;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .body .tabs .tab {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .body .tabs .tab[selected="true"] {
   background: var(--b-333333);
   color: var(--b-ffffff);
-}
-
-.route_field .route_groups .route_grouped_items .item:last-child {
-  margin-bottom: var(--o-safe-area-bottom);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status {
@@ -358,6 +358,10 @@
   justify-content: center;
 }
 
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .stretch {
+  background: var(--b-e5e5ea-inflected);
+}
+
 .route_field .route_groups .route_grouped_items .item .head .stretch svg {
   width: 17px;
   height: 17px;
@@ -411,6 +415,10 @@
 
 .route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .bus[on-this-route="true"] {
+  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-d));
 }
 
 .route_field .route_groups .route_grouped_items .item .bus:last-child,
@@ -553,6 +561,10 @@
   background: var(--b-e5e5ea);
   border-radius: 30px;
   color: var(--b-333333);
+}
+
+.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+  background: var(--b-e5e5ea-inflected);
 }
 
 .route_field[skeleton-screen="true"] .route_head .route_name span {
