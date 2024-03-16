@@ -88,11 +88,14 @@
 }
 
 .route_field .route_head .route_group_tab_line_track .route_group_tab_line {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   background: var(--b-333333);
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(calc(((200% * var(--b-route-tab-percentage) * var(--b-route-tab-percentage)) + 100% * var(--b-route-group-quantity) - var(--b-route-tab-percentage) * var(--b-route-group-quantity) * var(--b-route-tab-width)) / (2 * var(--b-route-tab-percentage) * var(--b-route-group-quantity)))) scaleX(calc(var(--b-route-tab-width) / 30));
+  transform: translateX(calc(((2 * var(--b-fw) * var(--b-route-tab-percentage) * var(--b-route-tab-percentage)) + var(--b-fw) * var(--b-route-group-quantity) - var(--b-route-tab-percentage) * var(--b-route-group-quantity) * var(--b-route-tab-width)) / (2 * var(--b-route-tab-percentage) * var(--b-route-group-quantity)))) scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
 .route_field .route_head .update_timer_box {
