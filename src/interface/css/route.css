@@ -413,6 +413,12 @@
   scroll-snap-align: center;
 }
 
+
+.route_field .route_groups .route_grouped_items .item .bus,
+.route_field .route_groups .route_grouped_items .item .overlapping_route {
+  background: rgba(var(--b-e5e5ea-inflected-r), var(--b-e5e5ea-inflected-g), var(--b-e5e5ea-inflected-b), var(--b-e5e5ea-opacity-a))
+}
+
 .route_field .route_groups .route_grouped_items .item .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
