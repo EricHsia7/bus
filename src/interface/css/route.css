@@ -87,23 +87,12 @@
   height: 2px;
 }
 
-.route_field .route_head .route_group_tab_line_track .route_group_tab_line_carriage {
-  position: absolute;
-  left: calc((100% / var(--b-route-group-quantity)) * var(--b-route-tab-percentage));
-  top: 0px;
-  width: calc(100% / var(--b-route-group-quantity));
-  height: 2px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.route_field .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line {
+.route_field .route_head .route_group_tab_line_track .route_group_tab_line {
   background: var(--b-333333);
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: scaleX(calc(var(--b-route-tab-width) / 30));
+  transform: translateX(calc(((200% * var(--b-route-tab-percentage) * var(--b-route-tab-percentage)) + 100% * var(--b-route-group-quantity) - var(--b-route-tab-percentage) * var(--b-route-group-quantity) * var(--b-route-tab-width)) / (2 * var(--b-route-tab-percentage) * var(--b-route-group-quantity)))) scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
 .route_field .route_head .update_timer_box {
