@@ -310,12 +310,12 @@
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-c));
+  background: var(--b-main-color-solid-transparent-c)
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="1"],
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
-  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-c));
+  background: var(--b-main-color-solid-transparent-c)
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status .next_slide[code="0.5"],
