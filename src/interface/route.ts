@@ -509,12 +509,14 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 async function refreshRoute(): object {
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  document.querySelector('.update_timer').setAttribute('refreshing', true);
   var formattedRoute = await formatRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
   routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
   routeRefreshTimer.refreshing = false;
+  document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
 }
 
