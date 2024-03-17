@@ -353,10 +353,12 @@
 @keyframes fadeout {
   0% {
     opacity: 1;
+    filter: blur(0px);
   }
 
   100% {
     opacity: 0;
+    filter: blur(15px);
   }
 }
 
