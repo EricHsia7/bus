@@ -343,14 +343,14 @@
   background: var(--b-e5e5ea-inflected);
 }
 
-.route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status .slide_fade_out {
-  animation-name: fade-out;
+.route_field .route_groups .route_grouped_items .item .head .status .slide_fade_out {
+  animation-name: fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-transition-duration);
   animation-fill-mode: forwards;
 }
 
-@keyframes fade-out {
+@keyframes fadeout {
   0% {
     opacity: 1;
   }
