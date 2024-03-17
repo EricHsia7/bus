@@ -628,7 +628,8 @@
   transition: height var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status {
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .current_slide {
   color: rgba(0, 0, 0, 0);
   background: var(--b-f9f9fb);
 }
@@ -652,7 +653,8 @@
 .route_field[skeleton-screen="true"] .route_head .route_name span,
 .route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
 .route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line,
-.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
+.route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .current_slide,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
   background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
