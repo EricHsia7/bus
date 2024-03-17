@@ -344,7 +344,6 @@
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .head .status .slide_fade_out {
-  animation: name duration timing-function delay iteration-count direction fill-mode;
   animation-name: fade-out;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-transition-duration);
