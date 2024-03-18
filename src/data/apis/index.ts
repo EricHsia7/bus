@@ -158,6 +158,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
+  deleteDataReceivingProgress(requestID);
   return {
     items: processedEstimateTime,
     RouteName: thisRouteName,

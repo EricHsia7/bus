@@ -52,7 +52,7 @@ export function getDataReceivingProgress(requestID: string): number {
       return Math.min(Math.max(received / total, 0), 1);
     }
   }
-  return 0;
+  return 1;
 }
 
 export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean) {
@@ -74,5 +74,11 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
     }
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
+  }
+}
+
+export function deleteDataReceivingProgress(requestID): void {
+  if (dataReceivingProgress.hasOwnProperty(requestID)) {
+    delete dataReceivingProgress[requestID];
   }
 }
