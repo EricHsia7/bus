@@ -98,7 +98,7 @@ export function ResizeRouteField(): void {
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};} .route_field .route_groups :not(.route_grouped_items[group="${percentage}"]) {visibility: hidden;}`;
+  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};} .route_field .route_groups .route_grouped_items:not([group="${percentage}"]) {visibility: hidden;}`;
 }
 
 function updateUpdateTimer() {
