@@ -6,7 +6,7 @@ import { getProvider } from './getProvider.ts';
 import { getTimeTable } from './getTimeTable.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
-import { setDataReceivingProgress } from './loader.ts';
+import { setDataReceivingProgress, deleteDataReceivingProgress } from './loader.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
