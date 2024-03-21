@@ -282,12 +282,14 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
   }
   var RouteName = integration.RouteName;
   var RouteEndPoints = integration.RouteEndPoints;
+  var dataUpdateTime = integration.dataUpdateTime;
   return {
     groupedItems,
     groupQuantity,
     itemQuantity,
     RouteName,
-    RouteEndPoints
+    RouteEndPoints,
+    dataUpdateTime
   };
 }
 
