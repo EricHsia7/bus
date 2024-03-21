@@ -17,8 +17,8 @@ var routeSliding = {
   fieldHeight: 0
 };
 var routeRefreshTimer = {
-  interval: 15 * 1000,
-  retryInterval: 5 * 1000,
+  defaultInterval: 15 * 1000,
+  minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
   streaming: false,
   lastUpdate: 0,
@@ -517,7 +517,7 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.retryInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.interval);
+  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval);
   routeRefreshTimer.dynamicInterval = routeRefreshTimer.nextUpdate - new Date().getTime();
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
@@ -530,7 +530,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, Math.min(routeRefreshTimer.retryInterval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }, Math.min(routeRefreshTimer.minInterval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
       } else {
         routeRefreshTimer.streamStarted = false;
       }
@@ -540,7 +540,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, routeRefreshTimer.retryInterval);
+        }, routeRefreshTimer.minInterval);
       } else {
         routeRefreshTimer.streamStarted = false;
       }
