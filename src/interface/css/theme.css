@@ -19,6 +19,8 @@
   --b-ffffff-r: 255;
   --b-ffffff-g: 255;
   --b-ffffff-b: 255;
+  --b-ffffff-opacity-a: 1;
+  --b-ffffff-opacity-b: 0.7;
 
   --b-f9f9fb: #f9f9fb;
   --b-f9f9fb-r: 249;

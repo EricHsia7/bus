@@ -19,6 +19,9 @@
   width: 100%;
   height: 95px;
   box-sizing: border-box;
+  background: rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .route_field .route_head .route_button_left {
@@ -129,7 +132,7 @@
 
 .route_field .route_groups {
   position: absolute;
-  top: 95px;
+  top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
@@ -148,7 +151,7 @@
   top: 0px;
   left: 0px;
   width: var(--b-fw);
-  height: calc(var(--b-fh) - 95px);
+  height: var(--b-fh);
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -175,6 +178,10 @@
   user-select: none;
   overflow: hidden;
   transition: none;
+}
+
+.route_field .route_groups .route_grouped_items .item:first-child {
+  margin-top: 95px;
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] {
