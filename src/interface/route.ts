@@ -17,8 +17,9 @@ var routeSliding = {
   fieldHeight: 0
 };
 var routeRefreshTimer = {
-  interval: 15 * 1000,
-  retryInterval: 5 * 1000,
+  defaultInterval: 15 * 1000,
+  minInterval: 5 * 1000,
+  dynamicInterval: 15 * 1000,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -107,7 +108,7 @@ function updateUpdateTimer() {
   if (routeRefreshTimer.refreshing) {
     percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
   document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
@@ -282,12 +283,14 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
   }
   var RouteName = integration.RouteName;
   var RouteEndPoints = integration.RouteEndPoints;
+  var dataUpdateTime = integration.dataUpdateTime;
   return {
     groupedItems,
     groupQuantity,
     itemQuantity,
     RouteName,
-    RouteEndPoints
+    RouteEndPoints,
+    dataUpdateTime
   };
 }
 
@@ -514,7 +517,8 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval);
+  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
@@ -526,7 +530,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }, Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime()));
       } else {
         routeRefreshTimer.streamStarted = false;
       }
@@ -536,7 +540,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, routeRefreshTimer.retryInterval);
+        }, routeRefreshTimer.minInterval);
       } else {
         routeRefreshTimer.streamStarted = false;
       }

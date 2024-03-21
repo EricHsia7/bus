@@ -40,3 +40,27 @@ export function compareThings(a: any, b: any): boolean {
     }
   }
 }
+
+export function timeStampToNumber(string: string): number {
+  var regex = /[0-9\.]*/gm;
+  var match = string.match(regex);
+  if (match) {
+    var year = parseInt(match[0]);
+    var month = parseInt(match[2]);
+    var date = parseInt(match[4]);
+    var hours = parseInt(match[6]);
+    var minutes = parseInt(match[8]);
+    var seconds = parseInt(match[10]);
+    var date_object = new Date();
+    date_object.setDate(1);
+    date_object.setMonth(0);
+    date_object.setFullYear(year);
+    date_object.setMonth(month - 1);
+    date_object.setDate(date);
+    date_object.setHours(hours);
+    date_object.setMinutes(minutes);
+    date_object.setSeconds(seconds);
+    return date_object.getTime();
+  }
+  return 0;
+}

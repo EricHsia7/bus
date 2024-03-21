@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataReceivingProgress } from './loader.ts';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 var StopAPIVariableCache = { available: false, data: {} };
 
@@ -26,6 +26,7 @@ export async function getStop(requestID: string): object {
     for (var api of apis) {
       var data = await fetchData(api, requestID, 'getStop');
       result = result.concat(data.BusInfo);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
   }
@@ -57,6 +58,7 @@ export async function getStop(requestID: string): object {
         StopAPIVariableCache.data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getStop', 0, true);
+      setDataUpdateTime(requestID, -1);
       return StopAPIVariableCache.data;
     }
   }
