@@ -530,7 +530,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, Math.min(routeRefreshTimer.minInterval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }, Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime()));
       } else {
         routeRefreshTimer.streamStarted = false;
       }
