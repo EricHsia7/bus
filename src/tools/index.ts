@@ -44,6 +44,7 @@ export function compareThings(a: any, b: any): boolean {
 export function timeStampToNumber(string: string): number {
   var regex = /[0-9\.]*/gm;
   var match = string.match(regex);
+  console.log(match)
   if (!(match === null)) {
     var year = parseInt(match[0]);
     var month = parseInt(match[2]);
