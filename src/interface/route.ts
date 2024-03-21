@@ -19,6 +19,7 @@ var routeSliding = {
 var routeRefreshTimer = {
   interval: 15 * 1000,
   retryInterval: 5 * 1000,
+  dynamicInterval: 15 * 1000,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -107,7 +108,7 @@ function updateUpdateTimer() {
   if (routeRefreshTimer.refreshing) {
     percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.interval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
   document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
@@ -516,7 +517,8 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.interval, formattedRoute.dataUpdateTime + routeRefreshTimer.interval);
+  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.retryInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.interval);
+  routeRefreshTimer.dynamicInterval = routeRefreshTimer.nextUpdate - new Date().getTime();
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
@@ -528,7 +530,7 @@ export function streamRoute(): void {
       if (routeRefreshTimer.streaming) {
         routeRefreshTimer.timer = setTimeout(function () {
           streamRoute();
-        }, Math.min(routeRefreshTimer.interval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
+        }, Math.min(routeRefreshTimer.retryInterval, Math.max(1, routeRefreshTimer.nextUpdate - new Date().getTime())));
       } else {
         routeRefreshTimer.streamStarted = false;
       }
