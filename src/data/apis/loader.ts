@@ -4,7 +4,7 @@ const pako = require('pako');
 var md5 = require('md5');
 
 var dataReceivingProgress = {};
-var dataUpdateTime = {};
+export var dataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, urlName: string): object {
   const response = await fetch(url);
