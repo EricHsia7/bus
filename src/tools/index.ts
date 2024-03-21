@@ -44,8 +44,8 @@ export function compareThings(a: any, b: any): boolean {
 export function timeStampToNumber(string: string): number {
   var regex = /[0-9\.]*/gm;
   var match = string.match(regex);
-  console.log(match)
-  if (!(match === null)) {
+  console.log(match);
+  if (!(match === undefined) && !(match === null)) {
     var year = parseInt(match[0]);
     var month = parseInt(match[2]);
     var date = parseInt(match[4]);
@@ -60,7 +60,7 @@ export function timeStampToNumber(string: string): number {
     date_object.setDate(date);
     date_object.setHours(hours);
     date_object.setMinutes(minutes);
-    date_object.setMinutes(seconds);
+    date_object.setSeconds(seconds);
     return date_object.getTime();
   }
   return 0;
