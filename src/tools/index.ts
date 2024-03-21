@@ -45,13 +45,12 @@ export function timeStampToNumber(string: string): number {
   var regex = /[0-9\.]*/gm;
   var match = string.match(regex);
   if (!(match === null)) {
-    match = match.map((e) => parseInt(e));
-    var year = match[0];
-    var month = match[1];
-    var date = match[2];
-    var hours = match[3];
-    var minutes = match[4];
-    var seconds = match[5];
+    var year = parseInt(match[0]);
+    var month = parseInt(match[2]);
+    var date = parseInt(match[4]);
+    var hours = parseInt(match[6]);
+    var minutes = parseInt(match[8]);
+    var seconds = parseInt(match[10]);
     var date_object = new Date();
     date_object.setDate(1);
     date_object.setMonth(0);
