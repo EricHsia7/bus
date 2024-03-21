@@ -514,7 +514,7 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.interval;
+  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime(), formattedRoute.dataUpdateTime + routeRefreshTimer.interval);
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };

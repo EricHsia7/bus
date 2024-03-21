@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData } from './loader.ts';
+import { fetchData, setDataUpdateTime } from './loader.ts';
 
 export async function getBusEvent(requestID: string): [] {
   var apis = [
@@ -10,6 +10,7 @@ export async function getBusEvent(requestID: string): [] {
   for (var api of apis) {
     var data = await fetchData(api, requestID, 'getBusEvent');
     result = result.concat(data.BusInfo);
+    setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }
   return result;
 }

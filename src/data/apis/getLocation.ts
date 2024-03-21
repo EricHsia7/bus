@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataReceivingProgress } from './loader.ts';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 
 var LocationAPIVariableCache = { available: false, data: {} };
@@ -38,6 +38,7 @@ export async function getLocation(requestID: string): object {
     for (var api of apis) {
       var data = await fetchData(api, requestID, 'getLocation');
       result = result.concat(data.BusInfo);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
   }
@@ -73,6 +74,7 @@ export async function getLocation(requestID: string): object {
         LocationAPIVariableCache.data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getLocation', 0, true);
+      setDataUpdateTime(requestID, 0);
       return LocationAPIVariableCache.data;
     }
   }

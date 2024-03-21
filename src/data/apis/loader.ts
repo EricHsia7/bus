@@ -1,7 +1,10 @@
+import { timeStampToNumber } from '../../tools/index.ts';
+
 const pako = require('pako');
 var md5 = require('md5');
 
 var dataReceivingProgress = {};
+var dataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, urlName: string): object {
   const response = await fetch(url);
@@ -77,8 +80,24 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   }
 }
 
-export function deleteDataReceivingProgress(requestID): void {
+export function deleteDataReceivingProgress(requestID: string): void {
   if (dataReceivingProgress.hasOwnProperty(requestID)) {
     delete dataReceivingProgress[requestID];
+  }
+}
+
+export function setDataUpdateTime(requestID: string, timeStamp: string): void {
+  if (!dataUpdateTime.hasOwnProperty(requestID)) {
+    dataUpdateTime[requestID] = 0;
+  }
+  var timeNumber = timeStampToNumber(timeStamp);
+  if (timeNumber > dataUpdateTime[requestID]) {
+    dataUpdateTime[requestID] = timeNumber;
+  }
+}
+
+export function deleteDataUpdateTime(requestID: string): void {
+  if (dataUpdateTime.hasOwnProperty(requestID)) {
+    delete dataUpdateTime[requestID];
   }
 }

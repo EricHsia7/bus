@@ -6,7 +6,7 @@ import { getProvider } from './getProvider.ts';
 import { getTimeTable } from './getTimeTable.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
-import { setDataReceivingProgress, deleteDataReceivingProgress } from './loader.ts';
+import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -158,15 +158,18 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
-  deleteDataReceivingProgress(requestID);
-  return {
+  var result = {
     items: processedEstimateTime,
     RouteName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
       RouteDestination: thisRouteDestination
-    }
+    },
+    dataUpdateTime: dataUpdateTime[requestID]
   };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  return result;
 }
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {

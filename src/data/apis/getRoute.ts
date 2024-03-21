@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataReceivingProgress } from './loader.ts';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 
 var RouteAPIVariableCache = { available: false, data: {} };
@@ -81,6 +81,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
     for (var api of apis) {
       var data = await fetchData(api, requestID, 'getRoute');
       result = result.concat(data.BusInfo);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
   }
@@ -118,6 +119,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
         RouteAPIVariableCache.data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getRoute', 0, true);
+      setDataUpdateTime(requestID, 0);
       return RouteAPIVariableCache.data;
     }
   }

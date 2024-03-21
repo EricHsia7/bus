@@ -1,5 +1,5 @@
 import { getAPIURL } from './getURL.ts';
-import { fetchData } from './loader.ts';
+import { fetchData,setDataUpdateTime } from './loader.ts';
 
 export async function getTimeTable(requestID: string): [] {
   var apis = [
@@ -10,6 +10,7 @@ export async function getTimeTable(requestID: string): [] {
   for (var api of apis) {
     var data = await fetchData(api, requestID, 'getTimeTable');
     result = result.concat(data.BusInfo);
+    setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }
   return result;
 }
