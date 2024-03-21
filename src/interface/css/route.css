@@ -232,6 +232,11 @@
   margin-right: 5px;
   box-sizing: border-box;
   font-size: 14px;
+  transition: none;
+}
+
+.route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .tab {
+  transition: background var(--b-transition-duration), color var(--b-transition-duration);
 }
 
 .route_field .route_groups .route_grouped_items .item[segment-buffer="true"] .body .tabs .tab {
