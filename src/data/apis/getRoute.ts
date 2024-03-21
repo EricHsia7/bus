@@ -119,7 +119,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
         RouteAPIVariableCache.data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getRoute', 0, true);
-      setDataUpdateTime(requestID, 0);
+      setDataUpdateTime(requestID, -1);
       return RouteAPIVariableCache.data;
     }
   }

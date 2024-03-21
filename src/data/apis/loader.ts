@@ -86,11 +86,14 @@ export function deleteDataReceivingProgress(requestID: string): void {
   }
 }
 
-export function setDataUpdateTime(requestID: string, timeStamp: string): void {
+export function setDataUpdateTime(requestID: string, timeStamp: string | number): void {
   if (!dataUpdateTime.hasOwnProperty(requestID)) {
     dataUpdateTime[requestID] = 0;
   }
-  var timeNumber = timeStampToNumber(timeStamp);
+  var timeNumber = 0;
+  if (typeof timeStamp === 'string') {
+    timeNumber = timeStampToNumber(timeStamp);
+  }
   if (timeNumber > dataUpdateTime[requestID]) {
     dataUpdateTime[requestID] = timeNumber;
   }

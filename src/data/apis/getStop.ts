@@ -58,7 +58,7 @@ export async function getStop(requestID: string): object {
         StopAPIVariableCache.data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getStop', 0, true);
-      setDataUpdateTime(requestID, 0);
+      setDataUpdateTime(requestID, -1);
       return StopAPIVariableCache.data;
     }
   }
