@@ -67,5 +67,4 @@ window.bus = {
 };
 window.bus.searchRouteByName = searchRouteByName;
 
-window.bus.test = function () {};
 export default window.bus;
