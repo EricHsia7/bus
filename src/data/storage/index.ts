@@ -8,7 +8,7 @@ var stores = ['cacheStore', 'settingsStore', 'analyticsStore'];
 async function dropInstance(store: number): any {
   var key = stores[store];
   if (storage[key] === false) {
-    storage[key] = localforage.createInstance({
+    storage[key] = await localforage.createInstance({
       name: key
     });
   }
@@ -20,7 +20,7 @@ export async function lfSetItem(store: number, key: string, value: any): any {
   try {
     var key = stores[store];
     if (storage[key] === false) {
-      storage[key] = localforage.createInstance({
+      storage[key] = await localforage.createInstance({
         name: key
       });
     }
@@ -37,7 +37,7 @@ export async function lfGetItem(store: number, key: string): any {
   try {
     var key = stores[store];
     if (storage[key] === false) {
-      storage[key] = localforage.createInstance({
+      storage[key] = await localforage.createInstance({
         name: key
       });
     }
