@@ -7,9 +7,9 @@ export async function recordRequest(requestID: string, data: object): void {
     var existingRecordObject = JSON.parse(existingRecord);
     existingRecordObject.time = existingRecordObject.time + data.time;
     existingRecordObject.content_length = existingRecordObject.content_length + data.content_length;
-    await lfSetItem(2, requestID, existingRecordObject);
+    await lfSetItem(2, requestID, JSON.stringify(existingRecordObject));
   } else {
-    await lfSetItem(2, requestID, data);
+    await lfSetItem(2, requestID, JSON.stringify(data));
   }
   console.log(requestID, data);
 }
