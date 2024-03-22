@@ -88,7 +88,14 @@ export function standardizeArray(array: [number]) {
   return array.map((val) => (val - mean) / stdDev);
 }
 
-// Example usage:
-const numbers = [1, 2, 3, 4, 5];
-const standardizedNumbers = standardizeArray(numbers);
-console.log(standardizedNumbers);
+export function convertBytes(contentLength: number): string {
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let i = 0;
+
+  while (contentLength >= 1024 && i < units.length - 1) {
+    contentLength /= 1024;
+    i++;
+  }
+
+  return contentLength.toFixed(2) + ' ' + units[i];
+}

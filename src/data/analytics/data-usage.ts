@@ -1,4 +1,4 @@
-import { standardizeArray } from '../../tools/index.ts';
+import { standardizeArray, convertBytes } from '../../tools/index.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 export async function recordRequest(requestID: string, data: object): void {
@@ -21,5 +21,5 @@ export async function calculateDataUsage(): number {
     var object = JSON.parse(json);
     total_content_length += object.content_length;
   }
-  return total_content_length;
+  return convertBytes(total_content_length);
 }
