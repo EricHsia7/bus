@@ -49,3 +49,13 @@ export async function lfGetItem(store: number, key: string): any {
     return null;
   }
 }
+
+export async function lfListItem(store: number): [] {
+  try {
+    var keys = await localforage.keys();
+    return keys;
+  } catch (err) {
+    console.log(err);
+    return []
+  }
+}
