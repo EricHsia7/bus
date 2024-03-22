@@ -1,5 +1,5 @@
 import { standardizeArray } from '../../tools/index.ts';
-import { lfSetItem, lfGetItem } from '../storage/index.ts';
+import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 export async function recordRequest(requestID: string, data: object): void {
   var existingRecord = await lfGetItem(2, requestID);
@@ -11,5 +11,15 @@ export async function recordRequest(requestID: string, data: object): void {
   } else {
     await lfSetItem(2, requestID, JSON.stringify(data));
   }
-  console.log(requestID, data);
+}
+
+export async function calculateDataUsage(): number {
+  var keys = await lfListItem(2);
+  var total_content_length = 0;
+  for (var key of keys) {
+    var json = await lfGetItem(2, key);
+    var object = JSON.parse(json);
+    total_content_length += object.content_length;
+  }
+  return total_content_length;
 }
