@@ -2,7 +2,7 @@ import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
-import { compareThings, getTextWidth } from '../tools/index.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation } from '../tools/index.ts';
 
 var md5 = require('md5');
 
