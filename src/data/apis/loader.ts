@@ -12,7 +12,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-  const contentLength = response.headers.get('content-length');
+  const contentLength = parseInt(String(response.headers.get('content-length')));
   let receivedLength = 0;
   const reader = response.body.getReader();
   const chunks = [];
@@ -35,10 +35,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
   }
 
   const endTimeStamp = new Date().getTime();
-  var { done, value } = await reader.read();
-  if (done) {
-    recordRequest(requestID, { time: endTimeStamp - startTimeStamp, content_length: contentLength });
-  }
+  recordRequest(requestID, { time: endTimeStamp - startTimeStamp, content_length: contentLength });
 
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
