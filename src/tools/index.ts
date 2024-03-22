@@ -64,3 +64,31 @@ export function timeStampToNumber(string: string): number {
   }
   return 0;
 }
+
+export function calculateStandardDeviation(arr: [number]) {
+  // Step 1: Calculate the mean
+  const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
+  // Step 2: Calculate the squared difference between each element and the mean
+  const squaredDifferences = arr.map((val) => Math.pow(val - mean, 2));
+  // Step 3: Find the mean of those squared differences
+  const meanOfSquaredDifferences = squaredDifferences.reduce((acc, val) => acc + val, 0) / arr.length;
+  // Step 4: Take the square root of that mean
+  const standardDeviation = Math.sqrt(meanOfSquaredDifferences);
+  return standardDeviation;
+}
+
+export function standardizeArray(array: [number]) {
+  // Calculate the mean of the array
+  const mean = array.reduce((acc, val) => acc + val, 0) / array.length;
+
+  // Calculate the standard deviation
+  const stdDev = calculateStandardDeviation(array);
+
+  // Standardize the array
+  return array.map((val) => (val - mean) / stdDev);
+}
+
+// Example usage:
+const numbers = [1, 2, 3, 4, 5];
+const standardizedNumbers = standardizeArray(numbers);
+console.log(standardizedNumbers);
