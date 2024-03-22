@@ -6,25 +6,25 @@ const storage = {
 };
 var stores = ['cacheStore', 'settingsStore', 'analyticsStore'];
 async function dropInstance(store: number): any {
-  var key = stores[store];
-  if (storage[key] === false) {
-    storage[key] = await localforage.createInstance({
-      name: key
+  var store_key = stores[store];
+  if (storage[store_key] === false) {
+    storage[store_key] = await localforage.createInstance({
+      name: store_key
     });
   }
-  var operation = await storage[stores[store]].dropInstance();
+  var operation = await storage[store_key].dropInstance();
   return operation;
 }
 
 export async function lfSetItem(store: number, key: string, value: any): any {
   try {
-    var key = stores[store];
-    if (storage[key] === false) {
-      storage[key] = await localforage.createInstance({
-        name: key
+    var store_key = stores[store];
+    if (storage[store_key] === false) {
+      storage[store_key] = await localforage.createInstance({
+        name: store_key
       });
     }
-    var operation = await storage[key].setItem(key, value);
+    var operation = await storage[store_key].setItem(key, value);
     return operation;
   } catch (err) {
     console.log(err);
@@ -35,13 +35,13 @@ export async function lfSetItem(store: number, key: string, value: any): any {
 
 export async function lfGetItem(store: number, key: string): any {
   try {
-    var key = stores[store];
-    if (storage[key] === false) {
-      storage[key] = await localforage.createInstance({
-        name: key
+    var store_key = stores[store];
+    if (storage[store_key] === false) {
+      storage[store_key] = await localforage.createInstance({
+        name: store_key
       });
     }
-    var operation = await storage[stores[store]].getItem(key);
+    var operation = await storage[store_key].getItem(key);
     return operation;
   } catch (err) {
     console.log(err);
