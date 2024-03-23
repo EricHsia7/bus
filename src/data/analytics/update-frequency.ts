@@ -47,7 +47,7 @@ export async function listRecordedEstimateTime() {
     var object = JSON.parse(json);
     for (var key2 in object) {
       console.log(key, key2);
-      console.log(object[key2].map((item) => `${item.EstimateTime}, ${item.timeStamp}`).join(`\n`));
+      console.log(object[key2].map((item) => `${item.EstimateTime} ${item.timeStamp}`).join(`\n`));
     }
   }
 }
