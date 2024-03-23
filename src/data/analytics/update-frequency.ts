@@ -27,7 +27,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
         var existingRecord = await lfGetItem(3, trackingUpdateFrequency.trackID);
         if (existingRecord) {
           var existingRecordObject = JSON.parse(existingRecord);
-          var delta = parseInt(item.EstimateTime) - existingRecordObject.log[existingRecordObject.log.length - 1].EstimateTime;
+          var delta = parseInt(item.EstimateTime) - existingRecordObject[`s_${item.StopID}`][existingRecordObject[`s_${item.StopID}`].length - 1].EstimateTime;
           if (delta < 0) {
             if (!existingRecordObject.hasOwnProperty(`s_${item.StopID}`)) {
               existingRecordObject[`s_${item.StopID}`] = [];
