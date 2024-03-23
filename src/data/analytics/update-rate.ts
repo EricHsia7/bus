@@ -3,41 +3,41 @@ import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 var md5 = require('md5');
 
-var trackingUpdateFrequency = {
+var trackingUpdateRate = {
   trackedStops: [],
-  trackID: null,
+  trackingID: null,
   tracking: false,
   sampleQuantity: 64
 };
 
 export async function recordEstimateTime(EstimateTime: object): void {
-  if (!trackingUpdateFrequency.tracking) {
-    trackingUpdateFrequency.tracking = true;
-    trackingUpdateFrequency.trackID = `e_${md5(Math.random() + new Date().getTime())}`;
+  if (!trackingUpdateRate.tracking) {
+    trackingUpdateRate.tracking = true;
+    var today = new Date();
+    trackingUpdateRate.trackingID = `e_${md5(Math.random() + new Date().getTime())}`;
     var EstimateTimeLength = EstimateTime.length - 1;
-    for (var i = 0; i < trackingUpdateFrequency.sampleQuantity; i++) {
+    for (var i = 0; i < trackingUpdateRate.sampleQuantity; i++) {
       const randomIndex = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
       var randomItem = EstimateTime[randomIndex];
-      trackingUpdateFrequency.trackedStops.push(randomItem.StopID);
-    }
-  } else {
-    const currentTimeStamp = Math.floor(new Date().getTime() / 1000);
-    for (var item of EstimateTime) {
-      if (trackingUpdateFrequency.trackedStops.indexOf(item.StopID) > -1) {
-        var existingRecord = await lfGetItem(3, trackingUpdateFrequency.trackID);
-        if (!existingRecord) {
-          var existingRecordObject = {};
-        } else {
-          var existingRecordObject = JSON.parse(existingRecord);
-        }
-        if (!existingRecordObject.hasOwnProperty(`s_${item.StopID}`)) {
-          existingRecordObject[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
-        }
-        existingRecordObject[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-        await lfSetItem(3, trackingUpdateFrequency.trackID, JSON.stringify(existingRecordObject));
-      }
+      trackingUpdateRate.trackedStops.push(randomItem.StopID);
     }
   }
+  const currentTimeStamp = Math.floor(new Date().getTime() / 1000);
+  var existingRecord = await lfGetItem(3, trackingUpdateRate.trackingID);
+  if (!existingRecord) {
+    var existingRecordObject = { trackingID: trackingUpdateRate.trackingID, timeStamp: new Date().getTime(), data: {} };
+  } else {
+    var existingRecordObject = JSON.parse(existingRecord);
+  }
+  for (var item of EstimateTime) {
+    if (trackingUpdateRate.trackedStops.indexOf(item.StopID) > -1) {
+      if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
+        existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
+      }
+      existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+    }
+  }
+  await lfSetItem(3, trackingUpdateRate.trackingID, JSON.stringify(existingRecordObject));
 }
 
 export async function listRecordedEstimateTime(): [] {
@@ -46,8 +46,10 @@ export async function listRecordedEstimateTime(): [] {
   for (var key of keys) {
     var json = await lfGetItem(3, key);
     var object = JSON.parse(json);
-    for (var key2 in object) {
-      result.push(object[key2].map((item) => [item.EstimateTime, item.timeStamp]));
+    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000)) {
+      for (var key2 in object.data) {
+        result.push(object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
+      }
     }
   }
   return result;
