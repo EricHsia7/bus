@@ -29,13 +29,15 @@ export async function recordEstimateTime(EstimateTime: object): void {
           var existingRecordObject = JSON.parse(existingRecord);
           var delta = parseInt(item.EstimateTime) - existingRecordObject.log[existingRecordObject.log.length - 1].EstimateTime;
           if (delta < 0) {
-            existingRecordObject.log.push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+            if (!existingRecordObject.hasOwnProperty(`s_${item.StopID}`)) {
+              existingRecordObject[`s_${item.StopID}`] = [];
+            }
+            existingRecordObject[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
             await lfSetItem(3, trackingUpdateFrequency.trackID, JSON.stringify(existingRecordObject));
           }
         } else {
-          var newRecordObject = {
-            log: [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }]
-          };
+          var newRecordObject = {};
+          newRecordObject[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
           await lfSetItem(3, trackingUpdateFrequency.trackID, JSON.stringify(newRecordObject));
         }
       }
