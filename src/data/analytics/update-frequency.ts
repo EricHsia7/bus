@@ -33,7 +33,6 @@ export async function recordEstimateTime(EstimateTime: object): void {
         if (!existingRecordObject.hasOwnProperty(`s_${item.StopID}`)) {
           existingRecordObject[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
         }
-        console.log(existingRecordObject, item);
         existingRecordObject[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
         await lfSetItem(3, trackingUpdateFrequency.trackID, JSON.stringify(existingRecordObject));
       }
@@ -47,7 +46,8 @@ export async function listRecordedEstimateTime() {
     var json = await lfGetItem(3, key);
     var object = JSON.parse(json);
     for (var key2 in object) {
-      console.log(key, object[key2].map((item) => `${item.EstimateTime}, ${item.timeStamp}`).join(`\n`));
+      console.log(key, key2);
+      console.log(object[key2].map((item) => `${item.EstimateTime}, ${item.timeStamp}`).join(`\n`));
     }
   }
 }
