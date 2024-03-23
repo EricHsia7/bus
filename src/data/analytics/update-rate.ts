@@ -105,9 +105,9 @@ function pearsonCorrelation(x, y) {
 }
 
 export async function processRecordedEstimateTime() {
-var weighted_average = 0
-var total_correlation = 0
-var total_weight = 0
+  var weighted_average = 0;
+  var total_correlation = 0;
+  var total_weight = 0;
   var collection = await listRecordedEstimateTime();
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
@@ -115,13 +115,13 @@ var total_weight = 0
       const firstColumn = group.map((item) => item[0]);
       const secondColumn = group.map((item) => item[1]);
       const correlation = pearsonCorrelation(firstColumn, secondColumn);
-if(!(correlation === 0)) {
-       total_correlation += correlation * firstColumn.length
- total_weight+=firstColumn.length
-   }
- }
+      if (!(correlation === 0)) {
+        total_correlation += correlation * firstColumn.length;
+        total_weight += firstColumn.length;
+      }
+    }
   }
- weighted_average = total_correlation / total_weight
-console.log(weighted_average)
-return weighted_average
+  weighted_average = total_correlation / total_weight;
+  console.log(weighted_average);
+  return weighted_average;
 }
