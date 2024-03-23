@@ -1,10 +1,13 @@
 const localforage = require('localforage');
+
 const storage = {
   cacheStore: false,
   settingsStore: false,
-  analyticsStore: false
+  analyticsOfDataUsageStore: false,
+  analyticsOfUpdateFrequencyStore: false
 };
 var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateFrequencyStore'];
+
 async function dropInstance(store: number): any {
   var store_key = stores[store];
   if (storage[store_key] === false) {
