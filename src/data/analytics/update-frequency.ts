@@ -26,10 +26,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
       if (trackingUpdateFrequency.trackedStops.indexOf(item.StopID) > -1) {
         var existingRecord = await lfGetItem(3, trackingUpdateFrequency.trackID);
         if (!existingRecord) {
-          var newRecordObject = {};
-          newRecordObject[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
-          await lfSetItem(3, trackingUpdateFrequency.trackID, JSON.stringify(newRecordObject));
-          var existingRecordObject = newRecordObject;
+          var existingRecordObject = {};
         } else {
           var existingRecordObject = JSON.parse(existingRecord);
         }
