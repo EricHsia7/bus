@@ -1,4 +1,4 @@
-import { standardizeArray, convertBytes } from '../../tools/index.ts';
+import { convertBytes } from '../../tools/index.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 export async function recordRequest(requestID: string, data: object): void {

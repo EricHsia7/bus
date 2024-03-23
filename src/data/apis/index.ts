@@ -7,6 +7,7 @@ import { getTimeTable } from './getTimeTable.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
+import { recordEstimateTime } from '../analytics/update-frequency.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -169,6 +170,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
+  await recordEstimateTime(EstimateTime);
   return result;
 }
 /*
