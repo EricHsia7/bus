@@ -2,7 +2,7 @@ import { integrateRoute } from '../data/apis/index.ts';
 import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
-import { compareThings, getTextWidth } from '../tools/index.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation } from '../tools/index.ts';
 
 var md5 = require('md5');
 
@@ -35,18 +35,6 @@ var currentRouteIDSet = {
 
 export function initializeRouteSliding() {
   var element = document.querySelector('.route_groups');
-  function calculateStandardDeviation(arr) {
-    // Step 1: Calculate the mean
-    const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
-    // Step 2: Calculate the squared difference between each element and the mean
-    const squaredDifferences = arr.map((val) => Math.pow(val - mean, 2));
-    // Step 3: Find the mean of those squared differences
-    const meanOfSquaredDifferences = squaredDifferences.reduce((acc, val) => acc + val, 0) / arr.length;
-    // Step 4: Take the square root of that mean
-    const standardDeviation = Math.sqrt(meanOfSquaredDifferences);
-    return standardDeviation;
-  }
-
   function monitorScrollLeft(element: HTMLElement, callback: Function): void {
     routeSliding.scrollLog.push(element.scrollLeft);
     if (routeSliding.scrollLog.length > 10) {

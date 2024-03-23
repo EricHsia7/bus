@@ -45,12 +45,12 @@ export async function getLocation(requestID: string): object {
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_key = 'bus_location_cache';
-  var cached_time = await lfGetItem(`${cache_key}_timestamp`);
+  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
     var simplified_result = simplifyLocation(result);
-    await lfSetItem(`${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(`${cache_key}`, JSON.stringify(simplified_result));
+    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
     if (!LocationAPIVariableCache.available) {
       LocationAPIVariableCache.available = true;
       LocationAPIVariableCache.data = simplified_result;
@@ -60,8 +60,8 @@ export async function getLocation(requestID: string): object {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
       var simplified_result = simplifyLocation(result);
-      await lfSetItem(`${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(`${cache_key}`, JSON.stringify(simplified_result));
+      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
       if (!LocationAPIVariableCache.available) {
         LocationAPIVariableCache.available = true;
         LocationAPIVariableCache.data = simplified_result;
@@ -69,7 +69,7 @@ export async function getLocation(requestID: string): object {
       return simplified_result;
     } else {
       if (!LocationAPIVariableCache.available) {
-        var cache = await lfGetItem(`${cache_key}`);
+        var cache = await lfGetItem(0, `${cache_key}`);
         LocationAPIVariableCache.available = true;
         LocationAPIVariableCache.data = JSON.parse(cache);
       }

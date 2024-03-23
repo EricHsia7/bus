@@ -1,6 +1,8 @@
 import { integrateRoute } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
+import { calculateDataUsage } from './data/analytics/data-usage.ts';
+import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
 import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
@@ -59,9 +61,13 @@ window.bus = {
     typeTextIntoInput,
     deleteCharFromInout,
     emptyInput
+  },
+  test: {
+    calculateDataUsage,
+    listRecordedEstimateTime,
+    getUpdateRate
   }
 };
 window.bus.searchRouteByName = searchRouteByName;
 
-window.bus.test = function () {};
 export default window.bus;

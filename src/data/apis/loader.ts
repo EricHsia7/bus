@@ -1,5 +1,5 @@
 import { timeStampToNumber } from '../../tools/index.ts';
-
+import { recordRequest } from '../analytics/data-usage.ts';
 const pako = require('pako');
 var md5 = require('md5');
 
@@ -7,16 +7,17 @@ var dataReceivingProgress = {};
 export var dataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, urlName: string): object {
+  const startTimeStamp = new Date().getTime();
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-  const contentLength = response.headers.get('content-length');
+  const contentLength = parseInt(String(response.headers.get('content-length')));
   let receivedLength = 0;
   const reader = response.body.getReader();
   const chunks = [];
   while (true) {
-    const { done, value } = await reader.read();
+    var { done, value } = await reader.read();
     if (done) {
       break;
     }
@@ -32,6 +33,9 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     uint8Array.set(chunk, position);
     position += chunk.length;
   }
+
+  const endTimeStamp = new Date().getTime();
+  await recordRequest(requestID, { time: endTimeStamp - startTimeStamp, content_length: contentLength });
 
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
