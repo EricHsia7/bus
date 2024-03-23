@@ -16,7 +16,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
     trackingUpdateFrequency.trackID = `e_${md5(Math.random() + new Date().getTime())}`;
     var EstimateTimeLength = EstimateTime.length - 1;
     for (var i = 0; i < trackingUpdateFrequency.sampleQuantity; i++) {
-      const randomIndex = Math.max(Math.min(Math.round(Math.random() * EstimateTime), EstimateTimeLength), 0);
+      const randomIndex = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
       var randomItem = EstimateTime[randomIndex];
       trackingUpdateFrequency.trackedStops.push(randomItem.StopID);
     }
