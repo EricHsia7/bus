@@ -99,3 +99,54 @@ export function convertBytes(contentLength: number): string {
 
   return contentLength.toFixed(2) + ' ' + units[i];
 }
+
+// Function to split data based on delta
+export function splitDataByDelta(data: []): [] {
+  const result = [];
+  let currentGroup = [];
+  for (let i = 0; i < data.length; i++) {
+    if (i === 0 || data[i][0] - data[i - 1][0] > 0) {
+      if (currentGroup.length > 0) {
+        result.push(currentGroup);
+      }
+      currentGroup = [data[i]];
+    } else {
+      currentGroup.push(data[i]);
+    }
+  }
+  if (currentGroup.length > 0) {
+    result.push(currentGroup);
+  }
+  return result;
+}
+
+// Function to calculate Pearson correlation coefficient
+export function pearsonCorrelation(x, y) {
+  const n = x.length;
+  if (n !== y.length) {
+    throw new Error('Arrays must have the same length');
+  }
+
+  let sumX = 0,
+    sumY = 0,
+    sumXY = 0,
+    sumXSquared = 0,
+    sumYSquared = 0;
+
+  for (let i = 0; i < n; i++) {
+    sumX += x[i];
+    sumY += y[i];
+    sumXY += x[i] * y[i];
+    sumXSquared += x[i] ** 2;
+    sumYSquared += y[i] ** 2;
+  }
+
+  const numerator = n * sumXY - sumX * sumY;
+  const denominator = Math.sqrt((n * sumXSquared - sumX ** 2) * (n * sumYSquared - sumY ** 2));
+
+  if (denominator === 0) {
+    return 0; // Correlation is undefined in this case
+  }
+
+  return numerator / denominator;
+}
