@@ -18,7 +18,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
     for (var i = 0; i < trackingUpdateFrequency.sampleQuantity; i++) {
       const randomIndex = Math.max(Math.min(Math.round(Math.random() * EstimateTime), EstimateTimeLength), 0);
       var randomItem = EstimateTime[randomIndex];
-      trackedStops.push(randomItem.StopID);
+      trackingUpdateFrequency.trackedStops.push(randomItem.StopID);
     }
   } else {
     const currentTimeStamp = Math.floor(new Date().getTime() / 1000);
