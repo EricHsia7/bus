@@ -56,6 +56,11 @@ export async function lfGetItem(store: number, key: string): any {
 export async function lfListItem(store: number): [] {
   try {
     var store_key = stores[store];
+    if (storage[store_key] === false) {
+      storage[store_key] = await localforage.createInstance({
+        name: store_key
+      });
+    }
     var keys = await storage[store_key].keys();
     return keys;
   } catch (err) {
