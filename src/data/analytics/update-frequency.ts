@@ -50,6 +50,8 @@ export async function listRecordedEstimateTime() {
   for (var key of keys) {
     var json = await lfGetItem(3, key);
     var object = JSON.parse(json);
-    console.log(key, object.log.map((item) => `${item.EstimateTime}, ${item.timeStamp}`).join(`\n`));
+    for (var key2 in object) {
+      console.log(key, object[key2].map((item) => `${item.EstimateTime}, ${item.timeStamp}`).join(`\n`));
+    }
   }
 }
