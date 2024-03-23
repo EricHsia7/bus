@@ -10,7 +10,7 @@ var trackingUpdateFrequency = {
   sampleQuantity: 64
 };
 
-export async function recordEstimateTime(trackingID: string, EstimateTime: object): void {
+export async function recordEstimateTime(EstimateTime: object): void {
   if (!trackingUpdateFrequency.tracking) {
     trackingUpdateFrequency.tracking = true;
     trackingUpdateFrequency.trackID = `e_${md5(Math.random() + new Date().getTime())}`;
