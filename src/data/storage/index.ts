@@ -4,9 +4,10 @@ const storage = {
   cacheStore: false,
   settingsStore: false,
   analyticsOfDataUsageStore: false,
-  analyticsOfUpdateRateStore: false
+  analyticsOfUpdateRateStore: false,
+  savedStopFolderStore: false
 };
-var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore'];
+var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'savedStopFolderStore'];
 
 async function dropInstance(store: number): any {
   var store_key = stores[store];

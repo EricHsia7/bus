@@ -8,6 +8,7 @@ import { getUpdateRate } from '../data/analytics/update-rate.ts'
 var md5 = require('md5');
 
 var previousFormattedRoute = {};
+
 var routeSliding = {
   currentGroup: 0,
   targetGroup: 0,
@@ -17,6 +18,7 @@ var routeSliding = {
   fieldWidth: 0,
   fieldHeight: 0
 };
+
 var routeRefreshTimer = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
