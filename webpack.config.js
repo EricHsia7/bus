@@ -94,7 +94,7 @@ module.exports = (env, argv) => {
                       {
                         strategy: 'minimal',
                         outputMapCallback: function (map) {
-                          postcssRenameMap = Object.assign(postcssRenameMap, Object.assign({}, map));
+                          postcssRenameMap = Object.assign(postcssRenameMap, map);
                         }
                       }
                     ]
