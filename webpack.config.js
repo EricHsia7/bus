@@ -7,6 +7,7 @@ const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const fs = require('fs');
+var postcssRenameMap = {};
 
 function generateRandomString(length) {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -93,9 +94,7 @@ module.exports = (env, argv) => {
                       {
                         strategy: 'minimal',
                         outputMapCallback: function (map) {
-                          const mapPath = path.resolve(__dirname, './dist/postcss-rename-map.json');
-                          fs.mkdirSync(path.resolve(__dirname, 'dist'), { recursive: true });
-                          fs.writeFileSync(mapPath, JSON.stringify(map, null, 2));
+                          postcssRenameMap = Object.assign(postcssRenameMap, Object.assign({}, map));
                         }
                       }
                     ]
@@ -150,3 +149,7 @@ module.exports = (env, argv) => {
     // Add any additional plugins and configurations as needed
   };
 };
+
+const mapPath = path.resolve(__dirname, './dist/postcss-rename-map.json');
+fs.mkdirSync(path.resolve(__dirname, 'dist'), { recursive: true });
+fs.writeFileSync(mapPath, JSON.stringify(postcssRenameMap, null, 2));
