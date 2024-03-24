@@ -87,15 +87,16 @@ module.exports = (env, argv) => {
               options: {
                 postcssOptions: {
                   plugins: [
-                    // Include postcss-rename with your desired options
                     [
                       'postcss-rename',
                       {
-                        strategy: 'minimal'
-                        /* options */
+                        strategy: 'minimal',
+                        outputMapCallback: function (map) {
+                          const mapPath = path.resolve(__dirname, 'postcss-rename-map.json');
+                          fs.writeFileSync(mapPath, JSON.stringify(map, null, 2));
+                        }
                       }
                     ]
-                    // Other PostCSS plugins
                   ]
                 }
               }
