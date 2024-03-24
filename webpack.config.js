@@ -95,6 +95,9 @@ module.exports = (env, argv) => {
                         strategy: 'minimal',
                         outputMapCallback: function (map) {
                           postcssRenameMap = Object.assign(postcssRenameMap, map);
+                          const mapPath = path.resolve(__dirname, `./dist/postcss-rename-map/[name].json`);
+                          fs.mkdirSync(path.resolve(__dirname, 'dist/postcss-rename-map'), { recursive: true });
+                          fs.writeFileSync(mapPath, JSON.stringify(postcssRenameMap, null, 2));
                         }
                       }
                     ]
@@ -149,7 +152,3 @@ module.exports = (env, argv) => {
     // Add any additional plugins and configurations as needed
   };
 };
-
-const mapPath = path.resolve(__dirname, './dist/postcss-rename-map.json');
-fs.mkdirSync(path.resolve(__dirname, 'dist'), { recursive: true });
-fs.writeFileSync(mapPath, JSON.stringify(postcssRenameMap, null, 2));
