@@ -93,7 +93,7 @@ module.exports = (env, argv) => {
                       {
                         strategy: 'minimal',
                         outputMapCallback: function (map) {
-                          const mapPath = path.resolve(__dirname, 'postcss-rename-map.json');
+                          const mapPath = path.resolve(__dirname, './dist/postcss-rename-map.json');
                           fs.writeFileSync(mapPath, JSON.stringify(map, null, 2));
                         }
                       }
