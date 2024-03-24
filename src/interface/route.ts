@@ -3,6 +3,7 @@ import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation } from '../tools/index.ts';
+import { getUpdateRate } from '../data/analytics/update-rate.ts'
 
 var md5 = require('md5');
 
@@ -32,6 +33,8 @@ var currentRouteIDSet = {
   RouteID: 0,
   PathAttributeId: []
 };
+
+
 
 export function initializeRouteSliding() {
   var element = document.querySelector('.route_groups');
@@ -513,8 +516,9 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval);
-  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
+  var updateRate = await getUpdateRate();
+  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime())
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
