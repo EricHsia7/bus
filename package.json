@@ -40,7 +40,10 @@
     "stacktrace-js": "^2.0.2",
     "html-webpack-plugin": "^5.5.3",
     "workbox-webpack-plugin": "^7.0.0",
-    "canvas": "^2.11.2"
+    "canvas": "^2.11.2",
+    "postcss": "^8.4.38",
+    "postcss-loader": "^8.1.1",
+    "postcss-rename": "^0.6.0"
   },
   "dependencies": {
     "md5": "^2.3.0",

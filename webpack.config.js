@@ -79,7 +79,27 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css|less?$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    // Include postcss-rename with your desired options
+                    [
+                      'postcss-rename',
+                      {
+                        /* options */
+                      }
+                    ]
+                    // Other PostCSS plugins
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -113,7 +133,7 @@ module.exports = (env, argv) => {
             minChunks: 2,
             priority: -20,
             reuseExistingChunk: true
-          },
+          }
           // Add more cache groups if needed
         }
       }
