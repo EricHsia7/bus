@@ -91,6 +91,7 @@ module.exports = (env, argv) => {
                     [
                       'postcss-rename',
                       {
+                        strategy: 'minimal'
                         /* options */
                       }
                     ]
