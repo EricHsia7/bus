@@ -107,7 +107,7 @@ function updateUpdateTimer() {
 }
 
 export async function formatRoute(RouteID: number, PathAttributeId: [number], requestID: string) {
-  function formatEstimateTime(EstimateTime: string, mode: number = 1) {
+  function formatEstimateTime(EstimateTime: string, mode: number) {
     function formatTime(time: number, mode: number) {
       if (mode === 0) {
         return `${time}秒`;
@@ -246,7 +246,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
   for (var item of integration.items) {
     var formattedItem = {};
     formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime);
+    formattedItem.status = formatEstimateTime(item.EstimateTime, 2);
     formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
     formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
