@@ -254,7 +254,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
   for (var item of integration.items) {
     var formattedItem = {};
     formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime, 2);
+    formattedItem.status = formatEstimateTime(item.EstimateTime, 3);
     formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
     formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
