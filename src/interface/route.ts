@@ -121,6 +121,14 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
         var minutes = String(Math.floor(time / 60));
         return `${minutes}分`;
       }
+      if (mode === 3) {
+        if (time >= 60) {
+          var minutes = String(Math.floor(time / 60));
+          return `${minutes}分`;
+        } else {
+          return `${time}秒`;
+        }
+      }
       return '--';
     }
     var time = parseInt(EstimateTime);
