@@ -2,16 +2,20 @@ import { getStop } from '../apis/getStop.ts';
 import { getLocation } from '../apis/getLocation.ts';
 import { getRoute } from '../apis/getRoute.ts';
 
-var folders = [
-  {
+var folders = {
+  f_0: {
     name: 'Saved Stop',
     default: true,
     storeIndex: 4,
     contentType: ['stop'],
     id: 0
   }
-];
+}
 
+export async function saveToFolder(folderID: number, content: object) :void {
+
+folderID
+}
 export async function saveStop(folderID: number, StopID: number) {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var Stop = await getStop(requestID);
@@ -26,7 +30,9 @@ export async function saveStop(folderID: number, StopID: number) {
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
   var object = {
+    type: 'stop',
     id: StopID,
+    time: new Date().toISOString(),
     name: thisStopName,
     route: {
       name: thisRouteName,
@@ -37,5 +43,5 @@ export async function saveStop(folderID: number, StopID: number) {
       id: thisStopRouteID
     }
   };
-  
+
 }
