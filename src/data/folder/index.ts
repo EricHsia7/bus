@@ -74,6 +74,7 @@ export async function saveStop(folderID: number, StopID: number, RouteID: number
   var Location = await getLocation(requestID);
   var Route = await getRoute(requestID);
   var thisStop = Stop[`s_${StopID}`];
+  var thisStopDirection = thisStop.goBack
   var thisLocation = Location[`l_${thisStop.stopLocationId}`];
   var thisStopName = thisLocation.n;
   var thisRoute = Route[`r_${RouteID}`];
@@ -85,6 +86,7 @@ export async function saveStop(folderID: number, StopID: number, RouteID: number
     id: StopID,
     time: new Date().toISOString(),
     name: thisStopName,
+    direction: thisStopDirection,
     route: {
       name: thisRouteName,
       endPoints: {
