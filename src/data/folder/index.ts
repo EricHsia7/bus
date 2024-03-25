@@ -95,7 +95,7 @@ export async function saveStop(folderID: number, StopID: number, RouteID: number
     }
   };
   await saveToFolder(folderID, content);
-  console.log(`Successfully saved ${name}!`);
+  console.log(`Successfully saved ${thisStopName}!`);
 }
 
 export async function isSaved(type: string, id: number | string): boolean {
