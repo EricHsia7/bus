@@ -333,7 +333,8 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
         segmentBuffer: {
           endpoint: false,
           type: null
-        }
+        },
+        id: null
       });
     }
   }
