@@ -58,7 +58,6 @@ window.bus = {
     switchRoute: switchRoute,
     switchRouteBodyTab: switchRouteBodyTab
   },
-
   folder: {
     isSaved: isSaved,
     saveStop: saveStop
