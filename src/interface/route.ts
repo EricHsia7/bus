@@ -291,7 +291,9 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
     itemQuantity,
     RouteName,
     RouteEndPoints,
-    dataUpdateTime
+    dataUpdateTime,
+    RouteID,
+    PathAttributeId
   };
 }
 
@@ -302,7 +304,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" onclick="bus.folder.saveStop(null,null)">收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" onclick="bus.folder.saveStop(null,null,null)">收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -348,7 +350,9 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
       RouteEndPoints: {
         RouteDeparture: '載入中',
         RouteDestination: '載入中'
-      }
+      },
+      RouteID: null,
+      PathAttributeId: []
     },
     true
   );
@@ -389,8 +393,8 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         thisElement.setAttribute('stretched', false);
       }
     }
-    function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.folder.saveStop('saved_stop', ${thisItem.id})`);
+    function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
+      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.folder.saveStop('saved_stop', ${thisItem.id}, ${formattedRoute.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
         thisElement.querySelector('.body .tabs .action_button').setAttribute('highlighted', e);
       });
@@ -403,7 +407,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem);
+      updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -421,7 +425,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         updateSegmentBuffer(thisElement, thisItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem);
+        updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
       }
       updateStretch(thisElement, skeletonScreen);
     }

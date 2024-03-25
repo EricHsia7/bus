@@ -68,7 +68,7 @@ export async function saveToFolder(folderID: number, content: object): boolean {
   return false;
 }
 
-export async function saveStop(folderID: number, StopID: number): void {
+export async function saveStop(folderID: number, StopID: number, RouteID: number): void {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID);
@@ -76,8 +76,7 @@ export async function saveStop(folderID: number, StopID: number): void {
   var thisStop = Stop[`s_${StopID}`];
   var thisLocation = Location[`l_${thisStop.stopLocationId}`];
   var thisStopName = thisLocation.n;
-  var thisStopRouteID = thisLocation.r;
-  var thisRoute = Route[`r_${thisStopRouteID}`];
+  var thisRoute = Route[`r_${RouteID}`];
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
@@ -92,7 +91,7 @@ export async function saveStop(folderID: number, StopID: number): void {
         departure: thisRouteDeparture,
         destination: thisRouteDestination
       },
-      id: thisStopRouteID
+      id: RouteID
     }
   };
   await saveToFolder(folderID, content);
