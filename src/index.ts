@@ -6,6 +6,8 @@ import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update
 import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
+import { initializeFolderStores } from '../data/storage/index.ts';
+import { saveStop, isSaved } from '../data/folder/index.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
@@ -46,6 +48,7 @@ window.bus = {
     screen.orientation.addEventListener('change', (event) => {
       ResizeRouteField();
     });
+    initializeFolderStores();
     openRouteByURLScheme();
   },
   route: {
@@ -54,6 +57,11 @@ window.bus = {
     closeRoute: closeRoute,
     switchRoute: switchRoute,
     switchRouteBodyTab: switchRouteBodyTab
+  },
+
+  folder: {
+    isSaved: isSaved,
+    saveStop: saveStop
   },
   searchPage: {
     openSearchPage,

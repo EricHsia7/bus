@@ -3,7 +3,8 @@ import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation } from '../tools/index.ts';
-import { getUpdateRate } from '../data/analytics/update-rate.ts'
+import { getUpdateRate } from '../data/analytics/update-rate.ts';
+import { isSaved } from '../data/folder/index.ts';
 
 var md5 = require('md5');
 
@@ -35,8 +36,6 @@ var currentRouteIDSet = {
   RouteID: 0,
   PathAttributeId: []
 };
-
-
 
 export function initializeRouteSliding() {
   var element = document.querySelector('.route_groups');
@@ -268,6 +267,7 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
       longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
     };
     formattedItem.segmentBuffer = item._segmentBuffer;
+    formattedItem.id = item.StopID || null;
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
     if (!groupedItems.hasOwnProperty(group)) {
       groupedItems[group] = [];
@@ -302,7 +302,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" onclick="bus.folder.saveStop(null)">收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -388,6 +388,12 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         thisElement.setAttribute('stretched', false);
       }
     }
+    function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.folder.saveStop(${thisItem.id})`);
+      isSaved('stop', thisItem.id).then((e) => {
+        thisElement.querySelector('.body .tabs .action_button').setAttribute('highlighted', e);
+      });
+    }
 
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
@@ -396,6 +402,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
+      updateSaveStopActionButton(thisElement, thisItem);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -411,6 +418,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
       if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisElement, thisItem);
+      }
+      if (!(previousItem.id === thisItem.id)) {
+        updateSaveStopActionButton(thisElement, thisItem);
       }
       updateStretch(thisElement, skeletonScreen);
     }
@@ -520,7 +530,7 @@ async function refreshRoute(): object {
   routeRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
   routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
-  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime())
+  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
