@@ -15,6 +15,7 @@ import './interface/css/route.css';
 import './interface/css/home-page.css';
 import './interface/css/search-page/index.css';
 import './interface/css/search-page/keyboard.css';
+import './interface/css/prompt.css';
 
 //for development
 
