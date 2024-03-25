@@ -1,7 +1,7 @@
 import { getStop } from '../apis/getStop.ts';
 import { getLocation } from '../apis/getLocation.ts';
 import { getRoute } from '../apis/getRoute.ts';
-
+import { lfSetItem, lfGetItem } from '../storage/index.ts'
 var folders = {
   f_0: {
     name: 'Saved Stop',
@@ -13,8 +13,9 @@ var folders = {
 }
 
 export async function saveToFolder(folderID: number, content: object) :void {
-
-folderID
+var thisFolder = folders[`f_${folderID}`]
+//await lfSetItem(thisFolder.storeIndex,f_${folderID}
+//folderID
 }
 export async function saveStop(folderID: number, StopID: number) {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
