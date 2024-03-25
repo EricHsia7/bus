@@ -59,7 +59,21 @@ export async function listFolders(): [] {
   return result;
 }
 
-export async function saveToFolder(folderID: number, content: object): boolean {
+export async function listFolderContent(folderID: string): [] {
+  var result = [];
+  var thisFolder = folders[`f_${folderID}`];
+  var itemKeys = await lfListItem(thisFolder.storeIndex);
+  for (var itemKey of itemKeys) {
+    var item = await lfGetItem(thisFolder.storeIndex, itemKey);
+    if (item) {
+      var itemObject = JSON.parse(item);
+      result.push(itemObject);
+    }
+  }
+  return result;
+}
+
+export async function saveToFolder(folderID: string, content: object): boolean {
   var thisFolder = folders[`f_${folderID}`];
   if (thisFolder.contentType.indexOf(content.type) > -1) {
     await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
@@ -68,13 +82,13 @@ export async function saveToFolder(folderID: number, content: object): boolean {
   return false;
 }
 
-export async function saveStop(folderID: number, StopID: number, RouteID: number): void {
+export async function saveStop(folderID: string, StopID: number, RouteID: number): void {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID);
   var Route = await getRoute(requestID);
   var thisStop = Stop[`s_${StopID}`];
-  var thisStopDirection = thisStop.goBack
+  var thisStopDirection = thisStop.goBack;
   var thisLocation = Location[`l_${thisStop.stopLocationId}`];
   var thisStopName = thisLocation.n;
   var thisRoute = Route[`r_${RouteID}`];
