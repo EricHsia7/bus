@@ -34,8 +34,8 @@ export async function checkAppVersion(): void | string {
   if (app_version) {
     var existing_app_version = await lfGetItem(1, 'app_version');
     if (existing_app_version) {
-      existing_app_version_object = JSON.parse(existing_app_version);
-      if (!(existing_app_version.id === app_version.id)) {
+      var existing_app_version_object = JSON.parse(existing_app_version);
+      if (!(existing_app_version_object.id === app_version.id)) {
         await lfSetItem(1, 'app_version', JSON.stringify(app_version));
         refreshPageWithTimestamp(app_version.id);
         return '';
