@@ -1,14 +1,19 @@
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 
-function refreshPageWithTimestamp(id) {
+function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL
   var searchParams = new URLSearchParams(window.location.search);
   // Set the 'timestamp' query parameter to the current timestamp
   searchParams.set('v', id);
   // Construct the new URL with updated query parameters
   var newUrl = window.location.pathname + '?' + searchParams.toString();
-  // Redirect to the new URL
+  if(enforce) {
+// Redirect to the new URL
   window.location.href = newUrl;
+}
+else {
+history.replaceState(null, "", newUrl);
+}
 }
 
 async function getAppVersion(): object {
@@ -37,9 +42,12 @@ export async function checkAppVersion(): void | string {
       var existing_app_version_object = JSON.parse(existing_app_version);
       if (!(existing_app_version_object.id === app_version.id)) {
         await lfSetItem(1, 'app_version', JSON.stringify(app_version));
-        refreshPageWithTimestamp(app_version.id);
+        refreshPageWithTimeStamp(app_version.id, true);
         return '';
       }
+      else {
+        refreshPageWithTimeStamp(app_version.id, false);
+}
     }
     await lfSetItem(1, 'app_version', JSON.stringify(app_version));
     return '';
