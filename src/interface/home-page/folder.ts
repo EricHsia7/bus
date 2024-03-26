@@ -13,7 +13,7 @@ function generateElementOfFolder(folder: object, items: []): object {
   return `<div class="home_page_folder"><div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div></div>`;
 }
 
-async function updateFolderField(): void {
+export async function updateFolderField(): void {
   var foldersElement = document.querySelector('.home_page_field .home_page_body .home_page_folders');
   var folders = await listFolders();
   for(var folder of folders) {
