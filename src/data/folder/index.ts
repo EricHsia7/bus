@@ -70,6 +70,9 @@ export async function listFolderContent(folderID: string): [] {
       result.push(itemObject);
     }
   }
+  result = result.sort(function (a, b) {
+    return a.time - b.time
+  });
   return result;
 }
 
