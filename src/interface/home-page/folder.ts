@@ -3,7 +3,7 @@ import { listFolders, listFolderContent } from '../../data/folder/index.ts';
 function generateElementOfFolder(folder: object, items: []): object {
   function generateElementOfItem(item: object): string {
     if (item.type === 'stop') {
-      return `<div class="home_page_folder_item_stop"><div class="home_page_folder_item_stop_status" code="0">--:--</div><div class="home_page_folder_item_stop_route">${item.route.name} - ${[item.endPoints.destination, item.endPoints.departure, ''][item.direction ? item.direction : 0]}</div><div class="home_page_folder_item_stop_name">${item.name}</div></div>`;
+      return `<div class="home_page_folder_item_stop"><div class="home_page_folder_item_stop_status" code="0">--:--</div><div class="home_page_folder_item_stop_route">${item.route.name} - ${[item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0]}</div><div class="home_page_folder_item_stop_name">${item.name}</div></div>`;
     }
     return '';
   }
