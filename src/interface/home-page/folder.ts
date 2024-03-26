@@ -1,4 +1,4 @@
-import { listFolderContent } from '../../data/folder/index.ts';
+import { listFolders, listFolderContent } from '../../data/folder/index.ts';
 
 function generateElementOfFolder(folder: object, items: []): object {
   function generateElementOfItem(item: object): string {
