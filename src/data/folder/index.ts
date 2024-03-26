@@ -122,11 +122,9 @@ export async function isSaved(type: string, id: number | string): boolean {
   for (var folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
       var itemKeys = await lfListItem(folder.storeIndex);
-      for (var itemKey of itemKeys) {
-        if (itemKey.indexOf(`${type}_${id}`) > -1) {
+        if (itemKeys.indexOf(`${type}_${id}`) > -1) {
           return true;
         }
-      }
     }
   }
   return false;
