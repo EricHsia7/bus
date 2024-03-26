@@ -7,7 +7,7 @@ import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, swi
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores } from './data/storage/index.ts';
-import { saveStop, isSaved } from './data/folder/index.ts';
+import { saveStop, isSaved, updateFolderField } from './data/folder/index.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
@@ -49,7 +49,9 @@ window.bus = {
     screen.orientation.addEventListener('change', (event) => {
       ResizeRouteField();
     });
-    initializeFolderStores();
+    initializeFolderStores().then(e => {
+      updateFolderField();
+    });
     openRouteByURLScheme();
   },
   route: {
