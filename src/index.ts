@@ -47,9 +47,13 @@ window.bus = {
     window.addEventListener('resize', (event) => {
       ResizeRouteField();
     });
-    screen.orientation.addEventListener('change', (event) => {
-      ResizeRouteField();
-    });
+    if (screen) {
+      if (screen.orientation) {
+        screen.orientation.addEventListener('change', (event) => {
+          ResizeRouteField();
+        });
+      }
+    }
     initializeFolderStores().then((e) => {
       updateFolderField();
     });
