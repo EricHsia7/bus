@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-folder
+      - dev-version-check
 jobs:
   build:
     runs-on: ubuntu-latest
