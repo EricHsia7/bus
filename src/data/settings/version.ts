@@ -13,7 +13,9 @@ function refreshPageWithTimestamp(id) {
 
 async function getAppVersion(): object {
   try {
-    var response = await fetch(`./version.json?_=${new Date().getTime()}`);
+    var response = await fetch(`./version.json?_=${new Date().getTime()}`, {
+      cache: 'no-store'
+    });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -26,7 +28,8 @@ async function getAppVersion(): object {
     };
   }
 }
-async function saveAppVersion(): void {
+
+export async function checkAppVersion(): void | string {
   var app_version = await getAppVersion();
   if (app_version) {
     var existing_app_version = await lfGetItem(1, 'app_version');
@@ -35,8 +38,11 @@ async function saveAppVersion(): void {
       if (!(existing_app_version.id === app_version.id)) {
         await lfSetItem(1, 'app_version', JSON.stringify(app_version));
         refreshPageWithTimestamp(app_version.id);
+        return '';
       }
-      await lfSetItem(1, 'app_version', JSON.stringify(app_version));
     }
+    await lfSetItem(1, 'app_version', JSON.stringify(app_version));
+    return '';
   }
+  return '';
 }

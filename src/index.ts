@@ -8,6 +8,7 @@ import { openSearchPage, closeSearchPage } from './interface/search-page/index.t
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { updateFolderField } from './interface/home-page/folder.ts';
+import { checkAppVersion } from './data/settings/version.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
@@ -53,6 +54,7 @@ window.bus = {
       updateFolderField();
     });
     openRouteByURLScheme();
+    checkAppVersion();
   },
   route: {
     stretchItemBody: stretchItemBody,
