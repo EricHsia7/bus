@@ -60,7 +60,7 @@ async function generateVersionJSON() {
   return object;
 }
 
-const thisVersion = await generateVersionJSON();
+const thisVersion = generateVersionJSON();
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
