@@ -9,16 +9,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const { execSync } = require('child_process');
 
-function generateRandomString(length) {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    result += charset[randomIndex];
-  }
-  return result;
-}
-
 async function makeDirectory(path) {
   // Check if the path already exists
   try {
@@ -49,19 +39,29 @@ async function createTextFile(filePath, data, encoding = 'utf-8') {
   }
 }
 
-async function generateVersionJSON() {
-  const workflowRunNumber = parseInt(String(execSync('echo $GITHUB_RUN_NUMBER').toString().trim()));
-  const id = generateRandomString(16);
-  var object = {
-    build: workflowRunNumber,
-    id: id
-  };
-  await makeDirectory('dist');
-  await createTextFile('./dist/version.json', JSON.stringify(object, null, 2));
-  return object;
+function generateRandomString(length) {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    result += charset[randomIndex];
+  }
+  return result;
 }
 
-const thisVersion = generateVersionJSON();
+const workflowRunNumber = parseInt(String(execSync('echo $GITHUB_RUN_NUMBER').toString().trim()));
+const id = generateRandomString(16);
+const thisVersion = {
+  build: workflowRunNumber,
+  id: id
+};
+
+async function outputVersionJSON() {
+  await makeDirectory('dist');
+  await createTextFile('./dist/version.json', JSON.stringify(thisVersion, null, 2));
+}
+
+outputVersionJSON();
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
