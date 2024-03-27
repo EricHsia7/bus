@@ -1,6 +1,4 @@
-import { getStop } from '../apis/getStop.ts';
-import { getLocation } from '../apis/getLocation.ts';
-import { getRoute } from '../apis/getRoute.ts';
+import { integrateStop, integrateEstimateTimes } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
 var md5 = require('md5');
 
@@ -77,7 +75,7 @@ export async function listFolderContent(folderID: string): [] {
   return result;
 }
 
-export async function listAllFolderContent(): [] {
+export async function listFoldersWithContent(): [] {
   var folders = await listFolders();
   var result = [];
   for (var folder of folders) {
@@ -86,6 +84,24 @@ export async function listAllFolderContent(): [] {
       folder: folder,
       content: folderContent
     });
+  }
+  return result;
+}
+
+export async function integrateFolders(): [] {
+  var foldersWithContent = await listFoldersWithContent();
+  var StopIDs = [];
+  for (var item of foldersWithContent) {
+    StopIDs = StopIDs.concat(item.content.filter(m.type === 'stop' ? true : false).map(e.id));
+  }
+  var result = [];
+  var EstimateTimes = await integrateEstimateTimes(StopIDs);
+  for (var item of foldersWithContent) {
+    var integratedItem = {};
+    integratedItem.folder = item.folder;
+    integratedItem.content = item.content;
+    integratedItem.content._EstimateTime = EstimateTimes[`s_${item.StopID}`];
+    result.push(integratedItem);
   }
   return result;
 }
@@ -100,29 +116,18 @@ export async function saveToFolder(folderID: string, content: object): boolean {
 }
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): void {
-  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  var Stop = await getStop(requestID);
-  var Location = await getLocation(requestID);
-  var Route = await getRoute(requestID);
-  var thisStop = Stop[`s_${StopID}`];
-  var thisStopDirection = thisStop.goBack;
-  var thisLocation = Location[`l_${thisStop.stopLocationId}`];
-  var thisStopName = thisLocation.n;
-  var thisRoute = Route[`r_${RouteID}`];
-  var thisRouteName = thisRoute.n;
-  var thisRouteDeparture = thisRoute.dep;
-  var thisRouteDestination = thisRoute.des;
+  var integration = await integrateStop(StopID, RouteID);
   var content = {
     type: 'stop',
     id: StopID,
     time: new Date().toISOString(),
-    name: thisStopName,
-    direction: thisStopDirection,
+    name: integration.thisStopName,
+    direction: integration.thisStopDirection,
     route: {
-      name: thisRouteName,
+      name: integration.thisRouteName,
       endPoints: {
-        departure: thisRouteDeparture,
-        destination: thisRouteDestination
+        departure: integration.thisRouteDeparture,
+        destination: integration.thisRouteDestination
       },
       id: RouteID
     }
