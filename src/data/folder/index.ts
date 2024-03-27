@@ -51,6 +51,10 @@ export async function createFolder(name: string): boolean {
   return false;
 }
 
+export function getFolder(folderID: string): object {
+  return folders[`f_${folderID}`];
+}
+
 export async function listFolders(): [] {
   var result = [];
   for (var folder in folders) {
@@ -70,9 +74,19 @@ export async function listFolderContent(folderID: string): [] {
       result.push(itemObject);
     }
   }
-  result = result.sort(function (a, b) {
-    return a.time - b.time
-  });
+  return result;
+}
+
+export async function listAllFolderContent(): [] {
+  var folders = await listFolders();
+  var result = [];
+  for (var folder of folders) {
+    var folderContent = await listFolderContent(folder.id);
+    result.push({
+      folder: folder,
+      content: folderContent
+    });
+  }
   return result;
 }
 
@@ -122,9 +136,11 @@ export async function isSaved(type: string, id: number | string): boolean {
   for (var folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
       var itemKeys = await lfListItem(folder.storeIndex);
-        if (itemKeys.indexOf(`${type}_${id}`) > -1) {
+      for (var itemKey of itemKeys) {
+        if (itemKey.indexOf(`${type}_${id}`) > -1) {
           return true;
         }
+      }
     }
   }
   return false;
