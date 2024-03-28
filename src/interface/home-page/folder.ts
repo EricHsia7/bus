@@ -28,8 +28,8 @@ function generateElementOfFolder(folder: object, items: []): object {
 }
 
 export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: []): void {
-function updateItem(thisElement, thisItem, previousItem) {
-if (previousItem === null) {
+  function updateItem(thisElement, thisItem, previousItem) {
+    if (previousItem === null) {
       updateStatus(thisElement, thisItem);
       updateName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
@@ -73,43 +73,45 @@ if (previousItem === null) {
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentFolderSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
+  var currentFolderSeatQuantity = Field.querySelectorAll(`.home_page_folder`).length;
   if (!(folderQuantity === currentFolderSeatQuantity)) {
     var capacity = currentFolderSeatQuantity - folderQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
         var thisElement = document.createElement('div');
-        thisElement.classList.add('route_grouped_items');
+        thisElement.classList.add('home_page_folder');
         thisElement.setAttribute('group', currentFolderSeatQuantity + o);
+        /*
         var tabElement = document.createElement('div');
         tabElement.classList.add('route_group_tab');
         Field.querySelector(`.route_groups`).appendChild(thisElement);
         Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
+     */
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.route_groups .route_grouped_items`)[folderIndex].remove();
-        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[folderIndex].remove();
+        Field.querySelectorAll(`.home_page_folder`)[folderIndex].remove();
+        //Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[folderIndex].remove();
       }
     }
   }
 
   for (var i = 0; i < folderQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          Field.querySelector(`.home_page_folder[index="${i}"]`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+          Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`)[itemIndex].remove();
         }
       }
     }
@@ -117,10 +119,11 @@ if (previousItem === null) {
 
   for (var i = 0; i < folderQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
+    /* var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
     thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+   */
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
+      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[groupKey][j];
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
