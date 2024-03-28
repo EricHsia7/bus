@@ -3,9 +3,9 @@ import { listFolders, listFolderContent, integrateFolders } from '../../data/fol
 var previousFoldersWithContent = [];
 
 var foldersRefreshTimer = {
-  defaultInterval: 15 * 1000,
-  minInterval: 5 * 1000,
-  dynamicInterval: 15 * 1000,
+  defaultInterval: 30 * 1000,
+  minInterval: 20 * 1000,
+  dynamicInterval: 30 * 1000,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -35,11 +35,11 @@ export async function refreshFolders(): object {
   var foldersWithContent = await integrateFolders();
   var formattedFoldersWithContent = formatFoldersWithContent(foldersWithContent);
   var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
-  updateFoldersField(Field, formattedRoute, false);
+  updateFoldersField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
-  foldersRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
+  foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+  foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, formattedFoldersWithContent.nextUpdate - new Date().getTime());
   foldersRefreshTimer.refreshing = false;
   return { status: 'Successfully refreshed the route.' };
 }
