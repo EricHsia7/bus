@@ -1,4 +1,4 @@
-import { listFolders, listFolderContent } from '../../data/folder/index.ts';
+import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 
 var previousFoldersWithContent = [];
 
@@ -32,16 +32,15 @@ export async function updateFoldersField(Field: HTMLElement, foldersWithContent:
 export async function refreshFolders(): object {
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.update_timer').setAttribute('refreshing', true);
-  var foldersWithContent = await listFoldersWithContent();
+  var foldersWithContent = await integrateFolders();
+  var formattedFoldersWithContent = formatFoldersWithContent(foldersWithContent);
   var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
-  updateRouteField(Field, formattedRoute, false);
-  routeRefreshTimer.lastUpdate = new Date().getTime();
+  updateFoldersField(Field, formattedRoute, false);
+  foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
-  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
-  routeRefreshTimer.refreshing = false;
-  document.querySelector('.update_timer').setAttribute('refreshing', false);
+  foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  foldersRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
+  foldersRefreshTimer.refreshing = false;
   return { status: 'Successfully refreshed the route.' };
 }
 
