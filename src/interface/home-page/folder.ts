@@ -1,6 +1,6 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 
-var previousFoldersWithContent = [];
+var previousFormattedFoldersWithContent = [];
 
 var foldersRefreshTimer = {
   defaultInterval: 30 * 1000,
@@ -27,7 +27,120 @@ function generateElementOfFolder(folder: object, items: []): object {
   return `<div class="home_page_folder"><div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div></div>`;
 }
 
-export async function updateFoldersField(Field: HTMLElement, foldersWithContent: []): void {}
+export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: []): void {
+function updateItem(thisElement, thisItem, previousItem) {
+if (previousItem === null) {
+      updateStatus(thisElement, thisItem);
+      updateName(thisElement, thisItem);
+      updateBuses(thisElement, thisItem);
+      updateOverlappingRoutes(thisElement, thisItem);
+      updateSegmentBuffer(thisElement, thisItem);
+      updateStretch(thisElement, skeletonScreen);
+      updateSaveStopActionButton(thisElement, thisItem, formattedFoldersWithContent);
+    } else {
+      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+        updateStatus(thisElement, thisItem);
+      }
+      if (!compareThings(previousItem.name, thisItem.name)) {
+        updateName(thisElement, thisItem);
+      }
+      if (!compareThings(previousItem.buses, thisItem.buses)) {
+        updateBuses(thisElement, thisItem);
+      }
+      if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
+        updateOverlappingRoutes(thisElement, thisItem);
+      }
+      if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
+        updateSegmentBuffer(thisElement, thisItem);
+      }
+      if (!(previousItem.id === thisItem.id)) {
+        updateSaveStopActionButton(thisElement, thisItem, formattedFoldersWithContent);
+      }
+      updateStretch(thisElement, skeletonScreen);
+    }
+  }
+
+  //const FieldWidth = FieldSize.width;
+  //const FieldHeight = FieldSize.height;
+
+  if (previousFormattedFoldersWithContent === []) {
+    previousFormattedFoldersWithContent = formattedFoldersWithContent;
+  }
+
+  var folderQuantity = formattedFoldersWithContent.folderQuantity;
+  var itemQuantity = formattedFoldersWithContent.itemQuantity;
+  var foldedItems = formattedFoldersWithContent.foldedItems;
+
+  Field.setAttribute('skeleton-screen', skeletonScreen);
+
+  var currentFolderSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
+  if (!(folderQuantity === currentFolderSeatQuantity)) {
+    var capacity = currentFolderSeatQuantity - folderQuantity;
+    if (capacity < 0) {
+      for (var o = 0; o < Math.abs(capacity); o++) {
+        var folderIndex = currentFolderSeatQuantity + o;
+        var thisElement = document.createElement('div');
+        thisElement.classList.add('route_grouped_items');
+        thisElement.setAttribute('group', currentFolderSeatQuantity + o);
+        var tabElement = document.createElement('div');
+        tabElement.classList.add('route_group_tab');
+        Field.querySelector(`.route_groups`).appendChild(thisElement);
+        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
+      }
+    } else {
+      for (var o = 0; o < Math.abs(capacity); o++) {
+        var folderIndex = currentFolderSeatQuantity - 1 - o;
+        Field.querySelectorAll(`.route_groups .route_grouped_items`)[folderIndex].remove();
+        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[folderIndex].remove();
+      }
+    }
+  }
+
+  for (var i = 0; i < folderQuantity; i++) {
+    var groupKey = `g_${i}`;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
+      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+      if (capacity < 0) {
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          var thisElement = generateElementOfItem({}, true);
+          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+        }
+      } else {
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          var itemIndex = currentItemSeatQuantity - 1 - o;
+          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+        }
+      }
+    }
+  }
+
+  for (var i = 0; i < folderQuantity; i++) {
+    var groupKey = `g_${i}`;
+    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
+    thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    for (var j = 0; j < itemQuantity[groupKey]; j++) {
+      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+      var thisItem = foldedItems[groupKey][j];
+      if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
+        if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(groupKey)) {
+          if (previousFormattedFoldersWithContent.foldedItems[groupKey][j]) {
+            var previousItem = previousFormattedFoldersWithContent.foldedItems[groupKey][j];
+            updateItem(thisElement, thisItem, previousItem);
+          } else {
+            updateItem(thisElement, thisItem, null);
+          }
+        } else {
+          updateItem(thisElement, thisItem, null);
+        }
+      } else {
+        updateItem(thisElement, thisItem, null);
+      }
+    }
+  }
+  previousFormattedFoldersWithContent = formattedFoldersWithContent;
+}
 
 export async function refreshFolders(): object {
   foldersRefreshTimer.refreshing = true;
