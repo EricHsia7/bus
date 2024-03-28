@@ -14,15 +14,18 @@ var folders = {
 
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
+  var index = 0;
   for (var folderKey of folderKeys) {
     var thisFolder = await lfGetItem(4, folderKey);
     if (thisFolder) {
       var thisFolderObject = JSON.parse(thisFolder);
       var storeIndex = await registerStore(thisFolderObject.name);
       thisFolder.storeIndex = storeIndex;
+      thisFolder.index = index;
       if (!folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
         folders[`f_${thisFolderObject.id}`] = thisFolderObject;
       }
+      index += 1;
     }
   }
 }
@@ -34,7 +37,8 @@ export async function createFolder(name: string): boolean {
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],
-    id: idintifier
+    id: idintifier,
+    time: new Date().toISOString()
   };
 
   if (!folders.hasOwnProperty(`f_${idintifier}`)) {

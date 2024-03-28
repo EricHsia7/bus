@@ -1,4 +1,5 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
+import { compareThings } from '../../tools/index.ts';
 
 var previousFormattedFoldersWithContent = [];
 
@@ -14,6 +15,25 @@ var foldersRefreshTimer = {
   streamStarted: false
 };
 
+function formatFoldersWithContent(array: []): object {
+  var foldedItems = {};
+  var itemQuantity = {};
+  for (var item of array) {
+    var folderKey = `f_${foldedItems.folder.index}`;
+    if (!foldedItems.hasOwnProperty(folderKey)) {
+      foldedItems[folderKey] = [];
+      itemQuantity[folderKey] = 0;
+    }
+    foldedItems[folderKey].push(item);
+    itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
+  }
+  var result = {
+    foldedItems,
+    folderQuantity,
+    itemQuantity
+  };
+}
+
 function generateElementOfFolder(folder: object, items: []): object {
   function generateElementOfItem(item: object): string {
     if (item.type === 'stop') {
@@ -27,16 +47,22 @@ function generateElementOfFolder(folder: object, items: []): object {
   return `<div class="home_page_folder"><div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div></div>`;
 }
 
-export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: []): void {
+export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
+    function updateStatus(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.querySelector('.home_page_folder_item_stop_status').setAttribute('code', thisItem.status.code);
+      thisElement.querySelector('.home_page_folder_item_stop_status').innerText = thisItem.status.text;
+    }
+    function updateName(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.querySelector('.home_page_folder_item_stop_name').innerText = thisItem.name;
+    }
+    function updateRoute(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0];
+    }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
       updateName(thisElement, thisItem);
-      updateBuses(thisElement, thisItem);
-      updateOverlappingRoutes(thisElement, thisItem);
-      updateSegmentBuffer(thisElement, thisItem);
-      updateStretch(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem, formattedFoldersWithContent);
+      updateRoute(thisElement, thisItem);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -44,19 +70,9 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       if (!compareThings(previousItem.name, thisItem.name)) {
         updateName(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.buses, thisItem.buses)) {
-        updateBuses(thisElement, thisItem);
+      if (!compareThings(previousItem.id, thisItem.id)) {
+        updateRoute(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
-        updateOverlappingRoutes(thisElement, thisItem);
-      }
-      if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
-        updateSegmentBuffer(thisElement, thisItem);
-      }
-      if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem, formattedFoldersWithContent);
-      }
-      updateStretch(thisElement, skeletonScreen);
     }
   }
 
