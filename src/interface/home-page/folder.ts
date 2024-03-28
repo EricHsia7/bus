@@ -115,10 +115,10 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   }
 
   for (var i = 0; i < folderQuantity; i++) {
-    var groupKey = `g_${i}`;
+    var folderKey = `f_${i}`;
     var currentItemSeatQuantity = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`).length;
-    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+    if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
+      var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
@@ -134,18 +134,18 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   }
 
   for (var i = 0; i < folderQuantity; i++) {
-    var groupKey = `g_${i}`;
+    var folderKey = `f_${i}`;
     /* var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
     thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
    */
-    for (var j = 0; j < itemQuantity[groupKey]; j++) {
+    for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = foldedItems[groupKey][j];
+      var thisItem = foldedItems[folderKey][j];
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
-        if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(groupKey)) {
-          if (previousFormattedFoldersWithContent.foldedItems[groupKey][j]) {
-            var previousItem = previousFormattedFoldersWithContent.foldedItems[groupKey][j];
+        if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
+          if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {
+            var previousItem = previousFormattedFoldersWithContent.foldedItems[folderKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
