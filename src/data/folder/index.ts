@@ -101,7 +101,7 @@ export async function integrateFolders(): [] {
         .filter((m) => {
           return m.type === 'stop' ? true : false;
         })
-        .map(e.id)
+        .map((e) => e.id)
     );
   }
   var result = [];
