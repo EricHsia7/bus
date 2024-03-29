@@ -57,8 +57,8 @@ window.bus = {
     initializeFolderStores().then((e) => {
       try {
         refreshFolders();
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.log(err);
       }
     });
     openRouteByURLScheme();
