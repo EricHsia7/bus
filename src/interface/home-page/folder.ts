@@ -20,8 +20,9 @@ var foldersRefreshTimer = {
 function formatFoldersWithContent(array: []): object {
   var foldedItems = {};
   var itemQuantity = {};
+  var folderQuantity = {};
   for (var item of array) {
-    console.log(item)
+    console.log(item);
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
       foldedItems[folderKey] = [];
