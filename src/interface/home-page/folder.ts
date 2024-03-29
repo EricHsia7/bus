@@ -21,7 +21,8 @@ function formatFoldersWithContent(array: []): object {
   var foldedItems = {};
   var itemQuantity = {};
   for (var item of array) {
-    var folderKey = `f_${foldedItems.folder.index}`;
+    console.log(item)
+    var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
       foldedItems[folderKey] = [];
       itemQuantity[folderKey] = 0;
