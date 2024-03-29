@@ -55,7 +55,11 @@ window.bus = {
       }
     }
     initializeFolderStores().then((e) => {
-      //updateFoldersField();
+      try {
+        refreshFolders();
+      } catch (e) {
+        console.log(e);
+      }
     });
     openRouteByURLScheme();
     checkAppVersion();
