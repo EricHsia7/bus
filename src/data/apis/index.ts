@@ -9,6 +9,8 @@ import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 
+var md5 = require('md5');
+
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
   const directionRegex = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm;
