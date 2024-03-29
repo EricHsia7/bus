@@ -1,6 +1,6 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 import { compareThings } from '../../tools/index.ts';
-import { getUpdateRate } from '../../data/update-rate.ts';
+import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 var md5 = require('md5');
 
 var previousFormattedFoldersWithContent = [];
