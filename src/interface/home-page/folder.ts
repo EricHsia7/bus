@@ -1,6 +1,8 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 import { compareThings } from '../../tools/index.ts';
 
+var md5 = require('md5')
+
 var previousFormattedFoldersWithContent = [];
 
 var foldersRefreshTimer = {
