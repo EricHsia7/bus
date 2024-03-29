@@ -1,7 +1,7 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 import { compareThings } from '../../tools/index.ts';
 
-var md5 = require('md5')
+var md5 = require('md5');
 
 var previousFormattedFoldersWithContent = [];
 
@@ -164,18 +164,23 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 }
 
 export async function refreshFolders(): object {
-  foldersRefreshTimer.refreshing = true;
-  foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  var foldersWithContent = await integrateFolders();
-  var formattedFoldersWithContent = formatFoldersWithContent(foldersWithContent);
-  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
-  updateFoldersField(Field, formattedFoldersWithContent, false);
-  foldersRefreshTimer.lastUpdate = new Date().getTime();
-  var updateRate = await getUpdateRate();
-  foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
-  foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, formattedFoldersWithContent.nextUpdate - new Date().getTime());
-  foldersRefreshTimer.refreshing = false;
-  return { status: 'Successfully refreshed the route.' };
+  try {
+    foldersRefreshTimer.refreshing = true;
+    foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+    var foldersWithContent = await integrateFolders();
+    var formattedFoldersWithContent = formatFoldersWithContent(foldersWithContent);
+    var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+    updateFoldersField(Field, formattedFoldersWithContent, false);
+    foldersRefreshTimer.lastUpdate = new Date().getTime();
+    var updateRate = await getUpdateRate();
+    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+    foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, formattedFoldersWithContent.nextUpdate - new Date().getTime());
+    foldersRefreshTimer.refreshing = false;
+    return { status: 'Successfully refreshed the route.' };
+  } catch (err) {
+    console.log(err);
+    return { status: err };
+  }
 }
 
 export async function streamFolders(): void {}
