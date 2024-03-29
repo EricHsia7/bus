@@ -96,7 +96,13 @@ export async function integrateFolders(): [] {
   var foldersWithContent = await listFoldersWithContent();
   var StopIDs = [];
   for (var item of foldersWithContent) {
-    StopIDs = StopIDs.concat(item.content.filter(m.type === 'stop' ? true : false).map(e.id));
+    StopIDs = StopIDs.concat(
+      item.content
+        .filter((m) => {
+          return m.type === 'stop' ? true : false;
+        })
+        .map(e.id)
+    );
   }
   var result = [];
   var EstimateTimes = await integrateEstimateTimes(StopIDs);
