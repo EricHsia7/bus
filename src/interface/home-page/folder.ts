@@ -22,9 +22,8 @@ async function formatFoldersWithContent(requestID: string): object {
   var integration = await integrateFolders(requestID);
   var foldedItems = {};
   var itemQuantity = {};
-  var folderQuantity = {};
+  var folderQuantity = 0;
   for (var item of integration.items) {
-    console.log(item);
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
       foldedItems[folderKey] = [];
@@ -32,6 +31,7 @@ async function formatFoldersWithContent(requestID: string): object {
     }
     foldedItems[folderKey].push(item);
     itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
+    folderQuantity += 1;
   }
   var result = {
     foldedItems: foldedItems,
