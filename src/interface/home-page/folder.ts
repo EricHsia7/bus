@@ -139,7 +139,7 @@ function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
 export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = thisElement.querySelector('.home_page_folder_item_stop_status.next_slide');
+      var nextSlide = thisElement.querySelector('.home_page_folder_item_stop_status .next_slide');
       var currentSlide = thisElement.querySelector('.home_page_folder_item_stop_status .current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
