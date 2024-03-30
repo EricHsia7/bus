@@ -65,7 +65,7 @@ function generateElementOfItem(skeletonScreen: boolean): string {
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder_item_stop');
-  element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route"></div><div class="home_page_folder_item_stop_name"></div>`;
+  element.innerHTML = `<div class="home_page_folder_item_stop_status"><div class="next_slide" code="0"></div><div class="current_slide" code="0"></div></div><div class="home_page_folder_item_stop_route"></div><div class="home_page_folder_item_stop_name"></div>`;
   return {
     element: element,
     id: identifier
