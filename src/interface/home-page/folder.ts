@@ -87,7 +87,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   //const FieldWidth = FieldSize.width;
   //const FieldHeight = FieldSize.height;
 
-  if (previousFormattedFoldersWithContent === []) {
+  if (previousFormattedFoldersWithContent === {}) {
     previousFormattedFoldersWithContent = formattedFoldersWithContent;
   }
 
