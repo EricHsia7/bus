@@ -32,7 +32,7 @@ async function formatFoldersWithContent(requestID: string): object {
     }
     for (var item2 of item.content) {
       var formattedItem = item2;
-      formattedItem.status = formatEstimateTime(item2._EstimateTime, 3);
+      formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, 3);
       foldedItems[folderKey].push(formattedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
