@@ -24,11 +24,13 @@ async function formatFoldersWithContent(requestID: string): object {
   var foldedItems = {};
   var itemQuantity = {};
   var folderQuantity = 0;
+  var folders = {};
   for (var item of integration.items) {
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
       foldedItems[folderKey] = [];
       itemQuantity[folderKey] = 0;
+      folders[folderKey] = item.folder;
     }
     for (var item2 of item.content) {
       var formattedItem = item2;
@@ -40,6 +42,7 @@ async function formatFoldersWithContent(requestID: string): object {
   }
   var result = {
     foldedItems: foldedItems,
+    folders: folders,
     folderQuantity: folderQuantity,
     itemQuantity: itemQuantity,
     dataUpdateTime: integration.dataUpdateTime
@@ -71,7 +74,7 @@ function generateElementOfFolder(folder: object, index: number, skeletonScreen: 
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder');
   element.setAttribute('index', index);
-  element.innerHTML = `<div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content"></div>`;
+  element.innerHTML = `<div class="home_page_folder_head"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content"></div>`;
   return {
     element: element,
     id: identifier
@@ -164,14 +167,12 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    /* var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
-   */
+    var thisHeadElement = Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_head`);
+    thisHeadElement.querySelector('.home_page_folder_name').innerText = thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_item_stop`)[j];
+      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
-      console.log(foldedItems, thisItem);
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
         if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
           if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {

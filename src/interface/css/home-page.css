@@ -91,7 +91,7 @@
 
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_title {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -100,7 +100,7 @@
   align-items: center;
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_title .home_page_folder_icon {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -111,16 +111,16 @@
   align-items: center;
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_title .home_page_folder_icon svg {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_icon svg {
   height: 20px;
   width: 20px;
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_title .home_page_folder_icon svg path {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_icon svg path {
   color: var(--b-333333);
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_title .home_page_folder_name {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_name {
   position: absolute;
   top: 0px;
   left: 25px;
