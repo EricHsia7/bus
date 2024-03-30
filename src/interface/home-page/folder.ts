@@ -58,7 +58,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): string {
   };
 }
 
-function generateElementOfFolder(folder: object, index: number): object {
+function generateElementOfFolder(folder: object, index: number, skeletonScreen: boolean): object {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var folderIcon = '';
   var folderName = folder.name ? folder.name : '';
@@ -123,7 +123,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder({}, currentFolderSeatQuantity + o);
+        var thisElement = generateElementOfFolder({}, currentFolderSeatQuantity + o, true);
         Field.appendChild(thisElement.element);
         /*
         var tabElement = document.createElement('div');
