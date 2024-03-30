@@ -35,14 +35,14 @@
 }
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_icon svg {
-  height: 20px;
-  width: 20px;
+  height: 15px;
+  width: 15px;
   user-select: none;
   -webkit-user-select: none;
 }
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_icon svg path {
-  color: var(--b-333333);
+  fill: var(--b-333333);
 }
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head .home_page_folder_name {
