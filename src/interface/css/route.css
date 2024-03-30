@@ -243,6 +243,31 @@
   transition: none;
 }
 
+.route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon {
+  position: relative;
+  display: inline-flex;
+  height: 35px;
+  width: 26px;
+  align-items: center;
+}
+
+.route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon svg path {
+  fill: var(--b-333333);
+}
+
+.route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon svg path[filling="filling"] {
+  fill: rgba(0, 0, 0, 0)
+}
+
+.route_field .route_groups .route_grouped_items .item .body .tabs .action_button[highlighted="true"] .action_button_icon svg path[filling="filling"] {
+  fill: var(--b-main-color);
+}
+
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .tab,
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .action_button {
   transition: background var(--b-transition-duration), color var(--b-transition-duration);

@@ -2,6 +2,7 @@ import { listFolders, listFolderContent, integrateFolders } from '../../data/fol
 import { compareThings } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
+import { icons } from '../icons/index.ts';
 
 var md5 = require('md5');
 
@@ -164,8 +165,9 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     }
   }
 
-  //const FieldWidth = FieldSize.width;
-  //const FieldHeight = FieldSize.height;
+  const FieldSize = queryFolderFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
 
   if (previousFormattedFoldersWithContent === {}) {
     previousFormattedFoldersWithContent = formattedFoldersWithContent;
@@ -218,7 +220,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     var folderKey = `f_${i}`;
     var thisHeadElement = Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_head`);
     thisHeadElement.querySelector('.home_page_folder_name').innerText = folders[folderKey].name;
-    thisHeadElement.querySelector('.home_page_folder_icon').innerText = folders[folderKey].icon;
+    thisHeadElement.querySelector('.home_page_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);

@@ -1,11 +1,15 @@
 import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
+
 var md5 = require('md5');
 
 var Folders = {
   f_saved_stop: {
     name: '已收藏站牌',
-    icon: '',
+    icon: {
+      source: 'icons',
+      id: 'favorite'
+    },
     default: true,
     index: 0,
     storeIndex: 5,
