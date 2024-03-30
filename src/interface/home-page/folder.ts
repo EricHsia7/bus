@@ -42,17 +42,38 @@ async function formatFoldersWithContent(requestID: string): object {
   return result;
 }
 
-function generateElementOfFolder(folder: object, items: []): object {
-  function generateElementOfItem(item: object): string {
-    if (item.type === 'stop') {
-      return `<div class="home_page_folder_item_stop"><div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route">${item.route.name} - ${[item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0]}</div><div class="home_page_folder_item_stop_name">${item.name}</div></div>`;
-    }
-    return '';
+function generateElementOfItem(item: object, skeletonScreen: boolean): string {
+  var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.id = identifier;
+  element.setAttribute('skeleton-screen', skeletonScreen);
+  element.setAttribute('stretched', false);
+  if (item.type === 'stop') {
+    element.classList.add('home_page_folder_item_stop');
+    element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route">${item.route.name} - ${[item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0]}</div><div class="home_page_folder_item_stop_name">${item.name}</div>`;
   }
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
+function generateElementOfFolder(folder: object, items: [], index: number): object {
+  var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var folderIcon = '';
   var folderName = folder.name;
   var folderContent = items.map((item) => generateElementOfItem(item)).join('');
-  return `<div class="home_page_folder"><div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div></div>`;
+  var element = document.createElement('div');
+  element.id = identifier;
+  element.setAttribute('skeleton-screen', skeletonScreen);
+  element.setAttribute('stretched', false);
+  element.classList.add('home_page_folder');
+  element.setAttribute('index', index);
+  element.innerHTML = `<div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div>`;
+  return {
+    element: element,
+    id: identifier
+  };
 }
 
 export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
@@ -103,13 +124,11 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = document.createElement('div');
-        thisElement.classList.add('home_page_folder');
-        thisElement.setAttribute('group', currentFolderSeatQuantity + o);
+        var thisElement = generateElementOfFolder({}, [], currentFolderSeatQuantity + o);
+        Field.appendChild(thisElement.element);
         /*
         var tabElement = document.createElement('div');
         tabElement.classList.add('route_group_tab');
-        Field.querySelector(`.route_groups`).appendChild(thisElement);
         Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
      */
       }
