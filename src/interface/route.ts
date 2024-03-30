@@ -580,6 +580,7 @@ export function saveItemStop(itemID: string, folderId: string, StopID: number, R
   var actionButtonElement = itemElement.querySelector('.action_button[type="save-stop"]');
   saveStop(folderId, StopID, RouteID).then((e) => {
     isSaved('stop', StopID).then((k) => {
+      console.log(actionButtonElement, e, k);
       actionButtonElement.setAttribute('highlighted', k);
     });
   });
