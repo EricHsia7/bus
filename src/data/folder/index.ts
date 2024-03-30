@@ -1,4 +1,4 @@
-import { integrateStop, integrateEstimateTimes } from '../apis/index.ts';
+import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
 var md5 = require('md5');
 
@@ -105,14 +105,14 @@ export async function integrateFolders(): [] {
     );
   }
   var result = [];
-  var EstimateTimes = await integrateEstimateTimes(StopIDs);
+  var EstimateTime2 = await integrateEstimateTime2(StopIDs);
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
     integratedFolder.folder = folder.folder;
     integratedFolder.content = [];
     for (var item of folder.content) {
       var integratedItem = item;
-      integratedItem._EstimateTime = EstimateTimes[`s_${item.id}`];
+      integratedItem._EstimateTime = EstimateTime2[`s_${item.id}`];
       integratedFolder.content.push(integratedItem);
     }
     result.push(integratedFolder);

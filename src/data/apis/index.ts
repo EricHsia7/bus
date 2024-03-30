@@ -198,27 +198,23 @@ export async function integrateStop(StopID: number, RouteID: number): object {
   };
 }
 
-export async function integrateEstimateTimes(StopIDs: []): object {
-  function filterEstimateTime(EstimateTime: [], StopIDs: []): [] {
-    var result = [];
-    for (var item of EstimateTime) {
-      if (StopIDs.indexOf(item.StopID) > -1) {
-        result.push(item);
-      }
+function processEstimateTime2(EstimateTime: [], StopIDs: []):{} {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(item.StopID) > -1) {
+      result[`s_${item.StopID}`] = item;
     }
-    return result;
   }
-  const requestID: string = `r_${md5(Math.random() * new Date().getTime())}`;
-  var EstimateTime = await getEstimateTime(requestID);
-  var filteredEstimateTime = filterEstimateTime(EstimateTime, StopIDs);
-  var filteredItems = {};
-  for (var item of filteredEstimateTime) {
-    console.log(item)
-    filteredItems[`s_${item.StopID}`] = item;
-  }
+  return result;
+}
 
+export async function integrateEstimateTime2(StopIDs: []): object {
+  const requestID: string = `r_${md5(Math.random() * new Date().getTime())}`;
+  setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
+  var EstimateTime = await getEstimateTime(requestID);
+  var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);
   var result = {
-    filteredItems: filteredItems,
+    items: processedEstimateTime2,
     dataUpdateTime: dataUpdateTime[requestID]
   };
   console.log(dataUpdateTime, requestID);
