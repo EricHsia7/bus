@@ -74,4 +74,10 @@
   height: calc(100% - 55px);
   overflow-x: hidden;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.home_page_field .home_page_body::-webkit-scrollbar {
+  display: none;
 }
