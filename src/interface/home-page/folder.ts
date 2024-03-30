@@ -33,13 +33,13 @@ async function formatFoldersWithContent(requestID: string): object {
     foldedItems[folderKey].push(item);
     itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
   }
-  var dataUpdateTime = integration.dataUpdateTime;
   var result = {
-    foldedItems,
-    folderQuantity,
-    itemQuantity,
-    dataUpdateTime
+    foldedItems: foldedItems,
+    folderQuantity: folderQuantity,
+    itemQuantity: itemQuantity,
+    dataUpdateTime: integration.dataUpdateTime
   };
+  return result;
 }
 
 function generateElementOfFolder(folder: object, items: []): object {
