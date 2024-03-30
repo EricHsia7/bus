@@ -4,7 +4,7 @@ var md5 = require('md5');
 
 var Folders = {
   f_saved_stop: {
-    name: 'Saved Stop',
+    name: '已收藏站牌',
     default: true,
     index: 0,
     storeIndex: 5,
