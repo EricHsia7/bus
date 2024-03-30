@@ -112,7 +112,7 @@ export async function integrateFolders(): [] {
     integratedFolder.content = [];
     for (var item of folder.content) {
       var integratedItem = item;
-      integratedItem._EstimateTime = EstimateTimes[`s_${item.StopID}`];
+      integratedItem._EstimateTime = EstimateTimes[`s_${item.id}`];
       integratedFolder.content.push(integratedItem);
     }
     result.push(integratedFolder);
