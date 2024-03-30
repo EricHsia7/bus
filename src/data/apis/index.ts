@@ -212,11 +212,18 @@ export async function integrateEstimateTimes(StopIDs: []): object {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var EstimateTime = await getEstimateTime(requestID);
   var filteredEstimateTime = filterEstimateTime(EstimateTime, StopIDs);
-  var result = {}
+  var filteredItems = {}
   for (var item of filteredEstimateTime) {
     result[`s_${item.StopID}`] = item
   }
-  return result;
+  var dataUpdateTime = dataUpdateTime[requestID]
+  var result = {
+filteredItems,
+dataUpdateTime
+};
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+return result
 }
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
