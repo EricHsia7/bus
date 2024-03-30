@@ -104,7 +104,7 @@ function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
       index: i,
       icon: ''
     };
-    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
+    for (var j = 0; j < defaultItemQuantity[folderKey]; j++) {
       foldedItems[folderKey].push({
         type: 'stop',
         id: null,
