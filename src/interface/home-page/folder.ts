@@ -17,11 +17,12 @@ var foldersRefreshTimer = {
   streamStarted: false
 };
 
-function formatFoldersWithContent(array: []): object {
+async function formatFoldersWithContent(requestID: string): object {
+  var integration = await integrateFolders();
   var foldedItems = {};
   var itemQuantity = {};
   var folderQuantity = {};
-  for (var item of array) {
+  for (var item of integration) {
     console.log(item);
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
@@ -31,10 +32,12 @@ function formatFoldersWithContent(array: []): object {
     foldedItems[folderKey].push(item);
     itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
   }
+  var dataUpdateTime = integration.dataUpdateTime
   var result = {
     foldedItems,
     folderQuantity,
-    itemQuantity
+    itemQuantity,
+    dataUpdateTime
   };
 }
 
@@ -169,8 +172,7 @@ export async function refreshFolders(): object {
   try {
     foldersRefreshTimer.refreshing = true;
     foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-    var foldersWithContent = await integrateFolders();
-    var formattedFoldersWithContent = formatFoldersWithContent(foldersWithContent);
+    var formattedFoldersWithContent = formatFoldersWithContent();
     var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
     updateFoldersField(Field, formattedFoldersWithContent, false);
     foldersRefreshTimer.lastUpdate = new Date().getTime();
