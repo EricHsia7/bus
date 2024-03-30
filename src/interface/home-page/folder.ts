@@ -148,12 +148,12 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelector(`.home_page_folder[index="${i}"]`).appendChild(thisElement.element);
+          Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_content`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`)[itemIndex].remove();
+          Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[itemIndex].remove();
         }
       }
     }
