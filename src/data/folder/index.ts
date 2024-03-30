@@ -5,6 +5,7 @@ var md5 = require('md5');
 var Folders = {
   f_saved_stop: {
     name: '已收藏站牌',
+    icon: '',
     default: true,
     index: 0,
     storeIndex: 5,

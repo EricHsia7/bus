@@ -19,6 +19,13 @@ var foldersRefreshTimer = {
   streamStarted: false
 };
 
+function queryFolderFieldSize(): object {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+}
+
 async function formatFoldersWithContent(requestID: string): object {
   var integration = await integrateFolders(requestID);
   var foldedItems = {};
@@ -79,6 +86,55 @@ function generateElementOfFolder(folder: object, index: number, skeletonScreen: 
     element: element,
     id: identifier
   };
+}
+
+function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
+  const FieldSize = queryFolderFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
+  var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50) + 5, f_1: Math.floor(FieldHeight / 50) + 5, f_2: Math.floor(FieldHeight / 50) + 5 };
+  var defaultFolderQuantity = 3;
+  var foldedItems = {};
+  var folders = {};
+  for (var i = 0; i < defaultFolderQuantity; i++) {
+    var folderKey = `f_${i}`;
+    foldedItems[folderKey] = [];
+    folders[folderKey] = {
+      name: '',
+      index: i,
+      icon: ''
+    };
+    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
+      foldedItems[folderKey].push({
+        type: 'stop',
+        id: null,
+        status: {
+          code: 0,
+          text: null
+        },
+        name: null,
+        route: {
+          name: null,
+          endPoints: {
+            departure: null,
+            destination: null
+          },
+          id: null
+        }
+      });
+    }
+  }
+  updateFoldersField(
+    Field,
+    {
+      foldedItems: foldedItems,
+      folders: folders,
+      folderQuantity: defaultFolderQuantity,
+      itemQuantity: defaultItemQuantity,
+      dataUpdateTime: null
+    },
+    true
+  );
 }
 
 export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
@@ -189,10 +245,11 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 }
 
 export async function refreshFolders(): object {
+  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+  setUpFolderFieldSkeletonScreen(Field);
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
-  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
   updateFoldersField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
