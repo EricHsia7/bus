@@ -216,7 +216,6 @@ export async function integrateEstimateTime2(requestID: string, StopIDs: []): ob
     items: processedEstimateTime2,
     dataUpdateTime: dataUpdateTime[requestID]
   };
-  console.log(dataUpdateTime, requestID);
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   return result;

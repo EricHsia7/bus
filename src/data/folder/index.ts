@@ -6,6 +6,7 @@ var folders = {
   f_saved_stop: {
     name: 'Saved Stop',
     default: true,
+    index: 0,
     storeIndex: 5,
     contentType: ['stop'],
     id: 'saved_stop'
@@ -14,7 +15,7 @@ var folders = {
 
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
-  var index = 0;
+  var index = 1;
   for (var folderKey of folderKeys) {
     var thisFolder = await lfGetItem(4, folderKey);
     if (thisFolder) {
