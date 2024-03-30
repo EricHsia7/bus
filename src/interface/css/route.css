@@ -267,7 +267,7 @@
 
 .route_field .route_groups .route_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
 .route_field .route_groups .route_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
-  fill: var(--b-db1016);
+  fill: var(--b-f4252c);
 }
 
 .route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .tab,
@@ -287,8 +287,8 @@
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] {
-  background: rgba(var(--b-db1016-r), var(--b-db1016-g), var(--b-db1016-b), var(--b-db1016-opacity-a));
-  color: var(--b-db1016);
+  background: rgba(var(--b-f4252c-r), var(--b-f4252c-g), var(--b-f4252c-b), var(--b-f4252c-opacity-a));
+  color: var(--b-f4252c);
 }
 
 .route_field .route_groups .route_grouped_items .item .head .status {
