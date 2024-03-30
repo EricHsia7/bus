@@ -169,6 +169,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
+      console.log(foldedItems, thisItem);
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
         if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
           if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {
