@@ -143,16 +143,6 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   return result2;
 }
 
-function filterEstimateTime(EstimateTime: [], StopIDs: []): object {
-  var result = [];
-  for (var item of EstimateTime) {
-    if (StopIDs.indexOf(item.StopID) > -1) {
-      result.push(item);
-    }
-  }
-  return result;
-}
-
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
   setDataReceivingProgress(requestID, 'getRoute', 0, false);
   setDataReceivingProgress(requestID, 'getStop', 0, false);
@@ -209,11 +199,21 @@ export async function integrateStop(StopID: number, RouteID: number): object {
 }
 
 export async function integrateEstimateTimes(StopIDs: []): object {
+  function filterEstimateTime(EstimateTime: [], StopIDs: []): [] {
+    var result = [];
+    for (var item of EstimateTime) {
+      if (StopIDs.indexOf(item.StopID) > -1) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
   const requestID: string = `r_${md5(Math.random() * new Date().getTime())}`;
   var EstimateTime = await getEstimateTime(requestID);
   var filteredEstimateTime = filterEstimateTime(EstimateTime, StopIDs);
   var filteredItems = {};
   for (var item of filteredEstimateTime) {
+    console.log(item)
     filteredItems[`s_${item.StopID}`] = item;
   }
 
