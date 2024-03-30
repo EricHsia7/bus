@@ -18,7 +18,7 @@ import './interface/css/home-page/folder.css';
 import './interface/css/search-page/index.css';
 import './interface/css/search-page/keyboard.css';
 import './interface/css/prompt.css';
-import './interface/animation.css';
+import './interface/css/animation.css';
 //for development
 
 const ErrorStackParser = require('error-stack-parser');
