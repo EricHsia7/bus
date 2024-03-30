@@ -106,12 +106,16 @@ export async function integrateFolders(): [] {
   }
   var result = [];
   var EstimateTimes = await integrateEstimateTimes(StopIDs);
-  for (var item of foldersWithContent) {
-    var integratedItem = {};
-    integratedItem.folder = item.folder;
-    integratedItem.content = item.content;
-    integratedItem.content._EstimateTime = EstimateTimes[`s_${item.StopID}`];
-    result.push(integratedItem);
+  for (var folder of foldersWithContent) {
+    var integratedFolder = {};
+    integratedFolder.folder = folder.folder;
+    integratedFolder.content = [];
+    for (var item of folder.content) {
+      var integratedItem = item;
+      integratedItem._EstimateTime = EstimateTimes[`s_${item.StopID}`];
+      integratedFolder.content.push(integratedItem);
+    }
+    result.push(integratedFolder);
   }
   return result;
 }
