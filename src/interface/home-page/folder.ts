@@ -120,6 +120,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   var folderQuantity = formattedFoldersWithContent.folderQuantity;
   var itemQuantity = formattedFoldersWithContent.itemQuantity;
   var foldedItems = formattedFoldersWithContent.foldedItems;
+  var folders = formattedFoldersWithContent.integrateFolders;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
@@ -168,7 +169,8 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
     var thisHeadElement = Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_head`);
-    thisHeadElement.querySelector('.home_page_folder_name').innerText = thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    thisHeadElement.querySelector('.home_page_folder_name').innerText = folders[folderKey].name;
+    thisHeadElement.querySelector('.home_page_folder_icon').innerText = folders[folderKey].icon;
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
