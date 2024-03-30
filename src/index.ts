@@ -3,7 +3,7 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemStop } from './interface/route.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
@@ -66,7 +66,8 @@ window.bus = {
     openRoute: openRoute,
     closeRoute: closeRoute,
     switchRoute: switchRoute,
-    switchRouteBodyTab: switchRouteBodyTab
+    switchRouteBodyTab: switchRouteBodyTab,
+    saveItemStop: saveItemStop
   },
   folder: {
     isSaved: isSaved,
