@@ -57,31 +57,29 @@ async function formatFoldersWithContent(requestID: string): object {
   return result;
 }
 
-function generateElementOfItem(item: object, skeletonScreen: boolean): string {
+function generateElementOfItem(skeletonScreen: boolean): string {
   var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder_item_stop');
-  element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route">${item.route ? item.route.name : ''} - ${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="home_page_folder_item_stop_name">${item.name ? item.name : ''}</div>`;
+  element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route"></div><div class="home_page_folder_item_stop_name"></div>`;
   return {
     element: element,
     id: identifier
   };
 }
 
-function generateElementOfFolder(folder: object, index: number, skeletonScreen: boolean): object {
+function generateElementOfFolder(index: number, skeletonScreen: boolean): object {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
-  var folderIcon = '';
-  var folderName = folder.name ? folder.name : '';
   var element = document.createElement('div');
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder');
   element.setAttribute('index', index);
-  element.innerHTML = `<div class="home_page_folder_head"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content"></div>`;
+  element.innerHTML = `<div class="home_page_folder_head"><div class="home_page_folder_icon"></div><div class="home_page_folder_name"></div></div><div class="home_page_folder_content"></div>`;
   return {
     element: element,
     id: identifier
@@ -147,7 +145,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       thisElement.querySelector('.home_page_folder_item_stop_name').innerText = thisItem.name;
     }
     function updateRoute(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0];
+      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - ${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
     }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
@@ -186,7 +184,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder({}, currentFolderSeatQuantity + o, true);
+        var thisElement = generateElementOfFolder(currentFolderSeatQuantity + o, true);
         Field.appendChild(thisElement.element);
       }
     } else {
@@ -204,7 +202,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem({}, true);
+          var thisElement = generateElementOfItem(true);
           Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_content`).appendChild(thisElement.element);
         }
       } else {
