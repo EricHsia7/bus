@@ -1,5 +1,6 @@
 import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
 import { compareThings } from '../../tools/index.ts';
+import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 
 var md5 = require('md5');
@@ -29,7 +30,8 @@ async function formatFoldersWithContent(requestID: string): object {
       foldedItems[folderKey] = [];
       itemQuantity[folderKey] = 0;
     }
-    foldedItems[folderKey].push(item);
+    var formattedItem = item;
+    formattedItem.status = foldedItems[folderKey].push(item);
     itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     folderQuantity += 1;
   }
@@ -165,7 +167,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = foldedItems[folderKey][j].content;
+      var thisItem = foldedItems[folderKey][j];
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
         if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
           if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {

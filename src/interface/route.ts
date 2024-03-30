@@ -3,6 +3,7 @@ import { icons } from './icons/index.ts';
 import { searchRouteByName } from '../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../data/apis/loader.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation } from '../tools/index.ts';
+import { formatEstimateTime } from '../tools/format-time.ts';
 import { getUpdateRate } from '../data/analytics/update-rate.ts';
 import { isSaved } from '../data/folder/index.ts';
 
@@ -111,61 +112,6 @@ function updateUpdateTimer() {
 }
 
 export async function formatRoute(RouteID: number, PathAttributeId: [number], requestID: string) {
-  function formatEstimateTime(EstimateTime: string, mode: number) {
-    function formatTime(time: number, mode: number) {
-      if (mode === 0) {
-        return `${time}秒`;
-      }
-      if (mode === 1) {
-        var minutes = String((time - (time % 60)) / 60);
-        var seconds = String(time % 60);
-        return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
-      }
-      if (mode === 2) {
-        var minutes = String(Math.floor(time / 60));
-        return `${minutes}分`;
-      }
-      if (mode === 3) {
-        if (time >= 60) {
-          var minutes = String(Math.floor(time / 60));
-          return `${minutes}分`;
-        } else {
-          return `${time}秒`;
-        }
-      }
-      return '--';
-    }
-    var time = parseInt(EstimateTime);
-    if (time === -3) {
-      return { code: 6, text: '末班駛離' };
-    }
-    if (time === -4) {
-      return { code: 5, text: '今日停駛' };
-    }
-    if (time === -2) {
-      return { code: 4, text: '交通管制' };
-    }
-    if (time === -1) {
-      return { code: 3, text: '未發車' };
-    }
-
-    if (0 <= time && time <= 10) {
-      return { code: 2, text: '進站中' };
-    }
-
-    if (10 < time && time <= 90) {
-      return { code: 2, text: formatTime(time, mode) };
-    }
-    if (90 < time && time <= 180) {
-      return { code: 1, text: formatTime(time, mode) };
-    }
-    if (180 < time && time <= 250) {
-      return { code: 0.5, text: formatTime(time, mode) };
-    }
-    if (250 < time) {
-      return { code: 0, text: formatTime(time, mode) };
-    }
-  }
   function formatBusEvent(buses: []): [] | null {
     if (buses.length === 0) {
       return null;
