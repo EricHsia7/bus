@@ -1,0 +1,77 @@
+.home_page_field {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--b-f9f9fb);
+}
+
+.home_page_field .home_page_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-e5e5ea);
+  box-sizing: border-box;
+  background: var(--b-ffffff);
+}
+
+.home_page_field .home_page_head .home_page_title {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 110px);
+  height: 55px;
+  color: var(--b-333333);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.home_page_field .home_page_head .home_page_button_left,
+.home_page_field .home_page_head .home_page_button_right {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home_page_field .home_page_head .home_page_button_left {
+  top: 0px;
+  left: 0px;
+
+}
+
+.home_page_field .home_page_head .home_page_button_right {
+  top: 0px;
+  right: 0px;
+}
+
+.home_page_field .home_page_head .home_page_button_left svg,
+.home_page_field .home_page_head .home_page_button_right svg {
+  width: 20px;
+  height: 20px;
+}
+
+.home_page_field .home_page_head .home_page_button_left svg path,
+.home_page_field .home_page_head .home_page_button_right svg path {
+  fill: var(--b-333333);
+}
+
+.home_page_field .home_page_body {
+  position: absolute;
+  top: 55px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
