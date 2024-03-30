@@ -132,17 +132,11 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
         var folderIndex = currentFolderSeatQuantity + o;
         var thisElement = generateElementOfFolder({}, currentFolderSeatQuantity + o, true);
         Field.appendChild(thisElement.element);
-        /*
-        var tabElement = document.createElement('div');
-        tabElement.classList.add('route_group_tab');
-        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
-     */
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity - 1 - o;
         Field.querySelectorAll(`.home_page_folder`)[folderIndex].remove();
-        //Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[folderIndex].remove();
       }
     }
   }

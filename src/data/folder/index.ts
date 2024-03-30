@@ -2,7 +2,7 @@ import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
 var md5 = require('md5');
 
-var folders = {
+var Folders = {
   f_saved_stop: {
     name: 'Saved Stop',
     default: true,
@@ -23,8 +23,8 @@ export async function initializeFolderStores(): void {
       var storeIndex = await registerStore(thisFolderObject.name);
       thisFolder.storeIndex = storeIndex;
       thisFolder.index = index;
-      if (!folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
-        folders[`f_${thisFolderObject.id}`] = thisFolderObject;
+      if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
+        Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
       }
       index += 1;
     }
@@ -42,10 +42,10 @@ export async function createFolder(name: string): boolean {
     time: new Date().toISOString()
   };
 
-  if (!folders.hasOwnProperty(`f_${idintifier}`)) {
+  if (!Folders.hasOwnProperty(`f_${idintifier}`)) {
     var existingFolder = await lfGetItem(4, `f_${idintifier}`);
     if (!existingFolder) {
-      folders[`f_${idintifier}`] = object;
+      Folders[`f_${idintifier}`] = object;
       await lfSetItem(4, `f_${idintifier}`, JSON.stringify(object));
       return true;
     }
@@ -55,20 +55,20 @@ export async function createFolder(name: string): boolean {
 }
 
 export function getFolder(folderID: string): object {
-  return folders[`f_${folderID}`];
+  return Folders[`f_${folderID}`];
 }
 
 export async function listFolders(): [] {
   var result = [];
-  for (var folder in folders) {
-    result.push(folders[folder]);
+  for (var folder in Folders) {
+    result.push(Folders[folder]);
   }
   return result;
 }
 
 export async function listFolderContent(folderID: string): [] {
   var result = [];
-  var thisFolder = folders[`f_${folderID}`];
+  var thisFolder = Folders[`f_${folderID}`];
   var itemKeys = await lfListItem(thisFolder.storeIndex);
   for (var itemKey of itemKeys) {
     var item = await lfGetItem(thisFolder.storeIndex, itemKey);
@@ -81,9 +81,9 @@ export async function listFolderContent(folderID: string): [] {
 }
 
 export async function listFoldersWithContent(): [] {
-  var folders = await listFolders();
+  var Folders = await listFolders();
   var result = [];
-  for (var folder of folders) {
+  for (var folder of Folders) {
     var folderContent = await listFolderContent(folder.id);
     result.push({
       folder: folder,
@@ -126,7 +126,7 @@ export async function integrateFolders(requestID: string): [] {
 }
 
 export async function saveToFolder(folderID: string, content: object): boolean {
-  var thisFolder = folders[`f_${folderID}`];
+  var thisFolder = Folders[`f_${folderID}`];
   if (thisFolder.contentType.indexOf(content.type) > -1) {
     await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
     return true;
