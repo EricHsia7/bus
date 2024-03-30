@@ -120,7 +120,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
   var folderQuantity = formattedFoldersWithContent.folderQuantity;
   var itemQuantity = formattedFoldersWithContent.itemQuantity;
   var foldedItems = formattedFoldersWithContent.foldedItems;
-  var folders = formattedFoldersWithContent.integrateFolders;
+  var folders = formattedFoldersWithContent.folders;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
