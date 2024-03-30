@@ -104,7 +104,7 @@ export async function integrateFolders(requestID: string): [] {
         .map((e) => e.id)
     );
   }
-  var result = [];
+  var array = [];
   var EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
@@ -112,11 +112,15 @@ export async function integrateFolders(requestID: string): [] {
     integratedFolder.content = [];
     for (var item of folder.content) {
       var integratedItem = item;
-      integratedItem._EstimateTime = EstimateTime2[`s_${item.id}`];
+      integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
       integratedFolder.content.push(integratedItem);
     }
-    result.push(integratedFolder);
+    array.push(integratedFolder);
   }
+  var result = {
+    items: array,
+    dataUpdateTime: EstimateTime2.dataUpdateTime
+  };
   return result;
 }
 
