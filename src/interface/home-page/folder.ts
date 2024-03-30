@@ -49,7 +49,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): string {
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder_item_stop');
-  element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route">${item.route.name} - ${[item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0]}</div><div class="home_page_folder_item_stop_name">${item.name}</div>`;
+  element.innerHTML = `<div class="home_page_folder_item_stop_status" code="0"></div><div class="home_page_folder_item_stop_route">${item.route ? item.route.name : ''} - ${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="home_page_folder_item_stop_name">${item.name ? item.name : ''}</div>`;
   return {
     element: element,
     id: identifier
