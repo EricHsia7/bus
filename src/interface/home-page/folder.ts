@@ -142,7 +142,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
