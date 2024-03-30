@@ -22,7 +22,7 @@ async function formatFoldersWithContent(requestID: string): object {
   var foldedItems = {};
   var itemQuantity = {};
   var folderQuantity = {};
-  for (var item of integration) {
+  for (var item of integration.filteredItems) {
     console.log(item);
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
