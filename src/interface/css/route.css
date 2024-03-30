@@ -242,6 +242,7 @@
   font-size: 14px;
   transition: none;
   overflow: hidden;
+  vertical-align: top;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon {
