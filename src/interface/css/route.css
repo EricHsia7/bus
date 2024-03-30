@@ -241,13 +241,14 @@
   box-sizing: border-box;
   font-size: 14px;
   transition: none;
+  overflow: hidden;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs .action_button .action_button_icon {
   position: relative;
   display: inline-flex;
   height: 35px;
-  width: 15px;
+  width: 18px;
   align-items: center;
 }
 
