@@ -1,0 +1,15 @@
+@keyframes skeleton-loading {
+  to {
+    background-position: -20%;
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

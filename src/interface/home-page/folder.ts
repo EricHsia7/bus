@@ -139,8 +139,20 @@ function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
 export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.home_page_folder_item_stop_status').setAttribute('code', thisItem.status.code);
-      thisElement.querySelector('.home_page_folder_item_stop_status').innerText = thisItem.status.text;
+      var nextSlide = thisElement.querySelector('.home_page_folder_item_stop_status.next_slide');
+      var currentSlide = thisElement.querySelector('.home_page_folder_item_stop_status .current_slide');
+      nextSlide.setAttribute('code', thisItem.status.code);
+      nextSlide.innerText = thisItem.status.text;
+      currentSlide.addEventListener(
+        'animationend',
+        function () {
+          currentSlide.setAttribute('code', thisItem.status.code);
+          currentSlide.innerText = thisItem.status.text;
+          currentSlide.classList.remove('slide_fade_out');
+        },
+        { once: true }
+      );
+      currentSlide.classList.add('slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
       thisElement.querySelector('.home_page_folder_item_stop_name').innerText = thisItem.name;

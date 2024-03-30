@@ -408,16 +408,6 @@
   animation-fill-mode: forwards;
 }
 
-@keyframes fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 .route_field .route_groups .route_grouped_items .item .name {
   position: absolute;
   top: 5px;
@@ -722,10 +712,4 @@
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-}
-
-@keyframes skeleton-loading {
-  to {
-    background-position: -20%;
-  }
 }
