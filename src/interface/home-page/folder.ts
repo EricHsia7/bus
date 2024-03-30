@@ -165,7 +165,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     thisTabElement.innerHTML = [formattedFoldersWithContent.RouteEndPoints.RouteDestination, formattedFoldersWithContent.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
    */
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .item`)[j];
+      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
       if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
