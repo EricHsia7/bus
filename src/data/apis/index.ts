@@ -209,21 +209,22 @@ export async function integrateStop(StopID: number, RouteID: number): object {
 }
 
 export async function integrateEstimateTimes(StopIDs: []): object {
-  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  const requestID: string = `r_${md5(Math.random() * new Date().getTime())}`;
   var EstimateTime = await getEstimateTime(requestID);
   var filteredEstimateTime = filterEstimateTime(EstimateTime, StopIDs);
-  var filteredItems = {}
+  var filteredItems = {};
   for (var item of filteredEstimateTime) {
-    result[`s_${item.StopID}`] = item
+    result[`s_${item.StopID}`] = item;
   }
-  var dataUpdateTime = dataUpdateTime[requestID]
+  var dataUpdateTime = dataUpdateTime[requestID];
   var result = {
-filteredItems,
-dataUpdateTime
-};
+    filteredItems,
+    dataUpdateTime
+  };
+  console.log(dataUpdateTime, requestID);
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-return result
+  return result;
 }
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
