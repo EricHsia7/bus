@@ -145,7 +145,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
       thisElement.querySelector('.home_page_folder_item_stop_name').innerText = thisItem.name;
     }
     function updateRoute(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - ${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
     }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
