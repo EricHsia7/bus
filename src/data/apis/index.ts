@@ -216,10 +216,10 @@ export async function integrateEstimateTimes(StopIDs: []): object {
   for (var item of filteredEstimateTime) {
     result[`s_${item.StopID}`] = item;
   }
-  var dataUpdateTime = dataUpdateTime[requestID];
+
   var result = {
-    filteredItems,
-    dataUpdateTime
+    filteredItems: filteredItems,
+    dataUpdateTime: dataUpdateTime[requestID]
   };
   console.log(dataUpdateTime, requestID);
   deleteDataReceivingProgress(requestID);
