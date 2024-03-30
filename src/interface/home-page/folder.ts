@@ -30,10 +30,9 @@ async function formatFoldersWithContent(requestID: string): object {
       foldedItems[folderKey] = [];
       itemQuantity[folderKey] = 0;
     }
-    console.log(item);
     for (var item2 of item.content) {
       var formattedItem = item2;
-      formattedItem.status = formatEstimateTime(item2._EstimateTime);
+      formattedItem.status = formatEstimateTime(item2._EstimateTime, 3);
       foldedItems[folderKey].push(formattedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
