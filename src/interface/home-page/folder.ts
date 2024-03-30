@@ -58,18 +58,17 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): string {
   };
 }
 
-function generateElementOfFolder(folder: object, items: [], index: number): object {
+function generateElementOfFolder(folder: object, index: number): object {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var folderIcon = '';
-  var folderName = folder.name;
-  var folderContent = items.map((item) => generateElementOfItem(item)).join('');
+  var folderName = folder.name ? folder.name : '';
   var element = document.createElement('div');
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder');
   element.setAttribute('index', index);
-  element.innerHTML = `<div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content">${folderContent}</div>`;
+  element.innerHTML = `<div class="home_page_folder_title"><div class="home_page_folder_icon">${folderIcon}</div><div class="home_page_folder_name">${folderName}</div></div><div class="home_page_folder_content"></div>`;
   return {
     element: element,
     id: identifier
@@ -124,7 +123,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder({}, [], currentFolderSeatQuantity + o);
+        var thisElement = generateElementOfFolder({}, currentFolderSeatQuantity + o);
         Field.appendChild(thisElement.element);
         /*
         var tabElement = document.createElement('div');
