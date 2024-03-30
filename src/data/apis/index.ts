@@ -198,7 +198,7 @@ export async function integrateStop(StopID: number, RouteID: number): object {
   };
 }
 
-function processEstimateTime2(EstimateTime: [], StopIDs: []):{} {
+function processEstimateTime2(EstimateTime: [], StopIDs: []): {} {
   var result = {};
   for (var item of EstimateTime) {
     if (StopIDs.indexOf(item.StopID) > -1) {
@@ -208,8 +208,7 @@ function processEstimateTime2(EstimateTime: [], StopIDs: []):{} {
   return result;
 }
 
-export async function integrateEstimateTime2(StopIDs: []): object {
-  const requestID: string = `r_${md5(Math.random() * new Date().getTime())}`;
+export async function integrateEstimateTime2(requestID: string, StopIDs: []): object {
   setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
   var EstimateTime = await getEstimateTime(requestID);
   var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);

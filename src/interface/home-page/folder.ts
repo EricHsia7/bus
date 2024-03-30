@@ -19,7 +19,7 @@ var foldersRefreshTimer = {
 };
 
 async function formatFoldersWithContent(requestID: string): object {
-  var integration = await integrateFolders();
+  var integration = await integrateFolders(requestID);
   var foldedItems = {};
   var itemQuantity = {};
   var folderQuantity = {};
@@ -172,7 +172,7 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 export async function refreshFolders(): object {
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  var formattedFoldersWithContent = formatFoldersWithContent();
+  var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
   var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
   updateFoldersField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();

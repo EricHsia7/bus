@@ -92,7 +92,7 @@ export async function listFoldersWithContent(): [] {
   return result;
 }
 
-export async function integrateFolders(): [] {
+export async function integrateFolders(requestID: string): [] {
   var foldersWithContent = await listFoldersWithContent();
   var StopIDs = [];
   for (var item of foldersWithContent) {
@@ -105,7 +105,7 @@ export async function integrateFolders(): [] {
     );
   }
   var result = [];
-  var EstimateTime2 = await integrateEstimateTime2(StopIDs);
+  var EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
     integratedFolder.folder = folder.folder;
