@@ -214,7 +214,7 @@ export async function integrateEstimateTimes(StopIDs: []): object {
   var filteredEstimateTime = filterEstimateTime(EstimateTime, StopIDs);
   var filteredItems = {};
   for (var item of filteredEstimateTime) {
-    result[`s_${item.StopID}`] = item;
+    filteredItems[`s_${item.StopID}`] = item;
   }
 
   var result = {
