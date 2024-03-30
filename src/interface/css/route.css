@@ -275,7 +275,7 @@
   transition: background var(--b-transition-duration), color var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .action_button .action_button_icon svg {
+.route_field .route_groups .route_grouped_items .item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
   transition: fill var(--b-transition-duration);
 }
 
