@@ -44,7 +44,12 @@ export async function checkAppVersion(): void | string {
         refreshPageWithTimeStamp(app_version.id, true);
         return '';
       } else {
-        refreshPageWithTimeStamp(app_version.id, true);
+        var searchParams = new URLSearchParams(window.location.search);
+        if (!(searchParams.get('v') === app_version.id)) {
+          refreshPageWithTimeStamp(app_version.id, true);
+        } else {
+          refreshPageWithTimeStamp(app_version.id, false);
+        }
       }
     }
     await lfSetItem(1, 'app_version', JSON.stringify(app_version));
