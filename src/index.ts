@@ -7,7 +7,7 @@ import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, swi
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
-import { setUpFolderFieldSkeletonScreen, streamFolders } from './interface/home-page/folder.ts';
+import { initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 
 import './interface/css/theme.css';
@@ -56,9 +56,8 @@ window.bus = {
       }
     }
     initializeFolderStores().then((e) => {
-      streamFolders();
+      initializeFolders();
     });
-    setUpFolderFieldSkeletonScreen(document.querySelector('.home_page_field .home_page_body .home_page_folders'));
     openRouteByURLScheme();
     checkAppVersion();
   },
