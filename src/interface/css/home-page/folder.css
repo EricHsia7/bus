@@ -178,11 +178,18 @@
   -webkit-user-select: none;
 }
 
-.home_page_field .home_page_body .home_page_folders[skeleton-screen="true"] .route_head .route_name span,
-.home_page_field .home_page_body .home_page_folders[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
-.home_page_field .home_page_body .home_page_folders[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line_carriage .route_group_tab_line,
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .status .next_slide,
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .status .current_slide,
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-f9f9fb);
+  top: 7.5px;
+  height: 35px;
+  border-radius: 30px;
+}
+
+.home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_name,
+.home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_icon,
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .next_slide,
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .current_slide,
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name {
   background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
