@@ -52,7 +52,7 @@ async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
   const canvasWidth = deviceInfo.scaled_width;
   const canvasHeight = deviceInfo.scaled_height;
   const scale = deviceInfo.scaled_width / deviceInfo.width;
-  const iconWidth = Math.max(canvasWidth * 0.57, 220);
+  const iconWidth = Math.max(canvasWidth * 0.45, 220);
   const fileName = deviceInfo.device.toLocaleLowerCase().replace(/\s|\“/gm, '_') + '_@' + Math.round(scale) + 'x';
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
