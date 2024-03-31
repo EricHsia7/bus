@@ -55,6 +55,7 @@ async function formatFoldersWithContent(requestID: string): object {
     itemQuantity: itemQuantity,
     dataUpdateTime: integration.dataUpdateTime
   };
+  console.log(integration)
   return result;
 }
 
