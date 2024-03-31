@@ -178,7 +178,8 @@
   -webkit-user-select: none;
 }
 
-.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name {
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name,
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_route {
   color: rgba(0, 0, 0, 0);
   background: var(--b-f9f9fb);
   top: 7.5px;
