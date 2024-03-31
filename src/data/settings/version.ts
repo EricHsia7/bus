@@ -7,13 +7,12 @@ function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   searchParams.set('v', id);
   // Construct the new URL with updated query parameters
   var newUrl = window.location.pathname + '?' + searchParams.toString();
-  if(enforce) {
-// Redirect to the new URL
-  window.location.href = newUrl;
-}
-else {
-history.replaceState(null, "", newUrl);
-}
+  if (enforce) {
+    // Redirect to the new URL
+    window.location.replace(newUrl);
+  } else {
+    history.replaceState(null, '', newUrl);
+  }
 }
 
 async function getAppVersion(): object {
@@ -44,10 +43,9 @@ export async function checkAppVersion(): void | string {
         await lfSetItem(1, 'app_version', JSON.stringify(app_version));
         refreshPageWithTimeStamp(app_version.id, true);
         return '';
+      } else {
+        refreshPageWithTimeStamp(app_version.id, true);
       }
-      else {
-        refreshPageWithTimeStamp(app_version.id, false);
-}
     }
     await lfSetItem(1, 'app_version', JSON.stringify(app_version));
     return '';
