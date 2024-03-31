@@ -58,7 +58,7 @@ window.bus = {
     initializeFolderStores().then((e) => {
       streamFolders();
     });
-    setUpFolderFieldSkeletonScreen();
+    setUpFolderFieldSkeletonScreen(document.querySelector('.home_page_field .home_page_body .home_page_folders'));
     openRouteByURLScheme();
     checkAppVersion();
   },
