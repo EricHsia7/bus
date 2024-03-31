@@ -220,6 +220,14 @@ export async function integrateEstimateTime2(requestID: string, StopIDs: []): ob
   deleteDataUpdateTime(requestID);
   return result;
 }
+
+export function preloadData(): void {
+  var requestID = 'preload_data';
+  getRoute(requestID, true);
+  getStop(requestID);
+  getLocation(requestID);
+}
+
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
   var minuteToStr = function (s) {

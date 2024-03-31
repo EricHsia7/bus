@@ -1,4 +1,4 @@
-import { integrateRoute } from './data/apis/index.ts';
+import { preloadData } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
@@ -61,6 +61,7 @@ window.bus = {
         initializeFolderStores().then((e) => {
           initializeFolders();
         });
+        preloadData();
         openRouteByURLScheme();
       }
     });
