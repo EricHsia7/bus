@@ -7,6 +7,8 @@ import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
 
+const ripple = require('@erichsia7/ripple');
+
 var previousFormattedRoute = {};
 
 var routeSliding = {
@@ -432,6 +434,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
           Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 450);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
