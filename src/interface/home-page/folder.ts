@@ -272,7 +272,6 @@ export async function refreshFolders(): object {
 }
 
 export async function streamFolders(): void {
-  try {
     refreshFolders()
       .then((result) => {
         if (foldersRefreshTimer.streaming) {
@@ -293,7 +292,19 @@ export async function streamFolders(): void {
           foldersRefreshTimer.streamStarted = false;
         }
       });
-  } catch (err) {
-    console.log(err);
+}
+
+export function initializeFolders(RouteID: number, PathAttributeId: [number]) {
+  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+  setUpFolderFieldSkeletonScreen(Field);
+  if (!foldersRefreshTimer.streaming) {
+    foldersRefreshTimer.streaming = true;
+    if (!foldersRefreshTimer.streamStarted) {
+      foldersRefreshTimer.streamStarted = true;
+      streamFolders();
+    } else {
+      refreshFolders();
+    }
+    //updateUpdateTimer();
   }
 }
