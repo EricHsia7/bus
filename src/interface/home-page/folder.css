@@ -206,7 +206,7 @@
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .next_slide,
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .current_slide,
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name {
-  background: var(--b-f9f9fb-r);
+  background: var(--b-f9f9fb);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
@@ -218,7 +218,7 @@
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_name,
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_icon {
-  background: var(--b-f9f9fb-r);
+  background: var(--b-f9f9fb);
   /*background: linear-gradient(90deg, rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.5) 35%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), 0.225) 55%, rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.5) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
