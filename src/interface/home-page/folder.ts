@@ -55,7 +55,6 @@ async function formatFoldersWithContent(requestID: string): object {
     itemQuantity: itemQuantity,
     dataUpdateTime: integration.dataUpdateTime
   };
-  console.log(integration);
   return result;
 }
 
@@ -92,7 +91,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50) + 5, f_1: Math.floor(FieldHeight / 50) + 5, f_2: Math.floor(FieldHeight / 50) + 5 };
+  var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
   var defaultFolderQuantity = 3;
   var foldedItems = {};
   var folders = {};
@@ -124,7 +123,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
       });
     }
   }
-  updateFoldersField(
+  updateFolderField(
     Field,
     {
       foldedItems: foldedItems,
@@ -137,7 +136,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export async function updateFoldersField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
+export async function updateFolderField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       var nextSlide = thisElement.querySelector('.home_page_folder_item_stop_status .next_slide');
@@ -262,7 +261,7 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
-  updateFoldersField(Field, formattedFoldersWithContent, false);
+  updateFolderField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
   foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
@@ -272,26 +271,26 @@ export async function refreshFolders(): object {
 }
 
 export async function streamFolders(): void {
-    refreshFolders()
-      .then((result) => {
-        if (foldersRefreshTimer.streaming) {
-          foldersRefreshTimer.timer = setTimeout(function () {
-            streamFolders();
-          }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
-        } else {
-          foldersRefreshTimer.streamStarted = false;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        if (foldersRefreshTimer.streaming) {
-          foldersRefreshTimer.timer = setTimeout(function () {
-            streamFolders();
-          }, foldersRefreshTimer.minInterval);
-        } else {
-          foldersRefreshTimer.streamStarted = false;
-        }
-      });
+  refreshFolders()
+    .then((result) => {
+      if (foldersRefreshTimer.streaming) {
+        foldersRefreshTimer.timer = setTimeout(function () {
+          streamFolders();
+        }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
+      } else {
+        foldersRefreshTimer.streamStarted = false;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      if (foldersRefreshTimer.streaming) {
+        foldersRefreshTimer.timer = setTimeout(function () {
+          streamFolders();
+        }, foldersRefreshTimer.minInterval);
+      } else {
+        foldersRefreshTimer.streamStarted = false;
+      }
+    });
 }
 
 export function initializeFolders(RouteID: number, PathAttributeId: [number]) {
