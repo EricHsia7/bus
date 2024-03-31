@@ -1,4 +1,5 @@
-import { timeStampToNumber, md5 } from '../../tools/format-time.ts';
+import { timeStampToNumber } from '../../tools/format-time.ts';
+import { md5 } from '../../tools/index.ts';
 import { recordRequest } from '../analytics/data-usage.ts';
 const pako = require('pako');
 
