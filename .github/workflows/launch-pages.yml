@@ -32,16 +32,8 @@ jobs:
           cp -r ./pwaicon2/ ./dist/pwaicon2/
           cp -r ./splash_screen/ ./dist/splash_screen/
           cp -r ./manifest.json ./dist/manifest.json
-
-#      - name: Install canvas package
-#        run: npm install canvas
-
-#      - name: Generate splash screen
-#        run: node generate_splash_screen.js
-
-#      - name: Uninstall canvas package
-#        run: npm uninstall canvas
-
+      - name: Generate splash screen
+        run: node generate_splash_screen.js
       - name: Deploy with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
