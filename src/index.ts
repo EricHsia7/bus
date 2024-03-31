@@ -7,7 +7,7 @@ import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, swi
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
-import { streamFolders } from './interface/home-page/folder.ts';
+import { setUpFolderFieldSkeletonScreen, streamFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 
 import './interface/css/theme.css';
@@ -58,6 +58,7 @@ window.bus = {
     initializeFolderStores().then((e) => {
       streamFolders();
     });
+    setUpFolderFieldSkeletonScreen();
     openRouteByURLScheme();
     checkAppVersion();
   },

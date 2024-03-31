@@ -87,7 +87,7 @@ function generateElementOfFolder(index: number, skeletonScreen: boolean): object
   };
 }
 
-function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
+export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -258,7 +258,6 @@ export async function updateFoldersField(Field: HTMLElement, formattedFoldersWit
 
 export async function refreshFolders(): object {
   var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
-  setUpFolderFieldSkeletonScreen(Field);
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
