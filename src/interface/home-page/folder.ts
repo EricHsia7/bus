@@ -266,7 +266,7 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
   foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
-  foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, formattedFoldersWithContent.nextUpdate - new Date().getTime());
+  foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime());
   foldersRefreshTimer.refreshing = false;
   return { status: 'Successfully refreshed the folders.' };
 }
