@@ -271,4 +271,25 @@ export async function refreshFolders(): object {
   return { status: 'Successfully refreshed the folders.' };
 }
 
-export async function streamFolders(): void {}
+export async function streamFolders(): void {
+  refreshFolders()
+    .then((result) => {
+      if (foldersRefreshTimer.streaming) {
+        foldersRefreshTimer.timer = setTimeout(function () {
+          streamFolders();
+        }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
+      } else {
+        foldersRefreshTimer.streamStarted = false;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      if (foldersRefreshTimer.streaming) {
+        foldersRefreshTimer.timer = setTimeout(function () {
+          streamFolders();
+        }, foldersRefreshTimer.minInterval);
+      } else {
+        foldersRefreshTimer.streamStarted = false;
+      }
+    });
+}
