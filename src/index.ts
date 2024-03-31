@@ -7,7 +7,7 @@ import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSli
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
-import { initializeFolders } from './interface/home-page/folder.ts';
+import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 
 import './interface/theme.css';
@@ -44,6 +44,8 @@ window.onerror = async function (message, source, lineno, colno, error) {
 
 window.bus = {
   initialize: function () {
+    var FolderField = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+    setUpFolderFieldSkeletonScreen(FolderField);
     checkAppVersion().then((e) => {
       if (e.status === 'ok') {
         initializeRouteSliding();

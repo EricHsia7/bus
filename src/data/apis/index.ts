@@ -223,9 +223,10 @@ export async function integrateEstimateTime2(requestID: string, StopIDs: []): ob
 
 export function preloadData(): void {
   var requestID = 'preload_data';
-  getRoute(requestID, true);
-  getStop(requestID);
-  getLocation(requestID);
+  getRoute(requestID, true).then((e) => {
+    getStop(requestID);
+    getLocation(requestID);
+  });
 }
 
 /*
