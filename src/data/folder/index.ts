@@ -79,9 +79,13 @@ export async function listFolderContent(folderID: string): [] {
     var item = await lfGetItem(thisFolder.storeIndex, itemKey);
     if (item) {
       var itemObject = JSON.parse(item);
+      itemObject.timeNumber = new Date(itemObject.time).getTime();
       result.push(itemObject);
     }
   }
+  result = result.sort(function (a, b) {
+    return a.timeNumber - b.timeNumber;
+  });
   return result;
 }
 
