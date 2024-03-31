@@ -55,7 +55,7 @@ async function formatFoldersWithContent(requestID: string): object {
     itemQuantity: itemQuantity,
     dataUpdateTime: integration.dataUpdateTime
   };
-  console.log(integration)
+  console.log(integration);
   return result;
 }
 
@@ -272,24 +272,28 @@ export async function refreshFolders(): object {
 }
 
 export async function streamFolders(): void {
-  refreshFolders()
-    .then((result) => {
-      if (foldersRefreshTimer.streaming) {
-        foldersRefreshTimer.timer = setTimeout(function () {
-          streamFolders();
-        }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
-      } else {
-        foldersRefreshTimer.streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      if (foldersRefreshTimer.streaming) {
-        foldersRefreshTimer.timer = setTimeout(function () {
-          streamFolders();
-        }, foldersRefreshTimer.minInterval);
-      } else {
-        foldersRefreshTimer.streamStarted = false;
-      }
-    });
+  try {
+    refreshFolders()
+      .then((result) => {
+        if (foldersRefreshTimer.streaming) {
+          foldersRefreshTimer.timer = setTimeout(function () {
+            streamFolders();
+          }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
+        } else {
+          foldersRefreshTimer.streamStarted = false;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (foldersRefreshTimer.streaming) {
+          foldersRefreshTimer.timer = setTimeout(function () {
+            streamFolders();
+          }, foldersRefreshTimer.minInterval);
+        } else {
+          foldersRefreshTimer.streamStarted = false;
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
 }
