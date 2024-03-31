@@ -229,7 +229,9 @@ export async function updateFolderField(Field: HTMLElement, formattedFoldersWith
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var thisHeadElement = Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_head`);
+    var thisFolderElement = Field.querySelector(`.home_page_folder[index="${i}"]`);
+    thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
+    var thisHeadElement = thisFolderElement.querySelector(`.home_page_folder_head`);
     thisHeadElement.querySelector('.home_page_folder_name').innerText = folders[folderKey].name;
     thisHeadElement.querySelector('.home_page_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
     for (var j = 0; j < itemQuantity[folderKey]; j++) {

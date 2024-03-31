@@ -199,6 +199,21 @@
   animation-timing-function: ease-in-out;
 }
 
+.home_page_field .home_page_body .home_page_folders[skeleton-screen="true"] .home_page_folder .home_page_folder_head .home_page_folder_icon {
+  top: 5px;
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--b-border-radius-small);
+}
+
+.home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_name {
+  top: 5px;
+  left: 5px;
+  width: 50px;
+  height: 15px;
+  border-radius: var(--b-border-radius-small);
+}
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_name,
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_icon {
