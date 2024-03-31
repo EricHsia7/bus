@@ -33,15 +33,23 @@ async function getAppVersion(): object {
   }
 }
 
-export async function checkAppVersion(): void {
+export async function checkAppVersion(): object {
   var app_version = await getAppVersion();
   if (app_version) {
-    await lfSetItem(1, 'app_version', JSON.stringify(app_version));
-    var searchParams = new URLSearchParams(window.location.search);
-    if (!(searchParams.get('v') === app_version.id)) {
-      refreshPageWithTimeStamp(app_version.id, true);
+    if (!(app_version.id === null)) {
+      await lfSetItem(1, 'app_version', JSON.stringify(app_version));
+      var searchParams = new URLSearchParams(window.location.search);
+      if (!(searchParams.get('v') === app_version.id)) {
+        refreshPageWithTimeStamp(app_version.id, true);
+        return { status: 'refreshing' };
+      } else {
+        refreshPageWithTimeStamp(app_version.id, false);
+        return { status: 'ok' };
+      }
     } else {
-      refreshPageWithTimeStamp(app_version.id, false);
+      return { status: 'fetchError' };
     }
+  } else {
+    return { status: 'unknownError' };
   }
 }

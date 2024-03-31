@@ -43,23 +43,26 @@ window.onerror = async function (message, source, lineno, colno, error) {
 
 window.bus = {
   initialize: function () {
-    initializeRouteSliding();
-    ResizeRouteField();
-    window.addEventListener('resize', (event) => {
-      ResizeRouteField();
-    });
-    if (screen) {
-      if (screen.orientation) {
-        screen.orientation.addEventListener('change', (event) => {
+    checkAppVersion().then((e) => {
+      if (e.status === 'ok') {
+        initializeRouteSliding();
+        ResizeRouteField();
+        window.addEventListener('resize', (event) => {
           ResizeRouteField();
         });
+        if (screen) {
+          if (screen.orientation) {
+            screen.orientation.addEventListener('change', (event) => {
+              ResizeRouteField();
+            });
+          }
+        }
+        initializeFolderStores().then((e) => {
+          initializeFolders();
+        });
+        openRouteByURLScheme();
       }
-    }
-    initializeFolderStores().then((e) => {
-      initializeFolders();
     });
-    openRouteByURLScheme();
-    checkAppVersion();
   },
   route: {
     stretchItemBody: stretchItemBody,
