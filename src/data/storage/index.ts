@@ -4,9 +4,11 @@ const storage = {
   cacheStore: false,
   settingsStore: false,
   analyticsOfDataUsageStore: false,
-  analyticsOfUpdateRateStore: false
+  analyticsOfUpdateRateStore: false,
+  folderListStore: false,
+  savedStopFolderStore: false
 };
-var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore'];
+var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore'];
 
 async function dropInstance(store: number): any {
   var store_key = stores[store];
@@ -67,4 +69,16 @@ export async function lfListItem(store: number): [] {
     console.log(err);
     return [];
   }
+}
+
+export async function registerStore(name: string): number {
+  var store_key = `${name.replaceAll(/[\s\n\-]/gm, '')}Store`;
+  if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
+    storage[store_key] = await localforage.createInstance({
+      name: store_key
+    });
+    stores.push(store_key);
+    return stores.length - 1;
+  }
+  return -1;
 }

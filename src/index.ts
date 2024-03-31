@@ -3,17 +3,22 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab } from './interface/route.ts';
+import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
+import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
+import { initializeFolders } from './interface/home-page/folder.ts';
+import { checkAppVersion } from './data/settings/version.ts';
 
 import './interface/css/theme.css';
 import './interface/css/index.css';
 import './interface/css/route.css';
-import './interface/css/home-page.css';
+import './interface/css/home-page/index.css';
+import './interface/css/home-page/folder.css';
 import './interface/css/search-page/index.css';
 import './interface/css/search-page/keyboard.css';
-
+import './interface/css/prompt.css';
+import './interface/css/animation.css';
 //for development
 
 const ErrorStackParser = require('error-stack-parser');
@@ -38,22 +43,38 @@ window.onerror = async function (message, source, lineno, colno, error) {
 
 window.bus = {
   initialize: function () {
-    initializeRouteSliding();
-    ResizeRouteField();
-    window.addEventListener('resize', (event) => {
-      ResizeRouteField();
+    checkAppVersion().then((e) => {
+      if (e.status === 'ok') {
+        initializeRouteSliding();
+        ResizeRouteField();
+        window.addEventListener('resize', (event) => {
+          ResizeRouteField();
+        });
+        if (screen) {
+          if (screen.orientation) {
+            screen.orientation.addEventListener('change', (event) => {
+              ResizeRouteField();
+            });
+          }
+        }
+        initializeFolderStores().then((e) => {
+          initializeFolders();
+        });
+        openRouteByURLScheme();
+      }
     });
-    screen.orientation.addEventListener('change', (event) => {
-      ResizeRouteField();
-    });
-    openRouteByURLScheme();
   },
   route: {
     stretchItemBody: stretchItemBody,
     openRoute: openRoute,
     closeRoute: closeRoute,
     switchRoute: switchRoute,
-    switchRouteBodyTab: switchRouteBodyTab
+    switchRouteBodyTab: switchRouteBodyTab,
+    saveItemAsStop: saveItemAsStop
+  },
+  folder: {
+    isSaved: isSaved,
+    saveStop: saveStop
   },
   searchPage: {
     openSearchPage,
@@ -65,7 +86,8 @@ window.bus = {
   test: {
     calculateDataUsage,
     listRecordedEstimateTime,
-    getUpdateRate
+    getUpdateRate,
+    initializeFolderStores
   }
 };
 window.bus.searchRouteByName = searchRouteByName;

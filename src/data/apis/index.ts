@@ -9,6 +9,8 @@ import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 
+var md5 = require('md5');
+
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
   const directionRegex = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm;
@@ -65,7 +67,7 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
-function processEstimateTime(EstimateTime: object, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: [], Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
@@ -171,6 +173,51 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   await recordEstimateTime(EstimateTime);
+  return result;
+}
+
+export async function integrateStop(StopID: number, RouteID: number): object {
+  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  var Stop = await getStop(requestID);
+  var Location = await getLocation(requestID);
+  var Route = await getRoute(requestID);
+  var thisStop = Stop[`s_${StopID}`];
+  var thisStopDirection = thisStop.goBack;
+  var thisLocation = Location[`l_${thisStop.stopLocationId}`];
+  var thisStopName = thisLocation.n;
+  var thisRoute = Route[`r_${RouteID}`];
+  var thisRouteName = thisRoute.n;
+  var thisRouteDeparture = thisRoute.dep;
+  var thisRouteDestination = thisRoute.des;
+  return {
+    thisStopName,
+    thisStopDirection,
+    thisRouteName,
+    thisRouteDeparture,
+    thisRouteDestination
+  };
+}
+
+function processEstimateTime2(EstimateTime: [], StopIDs: []): {} {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(item.StopID) > -1) {
+      result[`s_${item.StopID}`] = item;
+    }
+  }
+  return result;
+}
+
+export async function integrateEstimateTime2(requestID: string, StopIDs: []): object {
+  setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
+  var EstimateTime = await getEstimateTime(requestID);
+  var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);
+  var result = {
+    items: processedEstimateTime2,
+    dataUpdateTime: dataUpdateTime[requestID]
+  };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }
 /*

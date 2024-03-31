@@ -66,7 +66,7 @@ export async function getUpdateRate(): number {
       const firstColumn = group.map((item) => item[0]);
       const secondColumn = group.map((item) => item[1]);
       const correlation = pearsonCorrelation(firstColumn, secondColumn);
-      if (!(correlation === 0)) {
+      if (!(correlation === 0) && Math.abs(correlation) > 0.2) {
         total_correlation += correlation * firstColumn.length;
         total_weight += firstColumn.length;
       }

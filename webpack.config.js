@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,6 +7,37 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const { execSync } = require('child_process');
+
+async function makeDirectory(path) {
+  // Check if the path already exists
+  try {
+    await fs.promises.access(path);
+    // If there is no error, it means the path already exists
+    console.log('Given directory already exists!');
+  } catch (error) {
+    // If there is an error, it means the path does not exist
+    // Try to create the directory
+    try {
+      await fs.promises.mkdir(path, { recursive: true });
+      // If there is no error, log a success message
+      console.log('New directory created successfully!');
+    } catch (error) {
+      // If there is an error, log it
+      console.log(error);
+      process.exit(1);
+    }
+  }
+}
+
+async function createTextFile(filePath, data, encoding = 'utf-8') {
+  try {
+    await fs.promises.writeFile(filePath, data, { encoding });
+    return `Text file '${filePath}' has been created successfully with ${encoding} encoding!`;
+  } catch (err) {
+    throw new Error(`Error writing to file: ${err}`);
+  }
+}
 
 function generateRandomString(length) {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -16,6 +48,20 @@ function generateRandomString(length) {
   }
   return result;
 }
+
+const workflowRunNumber = parseInt(String(execSync('echo $GITHUB_RUN_NUMBER').toString().trim()));
+const id = generateRandomString(16);
+const thisVersion = {
+  build: workflowRunNumber,
+  id: id
+};
+
+async function outputVersionJSON() {
+  await makeDirectory('dist');
+  await createTextFile('./dist/version.json', JSON.stringify(thisVersion, null, 2));
+}
+
+outputVersionJSON();
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -38,7 +84,7 @@ module.exports = (env, argv) => {
         skipWaiting: true,
         exclude: [/\.map$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/],
-        cacheId: `bus-${generateRandomString(16)}`,
+        cacheId: `bus-${thisVersion.id}`,
         runtimeCaching: [
           {
             urlPattern: new RegExp('^https://fonts.googleapis.com'),
@@ -106,14 +152,14 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        maxSize: 20000,
+        maxSize: 51200,
         cacheGroups: {
           // Define your cache groups here with specific rules
           default: {
             minChunks: 2,
             priority: -20,
             reuseExistingChunk: true
-          },
+          }
           // Add more cache groups if needed
         }
       }
