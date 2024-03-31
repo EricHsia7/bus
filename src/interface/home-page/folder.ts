@@ -77,7 +77,6 @@ function generateElementOfFolder(index: number, skeletonScreen: boolean): object
   var element = document.createElement('div');
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
-  element.setAttribute('stretched', false);
   element.classList.add('home_page_folder');
   element.setAttribute('index', index);
   element.innerHTML = `<div class="home_page_folder_head"><div class="home_page_folder_icon"></div><div class="home_page_folder_name"></div></div><div class="home_page_folder_content"></div>`;
