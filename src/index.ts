@@ -21,7 +21,7 @@ import './interface/route/index.css';
 import './interface/prompt/index.css';
 
 //for development
-
+/*
 const ErrorStackParser = require('error-stack-parser');
 const StackTrace = require('stacktrace-js');
 
@@ -41,6 +41,7 @@ window.onerror = async function (message, source, lineno, colno, error) {
     });
   });
 };
+*/
 
 window.bus = {
   initialize: function () {

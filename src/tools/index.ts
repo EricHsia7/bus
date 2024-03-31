@@ -1,4 +1,4 @@
-var md5 = require('md5');
+export const md5 = require('md5');
 
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));

@@ -1,7 +1,6 @@
 import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
-
-var md5 = require('md5');
+import { md5 } from '../../tools/index.ts';
 
 var Folders = {
   f_saved_stop: {

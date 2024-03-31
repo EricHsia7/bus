@@ -1,7 +1,5 @@
-import { splitDataByDelta, pearsonCorrelation } from '../../tools/index.ts';
+import { splitDataByDelta, pearsonCorrelation, md5 } from '../../tools/index.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
-
-var md5 = require('md5');
 
 var trackingUpdateRate = {
   trackedStops: [],

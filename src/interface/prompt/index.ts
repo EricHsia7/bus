@@ -1,4 +1,4 @@
-var md5 = require('md5')
+import { md5 } from '../../tools/index.ts';
 
 export function prompt_message(message: string, duration: number): void {
   if (isNaN(duration)) {

@@ -1,7 +1,6 @@
-import { timeStampToNumber } from '../../tools/format-time.ts';
+import { timeStampToNumber, md5 } from '../../tools/format-time.ts';
 import { recordRequest } from '../analytics/data-usage.ts';
 const pako = require('pako');
-var md5 = require('md5');
 
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};

@@ -1,6 +1,6 @@
 import { getRoute } from '../apis/getRoute.ts';
+import {md5} from '../../tools/index.ts'
 
-var md5 = require('md5');
 const Fuse = require('fuse.js');
 
 export async function searchRouteByName(query: string): Array {
