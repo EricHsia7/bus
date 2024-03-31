@@ -3,22 +3,23 @@ import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
-import { displayRoute, updateRouteField, formatRoute, openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route.ts';
+import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 
-import './interface/css/theme.css';
-import './interface/css/index.css';
-import './interface/css/route.css';
-import './interface/css/home-page/index.css';
-import './interface/css/home-page/folder.css';
-import './interface/css/search-page/index.css';
-import './interface/css/search-page/keyboard.css';
-import './interface/css/prompt.css';
-import './interface/css/animation.css';
+import './interface/theme.css';
+import './interface/index.css';
+import './interface/animation.css';
+import './interface/home-page/index.css';
+import './interface/home-page/folder.css';
+import './interface/search-page/index.css';
+import './interface/search-page/keyboard.css';
+import './interface/route/index.css';
+import './interface/prompt/index.css';
+
 //for development
 
 const ErrorStackParser = require('error-stack-parser');
