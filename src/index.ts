@@ -48,32 +48,37 @@ window.bus = {
   initialize: function () {
     var FolderField = document.querySelector('.home_page_field .home_page_body .home_page_folders');
     setUpFolderFieldSkeletonScreen(FolderField);
-    checkAppVersion().then((e) => {
-      if (e.status === 'ok') {
-        initializeRouteSliding();
-        ResizeRouteField();
-        window.addEventListener('resize', (event) => {
+    checkAppVersion()
+      .then((e) => {
+        if (e.status === 'ok') {
+          initializeRouteSliding();
           ResizeRouteField();
-        });
-        if (screen) {
-          if (screen.orientation) {
-            screen.orientation.addEventListener('change', (event) => {
-              ResizeRouteField();
-            });
+          window.addEventListener('resize', (event) => {
+            ResizeRouteField();
+          });
+          if (screen) {
+            if (screen.orientation) {
+              screen.orientation.addEventListener('change', (event) => {
+                ResizeRouteField();
+              });
+            }
           }
+          initializeFolderStores().then((e) => {
+            initializeFolders();
+          });
+          preloadData();
+          openRouteByURLScheme();
+          fadeOutSplashScreen();
         }
-        initializeFolderStores().then((e) => {
-          initializeFolders();
-        });
-        preloadData();
-        openRouteByURLScheme();
+        if (e.status === 'fetchError' || e.status === 'unknownError') {
+          fadeOutSplashScreen();
+          alert(e.status);
+        }
+      })
+      .catch((e) => {
         fadeOutSplashScreen();
-      }
-      if (e.status === 'fetchError' || e.status === 'unknownError') {
-        fadeOutSplashScreen();
-        alert(e.status);
-      }
-    });
+        alert(e);
+      });
   },
   route: {
     stretchItemBody: stretchItemBody,
