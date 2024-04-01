@@ -658,13 +658,13 @@
 
 .route_field[skeleton-screen="true"] .route_head .route_name span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
   border-radius: 30px;
 }
 
 .route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
   border-radius: 30px;
 }
 
@@ -679,19 +679,19 @@
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .current_slide {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
 }
 
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
   top: 7.5px;
   height: 35px;
   border-radius: 30px;
 }
 
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
 }
 
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
@@ -705,7 +705,7 @@
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .status .current_slide,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .name,
 .route_field .route_groups .route_grouped_items .item[skeleton-screen="true"] .head .stretch {
-  background: var(--b-f9f9fb);
+  background: var(--b-e5e5ea);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
