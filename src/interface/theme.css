@@ -121,3 +121,19 @@
     --b-333333-opacity-d: 0.33;
   }
 }
+
+:root {
+  --safe-area-left: 0px;
+  --safe-area-right: 0px;
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+}
+
+@supports (bottom: env(safe-area-inset-top)) {
+  :root {
+    --safe-area-left: env(safe-area-inset-left);
+    --safe-area-right: env(safe-area-inset-right);
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+  }
+}
