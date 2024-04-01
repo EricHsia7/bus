@@ -26,7 +26,7 @@ function initializeKeyboard(): void {
   for (var row of keyboard_keys) {
     for (var column of row) {
       var eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
-      var eventType = 'onclick'
+      var eventType = 'onmousedown'
 if (column === '刪除') {
         eventScript = 'bus.searchPage.deleteCharFromInout()';
       }
