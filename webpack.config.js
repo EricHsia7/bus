@@ -70,16 +70,13 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].min.css' // Output CSS filename
       }),
-      new webpack.DefinePlugin({
-        version_id: thisVersion.id
-      }),
       new HtmlWebpackPlugin({
         template: './src/index.html', // Path to your custom HTML template file
         inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          VERSION: JSON.stringify(generateRandomString(16)) // You can adjust the length of the random string here (e.g., 8 characters)
+          VERSION: JSON.stringify(thisVersion.id) // You can adjust the length of the random string here (e.g., 8 characters)
         }
       }),
       new WorkboxPlugin.GenerateSW({
