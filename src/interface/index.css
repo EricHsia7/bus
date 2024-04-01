@@ -34,11 +34,11 @@ body * {
   align-items: center;
 }
 
-.splash-screen .splash-screen-icon {
+.splash-screen svg.splash-screen-icon {
   width: clamp(50px, calc(100vw * 0.45), 110px);
   height: clamp(50px, calc(100vw * 0.45), 110px);
 }
 
-.splash-screen .splash-screen-icon svg path {
+.splash-screen svg.splash-screen-icon path {
   fill: var(--b-333333);
 }
