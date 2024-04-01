@@ -42,3 +42,10 @@ body * {
 .splash-screen svg.splash-screen-icon path {
   fill: var(--b-333333);
 }
+
+.splash-screen-fade-out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-transition-duration);
+  animation-fill-mode: forwards;
+}

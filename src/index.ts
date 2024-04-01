@@ -9,6 +9,7 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
+import { fadeOutSplashScreen } from './interface/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -66,7 +67,7 @@ window.bus = {
         });
         preloadData();
         openRouteByURLScheme();
-        document.querySelector('.splash-screen').style.display = 'none';
+        fadeOutSplashScreen();
       }
     });
   },

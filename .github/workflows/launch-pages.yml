@@ -32,8 +32,8 @@ jobs:
           cp -r ./pwaicon2/ ./dist/pwaicon2/
           cp -r ./manifest.json ./dist/manifest.json
 
-      - name: Generate splash screen
-        run: node generate_splash_screen.js
+      #- name: Generate splash screen
+      #  run: node generate_splash_screen.js
 
       - name: Deploy with gh-pages
         run: |
