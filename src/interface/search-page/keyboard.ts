@@ -11,18 +11,32 @@ let keyboard_keys = [
 const searchInputElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
 const keyboardElement = document.querySelector('.search_page_field .search_page_body .search_page_keyboard');
 
+function supportTouch(): boolean {
+if ('ontouchstart' in window || navigator.maxTouchPoints) {
+    // Touch events are supported
+return true
+} else {
+    // Touch events are not supported
+return false
+}
+}
+
 function initializeKeyboard(): void {
   var result = [];
   for (var row of keyboard_keys) {
     for (var column of row) {
-      var onclickScript = `bus.searchPage.typeTextIntoInput('${column}')`;
-      if (column === '刪除') {
-        onclickScript = 'bus.searchPage.deleteCharFromInout()';
+      var eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
+      var eventType = 'onclick'
+if (column === '刪除') {
+        eventScript = 'bus.searchPage.deleteCharFromInout()';
       }
       if (column === '清空') {
-        onclickScript = 'bus.searchPage.emptyInput()';
+        eventScript = 'bus.searchPage.emptyInput()';
       }
-      result.push(`<div class="search_page_keyboard_key" onclick="${onclickScript}">${column}</div>`);
+      if(supportTouch()) {
+      var eventType = 'ontouchstart'
+}
+      result.push(`<div class="search_page_keyboard_key" ${eventType}="${eventScript}">${column}</div>`);
     }
   }
   keyboardElement.innerHTML = result.join('');
