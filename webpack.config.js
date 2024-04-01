@@ -70,6 +70,9 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].min.css' // Output CSS filename
       }),
+      new webpack.DefinePlugin({
+        version_id: thisVersion.id
+      }),
       new HtmlWebpackPlugin({
         template: './src/index.html', // Path to your custom HTML template file
         inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
