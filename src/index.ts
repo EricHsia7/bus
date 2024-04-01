@@ -66,6 +66,7 @@ window.bus = {
         });
         preloadData();
         openRouteByURLScheme();
+        document.querySelector('.splash-screen').style.display = 'none';
       }
     });
   },
