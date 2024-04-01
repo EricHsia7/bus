@@ -69,6 +69,10 @@ window.bus = {
         openRouteByURLScheme();
         fadeOutSplashScreen();
       }
+      if (e.status === 'fetchError' || e.status === 'unknownError') {
+        fadeOutSplashScreen();
+        alert(e.status);
+      }
     });
   },
   route: {
