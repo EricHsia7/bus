@@ -37,9 +37,7 @@ export async function checkAppVersion(): object {
   var app_version = await getAppVersion();
   if (app_version) {
     if (!(app_version.id === null)) {
-      await lfSetItem(1, 'app_version', JSON.stringify(app_version));
-      var searchParams = new URLSearchParams(window.location.search);
-      if (!(searchParams.get('v') === app_version.id)) {
+      if (!(document.querySelector('head meta[name="version"]').getAttribute('content') === app_version.id)) {
         refreshPageWithTimeStamp(app_version.id, true);
         return { status: 'refreshing' };
       } else {
