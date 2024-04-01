@@ -5,6 +5,7 @@
   width: 100%;
   height: clamp(200px, 36%, 270px);
   padding: 5px;
+  padding-bottom: calc(var(--safe-area-bottom) + 5px);
   box-sizing: border-box;
   background: var(--b-e5e5ea);
   user-select: none;
