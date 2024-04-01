@@ -1,5 +1,5 @@
 var splashScreenTimer = {
-  minimalTimeOut: 800,
+  minimalTimeOut: 1024,
   openTime: new Date().getTime()
 };
 
