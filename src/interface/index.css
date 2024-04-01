@@ -35,8 +35,8 @@ body * {
 }
 
 .splash-screen svg.splash-screen-icon {
-  width: clamp(50px, calc(100vw * 0.45), 110px);
-  height: clamp(50px, calc(100vw * 0.45), 110px);
+  width: clamp(50px, calc(100vw * 0.45), 220px);
+  height: clamp(50px, calc(100vw * 0.45), 220px);
 }
 
 .splash-screen svg.splash-screen-icon path {
