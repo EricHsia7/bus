@@ -245,23 +245,23 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
   var thisRouteDeparture = thisRoute.departureZh;
   var thisRouteDestination = thisRoute.destinationZh;
 
-  var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime);
-  var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime);
+  var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
+  var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime,0);
 
-  var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime);
-  var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime);
+  var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime,0);
+  var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime,0);
 
-  var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime);
-  var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime);
+  var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime,0);
+  var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime,0);
 
-  var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime);
-  var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime);
+  var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime,0);
+  var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime,0);
 
-  var rushHourWindow = formatTimeCode(thisRoute.peakHeadway);
-  var nonRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway);
+  var rushHourWindow = formatTimeCode(thisRoute.peakHeadway,1);
+  var nonRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway,1);
 
-  var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway);
-  var nonRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway);
+  var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway,1);
+  var nonRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway,1);
   //window → the interval/gap between arrivals of buses
 
   var realSequence = thisRoute.realSequence;
