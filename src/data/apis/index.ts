@@ -8,7 +8,7 @@ import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
-import { md5 } from '../../tools/index.ts'
+import { md5 } from '../../tools/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -230,39 +230,77 @@ export function preloadData(): void {
 
 async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
   var Route = await getRoute(requestID, false);
-  var thisRoute = {}
-for(var item of Route) {
-if(item.Id === RouteID) {
-thisRoute = item;
-break;
+  var thisRoute = {};
+  for (var item of Route) {
+    if (item.Id === RouteID) {
+      thisRoute = item;
+      break;
+    }
+  }
+  var thisRouteName = thisRoute.nameZh;
+  var thisRouteName = thisRoute.nameZh;
+
+  var thisRouteDeparture = thisRoute.departureZh;
+  var thisRouteDestination = thisRoute.destinationZh;
+
+  var thisRouteGoFirstBusTime = thisRoute.goFirstBusTime;
+  var thisRouteGoLastBusTime = thisRoute.goLastBusTime;
+
+  var thisRouteBackFirstBusTime = thisRoute.backFirstBusTime;
+  var thisRouteBackLastBusTime = thisRoute.backLastBusTime;
+
+  var thisRouteGoFirstBusTimeOnHoliday = thisRoute.holidayGoFirstBusTime;
+  var thisRouteGoLastBusTimeOnHoliday = thisRoute.holidayGoLastBusTime;
+
+  var thisRouteBackFirstBusTimeOnHoliday = thisRoute.holidayBackFirstBusTime;
+  var thisRouteBackLastBusTimeOnHoliday = thisRoute.holidayBackLastBusTime;
+
+  var rushHourWindow = thisRoute.peakHeadway;
+  var nonRushHourWindow = thisRoute.offPeakHeadway;
+
+  var rushHourWindowOnHoliday = thisRoute.holidayPeakHeadway;
+  var nonRushHourWindowOnHoliday = thisRoute.holidayOffPeakHeadway;
+
+  //window → the interval/gap between arrivals of buses
+
+  var result = {
+    name: thisRouteName,
+    endPoints: {
+      departure: thisRouteDeparture,
+      destination: thisRouteDestination
+    },
+    timeTable: {
+      go: {
+        weekday: {
+          first: thisRouteGoFirstBusTime,
+          last: thisRouteGoLastBusTime,
+          rushHourWindow: rushHourWindow,
+          nonRushHourWindow: nonRushHourWindow
+        },
+        holiday: {
+          first: thisRouteGoFirstBusTimeOnHoliday,
+          last: thisRouteGoLastBusTimeOnHoliday,
+          rushHourWindow: rushHourWindowOnHoliday,
+          nonRushHourWindow: nonRushHourWindowOnHoliday
+        }
+      },
+      back: {
+        weekday: {
+          first: thisRouteBackFirstBusTime,
+          last: thisRouteBackLastBusTime,
+          rushHourWindow: rushHourWindow,
+          nonRushHourWindow: nonRushHourWindow
+        },
+        holiday: {
+          first: thisRouteBackFirstBusTimeOnHoliday,
+          last: thisRouteBackFirstBusTimeOnHoliday,
+          rushHourWindow: rushHourWindowOnHoliday,
+          nonRushHourWindow: nonRushHourWindowOnHoliday
+        }
+      }
+    }
+  };
 }
-}
-var thisRouteName = thisRoute.nameZh
-var thisRouteName = thisRoute.nameZh
-
-var thisRouteDeparture = thisRoute.departureZh
-var thisRouteDestination = thisRoute.destinationZh
-
-var thisRouteGoFirstBusTime = thisRoute.goFirstBusTime
-var thisRouteGoLastBusTime = thisRoute.goLastBusTime
-
-var thisRouteBackFirstBusTime = thisRoute.backFirstBusTime
-var thisRouteBackLastBusTime = thisRoute.backLastBusTime
-
-var thisRouteGoFirstBusTimeOnHoliday = thisRoute.holidayGoFirstBusTime
-var thisRouteGoLastBusTimeOnHoliday = thisRoute.holidayGoLastBusTime
-
-var thisRouteBackFirstBusTimeOnHoliday = thisRoute.holidayBackFirstBusTime
-var thisRouteBackLastBusTimeOnHoliday = thisRoute.holidayBackLastBusTime
-
-var rushHourWindow = thisRoute.peakHeadway
-var nonRushHourWindow = thisRoute.offPeakHeadway
-//window → the interval/gap between arrivals of buses
-
-
-
-}
-
 
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
