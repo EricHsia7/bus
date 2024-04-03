@@ -79,8 +79,9 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
   }
 }
 
-export function formatTimeCode(code: string): object {
-  var hours = 0;
+export function formatTimeCode(code: string, mode: number): object {
+  if(mode === 0) {
+var hours = 0;
   var minutes = 0;
   if (code.length === 4) {
     hours = parseInt(code.substring(0, 2));
@@ -90,7 +91,31 @@ export function formatTimeCode(code: string): object {
     minutes = parseInt(code);
   }
   return {
+type:'moment',
     hours: hours,
     minutes: minutes
   };
+}
+else {
+if(mode === 1){
+var min = 0
+var max = 0
+if(code.length === 4) {
+var number1 = parseInt(code.substring(0, 2));
+var number2 = parseInt(code.substring(2, 4));
+ min = Math.min(number1,number2)
+ max = Math.max(number1,number2)
+}
+if(code.length === 2) {
+var number = parseInt(code.substring(0, 2));
+ min = number
+ max = number
+}
+return {
+type:'range',
+min:min,
+max:max
+}
+}
+}
 }
