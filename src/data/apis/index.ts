@@ -249,6 +249,17 @@ var thisRouteGoLastBusTime = thisRoute.goLastBusTime
 var thisRouteBackFirstBusTime = thisRoute.backFirstBusTime
 var thisRouteBackLastBusTime = thisRoute.backLastBusTime
 
+var thisRouteGoFirstBusTimeOnHoliday = thisRoute.holidayGoFirstBusTime
+var thisRouteGoLastBusTimeOnHoliday = thisRoute.holidayGoLastBusTime
+
+var thisRouteBackFirstBusTimeOnHoliday = thisRoute.holidayBackFirstBusTime
+var thisRouteBackLastBusTimeOnHoliday = thisRoute.holidayBackLastBusTime
+
+var rushHourWindow = thisRoute.peakHeadway
+var nonRushHourWindow = thisRoute.offPeakHeadway
+//window → the interval/gap between arrivals of buses
+
+
 
 }
 
