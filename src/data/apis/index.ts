@@ -228,6 +228,10 @@ export function preloadData(): void {
   });
 }
 
+async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
+  var Route = await getRoute(requestID, false);
+}
+
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
   var minuteToStr = function (s) {
