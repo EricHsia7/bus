@@ -262,8 +262,9 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
 
   var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway);
   var nonRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway);
-
   //window → the interval/gap between arrivals of buses
+
+  var realSequence = thisRoute.realSequence;
 
   var result = {
     name: thisRouteName,
@@ -300,7 +301,8 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
           nonRushHourWindow: nonRushHourWindowOnHoliday
         }
       }
-    }
+    },
+    realSequence: realSequence
   };
   return result;
 }
