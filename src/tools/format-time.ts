@@ -106,7 +106,7 @@ export function formatTimeCode(code: string, mode: number): object {
         max = Math.max(number1, number2);
       }
       if (code.length === 2) {
-        var number = parseInt(code.substring(0, 2));
+        var number = parseInt(code);
         min = number;
         max = number;
       }
