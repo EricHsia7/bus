@@ -136,6 +136,13 @@
   background: var(--b-main-color-solid-transparent-c)
 }
 
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_content .home_page_folder_item_stop .home_page_folder_item_stop_status .next_slide[code="0.5"],
+.home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_content .home_page_folder_item_stop .home_page_folder_item_stop_status .current_slide[code="0.5"] {
+  color: var(--b-333333);
+  font-size: 15px;
+  font-weight: 700;
+}
+
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_content .home_page_folder_item_stop .home_page_folder_item_stop_status .next_slide[code="0"],
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_content .home_page_folder_item_stop .home_page_folder_item_stop_status .current_slide[code="0"] {
   color: var(--b-333333);
