@@ -78,3 +78,19 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
     return { code: 0, text: formatTime(time, mode) };
   }
 }
+
+export function formatTimeCode(code: string): object {
+  var hours = 0;
+  var minutes = 0;
+  if (code.length === 4) {
+    hours = parseInt(code.substring(0, 2));
+    minutes = parseInt(code.substring(2, 4));
+  }
+  if (code.length === 2) {
+    minutes = parseInt(code);
+  }
+  return {
+    hours: hours,
+    minutes: minutes
+  };
+}

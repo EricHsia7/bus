@@ -4,10 +4,12 @@ import { getBusEvent } from './getBusEvent.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
 import { getTimeTable } from './getTimeTable.ts';
+import { getRushHour } from './getRushHour.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
+import { formatTimeCode } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
@@ -243,23 +245,23 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
   var thisRouteDeparture = thisRoute.departureZh;
   var thisRouteDestination = thisRoute.destinationZh;
 
-  var thisRouteGoFirstBusTime = thisRoute.goFirstBusTime;
-  var thisRouteGoLastBusTime = thisRoute.goLastBusTime;
+  var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime);
+  var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime);
 
-  var thisRouteBackFirstBusTime = thisRoute.backFirstBusTime;
-  var thisRouteBackLastBusTime = thisRoute.backLastBusTime;
+  var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime);
+  var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime);
 
-  var thisRouteGoFirstBusTimeOnHoliday = thisRoute.holidayGoFirstBusTime;
-  var thisRouteGoLastBusTimeOnHoliday = thisRoute.holidayGoLastBusTime;
+  var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime);
+  var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime);
 
-  var thisRouteBackFirstBusTimeOnHoliday = thisRoute.holidayBackFirstBusTime;
-  var thisRouteBackLastBusTimeOnHoliday = thisRoute.holidayBackLastBusTime;
+  var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime);
+  var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime);
 
-  var rushHourWindow = thisRoute.peakHeadway;
-  var nonRushHourWindow = thisRoute.offPeakHeadway;
+  var rushHourWindow = formatTimeCode(thisRoute.peakHeadway);
+  var nonRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway);
 
-  var rushHourWindowOnHoliday = thisRoute.holidayPeakHeadway;
-  var nonRushHourWindowOnHoliday = thisRoute.holidayOffPeakHeadway;
+  var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway);
+  var nonRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway);
 
   //window → the interval/gap between arrivals of buses
 
@@ -300,6 +302,7 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
       }
     }
   };
+  return result;
 }
 
 /*
