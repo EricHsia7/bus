@@ -59,6 +59,8 @@
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_field .route_head .route_group_tabs {
@@ -80,6 +82,8 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-333333);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_field .route_head .route_group_tab_line_track {
