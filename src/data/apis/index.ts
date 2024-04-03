@@ -230,7 +230,28 @@ export function preloadData(): void {
 
 async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
   var Route = await getRoute(requestID, false);
+  var thisRoute = {}
+for(var item of Route) {
+if(item.Id === RouteID) {
+thisRoute = item;
+break;
 }
+}
+var thisRouteName = thisRoute.nameZh
+var thisRouteName = thisRoute.nameZh
+
+var thisRouteDeparture = thisRoute.departureZh
+var thisRouteDestination = thisRoute.destinationZh
+
+var thisRouteGoFirstBusTime = thisRoute.goFirstBusTime
+var thisRouteGoLastBusTime = thisRoute.goLastBusTime
+
+var thisRouteBackFirstBusTime = thisRoute.backFirstBusTime
+var thisRouteBackLastBusTime = thisRoute.backLastBusTime
+
+
+}
+
 
 /*
 async function integrateRouteInfo(RouteID: number, PathAttributeId: [number]) {
