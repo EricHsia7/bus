@@ -1,6 +1,9 @@
+import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
 
-var settings = {
+const SettingKeys = ['time_formatting_mode', 'display_current_location', 'refresh_interval'];
+
+var Settings = {
   time_formatting_mode: {
     name: '預估時間格式',
     default_value: 0,
@@ -79,3 +82,48 @@ var settings = {
   }
 };
 
+export async function initializeSettings() {
+  var userSettings = await lfListItem(1);
+  for (var key of userSettings) {
+    if (SettingKeys.indexOf(key) > -1) {
+      var userSetting = await lfGetItem(1, key);
+      if (userSetting) {
+        var userSettingValue = parseInt(userSetting);
+        Settings[key].value = userSettingValue;
+      }
+    }
+  }
+}
+
+function listSettings(): [] {
+  var result = [];
+  for (var key of Settings) {
+    result.push(key);
+  }
+  return result;
+}
+
+async function changeSettingValue(key: string, value: number): boolean {
+  if (SettingKeys.indexOf(key) > -1) {
+    if (Settings.hasOwnProperty(key)) {
+      if (!(Settings[key].options[value] === undefined) && !(Settings[key].options[value] === null)) {
+        await lfSetItem(1, key, value);
+        Settings[key].value = value;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function getSettingOption(key: string): object | boolean | void {
+  if (SettingKeys.indexOf(key) > -1) {
+    if (Settings.hasOwnProperty(key)) {
+      var value = Settings[value];
+      var option = Settings['options'][value];
+      if (!(option === undefined) && !(option === null)) {
+        return option;
+      }
+    }
+  }
+}
