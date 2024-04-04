@@ -25,6 +25,7 @@ var routeRefreshTimer = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
+  dynamic: true,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,

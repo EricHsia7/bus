@@ -1,5 +1,5 @@
 import { getRoute } from '../apis/getRoute.ts';
-import {md5} from '../../tools/index.ts'
+import { md5 } from '../../tools/index.ts';
 
 const Fuse = require('fuse.js');
 
