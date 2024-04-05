@@ -4,7 +4,7 @@
   left: 0px;
   width: 100%;
   height: 100%;
-  background: var(--b-e5e5ea);
+  background: var(--b-f9f9fb);
   display: none;
 }
 
@@ -18,7 +18,7 @@
   left: 0px;
   width: 100%;
   height: 55px;
-  border-bottom: 1px solid var(--b-e5e5ea);
+  border-bottom: 1px solid var(--b-ededf2);
   box-sizing: border-box;
   background: var(--b-ffffff);
 }
@@ -87,6 +87,7 @@
   display: inline-block;
   background: var(--b-ffffff);
   border-radius: 20px;
+  margin-top: 10px;
 }
 
 .settings_page_field .settings_page_settings .setting {
