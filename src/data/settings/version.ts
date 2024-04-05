@@ -33,11 +33,15 @@ async function getAppVersion(): object {
   }
 }
 
+export function getHTMLVersionID() :string{
+  return document.querySelector('head meta[name="version"]').getAttribute('content')
+}
+
 export async function checkAppVersion(): object {
   var app_version = await getAppVersion();
   if (app_version) {
     if (!(app_version.id === null)) {
-      if (!(document.querySelector('head meta[name="version"]').getAttribute('content') === app_version.id)) {
+      if (!(getHTMLVersionID() === app_version.id)) {
         refreshPageWithTimeStamp(app_version.id, true);
         return { status: 'refreshing' };
       } else {

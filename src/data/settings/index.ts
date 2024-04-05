@@ -1,5 +1,6 @@
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
+import { getHTMLVersionID } from './version.ts';
 
 const SettingKeys = ['time_formatting_mode', 'display_current_location', 'refresh_interval'];
 
@@ -148,6 +149,9 @@ export function listSettings(): [] {
     }
     if (item.type === 'page') {
       item.status = '';
+    }
+    if (item.type === 'info' && key === 'version') {
+      item.status = getHTMLVersionID();
     }
     result.push(item);
   }
