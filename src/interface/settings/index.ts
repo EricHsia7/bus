@@ -8,7 +8,7 @@ function generateElementOfItem(item: object): object {
   element.classList.add('setting');
   element.id = identifier;
   element.setAttribute('type', item.type);
-  element.innerHTML = `<div class="setting_icon">${icons[item.icon]}</div><div class="setting_name">${item.name}</div><div class="setting_status">${item.status}</div><div class="setting_arrow">${icons['arrow']}</div>`;
+  element.innerHTML = `<div class="setting_icon">${icons[item.icon]}</div><div class="setting_name">${item.name}</div><div class="setting_status">${item.status}</div><div class="setting_arrow">${icons['arrow']}</div>`;
   return {
     element: element,
     id: identifier
