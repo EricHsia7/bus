@@ -152,10 +152,12 @@ export async function initializeSettings() {
         if (Settings[key].type === 'select') {
           var userSettingOption = parseInt(userSetting);
           Settings[key].option = userSettingOption;
+          console.log(key);
         }
       } else {
         if (Settings[key].type === 'select') {
           Settings[key].option = Settings[key].default_option;
+          console.log(key);
         }
       }
     }
