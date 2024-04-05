@@ -7,7 +7,6 @@ function generateElementOfItem(item: object, index: number): object {
   element.classList.add('option');
   element.id = identifier;
   element.setAttribute('type', item.type);
-  element.setAttribute('onclick', item.action);
   element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" ${item.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
