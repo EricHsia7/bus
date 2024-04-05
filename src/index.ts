@@ -9,6 +9,7 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
+import { openSettingsPage } from './data/settings/index.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 
@@ -111,6 +112,9 @@ window.bus = {
     listRecordedEstimateTime,
     getUpdateRate,
     initializeFolderStores
+  },
+  settingsPage: {
+    openSettingsPage
   }
 };
 window.bus.searchRouteByName = searchRouteByName;
