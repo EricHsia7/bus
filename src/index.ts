@@ -9,7 +9,8 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
-import { openSettingsPage, closeSettingsPage, openSettingsOptionsPage, closeSettingsOptionsPage } from './interface/settings/index.ts';
+import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
+import { openSettingsOptionsPage, closeSettingsOptionsPage } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 
