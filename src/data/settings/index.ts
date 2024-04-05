@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
 import { getHTMLVersionHash } from './version.ts';
 
-const SettingKeys = ['time_formatting_mode', 'display_current_location', 'refresh_interval'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_current_location'];
 
 var Settings = {
   time_formatting_mode: {
