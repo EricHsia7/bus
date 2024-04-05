@@ -104,7 +104,7 @@
 }
 
 .settings_page_field .settings_page_settings .setting,
-.settings_options_page_field .settings_options_page_options .option  {
+.settings_options_page_field .settings_options_page_options .option {
   position: relative;
   width: 100%;
   height: 55px;
@@ -134,7 +134,8 @@
   fill: var(--b-333333);
 }
 
-.settings_page_field .settings_page_settings .setting .setting_name {
+.settings_page_field .settings_page_settings .setting .setting_name,
+.settings_options_page_field .settings_options_page_options .option .option_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -149,6 +150,11 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.settings_options_page_field .settings_options_page_options .option .option_name {
+  width: calc(100% - 55px - 17.5px);
+  left: 17.5px;
 }
 
 .settings_page_field .settings_page_settings .setting .setting_status {
@@ -187,4 +193,50 @@
 
 .settings_page_field .settings_page_settings .setting .setting_arrow svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
+}
+
+.settings_options_page_field .settings_options_page_options .option .option_checkbox {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@property --b-checkbox-alpha {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --b-checkbox-radius {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 40%;
+}
+
+.settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: radial-gradient(circle, rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-checkbox-alpha)) 0%, rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-checkbox-alpha)) var(--b-checkbox-radius), rgba(0, 0, 0, 0) var(--b-checkbox-radius), rgba(0, 0, 0, 0) 100%);
+  width: 25px;
+  height: 25px;
+  border-color: var(--b-ededf2);
+  border-style: solid;
+  border-width: 2.5px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  transition: --b-checkbox-radius 0.3s, --b-checkbox-alpha 0.3s, border-color 0.3s;
+  transition-timing-function: ease-out;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"]:checked {
+  --b-checkbox-radius: 58%;
+  --b-checkbox-alpha: 1;
+  border-color: var(--b-main-color);
 }
