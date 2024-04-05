@@ -109,7 +109,7 @@ export async function initializeSettings() {
 
 export function listSettings(): [] {
   var result = [];
-  for (var key of Settings) {
+  for (var key in Settings) {
     result.push(Settings[key]);
   }
   return result;
