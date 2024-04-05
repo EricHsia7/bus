@@ -1,5 +1,6 @@
 import { md5 } from '../../tools/index.ts';
 import { listSettings } from '../../data/settings/index.ts';
+import { icons } from '../icons/index.ts';
 
 function generateElementOfItem(item: object): object {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
