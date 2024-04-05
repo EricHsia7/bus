@@ -130,7 +130,16 @@ var Settings = {
     name: '版本',
     icon: 'info',
     status: '',
+    type: 'info',
+    action: ''
+  },
+  github: {
+    key: 'github',
+    name: 'GitHub',
+    icon: 'github',
+    status: '@EricHsia7/bus',
     type: 'info'
+    action: ''
   }
 };
 
