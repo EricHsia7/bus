@@ -15,7 +15,7 @@ function generateElementOfItem(item: object, index: number): object {
 }
 
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
-  var list = getSettingOptions(settingKey);
+  var options = getSettingOptions(settingKey);
   Field.querySelector('.settings_options_page_body .settings_options_page_options').innerHTML = '';
   var index = 0;
   for (var item of options) {
