@@ -49,11 +49,12 @@ function generateRandomString(length) {
   return result;
 }
 
-const workflowRunNumber = parseInt(String(execSync('echo $GITHUB_RUN_NUMBER').toString().trim()));
-const id = generateRandomString(16);
+const workflowRunNumber = parseInt(execSync('echo $GITHUB_RUN_NUMBER').toString().trim());
+const commitHash = execSync('git rev-parse HEAD').toString().trim();
 const thisVersion = {
   build: workflowRunNumber,
-  id: id
+  hash: commitHash.substring(0,7),
+  fullHash: commitHash
 };
 
 async function outputVersionJSON() {
@@ -76,7 +77,7 @@ module.exports = (env, argv) => {
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          VERSION: JSON.stringify(thisVersion.id) // You can adjust the length of the random string here (e.g., 8 characters)
+          VERSION: JSON.stringify(thisVersion.hash) // You can adjust the length of the random string here (e.g., 8 characters)
         }
       }),
       new WorkboxPlugin.GenerateSW({
@@ -84,7 +85,7 @@ module.exports = (env, argv) => {
         skipWaiting: true,
         exclude: [/\.map$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/],
-        cacheId: `bus-${thisVersion.id}`,
+        cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
           {
             urlPattern: new RegExp('^https://fonts.googleapis.com'),
