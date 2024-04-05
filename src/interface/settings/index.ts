@@ -21,8 +21,14 @@ async function initializeSettingsField(Field: HTMLElement) {
   }
 }
 
-export function openSettingsPage() {
+export function openSettingsPage(): void {
   var Field: HTMLElement = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  Field.setAttribute('displayed', 'true');
   Field.innerHTML = '';
   initializeSettingsField(Field);
+}
+
+export function closeSettingsPage(): void {
+  var Field: HTMLElement = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  Field.setAttribute('displayed', 'false');
 }
