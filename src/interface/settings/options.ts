@@ -1,12 +1,12 @@
 import { md5 } from '../../tools/index.ts';
-import { getSetting } from '../../data/settings/index.ts';
+import { getSetting, changeSettingOption } from '../../data/settings/index.ts';
 
 function generateElementOfItem(setting: object, item: object, index: number): object {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('option');
   element.id = identifier;
-  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event, '${setting.key}')" ${setting.option === index ? 'checked' : ''}/></div>`;
+  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
     id: identifier
@@ -37,11 +37,11 @@ export function closeSettingsOptionsPage(): void {
   Field.setAttribute('displayed', 'false');
 }
 
-export function settingsOptionsHandler(event: Event): void {
+export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {
   var checkboxes = document.querySelectorAll('.settings_options_page_field .settings_options_page_body .settings_options_page_options .option .option_checkbox input[type="checkbox"]');
   for (var checkbox of checkboxes) {
     checkbox.checked = false;
   }
   event.target.checked = true;
-  changeSettingOption()
+  changeSettingOption(settingKey, index);
 }
