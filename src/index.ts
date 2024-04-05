@@ -2,6 +2,7 @@ import { preloadData } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
 import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
+import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
 import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
@@ -113,7 +114,8 @@ window.bus = {
     calculateDataUsage,
     listRecordedEstimateTime,
     getUpdateRate,
-    initializeFolderStores
+    initializeFolderStores,
+    calculateStoresSize
   },
   settingsPage: {
     openSettingsPage,
