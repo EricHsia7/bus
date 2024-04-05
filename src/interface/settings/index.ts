@@ -16,16 +16,16 @@ function generateElementOfItem(item: object): object {
 
 async function initializeSettingsField(Field: HTMLElement) {
   var list = await listSettings();
+  Field.querySelector('.settings_page_body .settings_page_settings').innerHTML = '';
   for (var item of list) {
     var thisElement = generateElementOfItem(item);
-    Field.appendChild(thisElement.element);
+    Field.querySelector('.settings_page_body .settings_page_settings').appendChild(thisElement.element);
   }
 }
 
 export function openSettingsPage(): void {
-  var Field: HTMLElement = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  var Field: HTMLElement = document.querySelector('.settings_page_field');
   Field.setAttribute('displayed', 'true');
-  Field.innerHTML = '';
   initializeSettingsField(Field);
 }
 
