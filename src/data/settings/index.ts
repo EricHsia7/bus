@@ -148,16 +148,16 @@ export async function initializeSettings() {
   for (var key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
       var userSetting = await lfGetItem(1, key);
-      if (userSetting) {
+      if (!(userSetting === null)) {
         if (Settings[key].type === 'select') {
           var userSettingOption = parseInt(userSetting);
           Settings[key].option = userSettingOption;
-          console.log(key);
+          console.log(0, key);
         }
       } else {
         if (Settings[key].type === 'select') {
           Settings[key].option = Settings[key].default_option;
-          console.log(key);
+          console.log(1, key);
         }
       }
     }
