@@ -28,7 +28,7 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
 export function openSettingsOptionsPage(settingKey: string): void {
   var Field = document.querySelector('.settings_options_page_field');
   Field.setAttribute('displayed', 'true');
-  initializeSettingsOptionsField(Field);
+  initializeSettingsOptionsField(Field, settingKey);
 }
 
 export function closeSettingsOptionsPage(): void {
