@@ -158,7 +158,7 @@ export function listSettings(): [] {
   return result;
 }
 
-async function changeSettingOption(key: string, option: number): boolean {
+export async function changeSettingOption(key: string, option: number): boolean {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       if (Settings[key].type === 'select') {
@@ -173,12 +173,12 @@ async function changeSettingOption(key: string, option: number): boolean {
   return false;
 }
 
-function getSettingOption(key: string): object | void {
+export function getSettingOptions(key: string): object | void {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      var option = Settings['options'][Settings['option']];
-      if (!(option === undefined) && !(option === null)) {
-        return option;
+      var options = Settings['options'];
+      if (!(options === undefined) && !(options === null)) {
+        return options;
       }
     }
   }
