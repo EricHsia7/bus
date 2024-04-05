@@ -104,7 +104,7 @@ var Settings = {
   },
   data_usage: {
     name: '網路使用量',
-    icon: 'inventory',
+    icon: 'data_usage',
     status: '',
     type: 'page',
     action: 'bus.dataUsage.openDataUsagePage()'
@@ -118,7 +118,7 @@ var Settings = {
   },
   version: {
     name: '版本',
-    icon: 'version',
+    icon: 'info',
     status: '',
     type: 'info'
   }
