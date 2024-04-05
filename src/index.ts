@@ -9,7 +9,7 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
-import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
+import { openSettingsPage, closeSettingsPage, openSettingsOptionsPage, closeSettingsOptionsPage } from './interface/settings/index.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 
@@ -116,7 +116,9 @@ window.bus = {
   },
   settingsPage: {
     openSettingsPage,
-    closeSettingsPage
+    closeSettingsPage,
+    openSettingsOptionsPage,
+    closeSettingsOptionsPage
   }
 };
 window.bus.searchRouteByName = searchRouteByName;

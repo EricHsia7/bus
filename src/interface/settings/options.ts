@@ -14,10 +14,24 @@ function generateElementOfItem(item: object, index: number): object {
   };
 }
 
-function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {}
+function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
+  var list = getSettingOptions(settingKey);
+  Field.querySelector('.settings_options_page_body .settings_options_page_options').innerHTML = '';
+  var index = 0;
+  for (var item of options) {
+    var thisElement = generateElementOfItem(item, index);
+    Field.querySelector('.settings_options_page_body .settings_options_page_options').appendChild(thisElement.element);
+    index += 1;
+  }
+}
 
 export function openSettingsOptionsPage(settingKey: string): void {
   var Field = document.querySelector('.settings_options_page_field');
+  Field.setAttribute('displayed', 'true');
+  initializeSettingsOptionsField(Field);
 }
 
-export function closeSettingsOptionsPage(): void {}
+export function closeSettingsOptionsPage(): void {
+  var Field = document.querySelector('.settings_options_page_field');
+  Field.setAttribute('displayed', 'false');
+}
