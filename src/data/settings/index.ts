@@ -7,9 +7,10 @@ var Settings = {
   time_formatting_mode: {
     name: '預估時間格式',
     icon: 'format',
+    status: '',
+    type: 'select',
     default_option: 0,
     option: 0,
-    type: 'select',
     options: [
       { name: formatTime(61, 3), value: 3 },
       { name: formatTime(61, 2), value: 2 },
@@ -20,9 +21,10 @@ var Settings = {
   display_current_location: {
     name: '顯示位置',
     icon: 'location',
+    status: '',
+    type: 'select',
     default_option: 1,
     option: 1,
-    type: 'switch',
     options: [
       {
         name: '開啟',
@@ -37,9 +39,10 @@ var Settings = {
   refresh_interval: {
     name: '預估時間更新頻率',
     icon: 'frequency',
+    status: '',
+    type: 'select',
     default_option: 0,
     option: 0,
-    type: 'select',
     options: [
       {
         name: '自動',
@@ -91,6 +94,33 @@ var Settings = {
         }
       }
     ]
+  },
+  folder: {
+    name: '資料夾',
+    icon: 'folder',
+    status: '',
+    type: 'page',
+    action: 'bus.folder.openFolderListPage()'
+  },
+  data_usage: {
+    name: '網路使用量',
+    icon: 'inventory',
+    status: '',
+    type: 'page',
+    action: 'bus.dataUsage.openDataUsagePage()'
+  },
+  storage: {
+    name: '儲存空間',
+    icon: 'inventory',
+    status: '',
+    type: 'page',
+    action: 'bus.storage.openStoragePage()'
+  },
+  version: {
+    name: '版本',
+    icon: 'version',
+    status: '',
+    type: 'info'
   }
 };
 
@@ -100,8 +130,10 @@ export async function initializeSettings() {
     if (SettingKeys.indexOf(key) > -1) {
       var userSetting = await lfGetItem(1, key);
       if (userSetting) {
-        var userSettingOption = parseInt(userSetting);
-        Settings[key].option = userSettingOption;
+        if (Settings[key].type === 'select') {
+          var userSettingOption = parseInt(userSetting);
+          Settings[key].option = userSettingOption;
+        }
       }
     }
   }
@@ -110,7 +142,14 @@ export async function initializeSettings() {
 export function listSettings(): [] {
   var result = [];
   for (var key in Settings) {
-    result.push(Settings[key]);
+    var item = Settings[key];
+    if (item.type === 'select') {
+      item.status = item.options[item.option].name;
+    }
+    if (item.type === 'page') {
+      item.status = '';
+    }
+    result.push(item);
   }
   return result;
 }
@@ -118,10 +157,12 @@ export function listSettings(): [] {
 async function changeSettingOption(key: string, option: number): boolean {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      if (!(Settings[key].options[option] === undefined) && !(Settings[key].options[option] === null)) {
-        await lfSetItem(1, key, option);
-        Settings[key].option = option;
-        return true;
+      if (Settings[key].type === 'select') {
+        if (!(Settings[key].options[option] === undefined) && !(Settings[key].options[option] === null)) {
+          await lfSetItem(1, key, option);
+          Settings[key].option = option;
+          return true;
+        }
       }
     }
   }
