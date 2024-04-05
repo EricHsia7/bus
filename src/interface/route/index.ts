@@ -2,6 +2,7 @@ import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
 import { searchRouteByName } from '../../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
@@ -200,12 +201,13 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
     }
     return result;
   }
+  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   var integration = await integrateRoute(RouteID, PathAttributeId, requestID);
   var groupedItems = {};
   for (var item of integration.items) {
     var formattedItem = {};
     formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime, 3);
+    formattedItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
     formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
     formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;

@@ -193,3 +193,11 @@ export function getSetting(key: string): object | void {
     }
   }
 }
+
+export function getSettingOptionValue(key: string): object | void {
+  if (SettingKeys.indexOf(key) > -1) {
+    if (Settings.hasOwnProperty(key)) {
+      return Settings[key].options[Settings[key].option].value;
+    }
+  }
+}
