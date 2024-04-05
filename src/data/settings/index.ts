@@ -180,13 +180,10 @@ export async function changeSettingOption(key: string, option: number): boolean 
   return false;
 }
 
-export function getSettingOptions(key: string): object | void {
+export function getSetting(key: string): object | void {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      var options = Settings[key].options;
-      if (!(options === undefined) && !(options === null)) {
-        return options;
-      }
+      return Settings[key];
     }
   }
 }
