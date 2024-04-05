@@ -43,5 +43,7 @@ export function settingsOptionsHandler(event: Event, settingKey: string, index: 
     checkbox.checked = false;
   }
   event.target.checked = true;
-  changeSettingOption(settingKey, index);
+  changeSettingOption(settingKey, index).then((e) => {
+    console.log(e);
+  });
 }
