@@ -217,7 +217,7 @@
 @property --b-checkbox-radius {
   syntax: '<percentage>';
   inherits: false;
-  initial-value: 40%;
+  initial-value: 32%;
 }
 
 .settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"] {
