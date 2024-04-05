@@ -138,7 +138,7 @@ var Settings = {
     name: 'GitHub',
     icon: 'github',
     status: '@EricHsia7/bus',
-    type: 'info'
+    type: 'info',
     action: ''
   }
 };
