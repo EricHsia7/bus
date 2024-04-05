@@ -107,7 +107,7 @@ export async function initializeSettings() {
   }
 }
 
-function listSettings(): [] {
+export function listSettings(): [] {
   var result = [];
   for (var key of Settings) {
     result.push(key);
