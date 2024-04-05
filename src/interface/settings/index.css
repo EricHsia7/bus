@@ -204,6 +204,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  -webKit-user-select: none;
 }
 
 @property --b-checkbox-alpha {
@@ -231,8 +233,8 @@
   box-sizing: border-box;
   transition: --b-checkbox-radius var(--b-transition-duration), --b-checkbox-alpha var(--b-transition-duration), border-color var(--b-transition-duration);
   transition-timing-function: ease-out;
-  outline: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webKit-user-select: none;
 }
 
 .settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"]:checked {
