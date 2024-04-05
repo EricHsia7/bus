@@ -6,7 +6,7 @@ function generateElementOfItem(setting: object, item: object, index: number): ob
   var element = document.createElement('div');
   element.classList.add('option');
   element.id = identifier;
-  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event)" ${setting.option === index ? 'checked' : ''}/></div>`;
+  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event, '${setting.key}')" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
     id: identifier
@@ -25,8 +25,10 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
 }
 
 export function openSettingsOptionsPage(settingKey: string): void {
-  var Field = document.querySelector('.settings_options_page_field');
+  var setting = getSetting(settingKey);
+  var Field: HTMLElement = document.querySelector('.settings_options_page_field');
   Field.setAttribute('displayed', 'true');
+  Field.querySelector('.settings_options_page_head .settings_options_page_title').innerText = setting.name;
   initializeSettingsOptionsField(Field, settingKey);
 }
 
@@ -41,4 +43,5 @@ export function settingsOptionsHandler(event: Event): void {
     checkbox.checked = false;
   }
   event.target.checked = true;
+  changeSettingOption()
 }

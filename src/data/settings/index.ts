@@ -6,6 +6,7 @@ const SettingKeys = ['time_formatting_mode', 'display_current_location', 'refres
 
 var Settings = {
   time_formatting_mode: {
+    key: 'time_formatting_mode',
     name: '預估時間格式',
     icon: 'format',
     status: '',
@@ -20,26 +21,8 @@ var Settings = {
       { name: formatTime(61, 0), value: 0 }
     ]
   },
-  display_current_location: {
-    name: '顯示位置',
-    icon: 'location',
-    status: '',
-    action: `bus.settingsPage.openSettingsOptionsPage('display_current_location')`,
-    type: 'select',
-    default_option: 1,
-    option: 1,
-    options: [
-      {
-        name: '開啟',
-        value: true
-      },
-      {
-        name: '關閉',
-        value: false
-      }
-    ]
-  },
   refresh_interval: {
+    key: 'refresh_interval',
     name: '預估時間更新頻率',
     icon: 'frequency',
     status: '',
@@ -99,6 +82,26 @@ var Settings = {
       }
     ]
   },
+  display_current_location: {
+    key: 'display_current_location',
+    name: '顯示位置',
+    icon: 'location',
+    status: '',
+    action: `bus.settingsPage.openSettingsOptionsPage('display_current_location')`,
+    type: 'select',
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '開啟',
+        value: true
+      },
+      {
+        name: '關閉',
+        value: false
+      }
+    ]
+  },
   folder: {
     name: '資料夾',
     icon: 'folder',
@@ -107,6 +110,7 @@ var Settings = {
     action: 'bus.folder.openFolderListPage()'
   },
   data_usage: {
+    key: 'data_usage',
     name: '網路使用量',
     icon: 'data_usage',
     status: '',
@@ -114,6 +118,7 @@ var Settings = {
     action: 'bus.dataUsage.openDataUsagePage()'
   },
   storage: {
+    key: 'storage',
     name: '儲存空間',
     icon: 'inventory',
     status: '',
@@ -121,6 +126,7 @@ var Settings = {
     action: 'bus.storage.openStoragePage()'
   },
   version: {
+    key: 'version',
     name: '版本',
     icon: 'info',
     status: '',
