@@ -6,7 +6,7 @@ function generateElementOfItem(item: object): object {
   var element = document.createElement('div');
   element.classList.add('setting');
   element.id = identifier;
-  element.innerHTML = `<div class="setting_icon">${icons[item.icon]}</div><div class="setting_name">${item.name}</div><div class="setting_status"></div><div class="setting_arrow">${icons[item.icon]}</div>`;
+  element.innerHTML = `<div class="setting_icon">${icons[item.icon]}</div><div class="setting_name">${item.name}</div><div class="setting_status"></div><div class="setting_arrow">${icons['arrow']}</div>`;
   return {
     element: element,
     id: identifier
