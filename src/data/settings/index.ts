@@ -6,8 +6,9 @@ const SettingKeys = ['time_formatting_mode', 'display_current_location', 'refres
 var Settings = {
   time_formatting_mode: {
     name: '預估時間格式',
-    default_value: 0,
-    value: 0,
+    icon: 'format',
+    default_option: 0,
+    option: 0,
     type: 'select',
     options: [
       { name: formatTime(61, 3), value: 3 },
@@ -18,15 +19,26 @@ var Settings = {
   },
   display_current_location: {
     name: '顯示位置',
-    default_value: 1,
-    value: 1,
+    icon: 'location',
+    default_option: 1,
+    option: 1,
     type: 'switch',
-    options: [true, false]
+    options: [
+      {
+        name: '開啟',
+        value: true
+      },
+      {
+        name: '關閉',
+        value: false
+      }
+    ]
   },
   refresh_interval: {
     name: '預估時間更新頻率',
-    default_value: 0,
-    value: 0,
+    icon: 'frequency',
+    default_option: 0,
+    option: 0,
     type: 'select',
     options: [
       {
@@ -88,8 +100,8 @@ export async function initializeSettings() {
     if (SettingKeys.indexOf(key) > -1) {
       var userSetting = await lfGetItem(1, key);
       if (userSetting) {
-        var userSettingValue = parseInt(userSetting);
-        Settings[key].value = userSettingValue;
+        var userSettingOption = parseInt(userSetting);
+        Settings[key].option = userSettingOption;
       }
     }
   }
@@ -103,12 +115,12 @@ function listSettings(): [] {
   return result;
 }
 
-async function changeSettingValue(key: string, value: number): boolean {
+async function changeSettingOption(key: string, option: number): boolean {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      if (!(Settings[key].options[value] === undefined) && !(Settings[key].options[value] === null)) {
-        await lfSetItem(1, key, value);
-        Settings[key].value = value;
+      if (!(Settings[key].options[option] === undefined) && !(Settings[key].options[option] === null)) {
+        await lfSetItem(1, key, option);
+        Settings[key].option = option;
         return true;
       }
     }
@@ -116,11 +128,10 @@ async function changeSettingValue(key: string, value: number): boolean {
   return false;
 }
 
-function getSettingOption(key: string): object | boolean | void {
+function getSettingOption(key: string): object | void {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      var value = Settings[value];
-      var option = Settings['options'][value];
+      var option = Settings['options'][Settings['option']];
       if (!(option === undefined) && !(option === null)) {
         return option;
       }
