@@ -1,11 +1,77 @@
-.settings_page_settings .setting {
+.settings_page_field {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--b-ffffff);
+  display: none;
+}
+
+.settings_page_field[displayed="true"] {
+  display: block;
+}
+
+.settings_page_field .settings_page_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-e5e5ea);
+  box-sizing: border-box;
+  background: var(--b-ffffff);
+}
+
+.settings_page_field .settings_page_head .settings_page_button_left,
+.settings_page_field .settings_page_head .settings_page_button_right {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings_page_field .settings_page_head .settings_page_button_left {
+  top: 0px;
+  left: 0px;
+}
+
+.settings_page_field .settings_page_head .settings_page_button_right {
+  top: 0px;
+  right: 0px;
+}
+
+.settings_page_field .settings_page_head .settings_page_button_left svg,
+.settings_page_field .settings_page_head .settings_page_button_right svg {
+  width: 20px;
+  height: 20px;
+}
+
+.settings_page_field .settings_page_head .settings_page_button_left svg path,
+.settings_page_field .settings_page_head .settings_page_button_right svg path {
+  fill: var(--b-333333);
+}
+
+.settings_page_field .settings_page_body {
+  position: absolute;
+  top: 55px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.settings_page_field .settings_page_settings .setting {
   position: relative;
   width: 100%;
   height: 55px;
   background: var(--b-ffffff);
 }
 
-.settings_page_settings .setting .setting_icon {
+.settings_page_field .settings_page_settings .setting .setting_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -16,16 +82,16 @@
   align-items: center;
 }
 
-.settings_page_settings .setting .setting_icon svg {
+.settings_page_field .settings_page_settings .setting .setting_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.settings_page_settings .setting .setting_icon svg path {
+.settings_page_field .settings_page_settings .setting .setting_icon svg path {
   fill: var(--b-333333);
 }
 
-.settings_page_settings .setting .setting_name {
+.settings_page_field .settings_page_settings .setting .setting_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -40,7 +106,7 @@
   overflow: hidden;
 }
 
-.settings_page_settings .setting .setting_status {
+.settings_page_field .settings_page_settings .setting .setting_status {
   position: absolute;
   top: 0px;
   right: 45px;
@@ -52,7 +118,7 @@
   color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
 }
 
-.settings_page_settings .setting .setting_arrow {
+.settings_page_field .settings_page_settings .setting .setting_arrow {
   position: absolute;
   top: 0px;
   right: 17.5px;
@@ -63,11 +129,11 @@
   align-items: center;
 }
 
-.settings_page_settings .setting .setting_arrow svg {
+.settings_page_field .settings_page_settings .setting .setting_arrow svg {
   width: 20px;
   height: 20px;
 }
 
-.settings_page_settings .setting .setting_arrow svg path {
+.settings_page_field .settings_page_settings .setting .setting_arrow svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }

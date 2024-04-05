@@ -50,7 +50,8 @@
   height: 55px;
 }
 
-.search_page_field .search_page_head .search_page_button_left {
+.search_page_field .search_page_head .search_page_button_left,
+.search_page_field .search_page_head .search_page_button_right {
   position: absolute;
   width: 55px;
   height: 55px;
