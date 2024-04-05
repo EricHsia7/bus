@@ -22,5 +22,7 @@ async function initializeSettingsField(Field: HTMLElement) {
 }
 
 function openSettings() {
-  var Field = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  var Field: HTMLElement = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  Field.innerHTML = '';
+  initializeSettingsField(Field);
 }
