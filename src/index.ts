@@ -10,7 +10,7 @@ import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.t
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
-import { openSettingsOptionsPage, closeSettingsOptionsPage } from './interface/settings/options.ts';
+import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 
@@ -119,7 +119,8 @@ window.bus = {
     openSettingsPage,
     closeSettingsPage,
     openSettingsOptionsPage,
-    closeSettingsOptionsPage
+    closeSettingsOptionsPage,
+    settingsOptionsHandler
   }
 };
 window.bus.searchRouteByName = searchRouteByName;

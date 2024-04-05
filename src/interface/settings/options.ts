@@ -7,7 +7,7 @@ function generateElementOfItem(item: object, index: number): object {
   element.classList.add('option');
   element.id = identifier;
   element.setAttribute('type', item.type);
-  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" ${item.option === index ? 'checked' : ''}/></div>`;
+  element.innerHTML = `<div class="option_name">${item.name}</div><div class="option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event)" ${item.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
     id: identifier
@@ -34,4 +34,12 @@ export function openSettingsOptionsPage(settingKey: string): void {
 export function closeSettingsOptionsPage(): void {
   var Field = document.querySelector('.settings_options_page_field');
   Field.setAttribute('displayed', 'false');
+}
+
+export function settingsOptionsHandler(event: Event): void {
+  var checkboxes = document.querySelectorAll('.settings_options_page_field .settings_options_page_body .settings_options_page_options .option .option_checkbox input[type="checkbox"]');
+  for (var checkbox of checkboxes) {
+    checkbox.checked = false;
+  }
+  event.target.checked = true;
 }

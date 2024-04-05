@@ -138,6 +138,10 @@ export async function initializeSettings() {
           var userSettingOption = parseInt(userSetting);
           Settings[key].option = userSettingOption;
         }
+      } else {
+        if (Settings[key].type === 'select') {
+          Settings[key].option = Settings[key].default_option;
+        }
       }
     }
   }
