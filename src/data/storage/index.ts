@@ -75,13 +75,15 @@ export async function lfListItem(store: number): [] {
 
 export async function calculateStoresSize(): string {
   var total_size = 0;
+  var index = 0;
   for (var store of stores) {
-    var keysInStore = await lfListItem(store);
+    var keysInStore = await lfListItem(index);
     for (var itemKey of keysInStore) {
-      var item = await lfGetItem(store, itemKey);
+      var item = await lfGetItem(index, itemKey);
       var itemInString = String(item);
       total_size += itemInString.length + itemKey.length;
     }
+    index += 1;
   }
   return convertBytes(total_size);
 }
