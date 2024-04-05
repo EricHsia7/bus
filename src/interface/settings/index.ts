@@ -30,6 +30,6 @@ export function openSettingsPage(): void {
 }
 
 export function closeSettingsPage(): void {
-  var Field: HTMLElement = document.querySelector('.settings_page_field .settings_page_body .settings_page_settings');
+  var Field: HTMLElement = document.querySelector('.settings_page_field');
   Field.setAttribute('displayed', 'false');
 }
