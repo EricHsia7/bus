@@ -171,6 +171,10 @@
   -webkit-user-select: none;
 }
 
+.settings_page_field .settings_page_settings .setting[type="info"] .setting_status {
+  right: 17.5px;
+}
+
 .settings_page_field .settings_page_settings .setting .setting_arrow {
   position: absolute;
   top: 0px;
@@ -182,6 +186,10 @@
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.settings_page_field .settings_page_settings .setting[type="info"] .setting_arrow {
+  display: none;
 }
 
 .settings_page_field .settings_page_settings .setting .setting_arrow svg {
