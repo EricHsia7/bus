@@ -14,6 +14,7 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
+import { integrateRouteInformation } from './data/apis/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -115,6 +116,12 @@ window.bus = {
     listRecordedEstimateTime,
     getUpdateRate,
     initializeFolderStores,
+    routeInfo: async function (name: string) {
+      var search = await searchRouteByName(name);
+      var Route = search[0];
+      var integration = await integrateRouteInformation(Route.id, Route.pid, 'test');
+      return integration;
+    },
     calculateStoresSize
   },
   settingsPage: {

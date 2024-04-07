@@ -3,12 +3,15 @@ import { getStop } from './getStop.ts';
 import { getBusEvent } from './getBusEvent.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
+import { getSemiTimeTable } from './getSemiTimeTable.ts';
 import { getTimeTable } from './getTimeTable.ts';
+import { getRushHour } from './getRushHour.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
-import { md5 } from '../../tools/index.ts'
+import { formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
+import { md5 } from '../../tools/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -226,6 +229,206 @@ export function preloadData(): void {
     getStop(requestID);
     getLocation(requestID);
   });
+}
+
+export async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
+  function getThisRoute(Route: [], RouteID: number): object {
+    var thisRoute = {};
+    for (var item of Route) {
+      if (item.Id === RouteID) {
+        thisRoute = item;
+        break;
+      }
+    }
+    return thisRoute;
+  }
+
+  function getTimeTableRules(thisRoute: object): object {
+    var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
+    var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime, 0);
+
+    var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime, 0);
+    var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime, 0);
+
+    var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime, 0);
+    var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime, 0);
+
+    var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime, 0);
+    var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime, 0);
+
+    var rushHourWindow = formatTimeCode(thisRoute.peakHeadway, 1);
+    var offRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway, 1);
+
+    var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway, 1);
+    var offRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway, 1);
+    //window → the interval/gap between arrivals of buses
+
+    var realSequence = thisRoute.realSequence;
+    return {
+      go: {
+        weekday: {
+          first: thisRouteGoFirstBusTime,
+          last: thisRouteGoLastBusTime,
+          rushHourWindow: rushHourWindow,
+          offRushHourWindow: offRushHourWindow
+        },
+        holiday: {
+          first: thisRouteGoFirstBusTimeOnHoliday,
+          last: thisRouteGoLastBusTimeOnHoliday,
+          rushHourWindow: rushHourWindowOnHoliday,
+          offRushHourWindow: offRushHourWindowOnHoliday
+        }
+      },
+      back: {
+        weekday: {
+          first: thisRouteBackFirstBusTime,
+          last: thisRouteBackLastBusTime,
+          rushHourWindow: rushHourWindow,
+          offRushHourWindow: offRushHourWindow
+        },
+        holiday: {
+          first: thisRouteBackFirstBusTimeOnHoliday,
+          last: thisRouteBackFirstBusTimeOnHoliday,
+          rushHourWindow: rushHourWindowOnHoliday,
+          offRushHourWindow: offRushHourWindowOnHoliday
+        }
+      },
+      realSequence: realSequence
+    };
+  }
+
+  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: [number], timeTableRules: object, SemiTimeTable: [], TimeTable: []): object {
+    function getThisWeekOrigin(): Date {
+      var today: Date = new Date();
+      var dayOfToday: number = today.getDay();
+      var originDate: number = today.getDate() - dayOfToday;
+      var origin: Date = new Date();
+      origin.setDate(originDate);
+      origin.setHours(0);
+      origin.setMinutes(0);
+      origin.setSeconds(0);
+      origin.setMilliseconds(0);
+      return origin;
+    }
+
+    function offsetDate(origin: Date, date: number, hours: number, minutes: number): Date {
+      var duplicatedOrigin = new Date();
+      duplicatedOrigin.setDate(1);
+      duplicatedOrigin.setMonth(0);
+      duplicatedOrigin.setHours(hours);
+      duplicatedOrigin.setMinutes(minutes);
+      duplicatedOrigin.setSeconds(0);
+      duplicatedOrigin.setMilliseconds(0);
+      duplicatedOrigin.setFullYear(origin.getFullYear());
+      duplicatedOrigin.setMonth(origin.getMonth());
+      duplicatedOrigin.setDate(origin.getDate());
+      duplicatedOrigin.setDate(duplicatedOrigin.getDate() + date);
+      return duplicatedOrigin;
+    }
+
+    var calendar = {};
+    var thisWeekOrigin = getThisWeekOrigin();
+    for (var item of SemiTimeTable) {
+      if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
+        if (item.DateType === '0') {
+          var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+
+          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+
+          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+            calendar[dayOfWeek.code] = [];
+          }
+
+          var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
+          var thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
+
+          var thisPeriodEndTime = formatTimeCode(item.EndTime, 0);
+          var thisPeriodEndTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodEndTime.hours, thisPeriodEndTime.minutes);
+
+          var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
+
+          var minWindow = parseInt(item.LongHeadway);
+          var maxWindow = parseInt(item.LowHeadway);
+          var averageWindow = (maxWindow + minWindow) / 2;
+
+          var headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
+          for (var i = 0; i < headwayQuantity; i++) {
+            var violateRules = false;
+            var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + averageWindow * i);
+            if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {
+              violateRules = true;
+            }
+            if (thisHeadwayDate.getTime() > thisPeriodEndTimeDateObject.getTime()) {
+              violateRules = true;
+            }
+            /*need to complete - check timeTableRules*/
+            if (violateRules === false) {
+              calendar[dayOfWeek.code].push({
+                date: thisHeadwayDate,
+                dateString: dateToString(thisHeadwayDate),
+                duration: maxWindow,
+                deviation: Math.abs(averageWindow - maxWindow)
+              });
+            }
+          }
+        }
+      }
+    }
+    for (var item of TimeTable) {
+      if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
+        if (item.DateType === '0') {
+          var violateRules = false;
+          var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+            calendar[dayOfWeek.code] = [];
+          }
+          var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
+          var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
+          /*need to complete - check timeTableRules*/
+          if (violateRules === false) {
+            calendar[dayOfWeek.code].push({
+              date: thisHeadwayDate,
+              dateString: dateToString(thisHeadwayDate),
+              duration: 0,
+              deviation: 0
+            });
+          }
+        }
+      }
+    }
+    for (var code in calendar) {
+      calendar[code] = calendar[code].sort(function (a, b) {
+        return a.date.getTime() - b.date.getTime();
+      });
+    }
+    return calendar;
+  }
+
+  var Route = await getRoute(requestID, false);
+  var thisRoute = getThisRoute(Route, RouteID);
+
+  var SemiTimeTable = await getSemiTimeTable(requestID);
+  var TimeTable = await getTimeTable(requestID);
+  var timeTableRules = getTimeTableRules(thisRoute);
+  var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
+
+  var thisRouteName = thisRoute.nameZh;
+  var thisRouteName = thisRoute.nameZh;
+
+  var thisRouteDeparture = thisRoute.departureZh;
+  var thisRouteDestination = thisRoute.destinationZh;
+
+  var result = {
+    name: thisRouteName,
+    endPoints: {
+      departure: thisRouteDeparture,
+      destination: thisRouteDestination
+    },
+    timeTableRules: timeTableRules,
+    calendar: calendar
+  };
+  return result;
 }
 
 /*

@@ -22,6 +22,10 @@ export function timeStampToNumber(string: string): number {
   return 0;
 }
 
+export function dateToString(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
+
 export function formatTime(time: number, mode: number): string {
   if (mode === 0) {
     return `${time}秒`;
@@ -77,4 +81,96 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
   if (250 < time) {
     return { code: 0, text: formatTime(time, mode) };
   }
+}
+
+export function formatTimeCode(code: string, mode: number): object {
+  if (mode === 0) {
+    var hours = 0;
+    var minutes = 0;
+    if (code.length === 4) {
+      hours = parseInt(code.substring(0, 2));
+      minutes = parseInt(code.substring(2, 4));
+    }
+    if (code.length === 2) {
+      minutes = parseInt(code);
+    }
+    return {
+      type: 'moment',
+      hours: hours,
+      minutes: minutes
+    };
+  } else {
+    if (mode === 1) {
+      var min = 0;
+      var max = 0;
+      if (code.length === 4) {
+        var number1 = parseInt(code.substring(0, 2));
+        var number2 = parseInt(code.substring(2, 4));
+        min = Math.min(number1, number2);
+        max = Math.max(number1, number2);
+      }
+      if (code.length === 2) {
+        var number = parseInt(code);
+        min = number;
+        max = number;
+      }
+      return {
+        type: 'range',
+        min: min,
+        max: max
+      };
+    }
+  }
+}
+
+export function dateValueToDayOfWeek(dateValue: string): object {
+  var days = [
+    {
+      name: '週六',
+      day: 0,
+      code: 'sat'
+    },
+    {
+      name: '週一',
+      day: 1,
+      code: 'mon'
+    },
+    {
+      name: '週二',
+      day: 2,
+      code: 'tue'
+    },
+    {
+      name: '週三',
+      day: 3,
+      code: 'wed'
+    },
+    {
+      name: '週四',
+      day: 4,
+      code: 'thu'
+    },
+    {
+      name: '週五',
+      day: 5,
+      code: 'fri'
+    },
+    {
+      name: '週日',
+      day: 6,
+      code: 'sun'
+    }
+  ];
+  var index = 0;
+  var int = parseInt(dateValue);
+  if (int === 1) {
+    index = 6;
+  }
+  if (2 <= int && int <= 6) {
+    index = int - 1;
+  }
+  if (int === 7) {
+    index = 0;
+  }
+  return days[index];
 }
