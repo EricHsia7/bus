@@ -26,7 +26,7 @@ var routeRefreshTimer = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
-  dynamic: true,
+  auto: true,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -476,6 +476,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 }
 
 async function refreshRoute(): object {
+  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
+  routeRefreshTimer.auto = refresh_interval_setting.auto;
+  routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   document.querySelector('.update_timer').setAttribute('refreshing', true);
@@ -483,8 +486,12 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  var updateRate = await getUpdateRate();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  if (routeRefreshTimer.auto) {
+    var updateRate = await getUpdateRate();
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  } else {
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval);
+  }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);
