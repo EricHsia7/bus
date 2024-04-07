@@ -3,6 +3,8 @@ import { indexToDay } from '../../../tools/format-time.ts';
 import { md5 } from '../../../tools/index.ts';
 
 const calendar_ratio = 100;
+var previousCalendar = {}
+
 
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
@@ -61,7 +63,7 @@ function generateElementOfEvent(event: object): GeneratedElement {
   thisDayStart.setMilliseconds(0);
   element.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
   element.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
-  element.innerHTML = event.dateString;
+  element.innerText = event.dateString;
   return {
     element: element,
     id: identifier
@@ -165,25 +167,32 @@ export function updateCalendarField(Field: HTMLElement, calendar: object): void 
 
 export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
-    function updateDay(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.home_page_folder_item_stop_name').innerText = thisItem.name;
+    function updateText(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.innerText = thisItem.dateString;
     }
-    function updateEvent(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.home_page_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+    function updatePosition(thisElement: HTMLElement, thisItem: object): void {
+     var thisDayStart = new Date();
+  thisDayStart.setDate(1);
+  thisDayStart.setMonth(0);
+  thisDayStart.setFullYear(thisItem.date.getFullYear());
+  thisDayStart.setMonth(thisItem.date.getMonth());
+  thisDayStart.setDate(thisItem.date.getDate());
+  thisDayStart.setHours(0);
+  thisDayStart.setMinutes(0);
+  thisDayStart.setSeconds(0);
+  thisDayStart.setMilliseconds(0);
+  thisElement.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
+  thisElement.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
     }
     if (previousItem === null) {
-      updateStatus(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateRoute(thisElement, thisItem);
+      updateText(thisElement, thisItem);
+      updatePosition(thisElement, thisItem);
     } else {
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisElement, thisItem);
+      if (!(thisItem.dateString === previousItem.dateString) || !compareThings(previousItem, thisItem)) {
+      updateText(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisElement, thisItem);
-      }
-      if (!compareThings(previousItem.id, thisItem.id)) {
-        updateRoute(thisElement, thisItem);
+      if (!(thisItem.dateString === previousItem.dateString) || !compareThings(previousItem, thisItem)) {
+      updatePosition(thisElement, thisItem);
       }
     }
   }
@@ -192,8 +201,8 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousFormattedFoldersWithContent === {}) {
-    previousFormattedFoldersWithContent = formattedFoldersWithContent;
+  if (previousCalendar === {}) {
+    previousCalendar = calendar;
   }
 
   var folderQuantity = formattedFoldersWithContent.folderQuantity;
@@ -250,10 +259,10 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
-      if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
-        if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
-          if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {
-            var previousItem = previousFormattedFoldersWithContent.foldedItems[folderKey][j];
+      if (previousCalendar.hasOwnProperty('foldedItems')) {
+        if (previousCalendar.foldedItems.hasOwnProperty(folderKey)) {
+          if (previousCalendar.foldedItems[folderKey][j]) {
+            var previousItem = previousCalendar.foldedItems[folderKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -266,5 +275,5 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       }
     }
   }
-  previousFormattedFoldersWithContent = formattedFoldersWithContent;
+  previousCalendar = calendar;
 }
