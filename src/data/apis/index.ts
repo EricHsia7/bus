@@ -396,7 +396,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             calendar[dayOfWeek.code].events.push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate, 'hh:mm'),
-              duration: 0,
+              duration: 15,
               deviation: 0
             });
           }

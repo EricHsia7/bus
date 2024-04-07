@@ -45,6 +45,18 @@ function generateElementOfEvent(event: object): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_event');
   element.id = identifier;
+  var thisDayStart = new Date();
+  thisDayStart.setDate(1);
+  thisDayStart.setMonth(0);
+  thisDayStart.setFullYear(event.date.getFullYear());
+  thisDayStart.setMonth(event.date.getMonth());
+  thisDayStart.setDate(event.date.getDate());
+  thisDayStart.setHours(0);
+  thisDayStart.setMinutes(0);
+  thisDayStart.setSeconds(0);
+  thisDayStart.setMilliseconds(0);
+  element.style.setProperty('--b-calendar-event-top', `${80 * 24 * ((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))}px`);
+  element.style.setProperty('--b-calendar-event-height', `${80 * 24 * ((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))}px`);
   element.innerHTML = event.dateString;
   return {
     element: element,
