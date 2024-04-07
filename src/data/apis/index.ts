@@ -399,7 +399,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
   }
 
   var Route = await getRoute(requestID, false);
-  var thisRoute = getThisRoute(Route);
+  var thisRoute = getThisRoute(Route, RouteID);
 
   var SemiTimeTable = await getSemiTimeTable(requestID);
   var TimeTable = await getTimeTable(requestID);
