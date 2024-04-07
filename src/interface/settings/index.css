@@ -38,7 +38,8 @@
   align-items: center;
 }
 
-.settings_page_field .settings_page_head .settings_page_button_left .settings_options_page_field .settings_options_page_head .settings_options_page_button_left {
+.settings_page_field .settings_page_head .settings_page_button_left,
+.settings_options_page_field .settings_options_page_head .settings_options_page_button_left {
   top: 0px;
   left: 0px;
 }

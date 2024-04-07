@@ -10,7 +10,11 @@ async function initializeRouteInformationField(Field: HTMLElement, RouteID: numb
 
 export function openRouteInformation(RouteID: number, PathAttributeId: [number]): void {
   var Field: HTMLElement = document.querySelector('.route_information_field');
+  Field.setAttribute('displayed', true);
   initializeRouteInformationField(Field, RouteID, PathAttributeId);
 }
 
-export function closeRouteInformation(): void {}
+export function closeRouteInformation(): void {
+  var Field: HTMLElement = document.querySelector('.route_information_field');
+  Field.setAttribute('displayed', false);
+}

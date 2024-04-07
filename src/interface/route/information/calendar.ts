@@ -20,14 +20,16 @@ function generateElementOfEvent(event: object): GeneratedElement {
   element.classList.add('route_information_calendar_event');
   element.id = identifier;
   element.innerHTML = event.dateString;
-//  element.style.setProperty('')
+  //  element.style.setProperty('')
   return {
     element: element,
     id: identifier
   };
 }
 
-export function initializeCalendar(Field: HTMLElement, calendar: object) {
+export function initializeCalendar(Field: HTMLElement, calendar: object): void {
+  Field.querySelector('.route_information_calendar_days').innerHTML = '';
+  Field.querySelector('.route_information_calendar_events').innerHTML = '';
   var index = 0;
   for (var code in calendar) {
     var thisDay = calendar[code];
