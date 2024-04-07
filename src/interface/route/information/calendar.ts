@@ -18,7 +18,7 @@ function generateElementOfDay(dayOfWeek: object): GeneratedElement {
 function generateElementOfEventsGroup(dayOfWeek: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classList.add('route_information_calendar_events_group');
+  element.classList.add('route_information_calendar_grouped_events');
   element.id = identifier;
   element.setAttribute('day', dayOfWeek.day);
   return {
@@ -33,7 +33,6 @@ function generateElementOfEvent(event: object): GeneratedElement {
   element.classList.add('route_information_calendar_event');
   element.id = identifier;
   element.innerHTML = event.dateString;
-  //  element.style.setProperty('')
   return {
     element: element,
     id: identifier
@@ -42,16 +41,16 @@ function generateElementOfEvent(event: object): GeneratedElement {
 
 export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   Field.querySelector('.route_information_calendar_days').innerHTML = '';
-  Field.querySelector('.route_information_calendar_events').innerHTML = '';
+  Field.querySelector('.route_information_calendar_events_groups').innerHTML = '';
   for (var code in calendar) {
     var thisDay = calendar[code];
     var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
     var thisEventsGroupElement: GeneratedElement = generateElementOfEventsGroup(thisDay.dayOfWeek);
     Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
-    Field.querySelector('.route_information_calendar_events').appendChild(thisEventsGroupElement.element);
+    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventsGroupElement.element);
     for (var event of thisDay.events) {
       var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
-      Field.querySelector(`.route_information_calendar_events .route_information_calendar_events_group[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
+      Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
     }
   }
 }
