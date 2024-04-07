@@ -71,7 +71,7 @@ function simplifyRoute(Route: object): object {
   return result;
 }
 
-export async function getRoute(requestID: string, simplify: boolean = true): object {
+export async function getRoute(requestID: string, simplify: boolean = true): object | [] {
   async function getData() {
     var apis = [
       [0, 10],

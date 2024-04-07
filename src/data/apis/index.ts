@@ -3,13 +3,14 @@ import { getStop } from './getStop.ts';
 import { getBusEvent } from './getBusEvent.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
+import { getSemiTimeTable } from './getSemiTimeTable.ts';
 import { getTimeTable } from './getTimeTable.ts';
 import { getRushHour } from './getRushHour.ts';
 import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
-import { formatTimeCode } from '../../tools/format-time.ts';
+import { formatTimeCode, dateValueToDayOfWeek } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
@@ -230,61 +231,54 @@ export function preloadData(): void {
   });
 }
 
-async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
-  var Route = await getRoute(requestID, false);
-  var thisRoute = {};
-  for (var item of Route) {
-    if (item.Id === RouteID) {
-      thisRoute = item;
-      break;
+export async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
+  function getTimeTableRules(Route: []): object {
+    var thisRoute = {};
+    for (var item of Route) {
+      if (item.Id === RouteID) {
+        thisRoute = item;
+        break;
+      }
     }
-  }
-  var thisRouteName = thisRoute.nameZh;
-  var thisRouteName = thisRoute.nameZh;
+    var thisRouteName = thisRoute.nameZh;
+    var thisRouteName = thisRoute.nameZh;
 
-  var thisRouteDeparture = thisRoute.departureZh;
-  var thisRouteDestination = thisRoute.destinationZh;
+    var thisRouteDeparture = thisRoute.departureZh;
+    var thisRouteDestination = thisRoute.destinationZh;
 
-  var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
-  var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime,0);
+    var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
+    var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime, 0);
 
-  var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime,0);
-  var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime,0);
+    var thisRouteBackFirstBusTime = formatTimeCode(thisRoute.backFirstBusTime, 0);
+    var thisRouteBackLastBusTime = formatTimeCode(thisRoute.backLastBusTime, 0);
 
-  var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime,0);
-  var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime,0);
+    var thisRouteGoFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoFirstBusTime, 0);
+    var thisRouteGoLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayGoLastBusTime, 0);
 
-  var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime,0);
-  var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime,0);
+    var thisRouteBackFirstBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackFirstBusTime, 0);
+    var thisRouteBackLastBusTimeOnHoliday = formatTimeCode(thisRoute.holidayBackLastBusTime, 0);
 
-  var rushHourWindow = formatTimeCode(thisRoute.peakHeadway,1);
-  var nonRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway,1);
+    var rushHourWindow = formatTimeCode(thisRoute.peakHeadway, 1);
+    var offRushHourWindow = formatTimeCode(thisRoute.offPeakHeadway, 1);
 
-  var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway,1);
-  var nonRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway,1);
-  //window → the interval/gap between arrivals of buses
+    var rushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayPeakHeadway, 1);
+    var offRushHourWindowOnHoliday = formatTimeCode(thisRoute.holidayOffPeakHeadway, 1);
+    //window → the interval/gap between arrivals of buses
 
-  var realSequence = thisRoute.realSequence;
-
-  var result = {
-    name: thisRouteName,
-    endPoints: {
-      departure: thisRouteDeparture,
-      destination: thisRouteDestination
-    },
-    timeTable: {
+    var realSequence = thisRoute.realSequence;
+    return {
       go: {
         weekday: {
           first: thisRouteGoFirstBusTime,
           last: thisRouteGoLastBusTime,
           rushHourWindow: rushHourWindow,
-          nonRushHourWindow: nonRushHourWindow
+          offRushHourWindow: offRushHourWindow
         },
         holiday: {
           first: thisRouteGoFirstBusTimeOnHoliday,
           last: thisRouteGoLastBusTimeOnHoliday,
           rushHourWindow: rushHourWindowOnHoliday,
-          nonRushHourWindow: nonRushHourWindowOnHoliday
+          offRushHourWindow: offRushHourWindowOnHoliday
         }
       },
       back: {
@@ -292,18 +286,98 @@ async function integrateRouteInformation(RouteID: number, PathAttributeId: [numb
           first: thisRouteBackFirstBusTime,
           last: thisRouteBackLastBusTime,
           rushHourWindow: rushHourWindow,
-          nonRushHourWindow: nonRushHourWindow
+          offRushHourWindow: offRushHourWindow
         },
         holiday: {
           first: thisRouteBackFirstBusTimeOnHoliday,
           last: thisRouteBackFirstBusTimeOnHoliday,
           rushHourWindow: rushHourWindowOnHoliday,
-          nonRushHourWindow: nonRushHourWindowOnHoliday
+          offRushHourWindow: offRushHourWindowOnHoliday
+        }
+      },
+      realSequence: realSequence
+    };
+  }
+
+  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: [number], timeTableRules: object, SemiTimeTable: [], TimeTable: []): object {
+    function getThisWeekOrigin(): Date {
+      var today: Date = new Date();
+      var dayOfToday: number = today.getDay();
+      var originDate: number = today.getDate() - dayOfToday;
+      var origin: Date = new Date();
+      origin.setDate(originDate);
+      origin.setHours(0);
+      origin.setMinutes(0);
+      origin.setSeconds(0);
+      origin.setMilliseconds(0);
+      return origin;
+    }
+
+    function offsetDate(origin: Date, dayOfWeek: object): Date {
+      var duplicatedOrigin = new Date();
+      duplicatedOrigin.setDate(1);
+      duplicatedOrigin.setMonth(0);
+      duplicatedOrigin.setHours(0);
+      duplicatedOrigin.setMinutes(0);
+      duplicatedOrigin.setSeconds(0);
+      duplicatedOrigin.setMilliseconds(0);
+      duplicatedOrigin.setFullYear(origin.getFullYear());
+      duplicatedOrigin.setMonth(origin.getMonth());
+      duplicatedOrigin.setDate(origin.getDate());
+      duplicatedOrigin.setDate(duplicatedOrigin.getDate() + dayOfWeek.day);
+      return duplicatedOrigin;
+    }
+
+    var calendar = {};
+    var thisWeekOrigin = getThisWeekOrigin();
+    for (var item of SemiTimeTable) {
+      if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
+        if (item.DateType === '0') {
+          var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek);
+          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+            calendar[dayOfWeek.code] = [];
+          }
+          var minWindow = parseInt(item.LongHeadway);
+          var maxWindow = parseInt(item.LowHeadway);
+          var averageWindow = (maxWindow + minWindow) / 2;
+          var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
+          var thisPeriodEndTime = formatTimeCode(item.EndTime, 0);
+          var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
+         var headwayQuantity = thisPeriodDurationInMinutes/averageWindow
+          for (var i = 0; i < headwayQuantity; i++) {
+            var thisHeadwayDate = new Date()
+            thisHeadwayDate.setDate(1)
+            thisHeadwayDate.setMonth(0)
+            thisHeadwayDate.setFullYear(thisDayOrigin.getFullYear())
+            thisHeadwayDate.setMonth(thisDayOrigin.getMonth())
+            thisHeadwayDate.setDate(thisDayOrigin.getDate())
+            thisHeadwayDate.setHours(thisDayOrigin.setHours())
+            thisHeadwayDate.setMinutes(thisDayOrigin.getMinutes())
+            thisHeadwayDate.setSeconds(thisDayOrigin.getSeconds())
+            thisHeadwayDate.setMilliseconds(thisDayOrigin.getMilliseconds())
+            thisHeadwayDate.setHours(thisHeadwayDate.getHours() + thisPeriodStartTime.hours)
+            thisHeadwayDate.setMinutes(thisHeadwayDate.getMinutes() + thisPeriodStartTime.minutes)
+          }
         }
       }
+    }
+  }
+
+  var Route = await getRoute(requestID, false);
+  var timeTableRules = getTimeTableRules(Route);
+  var SemiTimeTable = await getSemiTimeTable(requestID);
+  var TimeTable = await getTimeTable(requestID);
+
+  var result = {
+    name: thisRouteName,
+    endPoints: {
+      departure: thisRouteDeparture,
+      destination: thisRouteDestination
     },
-    realSequence: realSequence
+    timeTableRules: timeTableRules
   };
+
   return result;
 }
 
