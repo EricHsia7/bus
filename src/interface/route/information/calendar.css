@@ -100,7 +100,8 @@
   left: 0px;
   width: 100%;
   height: var(--b-calendar-event-height);
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-c));
+  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
+  color: var(--b-main-color);
   border-radius: 8px;
   user-select: none;
   -webkit-user-select: none;
