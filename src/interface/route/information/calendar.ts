@@ -45,7 +45,8 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   Field.querySelector('.route_information_calendar_events').innerHTML = '';
   for (var code in calendar) {
     var thisDay = calendar[code];
-    var thisDayElement: GeneratedElement = generateElementOfDay(index);
+    var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
+    var thisEventsGroupElement: GeneratedElement = generateElementOfEventsGroup(thisDay.dayOfWeek);
     Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
     Field.querySelector('.route_information_calendar_events').appendChild(thisEventsGroupElement.element);
     for (var event of thisDay.events) {
