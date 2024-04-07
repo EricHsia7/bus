@@ -59,8 +59,8 @@ function generateElementOfEvent(event: object): GeneratedElement {
   thisDayStart.setMinutes(0);
   thisDayStart.setSeconds(0);
   thisDayStart.setMilliseconds(0);
-  element.style.setProperty('--b-calendar-event-top', `${calendar_ratio * 24 * ((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))}px`);
-  element.style.setProperty('--b-calendar-event-height', `${calendar_ratio * 24 * ((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))}px`);
+  element.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*100}%`);
+  element.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*100}%`);
   element.innerHTML = event.dateString;
   return {
     element: element,
