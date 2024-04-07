@@ -5,10 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-folder
-      - dev-version-check
-      - dev-format-directory-structure
-      - dev-route-information
 jobs:
   build:
     runs-on: ubuntu-latest

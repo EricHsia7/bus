@@ -104,7 +104,7 @@
   font-weight: 700;
   -webkit-user-select: none;
   user-select: none;
-  background: var(--b-e5e5ea);
+  background: var(--b-ededf2);
 }
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_content .home_page_folder_item_stop .home_page_folder_item_stop_status .next_slide[code="6"],
@@ -221,7 +221,7 @@
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .next_slide,
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_status .current_slide,
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_item_stop[skeleton-screen="true"] .home_page_folder_item_stop_name {
-  background: var(--b-e5e5ea);
+  background: var(--b-ededf2);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
@@ -233,8 +233,8 @@
 
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_name,
 .home_page_field .home_page_body .home_page_folders .home_page_folder[skeleton-screen="true"] .home_page_folder_head .home_page_folder_icon {
-  background: var(--b-e5e5ea);
-  /*background: linear-gradient(90deg, rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.5) 35%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), 0.225) 55%, rgba(var(--b-e5e5ea-r), var(--b-e5e5ea-g), var(--b-e5e5ea-b), 0.5) 75%);
+  background: var(--b-ededf2);
+  /*background: linear-gradient(90deg, rgba(var(--b-ededf2-r), var(--b-ededf2-g), var(--b-ededf2-b), 0.5) 35%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), 0.225) 55%, rgba(var(--b-ededf2-r), var(--b-ededf2-g), var(--b-ededf2-b), 0.5) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
   animation: skeleton-loading;

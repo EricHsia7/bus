@@ -2,6 +2,7 @@ import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
 import { searchRouteByName } from '../../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
@@ -25,6 +26,7 @@ var routeRefreshTimer = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
+  auto: true,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -199,12 +201,13 @@ export async function formatRoute(RouteID: number, PathAttributeId: [number], re
     }
     return result;
   }
+  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   var integration = await integrateRoute(RouteID, PathAttributeId, requestID);
   var groupedItems = {};
   for (var item of integration.items) {
     var formattedItem = {};
     formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime, 3);
+    formattedItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
     formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
     formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
     formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
@@ -473,6 +476,9 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 }
 
 async function refreshRoute(): object {
+  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
+  routeRefreshTimer.auto = refresh_interval_setting.auto;
+  routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   document.querySelector('.update_timer').setAttribute('refreshing', true);
@@ -480,8 +486,12 @@ async function refreshRoute(): object {
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, formattedRoute, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
-  var updateRate = await getUpdateRate();
-  routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  if (routeRefreshTimer.auto) {
+    var updateRate = await getUpdateRate();
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+  } else {
+    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.defaultInterval;
+  }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
   document.querySelector('.update_timer').setAttribute('refreshing', false);

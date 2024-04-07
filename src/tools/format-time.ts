@@ -26,7 +26,7 @@ export function dateToString(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 }
 
-function formatTime(time: number, mode: number): string {
+export function formatTime(time: number, mode: number): string {
   if (mode === 0) {
     return `${time}秒`;
   }
