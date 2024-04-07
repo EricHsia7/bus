@@ -27,9 +27,9 @@ export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss
     .replaceAll(/Y{4,4}/g, date.getFullYear())
     .replaceAll(/M{2,2}/g, String(date.getMonth() + 1).padStart(2, '0'))
     .replaceAll(/D{2,2}/g, String(date.getDate()).padStart(2, '0'))
-    .replaceAll(/h{2,2}/g, String(date.getHours() + 1).padStart(2, '0'))
-    .replaceAll(/m{2,2}/g, String(date.getMinutes() + 1).padStart(2, '0'))
-    .replaceAll(/s{2,2}/g, String(date.getSeconds() + 1).padStart(2, '0'));
+    .replaceAll(/h{2,2}/g, String(date.getHours()).padStart(2, '0'))
+    .replaceAll(/m{2,2}/g, String(date.getMinutes()).padStart(2, '0'))
+    .replaceAll(/s{2,2}/g, String(date.getSeconds()).padStart(2, '0'));
   return result;
 }
 
