@@ -354,7 +354,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var headwayQuantity = thisPeriodDurationInMinutes / maxWindow;
           for (var i = 0; i < headwayQuantity; i++) {
             var violateRules = false;
-            var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i + averageWindow);
+            var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
             if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {
               violateRules = true;
             }
@@ -365,7 +365,8 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             if (violateRules === false) {
               calendar[dayOfWeek.code].push({
                 date: thisHeadwayDate,
-                duration: maxWindow + minWindow,
+                dateString: thisHeadwayDate.toISOString(),
+                duration: maxWindow,
                 deviation: Math.abs(averageWindow - maxWindow)
               });
             }
@@ -388,8 +389,9 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           if (violateRules === false) {
             calendar[dayOfWeek.code].push({
               date: thisHeadwayDate,
-              duration: maxWindow + minWindow,
-              deviation: Math.abs(averageWindow - maxWindow)
+              dateString: thisHeadwayDate.toISOString(),
+              duration: 0,
+              deviation: 0
             });
           }
         }
