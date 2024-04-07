@@ -161,6 +161,7 @@ export function indexToDay(index: number): object {
       code: 'sun'
     }
   ];
+  return days[index];
 }
 
 export function dateValueToDayOfWeek(dateValue: string): object {
