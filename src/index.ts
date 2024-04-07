@@ -109,6 +109,7 @@ window.bus = {
       var search = await searchRouteByName('299');
       var Route = search[0];
       var integration = await integrateRouteInformation(Route.id, Route.pid, 'test');
+      return integration
     }
   }
 };
