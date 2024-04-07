@@ -232,7 +232,7 @@ export function preloadData(): void {
 }
 
 export async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
-  function getTimeTableRules(Route: []): object {
+  function getThisRoute(Route: [], RouteID: number): object {
     var thisRoute = {};
     for (var item of Route) {
       if (item.Id === RouteID) {
@@ -240,12 +240,10 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
         break;
       }
     }
-    var thisRouteName = thisRoute.nameZh;
-    var thisRouteName = thisRoute.nameZh;
+    return thisRoute;
+  }
 
-    var thisRouteDeparture = thisRoute.departureZh;
-    var thisRouteDestination = thisRoute.destinationZh;
-
+  function getTimeTableRules(thisRoute: object): object {
     var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
     var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime, 0);
 
@@ -401,10 +399,19 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
   }
 
   var Route = await getRoute(requestID, false);
+  var thisRoute = getThisRoute(Route);
+
   var SemiTimeTable = await getSemiTimeTable(requestID);
   var TimeTable = await getTimeTable(requestID);
-  var timeTableRules = getTimeTableRules(Route);
+  var timeTableRules = getTimeTableRules(thisRoute);
   var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
+
+  var thisRouteName = thisRoute.nameZh;
+  var thisRouteName = thisRoute.nameZh;
+
+  var thisRouteDeparture = thisRoute.departureZh;
+  var thisRouteDestination = thisRoute.destinationZh;
+
   var result = {
     name: thisRouteName,
     endPoints: {
