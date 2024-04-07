@@ -133,9 +133,9 @@ export function formatTimeCode(code: string, mode: number): object {
 export function indexToDay(index: number): object {
   var days = [
     {
-      name: '週六',
+      name: '週日',
       day: 0,
-      code: 'sat'
+      code: 'sun'
     },
     {
       name: '週一',
@@ -163,25 +163,16 @@ export function indexToDay(index: number): object {
       code: 'fri'
     },
     {
-      name: '週日',
+      name: '週六',
       day: 6,
-      code: 'sun'
+      code: 'sat'
     }
   ];
   return days[index];
 }
 
 export function dateValueToDayOfWeek(dateValue: string): object {
-  var index = 0;
   var int = parseInt(dateValue);
-  if (int === 1) {
-    index = 6;
-  }
-  if (2 <= int && int <= 6) {
-    index = int - 1;
-  }
-  if (int === 7) {
-    index = 0;
-  }
+  var index = int - 1;
   return indexToDay(index);
 }
