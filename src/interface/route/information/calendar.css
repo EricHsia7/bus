@@ -33,7 +33,7 @@
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_gridlines {
   position: absolute;
-  top: 55px;
+  top: 60px;
   left: 10px;
   width: calc(100% - 20px);
   height: calc(24 * var(--b-calendar-ratio));
@@ -56,7 +56,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--b-ededf2);
+  color: var(--b-aeaeb2);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -67,14 +67,15 @@
   left: 45px;
   width: calc(100% - 45px);
   height: 1.2px;
-  background: var(--b-aeaeb2);
+  background: var(--b-ededf2);
   user-select: none;
   -webkit-user-select: none;
+  border-radius: 2px;
 }
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups {
   position: absolute;
-  top: 55px;
+  top: 60px;
   left: 10px;
   width: calc(100% - 20px);
   height: calc(24 * var(--b-calendar-ratio));
