@@ -404,7 +404,7 @@ dayOfWeek:dayOfWeek
       }
     }
     for (var code in calendar) {
-      calendar[code].events = calendar[code].sort(function (a, b) {
+      calendar[code].events = calendar[code].events.sort(function (a, b) {
         return a.date.getTime() - b.date.getTime();
       });
     }
