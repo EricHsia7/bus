@@ -33,9 +33,9 @@ function processSegmentBuffer(buffer: string): object {
       if (!result.hasOwnProperty(key)) {
         result[key] = [];
       }
-      var extratedName = String(match[0].replaceAll(directionRegex, '')).trim();
-      if (extratedName.length > 0) {
-        result[key].push(extratedName);
+      var extractedName = String(match[0].replaceAll(directionRegex, '')).trim();
+      if (extractedName.length > 0) {
+        result[key].push(extractedName);
       }
     }
   }
@@ -368,7 +368,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             if (violateRules === false) {
               calendar[dayOfWeek.code].events.push({
                 date: thisHeadwayDate,
-                dateString: dateToString(thisHeadwayDate),
+                dateString: dateToString(thisHeadwayDate, 'hh:mm'),
                 duration: maxWindow,
                 deviation: Math.abs(averageWindow - maxWindow)
               });
@@ -395,7 +395,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           if (violateRules === false) {
             calendar[dayOfWeek.code].events.push({
               date: thisHeadwayDate,
-              dateString: dateToString(thisHeadwayDate),
+              dateString: dateToString(thisHeadwayDate, 'hh:mm'),
               duration: 0,
               deviation: 0
             });

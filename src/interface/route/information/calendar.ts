@@ -2,6 +2,18 @@ import { GeneratedElement } from '../../index.ts';
 import { indexToDay } from '../../../tools/format-time.ts';
 import { md5 } from '../../../tools/index.ts';
 
+function generateElementOfGridline(hours: number): GeneratedElement {
+  var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('route_information_calendar_gridline');
+  element.id = identifier;
+  element.innerHTML = `<div class="route_information_calendar_gridline_hour">${String(hours).padStart(2, '0')}:00</div><route_information_calendar_gridline_line"></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function generateElementOfDay(dayOfWeek: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
@@ -41,7 +53,14 @@ function generateElementOfEvent(event: object): GeneratedElement {
 
 export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   Field.querySelector('.route_information_calendar_days').innerHTML = '';
+  Field.querySelector('.route_information_calendar_gridlines').innerHTML = '';
   Field.querySelector('.route_information_calendar_events_groups').innerHTML = '';
+
+  for (var hours = 0; hours < 24; hours++) {
+    var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
+    Field.querySelector('.route_information_calendar_gridlines').appendChild(thisGridlineElement.element);
+  }
+
   for (var code in calendar) {
     var thisDay = calendar[code];
     var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);

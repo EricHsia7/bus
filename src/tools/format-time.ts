@@ -22,8 +22,15 @@ export function timeStampToNumber(string: string): number {
   return 0;
 }
 
-export function dateToString(date: Date): string {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+export function dateToString(date: Date, template: string = 'yyyy-MM-dd hh:mm:ss'): string {
+  const result = template
+    .replaceAll(/y{4,4}/gi, date.getFullYear())
+    .replaceAll(/M{2,2}/g, String(date.getMonth() + 1).padStart(2, '0'))
+    .replaceAll(/d{2,2}/gi, String(date.getDate()).padStart(2, '0'))
+    .replaceAll(/h{2,2}/gi, String(date.getMonth() + 1).padStart(2, '0'))
+    .replaceAll(/m{2,2}/g, String(date.getMonth() + 1).padStart(2, '0'))
+    .replaceAll(/s{2,2}/gi, String(date.getMonth() + 1).padStart(2, '0'));
+  return result
 }
 
 export function formatTime(time: number, mode: number): string {
