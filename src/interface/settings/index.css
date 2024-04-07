@@ -91,6 +91,8 @@
   height: calc(100% - 55px);
   overflow-x: hidden;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .settings_page_field .settings_page_settings,

@@ -7,7 +7,8 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_gridline');
   element.id = identifier;
-  element.innerHTML = `<div class="route_information_calendar_gridline_hour">${String(hours).padStart(2, '0')}:00</div><route_information_calendar_gridline_line"></div>`;
+  element.style.setProperty('--b-calendar-gridline-top', `${hours * 80 - 5}px`);
+  element.innerHTML = `<div class="route_information_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><route_information_calendar_gridline_line"></div>`;
   return {
     element: element,
     id: identifier
