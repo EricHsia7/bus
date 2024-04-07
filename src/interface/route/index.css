@@ -24,7 +24,8 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.route_field .route_head .route_button_left {
+.route_field .route_head .route_button_left,
+.route_field .route_head .route_button_right {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -35,12 +36,14 @@
   align-items: center;
 }
 
-.route_field .route_head .route_button_left svg {
+.route_field .route_head .route_button_left svg,
+.route_field .route_head .route_button_right svg {
   height: 20px;
   width: 20px;
 }
 
-.route_field .route_head .route_button_left svg path {
+.route_field .route_head .route_button_left svg path,
+.route_field .route_head .route_button_right svg path {
   fill: var(--b-333333);
 }
 
