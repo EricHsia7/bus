@@ -10,7 +10,7 @@ import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
-import { formatTimeCode, dateValueToDayOfWeek } from '../../tools/format-time.ts';
+import { formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
@@ -365,7 +365,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             if (violateRules === false) {
               calendar[dayOfWeek.code].push({
                 date: thisHeadwayDate,
-                dateString: thisHeadwayDate.toISOString(),
+                dateString: dateToString(thisHeadwayDate),
                 duration: maxWindow,
                 deviation: Math.abs(averageWindow - maxWindow)
               });
@@ -389,7 +389,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           if (violateRules === false) {
             calendar[dayOfWeek.code].push({
               date: thisHeadwayDate,
-              dateString: thisHeadwayDate.toISOString(),
+              dateString: dateToString(thisHeadwayDate),
               duration: 0,
               deviation: 0
             });
