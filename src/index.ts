@@ -105,11 +105,11 @@ window.bus = {
     listRecordedEstimateTime,
     getUpdateRate,
     initializeFolderStores,
-    routeInfo: async function () {
-      var search = await searchRouteByName('299');
+    routeInfo: async function (name: string) {
+      var search = await searchRouteByName(name);
       var Route = search[0];
       var integration = await integrateRouteInformation(Route.id, Route.pid, 'test');
-      return integration
+      return integration;
     }
   }
 };
