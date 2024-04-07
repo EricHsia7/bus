@@ -8,7 +8,7 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   element.classList.add('route_information_calendar_gridline');
   element.id = identifier;
   element.style.setProperty('--b-calendar-gridline-top', `${hours * 80 - 5}px`);
-  element.innerHTML = `<div class="route_information_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><route_information_calendar_gridline_line"></div>`;
+  element.innerHTML = `<div class="route_information_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><div class="route_information_calendar_gridline_line"></div>`;
   return {
     element: element,
     id: identifier
@@ -21,6 +21,7 @@ function generateElementOfDay(dayOfWeek: object): GeneratedElement {
   element.classList.add('route_information_calendar_day');
   element.id = identifier;
   element.setAttribute('day', dayOfWeek.day);
+  element.setAttribute('selected', new Date().getDay() === dayOfWeek.day ? true : false);
   element.innerHTML = dayOfWeek.name;
   return {
     element: element,
@@ -34,6 +35,7 @@ function generateElementOfEventsGroup(dayOfWeek: object): GeneratedElement {
   element.classList.add('route_information_calendar_grouped_events');
   element.id = identifier;
   element.setAttribute('day', dayOfWeek.day);
+  element.setAttribute('displayed', new Date().getDay() === dayOfWeek.day ? true : false);
   return {
     element: element,
     id: identifier

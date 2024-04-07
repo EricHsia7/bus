@@ -86,6 +86,11 @@
   left: 60px;
   width: calc(100% - 60px);
   height: 100%;
+  display: none;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups .route_information_calendar_grouped_events[displayed="true"] {
+  display: block;
 }
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups .route_information_calendar_grouped_events .route_information_calendar_event {
