@@ -383,7 +383,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             calendar[dayOfWeek.code] = [];
           }
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
-          var thisHeadwayDate = thisDayOrigin(thisWeekOrigin, dayOfWeek, thisDepartureTime.hours, thisDepartureTime.minutes);
+          var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
           if (violateRules === false) {
             calendar[dayOfWeek.code].push({
