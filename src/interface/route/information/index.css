@@ -80,7 +80,6 @@
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  background:var(--b-ffffff);
 }
 
 .route_information_field .route_information_body .route_information_groups {
