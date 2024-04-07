@@ -133,39 +133,39 @@ export function formatTimeCode(code: string, mode: number): object {
 export function indexToDay(index: number): object {
   var days = [
     {
-      name: '週日',
+      name: '日',
       day: 0,
-      code: 'sun'
+      code: 'd0_sun'
     },
     {
-      name: '週一',
+      name: '一',
       day: 1,
-      code: 'mon'
+      code: 'd1_mon'
     },
     {
-      name: '週二',
+      name: '二',
       day: 2,
-      code: 'tue'
+      code: 'd2_tue'
     },
     {
-      name: '週三',
+      name: '三',
       day: 3,
-      code: 'wed'
+      code: 'd3_wed'
     },
     {
-      name: '週四',
+      name: '四',
       day: 4,
-      code: 'thu'
+      code: 'd4_thu'
     },
     {
-      name: '週五',
+      name: '五',
       day: 5,
-      code: 'fri'
+      code: 'd5_fri'
     },
     {
-      name: '週六',
+      name: '六',
       day: 6,
-      code: 'sat'
+      code: 'd6_sat'
     }
   ];
   return days[index];
