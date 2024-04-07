@@ -8,9 +8,10 @@ import { icons } from '../icons/index.ts';
 var previousFormattedFoldersWithContent = [];
 
 var foldersRefreshTimer = {
-  defaultInterval: 30 * 1000,
-  minInterval: 20 * 1000,
-  dynamicInterval: 30 * 1000,
+  defaultInterval: 15 * 1000,
+  minInterval: 5 * 1000,
+  dynamicInterval: 15 * 1000,
+  auto: true,
   streaming: false,
   lastUpdate: 0,
   nextUpdate: 0,
@@ -258,14 +259,21 @@ export async function updateFolderField(Field: HTMLElement, formattedFoldersWith
 }
 
 export async function refreshFolders(): object {
-  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
+  foldersRefreshTimer.auto = refresh_interval_setting.auto;
+  foldersRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
+  var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
   updateFolderField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+  if (routeRefreshTimer.auto) {
+    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+  } else {
+    foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.defaultInterval;
+  }
   foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime());
   foldersRefreshTimer.refreshing = false;
   return { status: 'Successfully refreshed the folders.' };

@@ -490,7 +490,7 @@ async function refreshRoute(): object {
     var updateRate = await getUpdateRate();
     routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
   } else {
-    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval);
+    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.defaultInterval;
   }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
