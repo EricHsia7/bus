@@ -1,7 +1,7 @@
 @property --b-calendar-ratio {
   syntax: '<length>';
   inherits: false;
-  initial-value: 80px;
+  initial-value: 100px;
 }
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_days {
@@ -51,7 +51,7 @@
   position: absolute;
   top: 0px;
   height: 10px;
-  width: 60px;
+  width: 45px;
   font-size: 12px;
   display: flex;
   justify-content: center;
@@ -64,10 +64,10 @@
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_gridlines .route_information_calendar_gridline .route_information_calendar_gridline_line {
   position: absolute;
   top: 5px;
-  left: 60px;
-  width: calc(100% - 60px);
+  left: 45px;
+  width: calc(100% - 45px);
   height: 1.2px;
-  background: var(--b-ededf2);
+  background: var(--b-aeaeb2);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -83,8 +83,8 @@
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups .route_information_calendar_grouped_events {
   position: absolute;
   top: 0px;
-  left: 60px;
-  width: calc(100% - 60px);
+  left: 45px;
+  width: calc(100% - 45px);
   height: 100%;
   display: none;
 }

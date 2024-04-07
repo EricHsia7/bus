@@ -2,12 +2,14 @@ import { GeneratedElement } from '../../index.ts';
 import { indexToDay } from '../../../tools/format-time.ts';
 import { md5 } from '../../../tools/index.ts';
 
+const calendar_ratio = 100;
+
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_gridline');
   element.id = identifier;
-  element.style.setProperty('--b-calendar-gridline-top', `${hours * 80 - 5}px`);
+  element.style.setProperty('--b-calendar-gridline-top', `${hours * calendar_ratio - 5}px`);
   element.innerHTML = `<div class="route_information_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><div class="route_information_calendar_gridline_line"></div>`;
   return {
     element: element,
@@ -57,8 +59,8 @@ function generateElementOfEvent(event: object): GeneratedElement {
   thisDayStart.setMinutes(0);
   thisDayStart.setSeconds(0);
   thisDayStart.setMilliseconds(0);
-  element.style.setProperty('--b-calendar-event-top', `${80 * 24 * ((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))}px`);
-  element.style.setProperty('--b-calendar-event-height', `${80 * 24 * ((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))}px`);
+  element.style.setProperty('--b-calendar-event-top', `${calendar_ratio * 24 * ((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))}px`);
+  element.style.setProperty('--b-calendar-event-height', `${calendar_ratio * 24 * ((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))}px`);
   element.innerHTML = event.dateString;
   return {
     element: element,
