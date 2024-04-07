@@ -28,20 +28,25 @@ async function getAppVersion(): object {
     console.error('There was a problem with the fetch operation:', error);
     return {
       build: null,
-      id: null
+      hash: null,
+      fullHash: null
     };
   }
+}
+
+export function getHTMLVersionHash() :string{
+  return document.querySelector('head meta[name="version"]').getAttribute('content')
 }
 
 export async function checkAppVersion(): object {
   var app_version = await getAppVersion();
   if (app_version) {
-    if (!(app_version.id === null)) {
-      if (!(document.querySelector('head meta[name="version"]').getAttribute('content') === app_version.id)) {
-        refreshPageWithTimeStamp(app_version.id, true);
+    if (!(app_version.hash === null)) {
+      if (!(getHTMLVersionHash() === app_version.hash)) {
+        refreshPageWithTimeStamp(app_version.hash, true);
         return { status: 'refreshing' };
       } else {
-        refreshPageWithTimeStamp(app_version.id, false);
+        refreshPageWithTimeStamp(app_version.hash, false);
         return { status: 'ok' };
       }
     } else {

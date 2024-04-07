@@ -18,7 +18,7 @@
   left: 0px;
   width: 100%;
   height: 55px;
-  border-bottom: 1px solid var(--b-e5e5ea);
+  border-bottom: 1px solid var(--b-ededf2);
   box-sizing: border-box;
   background: var(--b-ffffff);
 }
@@ -50,7 +50,8 @@
   height: 55px;
 }
 
-.search_page_field .search_page_head .search_page_button_left {
+.search_page_field .search_page_head .search_page_button_left,
+.search_page_field .search_page_head .search_page_button_right {
   position: absolute;
   width: 55px;
   height: 55px;

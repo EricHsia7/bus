@@ -32,16 +32,16 @@
   --b-f9f9fb-inflected-g: 250;
   --b-f9f9fb-inflected-b: 249;
 
-  --b-e5e5ea: #ededf2;
-  --b-e5e5ea-r: 237;
-  --b-e5e5ea-g: 237;
-  --b-e5e5ea-b: 242;
-  --b-e5e5ea-opacity-a: 0.5;
+  --b-ededf2: #ededf2;
+  --b-ededf2-r: 237;
+  --b-ededf2-g: 237;
+  --b-ededf2-b: 242;
+  --b-ededf2-opacity-a: 0.5;
 
-  --b-e5e5ea-inflected: #dfebe6;
-  --b-e5e5ea-inflected-r: 223;
-  --b-e5e5ea-inflected-g: 235;
-  --b-e5e5ea-inflected-b: 230;
+  --b-ededf2-inflected: #dfebe6;
+  --b-ededf2-inflected-r: 223;
+  --b-ededf2-inflected-g: 235;
+  --b-ededf2-inflected-b: 230;
 
   --b-aeaeb2: #aeaeb2;
   --b-aeaeb2-r: 174;
@@ -95,15 +95,15 @@
     --b-f9f9fb-inflected-g: 14;
     --b-f9f9fb-inflected-b: 13;
 
-    --b-e5e5ea: #23232a;
-    --b-e5e5ea-r: 35;
-    --b-e5e5ea-g: 35;
-    --b-e5e5ea-b: 42;
+    --b-ededf2: #23232a;
+    --b-ededf2-r: 35;
+    --b-ededf2-g: 35;
+    --b-ededf2-b: 42;
 
-    --b-e5e5ea-inflected: #1f2925;
-    --b-e5e5ea-inflected-r: 31;
-    --b-e5e5ea-inflected-g: 47;
-    --b-e5e5ea-inflected-b: 37;
+    --b-ededf2-inflected: #1f2925;
+    --b-ededf2-inflected-r: 31;
+    --b-ededf2-inflected-g: 47;
+    --b-ededf2-inflected-b: 37;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;

@@ -22,7 +22,7 @@ export function timeStampToNumber(string: string): number {
   return 0;
 }
 
-function formatTime(time: number, mode: number): string {
+export function formatTime(time: number, mode: number): string {
   if (mode === 0) {
     return `${time}秒`;
   }
