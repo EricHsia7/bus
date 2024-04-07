@@ -406,7 +406,6 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   Field.setAttribute('skeleton-screen', skeletonScreen);
   Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteInformation(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
 
-
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;

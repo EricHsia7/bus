@@ -35,10 +35,10 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   for (var code in calendar) {
     var thisDay = calendar[code];
     var thisDayElement = generateElementOfDay(index);
-    Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement);
+    Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
     for (var event of thisDay) {
       var thisEventElement = generateElementOfEvent(event);
-      Field.querySelector('.route_information_calendar_events').appendChild(thisEventElement);
+      Field.querySelector('.route_information_calendar_events').appendChild(thisEventElement.element);
     }
     index += 1;
   }
