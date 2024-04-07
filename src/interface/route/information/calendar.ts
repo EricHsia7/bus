@@ -1,5 +1,6 @@
 import { GeneratedElement } from '../../index.ts';
 import { indexToDay } from '../../../tools/format-time.ts';
+import { md5 } from '../../../tools/index.ts';
 
 function generateElementOfDay(index: number): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
