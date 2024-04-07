@@ -90,3 +90,27 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
     }
   }
 }
+
+export function updateCalendarField(Field: HTMLElement, calendar: object): void {
+  Field.querySelector('.route_information_calendar_days').innerHTML = '';
+  Field.querySelector('.route_information_calendar_gridlines').innerHTML = '';
+  Field.querySelector('.route_information_calendar_events_groups').innerHTML = '';
+
+  for (var hours = 0; hours < 24; hours++) {
+    var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
+    Field.querySelector('.route_information_calendar_gridlines').appendChild(thisGridlineElement.element);
+  }
+
+  for (var code in calendar) {
+    var thisDay = calendar[code];
+    var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
+    var thisEventsGroupElement: GeneratedElement = generateElementOfEventsGroup(thisDay.dayOfWeek);
+    Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
+    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventsGroupElement.element);
+    for (var event of thisDay.events) {
+      var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
+      Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
+    }
+  }
+}
+
