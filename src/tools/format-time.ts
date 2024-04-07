@@ -123,7 +123,7 @@ export function formatTimeCode(code: string, mode: number): object {
   }
 }
 
-export function dateValueToDayOfWeek(dateValue: string): object {
+export function indexToDay(index: number): object {
   var days = [
     {
       name: '週六',
@@ -161,6 +161,9 @@ export function dateValueToDayOfWeek(dateValue: string): object {
       code: 'sun'
     }
   ];
+}
+
+export function dateValueToDayOfWeek(dateValue: string): object {
   var index = 0;
   var int = parseInt(dateValue);
   if (int === 1) {
@@ -172,5 +175,5 @@ export function dateValueToDayOfWeek(dateValue: string): object {
   if (int === 7) {
     index = 0;
   }
-  return days[index];
+  return indexToDay(index);
 }

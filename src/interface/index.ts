@@ -22,3 +22,8 @@ export function fadeOutSplashScreen() {
     fadeOut();
   }
 }
+
+export interface GeneratedElement {
+  element: HTMLElement,
+  id:string
+}
