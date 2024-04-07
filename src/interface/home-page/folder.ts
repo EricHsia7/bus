@@ -269,7 +269,7 @@ export async function refreshFolders(): object {
   updateFolderField(Field, formattedFoldersWithContent, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  if (routeRefreshTimer.auto) {
+  if (foldersRefreshTimer.auto) {
     foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
   } else {
     foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.defaultInterval;
