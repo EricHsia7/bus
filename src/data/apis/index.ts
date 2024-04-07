@@ -336,7 +336,10 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
 
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = [];
+            calendar[dayOfWeek.code] = {
+events:[],
+dayOfWeek:dayOfWeek
+}
           }
 
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
@@ -363,7 +366,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             }
             /*need to complete - check timeTableRules*/
             if (violateRules === false) {
-              calendar[dayOfWeek.code].push({
+              calendar[dayOfWeek.code].events.push({
                 date: thisHeadwayDate,
                 dateString: dateToString(thisHeadwayDate),
                 duration: maxWindow,
@@ -381,13 +384,16 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = [];
+calendar[dayOfWeek.code] = {
+events:[],
+dayOfWeek:dayOfWeek
+}
           }
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
           if (violateRules === false) {
-            calendar[dayOfWeek.code].push({
+            calendar[dayOfWeek.code].events.push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate),
               duration: 0,
@@ -398,7 +404,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       }
     }
     for (var code in calendar) {
-      calendar[code] = calendar[code].sort(function (a, b) {
+      calendar[code].events = calendar[code].sort(function (a, b) {
         return a.date.getTime() - b.date.getTime();
       });
     }
