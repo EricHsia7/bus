@@ -313,18 +313,18 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       return origin;
     }
 
-    function offsetDate(origin: Date, dayOfWeek: object): Date {
+    function offsetDate(origin: Date, date: number, hours: number, minutes: number): Date {
       var duplicatedOrigin = new Date();
       duplicatedOrigin.setDate(1);
       duplicatedOrigin.setMonth(0);
-      duplicatedOrigin.setHours(0);
-      duplicatedOrigin.setMinutes(0);
+      duplicatedOrigin.setHours(hours);
+      duplicatedOrigin.setMinutes(minutes);
       duplicatedOrigin.setSeconds(0);
       duplicatedOrigin.setMilliseconds(0);
       duplicatedOrigin.setFullYear(origin.getFullYear());
       duplicatedOrigin.setMonth(origin.getMonth());
       duplicatedOrigin.setDate(origin.getDate());
-      duplicatedOrigin.setDate(duplicatedOrigin.getDate() + dayOfWeek.day);
+      duplicatedOrigin.setDate(duplicatedOrigin.getDate() + date);
       return duplicatedOrigin;
     }
 
@@ -334,50 +334,86 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
         if (item.DateType === '0') {
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
-          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek);
+
+          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
             calendar[dayOfWeek.code] = [];
           }
+
+          var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
+          var thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
+
+          var thisPeriodEndTime = formatTimeCode(item.EndTime, 0);
+          var thisPeriodEndTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodEndTime.hours, thisPeriodEndTime.minutes);
+
+          var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
+
           var minWindow = parseInt(item.LongHeadway);
           var maxWindow = parseInt(item.LowHeadway);
           var averageWindow = (maxWindow + minWindow) / 2;
-          var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
-          var thisPeriodEndTime = formatTimeCode(item.EndTime, 0);
-          var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
-         var headwayQuantity = thisPeriodDurationInMinutes/averageWindow
+
+          var headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
           for (var i = 0; i < headwayQuantity; i++) {
-            var thisHeadwayDate = new Date()
-            thisHeadwayDate.setDate(1)
-            thisHeadwayDate.setMonth(0)
-            thisHeadwayDate.setFullYear(thisDayOrigin.getFullYear())
-            thisHeadwayDate.setMonth(thisDayOrigin.getMonth())
-            thisHeadwayDate.setDate(thisDayOrigin.getDate())
-            thisHeadwayDate.setHours(thisDayOrigin.setHours())
-            thisHeadwayDate.setMinutes(thisDayOrigin.getMinutes())
-            thisHeadwayDate.setSeconds(thisDayOrigin.getSeconds())
-            thisHeadwayDate.setMilliseconds(thisDayOrigin.getMilliseconds())
-            thisHeadwayDate.setHours(thisHeadwayDate.getHours() + thisPeriodStartTime.hours)
-            thisHeadwayDate.setMinutes(thisHeadwayDate.getMinutes() + thisPeriodStartTime.minutes)
+            var violateRules = false;
+            var thisHeadwayDate = thisDayOrigin(thisWeekOrigin, dayOfWeek, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + averageWindow * i);
+            if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {
+              violateRules = true;
+            }
+            if (thisHeadwayDate.getTime() > thisPeriodEndTimeDateObject.getTime()) {
+              violateRules = true;
+            }
+            /*need to complete - check timeTableRules*/
+            if (violateRules === false) {
+              calendar[dayOfWeek.code].push({
+                date: thisHeadwayDate,
+                duration: maxWindow + minWindow,
+                deviation: Math.abs(averageWindow - maxWindow)
+              });
+            }
           }
         }
       }
     }
+    for (var item of TimeTable) {
+      if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
+        if (item.DateType === '0') {
+          var violateRules = false;
+          var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+          var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+            calendar[dayOfWeek.code] = [];
+          }
+          var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
+          var thisHeadwayDate = thisDayOrigin(thisWeekOrigin, dayOfWeek, thisDepartureTime.hours, thisDepartureTime.minutes);
+          /*need to complete - check timeTableRules*/
+          if (violateRules === false) {
+            calendar[dayOfWeek.code].push({
+              date: thisHeadwayDate,
+              duration: maxWindow + minWindow,
+              deviation: Math.abs(averageWindow - maxWindow)
+            });
+          }
+        }
+      }
+    }
+    return calendar;
   }
 
   var Route = await getRoute(requestID, false);
-  var timeTableRules = getTimeTableRules(Route);
   var SemiTimeTable = await getSemiTimeTable(requestID);
   var TimeTable = await getTimeTable(requestID);
-
+  var timeTableRules = getTimeTableRules(Route);
+  var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
   var result = {
     name: thisRouteName,
     endPoints: {
       departure: thisRouteDeparture,
       destination: thisRouteDestination
     },
-    timeTableRules: timeTableRules
+    timeTableRules: timeTableRules,
+    calendar
   };
-
   return result;
 }
 

@@ -10,6 +10,7 @@ import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.t
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
+import { integrateRouteInformation } from './data/apis/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -103,7 +104,8 @@ window.bus = {
     calculateDataUsage,
     listRecordedEstimateTime,
     getUpdateRate,
-    initializeFolderStores
+    initializeFolderStores,
+    integrateRouteInformation
   }
 };
 window.bus.searchRouteByName = searchRouteByName;
