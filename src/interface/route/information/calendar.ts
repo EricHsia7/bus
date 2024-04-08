@@ -30,7 +30,6 @@ function generateElementOfDay(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_day');
   element.id = identifier;
-  element.innerHTML = dayOfWeek.name;
   return {
     element: element,
     id: identifier
