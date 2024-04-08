@@ -25,7 +25,7 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   };
 }
 
-function generateElementOfDay(dayOfWeek: object): GeneratedElement {
+function generateElementOfDay(dayOfWeek: object, skeletonScreen: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_day');
@@ -39,7 +39,7 @@ function generateElementOfDay(dayOfWeek: object): GeneratedElement {
   };
 }
 
-function generateElementOfEventGroup(dayOfWeek: object): GeneratedElement {
+function generateElementOfEventGroup(dayOfWeek: object, skeletonScreen: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_grouped_events');
@@ -52,7 +52,7 @@ function generateElementOfEventGroup(dayOfWeek: object): GeneratedElement {
   };
 }
 
-function generateElementOfEvent(event: object): GeneratedElement {
+function generateElementOfEvent(event: object, skeleton: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_event');
@@ -181,16 +181,16 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
-        var thisElement = generateElementOfEventGroup(currentEventGroupSeatQuantity + o, true);
+        var thisElement = generateElementOfEventGroup(eventGroups[eventGroupIndex], true);
         Field.querySelector('.route_information_calendar_events_groups').appendChild(thisElement.element);
-        var thisDayElement = generateElementOfDay(currentEventGroupSeatQuantity + o, true);
+        var thisDayElement = generateElementOfDay(eventGroupIndex[eventGroupIndex], true);
         Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
         Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events`)[eventGroupIndex].remove();
-        var thisDayElement = generateElementOfDay(currentEventGroupSeatQuantity + o, true);
+        var thisDayElement = generateElementOfDay(eventGroupIndex[eventGroupIndex], true);
         Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     }
