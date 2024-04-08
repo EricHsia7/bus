@@ -200,8 +200,13 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
 
   for (var i = 0; i < eventGroupQuantity; i++) {
     var eventGroupKey = `d_${i}`;
+    var thisDay = eventGroups[eventGroupKey];
     var thisEventGroupElement = Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events`)[i];
+    var thisDayElement = Field.querySelectorAll(`.route_information_calendar_days .route_information_calendar_day`)[i];
     thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
+    thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
+    thisDayElement.innerText = thisDay.name;
+
     for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {
       var thisElement = thisEventGroupElement.querySelectorAll(`.route_information_calendar_event`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
