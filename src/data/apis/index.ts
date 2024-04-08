@@ -373,7 +373,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           code: 'd_6'
         }
       },
-      eventGroupQuantity: 0,
+      eventGroupQuantity: 7,
       eventQuantity: {
         d_0: 0,
         d_1: 0,
