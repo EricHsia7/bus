@@ -344,6 +344,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             calendar.groupedEvents[dayOfWeek.code] = [];
             calendar.groups[dayOfWeek.code] = dayOfWeek;
             calendar.groupQuantity = calendar.groupQuantity + 1;
+            calendar.eventQuantity[dayOfWeek.code] = 0;
           }
 
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
@@ -376,6 +377,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
                 duration: maxWindow,
                 deviation: Math.abs(averageWindow - maxWindow)
               });
+              calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
             }
           }
         }
