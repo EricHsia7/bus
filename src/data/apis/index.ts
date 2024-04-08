@@ -340,7 +340,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
 
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
 
-          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+          if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
             calendar.groupedEvents[dayOfWeek.code] = [];
             calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
             calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
@@ -389,7 +389,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var violateRules = false;
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-          if (!calendar.hasOwnProperty(dayOfWeek.code)) {
+          if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
             calendar.groupedEvents[dayOfWeek.code] = [];
             calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
             calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
