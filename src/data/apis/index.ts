@@ -328,8 +328,8 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
 
     var calendar = {
       groupedEvents: {},
-      groups: {},
-      groupQuantity: 0,
+      eventGroups: {},
+      eventGroupQuantity: 0,
       eventQuantity: {}
     };
     var thisWeekOrigin = getThisWeekOrigin();
@@ -342,8 +342,8 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
 
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
             calendar.groupedEvents[dayOfWeek.code] = [];
-            calendar.groups[dayOfWeek.code] = dayOfWeek;
-            calendar.groupQuantity = calendar.groupQuantity + 1;
+            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
+            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
             calendar.eventQuantity[dayOfWeek.code] = 0;
           }
 
@@ -391,26 +391,27 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
             calendar.groupedEvents[dayOfWeek.code] = [];
-            calendar.groups[dayOfWeek.code] = dayOfWeek;
-            calendar.groupQuantity = calendar.groupQuantity + 1;
-            calendar.eventQuantity;
+            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
+            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
+            calendar.eventQuantity[dayOfWeek.code] = 0;
           }
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
           if (violateRules === false) {
-            calendar[dayOfWeek.code].events.push({
+            calendar.groupedEvents[dayOfWeek.code].push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate, 'hh:mm'),
               duration: 15,
               deviation: 0
             });
+            calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
           }
         }
       }
     }
     for (var code in calendar) {
-      calendar[code].events = calendar[code].events.sort(function (a, b) {
+      calendar.groupedEvents[code] = calendar.groupedEvents[code].sort(function (a, b) {
         return a.date.getTime() - b.date.getTime();
       });
     }

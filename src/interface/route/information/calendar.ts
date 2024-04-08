@@ -3,8 +3,7 @@ import { indexToDay } from '../../../tools/format-time.ts';
 import { md5 } from '../../../tools/index.ts';
 
 const calendar_ratio = 100;
-var previousCalendar = {}
-
+var previousCalendar = {};
 
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
@@ -33,12 +32,12 @@ function generateElementOfDay(dayOfWeek: object): GeneratedElement {
   };
 }
 
-function generateElementOfEventsGroup(dayOfWeek: object): GeneratedElement {
+function generateElementOfEventGroup(dayOfWeek: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_grouped_events');
   element.id = identifier;
-  element.setAttribute('day', dayOfWeek.day);
+  element.setAttribute('index', dayOfWeek.day);
   element.setAttribute('displayed', new Date().getDay() === dayOfWeek.day ? true : false);
   return {
     element: element,
@@ -61,8 +60,8 @@ function generateElementOfEvent(event: object): GeneratedElement {
   thisDayStart.setMinutes(0);
   thisDayStart.setSeconds(0);
   thisDayStart.setMilliseconds(0);
-  element.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
-  element.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
+  element.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+  element.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
   element.innerText = event.dateString;
   return {
     element: element,
@@ -83,9 +82,9 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   for (var code in calendar) {
     var thisDay = calendar[code];
     var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
-    var thisEventsGroupElement: GeneratedElement = generateElementOfEventsGroup(thisDay.dayOfWeek);
+    var thisEventGroupElement: GeneratedElement = generateElementOfEventGroup(thisDay.dayOfWeek);
     Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
-    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventsGroupElement.element);
+    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventGroupElement.element);
     for (var event of thisDay.events) {
       var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
       Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
@@ -93,24 +92,24 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   }
 }
 
-export function setUpEventsGroupFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldSize = queryEventsGroupFieldSize();
+export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
+  const FieldSize = queryeventGroupFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
   var defaultEventQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
-  var defaultEventsGroupQuantity = 3;
+  var defaulteventGroupQuantity = 3;
   var foldedEvents = {};
-  var eventsGroups = {};
-  for (var i = 0; i < defaultEventsGroupQuantity; i++) {
-    var eventsGroupKey = `f_${i}`;
-    foldedEvents[eventsGroupKey] = [];
-    eventsGroups[eventsGroupKey] = {
+  var eventGroups = {};
+  for (var i = 0; i < defaulteventGroupQuantity; i++) {
+    var eventGroupKey = `f_${i}`;
+    foldedEvents[eventGroupKey] = [];
+    eventGroups[eventGroupKey] = {
       name: '',
       index: i,
       icon: ''
     };
-    for (var j = 0; j < defaultEventQuantity[eventsGroupKey]; j++) {
-      foldedEvents[eventsGroupKey].push({
+    for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
+      foldedEvents[eventGroupKey].push({
         type: 'stop',
         id: null,
         status: {
@@ -133,8 +132,8 @@ export function setUpEventsGroupFieldSkeletonScreen(Field: HTMLElement) {
     Field,
     {
       foldedEvents: foldedEvents,
-      eventsGroups: eventsGroups,
-      eventsGroupQuantity: defaultEventsGroupQuantity,
+      eventGroups: eventGroups,
+      eventGroupQuantity: defaulteventGroupQuantity,
       eventQuantity: defaultEventQuantity,
       dataUpdateTime: null
     },
@@ -155,9 +154,9 @@ export function updateCalendarField(Field: HTMLElement, calendar: object): void 
   for (var code in calendar) {
     var thisDay = calendar[code];
     var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
-    var thisEventsGroupElement: GeneratedElement = generateElementOfEventsGroup(thisDay.dayOfWeek);
+    var thisEventGroupElement: GeneratedElement = generateElementOfEventGroup(thisDay.dayOfWeek);
     Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
-    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventsGroupElement.element);
+    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventGroupElement.element);
     for (var event of thisDay.events) {
       var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
       Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
@@ -171,28 +170,28 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       thisElement.innerText = thisEvent.dateString;
     }
     function updatePosition(thisElement: HTMLElement, thisEvent: object): void {
-     var thisDayStart = new Date();
-  thisDayStart.setDate(1);
-  thisDayStart.setMonth(0);
-  thisDayStart.setFullYear(thisEvent.date.getFullYear());
-  thisDayStart.setMonth(thisEvent.date.getMonth());
-  thisDayStart.setDate(thisEvent.date.getDate());
-  thisDayStart.setHours(0);
-  thisDayStart.setMinutes(0);
-  thisDayStart.setSeconds(0);
-  thisDayStart.setMilliseconds(0);
-  thisElement.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
-  thisElement.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
+      var thisDayStart = new Date();
+      thisDayStart.setDate(1);
+      thisDayStart.setMonth(0);
+      thisDayStart.setFullYear(thisEvent.date.getFullYear());
+      thisDayStart.setMonth(thisEvent.date.getMonth());
+      thisDayStart.setDate(thisEvent.date.getDate());
+      thisDayStart.setHours(0);
+      thisDayStart.setMinutes(0);
+      thisDayStart.setSeconds(0);
+      thisDayStart.setMilliseconds(0);
+      thisElement.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+      thisElement.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
     }
     if (previousEvent === null) {
       updateText(thisElement, thisEvent);
       updatePosition(thisElement, thisEvent);
     } else {
       if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
-      updateText(thisElement, thisEvent);
+        updateText(thisElement, thisEvent);
       }
       if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
-      updatePosition(thisElement, thisEvent);
+        updatePosition(thisElement, thisEvent);
       }
     }
   }
@@ -205,64 +204,62 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     previousCalendar = calendar;
   }
 
-  var eventsGroupQuantity = calendar.eventsGroupQuantity;
+  var eventGroupQuantity = calendar.eventGroupQuantity;
   var eventQuantity = calendar.eventQuantity;
-  var foldedEvents = calendar.foldedEvents;
-  var eventsGroups = calendar.eventsGroups;
+  var groupedEvents = calendar.groupedEvents;
+  var eventGroups = calendar.eventGroups;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentEventsGroupSeatQuantity = Field.querySelectorAll(`.home_page_eventsGroup`).length;
-  if (!(eventsGroupQuantity === currentEventsGroupSeatQuantity)) {
-    var capacity = currentEventsGroupSeatQuantity - eventsGroupQuantity;
+  var currentEventGroupSeatQuantity = Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events`).length;
+  if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
+    var capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var eventsGroupIndex = currentEventsGroupSeatQuantity + o;
-        var thisElement = generateElementOfEventsGroup(currentEventsGroupSeatQuantity + o, true);
-        Field.appendChild(thisElement.element);
+        var eventGroupIndex = currentEventGroupSeatQuantity + o;
+        var thisElement = generateElementOfEventGroup(currentEventGroupSeatQuantity + o, true);
+        Field.querySelector('.route_information_calendar_events_groups').appendChild(thisElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var eventsGroupIndex = currentEventsGroupSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.home_page_eventsGroup`)[eventsGroupIndex].remove();
+        var eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
+        Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events`)[eventGroupIndex].remove();
       }
     }
   }
 
-  for (var i = 0; i < eventsGroupQuantity; i++) {
-    var eventsGroupKey = `f_${i}`;
-    var currentEventSeatQuantity = Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`).length;
-    if (!(eventQuantity[eventsGroupKey] === currentEventSeatQuantity)) {
-      var capacity = currentEventSeatQuantity - eventQuantity[eventsGroupKey];
+  for (var i = 0; i < eventGroupQuantity; i++) {
+    var eventGroupKey = `f_${i}`;
+    var currentEventSeatQuantity = Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"] .route_information_calendar_event`).length;
+    if (!(eventQuantity[eventGroupKey] === currentEventSeatQuantity)) {
+      var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfEvent(true);
-          Field.querySelector(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content`).appendChild(thisElement.element);
+          Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"]`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var eventIndex = currentEventSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`)[eventIndex].remove();
+          Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"] .route_information_calendar_event`).remove();
         }
       }
     }
   }
 
-  for (var i = 0; i < eventsGroupQuantity; i++) {
-    var eventsGroupKey = `f_${i}`;
-    var thisEventsGroupElement = Field.querySelector(`.home_page_eventsGroup[index="${i}"]`);
-    thisEventsGroupElement.setAttribute('skeleton-screen', skeletonScreen);
-    var thisHeadElement = thisEventsGroupElement.querySelector(`.home_page_eventsGroup_head`);
-    thisHeadElement.querySelector('.home_page_eventsGroup_name').innerText = eventsGroups[eventsGroupKey].name;
-    thisHeadElement.querySelector('.home_page_eventsGroup_icon').innerHTML = eventsGroups[eventsGroupKey].icon.source === 'icons' ? icons[eventsGroups[eventsGroupKey].icon.id] : '';
-    for (var j = 0; j < eventQuantity[eventsGroupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`)[j];
+  for (var i = 0; i < eventGroupQuantity; i++) {
+    var eventGroupKey = `d_${i}`;
+    var thisEventGroupElement = Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"]`);
+    thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
+
+    for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {
+      var thisElement = Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"] .route_information_calendar_event`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisEvent = foldedEvents[eventsGroupKey][j];
-      if (previousCalendar.hasOwnProperty('foldedEvents')) {
-        if (previousCalendar.foldedEvents.hasOwnProperty(eventsGroupKey)) {
-          if (previousCalendar.foldedEvents[eventsGroupKey][j]) {
-            var previousEvent = previousCalendar.foldedEvents[eventsGroupKey][j];
+      var thisEvent = groupedEvents[eventGroupKey][j];
+      if (previousCalendar.hasOwnProperty('groupedEvents')) {
+        if (previousCalendar.groupedEvents.hasOwnProperty(eventGroupKey)) {
+          if (previousCalendar.groupedEvents[eventGroupKey][j]) {
+            var previousEvent = previousCalendar.groupedEvents[eventGroupKey][j];
             updateEvent(thisElement, thisEvent, previousEvent);
           } else {
             updateEvent(thisElement, thisEvent, null);
