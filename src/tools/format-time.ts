@@ -135,37 +135,37 @@ export function indexToDay(index: number): object {
     {
       name: '日',
       day: 0,
-      code: 'd0_sun'
+      code: 'd_0'
     },
     {
       name: '一',
       day: 1,
-      code: 'd1_mon'
+      code: 'd_1'
     },
     {
       name: '二',
       day: 2,
-      code: 'd2_tue'
+      code: 'd_2'
     },
     {
       name: '三',
       day: 3,
-      code: 'd3_wed'
+      code: 'd_3'
     },
     {
       name: '四',
       day: 4,
-      code: 'd4_thu'
+      code: 'd_4'
     },
     {
       name: '五',
       day: 5,
-      code: 'd5_fri'
+      code: 'd_5'
     },
     {
       name: '六',
       day: 6,
-      code: 'd6_sat'
+      code: 'd_6'
     }
   ];
   return days[index];

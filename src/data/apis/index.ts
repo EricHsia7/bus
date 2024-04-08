@@ -326,7 +326,12 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       return duplicatedOrigin;
     }
 
-    var calendar = {};
+    var calendar = {
+      groupedEvents: {},
+      eventGroups: {},
+      eventGroupQuantity: 0,
+      eventQuantity: {}
+    };
     var thisWeekOrigin = getThisWeekOrigin();
     for (var item of SemiTimeTable) {
       if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
@@ -336,10 +341,10 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
 
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = {
-              events: [],
-              dayOfWeek: dayOfWeek
-            };
+            calendar.groupedEvents[dayOfWeek.code] = [];
+            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
+            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
+            calendar.eventQuantity[dayOfWeek.code] = 0;
           }
 
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
@@ -366,12 +371,13 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             }
             /*need to complete - check timeTableRules*/
             if (violateRules === false) {
-              calendar[dayOfWeek.code].events.push({
+              calendar.groupedEvents[dayOfWeek.code].push({
                 date: thisHeadwayDate,
                 dateString: dateToString(thisHeadwayDate, 'hh:mm'),
                 duration: maxWindow,
                 deviation: Math.abs(averageWindow - maxWindow)
               });
+              calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
             }
           }
         }
@@ -384,27 +390,28 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = {
-              events: [],
-              dayOfWeek: dayOfWeek
-            };
+            calendar.groupedEvents[dayOfWeek.code] = [];
+            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
+            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
+            calendar.eventQuantity[dayOfWeek.code] = 0;
           }
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
           if (violateRules === false) {
-            calendar[dayOfWeek.code].events.push({
+            calendar.groupedEvents[dayOfWeek.code].push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate, 'hh:mm'),
               duration: 15,
               deviation: 0
             });
+            calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
           }
         }
       }
     }
     for (var code in calendar) {
-      calendar[code].events = calendar[code].events.sort(function (a, b) {
+      calendar.groupedEvents[code] = calendar.groupedEvents[code].sort(function (a, b) {
         return a.date.getTime() - b.date.getTime();
       });
     }
