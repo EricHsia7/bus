@@ -410,7 +410,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
         }
       }
     }
-    for (var code in calendar) {
+    for (var code in calendar.groupedEvents) {
       calendar.groupedEvents[code] = calendar.groupedEvents[code].sort(function (a, b) {
         return a.date.getTime() - b.date.getTime();
       });
