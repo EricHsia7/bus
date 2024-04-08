@@ -30,8 +30,8 @@ function generateElementOfDay(dayOfWeek: object, skeletonScreen: boolean): Gener
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_day');
   element.id = identifier;
-  console.log(dayOfWeek);
-  element.setAttribute('day', dayOfWeek.day);
+  console.log(0, dayOfWeek);
+  element.setAttribute('index', dayOfWeek.day ? dayOfWeek.day : '');
   element.setAttribute('selected', new Date().getDay() === dayOfWeek.day ? true : false);
   element.innerHTML = dayOfWeek.name;
   return {
@@ -45,8 +45,8 @@ function generateElementOfEventGroup(dayOfWeek: object, skeletonScreen: boolean)
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_grouped_events');
   element.id = identifier;
-  console.log(dayOfWeek);
-  element.setAttribute('index', dayOfWeek.day);
+  console.log(1, dayOfWeek);
+  element.setAttribute('index', dayOfWeek.day ? dayOfWeek.day : '');
   element.setAttribute('displayed', new Date().getDay() === dayOfWeek.day ? true : false);
   return {
     element: element,
@@ -184,9 +184,9 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
-        var thisElement = generateElementOfEventGroup(eventGroups[eventGroupIndex], true);
+        var thisElement = generateElementOfEventGroup({}, true);
         Field.querySelector('.route_information_calendar_events_groups').appendChild(thisElement.element);
-        var thisDayElement = generateElementOfDay(eventGroups[eventGroupIndex], true);
+        var thisDayElement = generateElementOfDay({}, true);
         Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
