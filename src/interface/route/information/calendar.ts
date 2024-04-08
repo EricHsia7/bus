@@ -76,7 +76,7 @@ function generateElementOfEvent(event: object): GeneratedElement {
   };
 }
 
-export function initializeCalendarGridlines(Field: HTMLElement, calendar: object): void {
+export function initializeCalendarGridlines(Field: HTMLElement): void {
   Field.querySelector('.route_information_calendar_gridlines').innerHTML = '';
   for (var hours = 0; hours < 24; hours++) {
     var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
