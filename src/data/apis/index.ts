@@ -326,7 +326,12 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       return duplicatedOrigin;
     }
 
-    var calendar = {};
+    var calendar = {
+      groupedEvents: {},
+      groups: {},
+      groupQuantity: 0,
+      eventQuantity: {}
+    };
     var thisWeekOrigin = getThisWeekOrigin();
     for (var item of SemiTimeTable) {
       if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
@@ -336,10 +341,9 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
 
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = {
-              events: [],
-              dayOfWeek: dayOfWeek
-            };
+            calendar.groupedEvents[dayOfWeek.code] = [];
+            calendar.groups[dayOfWeek.code] = dayOfWeek;
+            calendar.groupQuantity = calendar.groupQuantity + 1;
           }
 
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
@@ -366,7 +370,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
             }
             /*need to complete - check timeTableRules*/
             if (violateRules === false) {
-              calendar[dayOfWeek.code].events.push({
+              calendar.groupedEvents[dayOfWeek.code].push({
                 date: thisHeadwayDate,
                 dateString: dateToString(thisHeadwayDate, 'hh:mm'),
                 duration: maxWindow,
@@ -384,10 +388,10 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
           if (!calendar.hasOwnProperty(dayOfWeek.code)) {
-            calendar[dayOfWeek.code] = {
-              events: [],
-              dayOfWeek: dayOfWeek
-            };
+            calendar.groupedEvents[dayOfWeek.code] = [];
+            calendar.groups[dayOfWeek.code] = dayOfWeek;
+            calendar.groupQuantity = calendar.groupQuantity + 1;
+            calendar.eventQuantity;
           }
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
