@@ -104,7 +104,7 @@
   height: var(--b-calendar-event-height);
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
   color: var(--b-main-color);
-  border-radius: 8px;
+  border-radius: 3px 8px 8px 3px;
   user-select: none;
   -webkit-user-select: none;
   padding-left: 10px;
@@ -116,7 +116,7 @@
   content: '';
   top: 0px;
   left: 0px;
-  border-radius: 8px 0px 0px 8px;
+  border-radius: 3px 0px 0px 3px;
   width: 3px;
   height: 100%;
   background: var(--b-main-color);
