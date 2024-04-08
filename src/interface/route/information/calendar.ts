@@ -93,24 +93,24 @@ export function initializeCalendar(Field: HTMLElement, calendar: object): void {
   }
 }
 
-export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldSize = queryFolderFieldSize();
+export function setUpEventsGroupFieldSkeletonScreen(Field: HTMLElement) {
+  const FieldSize = queryEventsGroupFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
-  var defaultFolderQuantity = 3;
-  var foldedItems = {};
-  var folders = {};
-  for (var i = 0; i < defaultFolderQuantity; i++) {
-    var folderKey = `f_${i}`;
-    foldedItems[folderKey] = [];
-    folders[folderKey] = {
+  var defaultEventQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
+  var defaultEventsGroupQuantity = 3;
+  var foldedEvents = {};
+  var eventsGroups = {};
+  for (var i = 0; i < defaultEventsGroupQuantity; i++) {
+    var eventsGroupKey = `f_${i}`;
+    foldedEvents[eventsGroupKey] = [];
+    eventsGroups[eventsGroupKey] = {
       name: '',
       index: i,
       icon: ''
     };
-    for (var j = 0; j < defaultItemQuantity[folderKey]; j++) {
-      foldedItems[folderKey].push({
+    for (var j = 0; j < defaultEventQuantity[eventsGroupKey]; j++) {
+      foldedEvents[eventsGroupKey].push({
         type: 'stop',
         id: null,
         status: {
@@ -129,13 +129,13 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
       });
     }
   }
-  updateFolderField(
+  updateEventsGroupField(
     Field,
     {
-      foldedItems: foldedItems,
-      folders: folders,
-      folderQuantity: defaultFolderQuantity,
-      itemQuantity: defaultItemQuantity,
+      foldedEvents: foldedEvents,
+      eventsGroups: eventsGroups,
+      eventsGroupQuantity: defaultEventsGroupQuantity,
+      eventQuantity: defaultEventQuantity,
       dataUpdateTime: null
     },
     true
@@ -166,17 +166,17 @@ export function updateCalendarField(Field: HTMLElement, calendar: object): void 
 }
 
 export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
-  function updateItem(thisElement, thisItem, previousItem) {
-    function updateText(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.innerText = thisItem.dateString;
+  function updateEvent(thisElement, thisEvent, previousEvent) {
+    function updateText(thisElement: HTMLElement, thisEvent: object): void {
+      thisElement.innerText = thisEvent.dateString;
     }
-    function updatePosition(thisElement: HTMLElement, thisItem: object): void {
+    function updatePosition(thisElement: HTMLElement, thisEvent: object): void {
      var thisDayStart = new Date();
   thisDayStart.setDate(1);
   thisDayStart.setMonth(0);
-  thisDayStart.setFullYear(thisItem.date.getFullYear());
-  thisDayStart.setMonth(thisItem.date.getMonth());
-  thisDayStart.setDate(thisItem.date.getDate());
+  thisDayStart.setFullYear(thisEvent.date.getFullYear());
+  thisDayStart.setMonth(thisEvent.date.getMonth());
+  thisDayStart.setDate(thisEvent.date.getDate());
   thisDayStart.setHours(0);
   thisDayStart.setMinutes(0);
   thisDayStart.setSeconds(0);
@@ -184,20 +184,20 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   thisElement.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
   thisElement.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000))*24 * calendar_ratio}px`);
     }
-    if (previousItem === null) {
-      updateText(thisElement, thisItem);
-      updatePosition(thisElement, thisItem);
+    if (previousEvent === null) {
+      updateText(thisElement, thisEvent);
+      updatePosition(thisElement, thisEvent);
     } else {
-      if (!(thisItem.dateString === previousItem.dateString) || !compareThings(previousItem, thisItem)) {
-      updateText(thisElement, thisItem);
+      if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
+      updateText(thisElement, thisEvent);
       }
-      if (!(thisItem.dateString === previousItem.dateString) || !compareThings(previousItem, thisItem)) {
-      updatePosition(thisElement, thisItem);
+      if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
+      updatePosition(thisElement, thisEvent);
       }
     }
   }
 
-  const FieldSize = queryFolderFieldSize();
+  const FieldSize = queryCalendarFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
@@ -205,73 +205,73 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     previousCalendar = calendar;
   }
 
-  var folderQuantity = formattedFoldersWithContent.folderQuantity;
-  var itemQuantity = formattedFoldersWithContent.itemQuantity;
-  var foldedItems = formattedFoldersWithContent.foldedItems;
-  var folders = formattedFoldersWithContent.folders;
+  var eventsGroupQuantity = calendar.eventsGroupQuantity;
+  var eventQuantity = calendar.eventQuantity;
+  var foldedEvents = calendar.foldedEvents;
+  var eventsGroups = calendar.eventsGroups;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentFolderSeatQuantity = Field.querySelectorAll(`.home_page_folder`).length;
-  if (!(folderQuantity === currentFolderSeatQuantity)) {
-    var capacity = currentFolderSeatQuantity - folderQuantity;
+  var currentEventsGroupSeatQuantity = Field.querySelectorAll(`.home_page_eventsGroup`).length;
+  if (!(eventsGroupQuantity === currentEventsGroupSeatQuantity)) {
+    var capacity = currentEventsGroupSeatQuantity - eventsGroupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder(currentFolderSeatQuantity + o, true);
+        var eventsGroupIndex = currentEventsGroupSeatQuantity + o;
+        var thisElement = generateElementOfEventsGroup(currentEventsGroupSeatQuantity + o, true);
         Field.appendChild(thisElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var folderIndex = currentFolderSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.home_page_folder`)[folderIndex].remove();
+        var eventsGroupIndex = currentEventsGroupSeatQuantity - 1 - o;
+        Field.querySelectorAll(`.home_page_eventsGroup`)[eventsGroupIndex].remove();
       }
     }
   }
 
-  for (var i = 0; i < folderQuantity; i++) {
-    var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`).length;
-    if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
+  for (var i = 0; i < eventsGroupQuantity; i++) {
+    var eventsGroupKey = `f_${i}`;
+    var currentEventSeatQuantity = Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`).length;
+    if (!(eventQuantity[eventsGroupKey] === currentEventSeatQuantity)) {
+      var capacity = currentEventSeatQuantity - eventQuantity[eventsGroupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem(true);
-          Field.querySelector(`.home_page_folder[index="${i}"] .home_page_folder_content`).appendChild(thisElement.element);
+          var thisElement = generateElementOfEvent(true);
+          Field.querySelector(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[itemIndex].remove();
+          var eventIndex = currentEventSeatQuantity - 1 - o;
+          Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`)[eventIndex].remove();
         }
       }
     }
   }
 
-  for (var i = 0; i < folderQuantity; i++) {
-    var folderKey = `f_${i}`;
-    var thisFolderElement = Field.querySelector(`.home_page_folder[index="${i}"]`);
-    thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
-    var thisHeadElement = thisFolderElement.querySelector(`.home_page_folder_head`);
-    thisHeadElement.querySelector('.home_page_folder_name').innerText = folders[folderKey].name;
-    thisHeadElement.querySelector('.home_page_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
-    for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
+  for (var i = 0; i < eventsGroupQuantity; i++) {
+    var eventsGroupKey = `f_${i}`;
+    var thisEventsGroupElement = Field.querySelector(`.home_page_eventsGroup[index="${i}"]`);
+    thisEventsGroupElement.setAttribute('skeleton-screen', skeletonScreen);
+    var thisHeadElement = thisEventsGroupElement.querySelector(`.home_page_eventsGroup_head`);
+    thisHeadElement.querySelector('.home_page_eventsGroup_name').innerText = eventsGroups[eventsGroupKey].name;
+    thisHeadElement.querySelector('.home_page_eventsGroup_icon').innerHTML = eventsGroups[eventsGroupKey].icon.source === 'icons' ? icons[eventsGroups[eventsGroupKey].icon.id] : '';
+    for (var j = 0; j < eventQuantity[eventsGroupKey]; j++) {
+      var thisElement = Field.querySelectorAll(`.home_page_eventsGroup[index="${i}"] .home_page_eventsGroup_content .home_page_eventsGroup_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = foldedItems[folderKey][j];
-      if (previousCalendar.hasOwnProperty('foldedItems')) {
-        if (previousCalendar.foldedItems.hasOwnProperty(folderKey)) {
-          if (previousCalendar.foldedItems[folderKey][j]) {
-            var previousItem = previousCalendar.foldedItems[folderKey][j];
-            updateItem(thisElement, thisItem, previousItem);
+      var thisEvent = foldedEvents[eventsGroupKey][j];
+      if (previousCalendar.hasOwnProperty('foldedEvents')) {
+        if (previousCalendar.foldedEvents.hasOwnProperty(eventsGroupKey)) {
+          if (previousCalendar.foldedEvents[eventsGroupKey][j]) {
+            var previousEvent = previousCalendar.foldedEvents[eventsGroupKey][j];
+            updateEvent(thisElement, thisEvent, previousEvent);
           } else {
-            updateItem(thisElement, thisItem, null);
+            updateEvent(thisElement, thisEvent, null);
           }
         } else {
-          updateItem(thisElement, thisItem, null);
+          updateEvent(thisElement, thisEvent, null);
         }
       } else {
-        updateItem(thisElement, thisItem, null);
+        updateEvent(thisElement, thisEvent, null);
       }
     }
   }
