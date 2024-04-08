@@ -327,10 +327,62 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
     }
 
     var calendar = {
-      groupedEvents: {},
-      eventGroups: {},
+      groupedEvents: {
+        d_0: [],
+        d_1: [],
+        d_2: [],
+        d_3: [],
+        d_4: [],
+        d_5: [],
+        d_6: []
+      },
+      eventGroups: {
+        d_0: {
+          name: '日',
+          day: 0,
+          code: 'd_0'
+        },
+        d_1: {
+          name: '一',
+          day: 1,
+          code: 'd_1'
+        },
+        d_2: {
+          name: '二',
+          day: 2,
+          code: 'd_2'
+        },
+        d_3: {
+          name: '三',
+          day: 3,
+          code: 'd_3'
+        },
+        d_4: {
+          name: '四',
+          day: 4,
+          code: 'd_4'
+        },
+        d_5: {
+          name: '五',
+          day: 5,
+          code: 'd_5'
+        },
+        d_6: {
+          name: '六',
+          day: 6,
+          code: 'd_6'
+        }
+      },
       eventGroupQuantity: 0,
-      eventQuantity: {}
+      eventQuantity: {
+        d_0: 0,
+        d_1: 0,
+        d_2: 0,
+        d_3: 0,
+        d_4: 0,
+        d_5: 0,
+        d_6: 0
+      }
     };
     var thisWeekOrigin = getThisWeekOrigin();
     for (var item of SemiTimeTable) {
@@ -339,13 +391,14 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
 
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-
+          /*
           if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
-            calendar.groupedEvents[dayOfWeek.code] = [];
-            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
-            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
-            calendar.eventQuantity[dayOfWeek.code] = 0;
-          }
+                      calendar.groupedEvents[dayOfWeek.code] = [];
+                      calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
+                      calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
+                      calendar.eventQuantity[dayOfWeek.code] = 0;
+            }
+          */
 
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
           var thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
@@ -389,12 +442,14 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
           var violateRules = false;
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+          /*
           if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
             calendar.groupedEvents[dayOfWeek.code] = [];
             calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
             calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
             calendar.eventQuantity[dayOfWeek.code] = 0;
           }
+          */
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
