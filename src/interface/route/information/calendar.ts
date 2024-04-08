@@ -66,7 +66,7 @@ export function initializeCalendarGridlines(Field: HTMLElement): void {
   }
 }
 
-export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
+export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   const FieldSize = queryCalendarFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
