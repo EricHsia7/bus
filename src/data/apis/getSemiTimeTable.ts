@@ -1,9 +1,8 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataUpdateTime } from './loader.ts';
-var SemiTimetableAPIVariableCache = {
-  available: false,
-  data: null
-}
+import { lfSetItem, lfGetItem } from '../storage/index.ts';
+
+var SemiTimetableAPIVariableCache = { available: false, data: {} }
 
 export async function getSemiTimeTable(requestID: string): object {
   async function getData() {

@@ -1,9 +1,8 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataUpdateTime } from './loader.ts';
-var TimetableAPIVariableCache = {
-  available: false,
-  data: null
-}
+import { lfSetItem, lfGetItem } from '../storage/index.ts';
+
+var TimetableAPIVariableCache = { available: false, data: {} }
 
 export async function getTimeTable(requestID: string): object {
   async function getData() {
