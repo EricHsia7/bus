@@ -1,0 +1,159 @@
+.route_information_field {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--b-f9f9fb);
+  display: none;
+}
+
+.route_information_field[displayed="true"] {
+  display: block;
+}
+
+.route_information_field .route_information_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-ededf2);
+  box-sizing: border-box;
+  background: var(--b-ffffff);
+}
+
+.route_information_field .route_information_head .route_information_button_left,
+.route_information_field .route_information_head .route_information_button_right {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.route_information_field .route_information_head .route_information_button_left {
+  top: 0px;
+  left: 0px;
+}
+
+.route_information_field .route_information_head .route_information_button_right {
+  top: 0px;
+  right: 0px;
+}
+
+.route_information_field .route_information_head .route_information_button_left svg,
+.route_information_field .route_information_head .route_information_button_right svg {
+  width: 20px;
+  height: 20px;
+}
+
+.route_information_field .route_information_head .route_information_button_left svg path,
+.route_information_field .route_information_head .route_information_button_right svg path {
+  fill: var(--b-333333);
+}
+
+.route_information_field .route_information_head .route_information_title {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 110px);
+  height: 55px;
+  color: var(--b-333333);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_information_field .route_information_body {
+  position: absolute;
+  top: 55px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.route_information_field .route_information_body .route_information_groups {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head {
+  position: relative;
+  width: calc(100% - 20px);
+  left: 10px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon svg {
+  height: 15px;
+  width: 15px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon svg path {
+  fill: var(--b-333333);
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_name {
+  position: absolute;
+  top: 0px;
+  left: 25px;
+  width: calc(100% - 25px);
+  height: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: var(--b-333333);
+  line-height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body {
+  position: relative;
+  width: calc(100% - 20px);
+  left: 10px;
+  display: inline-block;
+  background: var(--b-ffffff);
+  border-radius: 20px;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="calendar"] .route_information_group_body {
+  height: calc(24 * var(--b-calendar-ratio) + 60px + 10px);
+}

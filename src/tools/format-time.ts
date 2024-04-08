@@ -22,8 +22,15 @@ export function timeStampToNumber(string: string): number {
   return 0;
 }
 
-export function dateToString(date: Date): string {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss'): string {
+  const result = template
+    .replaceAll(/Y{4,4}/g, date.getFullYear())
+    .replaceAll(/M{2,2}/g, String(date.getMonth() + 1).padStart(2, '0'))
+    .replaceAll(/D{2,2}/g, String(date.getDate()).padStart(2, '0'))
+    .replaceAll(/h{2,2}/g, String(date.getHours()).padStart(2, '0'))
+    .replaceAll(/m{2,2}/g, String(date.getMinutes()).padStart(2, '0'))
+    .replaceAll(/s{2,2}/g, String(date.getSeconds()).padStart(2, '0'));
+  return result;
 }
 
 export function formatTime(time: number, mode: number): string {
@@ -123,54 +130,49 @@ export function formatTimeCode(code: string, mode: number): object {
   }
 }
 
-export function dateValueToDayOfWeek(dateValue: string): object {
+export function indexToDay(index: number): object {
   var days = [
     {
-      name: '週六',
+      name: '日',
       day: 0,
-      code: 'sat'
+      code: 'd_0'
     },
     {
-      name: '週一',
+      name: '一',
       day: 1,
-      code: 'mon'
+      code: 'd_1'
     },
     {
-      name: '週二',
+      name: '二',
       day: 2,
-      code: 'tue'
+      code: 'd_2'
     },
     {
-      name: '週三',
+      name: '三',
       day: 3,
-      code: 'wed'
+      code: 'd_3'
     },
     {
-      name: '週四',
+      name: '四',
       day: 4,
-      code: 'thu'
+      code: 'd_4'
     },
     {
-      name: '週五',
+      name: '五',
       day: 5,
-      code: 'fri'
+      code: 'd_5'
     },
     {
-      name: '週日',
+      name: '六',
       day: 6,
-      code: 'sun'
+      code: 'd_6'
     }
   ];
-  var index = 0;
-  var int = parseInt(dateValue);
-  if (int === 1) {
-    index = 6;
-  }
-  if (2 <= int && int <= 6) {
-    index = int - 1;
-  }
-  if (int === 7) {
-    index = 0;
-  }
   return days[index];
+}
+
+export function dateValueToDayOfWeek(dateValue: string): object {
+  var int = parseInt(dateValue);
+  var index = int - 1;
+  return indexToDay(index);
 }
