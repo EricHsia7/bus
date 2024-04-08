@@ -30,7 +30,7 @@ function generateElementOfDay(dayOfWeek: object, skeletonScreen: boolean): Gener
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_day');
   element.id = identifier;
-console.log(dayOfWeek);
+  console.log(dayOfWeek);
   element.setAttribute('day', dayOfWeek.day);
   element.setAttribute('selected', new Date().getDay() === dayOfWeek.day ? true : false);
   element.innerHTML = dayOfWeek.name;
@@ -45,6 +45,7 @@ function generateElementOfEventGroup(dayOfWeek: object, skeletonScreen: boolean)
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_grouped_events');
   element.id = identifier;
+  console.log(dayOfWeek);
   element.setAttribute('index', dayOfWeek.day);
   element.setAttribute('displayed', new Date().getDay() === dayOfWeek.day ? true : false);
   return {
@@ -130,7 +131,7 @@ export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
 }
 
 export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
-console.log(calendar);
+  console.log(calendar);
   function updateEvent(thisElement, thisEvent, previousEvent) {
     function updateText(thisElement: HTMLElement, thisEvent: object): void {
       thisElement.innerText = thisEvent.dateString;
