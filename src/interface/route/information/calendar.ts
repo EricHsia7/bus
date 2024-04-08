@@ -60,6 +60,7 @@ function generateElementOfEvent(event: object, skeleton: boolean): GeneratedElem
   element.classList.add('route_information_calendar_event');
   element.id = identifier;
   var thisDayStart = new Date();
+  if(event.date) {
   thisDayStart.setDate(1);
   thisDayStart.setMonth(0);
   thisDayStart.setFullYear(event.date.getFullYear());
@@ -69,6 +70,7 @@ function generateElementOfEvent(event: object, skeleton: boolean): GeneratedElem
   thisDayStart.setMinutes(0);
   thisDayStart.setSeconds(0);
   thisDayStart.setMilliseconds(0);
+}
   element.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
   element.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
   element.innerText = event.dateString;
