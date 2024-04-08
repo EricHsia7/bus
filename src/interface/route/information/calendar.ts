@@ -128,8 +128,8 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       thisDayStart.setMinutes(0);
       thisDayStart.setSeconds(0);
       thisDayStart.setMilliseconds(0);
-      thisElement.style.setProperty('--b-calendar-event-top', `${((event.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
-      thisElement.style.setProperty('--b-calendar-event-height', `${((event.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+      thisElement.style.setProperty('--b-calendar-event-top', `${((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+      thisElement.style.setProperty('--b-calendar-event-height', `${((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
     }
     if (previousEvent === null) {
       updateText(thisElement, thisEvent);
