@@ -5,6 +5,13 @@ import { md5 } from '../../../tools/index.ts';
 const calendar_ratio = 100;
 var previousCalendar = {};
 
+function queryCalendarFieldSize(): object {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+}
+
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
@@ -69,99 +76,56 @@ function generateElementOfEvent(event: object): GeneratedElement {
   };
 }
 
-export function initializeCalendar(Field: HTMLElement, calendar: object): void {
-  Field.querySelector('.route_information_calendar_days').innerHTML = '';
+export function initializeCalendarGridlines(Field: HTMLElement, calendar: object): void {
   Field.querySelector('.route_information_calendar_gridlines').innerHTML = '';
-  Field.querySelector('.route_information_calendar_events_groups').innerHTML = '';
-
   for (var hours = 0; hours < 24; hours++) {
     var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
     Field.querySelector('.route_information_calendar_gridlines').appendChild(thisGridlineElement.element);
   }
-
-  for (var code in calendar) {
-    var thisDay = calendar[code];
-    var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
-    var thisEventGroupElement: GeneratedElement = generateElementOfEventGroup(thisDay.dayOfWeek);
-    Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
-    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventGroupElement.element);
-    for (var event of thisDay.events) {
-      var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
-      Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
-    }
-  }
 }
 
 export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldSize = queryeventGroupFieldSize();
+  const FieldSize = queryCalendarFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultEventQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
-  var defaulteventGroupQuantity = 3;
-  var foldedEvents = {};
+  var defaultEventQuantity = {
+    d_0: 6,
+    d_1: 6,
+    d_2: 6,
+    d_3: 6,
+    d_4: 6,
+    d_5: 6,
+    d_6: 6
+  };
+  var defaultEventGroupQuantity = 7;
+  var groupedEvents = {};
   var eventGroups = {};
-  for (var i = 0; i < defaulteventGroupQuantity; i++) {
+  for (var i = 0; i < defaultEventGroupQuantity; i++) {
     var eventGroupKey = `f_${i}`;
-    foldedEvents[eventGroupKey] = [];
+    groupedEvents[eventGroupKey] = [];
     eventGroups[eventGroupKey] = {
-      name: '',
-      index: i,
-      icon: ''
+      day: i,
+      code: `d_{i}`,
+      name: ''
     };
     for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
-      foldedEvents[eventGroupKey].push({
-        type: 'stop',
-        id: null,
-        status: {
-          code: 0,
-          text: null
-        },
-        name: null,
-        route: {
-          name: null,
-          endPoints: {
-            departure: null,
-            destination: null
-          },
-          id: null
-        }
+      groupedEvents[eventGroupKey].push({
+        date: new Date(),
+        dateString: '',
+        duration: 60
       });
     }
   }
   updateCalendarField(
     Field,
     {
-      foldedEvents: foldedEvents,
+      groupedEvents: groupedEvents,
       eventGroups: eventGroups,
-      eventGroupQuantity: defaulteventGroupQuantity,
+      eventGroupQuantity: defaultEventGroupQuantity,
       eventQuantity: defaultEventQuantity,
-      dataUpdateTime: null
     },
     true
   );
-}
-
-export function updateCalendarField(Field: HTMLElement, calendar: object): void {
-  Field.querySelector('.route_information_calendar_days').innerHTML = '';
-  Field.querySelector('.route_information_calendar_gridlines').innerHTML = '';
-  Field.querySelector('.route_information_calendar_events_groups').innerHTML = '';
-
-  for (var hours = 0; hours < 24; hours++) {
-    var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
-    Field.querySelector('.route_information_calendar_gridlines').appendChild(thisGridlineElement.element);
-  }
-
-  for (var code in calendar) {
-    var thisDay = calendar[code];
-    var thisDayElement: GeneratedElement = generateElementOfDay(thisDay.dayOfWeek);
-    var thisEventGroupElement: GeneratedElement = generateElementOfEventGroup(thisDay.dayOfWeek);
-    Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
-    Field.querySelector('.route_information_calendar_events_groups').appendChild(thisEventGroupElement.element);
-    for (var event of thisDay.events) {
-      var thisEventElement: GeneratedElement = generateElementOfEvent(event, thisDay.dayOfWeek);
-      Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[day="${thisDay.dayOfWeek.day}"]`).appendChild(thisEventElement.element);
-    }
-  }
 }
 
 export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
@@ -219,23 +183,27 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
         var thisElement = generateElementOfEventGroup(currentEventGroupSeatQuantity + o, true);
         Field.querySelector('.route_information_calendar_events_groups').appendChild(thisElement.element);
+        var thisDayElement = generateElementOfDay(currentEventGroupSeatQuantity + o, true);
+        Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
         Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events`)[eventGroupIndex].remove();
+        var thisDayElement = generateElementOfDay(currentEventGroupSeatQuantity + o, true);
+        Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     }
   }
 
   for (var i = 0; i < eventGroupQuantity; i++) {
-    var eventGroupKey = `f_${i}`;
+    var eventGroupKey = `d_${i}`;
     var currentEventSeatQuantity = Field.querySelectorAll(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"] .route_information_calendar_event`).length;
     if (!(eventQuantity[eventGroupKey] === currentEventSeatQuantity)) {
       var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfEvent(true);
+          var thisElement = generateElementOfEvent(eventGroups[eventGroupKey]);
           Field.querySelector(`.route_information_calendar_events_groups .route_information_calendar_grouped_events[index="${i}"]`).appendChild(thisElement.element);
         }
       } else {
