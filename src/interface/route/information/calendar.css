@@ -104,11 +104,13 @@
   height: var(--b-calendar-event-height);
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
   color: var(--b-main-color);
-  border-radius: 3px 8px 8px 3px;
+  border-radius: 3px;
   user-select: none;
   -webkit-user-select: none;
-  padding-left: 10px;
+  padding: 2px;
+  padding-left: 8px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups .route_information_calendar_grouped_events .route_information_calendar_event::after {
