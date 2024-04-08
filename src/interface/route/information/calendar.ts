@@ -129,7 +129,7 @@ export function setUpEventsGroupFieldSkeletonScreen(Field: HTMLElement) {
       });
     }
   }
-  updateEventsGroupField(
+  updateCalendarField(
     Field,
     {
       foldedEvents: foldedEvents,
