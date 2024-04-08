@@ -108,12 +108,12 @@
   user-select: none;
   -webkit-user-select: none;
   padding-left: 10px;
-  padding-top: 5px;
   box-sizing: border-box;
 }
 
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body .route_information_calendar_events_groups .route_information_calendar_grouped_events .route_information_calendar_event::after {
   position: absolute;
+  content: '';
   top: 0px;
   left: 0px;
   border-radius: 8px 0px 0px 8px;
