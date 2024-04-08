@@ -1,8 +1,8 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataUpdateTime } from './loader.ts';
 var SemiTimetableAPIVariableCache = {
-available: false,
-data:null
+  available: false,
+  data: null
 }
 
 export async function getSemiTimeTable(requestID: string): object {
