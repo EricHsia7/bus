@@ -101,7 +101,7 @@ export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
   var groupedEvents = {};
   var eventGroups = {};
   for (var i = 0; i < defaultEventGroupQuantity; i++) {
-    var eventGroupKey = `f_${i}`;
+    var eventGroupKey = `d_${i}`;
     groupedEvents[eventGroupKey] = [];
     eventGroups[eventGroupKey] = {
       day: i,
@@ -122,7 +122,7 @@ export function setUpeventGroupFieldSkeletonScreen(Field: HTMLElement) {
       groupedEvents: groupedEvents,
       eventGroups: eventGroups,
       eventGroupQuantity: defaultEventGroupQuantity,
-      eventQuantity: defaultEventQuantity,
+      eventQuantity: defaultEventQuantity
     },
     true
   );
