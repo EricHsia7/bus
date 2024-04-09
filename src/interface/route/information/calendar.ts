@@ -71,13 +71,13 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
   var defaultEventQuantity = {
-    d_0: 6,
-    d_1: 6,
-    d_2: 6,
-    d_3: 6,
-    d_4: 6,
-    d_5: 6,
-    d_6: 6
+    d_0: 23,
+    d_1: 23,
+    d_2: 23,
+    d_3: 23,
+    d_4: 23,
+    d_5: 23,
+    d_6: 23
   };
   var defaultEventGroupQuantity = 7;
   var groupedEvents = {};
@@ -92,14 +92,14 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
     };
     for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
       var date = new Date()
-      date.setHours(j * 3);
-      date.setMinutes(0);
+      date.setHours(0);
+      date.setMinutes(j * 30);
       date.setSeconds(0);
       date.setMilliseconds(0);
       groupedEvents[eventGroupKey].push({
         date: date,
         dateString: '',
-        duration: 60
+        duration: 15
       });
     }
   }
