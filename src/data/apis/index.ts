@@ -473,13 +473,31 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
     return calendar;
   }
 
+  function getProviderInformation(Provider: [], providerId: number): object {
+    var thisProvider = {};
+    for (var item of Provider) {
+      if (item.id === providerId) {
+        thisProvider = item;
+      }
+    }
+    var result = {
+      name: thisProvider.nameZn,
+      phone: thisProvider.phoneInfo,
+      email: thisProvider.email
+    };
+    return result;
+  }
+
   var Route = await getRoute(requestID, false);
   var thisRoute = getThisRoute(Route, RouteID);
 
   var SemiTimeTable = await getSemiTimeTable(requestID);
   var TimeTable = await getTimeTable(requestID);
+  var Provider = await getProvider(requestID);
   var timeTableRules = getTimeTableRules(thisRoute);
   var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
+  var thisProviderId = thisRoute.providerId;
+  var thisProviderInformation = getProviderInformation(Provider, thisProviderId);
 
   var thisRouteName = thisRoute.nameZh;
   var thisRouteName = thisRoute.nameZh;
@@ -494,7 +512,8 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
       destination: thisRouteDestination
     },
     timeTableRules: timeTableRules,
-    calendar: calendar
+    calendar: calendar,
+    provider: thisProviderInformation
   };
   return result;
 }

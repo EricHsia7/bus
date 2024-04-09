@@ -111,7 +111,6 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
 }
 
 export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
-  console.log(calendar);
   function updateEvent(thisElement, thisEvent, previousEvent) {
     function updateText(thisElement: HTMLElement, thisEvent: object): void {
       thisElement.innerText = thisEvent.dateString;
