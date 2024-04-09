@@ -91,8 +91,13 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
       name: ''
     };
     for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
+      var date = new Date()
+      date.setHours(j * 3);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
       groupedEvents[eventGroupKey].push({
-        date: new Date(),
+        date: date,
         dateString: '',
         duration: 60
       });
