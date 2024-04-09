@@ -71,13 +71,13 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
   var defaultEventQuantity = {
-    d_0: 23,
-    d_1: 23,
-    d_2: 23,
-    d_3: 23,
-    d_4: 23,
-    d_5: 23,
-    d_6: 23
+    d_0: 47,
+    d_1: 47,
+    d_2: 47,
+    d_3: 47,
+    d_4: 47,
+    d_5: 47,
+    d_6: 47
   };
   var defaultEventGroupQuantity = 7;
   var groupedEvents = {};
