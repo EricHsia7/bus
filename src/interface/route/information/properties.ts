@@ -1,7 +1,7 @@
 import { GeneratedElement } from '../../index.ts';
 import { md5, compareThings } from '../../../tools/index.ts';
 import { icons } from '../../icons/index.ts';
-var previousProperties = {};
+var previousProperties = [];
 
 function queryPropertiesFieldSize(): object {
   return {
@@ -38,7 +38,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   updatePropertiesField(Field, properties, true);
 }
 
-export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean) {
+export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperties: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.route_information_property_icon').innerHTML = icons[thisProperty.icon];
@@ -71,20 +71,33 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentPropertySeatQuantity = Field.querySelectorAll(`.route_information_property`).length;
+  var currentPropertySeatQuantity = Field.querySelectorAll(`.route_information_group_body .route_information_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
     var capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity + o;
         var thisPropertyElement = generateElementOfProperty();
-        Field.appendChild(thisPropertyElement.element);
+        Field.querySelector('.route_information_group_body').appendChild(thisPropertyElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity - 1 - o;
-        Field.querySelectorAll(`.route_information_property`)[propertyIndex].remove();
+        Field.querySelectorAll(`.route_information_group_body .route_information_property`)[propertyIndex].remove();
       }
     }
   }
+
+  for (var i = 0; i < propertyQuantity; i++) {
+    var thisPropertyElement = Field.querySelectorAll(`.route_information_calendar_event`)[j];
+    thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
+    var thisProperty = properties[i];
+    if (previousProperties === []) {
+      updateProperty(thisPropertyElement, thisProperty, null);
+    } else {
+      updateProperty(thisPropertyElement, thisProperty, previousProperties);
+    }
+  }
+
+  previousProperties = properties;
 }
