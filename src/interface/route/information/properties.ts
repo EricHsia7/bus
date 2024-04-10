@@ -63,10 +63,6 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousProperties === {}) {
-    previousProperties = properties;
-  }
-
   var propertyQuantity = properties.length;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);

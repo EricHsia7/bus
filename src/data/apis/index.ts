@@ -494,18 +494,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
   var thisProviderId = thisRoute.providerId;
   var thisProvider = getThisProvider(Provider, thisProviderId);
 
-  var thisRouteName = thisRoute.nameZh;
-  var thisRouteName = thisRoute.nameZh;
-
-  var thisRouteDeparture = thisRoute.departureZh;
-  var thisRouteDestination = thisRoute.destinationZh;
-
   var result = {
-    name: thisRouteName,
-    endPoints: {
-      departure: thisRouteDeparture,
-      destination: thisRouteDestination
-    },
     timeTableRules: timeTableRules,
     calendar: calendar,
     properties: [

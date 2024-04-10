@@ -11,6 +11,7 @@ export function getTextWidth(text, font) {
 
 export function compareThings(a: any, b: any): boolean {
   function anyToString(any: any): string {
+    console.log('func compareThings',any)
     return JSON.stringify({ e: any });
   }
   var ax = anyToString(a);
