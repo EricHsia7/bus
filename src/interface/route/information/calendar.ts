@@ -210,6 +210,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
     thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
     thisDayElement.innerText = thisDay.name;
+    thisDayElement.setAttribute('selected', new Date().getDay() === i ? true : false);
 
     for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {
       var thisElement = thisEventGroupElement.querySelectorAll(`.route_information_calendar_event`)[j];
