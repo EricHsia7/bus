@@ -73,7 +73,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
 
   var currentPropertySeatQuantity = Field.querySelectorAll(`.route_information_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
-    var capacity = currentPropertySeatQuantity - eventGroupQuantity;
+    var capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity + o;
