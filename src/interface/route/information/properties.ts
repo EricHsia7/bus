@@ -47,11 +47,11 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
       thisElement.querySelector('.route_information_property_value').innerText = thisProperty.value;
     }
     if (previousProperty === null) {
-      updateProperty(thisElement, thisProperty);
+      updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
     } else {
       if (!compareThings(previousProperty, thisProperty)) {
-        updateProperty(thisElement, thisProperty);
+        updateIcon(thisElement, thisProperty);
       }
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
