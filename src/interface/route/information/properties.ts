@@ -89,7 +89,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
   }
 
   for (var i = 0; i < propertyQuantity; i++) {
-    var thisPropertyElement = Field.querySelectorAll(`.route_information_calendar_event`)[j];
+    var thisPropertyElement = Field.querySelectorAll(`.route_information_group_body .route_information_property`)[i];
     thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisProperty = properties[i];
     if (previousProperties === []) {
