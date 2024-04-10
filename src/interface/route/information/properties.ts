@@ -39,21 +39,21 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
 }
 
 export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean): void {
-  function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperties: object): void {
+  function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.route_information_property_icon').innerHTML = icons[thisProperty.icon];
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.route_information_property_value').innerText = thisProperty.value;
     }
-    if (previousProperties === null) {
+    if (previousProperty === null) {
       updateProperty(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
     } else {
-      if (!compareThings(previousProperties, thisProperty)) {
+      if (!compareThings(previousProperty, thisProperty)) {
         updateProperty(thisElement, thisProperty);
       }
-      if (!compareThings(previousProperties, thisProperty)) {
+      if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
     }
@@ -91,7 +91,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
     if (previousProperties === []) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
-      updateProperty(thisPropertyElement, thisProperty, previousProperties);
+      updateProperty(thisPropertyElement, thisProperty, previousProperties[i]);
     }
   }
 
