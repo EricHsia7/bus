@@ -35,7 +35,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
       value: ''
     });
   }
-  updateCalendarField(Field, properties, true);
+  updatePropertiesField(Field, properties, true);
 }
 
 export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean) {
