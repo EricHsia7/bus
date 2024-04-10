@@ -6,12 +6,12 @@ import { md5 } from '../../../tools/index.ts';
 async function initializeRouteInformationField(Field: HTMLElement, RouteID: number, PathAttributeId: [number]): void {
   var propertiesField = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="properties"]');
   var calendarField = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="calendar"]');
-  setUpPropertiesFieldSkeletonScreen(propertiesField)
+  setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var integration = await integrateRouteInformation(RouteID, PathAttributeId, requestID);
-  updatePropertiesField(propertiesField,integration)
+  updatePropertiesField(propertiesField, integration.properties);
   updateCalendarField(calendarField, integration.calendar, false);
 }
 

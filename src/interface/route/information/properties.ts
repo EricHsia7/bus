@@ -30,7 +30,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   var properties = [];
   for (var i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
-      key: 'i',
+      key: i,
       icon: 'none',
       value: ''
     });

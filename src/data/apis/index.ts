@@ -473,19 +473,14 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
     return calendar;
   }
 
-  function getProviderInformation(Provider: [], providerId: number): object {
+  function getThisProvider(Provider: [], providerId: number): object {
     var thisProvider = {};
     for (var item of Provider) {
       if (item.id === providerId) {
         thisProvider = item;
       }
     }
-    var result = {
-      name: thisProvider.nameZn,
-      phone: thisProvider.phoneInfo,
-      email: thisProvider.email
-    };
-    return result;
+    return thisProvider;
   }
 
   var Route = await getRoute(requestID, false);
@@ -497,7 +492,7 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
   var timeTableRules = getTimeTableRules(thisRoute);
   var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
   var thisProviderId = thisRoute.providerId;
-  var thisProviderInformation = getProviderInformation(Provider, thisProviderId);
+  var thisProvider = getThisProvider(Provider, thisProviderId);
 
   var thisRouteName = thisRoute.nameZh;
   var thisRouteName = thisRoute.nameZh;
@@ -513,7 +508,33 @@ export async function integrateRouteInformation(RouteID: number, PathAttributeId
     },
     timeTableRules: timeTableRules,
     calendar: calendar,
-    provider: thisProviderInformation
+    properties: [
+      {
+        key: 'route_name',
+        icon: 'route',
+        value: thisRoute.nameZh
+      },
+      {
+        key: 'pricing',
+        icon: 'money',
+        value: thisRoute.ticketPriceDescriptionZh
+      },
+      {
+        key: 'provider_name',
+        icon: 'company',
+        value: thisProvider.nameZn
+      },
+      {
+        key: 'provider_phone',
+        icon: 'phone',
+        value: thisProvider.phoneInfo
+      },
+      {
+        key: 'provider_email',
+        icon: 'email',
+        value: thisProvider.email
+      }
+    ]
   };
   return result;
 }
