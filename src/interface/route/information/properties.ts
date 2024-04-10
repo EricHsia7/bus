@@ -72,7 +72,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
   var currentPropertySeatQuantity = Field.querySelectorAll(`.route_information_property`).length;
-  if (!(eventGroupQuantity === currentPropertySeatQuantity)) {
+  if (!(propertyQuantity === currentPropertySeatQuantity)) {
     var capacity = currentPropertySeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
