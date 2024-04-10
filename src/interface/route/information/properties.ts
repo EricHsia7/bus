@@ -1,5 +1,5 @@
 import { GeneratedElement } from '../../index.ts';
-import { md5 } from '../../../tools/index.ts';
+import { md5, compareThings } from '../../../tools/index.ts';
 
 var previousProperties = {};
 

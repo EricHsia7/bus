@@ -1,6 +1,6 @@
 import { GeneratedElement } from '../../index.ts';
 import { indexToDay } from '../../../tools/format-time.ts';
-import { md5 } from '../../../tools/index.ts';
+import { md5, compareThings } from '../../../tools/index.ts';
 
 const calendar_ratio = 100;
 var previousCalendar = {};
@@ -91,7 +91,7 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
       name: ''
     };
     for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
-      var date = new Date()
+      var date = new Date();
       date.setHours(0);
       date.setMinutes(j * 30);
       date.setSeconds(0);
