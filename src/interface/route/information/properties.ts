@@ -1,6 +1,6 @@
 import { GeneratedElement } from '../../index.ts';
 import { md5, compareThings } from '../../../tools/index.ts';
-
+import { icons } from '../../icons/index.ts';
 var previousProperties = {};
 
 function queryPropertiesFieldSize(): object {
@@ -41,7 +41,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
 export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean) {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperties: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      thisElement.querySelector('.route_information_property_icon').innerHTML = thisProperty.icon;
+      thisElement.querySelector('.route_information_property_icon').innerHTML = icons[thisProperty.icon];
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.route_information_property_value').innerText = thisProperty.value;
