@@ -1,0 +1,42 @@
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property {
+  position: absolute;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: 45px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property .route_information_property_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property .route_information_property_icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property .route_information_property_icon svg path {
+  fill: var(--b-333333)
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property .route_information_property_value {
+  position: absolute;
+  top: 0px;
+  left: 45px;
+  width: calc(100% - 45px);
+  height: 45px;
+  color: var(--b-333333);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
