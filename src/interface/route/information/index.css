@@ -157,7 +157,3 @@
   user-select: none;
   -webkit-user-select: none;
 }
-
-.route_information_field .route_information_body .route_information_groups .route_information_group[group="calendar"] .route_information_group_body {
-  height: calc(24 * var(--b-calendar-ratio) + 60px + 10px);
-}
