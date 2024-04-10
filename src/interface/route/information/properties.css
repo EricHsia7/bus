@@ -1,7 +1,7 @@
 .route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property {
   position: relative;
   width: 100%;
-  height: 40px;
+  height: 30px;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -11,7 +11,7 @@
   top: 0px;
   left: 0px;
   width: 40px;
-  height: 40px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,7 @@
   top: 0px;
   left: 40px;
   width: calc(100% - 40px);
-  height: 40px;
+  height: 30px;
   color: var(--b-333333);
   font-size: 20px;
   display: flex;
