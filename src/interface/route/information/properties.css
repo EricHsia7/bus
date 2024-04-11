@@ -48,3 +48,30 @@
   word-break: keep-all;
   overflow: hidden;
 }
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property[skeleton-screen="true"] .route_information_property_icon {
+  top: 5px;
+  height: 20px;
+  width: 20px;
+  left: 10px;
+  border-radius: 20px;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property[skeleton-screen="true"] .route_information_property_value {
+  top: 5px;
+  height: 20px;
+  width: calc(100% - 40px - 10px);
+  border-radius: 20px;
+}
+
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property[skeleton-screen="true"] .route_information_property_icon,
+.route_information_field .route_information_body .route_information_groups .route_information_group[group="properties"] .route_information_group_body .route_information_property[skeleton-screen="true"] .route_information_property_value {
+  background: var(--b-ededf2);
+  /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: skeleton-loading;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;*/
+}
