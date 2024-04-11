@@ -10,10 +10,11 @@ function queryPropertiesFieldSize(): object {
   };
 }
 
-function generateElementOfProperty(): GeneratedElement {
+function generateElementOfProperty(skeletonScreen: boolean): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_property');
+  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   element.innerHTML = `<div class="route_information_property_icon"></div><div class="route_information_property_value"></div>`;
   return {
@@ -73,7 +74,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity + o;
-        var thisPropertyElement = generateElementOfProperty();
+        var thisPropertyElement = generateElementOfProperty(skeletonScreen);
         Field.querySelector('.route_information_group_body').appendChild(thisPropertyElement.element);
       }
     } else {
