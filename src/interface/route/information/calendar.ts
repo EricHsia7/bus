@@ -25,10 +25,11 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   };
 }
 
-function generateElementOfDay(): GeneratedElement {
+function generateElementOfDay(skeletonScreen: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_day');
+  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -36,10 +37,11 @@ function generateElementOfDay(): GeneratedElement {
   };
 }
 
-function generateElementOfEventGroup(): GeneratedElement {
+function generateElementOfEventGroup(skeletonScreen: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_grouped_events');
+  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -47,10 +49,11 @@ function generateElementOfEventGroup(): GeneratedElement {
   };
 }
 
-function generateElementOfEvent(): GeneratedElement {
+function generateElementOfEvent(skeletonScreen: boolean): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_information_calendar_event');
+  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -168,9 +171,9 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
-        var thisElement = generateElementOfEventGroup();
+        var thisElement = generateElementOfEventGroup(true);
         Field.querySelector('.route_information_calendar_events_groups').appendChild(thisElement.element);
-        var thisDayElement = generateElementOfDay();
+        var thisDayElement = generateElementOfDay(true);
         Field.querySelector('.route_information_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
@@ -190,7 +193,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfEvent();
+          var thisElement = generateElementOfEvent(true);
           thisEventGroupElement.appendChild(thisElement.element);
         }
       } else {
@@ -211,6 +214,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
     thisDayElement.innerText = thisDay.name;
     thisDayElement.setAttribute('selected', new Date().getDay() === i ? true : false);
+    thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
     for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {
       var thisElement = thisEventGroupElement.querySelectorAll(`.route_information_calendar_event`)[j];
