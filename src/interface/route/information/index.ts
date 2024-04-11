@@ -11,7 +11,7 @@ async function initializeRouteInformationField(Field: HTMLElement, RouteID: numb
   setUpCalendarFieldSkeletonScreen(calendarField);
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var integration = await integrateRouteInformation(RouteID, PathAttributeId, requestID);
-  updatePropertiesField(propertiesField, integration.properties);
+  updatePropertiesField(propertiesField, integration.properties, false);
   updateCalendarField(calendarField, integration.calendar, false);
 }
 
