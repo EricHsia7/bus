@@ -97,7 +97,7 @@
   display: inline-block;
 }
 
-.route_information_body .route_information_body .route_information_groups .route_information_group:last-child {
+.route_information_field .route_information_body .route_information_groups .route_information_group:last-child {
   margin-bottom: var(--safe-area-bottom);
 }
 
