@@ -97,6 +97,10 @@
   display: inline-block;
 }
 
+.route_information_body .route_information_body .route_information_groups .route_information_group:last-child {
+  margin-bottom: var(--safe-area-bottom);
+}
+
 .route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head {
   position: relative;
   width: calc(100% - 20px);

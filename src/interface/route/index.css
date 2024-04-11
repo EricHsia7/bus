@@ -200,6 +200,10 @@
   margin-top: 95px;
 }
 
+.route_field .route_groups .route_grouped_items .item:last-child {
+  margin-bottom: var(--safe-area-bottom);
+}
+
 .route_field .route_groups .route_grouped_items .item[stretched="true"] {
   height: 221px;
 }
