@@ -137,7 +137,9 @@ module.exports = (env, argv) => {
             loader: WebpackObfuscator.loader, 
             options: {
               simplify: false,
-                transformObjectKeys: true
+                compact:false,
+                identifierNamesGenerator: 'mangled',
+                renameProperties: true
             }
         }
     },
