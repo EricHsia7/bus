@@ -82,7 +82,7 @@ window.bus = {
               initializeFolders();
             });
             preloadData();
-            openRouteByPermalink();
+            openPermalink();
             fadeOutSplashScreen();
           }
           if (e.status === 'fetchError' || e.status === 'unknownError') {
