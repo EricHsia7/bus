@@ -7,7 +7,12 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const WebpackObfuscator = require('webpack-obfuscator');
 const { execSync } = require('child_process');
+
+
+
+
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -124,6 +129,18 @@ module.exports = (env, argv) => {
             }
           }
         },
+        {
+        test: /\.js|ts|jsx|tsx$/,
+        exclude: /node_modules/,
+        enforce: 'post',
+        use: { 
+            loader: WebpackObfuscator.loader, 
+            options: {
+              simplify: false,
+                transformObjectKeys: true
+            }
+        }
+    },
         {
           test: /\.css|less?$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader']
