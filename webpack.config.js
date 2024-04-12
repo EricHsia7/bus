@@ -7,6 +7,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const { execSync } = require('child_process');
 
 async function makeDirectory(path) {
@@ -69,7 +70,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[name].[contenthash].min.css' // Output CSS filename
+        filename: '[contenthash].min.css' // Output CSS filename
       }),
       new HtmlWebpackPlugin({
         template: './src/index.html', // Path to your custom HTML template file
@@ -95,7 +96,11 @@ module.exports = (env, argv) => {
             }
           }
         ]
-      })
+      }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static', // Generate static HTML report
+        reportFilename: 'dist/bundle-analysis-report.html', // Output file path and name
+    })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
     mode: 'production', // Set the mode to 'production' or 'development'
