@@ -1,7 +1,7 @@
 import { getRoute } from '../apis/getRoute.ts';
 import { md5 } from '../../tools/index.ts';
 
-const Fuse = require('fuse.js/dist/fuse.basic.cjs');
+const Fuse = require('fuse.js/dist/fuse.basic.js');
 
 export async function searchRouteByName(query: string): Array {
   var requestID = `r_${md5(Math.random() * new Date().getTime())}`;
