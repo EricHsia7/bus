@@ -26,7 +26,7 @@ export async function searchRouteByRouteID(query: string): Array {
   var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
-    if (String(key).indexOf(query) > -1) {
+    if (String(key) === `r_${query}`) {
       result.push({
         id: parseInt(key.split('_')[1]),
         pid: Route[key].pid,
