@@ -2,7 +2,6 @@
   "name": "@erichsia7/bus",
   "version": "0.0.1",
   "description": "",
-  "sideEffects": false,
   "main": "dist/index.min.js",
   "private": false,
   "scripts": {
