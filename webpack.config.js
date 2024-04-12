@@ -141,7 +141,14 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
       minimizer: [
-        new TerserPlugin(),
+        new TerserPlugin({terserOptions: {
+          mangle: {
+            properties: {
+              // Use a regex to select properties to mangle, e.g., those starting with 'long'
+              regex: /^(?!bus).*/
+            }
+          }
+        }}),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
