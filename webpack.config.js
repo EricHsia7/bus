@@ -139,7 +139,8 @@ module.exports = (env, argv) => {
               simplify: false,
                 compact:false,
                 identifierNamesGenerator: 'mangled',
-                renameProperties: true
+                renameProperties: true,
+                reservedStrings: ['bus', 'initialize']
             }
         }
     },
