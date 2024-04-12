@@ -1,7 +1,7 @@
 import { timeStampToNumber } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 import { recordRequest } from '../analytics/data-usage.ts';
-const { inflate: pako_inflate } = require('pako');
+const pako_inflate = require('pako/inflate');
 
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};
