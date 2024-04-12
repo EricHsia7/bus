@@ -130,6 +130,9 @@ module.exports = (env, argv) => {
           }
         },
         {
+          test: /\.css|less?$/,
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
+        },{
         test: /\.js$/,
         exclude: /node_modules/,
         enforce: 'post',
@@ -137,17 +140,13 @@ module.exports = (env, argv) => {
             loader: WebpackObfuscator.loader, 
             options: {
               simplify: false,
-                compact:false,
+                compact: true,
                 identifierNamesGenerator: 'mangled',
                 renameProperties: true,
                 reservedStrings: ['bus', 'initialize']
             }
         }
-    },
-        {
-          test: /\.css|less?$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
-        }
+    }
       ]
     },
     resolve: {
