@@ -130,7 +130,7 @@ module.exports = (env, argv) => {
           }
         },
         {
-        test: /\.js|ts|jsx|tsx$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         enforce: 'post',
         use: { 
