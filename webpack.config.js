@@ -141,11 +141,7 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
       minimizer: [
-        new TerserPlugin(/*{terserOptions: {
-          mangle: {
-            
-          }
-        }}*/),
+        new TerserPlugin(),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
@@ -161,8 +157,8 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        minSize: 30000,
-        maxSize: 51200,
+        minSize: 12800,
+        maxSize: 25600,
         cacheGroups: {
           // Define your cache groups here with specific rules
           default: {
