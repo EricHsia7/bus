@@ -4,7 +4,7 @@ import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
-import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, openRouteByURLScheme, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openRouteInformation, closeRouteInformation } from './interface/route/information/index.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
@@ -15,7 +15,7 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
-import { integrateRouteInformation } from './data/apis/index.ts';
+import { openPermalink } from './tools/permalink.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -25,9 +25,9 @@ import './interface/home-page/folder.css';
 import './interface/search-page/index.css';
 import './interface/search-page/keyboard.css';
 import './interface/route/index.css';
-import './interface/route/information/index.css'
-import './interface/route/information/properties.css'
-import './interface/route/information/calendar.css'
+import './interface/route/information/index.css';
+import './interface/route/information/properties.css';
+import './interface/route/information/calendar.css';
 import './interface/settings/index.css';
 import './interface/prompt/index.css';
 
@@ -82,7 +82,7 @@ window.bus = {
               initializeFolders();
             });
             preloadData();
-            openRouteByURLScheme();
+            openRouteByPermalink();
             fadeOutSplashScreen();
           }
           if (e.status === 'fetchError' || e.status === 'unknownError') {
@@ -122,12 +122,6 @@ window.bus = {
     listRecordedEstimateTime,
     getUpdateRate,
     initializeFolderStores,
-    routeInfo: async function (name: string) {
-      var search = await searchRouteByName(name);
-      var Route = search[0];
-      var integration = await integrateRouteInformation(Route.id, Route.pid, 'test');
-      return integration;
-    },
     calculateStoresSize
   },
   settingsPage: {

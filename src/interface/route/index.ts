@@ -1,6 +1,5 @@
 import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
-import { searchRouteByName } from '../../data/search/searchRoute.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
@@ -549,15 +548,6 @@ export function closeRoute() {
 export function switchRoute(RouteID: number, PathAttributeId: [number]) {
   routeRefreshTimer.streaming = false;
   openRoute(RouteID, PathAttributeId);
-}
-
-export function openRouteByURLScheme() {
-  var current_url = new URL(location.href);
-  if (current_url.searchParams.get('open_route_by_name') === 'true') {
-    searchRouteByName(current_url.searchParams.get('route_name')).then((e) => {
-      openRoute(e[0].id, e[0].pid);
-    });
-  }
 }
 
 export function stretchItemBody(itemID: string): void {
