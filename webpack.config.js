@@ -7,7 +7,6 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const WebpackObfuscator = require('webpack-obfuscator');
 const { execSync } = require('child_process');
 
 
@@ -132,21 +131,7 @@ module.exports = (env, argv) => {
         {
           test: /\.css|less?$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader']
-        },
-        {
-        test: /\.js$/,
-        enforce: 'post',
-        use: { 
-            loader: WebpackObfuscator.loader, 
-            options: {
-              simplify: false,
-                compact: true,
-                identifierNamesGenerator: 'mangled',
-                renameProperties: true,
-                reservedStrings: ['bus', 'initialize']
-            }
         }
-    }
       ]
     },
     resolve: {
