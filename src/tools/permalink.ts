@@ -1,4 +1,4 @@
-import { searchRouteByName } from '../data/search/searchRoute.ts';
+import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute.ts';
 import { openRoute } from '../interface/route/index.ts';
 
 const PermalinkTypes = ['route', 'route_info'];
