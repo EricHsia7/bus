@@ -8,15 +8,17 @@ export function openPermalink(): void {
   var permalinkValue = current_url.searchParams.get('permalink');
   if (!(permalinkValue === null)) {
     var permalinkString = String(permalinkValue);
-    var array = permalinkString.split(':');
-    var type = parseInt(array[0]);
-    //route
-    if (type === 0) {
-      var route_name = array[1];
-      searchRouteByName(route_name).then((e) => {
-        openRoute(e[0].id, e[0].pid);
-      });
+    if (/^[0-1]\:.*/.test(permalinkString)) {
+      var array = permalinkString.split(':');
+      var type = parseInt(array[0]);
+      //route
+      if (type === 0) {
+        var route_name = array[1];
+        searchRouteByName(route_name).then((e) => {
+          openRoute(e[0].id, e[0].pid);
+        });
+      }
+      current_url.searchParams.get('route_name');
     }
-    current_url.searchParams.get('route_name');
   }
 }
