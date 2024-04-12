@@ -20,7 +20,7 @@ export function openPermalink(): void {
           } else {
             searchRouteByRouteID(array[2]).then((p) => {
               if (p.length > 0) {
-                openRoute(e[0].id, e[0].pid);
+                openRoute(p[0].id, p[0].pid);
               }
             });
           }
