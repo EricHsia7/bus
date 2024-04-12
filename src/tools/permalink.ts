@@ -36,5 +36,5 @@ export function getPermalink(type: number, approach: object): string {
   if (type === 0) {
     link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
   }
-  return encodeURIComponent(link.toString());
+  return encodeURI(link.toString());
 }
