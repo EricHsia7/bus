@@ -137,7 +137,13 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
       minimizer: [
-        new TerserPlugin(),
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        }),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
