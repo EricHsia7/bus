@@ -10,7 +10,7 @@ export function openPermalink(): void {
     var permalinkString = String(permalinkValue);
     if (/^[0-1]\@(.*)(\~.*){0,1}/.test(permalinkString)) {
       var array = permalinkString.split(/[\@\~]/);
-      var type = parseInt(array[0]);
+      var type = parseInt(array[0], 16);
       //route
       if (type === 0) {
         var route_name = array[1];
@@ -28,5 +28,12 @@ export function openPermalink(): void {
       }
       current_url.searchParams.get('route_name');
     }
+  }
+}
+
+export function getPermalink(type: number, approach: object): string {
+  var link = new URL('https://erichsia7.github.io/bus/');
+  if (type === 0) {
+    link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
   }
 }

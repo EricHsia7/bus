@@ -15,7 +15,7 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
-import { openPermalink } from './tools/permalink.ts';
+import { openPermalink, getPermalink } from './tools/permalink.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -122,7 +122,8 @@ window.bus = {
     listRecordedEstimateTime,
     getUpdateRate,
     initializeFolderStores,
-    calculateStoresSize
+    calculateStoresSize,
+    getPermalink
   },
   settingsPage: {
     openSettingsPage,
