@@ -105,7 +105,7 @@ module.exports = (env, argv) => {
     mode: 'production', // Set the mode to 'production' or 'development'
     entry: './src/index.ts', // Entry point of your application
     output: {
-      filename: isProduction ? '[name].[contenthash].min.js' : 'index.js', // Output bundle filename
+      filename: isProduction ? '[contenthash].min.js' : 'index.js', // Output bundle filename
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: 'https://erichsia7.github.io/bus/',
       library: {
