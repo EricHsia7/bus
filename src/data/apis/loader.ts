@@ -1,7 +1,7 @@
 import { timeStampToNumber } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 import { recordRequest } from '../analytics/data-usage.ts';
-const pako_inflate = require('pako/inflate');
+const { inflate } = require('pako/inflate');
 
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};
@@ -41,7 +41,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = pako_inflate(buffer, { to: 'string' }); // Inflate and convert to string
+  const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
   return JSON.parse(inflatedData);
 }
 
