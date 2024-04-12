@@ -9,10 +9,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const { execSync } = require('child_process');
 
-
-
-
-
 async function makeDirectory(path) {
   // Check if the path already exists
   try {
@@ -57,7 +53,7 @@ const workflowRunNumber = parseInt(execSync('echo $GITHUB_RUN_NUMBER').toString(
 const commitHash = execSync('git rev-parse HEAD').toString().trim();
 const thisVersion = {
   build: workflowRunNumber,
-  hash: commitHash.substring(0,7),
+  hash: commitHash.substring(0, 7),
   fullHash: commitHash
 };
 
@@ -157,7 +153,8 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        minSize: 51200,
+        minSize: 25600,
+        maxSize: 51200,
         cacheGroups: {
           // Define your cache groups here with specific rules
           default: {
