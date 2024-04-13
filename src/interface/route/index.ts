@@ -403,7 +403,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteInformation(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
+  Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="info"]').setAttribute('onclick', `bus.route.openRouteInformation(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
