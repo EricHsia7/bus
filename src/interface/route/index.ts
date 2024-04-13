@@ -587,7 +587,7 @@ export function saveItemAsStop(itemID: string, folderId: string, StopID: number,
   saveStop(folderId, StopID, RouteID).then((e) => {
     isSaved('stop', StopID).then((k) => {
       actionButtonElement.setAttribute('highlighted', k);
-      prompt_message('已收藏站牌。')
+      prompt_message('已收藏站牌。');
     });
   });
 }
@@ -601,10 +601,11 @@ export async function copyRoutePermalink(RouteID: number): void {
     });
     var textArea = document.createElement('textarea');
     textArea.value = link;
+    textArea.setAttribute('readonly', 'readonly');
     document.body.appendChild(textArea);
     textArea.select();
     document.execCommand('Copy');
     textArea.remove();
-    prompt_message('已複製路線連結。')
+    prompt_message('已複製路線連結。');
   }
 }

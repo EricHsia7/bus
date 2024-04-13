@@ -108,7 +108,8 @@ window.bus = {
     saveItemAsStop: saveItemAsStop,
     openRouteInformation: openRouteInformation,
     closeRouteInformation: closeRouteInformation,
-    openRouteOptions: openRouteOptions
+    openRouteOptions: openRouteOptions,
+    copyRoutePermalink: copyRoutePermalink
   },
   folder: {
     isSaved: isSaved,
