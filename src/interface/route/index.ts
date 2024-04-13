@@ -1,10 +1,8 @@
 import { integrateRoute } from '../../data/apis/index.ts';
-import { searchRouteByRouteID } from '../../data/search/searchRoute.ts';
 import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { getPermalink } from '../../tools/permalink.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
@@ -590,28 +588,4 @@ export function saveItemAsStop(itemID: string, folderId: string, StopID: number,
       prompt_message('已收藏站牌。');
     });
   });
-}
-
-export async function shareRoutePermalink(RouteID: number): void {
-  var search = await searchRouteByRouteID(RouteID);
-  if (search.length > 0) {
-    var link = getPermalink(0, {
-      id: RouteID,
-      name: search[0].n
-    });
-    if (navigator.share) {
-      navigator
-        .share({
-          title: search[0].n,
-          url: link
-        })
-        .then(() => {
-          prompt_message('已分享路線連結。');
-        })
-        .catch((e) => {
-          prompt_message('目前不支援分享功能。');
-          console.error(e);
-        });
-    }
-  }
 }
