@@ -1,0 +1,111 @@
+.route_options_box {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-snap-type: y mandatory;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.35s, opacity 0.35s;
+  transition-timing-function: cubic-bezier(0.095, 0.905, 0.34, 1.01);
+}
+
+.route_options_box::-webkit-scrollbar {
+  display: none;
+}
+
+.route_options_box[displayed="true"] {
+  transform: translateY(0%);
+  opacity: 1;
+}
+
+.route_options_box .route_options_scroller_a {
+  position: relative;
+  width: 100%;
+  height: 45%;
+  background: rgba(0, 0, 0, 0);
+  scroll-snap-align: start;
+}
+
+.route_options_box .route_options_scroller_b {
+  position: relative;
+  width: 100%;
+  height: 55%;
+  background: rgba(0, 0, 0, 0);
+  scroll-snap-align: start;
+}
+
+.route_options_box .route_options {
+  position: relative;
+  width: 100%;
+  height: 45%;
+  background: var(--b-f9f9fb);
+  border-radius: 15px 15px 0px 0px;
+  scroll-snap-align: start;
+}
+
+.route_options_box .route_options .route_options_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.route_options_box .route_options .route_options_head .route_options_head_bar {
+  width: 50px;
+  height: 6px;
+  background: var(--b-aeaeb2);
+  border-radius: 15px;
+}
+
+.route_options_box .route_options .route_options_body {
+  position: absolute;
+  top: 25px;
+  left: 0px;
+  width: 100%;
+  display: inline-block;
+}
+
+.route_options_box .route_options .route_options_body .route_options_actions {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 60px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  background: var(--b-ffffff);
+  border-radius: 20px;
+  vertical-align: top;
+}
+
+.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button svg {
+  width: 25px;
+  height: 25px;
+}
+
+.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button svg path {
+  fill: var(--b-333333);
+}

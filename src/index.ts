@@ -5,6 +5,7 @@ import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
 import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { initializeRouteOptions } from './interface/route/options/index.ts';
 import { openRouteInformation, closeRouteInformation } from './interface/route/information/index.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
@@ -25,6 +26,7 @@ import './interface/home-page/folder.css';
 import './interface/search-page/index.css';
 import './interface/search-page/keyboard.css';
 import './interface/route/index.css';
+import './interface/route/options.css';
 import './interface/route/information/index.css';
 import './interface/route/information/properties.css';
 import './interface/route/information/calendar.css';
@@ -78,6 +80,7 @@ window.bus = {
                 });
               }
             }
+            initializeRouteOptions();
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
