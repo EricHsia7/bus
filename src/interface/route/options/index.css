@@ -11,9 +11,10 @@
   overscroll-behavior: contain;
   scroll-snap-type: y mandatory;
   transform: translateY(100%);
-  opacity: 0;
-  transition: transform 0.35s, opacity 0.35s;
+  transition: transform var(--b-transition-duration);
   transition-timing-function: cubic-bezier(0.095, 0.905, 0.34, 1.01);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box::-webkit-scrollbar {
@@ -22,7 +23,6 @@
 
 .route_options_box[displayed="true"] {
   transform: translateY(0%);
-  opacity: 1;
 }
 
 .route_options_box .route_options_scroller_a {
@@ -31,6 +31,8 @@
   height: 45%;
   background: rgba(0, 0, 0, 0);
   scroll-snap-align: start;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options_scroller_b {
@@ -39,15 +41,21 @@
   height: 55%;
   background: rgba(0, 0, 0, 0);
   scroll-snap-align: start;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options {
   position: relative;
   width: 100%;
   height: 45%;
-  background: var(--b-f9f9fb);
+  background: rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), var(--b-ffffff-opacity-b));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 15px 15px 0px 0px;
   scroll-snap-align: start;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options .route_options_head {
@@ -59,6 +67,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options .route_options_head .route_options_head_bar {
@@ -66,6 +76,8 @@
   height: 6px;
   background: var(--b-aeaeb2);
   border-radius: 15px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options .route_options_body {
@@ -99,11 +111,15 @@
   background: var(--b-ffffff);
   border-radius: 20px;
   vertical-align: top;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button svg {
   width: 25px;
   height: 25px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button svg path {
