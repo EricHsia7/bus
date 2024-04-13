@@ -52,10 +52,11 @@
   background: rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), var(--b-ffffff-opacity-b));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 20px 20px 0px 0px;
   scroll-snap-align: start;
   user-select: none;
   -webkit-user-select: none;
+  box-shadow: 0px 0px 25px -12px rgba(0, 0, 0, 0.23);
 }
 
 .route_options_box .route_options .route_options_head {
@@ -108,7 +109,7 @@
   justify-content: center;
   align-items: center;
   margin-left: 10px;
-  background: var(--b-ffffff);
+  background: rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b));
   border-radius: 20px;
   vertical-align: top;
   user-select: none;
