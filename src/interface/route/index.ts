@@ -6,7 +6,6 @@ import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '..
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
-import { prompt_message } from '../prompt/index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 

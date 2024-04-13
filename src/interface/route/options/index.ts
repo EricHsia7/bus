@@ -1,5 +1,6 @@
 import { searchRouteByRouteID } from '../../../data/search/searchRoute.ts';
 import { getPermalink } from '../../../tools/permalink.ts';
+import { prompt_message } from '../../prompt/index.ts';
 
 var routeOptionsBox: HTMLElement = document.querySelector('.route_options_box');
 
