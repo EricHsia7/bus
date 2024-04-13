@@ -407,7 +407,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
   Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="info"]').setAttribute('onclick', `bus.route.openRouteInformation(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
-  Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="link"]').setAttribute('onclick', `bus.route.copyRoutePermalink(${formattedRoute.RouteID})`);
+  Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="link"]').setAttribute('onclick', `bus.route.shareRoutePermalink(${formattedRoute.RouteID})`);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
@@ -592,20 +592,26 @@ export function saveItemAsStop(itemID: string, folderId: string, StopID: number,
   });
 }
 
-export async function copyRoutePermalink(RouteID: number): void {
+export async function shareRoutePermalink(RouteID: number): void {
   var search = await searchRouteByRouteID(RouteID);
   if (search.length > 0) {
     var link = getPermalink(0, {
       id: RouteID,
       name: search[0].n
     });
-    var textArea = document.createElement('textarea');
-    textArea.value = link;
-    textArea.setAttribute('readonly', 'readonly');
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('Copy');
-    textArea.remove();
-    prompt_message('已複製路線連結。');
+    if (navigator.share) {
+      navigator
+        .share({
+          title: search[0].n,
+          url: link
+        })
+        .then(() => {
+          prompt_message('已分享路線連結。');
+        })
+        .catch((e) => {
+          prompt_message('目前不支援分享功能。');
+          console.error(e);
+        });
+    }
   }
 }

@@ -4,7 +4,7 @@ import { searchRouteByName } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
-import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop, copyRoutePermalink } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop, shareRoutePermalink } from './interface/route/index.ts';
 import { initializeRouteOptions, openRouteOptions } from './interface/route/options/index.ts';
 import { openRouteInformation, closeRouteInformation } from './interface/route/information/index.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
@@ -109,7 +109,7 @@ window.bus = {
     openRouteInformation: openRouteInformation,
     closeRouteInformation: closeRouteInformation,
     openRouteOptions: openRouteOptions,
-    copyRoutePermalink: copyRoutePermalink
+    shareRoutePermalink: shareRoutePermalink
   },
   folder: {
     isSaved: isSaved,
