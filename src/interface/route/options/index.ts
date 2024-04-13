@@ -35,10 +35,10 @@ export async function shareRoutePermalink(RouteID: number): void {
           url: link
         })
         .then(() => {
-          prompt_message('已分享路線連結。');
+          prompt_message('已分享路線連結');
         })
         .catch((e) => {
-          prompt_message('目前不支援分享功能。');
+          prompt_message('已取消分享連結');
           console.error(e);
         });
     }
