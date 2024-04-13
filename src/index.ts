@@ -26,7 +26,7 @@ import './interface/home-page/folder.css';
 import './interface/search-page/index.css';
 import './interface/search-page/keyboard.css';
 import './interface/route/index.css';
-import './interface/route/options.css';
+import './interface/route/options/index.css';
 import './interface/route/information/index.css';
 import './interface/route/information/properties.css';
 import './interface/route/information/calendar.css';
