@@ -1,11 +1,14 @@
 import { integrateRoute } from '../../data/apis/index.ts';
+import { searchRouteByRouteID } from '../../data/search/searchRoute.ts';
 import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
+import { getPermalink } from '../../tools/permalink.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
+import { prompt_message } from '../prompt/index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 
@@ -404,6 +407,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
   Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="info"]').setAttribute('onclick', `bus.route.openRouteInformation(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
+  Field.querySelector('.route_options_box .route_options .route_options_body .route_options_actions .route_options_action_button[action="link"]').setAttribute('onclick', `bus.route.copyRoutePermalink(${formattedRoute.RouteID})`);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
@@ -583,6 +587,24 @@ export function saveItemAsStop(itemID: string, folderId: string, StopID: number,
   saveStop(folderId, StopID, RouteID).then((e) => {
     isSaved('stop', StopID).then((k) => {
       actionButtonElement.setAttribute('highlighted', k);
+      prompt_message('已收藏站牌。')
     });
   });
+}
+
+export async function copyRoutePermalink(RouteID: number): void {
+  var search = await searchRouteByRouteID(RouteID);
+  if (search.length > 0) {
+    var link = getPermalink(0, {
+      id: RouteID,
+      name: search[0].n
+    });
+    var textArea = document.createElement('textarea');
+    textArea.value = link;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('Copy');
+    textArea.remove();
+    prompt_message('已複製路線連結。')
+  }
 }
