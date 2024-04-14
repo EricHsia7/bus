@@ -80,7 +80,6 @@ window.bus = {
                 });
               }
             }
-            initializeRouteOptions();
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
