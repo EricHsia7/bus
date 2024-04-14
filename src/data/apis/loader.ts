@@ -23,8 +23,8 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     }
     chunks.push(value);
     receivedLength += value.length;
-    console.log(url, receivedLength, requestID);
     setDataReceivingProgress(requestID, urlName, receivedLength / contentLength, false);
+    console.log(dataReceivingProgress[requestID])
   }
 
   // Concatenate all the chunks into a single Uint8Array
