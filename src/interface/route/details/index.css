@@ -84,6 +84,10 @@
   overscroll-behavior: contain;
 }
 
+.route_details_field .route_details_body::-webkit-scrollbar {
+  display: none;
+}
+
 .route_details_field .route_details_body .route_details_groups {
   position: relative;
   width: 100%;

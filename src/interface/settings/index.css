@@ -97,6 +97,11 @@
   overscroll-behavior: contain;
 }
 
+.settings_page_field .settings_page_body::-webkit-scrollbar,
+.settings_options_page_field .settings_options_page_body::-webkit-scrollbar {
+  display: none;
+}
+
 .settings_page_field .settings_page_settings,
 .settings_options_page_field .settings_options_page_options {
   position: relative;
@@ -113,6 +118,11 @@
   position: relative;
   width: 100%;
   height: 55px;
+}
+
+.settings_page_field .settings_page_settings .setting:last-child,
+.settings_options_page_field .settings_options_page_options .option:last-child {
+  margin-bottom: var(--safe-area-bottom);
 }
 
 .settings_page_field .settings_page_settings .setting .setting_icon {
