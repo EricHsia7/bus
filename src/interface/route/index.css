@@ -241,10 +241,14 @@
   left: 10px;
   width: calc(100% - 20px);
   height: 35px;
-  overflow-x: screen;
+  overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
   word-break: keep-all;
+}
+
+.route_field .route_groups .route_grouped_items .item .body .tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs .tab,
