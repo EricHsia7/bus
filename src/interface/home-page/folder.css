@@ -13,6 +13,10 @@
   display: inline-block;
 }
 
+.home_page_field .home_page_body .home_page_folders .home_page_folder:last-child {
+  margin-bottom: var(--safe-area-bottom);
+}
+
 .home_page_field .home_page_body .home_page_folders .home_page_folder .home_page_folder_head {
   position: relative;
   width: calc(100% - 20px);
