@@ -180,6 +180,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
 
 export async function integrateStop(StopID: number, RouteID: number): object {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  console.log(requestID, new Date().getTime())
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID);
   var Route = await getRoute(requestID);
