@@ -5,9 +5,8 @@ import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
 import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
-import { shareRoutePermalink } from './interface/route/options/index.ts';
-import { initializeRouteOptions, openRouteOptions } from './interface/route/options/index.ts';
 import { openRouteInformation, closeRouteInformation } from './interface/route/information/index.ts';
+import { shareRoutePermalink } from './interface/route/information/actions.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop, isSaved } from './data/folder/index.ts';
@@ -27,8 +26,8 @@ import './interface/home-page/folder.css';
 import './interface/search-page/index.css';
 import './interface/search-page/keyboard.css';
 import './interface/route/index.css';
-import './interface/route/options/index.css';
 import './interface/route/information/index.css';
+import './interface/route/information/actions.css';
 import './interface/route/information/properties.css';
 import './interface/route/information/calendar.css';
 import './interface/settings/index.css';
@@ -109,7 +108,6 @@ window.bus = {
     saveItemAsStop: saveItemAsStop,
     openRouteInformation: openRouteInformation,
     closeRouteInformation: closeRouteInformation,
-    openRouteOptions: openRouteOptions,
     shareRoutePermalink: shareRoutePermalink
   },
   folder: {

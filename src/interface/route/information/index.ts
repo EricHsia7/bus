@@ -4,8 +4,10 @@ import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './pro
 import { md5 } from '../../../tools/index.ts';
 
 async function initializeRouteInformationField(Field: HTMLElement, RouteID: number, PathAttributeId: [number]): void {
-  var propertiesField = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="properties"]');
-  var calendarField = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="calendar"]');
+  var actionsField: HTMLElement = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="actions"]');
+  var propertiesField: HTMLElement = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="properties"]');
+  var calendarField: HTMLElement = Field.querySelector('.route_information_body .route_information_groups .route_information_group[group="calendar"]');
+  actionsField.querySelector('.route_information_group_body .route_information_action_button[action="link"]').setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
