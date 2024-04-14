@@ -82,7 +82,7 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
       dataReceivingProgress[requestID][key].previous_progress = progress;
     }
   } else {
-    dataReceivingProgress[requestID][key] = { expel: false, progress: 0, previous_progress: 0 };
+    dataReceivingProgress[requestID][key] = { expel: false, progress: progress, previous_progress: 0, total: 1 };
   }
 }
 
