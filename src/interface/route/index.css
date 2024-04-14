@@ -386,7 +386,7 @@
 
 .route_field .route_groups .route_grouped_items .item .head .status .next_slide[code="1"],
 .route_field .route_groups .route_grouped_items .item .head .status .current_slide[code="1"] {
-  color: var(--b-333333);
+  color: var(--b-main-color);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color-solid-transparent-c)
