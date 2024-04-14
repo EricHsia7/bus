@@ -61,7 +61,7 @@ export function getDataReceivingProgress(requestID: string): number {
       if (progress >= dataReceivingProgress[requestID].overall) {
         dataReceivingProgress[requestID].overall = progress;
       }
-      return dataReceivingProgress[requestID].overall;
+      return progress;
     }
   }
   return 1;
