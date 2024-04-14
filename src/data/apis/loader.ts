@@ -51,9 +51,11 @@ export function getDataReceivingProgress(requestID: string): number {
       var total = 0;
       var received = 0;
       for (var key in dataReceivingProgress[requestID]) {
-        if (!dataReceivingProgress[requestID][key].expel) {
-          total += dataReceivingProgress[requestID][key].total;
-          received += dataReceivingProgress[requestID][key].progress;
+        if (!(key === 'overall')) {
+          if (!dataReceivingProgress[requestID][key].expel) {
+            total += dataReceivingProgress[requestID][key].total;
+            received += dataReceivingProgress[requestID][key].progress;
+          }
         }
       }
       var progress = Math.min(Math.max(received / total, 0), 1);
@@ -61,7 +63,7 @@ export function getDataReceivingProgress(requestID: string): number {
       if (progress >= dataReceivingProgress[requestID].overall) {
         dataReceivingProgress[requestID].overall = progress;
       }
-      return progress;
+      return dataReceivingProgress[requestID].overall;
     }
   }
   return 1;
