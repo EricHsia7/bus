@@ -83,7 +83,7 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
   }
-  console.log(dataReceivingProgress);
+  console.log(requestID, urlName, progress, dataReceivingProgress);
 }
 
 export function deleteDataReceivingProgress(requestID: string): void {
