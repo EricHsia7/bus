@@ -160,7 +160,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
     }
   };
   await saveToFolder(folderID, content);
-  console.log(`Successfully saved ${integration.thisStopName}!`);
+  //console.log(`Successfully saved ${integration.thisStopName}!`);
 }
 
 export async function isSaved(type: string, id: number | string): boolean {

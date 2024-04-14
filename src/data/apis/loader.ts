@@ -24,7 +24,6 @@ export async function fetchData(url: string, requestID: string, tag: string): ob
     chunks.push(value);
     receivedLength += value.length;
     setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
-    console.log(url, contentLength, receivedLength, new Date().getTime());
   }
 
   // Concatenate all the chunks into a single Uint8Array

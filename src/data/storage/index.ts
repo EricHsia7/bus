@@ -34,7 +34,7 @@ export async function lfSetItem(store: number, key: string, value: any): any {
     var operation = await storage[store_key].setItem(key, value);
     return operation;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     await dropInstance(store);
     return null;
   }
@@ -51,7 +51,7 @@ export async function lfGetItem(store: number, key: string): any {
     var operation = await storage[store_key].getItem(key);
     return operation;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     await dropInstance(store);
     return null;
   }
@@ -68,7 +68,7 @@ export async function lfListItem(store: number): [] {
     var keys = await storage[store_key].keys();
     return keys;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return [];
   }
 }

@@ -291,7 +291,7 @@ export async function streamFolders(): void {
       }
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       if (foldersRefreshTimer.streaming) {
         foldersRefreshTimer.timer = setTimeout(function () {
           streamFolders();

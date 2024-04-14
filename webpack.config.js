@@ -25,7 +25,7 @@ async function makeDirectory(path) {
       console.log('New directory created successfully!');
     } catch (error) {
       // If there is an error, log it
-      console.log(error);
+      console.error(error);
       process.exit(1);
     }
   }
