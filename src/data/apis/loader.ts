@@ -57,8 +57,8 @@ export function getDataReceivingProgress(requestID: string): number {
         }
       }
       var progress = Math.min(Math.max(received / total, 0), 1);
+      console.log(progress, dataReceivingProgress[requestID].overall);
       if (progress >= dataReceivingProgress[requestID].overall) {
-        console.log(progress,dataReceivingProgress[requestID].overall)
         dataReceivingProgress[requestID].overall = progress;
       }
       return dataReceivingProgress[requestID].overall;
