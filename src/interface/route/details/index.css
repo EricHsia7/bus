@@ -1,4 +1,4 @@
-.route_information_field {
+.route_details_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -8,11 +8,11 @@
   display: none;
 }
 
-.route_information_field[displayed="true"] {
+.route_details_field[displayed="true"] {
   display: block;
 }
 
-.route_information_field .route_information_head {
+.route_details_field .route_details_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -23,8 +23,8 @@
   background: var(--b-ffffff);
 }
 
-.route_information_field .route_information_head .route_information_button_left,
-.route_information_field .route_information_head .route_information_button_right {
+.route_details_field .route_details_head .route_details_button_left,
+.route_details_field .route_details_head .route_details_button_right {
   position: absolute;
   width: 55px;
   height: 55px;
@@ -33,28 +33,28 @@
   align-items: center;
 }
 
-.route_information_field .route_information_head .route_information_button_left {
+.route_details_field .route_details_head .route_details_button_left {
   top: 0px;
   left: 0px;
 }
 
-.route_information_field .route_information_head .route_information_button_right {
+.route_details_field .route_details_head .route_details_button_right {
   top: 0px;
   right: 0px;
 }
 
-.route_information_field .route_information_head .route_information_button_left svg,
-.route_information_field .route_information_head .route_information_button_right svg {
+.route_details_field .route_details_head .route_details_button_left svg,
+.route_details_field .route_details_head .route_details_button_right svg {
   width: 20px;
   height: 20px;
 }
 
-.route_information_field .route_information_head .route_information_button_left svg path,
-.route_information_field .route_information_head .route_information_button_right svg path {
+.route_details_field .route_details_head .route_details_button_left svg path,
+.route_details_field .route_details_head .route_details_button_right svg path {
   fill: var(--b-333333);
 }
 
-.route_information_field .route_information_head .route_information_title {
+.route_details_field .route_details_head .route_details_title {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -70,7 +70,7 @@
   -webkit-user-select: none;
 }
 
-.route_information_field .route_information_body {
+.route_details_field .route_details_body {
   position: absolute;
   top: 55px;
   left: 0px;
@@ -82,7 +82,7 @@
   overscroll-behavior: contain;
 }
 
-.route_information_field .route_information_body .route_information_groups {
+.route_details_field .route_details_body .route_details_groups {
   position: relative;
   width: 100%;
   height: auto;
@@ -90,18 +90,18 @@
   margin-top: 10px;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group {
+.route_details_field .route_details_body .route_details_groups .route_details_group {
   position: relative;
   width: 100%;
   height: auto;
   display: inline-block;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group:last-child {
+.route_details_field .route_details_body .route_details_groups .route_details_group:last-child {
   margin-bottom: var(--safe-area-bottom);
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_head {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -112,7 +112,7 @@
   -webkit-user-select: none;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_head .route_details_group_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -125,18 +125,18 @@
   -webkit-user-select: none;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon svg {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_head .route_details_group_icon svg {
   height: 15px;
   width: 15px;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_icon svg path {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_head .route_details_group_icon svg path {
   fill: var(--b-333333);
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_head .route_information_group_name {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_head .route_details_group_name {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -151,7 +151,7 @@
   -webkit-user-select: none;
 }
 
-.route_information_field .route_information_body .route_information_groups .route_information_group .route_information_group_body {
+.route_details_field .route_details_body .route_details_groups .route_details_group .route_details_group_body {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;

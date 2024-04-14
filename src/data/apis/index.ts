@@ -231,7 +231,7 @@ export function preloadData(): void {
   });
 }
 
-export async function integrateRouteInformation(RouteID: number, PathAttributeId: [number], requestID: string): object {
+export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): object {
   function getThisRoute(Route: [], RouteID: number): object {
     var thisRoute = {};
     for (var item of Route) {

@@ -1,0 +1,34 @@
+.route_details_field .route_details_body .route_details_groups .route_details_group[group="actions"] .route_details_group_body {
+  height: 60px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  background: rgba(0, 0, 0, 0);
+}
+
+.route_details_field .route_details_body .route_details_groups .route_details_group[group="actions"] .route_details_group_body .route_details_action_button {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  background: var(--b-ffffff);
+  border-radius: 20px;
+  vertical-align: top;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_details_field .route_details_body .route_details_groups .route_details_group[group="actions"] .route_details_group_body .route_details_action_button svg {
+  width: 25px;
+  height: 25px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.route_details_field .route_details_body .route_details_groups .route_details_group[group="actions"] .route_details_group_body .route_details_action_button svg path {
+  fill: var(--b-333333);
+}
