@@ -23,6 +23,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     }
     chunks.push(value);
     receivedLength += value.length;
+    console.log(url, receivedLength, requestID);
     setDataReceivingProgress(requestID, urlName, receivedLength / contentLength, false);
   }
 
@@ -83,7 +84,6 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
   }
-  console.log(requestID, urlName, progress, dataReceivingProgress);
 }
 
 export function deleteDataReceivingProgress(requestID: string): void {
