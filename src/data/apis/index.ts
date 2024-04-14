@@ -146,7 +146,6 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
-  console.log(requestID, new Date().getTime());
   setDataReceivingProgress(requestID, 'getRoute', 0, false);
   setDataReceivingProgress(requestID, 'getStop', 0, false);
   setDataReceivingProgress(requestID, 'getLocation', 0, false);

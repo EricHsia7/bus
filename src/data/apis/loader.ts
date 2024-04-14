@@ -63,11 +63,11 @@ export function getDataReceivingProgress(requestID: string): number {
   return 1;
 }
 
-export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean) {
+export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  var key = `u_${md5(urlName)}`;
+  var key = `u_${urlName}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;
@@ -83,6 +83,7 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
   } else {
     dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
   }
+  console.log(dataReceivingProgress);
 }
 
 export function deleteDataReceivingProgress(requestID: string): void {
