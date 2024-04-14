@@ -64,6 +64,8 @@
   transform-origin: top left;
   display: block;
   transform: translateX(var(--cursor-offset));
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 @keyframes cursor {
