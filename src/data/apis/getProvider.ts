@@ -9,10 +9,10 @@ export async function getProvider(requestID: string): object {
     var apis = [
       [0, 9],
       [1, 9]
-    ].map((e) => getAPIURL(e[0], e[1], 60 * 60 * 1000));
+    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api, requestID, 'getTimeTable');
+      var data = await fetchData(api.url, requestID, `getTimeTable_${api.e[0]}`);
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -43,7 +43,8 @@ export async function getProvider(requestID: string): object {
         ProviderAPIVariableCache.available = true;
         ProviderAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getStop', 0, true);
+      setDataReceivingProgress(requestID, 'getProvider_0', 0, true);
+      setDataReceivingProgress(requestID, 'getProvider_1', 0, true);
       setDataUpdateTime(requestID, -1);
       return ProviderAPIVariableCache.data;
     }

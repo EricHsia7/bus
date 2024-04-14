@@ -144,6 +144,7 @@
 
 .route_field .route_head .update_timer_box .update_timer[refreshing="true"] {
   transition: transform var(--b-transition-duration);
+  transition-timing-function: linear;
 }
 
 .route_field .route_groups {

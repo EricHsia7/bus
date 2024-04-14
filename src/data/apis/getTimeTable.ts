@@ -2,17 +2,17 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 
-var TimetableAPIVariableCache = { available: false, data: {} }
+var TimetableAPIVariableCache = { available: false, data: {} };
 
 export async function getTimeTable(requestID: string): object {
   async function getData() {
     var apis = [
       [0, 14],
       [1, 14]
-    ].map((e) => getAPIURL(e[0], e[1], 60 * 60 * 1000));
+    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api, requestID, 'getTimeTable');
+      var data = await fetchData(api.url, requestID, `getTimeTable_${api.e[0]}`);
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -43,7 +43,8 @@ export async function getTimeTable(requestID: string): object {
         TimetableAPIVariableCache.available = true;
         TimetableAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getStop', 0, true);
+      setDataReceivingProgress(requestID, 'getTimeTable_0', 0, true);
+      setDataReceivingProgress(requestID, 'getTimeTable_1', 0, true);
       setDataUpdateTime(requestID, -1);
       return TimetableAPIVariableCache.data;
     }

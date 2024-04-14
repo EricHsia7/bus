@@ -6,7 +6,7 @@ const { inflate } = require('pako');
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, urlName: string): object {
+export async function fetchData(url: string, requestID: string, tag: string): object {
   const startTimeStamp = new Date().getTime();
   const response = await fetch(url);
   if (!response.ok) {
@@ -23,7 +23,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     }
     chunks.push(value);
     receivedLength += value.length;
-    setDataReceivingProgress(requestID, urlName, receivedLength / contentLength, false);
+    setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
     console.log(url, contentLength, receivedLength, new Date().getTime());
   }
 
@@ -64,25 +64,20 @@ export function getDataReceivingProgress(requestID: string): number {
   return 1;
 }
 
-export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean): void {
+export function setDataReceivingProgress(requestID: string, tag: string, progress: number, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  var key = `u_${urlName}`;
+  var key = `u_${tag}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;
     } else {
       dataReceivingProgress[requestID][key].expel = false;
-      var change = progress - dataReceivingProgress[requestID][key].previous_progress;
-      if (change < 0) {
-        dataReceivingProgress[requestID][key].total = dataReceivingProgress[requestID][key].total + 1;
-      }
-      dataReceivingProgress[requestID][key].progress = dataReceivingProgress[requestID][key].progress + Math.abs(change);
-      dataReceivingProgress[requestID][key].previous_progress = progress;
+      dataReceivingProgress[requestID][key].progress = progress;
     }
   } else {
-    dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
+    dataReceivingProgress[requestID][key] = { expel: false, progress: progress, total: 1 };
   }
 }
 

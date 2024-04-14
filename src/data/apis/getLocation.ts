@@ -33,10 +33,10 @@ export async function getLocation(requestID: string): object {
     var apis = [
       [0, 11],
       [1, 11]
-    ].map((e) => getAPIURL(e[0], e[1], 60 * 60 * 1000));
+    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api, requestID, 'getLocation');
+      var data = await fetchData(api.url, requestID, `getLocation_${api.e[0]}`);
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -73,7 +73,8 @@ export async function getLocation(requestID: string): object {
         LocationAPIVariableCache.available = true;
         LocationAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getLocation', 0, true);
+      setDataReceivingProgress(requestID, 'getLocation_0', 0, true);
+      setDataReceivingProgress(requestID, 'getLocation_1', 0, true);
       setDataUpdateTime(requestID, -1);
       return LocationAPIVariableCache.data;
     }
