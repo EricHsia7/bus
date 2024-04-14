@@ -245,6 +245,7 @@
   overflow-y: hidden;
   white-space: nowrap;
   word-break: keep-all;
+  border-radius: 30px;
 }
 
 .route_field .route_groups .route_grouped_items .item .body .tabs::-webkit-scrollbar {
