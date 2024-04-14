@@ -64,7 +64,7 @@ export function getDataReceivingProgress(requestID: string): number {
   return 1;
 }
 
-export function setDataReceivingProgress(requestID: string, tag: string, contentLength: number, receivedLength: number, expel: boolean): void {
+export function setDataReceivingProgress(requestID: string, tag: string, progress: number, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
@@ -82,7 +82,7 @@ export function setDataReceivingProgress(requestID: string, tag: string, content
       dataReceivingProgress[requestID][key].previous_progress = progress;
     }
   } else {
-    dataReceivingProgress[requestID][key] = { expel: false, contentLength: 0, receivedLength: 0 };
+    dataReceivingProgress[requestID][key] = { expel: false, progress: 0, previous_progress: 0 };
   }
 }
 
