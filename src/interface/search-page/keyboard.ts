@@ -1,5 +1,6 @@
 import { updateSearchResult } from './index.ts';
 import { getTextWidth } from '../../tools/index.ts';
+import { icons } from '../icons/index.ts';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -12,13 +13,13 @@ const searchInputElement = document.querySelector('.search_page_field .search_pa
 const keyboardElement = document.querySelector('.search_page_field .search_page_body .search_page_keyboard');
 
 function supportTouch(): boolean {
-if ('ontouchstart' in window || navigator.maxTouchPoints) {
+  if ('ontouchstart' in window || navigator.maxTouchPoints) {
     // Touch events are supported
-return true
-} else {
+    return true;
+  } else {
     // Touch events are not supported
-return false
-}
+    return false;
+  }
 }
 
 function initializeKeyboard(): void {
@@ -26,17 +27,19 @@ function initializeKeyboard(): void {
   for (var row of keyboard_keys) {
     for (var column of row) {
       var eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
-      var eventType = 'onmousedown'
-if (column === '刪除') {
+      var eventType = 'onmousedown';
+      var html = column;
+      if (column === '刪除') {
         eventScript = 'bus.searchPage.deleteCharFromInout()';
+        html = icons.backspace;
       }
       if (column === '清空') {
         eventScript = 'bus.searchPage.emptyInput()';
       }
-      if(supportTouch()) {
-      var eventType = 'ontouchstart'
-}
-      result.push(`<div class="search_page_keyboard_key" ${eventType}="${eventScript}">${column}</div>`);
+      if (supportTouch()) {
+        var eventType = 'ontouchstart';
+      }
+      result.push(`<div class="search_page_keyboard_key" ${eventType}="${eventScript}">${html}</div>`);
     }
   }
   keyboardElement.innerHTML = result.join('');

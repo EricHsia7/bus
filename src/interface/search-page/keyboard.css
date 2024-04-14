@@ -7,7 +7,7 @@
   padding: 10px;
   padding-bottom: calc(var(--safe-area-bottom) + 10px);
   box-sizing: border-box;
-  background: var(--b-ededf2);
+  background: var(--b-ffffff);
   user-select: none;
   -webkit-user-select: none;
   display: none;
@@ -29,6 +29,21 @@
   border-radius: 15px;
   font-size: 20px;
   color: var(--b-333333);
+  border: 1px solid var(--b-ededf2);
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.search_page_keyboard .search_page_keyboard_key svg {
+  width: 20px;
+  height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.search_page_keyboard .search_page_keyboard_key svg path {
+  fill: var(--b-333333);
 }
 
 .search_page_field .search_page_head .search_page_search_input .cursor {
