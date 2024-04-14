@@ -13,21 +13,21 @@
 }
 
 .prompt {
-  width: clamp(180px, calc(100% - 30px), 450px);
+  width: clamp(180px, calc(100% - 20px), 450px);
   height: 50px;
   border-radius: var(--b-border-radius-default);
   position: fixed;
   left: 50%;
   bottom: 0px;
   opacity: 0;
-  transform: translateX(-50%) translateY(0px) scale(1);
+  transform: translateX(-50%) translateY(80px) scale(1);
   background: rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.8);
   will-change: transform, opacity;
   -webkit-user-select: none;
   user-select: none;
   box-shadow: 0px 0px 25px -12px rgba(0, 0, 0, 0.23);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
