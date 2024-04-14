@@ -56,7 +56,11 @@ export function getDataReceivingProgress(requestID: string): number {
           received += dataReceivingProgress[requestID][key].progress;
         }
       }
-      return Math.min(Math.max(received / total, 0), 1);
+      var progress = Math.min(Math.max(received / total, 0), 1);
+      if (progress > dataReceivingProgress[requestID].overall) {
+        dataReceivingProgress[requestID].overall = progress;
+      }
+      return dataReceivingProgress[requestID].overall;
     }
   }
   return 1;
@@ -64,7 +68,7 @@ export function getDataReceivingProgress(requestID: string): number {
 
 export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean) {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
-    dataReceivingProgress[requestID] = {};
+    dataReceivingProgress[requestID] = { overall: 0 };
   }
   var key = `u_${md5(urlName)}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
