@@ -23,7 +23,9 @@
   height: 55px;
   border-bottom: 1px solid var(--b-ededf2);
   box-sizing: border-box;
-  background: var(--b-ffffff);
+  background: linear-gradient(180deg, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-a)) 0%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 70%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .settings_page_field .settings_page_head .settings_page_button_left,
@@ -85,10 +87,10 @@
 .settings_page_field .settings_page_body,
 .settings_options_page_field .settings_options_page_body {
   position: absolute;
-  top: 55px;
+  top: 0px;
   left: 0px;
   width: 100%;
-  height: calc(100% - 55px);
+  height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -103,7 +105,7 @@
   display: inline-block;
   background: var(--b-ffffff);
   border-radius: 20px;
-  margin-top: 10px;
+  margin-top: calc(10px + 55px);
 }
 
 .settings_page_field .settings_page_settings .setting,
