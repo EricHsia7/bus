@@ -1,9 +1,6 @@
 import { md5 } from '../../tools/index.ts';
 
-export function prompt_message(message: string, duration: number): void {
-  if (isNaN(duration)) {
-    duration = 1200;
-  }
+export function prompt_message(message: string, duration: number = 1200): void {
   message = String(message);
   var all_prompt = document.querySelectorAll('.prompt');
   if (!(all_prompt === null)) {
@@ -12,7 +9,7 @@ export function prompt_message(message: string, duration: number): void {
       all_prompt[e].remove();
     }
   }
-  var duration_base: number = 180;
+  var duration_base: number = 300;
   var translateY: number = -10;
   var prompt_id: string = md5(new Date().getTime() + Math.random());
   var prompt_element = document.createElement('div');
