@@ -76,10 +76,10 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
     var apis = [
       [0, 10],
       [1, 10]
-    ].map((e) => getAPIURL(e[0], e[1]));
+    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api, requestID, 'getRoute');
+      var data = await fetchData(api.url, requestID, `getRoute_${api.e[0]}`);
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -118,7 +118,8 @@ export async function getRoute(requestID: string, simplify: boolean = true): obj
         RouteAPIVariableCache.available = true;
         RouteAPIVariableCache.data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getRoute', 0, true);
+      setDataReceivingProgress(requestID, 'getRoute_0', 0, true);
+      setDataReceivingProgress(requestID, 'getRoute_1', 0, true);
       setDataUpdateTime(requestID, -1);
       return RouteAPIVariableCache.data;
     }

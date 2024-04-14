@@ -6,7 +6,7 @@ const { inflate } = require('pako');
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, urlName: string): object {
+export async function fetchData(url: string, requestID: string, tag: string): object {
   const startTimeStamp = new Date().getTime();
   const response = await fetch(url);
   if (!response.ok) {
@@ -23,7 +23,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     }
     chunks.push(value);
     receivedLength += value.length;
-    setDataReceivingProgress(requestID, urlName, receivedLength / contentLength, false);
+    setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
     console.log(url, contentLength, receivedLength, new Date().getTime());
   }
 
@@ -64,11 +64,11 @@ export function getDataReceivingProgress(requestID: string): number {
   return 1;
 }
 
-export function setDataReceivingProgress(requestID: string, urlName: string, progress: number | boolean, expel: boolean): void {
+export function setDataReceivingProgress(requestID: string, tag: string, contentLength: number, receivedLength: number, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  var key = `u_${urlName}`;
+  var key = `u_${tag}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;
@@ -82,7 +82,7 @@ export function setDataReceivingProgress(requestID: string, urlName: string, pro
       dataReceivingProgress[requestID][key].previous_progress = progress;
     }
   } else {
-    dataReceivingProgress[requestID][key] = { progress: progress, total: 1, previous_progress: 0, expel: false };
+    dataReceivingProgress[requestID][key] = { expel: false, contentLength: 0, receivedLength: 0 };
   }
 }
 

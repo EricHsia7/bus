@@ -5,10 +5,10 @@ export async function getBusData(requestID: string): [] {
   var apis = [
     [0, 0],
     [1, 0]
-  ].map((e) => getAPIURL(e[0], e[1]));
+  ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
   var result = [];
   for (var api of apis) {
-    var data = await fetchData(api, requestID, 'getBusData');
+    var data = await fetchData(api.url, requestID, `getBusData_${api.e[0]}`);
     result = result.concat(data.BusInfo);
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }
