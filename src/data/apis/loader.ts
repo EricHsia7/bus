@@ -24,7 +24,7 @@ export async function fetchData(url: string, requestID: string, urlName: string)
     chunks.push(value);
     receivedLength += value.length;
     setDataReceivingProgress(requestID, urlName, receivedLength / contentLength, false);
-    console.log(new Date().getTime(), dataReceivingProgress[requestID])
+    console.log(contentLength, receivedLength, new Date().getTime());
   }
 
   // Concatenate all the chunks into a single Uint8Array
