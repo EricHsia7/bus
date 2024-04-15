@@ -1,6 +1,6 @@
 import { preloadData } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
-import { updateSearchResult } from './data/search/searchRoute.ts';
+import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
@@ -85,16 +85,16 @@ window.bus = {
             });
             var searchInputElement: HTMLElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (e) {
-              updateSearchResult();
+              updateSearchResult(e.target.value);
             });
             searchInputElement.addEventListener('cut', function (e) {
-              updateSearchResult();
+              updateSearchResult(e.target.value);
             });
             searchInputElement.addEventListener('selectionchange', function (e) {
-              updateSearchResult();
+              updateSearchResult(e.target.value);
             });
             searchInputElement.addEventListener('keyup', function (e) {
-              updateSearchResult();
+              updateSearchResult(e.target.value);
             });
             preloadData();
             openPermalink();
