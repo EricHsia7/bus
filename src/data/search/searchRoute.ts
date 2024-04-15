@@ -81,7 +81,7 @@ export async function prepareForSearch() {
     index.push({
       id: parseInt(key.split('_')[1]),
       n: Location[key].n,
-      lo: Route[key].lo,
+      lo: Location[key].lo,
       la: Location[key].la,
       r: Location[key].r,
       s: Location[key].s,
