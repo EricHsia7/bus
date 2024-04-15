@@ -1,6 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
+import { md5 } from '../../tools/index.ts';
 
 var LocationAPIVariableCache = {
   merged: {
@@ -39,27 +40,27 @@ function simplifyLocation(array: []): object {
 
 function mergeLocationByName(object: object): object {
   var result = {};
-  for (var key in Location) {
+  for (var key in object) {
     var nameKey = `ml_${md5(
-      String(Location[key].n)
+      String(object[key].n)
         .trim()
         .replaceAll(/\(\（\）\)\:\：\~\～/g, '')
     )}`;
     if (!result.hasOwnProperty(nameKey)) {
       result[nameKey] = {
-        n: Location[key].n,
-        lo: [Location[key].lo],
-        la: [Location[key].la],
-        r: [Location[key].r],
-        s: [Location[key].s],
+        n: object[key].n,
+        lo: [object[key].lo],
+        la: [object[key].la],
+        r: [object[key].r],
+        s: [object[key].s],
         id: [parseInt(key.split('_')[1])]
       };
     } else {
       result[nameKey].id.push(parseInt(key.split('_')[1]));
-      result[nameKey].r.push(Location[key].r);
-      result[nameKey].s.push(Location[key].s);
-      result[nameKey].lo.push(Location[key].lo);
-      result[nameKey].la.push(Location[key].la);
+      result[nameKey].r.push(object[key].r);
+      result[nameKey].s.push(object[key].s);
+      result[nameKey].lo.push(object[key].lo);
+      result[nameKey].la.push(object[key].la);
     }
   }
   return result;
