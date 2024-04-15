@@ -84,17 +84,17 @@ window.bus = {
               initializeFolders();
             });
             var searchInputElement: HTMLElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
-            searchInputElement.addEventListener('paste', function (e) {
-              updateSearchResult(e.target.value);
+            searchInputElement.addEventListener('paste', function (event) {
+              updateSearchResult(event.target.value);
             });
-            searchInputElement.addEventListener('cut', function (e) {
-              updateSearchResult(e.target.value);
+            searchInputElement.addEventListener('cut', function (event) {
+              updateSearchResult(event.target.value);
             });
-            searchInputElement.addEventListener('selectionchange', function (e) {
-              updateSearchResult(e.target.value);
+            searchInputElement.addEventListener('selectionchange', function (event) {
+              updateSearchResult(event.target.value);
             });
-            searchInputElement.addEventListener('keyup', function (e) {
-              updateSearchResult(e.target.value);
+            searchInputElement.addEventListener('keyup', function (event) {
+              updateSearchResult(event.target.value);
             });
             preloadData();
             openPermalink();
