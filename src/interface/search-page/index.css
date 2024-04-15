@@ -117,17 +117,12 @@
   height: 50px;
   box-sizing: border-box;
   position: relative;
-  border-bottom: 1px solid var(--b-f9f9fb);
   user-select: none;
   -webkit-user-select: none;
 }
 
 .search_page_field .search_page_body .search_page_search_results .search_page_search_result:first-child {
   margin-top: 55px;
-}
-
-.search_page_field .search_page_body .search_page_search_results .search_page_search_result:last-child {
-  border: none;
 }
 
 .search_page_field .search_page_body .search_page_search_results .search_page_search_result .search_page_search_result_type {
@@ -138,6 +133,7 @@
   height: 50px;
   display: flex;
   align-items: center;
+  justify-content: center;
   user-select: none;
   -webkit-user-select: none;
 }
