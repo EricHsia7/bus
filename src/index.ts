@@ -1,6 +1,6 @@
 import { preloadData } from './data/apis/index.ts';
 import { getRoute } from './data/apis/getRoute.ts';
-import { searchRouteByName } from './data/search/searchRoute.ts';
+import { updateSearchResult } from './data/search/searchRoute.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { listRecordedEstimateTime, getUpdateRate } from './data/analytics/update-rate.ts';
@@ -148,6 +148,5 @@ window.bus = {
     settingsOptionsHandler
   }
 };
-window.bus.searchRouteByName = searchRouteByName;
 
 export default window.bus;
