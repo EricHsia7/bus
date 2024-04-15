@@ -134,7 +134,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 50px;
+  width: 55px;
   height: 50px;
   display: flex;
   align-items: center;
@@ -154,9 +154,9 @@
 .search_page_field .search_page_body .search_page_search_results .search_page_search_result .search_page_search_result_route_name {
   position: absolute;
   top: 0px;
-  left: 50px;
-  width: calc(100% - 50px);
-  height: 30px;
+  left: 55px;
+  width: calc(100% - 55px);
+  height: 50px;
   display: flex;
   font-size: 20px;
   color: var(--b-333333);
