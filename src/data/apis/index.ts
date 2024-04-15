@@ -158,7 +158,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   var Route = await getRoute(requestID, true);
   var Stop = await getStop(requestID);
-  var Location = await getLocation(requestID);
+  var Location = await getLocation(requestID, false);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
@@ -186,7 +186,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
 export async function integrateStop(StopID: number, RouteID: number): object {
   const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var Stop = await getStop(requestID);
-  var Location = await getLocation(requestID);
+  var Location = await getLocation(requestID, false);
   var Route = await getRoute(requestID);
   var thisStop = Stop[`s_${StopID}`];
   var thisStopDirection = thisStop.goBack;
