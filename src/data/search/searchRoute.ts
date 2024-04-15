@@ -67,7 +67,8 @@ export async function prepareForSearch() {
       pid: Route[key].pid,
       dep: Route[key].dep,
       des: Route[key].des,
-      n: Route[key].n
+      n: Route[key].n,
+      type: 0
     });
   }
   return new Fuse(index, { keys: ['n', 'dep', 'des'] });
