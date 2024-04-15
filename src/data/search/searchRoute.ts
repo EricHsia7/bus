@@ -61,7 +61,7 @@ export async function searchRouteByPathAttributeId(PathAttributeId: [number]) {
 export async function prepareForSearch() {
   var requestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var Route = await getRoute(requestID, true);
-  var Location = await getLocation(requestID);
+  var mergedLocation = await getLocation(requestID, true);
   var index = [];
   for (var key in Route) {
     index.push({
@@ -76,30 +76,6 @@ export async function prepareForSearch() {
       s: '',
       type: 0
     });
-  }
-  var mergedLocation = {};
-  for (var key in Location) {
-    var nameKey = `l_${md5(
-      String(Location[key].n)
-        .trim()
-        .replaceAll(/\(\（\）\)\:\：\~\～/g, '')
-    )}`;
-    if (!mergedLocation.hasOwnProperty(nameKey)) {
-      mergedLocation[nameKey] = {
-        n: Location[key].n,
-        lo: [Location[key].lo],
-        la: [Location[key].la],
-        r: [Location[key].r],
-        s: [Location[key].s],
-        id: [parseInt(key.split('_')[1])]
-      };
-    } else {
-      mergedLocation[nameKey].id.push(parseInt(key.split('_')[1]));
-      mergedLocation[nameKey].r.push(Location[key].r);
-      mergedLocation[nameKey].s.push(Location[key].s);
-      mergedLocation[nameKey].lo.push(Location[key].lo);
-      mergedLocation[nameKey].la.push(Location[key].la);
-    }
   }
   for (var key in mergedLocation) {
     index.push({
