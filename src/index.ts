@@ -83,6 +83,19 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
+            var searchInputElement: HTMLElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
+            searchInputElement.addEventListener('paste', function (e) {
+              updateSearchResult();
+            });
+            searchInputElement.addEventListener('cut', function (e) {
+              updateSearchResult();
+            });
+            searchInputElement.addEventListener('selectionchange', function (e) {
+              updateSearchResult();
+            });
+            searchInputElement.addEventListener('keyup', function (e) {
+              updateSearchResult();
+            });
             preloadData();
             openPermalink();
             fadeOutSplashScreen();
