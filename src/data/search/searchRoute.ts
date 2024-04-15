@@ -77,9 +77,33 @@ export async function prepareForSearch() {
       type: 0
     });
   }
+  var location_object = {};
   for (var key in Location) {
+    var nameKey = `l_${md5(
+      String(Location[key].n)
+        .trim()
+        .replaceAll(/\(\（\）\)\:\：\~\～/g, '')
+    )}`;
+    if (!location_object.hasOwnProperty(nameKey)) {
+      location_object[nameKey] = {
+        n: Location[key].n,
+        lo: [Location[key].lo],
+        la: [Location[key].la],
+        r: [Location[key].r],
+        s: [Location[key].s],
+        id: [parseInt(key.split('_')[1])]
+      };
+    } else {
+      location_object[nameKey].id.push(parseInt(key.split('_')[1]));
+      location_object[nameKey].r.push(Location[key].r);
+      location_object[nameKey].s.push(Location[key].s);
+      location_object[nameKey].lo.push(Location[key].lo);
+      location_object[nameKey].la.push(Location[key].la);
+    }
+  }
+  for (var key in location_object) {
     index.push({
-      id: parseInt(key.split('_')[1]),
+      id: Location[key].id,
       n: Location[key].n,
       lo: Location[key].lo,
       la: Location[key].la,
