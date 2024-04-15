@@ -81,7 +81,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
   }
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = `bus_${merged ? 'merged_' : ''}location_cache`;
+  var cache_key = `bus_${merged ? 'merged' : 'simplified'}_location_cache`;
   var variable_cache_key = merged ? 'merged' : 'simplified';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
