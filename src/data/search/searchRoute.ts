@@ -77,15 +77,15 @@ export async function prepareForSearch() {
       type: 0
     });
   }
-  var location_object = {};
+  var mergedLocation = {};
   for (var key in Location) {
     var nameKey = `l_${md5(
       String(Location[key].n)
         .trim()
         .replaceAll(/\(\（\）\)\:\：\~\～/g, '')
     )}`;
-    if (!location_object.hasOwnProperty(nameKey)) {
-      location_object[nameKey] = {
+    if (!mergedLocation.hasOwnProperty(nameKey)) {
+      mergedLocation[nameKey] = {
         n: Location[key].n,
         lo: [Location[key].lo],
         la: [Location[key].la],
@@ -94,21 +94,21 @@ export async function prepareForSearch() {
         id: [parseInt(key.split('_')[1])]
       };
     } else {
-      location_object[nameKey].id.push(parseInt(key.split('_')[1]));
-      location_object[nameKey].r.push(Location[key].r);
-      location_object[nameKey].s.push(Location[key].s);
-      location_object[nameKey].lo.push(Location[key].lo);
-      location_object[nameKey].la.push(Location[key].la);
+      mergedLocation[nameKey].id.push(parseInt(key.split('_')[1]));
+      mergedLocation[nameKey].r.push(Location[key].r);
+      mergedLocation[nameKey].s.push(Location[key].s);
+      mergedLocation[nameKey].lo.push(Location[key].lo);
+      mergedLocation[nameKey].la.push(Location[key].la);
     }
   }
-  for (var key in location_object) {
+  for (var key in mergedLocation) {
     index.push({
-      id: Location[key].id,
-      n: Location[key].n,
-      lo: Location[key].lo,
-      la: Location[key].la,
-      r: Location[key].r,
-      s: Location[key].s,
+      id: mergedLocation[key].id,
+      n: mergedLocation[key].n,
+      lo: mergedLocation[key].lo,
+      la: mergedLocation[key].la,
+      r: mergedLocation[key].r,
+      s: mergedLocation[key].s,
       dep: '',
       des: '',
       pid: [],
