@@ -87,14 +87,17 @@ window.bus = {
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(event.target.value);
             });
-            searchInputElement.addEventListener('cut', function (event) {
-              updateSearchResult(event.target.value);
+            searchInputElement.addEventListener('cut', function () {
+              updateSearchResult(searchInputElement.value);
             });
-            searchInputElement.addEventListener('selectionchange', function (event) {
-              updateSearchResult(event.target.value);
+            searchInputElement.addEventListener('selectionchange', function () {
+              updateSearchResult(searchInputElement.value);
             });
-            searchInputElement.addEventListener('keyup', function (event) {
-              updateSearchResult(event.target.value);
+            document.addEventListener('selectionchange', function () {
+              updateSearchResult(searchInputElement.value);
+            });
+            searchInputElement.addEventListener('keyup', function () {
+              updateSearchResult(searchInputElement.value);
             });
             preloadData();
             openPermalink();
