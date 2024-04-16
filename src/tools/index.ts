@@ -137,7 +137,6 @@ export function extractCommonFeaturesFromAddresses(addresses: string[]): string 
   // Iterate through each address
   for (const address of addresses) {
     // Extract common features by splitting the address
-    console.log(address)
     const features = String(address)
       .split('')
       .filter((feature) => feature.trim() !== '');
