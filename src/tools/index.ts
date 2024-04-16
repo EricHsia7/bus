@@ -127,12 +127,12 @@ export function pearsonCorrelation(x, y) {
   return numerator / denominator;
 }
 
-export function extractCommonFeaturesFromAddresses(addresses: [string]): string {
+export function extractCommonFeaturesFromAddresses(addresses: string[]): string {
   // Create an object to store feature occurrences
-  const featureCounts = {};
+  const featureCounts: { [key: string]: { count: number; chars: string; index: number } } = {};
 
   // Create a set to store unique simplified addresses
-  const simplifiedSet = new Set();
+  const simplifiedSet = new Set<string>();
 
   // Iterate through each address
   for (const address of addresses) {
@@ -148,12 +148,24 @@ export function extractCommonFeaturesFromAddresses(addresses: [string]): string 
     // Count occurrences of each feature
     let index = 0;
     for (const feature of features) {
-      const featureKey = `c_${index}_${feature}`;
-      featureCounts[featureKey] = {
-        count: (featureCounts[featureKey]?.count || 0) + 1,
-        chars: feature,
-        index: index
-      };
+      // Check if the feature is a digit
+      if (!isNaN(parseInt(feature))) {
+        // Create a key for the digit feature
+        const digitKey = `digit_${feature}`;
+        featureCounts[digitKey] = {
+          count: (featureCounts[digitKey]?.count || 0) + 1,
+          chars: feature,
+          index: index
+        };
+      } else {
+        // Create a key for non-digit features
+        const featureKey = `c_${index}_${feature}`;
+        featureCounts[featureKey] = {
+          count: (featureCounts[featureKey]?.count || 0) + 1,
+          chars: feature,
+          index: index
+        };
+      }
       index += 1;
     }
   }
@@ -165,9 +177,7 @@ export function extractCommonFeaturesFromAddresses(addresses: [string]): string 
   // Convert the feature counts object to an array of [feature, count] pairs
   const sortedFeatures = Object.entries(featureCounts)
     .filter((pair) => threshold <= pair[1].count && pair[1].count <= limit)
-    .sort(function (a, b) {
-      return a.index - b.index;
-    });
+    .sort((a, b) => a[1].index - b[1].index);
 
   // Extract the features from the sorted array
   const commonFeatures = sortedFeatures.map((pair) => pair[1].chars);
