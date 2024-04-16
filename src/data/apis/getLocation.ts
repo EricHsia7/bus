@@ -34,7 +34,7 @@ function simplifyLocation(array: []): object {
       if (!(result[key].s.indexOf(item.Id) > -1)) {
         result[key].s.push(item.Id);
       }
-      result.a.push(item.address);
+      result[key].a.push(item.address);
     }
   }
   return result;
