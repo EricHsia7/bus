@@ -126,3 +126,51 @@ export function pearsonCorrelation(x, y) {
 
   return numerator / denominator;
 }
+
+export function extractCommonFeaturesFromAddresses(addresses: [string]): string {
+  // Create an object to store feature occurrences
+  const featureCounts = {};
+
+  // Create a set to store unique simplified addresses
+  const simplifiedSet = new Set();
+
+  // Iterate through each address
+  for (const address of addresses) {
+    // Extract common features by splitting the address
+    const features = address.split(' ').filter((feature) => feature.trim() !== '');
+
+    // Join the extracted features to create a simplified address
+    const simplifiedAddress = features.join('');
+
+    // Add the simplified address to the set
+    simplifiedSet.add(simplifiedAddress);
+
+    // Count occurrences of each feature
+    let index = 0;
+    for (const feature of features) {
+      const featureKey = `c_${index}_${feature}`;
+      featureCounts[featureKey] = {
+        count: (featureCounts[featureKey]?.count || 0) + 1,
+        chars: feature,
+        index: index
+      };
+      index += 1;
+    }
+  }
+
+  // Set threshold and limit for filtering features
+  const threshold = addresses.length * 0.6;
+  const limit = addresses.length * 1;
+
+  // Convert the feature counts object to an array of [feature, count] pairs
+  const sortedFeatures = Object.entries(featureCounts)
+    .filter((pair) => threshold <= pair[1].count && pair[1].count <= limit)
+    .sort(function (a, b) {
+      return a.index - b.index;
+    });
+
+  // Extract the features from the sorted array
+  const commonFeatures = sortedFeatures.map((pair) => pair[1].chars);
+
+  return commonFeatures.join('');
+}
