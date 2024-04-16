@@ -1,5 +1,5 @@
 import { preloadData } from './data/apis/index.ts';
-import { getLocation } from '.data/apis/getLocation.ts';
+import { getLocation } from './data/apis/getLocation.ts';
 import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
