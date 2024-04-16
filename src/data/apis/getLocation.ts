@@ -25,6 +25,7 @@ function simplifyLocation(array: []): object {
       simplified_item.la = item.latitude;
       simplified_item.r = [item.routeId];
       simplified_item.s = [item.Id];
+      simplified_item.a = [item.address];
       result[key] = simplified_item;
     } else {
       if (!(result[key].r.indexOf(item.routeId) > -1)) {
@@ -33,6 +34,7 @@ function simplifyLocation(array: []): object {
       if (!(result[key].s.indexOf(item.Id) > -1)) {
         result[key].s.push(item.Id);
       }
+      simplified_item.a.push(item.address);
     }
   }
   return result;
@@ -53,6 +55,7 @@ function mergeLocationByName(object: object): object {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
+        a: [object[key].a],
         id: [parseInt(key.split('_')[1])]
       };
     } else {
@@ -61,6 +64,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].s.push(object[key].s);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
+      result[nameKey].a.push(object[key].a);
     }
   }
   return result;
@@ -83,7 +87,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_cache`;
+  var cache_key = `bus_${cache_type}_location_v2_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
