@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { md5 } from '../../tools/index.ts';
+import { md5, extractCommonFeaturesFromAddresses } from '../../tools/index.ts';
 
 var LocationAPIVariableCache = {
   merged: {
@@ -55,7 +55,7 @@ function mergeLocationByName(object: object): object {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
-        a: [object[key].a],
+        a: [extractCommonFeaturesFromAddresses(object[key].a)],
         id: [parseInt(key.split('_')[1])]
       };
     } else {
@@ -64,7 +64,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].s.push(object[key].s);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
-      result[nameKey].a.push(object[key].a);
+      result[nameKey].a.push(extractCommonFeaturesFromAddresses(object[key].a));
     }
   }
   return result;
