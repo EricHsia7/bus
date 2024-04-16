@@ -137,7 +137,8 @@ window.bus = {
   test: {
     calculateDataUsage,
     initializeFolderStores,
-    calculateStoresSize
+    calculateStoresSize,
+    getLocation
   },
   settingsPage: {
     openSettingsPage,
