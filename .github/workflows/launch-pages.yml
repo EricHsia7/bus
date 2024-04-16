@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-search-improvement
+      - dev-location
 
 jobs:
   build:

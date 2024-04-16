@@ -114,15 +114,15 @@ window.bus = {
     }
   },
   route: {
-    stretchItemBody: stretchItemBody,
-    openRoute: openRoute,
-    closeRoute: closeRoute,
-    switchRoute: switchRoute,
-    switchRouteBodyTab: switchRouteBodyTab,
-    saveItemAsStop: saveItemAsStop,
-    openRouteDetails: openRouteDetails,
-    closeRouteDetails: closeRouteDetails,
-    shareRoutePermalink: shareRoutePermalink
+    stretchItemBody,
+    openRoute,
+    closeRoute,
+    switchRoute,
+    switchRouteBodyTab,
+    saveItemAsStop,
+    openRouteDetails,
+    closeRouteDetails,
+    shareRoutePermalink
   },
   folder: {
     saveStop: saveStop
