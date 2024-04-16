@@ -159,7 +159,7 @@ export function extractCommonFeaturesFromAddresses(addresses: string[]): string 
         };
       } else {
         // Create a key for non-digit features
-        const featureKey = `c_${index}_${feature.charCodeAt(0)}`;
+        const featureKey = `chars_${index}_${feature.charCodeAt(0)}`;
         featureCounts[featureKey] = {
           count: (featureCounts[featureKey].count || 0) + 1,
           chars: feature,
