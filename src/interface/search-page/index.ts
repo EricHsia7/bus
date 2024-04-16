@@ -20,7 +20,18 @@ export function closeSearchPage(): void {
   searchPageField.setAttribute('displayed', 'false');
 }
 
+function containPhoneticSymbols(string: string): boolean {
+var regex = /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]*/gm
+if(regex.test(string)) {
+return true
+}
+else {
+return false
+}
+}
+
 export function updateSearchResult(query: string): void {
+if(!containPhoneticSymbols(query)) {
   var typeToIcon = ['route', 'location'];
   var searchResults = currentFuse.search(query);
   var html = [];
@@ -37,4 +48,5 @@ export function updateSearchResult(query: string): void {
     html.push(`<div class="search_page_search_result" onclick="${onclickScript}"><div class="search_page_search_result_type">${typeIcon}</div><div class="search_page_search_result_route_name">${name}</div></div>`);
   }
   searchResultsElement.innerHTML = html.join('');
+}
 }
