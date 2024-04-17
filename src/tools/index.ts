@@ -331,7 +331,7 @@ export function mergeAddressesIntoString(addresses: string[]): string {
     var result = {};
     for (var part of parts) {
       var r = regex(part === null || part === void 0 ? void 0 : part.suffixes, part.type);
-      result[part.key] = part.process(address.match(r));
+      result[part.key] = part.process(String(address).match(r));
     }
     return result;
   }
