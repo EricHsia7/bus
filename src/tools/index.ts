@@ -244,14 +244,28 @@ export function mergeAddressesIntoString(addresses: string[]): string {
       type: 0
     },
     {
-      suffixes: '巷弄',
+      suffixes: '巷',
       key: 'alley',
       process: function (e) {
         if (e === null) {
           return null;
         } else {
           return e.map((t) => {
-            return t.trim();
+            return parseInt(t.trim().replaceAll(/[巷]/gim));
+          });
+        }
+      },
+      type: 0
+    },
+    {
+      suffixes: '弄',
+      key: 'alley_branch',
+      process: function (e) {
+        if (e === null) {
+          return null;
+        } else {
+          return e.map((t) => {
+            return parseInt(t.trim().replaceAll(/[弄]/gim));
           });
         }
       },
@@ -360,7 +374,23 @@ export function mergeAddressesIntoString(addresses: string[]): string {
       }).length > 0
         ? address.road_section.join('、') + '段'
         : ''
-    }${address.alley}${
+    }${
+      address.alley.length > 0
+        ? address.alley
+            .sort(function (a, b) {
+              return a - b;
+            })
+            .join('、') + '巷'
+        : ''
+    }${
+      address.alley_branch.length > 0
+        ? address.alley_branch
+            .sort(function (a, b) {
+              return a - b;
+            })
+            .join('、') + '弄'
+        : ''
+    }${
       address.doorplate.length > 0
         ? address.doorplate
             .sort(function (a, b) {
