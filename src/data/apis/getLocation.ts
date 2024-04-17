@@ -21,8 +21,8 @@ function simplifyLocation(array: []): object {
     if (!result.hasOwnProperty(key)) {
       var simplified_item = {};
       simplified_item.n = item.nameZh;
-      simplified_item.lo = item.longitude;
-      simplified_item.la = item.latitude;
+      simplified_item.lo = parseFloat(item.longitude);
+      simplified_item.la = parseFloat(item.latitude);
       simplified_item.r = [item.routeId];
       simplified_item.s = [item.Id];
       simplified_item.a = [item.address];
@@ -89,7 +89,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v4_cache`;
+  var cache_key = `bus_${cache_type}_location_v5_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
