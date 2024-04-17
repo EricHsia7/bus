@@ -316,7 +316,7 @@ export function mergeAddressesIntoString(addresses: string[]): string {
     }
   ];
 
-  function parseAddress(addresses: []): object {
+  function parseAddress(address: string): object {
     function regex(suffixes, type) {
       if (type === 0) {
         return new RegExp(`([^市區鄉鎮村里路段街道巷弄號樓與]+[${suffixes}])`, 'gmi');
@@ -332,6 +332,23 @@ export function mergeAddressesIntoString(addresses: string[]): string {
     for (var part of parts) {
       var r = regex(part === null || part === void 0 ? void 0 : part.suffixes, part.type);
       result[part.key] = part.process(address.match(r));
+    }
+    return result;
+  }
+
+  function mergeAddresses(addresses: object[]): object {
+    var result = {};
+    for (var address of addresses) {
+      var parsedAddress = parseAddress(address);
+      for (var part of parts) {
+        if (!result.hasOwnProperty(part.key)) {
+          result[part.key] = [];
+        }
+        result[part.key] = result[part.key].concat(parsedAddress[part.key]);
+      }
+    }
+    for (var key in result) {
+      result[key] = Array.from(new Set(result[key])).filter((e) => (e ? true : false));
     }
     return result;
   }
@@ -352,23 +369,6 @@ export function mergeAddressesIntoString(addresses: string[]): string {
             .join('、') + '號'
         : ''
     }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
-  }
-
-  function mergeAddresses(addresses: string[]): object {
-    var result = {};
-    for (var address of addresses) {
-      var parsedAddress = parseAddress(address);
-      for (var part of parts) {
-        if (!result.hasOwnProperty(part.key)) {
-          result[part.key] = [];
-        }
-        result[part.key] = result[part.key].concat(parsedAddress[part.key]);
-      }
-    }
-    for (var key in result) {
-      result[key] = Array.from(new Set(result[key])).filter((e) => (e ? true : false));
-    }
-    return result;
   }
 
   return addressToString(mergeAddresses(addresses));
