@@ -356,7 +356,7 @@ export function mergeAddressesIntoString(addresses: string[]): string {
 
   function mergeAddresses(addresses: string[]): object {
     var result = {};
-    for (var address of parsedAddresses) {
+    for (var address of addresses) {
       var parsedAddress = parseAddress(address);
       for (var part of parts) {
         if (!result.hasOwnProperty(part.key)) {
