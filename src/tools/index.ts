@@ -127,7 +127,7 @@ export function pearsonCorrelation(x, y) {
   return numerator / denominator;
 }
 
-export function mergeAddressesIntoString(addresses: string[]): string {
+export function mergeAddressesIntoOne(addresses: string[], convertToString: boolean): object | string {
   const parts = [
     {
       suffixes: '市',
@@ -400,8 +400,13 @@ export function mergeAddressesIntoString(addresses: string[]): string {
         : ''
     }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
   }
+  var mergedAddresses = addressToString(mergeAddresses(addresses));
 
-  return addressToString(mergeAddresses(addresses));
+  if (convertToString) {
+    return addressToString(mergedAddresses);
+  } else {
+    return mergedAddresses;
+  }
 }
 
 export function extractCommonFeaturesFromAddresses(addresses: string[]): string {

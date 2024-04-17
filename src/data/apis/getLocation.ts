@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { md5, mergeAddressesIntoString, extractCommonFeaturesFromAddresses } from '../../tools/index.ts';
+import { md5, mergeAddressesIntoOne, extractCommonFeaturesFromAddresses } from '../../tools/index.ts';
 
 var LocationAPIVariableCache = {
   merged: {
@@ -55,8 +55,7 @@ function mergeLocationByName(object: object): object {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
-        a: [object[key].a],
-        ma: [mergeAddressesIntoString(object[key].a)],
+        a: [mergeAddressesIntoOne(object[key].a, false)],
         id: [parseInt(key.split('_')[1])]
       };
     } else {
@@ -65,8 +64,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].s.push(object[key].s);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
-      result[nameKey].a.push(object[key].a);
-      result[nameKey].ma.push(mergeAddressesIntoString(object[key].a));
+      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a, false));
     }
   }
   return result;
@@ -89,7 +87,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v5_cache`;
+  var cache_key = `bus_${cache_type}_location_v6_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
