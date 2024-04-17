@@ -56,7 +56,7 @@ function mergeLocationByName(object: object): object {
         r: [object[key].r],
         s: [object[key].s],
         a: [object[key].a],
-        ma: [extractCommonFeaturesFromAddresses(object[key].a)],
+        ma: [mergeAddressesIntoString(object[key].a)],
         id: [parseInt(key.split('_')[1])]
       };
     } else {
@@ -66,7 +66,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
       result[nameKey].a.push(object[key].a);
-      result[nameKey].ma.push(extractCommonFeaturesFromAddresses(object[key].a));
+      result[nameKey].ma.push(mergeAddressesIntoString(object[key].a));
     }
   }
   return result;
@@ -89,7 +89,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v2_cache`;
+  var cache_key = `bus_${cache_type}_location_v4_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
