@@ -400,7 +400,7 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
         : ''
     }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
   }
-  var mergedAddresses = addressToString(mergeAddresses(addresses));
+  var mergedAddresses = mergeAddresses(addresses);
 
   if (convertToString) {
     return addressToString(mergedAddresses);
