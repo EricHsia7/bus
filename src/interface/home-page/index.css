@@ -74,7 +74,8 @@
 }
 
 .home_page_field .home_page_head .home_page_button_right svg#download-svg path[arrow="arrow"],
-.home_page_field .home_page_head .home_page_button_right svg#search-svg path {
+.home_page_field .home_page_head .home_page_button_right svg#search-svg path,
+.home_page_field .home_page_head .home_page_button_left svg path {
   fill: var(--b-333333);
 }
 
