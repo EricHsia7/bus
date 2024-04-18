@@ -1,6 +1,7 @@
 import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
 import { md5 } from '../../tools/index.ts';
+import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 
 var Folders = {
