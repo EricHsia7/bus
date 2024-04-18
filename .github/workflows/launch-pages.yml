@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-location
+      - dev-organize-api-functions
 
 jobs:
   build:
