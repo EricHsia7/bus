@@ -1,6 +1,7 @@
 import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
 import { md5 } from '../../tools/index.ts';
+import { getSettingOptionValue } from '../settings/index.ts';
 
 var Folders = {
   f_saved_stop: {
@@ -126,11 +127,36 @@ export async function integrateFolders(requestID: string): [] {
     }
     array.push(integratedFolder);
   }
-  var result = {
-    items: array,
+
+  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  var foldedItems = {};
+  var itemQuantity = {};
+  var folderQuantity = 0;
+  var folders = {};
+
+  for (var item of array) {
+    var folderKey = `f_${item.folder.index}`;
+    if (!foldedItems.hasOwnProperty(folderKey)) {
+      foldedItems[folderKey] = [];
+      itemQuantity[folderKey] = 0;
+      folders[folderKey] = item.folder;
+    }
+    for (var item2 of item.content) {
+      var formattedItem = item2;
+      formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
+      foldedItems[folderKey].push(formattedItem);
+      itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
+    }
+    folderQuantity += 1;
+  }
+
+  return {
+    foldedItems: foldedItems,
+    folders: folders,
+    folderQuantity: folderQuantity,
+    itemQuantity: itemQuantity,
     dataUpdateTime: EstimateTime2.dataUpdateTime
   };
-  return result;
 }
 
 export async function saveToFolder(folderID: string, content: object): boolean {

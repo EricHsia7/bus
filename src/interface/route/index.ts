@@ -10,7 +10,7 @@ import { prompt_message } from '../prompt/index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 
-var previousFormattedRoute = {};
+var previousIntegration = {};
 
 var routeSliding = {
   currentGroup: 0,
@@ -174,7 +174,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
+export function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       var nextSlide = thisElement.querySelector('.status .next_slide');
@@ -210,7 +210,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
     }
     function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${formattedRoute.RouteID})`);
+      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
         thisElement.querySelector('.body .tabs .action_button').setAttribute('highlighted', e);
       });
@@ -223,7 +223,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
+      updateSaveStopActionButton(thisElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -241,7 +241,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         updateSegmentBuffer(thisElement, thisItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
+        updateSaveStopActionButton(thisElement, thisItem, integration);
       }
       updateStretch(thisElement, skeletonScreen);
     }
@@ -250,13 +250,13 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousFormattedRoute === {}) {
-    previousFormattedRoute = formattedRoute;
+  if (previousIntegration === {}) {
+    previousIntegration = integration;
   }
 
-  var groupQuantity = formattedRoute.groupQuantity;
-  var itemQuantity = formattedRoute.itemQuantity;
-  var groupedItems = formattedRoute.groupedItems;
+  var groupQuantity = integration.groupQuantity;
+  var itemQuantity = integration.itemQuantity;
+  var groupedItems = integration.groupedItems;
 
   routeSliding.groupQuantity = groupQuantity;
   routeSliding.fieldWidth = FieldWidth;
@@ -264,14 +264,14 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   for (var i = 0; i < groupQuantity; i++) {
     routeSliding.groupStyles[`g_${i}`] = {
-      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
+      width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
     };
   }
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
+  Field.querySelector('.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
+  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
@@ -319,15 +319,15 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerHTML = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
-      if (previousFormattedRoute.hasOwnProperty('groupedItems')) {
-        if (previousFormattedRoute.groupedItems.hasOwnProperty(groupKey)) {
-          if (previousFormattedRoute.groupedItems[groupKey][j]) {
-            var previousItem = previousFormattedRoute.groupedItems[groupKey][j];
+      if (previousIntegration.hasOwnProperty('groupedItems')) {
+        if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
+          if (previousIntegration.groupedItems[groupKey][j]) {
+            var previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -340,7 +340,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
     }
   }
-  previousFormattedRoute = formattedRoute;
+  previousIntegration = integration;
 }
 
 async function refreshRoute(): object {
@@ -356,7 +356,7 @@ async function refreshRoute(): object {
   routeRefreshTimer.lastUpdate = new Date().getTime();
   if (routeRefreshTimer.auto) {
     var updateRate = await getUpdateRate();
-    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, integration.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
   } else {
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.defaultInterval;
   }
