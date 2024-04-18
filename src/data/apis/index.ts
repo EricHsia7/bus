@@ -532,3 +532,41 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
   };
   return result;
 }
+
+export async function integrateLocation(StopLocationId: number, requestID: string): object {
+  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
+  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
+  setDataReceivingProgress(requestID, 'getStop_0', 0, false);
+  setDataReceivingProgress(requestID, 'getStop_1', 0, false);
+  setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
+  setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
+  setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
+  setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
+  setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
+  setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
+  var Route = await getRoute(requestID, true);
+  var Stop = await getStop(requestID);
+  var Location = await getLocation(requestID, true);
+  var EstimateTime = await getEstimateTime(requestID);
+  var BusEvent = await getBusEvent(requestID);
+  var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
+  var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
+  var thisRoute = Route[`r_${RouteID}`];
+  var thisRouteName = thisRoute.n;
+  var thisRouteDeparture = thisRoute.dep;
+  var thisRouteDestination = thisRoute.des;
+  var result = {
+    items: processedEstimateTime,
+    LocationName: thisRouteName,
+    RouteEndPoints: {
+      RouteDeparture: thisRouteDeparture,
+      RouteDestination: thisRouteDestination
+    },
+    dataUpdateTime: dataUpdateTime[requestID]
+  };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  await recordEstimateTime(EstimateTime);
+  return result;
+}
