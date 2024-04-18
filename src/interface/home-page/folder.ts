@@ -5,7 +5,7 @@ import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { icons } from '../icons/index.ts';
 
-var previousFormattedFoldersWithContent = [];
+var previousIntegration = [];
 
 var foldersRefreshTimer = {
   defaultInterval: 15 * 1000,
@@ -25,38 +25,6 @@ function queryFolderFieldSize(): object {
     width: window.innerWidth,
     height: window.innerHeight
   };
-}
-
-async function formatFoldersWithContent(requestID: string): object {
-  var integration = await integrateFolders(requestID);
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var foldedItems = {};
-  var itemQuantity = {};
-  var folderQuantity = 0;
-  var folders = {};
-  for (var item of integration.items) {
-    var folderKey = `f_${item.folder.index}`;
-    if (!foldedItems.hasOwnProperty(folderKey)) {
-      foldedItems[folderKey] = [];
-      itemQuantity[folderKey] = 0;
-      folders[folderKey] = item.folder;
-    }
-    for (var item2 of item.content) {
-      var formattedItem = item2;
-      formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
-      foldedItems[folderKey].push(formattedItem);
-      itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
-    }
-    folderQuantity += 1;
-  }
-  var result = {
-    foldedItems: foldedItems,
-    folders: folders,
-    folderQuantity: folderQuantity,
-    itemQuantity: itemQuantity,
-    dataUpdateTime: integration.dataUpdateTime
-  };
-  return result;
 }
 
 function generateElementOfItem(skeletonScreen: boolean): string {
@@ -136,7 +104,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export async function updateFolderField(Field: HTMLElement, formattedFoldersWithContent: {}, skeletonScreen: boolean): void {
+export async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       var nextSlide = thisElement.querySelector('.home_page_folder_item_stop_status .next_slide');
@@ -181,14 +149,14 @@ export async function updateFolderField(Field: HTMLElement, formattedFoldersWith
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousFormattedFoldersWithContent === {}) {
-    previousFormattedFoldersWithContent = formattedFoldersWithContent;
+  if (previousIntegration === {}) {
+    previousIntegration = integration;
   }
 
-  var folderQuantity = formattedFoldersWithContent.folderQuantity;
-  var itemQuantity = formattedFoldersWithContent.itemQuantity;
-  var foldedItems = formattedFoldersWithContent.foldedItems;
-  var folders = formattedFoldersWithContent.folders;
+  var folderQuantity = integration.folderQuantity;
+  var itemQuantity = integration.itemQuantity;
+  var foldedItems = integration.foldedItems;
+  var folders = integration.folders;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
@@ -239,10 +207,10 @@ export async function updateFolderField(Field: HTMLElement, formattedFoldersWith
       var thisElement = Field.querySelectorAll(`.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
-      if (previousFormattedFoldersWithContent.hasOwnProperty('foldedItems')) {
-        if (previousFormattedFoldersWithContent.foldedItems.hasOwnProperty(folderKey)) {
-          if (previousFormattedFoldersWithContent.foldedItems[folderKey][j]) {
-            var previousItem = previousFormattedFoldersWithContent.foldedItems[folderKey][j];
+      if (previousIntegration.hasOwnProperty('foldedItems')) {
+        if (previousIntegration.foldedItems.hasOwnProperty(folderKey)) {
+          if (previousIntegration.foldedItems[folderKey][j]) {
+            var previousItem = previousIntegration.foldedItems[folderKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -255,7 +223,7 @@ export async function updateFolderField(Field: HTMLElement, formattedFoldersWith
       }
     }
   }
-  previousFormattedFoldersWithContent = formattedFoldersWithContent;
+  previousIntegration = integration;
 }
 
 export async function refreshFolders(): object {
@@ -264,13 +232,13 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  var formattedFoldersWithContent = await formatFoldersWithContent(foldersRefreshTimer.currentRequestID);
+  var integration = await integrateFolders(foldersRefreshTimer.currentRequestID);
   var Field = document.querySelector('.home_page_field .home_page_body .home_page_folders');
-  updateFolderField(Field, formattedFoldersWithContent, false);
+  updateFolderField(Field, integration, false);
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
   if (foldersRefreshTimer.auto) {
-    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, formattedFoldersWithContent.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, integration.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
   } else {
     foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.defaultInterval;
   }

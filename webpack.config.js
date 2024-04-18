@@ -7,7 +7,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { execSync } = require('child_process');
 
 async function makeDirectory(path) {
@@ -99,8 +99,8 @@ module.exports = (env, argv) => {
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
-        reportFilename: 'dist/bundle-analysis-report.html', // Output file path and name
-    })
+        reportFilename: 'dist/bundle-analysis-report.html' // Output file path and name
+      })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
     mode: 'production', // Set the mode to 'production' or 'development'
@@ -145,7 +145,7 @@ module.exports = (env, argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: [/*'log',*/ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
+              drop_console: [/*'log',*/ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', /* 'error',*/ 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
             }
           }
         }),

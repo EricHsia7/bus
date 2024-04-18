@@ -2,7 +2,7 @@ import { integrateLocation } from '../../data/apis/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 
-var previousFormattedRoute: object = {};
+var previousIntegration: object = {};
 
 var locationRefreshTimer: object = {
   defaultInterval: 15 * 1000,
@@ -21,8 +21,7 @@ var currentHashSet: object = {
   hash: ''
 };
 
-
-function setUpLocationFieldSkeletonScreen(Field: HTMLElement) :void{
+function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -69,10 +68,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement) :void{
   );
 }
 
-
-function updateLocationField(Field: HTMLElement, Location: object, skeletonScreen: boolean): void {
-
-}
+function updateLocationField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {}
 
 async function refreshLocation(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
@@ -88,7 +84,7 @@ async function refreshLocation(): object {
   locationRefreshTimer.lastUpdate = new Date().getTime();
   if (locationRefreshTimer.auto) {
     var updateRate = await getUpdateRate();
-    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, formattedRoute.dataUpdateTime + locationRefreshTimer.defaultInterval / updateRate);
+    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.defaultInterval / updateRate);
   } else {
     locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.defaultInterval;
   }

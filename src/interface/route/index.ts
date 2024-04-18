@@ -3,14 +3,13 @@ import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 
-var previousFormattedRoute = {};
+var previousIntegration = {};
 
 var routeSliding = {
   currentGroup: 0,
@@ -113,139 +112,6 @@ function updateUpdateTimer() {
   });
 }
 
-export async function formatRoute(RouteID: number, PathAttributeId: [number], requestID: string) {
-  function formatBusEvent(buses: []): [] | null {
-    if (buses.length === 0) {
-      return null;
-    }
-    var result = [];
-    function formatBus(object: object): object {
-      var result = {};
-      var CarType = parseInt(object.CarType);
-      if (CarType === 0) {
-        result.type = '一般';
-      }
-      if (CarType === 1) {
-        result.type = '低底盤';
-      }
-      if (CarType === 2) {
-        result.type = '大復康巴士';
-      }
-      if (CarType === 3) {
-        result.type = '狗狗友善專車';
-      }
-      var CarOnStop = parseInt(object.CarOnStop);
-      var onStop = '';
-      if (CarOnStop === 0) {
-        onStop = '離站';
-      }
-      if (CarOnStop === 1) {
-        onStop = '進站';
-      }
-      var BusStatus = parseInt(object.BusStatus);
-      var situation = '';
-      if (BusStatus === 0) {
-        situation = '正常';
-      }
-      if (BusStatus === 1) {
-        situation = '車禍';
-      }
-      if (BusStatus === 2) {
-        situation = '故障';
-      }
-      if (BusStatus === 3) {
-        situation = '塞車';
-      }
-      if (BusStatus === 4) {
-        situation = '緊急求援';
-      }
-      if (BusStatus === 5) {
-        situation = '加油';
-      }
-      if (BusStatus === 99) {
-        situation = '非營運狀態';
-      }
-      result.carNumber = object.BusID;
-      result.status = {
-        onStop: onStop,
-        situation: situation,
-        text: `${onStop} | ${situation}`
-      };
-      result.RouteName = object.RouteName;
-      result.onThisRoute = object.onThisRoute;
-      return result;
-    }
-    for (var bus of buses) {
-      result.push(formatBus(bus));
-    }
-    return result;
-  }
-  function formatOverlappingRoutes(array: []): [] {
-    if (array.length === 0) {
-      return null;
-    }
-    var result = [];
-    for (var route of array) {
-      var formattedItem = {
-        name: route.n,
-        RouteEndPoints: {
-          RouteDeparture: route.dep,
-          RouteDestination: route.des,
-          text: `${route.dep} \u21CC ${route.des}`, //u21CC -> '⇌'
-          html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
-        },
-        RouteID: route.id,
-        PathAttributeId: route.pid ? route.pid : []
-      };
-      result.push(formattedItem);
-    }
-    return result;
-  }
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var integration = await integrateRoute(RouteID, PathAttributeId, requestID);
-  var groupedItems = {};
-  for (var item of integration.items) {
-    var formattedItem = {};
-    formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
-    formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
-    formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
-    formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
-    formattedItem.location = {
-      latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
-      longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
-    };
-    formattedItem.segmentBuffer = item._segmentBuffer;
-    formattedItem.id = item.StopID || null;
-    var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
-    if (!groupedItems.hasOwnProperty(group)) {
-      groupedItems[group] = [];
-    }
-    groupedItems[group].push(formattedItem);
-  }
-  var groupQuantity = 0;
-  var itemQuantity = {};
-  for (var group in groupedItems) {
-    if (!itemQuantity.hasOwnProperty(group)) {
-      itemQuantity[group] = groupedItems[group].length;
-    }
-    groupQuantity += 1;
-  }
-  var RouteName = integration.RouteName;
-  var RouteEndPoints = integration.RouteEndPoints;
-  var dataUpdateTime = integration.dataUpdateTime;
-  return {
-    groupedItems,
-    groupQuantity,
-    itemQuantity,
-    RouteName,
-    RouteEndPoints,
-    dataUpdateTime,
-    RouteID,
-    PathAttributeId
-  };
-}
-
 function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
@@ -307,7 +173,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export function updateRouteField(Field: HTMLElement, formattedRoute: object, skeletonScreen: boolean) {
+export function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       var nextSlide = thisElement.querySelector('.status .next_slide');
@@ -343,7 +209,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
     }
     function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${formattedRoute.RouteID})`);
+      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
         thisElement.querySelector('.body .tabs .action_button').setAttribute('highlighted', e);
       });
@@ -356,7 +222,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
+      updateSaveStopActionButton(thisElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -374,7 +240,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
         updateSegmentBuffer(thisElement, thisItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem, formattedRoute);
+        updateSaveStopActionButton(thisElement, thisItem, integration);
       }
       updateStretch(thisElement, skeletonScreen);
     }
@@ -383,13 +249,13 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousFormattedRoute === {}) {
-    previousFormattedRoute = formattedRoute;
+  if (previousIntegration === {}) {
+    previousIntegration = integration;
   }
 
-  var groupQuantity = formattedRoute.groupQuantity;
-  var itemQuantity = formattedRoute.itemQuantity;
-  var groupedItems = formattedRoute.groupedItems;
+  var groupQuantity = integration.groupQuantity;
+  var itemQuantity = integration.itemQuantity;
+  var groupedItems = integration.groupedItems;
 
   routeSliding.groupQuantity = groupQuantity;
   routeSliding.fieldWidth = FieldWidth;
@@ -397,14 +263,14 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
 
   for (var i = 0; i < groupQuantity; i++) {
     routeSliding.groupStyles[`g_${i}`] = {
-      width: getTextWidth([formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
+      width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
     };
   }
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  Field.querySelector('.route_name').innerHTML = `<span>${formattedRoute.RouteName}</span>`;
+  Field.querySelector('.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${formattedRoute.RouteID}, [${formattedRoute.PathAttributeId.join(',')}])`);
+  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
@@ -452,15 +318,15 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerHTML = [formattedRoute.RouteEndPoints.RouteDestination, formattedRoute.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
-      if (previousFormattedRoute.hasOwnProperty('groupedItems')) {
-        if (previousFormattedRoute.groupedItems.hasOwnProperty(groupKey)) {
-          if (previousFormattedRoute.groupedItems[groupKey][j]) {
-            var previousItem = previousFormattedRoute.groupedItems[groupKey][j];
+      if (previousIntegration.hasOwnProperty('groupedItems')) {
+        if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
+          if (previousIntegration.groupedItems[groupKey][j]) {
+            var previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -473,7 +339,7 @@ export function updateRouteField(Field: HTMLElement, formattedRoute: object, ske
       }
     }
   }
-  previousFormattedRoute = formattedRoute;
+  previousIntegration = integration;
 }
 
 async function refreshRoute(): object {
@@ -483,13 +349,13 @@ async function refreshRoute(): object {
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   document.querySelector('.update_timer').setAttribute('refreshing', true);
-  var formattedRoute = await formatRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
+  var integration = await integrateRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
   var Field = document.querySelector('.route_field');
-  updateRouteField(Field, formattedRoute, false);
+  updateRouteField(Field, integration, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
   if (routeRefreshTimer.auto) {
     var updateRate = await getUpdateRate();
-    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, formattedRoute.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, integration.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
   } else {
     routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.defaultInterval;
   }
