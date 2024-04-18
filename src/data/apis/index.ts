@@ -557,7 +557,7 @@ export async function integrateLocation(hash: string, requestID: string): object
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
   var result = {
-    items: processedEstimateTime,
+    groupedItems: processedEstimateTime,
     LocationName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
