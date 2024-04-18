@@ -84,23 +84,30 @@
   stroke: var(--b-333333);
 }
 
+@property --b-stroke-dashoffset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 189px;
+}
+
 .home_page_field .home_page_head .home_page_button_right svg path[progress="progress"] {
   stroke-dasharray: 189px;
   stroke-dashoffset: var(--b-stroke-dashoffset);
+  transition: --b-stroke-dashoffset var(--b-transition-duration);
 }
 
 .home_page_field .home_page_head .home_page_button_right svg#search-svg {
   transform: scale(var(--b-search-icon-scale));
   transform-origin: top left;
   opacity: 0;
-  transition: 0.5s;
+  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
 }
 
 .home_page_field .home_page_head .home_page_button_right svg#download-svg {
   transform: scale(1);
   transform-origin: top left;
   opacity: 1;
-  transition: 0.5s;
+  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
 }
 
 .home_page_field .home_page_head .home_page_button_right[complete="true"] svg#search-svg {
