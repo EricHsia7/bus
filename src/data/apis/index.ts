@@ -10,7 +10,7 @@ import { searchRouteByPathAttributeId } from '../search/searchRoute.ts';
 import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
-import { formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
+import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 
