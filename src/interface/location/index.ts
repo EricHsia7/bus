@@ -68,7 +68,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateLocationField(Field: HTMLElement, Location: object, skeletonScreen: boolean): void {}
+function updateLocationField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {}
 
 async function refreshLocation(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
