@@ -94,6 +94,7 @@
   stroke-dasharray: 189px;
   stroke-dashoffset: var(--b-stroke-dashoffset);
   transition: --b-stroke-dashoffset var(--b-transition-duration);
+  transition-timing-function: linear;
 }
 
 .home_page_field .home_page_head .home_page_button_right svg#search-svg {
