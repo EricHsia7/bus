@@ -4,7 +4,7 @@ import { getLocation } from '../../data/apis/getLocation.ts';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
 
 var dataPreloadRequestID = 'preload_data';
-var dataPreloadCompleted = false;
+export var dataPreloadCompleted = false;
 
 function updateDownloadProgress() {
   var pixels = (1 - getDataReceivingProgress(dataPreloadRequestID)) * 189;
