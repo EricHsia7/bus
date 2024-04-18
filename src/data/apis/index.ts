@@ -12,6 +12,7 @@ import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, 
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 import { formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
+import { getSettingOptionValue } from '../settings/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -69,6 +70,95 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
+function formatBusEvent(buses: []): [] | null {
+  if (buses.length === 0) {
+    return null;
+  }
+  var result = [];
+  function formatBus(object: object): object {
+    var result = {};
+    var CarType = parseInt(object.CarType);
+    if (CarType === 0) {
+      result.type = '一般';
+    }
+    if (CarType === 1) {
+      result.type = '低底盤';
+    }
+    if (CarType === 2) {
+      result.type = '大復康巴士';
+    }
+    if (CarType === 3) {
+      result.type = '狗狗友善專車';
+    }
+    var CarOnStop = parseInt(object.CarOnStop);
+    var onStop = '';
+    if (CarOnStop === 0) {
+      onStop = '離站';
+    }
+    if (CarOnStop === 1) {
+      onStop = '進站';
+    }
+    var BusStatus = parseInt(object.BusStatus);
+    var situation = '';
+    if (BusStatus === 0) {
+      situation = '正常';
+    }
+    if (BusStatus === 1) {
+      situation = '車禍';
+    }
+    if (BusStatus === 2) {
+      situation = '故障';
+    }
+    if (BusStatus === 3) {
+      situation = '塞車';
+    }
+    if (BusStatus === 4) {
+      situation = '緊急求援';
+    }
+    if (BusStatus === 5) {
+      situation = '加油';
+    }
+    if (BusStatus === 99) {
+      situation = '非營運狀態';
+    }
+    result.carNumber = object.BusID;
+    result.status = {
+      onStop: onStop,
+      situation: situation,
+      text: `${onStop} | ${situation}`
+    };
+    result.RouteName = object.RouteName;
+    result.onThisRoute = object.onThisRoute;
+    return result;
+  }
+  for (var bus of buses) {
+    result.push(formatBus(bus));
+  }
+  return result;
+}
+
+function formatOverlappingRoutes(array: []): [] {
+  if (array.length === 0) {
+    return null;
+  }
+  var result = [];
+  for (var route of array) {
+    var formattedItem = {
+      name: route.n,
+      RouteEndPoints: {
+        RouteDeparture: route.dep,
+        RouteDestination: route.des,
+        text: `${route.dep} \u21CC ${route.des}`, //u21CC -> '⇌'
+        html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
+      },
+      RouteID: route.id,
+      PathAttributeId: route.pid ? route.pid : []
+    };
+    result.push(formattedItem);
+  }
+  return result;
+}
+
 function processEstimateTime(EstimateTime: [], Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
   for (var item of EstimateTime) {
@@ -87,7 +177,6 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
             item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
-            //console.log(segmentBuffer, segmentBufferOfThisGroup, item['_Stop'].nameZh);
             if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
               item['_segmentBuffer'] = true;
             }
@@ -164,19 +253,57 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
   var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
   var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
+  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   var thisRoute = Route[`r_${RouteID}`];
+
+  var groupedItems = {};
+  for (var item of processedEstimateTime) {
+    var formattedItem = {};
+    formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
+    formattedItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
+    formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
+    formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
+    formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
+    formattedItem.location = {
+      latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
+      longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
+    };
+    formattedItem.segmentBuffer = item._segmentBuffer;
+    formattedItem.id = item.StopID || null;
+    var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
+    if (!groupedItems.hasOwnProperty(group)) {
+      groupedItems[group] = [];
+    }
+    groupedItems[group].push(formattedItem);
+  }
+  var groupQuantity = 0;
+  var itemQuantity = {};
+  for (var group in groupedItems) {
+    if (!itemQuantity.hasOwnProperty(group)) {
+      itemQuantity[group] = groupedItems[group].length;
+    }
+    groupQuantity += 1;
+  }
+
   var thisRouteName = thisRoute.n;
   var thisRouteDeparture = thisRoute.dep;
   var thisRouteDestination = thisRoute.des;
+
   var result = {
+    groupedItems: groupedItems,
+    groupQuantity: groupQuantity,
+    itemQuantity: itemQuantity,
     items: processedEstimateTime,
     RouteName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
       RouteDestination: thisRouteDestination
     },
-    dataUpdateTime: dataUpdateTime[requestID]
+    dataUpdateTime: dataUpdateTime[requestID],
+    RouteID,
+    PathAttributeId
   };
+
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   await recordEstimateTime(EstimateTime);
@@ -394,30 +521,18 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
       if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
         if (item.DateType === '0') {
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
-
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-          /*
-          if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
-                      calendar.groupedEvents[dayOfWeek.code] = [];
-                      calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
-                      calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
-                      calendar.eventQuantity[dayOfWeek.code] = 0;
-            }
-          */
-
           var thisPeriodStartTime = formatTimeCode(item.StartTime, 0);
           var thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
-
           var thisPeriodEndTime = formatTimeCode(item.EndTime, 0);
           var thisPeriodEndTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodEndTime.hours, thisPeriodEndTime.minutes);
-
           var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
 
           var minWindow = parseInt(item.LongHeadway);
           var maxWindow = parseInt(item.LowHeadway);
           var averageWindow = (maxWindow + minWindow) / 2;
-
           var headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
+
           for (var i = 0; i < headwayQuantity; i++) {
             var violateRules = false;
             var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
@@ -447,14 +562,6 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
           var violateRules = false;
           var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-          /*
-          if (!calendar.groupedEvents.hasOwnProperty(dayOfWeek.code)) {
-            calendar.groupedEvents[dayOfWeek.code] = [];
-            calendar.eventGroups[dayOfWeek.code] = dayOfWeek;
-            calendar.eventGroupQuantity = calendar.eventGroupQuantity + 1;
-            calendar.eventQuantity[dayOfWeek.code] = 0;
-          }
-          */
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
           /*need to complete - check timeTableRules*/
