@@ -43,7 +43,7 @@ if(!containPhoneticSymbols(query)) {
       onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
     }
     if (result.item.type === 1) {
-      onclickScript = ``; //openLocation
+      onclickScript = `bus.location.openLocation('${result.item.hash}')`; //openLocation
     }
     html.push(`<div class="search_page_search_result" onclick="${onclickScript}"><div class="search_page_search_result_type">${typeIcon}</div><div class="search_page_search_result_route_name">${name}</div></div>`);
   }

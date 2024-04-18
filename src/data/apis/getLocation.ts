@@ -43,11 +43,12 @@ function simplifyLocation(array: []): object {
 function mergeLocationByName(object: object): object {
   var result = {};
   for (var key in object) {
-    var nameKey = `ml_${md5(
+    var hash = md5(
       String(object[key].n)
         .trim()
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
-    )}`;
+    )
+    var nameKey = `ml_${hash}`;
     if (!result.hasOwnProperty(nameKey)) {
       result[nameKey] = {
         n: object[key].n,
@@ -56,7 +57,8 @@ function mergeLocationByName(object: object): object {
         r: [object[key].r],
         s: [object[key].s],
         a: [mergeAddressesIntoOne(object[key].a, false)],
-        id: [parseInt(key.split('_')[1])]
+        id: [parseInt(key.split('_')[1])],
+        hash: hash
       };
     } else {
       result[nameKey].id.push(parseInt(key.split('_')[1]));
