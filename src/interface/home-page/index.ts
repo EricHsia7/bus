@@ -1,7 +1,7 @@
-import { getRoute } from './data/apis/getRoute.ts';
-import { getStop } from './data/apis/getStop.ts';
-import { getLocation } from './data/apis/getLocation.ts';
-import { setDataReceivingProgress, getDataReceivingProgress } from './data/apis/loader.ts';
+import { getRoute } from '../../data/apis/getRoute.ts';
+import { getStop } from '../../data/apis/getStop.ts';
+import { getLocation } from '../../data/apis/getLocation.ts';
+import { setDataReceivingProgress, getDataReceivingProgress } from '../../data/apis/loader.ts';
 
 var dataPreloadRequestID = 'preload_data';
 var dataPreloadCompleted = false;
