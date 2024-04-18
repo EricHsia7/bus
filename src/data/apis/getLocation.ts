@@ -47,7 +47,7 @@ function mergeLocationByName(object: object): object {
       String(object[key].n)
         .trim()
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
-    )
+    );
     var nameKey = `ml_${hash}`;
     if (!result.hasOwnProperty(nameKey)) {
       result[nameKey] = {
