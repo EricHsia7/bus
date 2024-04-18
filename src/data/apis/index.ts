@@ -533,7 +533,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
   return result;
 }
 
-export async function integrateLocation(StopLocationId: number, requestID: string): object {
+export async function integrateLocation(hash: string, requestID: string): object {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
