@@ -71,7 +71,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement) :void{
 
 
 function updateLocationField(Field: HTMLElement, Location: object, skeletonScreen: boolean): void {
-  
+
 }
 
 async function refreshLocation(): object {
@@ -134,11 +134,11 @@ export function openLocation(hash: string): void {
     } else {
       refreshLocation();
     }
-    updateUpdateTimer();
+    //updateUpdateTimer();
   }
 }
 
-export function closeRoute() {
+export function closeLocation() {
   var Field = document.querySelector('.location_field');
   Field.setAttribute('displayed', 'false');
   locationRefreshTimer.streaming = false;
