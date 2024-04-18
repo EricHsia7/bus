@@ -1,13 +1,13 @@
 import { getRoute } from '../../data/apis/getRoute.ts';
 import { getStop } from '../../data/apis/getStop.ts';
 import { getLocation } from '../../data/apis/getLocation.ts';
-import { setDataReceivingProgress, getDataReceivingProgress } from '../../data/apis/loader.ts';
+import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
 
 var dataPreloadRequestID = 'preload_data';
 var dataPreloadCompleted = false;
 
 function updateDownloadProgress() {
-  var pixels = getDataReceivingProgress(dataPreloadRequestID) * 189;
+  var pixels = (1 - getDataReceivingProgress(dataPreloadRequestID)) * 189;
   document.querySelector('.home_page_button_right svg#download-svg path[progress="progress"]').style.setProperty('--b-stroke-dashoffset', `${pixels}px`);
   window.requestAnimationFrame(function () {
     if (dataPreloadCompleted === false) {
@@ -27,7 +27,7 @@ export async function preloadData(): void {
   await getRoute(dataPreloadRequestID, true);
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
-  await getLocation(dataPreloadRequestID, false);
   dataPreloadCompleted = true;
   document.querySelector('.home_page_button_right').setAttribute('complete', true);
+  deleteDataReceivingProgress(dataPreloadRequestID);
 }
