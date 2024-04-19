@@ -69,8 +69,6 @@
   --b-border-radius-small: 8px;
 
   --b-transition-duration: 0.3s;
-
-  --b-search-icon-scale: 1.4201187871;
 }
 
 @media (prefers-color-scheme: dark) {
