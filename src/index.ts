@@ -74,6 +74,8 @@ window.bus = {
             window.addEventListener('resize', (event) => {
               ResizeRouteField();
             });
+            initializeLocationSliding();
+            ResizeRouteField();
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
