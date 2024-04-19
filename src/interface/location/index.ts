@@ -50,7 +50,7 @@ function updateLocationCSS(percentage: number, width: number): void {
   document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
 }
 
-function initializeLocationSliding(): void {
+export function initializeLocationSliding(): void {
   var element = document.querySelector('.location_field .location_groups');
   function monitorScrollLeft(element, callback) {
     locationSliding.scrollLog.push(element.scrollLeft);
