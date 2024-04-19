@@ -29,6 +29,7 @@ import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
+import './interface/location/index.css';
 import './interface/settings/index.css';
 import './interface/prompt/index.css';
 
