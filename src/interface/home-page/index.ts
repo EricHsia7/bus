@@ -29,7 +29,7 @@ export async function preloadData(): void {
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
   dataPreloadCompleted = true;
-  document.querySelector('.home_page_button_right svg#download-svg path[progress="progress"]').style.setProperty('--b-stroke-dashoffset', `${189}px`);
+  document.querySelector('.home_page_button_right svg#download-svg path[progress="progress"]').style.setProperty('--b-stroke-dashoffset', `${0}px`);
   document.querySelector('.home_page_button_right svg#download-svg path[progress="progress"]').addEventListener(
     'transitionend',
     function () {
