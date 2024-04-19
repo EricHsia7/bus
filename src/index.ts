@@ -5,6 +5,7 @@ import { calculateStoresSize } from './data/storage/index.ts';
 import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
+import { openLocation, closeLocation } from './interface/location/index.ts';
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
@@ -124,6 +125,10 @@ window.bus = {
     openRouteDetails,
     closeRouteDetails,
     shareRoutePermalink
+  },
+  location: {
+    openLocation,
+    closeLocation
   },
   folder: {
     saveStop: saveStop
