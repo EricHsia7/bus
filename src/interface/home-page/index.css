@@ -60,15 +60,71 @@
   right: 0px;
 }
 
-.home_page_field .home_page_head .home_page_button_left svg,
-.home_page_field .home_page_head .home_page_button_right svg {
+.home_page_field .home_page_head .home_page_button_left svg {
   width: 20px;
   height: 20px;
 }
 
-.home_page_field .home_page_head .home_page_button_left svg path,
-.home_page_field .home_page_head .home_page_button_right svg path {
+.home_page_field .home_page_head .home_page_button_right svg {
+  position: absolute;
+  top: 17.5px;
+  left: 17.5px;
+  width: 20px;
+  height: 20px;
+}
+
+.home_page_field .home_page_head .home_page_button_right svg#download-svg path[arrow="arrow"],
+.home_page_field .home_page_head .home_page_button_right svg#search-svg path,
+.home_page_field .home_page_head .home_page_button_left svg path {
   fill: var(--b-333333);
+}
+
+.home_page_field .home_page_head .home_page_button_right svg#download-svg path[track="track"],
+.home_page_field .home_page_head .home_page_button_right svg#download-svg path[progress="progress"] {
+  stroke: var(--b-333333);
+}
+
+@property --b-stroke-dashoffset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 189px;
+}
+
+@property --b-search-icon-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1.4201187871;
+}
+
+.home_page_field .home_page_head .home_page_button_right svg path[progress="progress"] {
+  stroke-dasharray: 189px;
+  stroke-dashoffset: var(--b-stroke-dashoffset);
+  transition: --b-stroke-dashoffset var(--b-transition-duration);
+  transition-timing-function: linear;
+}
+
+.home_page_field .home_page_head .home_page_button_right svg#search-svg {
+  transform: scale(var(--b-search-icon-scale));
+  transform-origin: top left;
+  opacity: 0;
+  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
+}
+
+.home_page_field .home_page_head .home_page_button_right svg#download-svg {
+  transform: scale(1);
+  transform-origin: top left;
+  opacity: 1;
+  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
+}
+
+.home_page_field .home_page_head .home_page_button_right[complete="true"] svg#search-svg {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.home_page_field .home_page_head .home_page_button_right[complete="true"] svg#download-svg {
+  transform: scale(calc(1 / var(--b-search-icon-scale)));
+  opacity: 0;
 }
 
 .home_page_field .home_page_body {

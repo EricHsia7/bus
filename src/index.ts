@@ -1,4 +1,3 @@
-import { preloadData } from './data/apis/index.ts';
 import { getLocation } from './data/apis/getLocation.ts';
 import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
@@ -11,6 +10,7 @@ import { openSearchPage, closeSearchPage } from './interface/search-page/index.t
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
 import { initializeFolderStores, saveStop } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
+import { preloadData } from './interface/home-page/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';

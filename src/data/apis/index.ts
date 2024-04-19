@@ -355,14 +355,6 @@ export async function integrateEstimateTime2(requestID: string, StopIDs: []): ob
   return result;
 }
 
-export function preloadData(): void {
-  var requestID = 'preload_data';
-  getRoute(requestID, true).then((e) => {
-    getStop(requestID);
-    getLocation(requestID);
-  });
-}
-
 export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): object {
   function getThisRoute(Route: [], RouteID: number): object {
     var thisRoute = {};
