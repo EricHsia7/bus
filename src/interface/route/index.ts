@@ -39,7 +39,7 @@ var currentRouteIDSet = {
   PathAttributeId: []
 };
 
-export function initializeRouteSliding() {
+export function initializeRouteSliding(): void {
   var element = document.querySelector('.route_groups');
   function monitorScrollLeft(element: HTMLElement, callback: Function): void {
     routeSliding.scrollLog.push(element.scrollLeft);

@@ -66,7 +66,7 @@ window.bus = {
       checkAppVersion()
         .then((e) => {
           if (e.status === 'ok') {
-            initializeSettings();
+            initializeSettings().then((e) => {});
             initializeRouteSliding();
             ResizeRouteField();
             window.addEventListener('resize', (event) => {
@@ -98,9 +98,9 @@ window.bus = {
             searchInputElement.addEventListener('keyup', function () {
               updateSearchResult(searchInputElement.value);
             });
-            preloadData();
             openPermalink();
             fadeOutSplashScreen();
+            preloadData().then((e) => {});
           }
           if (e.status === 'fetchError' || e.status === 'unknownError') {
             fadeOutSplashScreen();

@@ -143,7 +143,7 @@ var Settings = {
   }
 };
 
-export async function initializeSettings() {
+export async function initializeSettings(): void {
   var userSettings = await lfListItem(1);
   for (var key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
