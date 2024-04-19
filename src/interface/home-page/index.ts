@@ -28,6 +28,8 @@ export async function preloadData(): void {
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
   dataPreloadCompleted = true;
-  document.querySelector('.home_page_button_right').setAttribute('complete', true);
+  document.querySelector('.home_page_button_right svg#download-svg path[progress="progress"]').addEventListener('transitionend', function() {
+    document.querySelector('.home_page_button_right').setAttribute('complete', true);
+  },{once: true});
   deleteDataReceivingProgress(dataPreloadRequestID);
 }
