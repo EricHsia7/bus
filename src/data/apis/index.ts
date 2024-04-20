@@ -43,7 +43,7 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeId: [number]): object {
+async function processBusEvent(BusEvent: [], RouteID: number, PathAttributeId: [number]): object {
   var result = {};
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
@@ -70,7 +70,7 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
-async function processBusEvent2(BusEvent: object, StopIDs: number[]): object {
+async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
   var result = {};
   for (var item of BusEvent) {
     var thisStopID = parseInt(item.StopID);
@@ -688,6 +688,7 @@ export async function integrateLocation(hash: string, requestID: string): object
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
+  console.log(0, Location, BusEvent, thisLocation, StopIDs, RouteIDs, processEstimateTime, processBusEvent);
   for (var i = 0; i < stopLocationQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
