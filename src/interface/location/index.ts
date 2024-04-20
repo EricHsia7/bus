@@ -56,14 +56,14 @@ function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width
 function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = 0;
-  if (routeRefreshTimer.refreshing) {
-    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+  if (locationRefreshTimer.refreshing) {
+    percentage = -1 + getDataReceivingProgress(locationRefreshTimer.currentRequestID);
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
   }
   document.querySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
-    if (routeRefreshTimer.streaming) {
+    if (locationRefreshTimer.streaming) {
       updateUpdateTimer();
     }
   });
