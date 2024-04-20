@@ -27,7 +27,7 @@ export function openPermalink(): void {
         });
       }
       if (type === 1) {
-        var hash = decodeShortStringToHex(array[1]);
+        var hash = decodeShortStringToHex(array[1], 32);
         openLocation(hash);
       }
       current_url.searchParams.get('route_name');
@@ -41,7 +41,7 @@ export function getPermalink(type: number, approach: object): string {
     link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
   }
   if (type === 1) {
-    link.searchParams.set('permalink', `1@${encodeHexToShortString(approach.hash)}`);
+    link.searchParams.set('permalink', `1@${encodeHexToShortString(approach.hash, 22)}`);
   }
   return decodeURIComponent(link.toString());
 }
