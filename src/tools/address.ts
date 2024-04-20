@@ -369,7 +369,7 @@ export function generateLabelFromAddresses(addresses: object[]): string[] {
     for (var commonProperty of commonProperties) {
       var components = [];
       for (var address of addresses) {
-        components.push(address[commonProperty.key]);
+        components.push(address[commonProperty.key].join(''));
       }
       if (areItemsDifferent(components)) {
         result.push({ components: components, len: Math.max(...components.map((e) => e.length)) });
