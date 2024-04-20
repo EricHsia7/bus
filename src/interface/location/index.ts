@@ -48,7 +48,7 @@ export function ResizeField(): void {
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}}`;
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;}`;
 }
 
 export function initializeLocationSliding(): void {
@@ -219,7 +219,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     cumulativeOffset += width;
   }
 
-  updateLocationCSS(locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
+  updateLocationCSS(locationSliding.groupQuantity, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset);
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
