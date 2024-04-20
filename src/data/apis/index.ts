@@ -688,14 +688,12 @@ export async function integrateLocation(hash: string, requestID: string): object
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
-  console.log(processedEstimateTime);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
   for (var i = 0; i < stopLocationQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
     var stopQuantity = thisLocation.s[i].length;
-
     for (var o = 0; o < stopQuantity; o++) {
       var thisStopID = thisLocation.s[i][o];
       var thisStop = Stop[`s_${thisStopID}`];
@@ -707,7 +705,6 @@ export async function integrateLocation(hash: string, requestID: string): object
       formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode) : null;
       formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(thisProcessedBusEvent) : null;
       formattedItem.name = Stop.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`) ? `${thisRoute.n} - 往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}` : null;
-      //formattedItem.test = { thisProcessedEstimateTime };
       groupedItems[groupKey].push(formattedItem);
       itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
     }
