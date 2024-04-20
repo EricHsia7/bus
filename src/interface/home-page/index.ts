@@ -20,10 +20,11 @@ function updateDownloadProgress() {
 
 function setCompleteStatus() {
   if (dataPreloadCompleted) {
+    progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
     document.querySelector('.home_page_button_right').setAttribute('complete', true);
-    progressElement.removeEventListener('transitionend', setCompleteStatus);
+    progressElement.removeEventListener('transitioncancel', setCompleteStatus);
   }
-  console.log(new Date().getTime())
+  console.log(new Date().getTime());
 }
 
 export async function preloadData(): void {
@@ -34,11 +35,11 @@ export async function preloadData(): void {
   setDataReceivingProgress(dataPreloadRequestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(dataPreloadRequestID, 'getLocation_1', 0, false);
   updateDownloadProgress();
-  progressElement.addEventListener('transitionend', setCompleteStatus);
+  progressElement.addEventListener('transitioncancel', setCompleteStatus);
   await getRoute(dataPreloadRequestID, true);
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
   dataPreloadCompleted = true;
-  progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
+  setCompleteStatus();
   deleteDataReceivingProgress(dataPreloadRequestID);
 }
