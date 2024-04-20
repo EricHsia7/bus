@@ -24,7 +24,6 @@ function setCompleteStatus() {
     document.querySelector('.home_page_button_right').setAttribute('complete', true);
     progressElement.removeEventListener('transitioncancel', setCompleteStatus);
   }
-  console.log(new Date().getTime());
 }
 
 export async function preloadData(): void {
