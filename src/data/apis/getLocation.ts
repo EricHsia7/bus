@@ -90,7 +90,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v8_cache`;
+  var cache_key = `bus_${cache_type}_location_v9_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
