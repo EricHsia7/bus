@@ -47,8 +47,8 @@ export function ResizeRouteField(): void {
   document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
 }
 
-function updateLocationCSS(percentage: number, width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
+function updateLocationCSS(groupQuantity: number, percentage: number, width: number): void {
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:;--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
 }
 
 export function initializeLocationSliding(): void {
@@ -84,7 +84,7 @@ export function initializeLocationSliding(): void {
     var current_size = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`] || { width: 0 };
     var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0 };
     var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding.currentGroup);
-    updateLocationCSS(slidingGroupIndex, tab_width);
+    updateLocationCSS(locationSliding.groupQuantity, slidingGroupIndex, tab_width);
   });
 }
 
@@ -211,7 +211,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     };
   }
 
-  updateLocationCSS(locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
+  updateLocationCSS(locationSliding.groupQuantity, locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 

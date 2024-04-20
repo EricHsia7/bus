@@ -97,7 +97,6 @@ async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
 }
 
 function formatBusEvent(buses: []): [] | null {
-  console.log(123, buses, typeof buses);
   if (buses.length === 0) {
     return null;
   }
