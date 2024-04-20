@@ -96,7 +96,7 @@
 }
 
 .location_field .location_head .location_group_tabs .location_group_tabs_tray .location_group_tab {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 17px;
