@@ -1,9 +1,9 @@
 import { integrateLocation } from '../../data/apis/index.ts';
+import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
-import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { icons } from '../icons/index.ts';
 
 var previousIntegration: object = {};
 
