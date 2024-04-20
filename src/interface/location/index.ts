@@ -200,6 +200,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   var groupQuantity = integration.groupQuantity;
   var itemQuantity = integration.itemQuantity;
   var groupedItems = integration.groupedItems;
+  var groups = integration.groups;
 
   locationSliding.groupQuantity = groupQuantity;
   locationSliding.fieldWidth = FieldWidth;
@@ -207,7 +208,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     locationSliding.groupStyles[`g_${i}`] = {
-      width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
+      width: getTextWidth(groups[`g_${i}`].name, `500 17px "Noto Sans", sans-serif`)
     };
   }
 
