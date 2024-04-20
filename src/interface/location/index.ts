@@ -186,17 +186,17 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   var itemQuantity = integration.itemQuantity;
   var groupedItems = integration.groupedItems;
 
-  routeSliding.groupQuantity = groupQuantity;
-  routeSliding.fieldWidth = FieldWidth;
-  routeSliding.fieldHeight = FieldHeight;
+  locationSliding.groupQuantity = groupQuantity;
+  locationSliding.fieldWidth = FieldWidth;
+  locationSliding.fieldHeight = FieldHeight;
 
   for (var i = 0; i < groupQuantity; i++) {
-    routeSliding.groupStyles[`g_${i}`] = {
+    locationSliding.groupStyles[`g_${i}`] = {
       width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
     };
   }
 
-  updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+  updateRouteCSS(locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
