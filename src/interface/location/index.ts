@@ -302,31 +302,35 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
     previousIntegration = integration;
   } catch (e) {
-    console.log(e);
+    console.log(456, e);
   }
 }
 
 async function refreshLocation(): object {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  locationRefreshTimer.auto = refresh_interval_setting.auto;
-  locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
-  locationRefreshTimer.refreshing = true;
-  locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.location_update_timer').setAttribute('refreshing', true);
-  var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
-  var Field = document.querySelector('.location_field');
-  updateLocationField(Field, integration, false);
-  locationRefreshTimer.lastUpdate = new Date().getTime();
-  if (locationRefreshTimer.auto) {
-    var updateRate = await getUpdateRate();
-    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.defaultInterval / updateRate);
-  } else {
-    locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.defaultInterval;
+  try {
+    var refresh_interval_setting = getSettingOptionValue('refresh_interval');
+    locationRefreshTimer.auto = refresh_interval_setting.auto;
+    locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
+    locationRefreshTimer.refreshing = true;
+    locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+    document.querySelector('.location_update_timer').setAttribute('refreshing', true);
+    var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
+    var Field = document.querySelector('.location_field');
+    updateLocationField(Field, integration, false);
+    locationRefreshTimer.lastUpdate = new Date().getTime();
+    if (locationRefreshTimer.auto) {
+      var updateRate = await getUpdateRate();
+      locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.defaultInterval / updateRate);
+    } else {
+      locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.defaultInterval;
+    }
+    locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
+    locationRefreshTimer.refreshing = false;
+    document.querySelector('.location_update_timer').setAttribute('refreshing', false);
+    return { status: 'Successfully refreshed the location.' };
+  } catch (e) {
+    console.log(789, e);
   }
-  locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
-  locationRefreshTimer.refreshing = false;
-  document.querySelector('.location_update_timer').setAttribute('refreshing', false);
-  return { status: 'Successfully refreshed the location.' };
 }
 
 export function streamLocation(): void {
