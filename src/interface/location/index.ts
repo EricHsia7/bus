@@ -59,6 +59,7 @@ function updateUpdateTimer() {
   var percentage = 0;
   if (locationRefreshTimer.refreshing) {
     percentage = -1 + getDataReceivingProgress(locationRefreshTimer.currentRequestID);
+    console.log(time, percentage);
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
   }
