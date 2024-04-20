@@ -87,6 +87,20 @@ export function initializeLocationSliding(): void {
   });
 }
 
+function generateElementOfItem(item: object, skeletonScreen: boolean): object {
+  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('item');
+  element.id = identifier;
+  element.setAttribute('skeleton-screen', skeletonScreen);
+  element.setAttribute('stretched', false);
+  element.innerHTML = ``;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
