@@ -127,8 +127,8 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
-  var defaultGroupQuantity = 2;
+  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5 };
+  var defaultGroupQuantity = 1;
   var groupedItems = {};
   for (var i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
@@ -148,9 +148,6 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupQuantity: defaultGroupQuantity,
       groups: {
         g_0: {
-          name: '載入中'
-        },
-        g_1: {
           name: '載入中'
         }
       },
