@@ -355,7 +355,7 @@ export function generateLabelFromAddresses(addresses: object[]): string[] {
       }
     }
   }
-  var commonProperties = Object.entries(object1)
+  var commonProperties = Object.entries(filledProperties)
     .map((property) => {
       return { key: property[0], value: property[1] };
     })
