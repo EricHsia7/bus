@@ -119,18 +119,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupedItems[groupKey].push({
         name: '',
         status: { code: -1, text: '' },
-        buses: null,
-        overlappingRoutes: null,
-        sequence: j,
-        location: {
-          latitude: null,
-          longitude: null
-        },
-        segmentBuffer: {
-          endpoint: false,
-          type: null
-        },
-        id: null
+        buses: null
       });
     }
   }
@@ -141,10 +130,10 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupQuantity: defaultGroupQuantity,
       groups: {
         g_0: {
-          name: ''
+          name: '載入中'
         },
         g_1: {
-          name: ''
+          name: '載入中'
         }
       },
       itemQuantity: defaultItemQuantity,
