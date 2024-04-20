@@ -39,7 +39,7 @@ function queryLocationFieldSize(): object {
 }
 
 export function ResizeRouteField(): void {
-  var Field = document.querySelector('.route_field');
+  var Field = document.querySelector('.location_field');
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -207,37 +207,37 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
         var thisElement = document.createElement('div');
-        thisElement.classList.add('route_grouped_items');
+        thisElement.classList.add('location_grouped_items');
         thisElement.setAttribute('group', currentGroupSeatQuantity + o);
         var tabElement = document.createElement('div');
-        tabElement.classList.add('route_group_tab');
-        Field.querySelector(`.route_groups`).appendChild(thisElement);
-        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
+        tabElement.classList.add('location_group_tab');
+        Field.querySelector(`.location_groups`).appendChild(thisElement);
+        Field.querySelector(`.location_head .location_group_tabs`).appendChild(tabElement);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
-        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
+        Field.querySelectorAll(`.location_groups .location_grouped_items`)[groupIndex].remove();
+        Field.querySelectorAll(`.location_head .location_group_tabs .location_group_tab`)[groupIndex].remove();
       }
     }
   }
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
+          Field.querySelector(`.location_groups .location_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+          Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[itemIndex].remove();
         }
       }
     }
@@ -245,10 +245,10 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
-    thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    var thisTabElement = Field.querySelectorAll(`.location_head .location_group_tabs .location_group_tab`)[i];
+    //thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
+      var thisElement = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
