@@ -1,6 +1,7 @@
 import { integrateLocation } from '../../data/apis/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
+import { icons } from '../icons/index.ts';
 
 var previousIntegration: object = {};
 
