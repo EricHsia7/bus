@@ -112,9 +112,7 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
             numbers = [numbers.reduce((a, b) => a + b, 0) + p];
           }
         }
-        return numbers.sort(function (a, b) {
-          return a ? a : 0 - b ? b : 0;
-        });
+        return numbers;
       },
       type: 0
     },
@@ -125,13 +123,9 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
         if (e === null) {
           return null;
         } else {
-          return e
-            .map((t) => {
-              return parseInt(t.trim().replaceAll(/[巷]/gim));
-            })
-            .sort(function (a, b) {
-              return a ? a : 0 - b ? b : 0;
-            });
+          return e.map((t) => {
+            return parseInt(t.trim().replaceAll(/[巷]/gim));
+          });
         }
       },
       type: 0
@@ -143,13 +137,9 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
         if (e === null) {
           return null;
         } else {
-          return e
-            .map((t) => {
-              return parseInt(t.trim().replaceAll(/[弄]/gim));
-            })
-            .sort(function (a, b) {
-              return a ? a : 0 - b ? b : 0;
-            });
+          return e.map((t) => {
+            return parseInt(t.trim().replaceAll(/[弄]/gim));
+          });
         }
       },
       type: 0
@@ -160,17 +150,13 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
       process: function (e) {
         var numbers = String(e).match(/[0-9]+/gim);
         numbers =
-          numbers
-            ?.map((n) => {
-              if (n === null) {
-                return null;
-              } else {
-                return parseInt(n);
-              }
-            })
-            .sort(function (a, b) {
-              return a ? a : 0 - b ? b : 0;
-            }) || null;
+          numbers?.map((n) => {
+            if (n === null) {
+              return null;
+            } else {
+              return parseInt(n);
+            }
+          }) || null;
         return numbers;
       },
       type: 0
@@ -249,7 +235,15 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
       }
     }
     for (var key in result) {
-      result[key] = Array.from(new Set(result[key])).filter((e) => (e ? true : false));
+      result[key] = Array.from(new Set(result[key]))
+        .filter((e) => (e ? true : false))
+        .sort(function (a, b) {
+          if (typeof a === 'number' && typeof b === 'number') {
+            return a ? a : 0 - b ? b : 0;
+          } else {
+            return String(a).charCodeAt(0) - String(b).charCodeAt(0);
+          }
+        });
     }
     return result;
   }
