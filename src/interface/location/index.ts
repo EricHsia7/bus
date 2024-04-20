@@ -196,7 +196,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     };
   }
 
-  updateRouteCSS(locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
+  updateLocationCSS(locationSliding.groupQuantity, locationSliding.currentGroup, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width);
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
