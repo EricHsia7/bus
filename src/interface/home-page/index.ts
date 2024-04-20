@@ -39,5 +39,6 @@ export async function preloadData(): void {
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
   dataPreloadCompleted = true;
+  progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
   deleteDataReceivingProgress(dataPreloadRequestID);
 }
