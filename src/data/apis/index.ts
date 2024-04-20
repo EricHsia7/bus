@@ -670,16 +670,11 @@ export async function integrateLocation(hash: string, requestID: string): object
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
 var EstimateTime = await getEstimateTime(requestID);
-    console.log(new Date().getTime(), 'getEstimateTime')
-var BusEvent = await getBusEvent(requestID);
-    console.log(new Date().getTime(), 'getBusEvent')
   var Location = await getLocation(requestID, true);
-  console.log(new Date().getTime(), 'getLocation')
   var Route = await getRoute(requestID, true);
-  console.log(new Date().getTime(), 'getRoute')
   var Stop = await getStop(requestID);
-  console.log(new Date().getTime(), 'getStop')
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  var BusEvent = await getBusEvent(requestID);
+var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   var use_addresses_as_location_labels = getSettingOptionValue('use_addresses_as_location_labels');
   var groupedItems = {};
   var itemQuantity = {};
