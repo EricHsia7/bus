@@ -62,7 +62,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
   }
-  document.querySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
+  document.querySelector('.location_update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -308,8 +308,7 @@ async function refreshLocation(): object {
   locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   locationRefreshTimer.refreshing = true;
   locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.route_update_timer').setAttribute('refreshing', true);
-
+  document.querySelector('.location_update_timer').setAttribute('refreshing', true);
   var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
   var Field = document.querySelector('.location_field');
   updateLocationField(Field, integration, false);
@@ -322,7 +321,7 @@ async function refreshLocation(): object {
   }
   locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
   locationRefreshTimer.refreshing = false;
-  document.querySelector('.route_update_timer').setAttribute('refreshing', false);
+  document.querySelector('.location_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the location.' };
 }
 

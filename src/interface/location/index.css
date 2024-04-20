@@ -131,7 +131,7 @@
   transform: translateX(-50%) scaleX(calc(var(--b-location-tab-line-width) / 30));
 }
 
-.location_field .location_head .route_update_timer_box {
+.location_field .location_head .location_update_timer_box {
   position: absolute;
   left: 0px;
   bottom: 0px;
