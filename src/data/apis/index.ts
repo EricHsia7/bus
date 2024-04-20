@@ -357,17 +357,17 @@ export async function integrateStop(StopID: number, RouteID: number): object {
   };
 }
 
-function processEstimateTime2(EstimateTime: [], StopIDs: []): object {
+function processEstimateTime2(EstimateTime: [], StopIDs: number[]): object {
   var result = {};
   for (var item of EstimateTime) {
-    if (StopIDs.indexOf(item.StopID) > -1) {
+    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
       result[`s_${item.StopID}`] = item;
     }
   }
   return result;
 }
 
-export async function integrateEstimateTime2(requestID: string, StopIDs: []): object {
+export async function integrateEstimateTime2(requestID: string, StopIDs: number[]): object {
   setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
   var EstimateTime = await getEstimateTime(requestID);
   var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);
