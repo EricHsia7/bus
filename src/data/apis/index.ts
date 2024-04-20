@@ -70,6 +70,31 @@ async function processBusEvent(BusEvent: object, RouteID: number, PathAttributeI
   return result;
 }
 
+async function processBusEvent2(BusEvent: object, StopIDs: number[]): object {
+  var result = {};
+  for (var item of BusEvent) {
+    var thisStopID = parseInt(item.StopID);
+    var thisRouteID = parseInt(item.RouteID);
+    if (StopIDs.indexOf(thisStopID) > -1) {
+      item.onThisRoute = true;
+      item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
+      var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
+      item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
+      if (!result.hasOwnProperty('s_' + item.StopID)) {
+        result['s_' + item.StopID] = [item];
+      } else {
+        result['s_' + item.StopID].push(item);
+      }
+    }
+  }
+  for (var key in result) {
+    result[key] = result[key].sort(function (a, b) {
+      return a.index - b.index;
+    });
+  }
+  return result;
+}
+
 function formatBusEvent(buses: []): [] | null {
   if (buses.length === 0) {
     return null;
@@ -332,7 +357,7 @@ export async function integrateStop(StopID: number, RouteID: number): object {
   };
 }
 
-function processEstimateTime2(EstimateTime: [], StopIDs: []): {} {
+function processEstimateTime2(EstimateTime: [], StopIDs: []): object {
   var result = {};
   for (var item of EstimateTime) {
     if (StopIDs.indexOf(item.StopID) > -1) {
@@ -643,13 +668,33 @@ export async function integrateLocation(hash: string, requestID: string): object
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
-  var Route = await getRoute(requestID, true);
-  var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, true);
+  var Route = await getRoute(requestID, true);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
-  var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
-  var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  var LocationKey = `ml_${hash}`;
+  var thisLocation = Location[LocationKey];
+  var stopLocationIds = thisLocation.id;
+  var StopIDs = [];
+  var RouteIDs = [];
+  var stopLocationQuantity = stopLocationIds.length;
+  for (var i = 0; i < stopLocationQuantity; i++) {
+    StopIDs = StopIDs.concat(thisLocation.s[i]);
+    RouteIDs = RouteIDs.concat(thisLocation.r[i]);
+  }
+  var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
+  var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
+  for (var i = 0; i < stopLocationQuantity; i++) {
+    for (var stop of thisLocation.s[i]) {
+      var thisStopEstimate = processedEstimateTime[`s_${stop}`];
+      var thisBusEvent = processedBusEvent[`s_${stop}`];
+      var formattedItem = {};
+      formattedItem.status = formatEstimateTime(thisStopEstimate, time_formatting_mode);
+      formattedItem.buses = formatBusEvent();
+    }
+  }
+
   var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
   var thisRoute = Route[`r_${RouteID}`];
   var thisRouteName = thisRoute.n;
