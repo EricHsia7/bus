@@ -53,6 +53,22 @@ function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width
   document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
 }
 
+function updateUpdateTimer() {
+  var time = new Date().getTime();
+  var percentage = 0;
+  if (routeRefreshTimer.refreshing) {
+    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+  } else {
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
+  }
+  document.querySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
+  window.requestAnimationFrame(function () {
+    if (routeRefreshTimer.streaming) {
+      updateUpdateTimer();
+    }
+  });
+}
+
 export function initializeLocationSliding(): void {
   var element = document.querySelector('.location_field .location_groups');
   function monitorScrollLeft(element, callback) {
@@ -291,7 +307,7 @@ async function refreshLocation(): object {
   locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   locationRefreshTimer.refreshing = true;
   locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  //document.querySelector('.update_timer').setAttribute('refreshing', true);
+  document.querySelector('.route_update_timer').setAttribute('refreshing', true);
 
   var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
   var Field = document.querySelector('.location_field');
@@ -305,7 +321,7 @@ async function refreshLocation(): object {
   }
   locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
   locationRefreshTimer.refreshing = false;
-  //document.querySelector('.update_timer').setAttribute('refreshing', false);
+  document.querySelector('.route_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the location.' };
 }
 

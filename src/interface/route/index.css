@@ -117,7 +117,7 @@
   transform: translateX(calc(var(--b-fw) / var(--b-route-group-quantity) * var(--b-route-tab-percentage) + (var(--b-fw) / var(--b-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
-.route_field .route_head .update_timer_box {
+.route_field .route_head .route_update_timer_box {
   position: absolute;
   left: 0px;
   bottom: 0px;
@@ -127,7 +127,7 @@
   background: var(--b-ededf2);
 }
 
-.route_field .route_head .update_timer_box .update_timer {
+.route_field .route_head .route_update_timer_box .route_update_timer {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -138,7 +138,7 @@
   transition: none;
 }
 
-.route_field .route_head .update_timer_box .update_timer[refreshing="true"] {
+.route_field .route_head .route_update_timer_box .route_update_timer[refreshing="true"] {
   transition: transform var(--b-transition-duration);
   transition-timing-function: linear;
 }

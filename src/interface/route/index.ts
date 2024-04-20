@@ -104,7 +104,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
-  document.querySelector('.update_timer').style.setProperty('--b-update-timer', percentage);
+  document.querySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -348,7 +348,7 @@ async function refreshRoute(): object {
   routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.update_timer').setAttribute('refreshing', true);
+  document.querySelector('.route_update_timer').setAttribute('refreshing', true);
   var integration = await integrateRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
   var Field = document.querySelector('.route_field');
   updateRouteField(Field, integration, false);
@@ -361,7 +361,7 @@ async function refreshRoute(): object {
   }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
-  document.querySelector('.update_timer').setAttribute('refreshing', false);
+  document.querySelector('.route_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
 }
 

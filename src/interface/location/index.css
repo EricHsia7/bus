@@ -131,6 +131,32 @@
   transform: translateX(-50%) scaleX(calc(var(--b-location-tab-line-width) / 30));
 }
 
+.location_field .location_head .route_update_timer_box {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 1.2px;
+  overflow: hidden;
+  background: var(--b-ededf2);
+}
+
+.location_field .location_head .location_update_timer_box .location_update_timer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-d));
+  height: 1.5px;
+  width: 100%;
+  transform: translateX(calc(var(--b-update-timer) * 100%));
+  transition: none;
+}
+
+.location_field .location_head .location_update_timer_box .location_update_timer[refreshing="true"] {
+  transition: transform var(--b-transition-duration);
+  transition-timing-function: linear;
+}
+
 .location_field .location_groups {
   position: absolute;
   top: 0px;
