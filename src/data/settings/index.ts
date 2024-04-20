@@ -102,6 +102,26 @@ var Settings = {
       }
     ]
   },
+  use_addresses_as_location_labels: {
+    key: 'use_addresses_as_location_labels',
+    name: '站牌位置標籤',
+    icon: 'label',
+    status: '',
+    action: `bus.settingsPage.openSettingsOptionsPage('use_addresses_as_location_labels')`,
+    type: 'select',
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '地址特徵',
+        value: true
+      },
+      {
+        name: '英文字母',
+        value: false
+      }
+    ]
+  },
   folder: {
     name: '資料夾',
     icon: 'folder',

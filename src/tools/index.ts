@@ -138,13 +138,21 @@ export function areItemsDifferent(arr: []): boolean {
   return true; // No duplicates found
 }
 
-export function numberToLetters(number: number): string {
+function numberToLetters(number: number): string {
   let result = '';
   while (number > 0) {
     let remainder = (number - 1) % 26; // Adjust for 1-based indexing
     let letter = String.fromCharCode(remainder + 65); // A=65 in ASCII
     result = letter + result;
     number = Math.floor((number - 1) / 26); // Update number for next iteration
+  }
+  return result;
+}
+
+export function generateLetterLabels(quantity: number): string[] {
+  var result = [];
+  for (var i = 0; i < quantity; i++) {
+    result.push(`地點${numberToLetters(i + 1)}`);
   }
   return result;
 }

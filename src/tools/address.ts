@@ -1,4 +1,4 @@
-import { areItemsDifferent, numberToLetters } from './index.ts';
+import { areItemsDifferent, generateLetterLabels } from './index.ts';
 
 export function mergeAddressesIntoOne(addresses: string[], convertToString: boolean): object | string {
   const parts = [
@@ -392,9 +392,6 @@ export function generateLabelFromAddresses(addresses: object[]): string[] {
     return result[0].components;
   } else {
     var addressesLength = addresses.length;
-    for (var i = 0; i < addressesLength; i++) {
-      result.push(`位置${numberToLetters(i + 1)}`);
-    }
-    return result;
+    return generateLetterLabels(addressesLength);
   }
 }
