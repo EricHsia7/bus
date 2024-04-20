@@ -1,4 +1,5 @@
 import { getLocation } from './data/apis/getLocation.ts';
+import { integrateLocation } from './data/apis/index.ts';
 import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
@@ -146,7 +147,8 @@ window.bus = {
     calculateDataUsage,
     initializeFolderStores,
     calculateStoresSize,
-    getLocation
+    getLocation,
+    integrateLocation
   },
   settingsPage: {
     openSettingsPage,
