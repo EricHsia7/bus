@@ -43,12 +43,11 @@ function queryLocationFieldSize(): object {
   };
 }
 
-export function ResizeField(): void {
-  var Field = document.querySelector('.location_field');
-  const FieldSize = queryRouteFieldSize();
+export function ResizeLocationField(): void {
+  const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
+  document.querySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number): void {

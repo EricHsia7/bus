@@ -3,10 +3,10 @@ import { integrateLocation } from './data/apis/index.ts';
 import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
-import { openLocation, closeLocation, initializeLocationSliding } from './interface/location/index.ts';
+import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField } from './interface/location/index.ts';
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
@@ -72,14 +72,16 @@ window.bus = {
             initializeSettings().then((e) => {});
             initializeRouteSliding();
             initializeLocationSliding();
-            ResizeField();
+            ResizeRouteField();
+            ResizeLocationField();
             window.addEventListener('resize', (event) => {
-              ResizeField();
+              ResizeRouteField();
+              ResizeLocationField();
             });
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
-                  ResizeField();
+                  ResizeRouteField();
                 });
               }
             }

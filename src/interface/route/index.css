@@ -114,7 +114,7 @@
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(calc(var(--b-fw) / var(--b-route-group-quantity) * var(--b-route-tab-percentage) + (var(--b-fw) / var(--b-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-route-tab-width) / 30));
+  transform: translateX(calc(var(--b-r-fw) / var(--b-route-group-quantity) * var(--b-route-tab-percentage) + (var(--b-r-fw) / var(--b-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
 .route_field .route_head .route_update_timer_box {
@@ -156,15 +156,15 @@
   scroll-snap-type: x mandatory;
   display: grid;
   grid-column-gap: 0px;
-  grid-template-columns: repeat(var(--b-route-group-quantity), var(--b-fw));
+  grid-template-columns: repeat(var(--b-route-group-quantity), var(--b-r-fw));
 }
 
 .route_field .route_groups .route_grouped_items {
   position: relative;
   top: 0px;
   left: 0px;
-  width: var(--b-fw);
-  height: var(--b-fh);
+  width: var(--b-r-fw);
+  height: var(--b-r-fh);
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -508,7 +508,7 @@
 .route_field .route_groups .route_grouped_items .item .bus,
 .route_field .route_groups .route_grouped_items .item .overlapping_route {
   position: relative;
-  width: calc(var(--b-fw) * 0.6);
+  width: calc(var(--b-r-fw) * 0.6);
   height: 121px;
   box-sizing: border-box;
   background: var(--b-f9f9fb);

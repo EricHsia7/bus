@@ -84,12 +84,11 @@ function queryRouteFieldSize(): object {
   };
 }
 
-export function ResizeField(): void {
-  var Field = document.querySelector('.route_field');
+export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  document.querySelector('#field_size').innerHTML = `:root {--b-fw:${FieldWidth}px;--b-fh:${FieldHeight}px;}`;
+  document.querySelector('#route_field_size').innerHTML = `:root {--b-r-fw:${FieldWidth}px;--b-r-fh:${FieldHeight}px;}`;
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
