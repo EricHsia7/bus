@@ -109,8 +109,8 @@ var Settings = {
     status: '',
     action: `bus.settingsPage.openSettingsOptionsPage('use_addresses_as_location_labels')`,
     type: 'select',
-    default_option: 1,
-    option: 1,
+    default_option: 0,
+    option: 0,
     options: [
       {
         name: '地址特徵',
