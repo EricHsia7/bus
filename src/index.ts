@@ -3,7 +3,7 @@ import { integrateLocation } from './data/apis/index.ts';
 import { updateSearchResult } from './interface/search-page/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchItemBody, initializeRouteSliding, ResizeField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
 import { openLocation, closeLocation, initializeLocationSliding } from './interface/location/index.ts';
@@ -71,16 +71,15 @@ window.bus = {
           if (e.status === 'ok') {
             initializeSettings().then((e) => {});
             initializeRouteSliding();
-            ResizeRouteField();
-            window.addEventListener('resize', (event) => {
-              ResizeRouteField();
-            });
             initializeLocationSliding();
-            ResizeRouteField();
+            ResizeField();
+            window.addEventListener('resize', (event) => {
+              ResizeField();
+            });
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
-                  ResizeRouteField();
+                  ResizeField();
                 });
               }
             }

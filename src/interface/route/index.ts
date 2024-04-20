@@ -84,7 +84,7 @@ function queryRouteFieldSize(): object {
   };
 }
 
-export function ResizeRouteField(): void {
+export function ResizeField(): void {
   var Field = document.querySelector('.route_field');
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
