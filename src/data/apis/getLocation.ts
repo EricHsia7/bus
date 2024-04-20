@@ -1,7 +1,8 @@
 import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { md5, mergeAddressesIntoOne, extractCommonFeaturesFromAddresses } from '../../tools/index.ts';
+import { md5 } from '../../tools/index.ts';
+import { mergeAddressesIntoOne, extractCommonFeaturesFromAddresses } from '../../tools/address.ts';
 
 var LocationAPIVariableCache = {
   merged: {

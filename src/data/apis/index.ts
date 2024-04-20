@@ -12,6 +12,7 @@ import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, 
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
+import { generateLabelFromAddresses } from '../../tools/address.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
@@ -676,23 +677,31 @@ export async function integrateLocation(hash: string, requestID: string): object
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   var groupedItems = {};
   var itemQuantity = {};
+  var groups = {};
+
   var LocationKey = `ml_${hash}`;
   var thisLocation = Location[LocationKey];
   var thisLocationName = thisLocation.n;
   var stopLocationIds = thisLocation.id;
+
   var StopIDs = [];
   var RouteIDs = [];
   var stopLocationQuantity = stopLocationIds.length;
+
   for (var i = 0; i < stopLocationQuantity; i++) {
     StopIDs = StopIDs.concat(thisLocation.s[i]);
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
+  var labels = generateLabelFromAddresses(thisLocation.a);
   for (var i = 0; i < stopLocationQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
+    groups[groupKey] = {
+      name: labels[i]
+    };
     var stopQuantity = thisLocation.s[i].length;
     for (var o = 0; o < stopQuantity; o++) {
       var thisStopID = thisLocation.s[i][o];
@@ -711,6 +720,7 @@ export async function integrateLocation(hash: string, requestID: string): object
   }
   var result = {
     groupedItems: groupedItems,
+    groups: groups,
     groupQuantity: stopLocationQuantity,
     itemQuantity: itemQuantity,
     LocationName: thisLocationName,
