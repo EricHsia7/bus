@@ -587,7 +587,7 @@
   border-radius: 30px;
 }
 
-.location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tabs_tray .route_group_tab span {
+.location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tabs_tray .location_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   border-radius: 30px;
@@ -625,7 +625,6 @@
 
 .location_field[skeleton-screen="true"] .location_head .location_name span,
 .location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tab span,
-.location_field[skeleton-screen="true"] .location_head .location_group_tab_line_track .location_group_tab_line,
 .location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
 .location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .current_slide,
 .location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .name,
