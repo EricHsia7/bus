@@ -659,12 +659,12 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
 }
 
 export async function integrateLocation(hash: string, requestID: string): object {
+  setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
+  setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
   setDataReceivingProgress(requestID, 'getStop_1', 0, false);
-  setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
-  setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
