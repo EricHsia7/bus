@@ -96,6 +96,7 @@ async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
 }
 
 function formatBusEvent(buses: []): [] | null {
+  console.log(123, buses, typeof buses);
   if (buses.length === 0) {
     return null;
   }
@@ -681,7 +682,6 @@ export async function integrateLocation(hash: string, requestID: string): object
   var stopLocationIds = thisLocation.id;
   var StopIDs = [];
   var RouteIDs = [];
-  console.log(0, Location, BusEvent, thisLocation, StopIDs, RouteIDs, processEstimateTime, processBusEvent);
   var stopLocationQuantity = stopLocationIds.length;
   for (var i = 0; i < stopLocationQuantity; i++) {
     StopIDs = StopIDs.concat(thisLocation.s[i]);
