@@ -48,7 +48,7 @@ export function ResizeRouteField(): void {
 }
 
 function updateLocationCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:;--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
 }
 
 export function initializeLocationSliding(): void {
@@ -264,7 +264,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = Field.querySelectorAll(`.location_head .location_group_tabs .location_group_tab`)[i];
-    //thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
+    thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
