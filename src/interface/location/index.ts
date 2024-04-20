@@ -361,7 +361,7 @@ export function openLocation(hash: string): void {
     } else {
       refreshLocation();
     }
-    //updateUpdateTimer();
+    updateUpdateTimer();
   }
 }
 
