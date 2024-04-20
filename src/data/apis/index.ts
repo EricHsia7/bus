@@ -318,7 +318,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,
-    items: processedEstimateTime,
     RouteName: thisRouteName,
     RouteEndPoints: {
       RouteDeparture: thisRouteDeparture,
@@ -670,11 +669,15 @@ export async function integrateLocation(hash: string, requestID: string): object
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   var Location = await getLocation(requestID, true);
   var Route = await getRoute(requestID, true);
+  var Stop = await getStop(requestID);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  var groupedItems = {};
+  var itemQuantity = {};
   var LocationKey = `ml_${hash}`;
   var thisLocation = Location[LocationKey];
+  var thisLocationName = thisLocation.n;
   var stopLocationIds = thisLocation.id;
   var StopIDs = [];
   var RouteIDs = [];
@@ -686,27 +689,25 @@ export async function integrateLocation(hash: string, requestID: string): object
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
   for (var i = 0; i < stopLocationQuantity; i++) {
+    var groupKey = `g_${i}`;
+    groupedItems[groupKey] = [];
+    itemQuantity[groupKey] = 0;
     for (var stop of thisLocation.s[i]) {
       var thisStopEstimate = processedEstimateTime[`s_${stop}`];
       var thisBusEvent = processedBusEvent[`s_${stop}`];
       var formattedItem = {};
       formattedItem.status = formatEstimateTime(thisStopEstimate, time_formatting_mode);
-      formattedItem.buses = formatBusEvent();
+      formattedItem.buses = formatBusEvent(thisBusEvent);
+      formattedItem.name = thisLocation.n;
+      groupedItems[groupKey].push(formattedItem);
+      itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
     }
   }
-
-  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
-  var thisRoute = Route[`r_${RouteID}`];
-  var thisRouteName = thisRoute.n;
-  var thisRouteDeparture = thisRoute.dep;
-  var thisRouteDestination = thisRoute.des;
   var result = {
-    groupedItems: processedEstimateTime,
-    LocationName: thisRouteName,
-    RouteEndPoints: {
-      RouteDeparture: thisRouteDeparture,
-      RouteDestination: thisRouteDestination
-    },
+    groupedItems: groupedItems,
+    groupQuantity: stopLocationQuantity,
+    itemQuantity: itemQuantity,
+    LocationName: thisLocationName,
     dataUpdateTime: dataUpdateTime[requestID]
   };
   deleteDataReceivingProgress(requestID);
