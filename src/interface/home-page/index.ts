@@ -21,9 +21,9 @@ function updateDownloadProgress() {
 function setCompleteStatus() {
   if (dataPreloadCompleted) {
     document.querySelector('.home_page_button_right').setAttribute('complete', true);
-    progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
     progressElement.removeEventListener('transitionend', setCompleteStatus);
   }
+  console.log(new Date().getTime())
 }
 
 export async function preloadData(): void {
