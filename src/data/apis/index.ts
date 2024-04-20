@@ -695,11 +695,9 @@ export async function integrateLocation(hash: string, requestID: string): object
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
     for (var stop of thisLocation.s[i]) {
-      var thisStopEstimate = processedEstimateTime[`s_${stop}`];
-      var thisBusEvent = processedBusEvent[`s_${stop}`];
       var formattedItem = {};
-      formattedItem.status = formatEstimateTime(thisStopEstimate, time_formatting_mode);
-      formattedItem.buses = formatBusEvent(thisBusEvent);
+      formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${stop}`) ? formatEstimateTime(processedEstimateTime[`s_${stop}`], time_formatting_mode) : null;
+      formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${stop}`) ? formatBusEvent(processedBusEvent[`s_${stop}`]) : null;
       formattedItem.name = thisLocation.n;
       groupedItems[groupKey].push(formattedItem);
       itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
