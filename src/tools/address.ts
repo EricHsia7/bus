@@ -381,7 +381,7 @@ export function generateLabelFromAddresses(addresses: object[]): string[] {
     result = result.sort(function (a, b) {
       return a.len - b.len;
     });
-    return result[0];
+    return result[0].components;
   } else {
     var addressesLength = addresses.length;
     for (var i = 0; i < addressesLength; i++) {
