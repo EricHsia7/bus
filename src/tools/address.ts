@@ -393,7 +393,7 @@ export function generateLabelFromAddresses(addresses: object[]): string[] {
   } else {
     var addressesLength = addresses.length;
     for (var i = 0; i < addressesLength; i++) {
-      result.push(numberToLetters(i));
+      result.push(numberToLetters(i + 1));
     }
     return result;
   }
