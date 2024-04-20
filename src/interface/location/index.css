@@ -112,7 +112,7 @@
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(calc(var(--b-fw) / var(--b-route-group-quantity) * var(--b-route-tab-percentage) + (var(--b-fw) / var(--b-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-route-tab-width) / 30));
+  transform: translateX(calc(var(--b-fw) / var(--b-location-group-quantity) * var(--b-location-tab-percentage) + (var(--b-fw) / var(--b-location-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-location-tab-width) / 30));
 }
 
 .location_field[skeleton-screen="true"] .location_head .location_group_tab_line_track .location_group_tab_line {
@@ -179,10 +179,6 @@
 
 .location_field .location_groups .location_grouped_items .item[stretched="true"] {
   height: 221px;
-}
-
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] {
-  background: var(--b-f9f9fb-inflected);
 }
 
 .location_field .location_groups .location_grouped_items .item .head {
@@ -278,11 +274,6 @@
   transition: fill var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .body .tabs .tab,
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .body .tabs .action_button {
-  background: var(--b-ededf2-inflected);
-}
-
 .location_field .location_groups .location_grouped_items .item .body .tabs .tab[selected="true"],
 .location_field .location_groups .location_grouped_items .item .body .tabs .action_button[highlighted="true"] {
   background: var(--b-333333);
@@ -337,28 +328,12 @@
   font-weight: 500;
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="6"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="6"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="5"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="5"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="4"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="4"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="3"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="3"] {
-  background: var(--b-ededf2-inflected);
-}
-
 .location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="2"],
 .location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="2"] {
   color: var(--b-ffffff);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
-}
-
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="2"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="2"] {
-  background: var(--b-main-color-inflected);
 }
 
 .location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="1"],
@@ -381,22 +356,12 @@
   font-weight: 700;
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="0.5"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="0.5"] {
-  background: var(--b-ededf2-inflected);
-}
-
 .location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="0"],
 .location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
-}
-
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="0"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="0"] {
-  background: var(--b-ededf2-inflected);
 }
 
 .location_field .location_groups .location_grouped_items .item .head .status .slide_fade_out {

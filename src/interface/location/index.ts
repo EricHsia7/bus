@@ -48,7 +48,7 @@ export function ResizeRouteField(): void {
 }
 
 function updateLocationCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-percentage:${percentage};--b-location-tabs-width:${width}px;}`;
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tab-percentage:${percentage};--b-location-tab-width:${width}px;}`;
 }
 
 export function initializeLocationSliding(): void {
