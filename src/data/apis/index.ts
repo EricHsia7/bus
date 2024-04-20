@@ -71,7 +71,6 @@ async function processBusEvent(BusEvent: [], RouteID: number, PathAttributeId: [
 }
 
 async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
-  console.log(StopIDs);
   var result = {};
   for (var item of BusEvent) {
     var thisStopID = parseInt(item.StopID);
@@ -694,11 +693,17 @@ export async function integrateLocation(hash: string, requestID: string): object
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
-    for (var stop of thisLocation.s[i]) {
+    var stopQuantity = thisLocation.s[i].length;
+
+    for (var o = 0; o < stopQuantity; o++) {
+      var thisStopID = thisLocation.s[i][o];
+      var thisRouteID = thisLocation.r[i][o];
+      var thisRoute = Route[`r_${thisRouteID}`];
+      var thisProcessedEstimateTime = processedEstimateTime[`s_${thisStopID}`];
       var formattedItem = {};
-      formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${stop}`) ? formatEstimateTime(processedEstimateTime[`s_${stop}`], time_formatting_mode) : null;
-      formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${stop}`) ? formatBusEvent(processedBusEvent[`s_${stop}`]) : null;
-      formattedItem.name = thisLocation.n;
+      formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime) : null;
+      formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(processedBusEvent[`s_${thisStopID}`]) : null;
+      formattedItem.name = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`) ? `${thisRoute.n} - ${[thisRoute.des, thisRoute.dep, ''][parseInt(thisProcessedEstimateTime.GoBack)]}` : null;
       groupedItems[groupKey].push(formattedItem);
       itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
     }
