@@ -272,7 +272,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var groupKey = `g_${i}`;
     var thisTabElement = Field.querySelectorAll(`.location_head .location_group_tabs_tray .location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
-    thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}`);
+    thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
