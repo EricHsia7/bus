@@ -688,6 +688,7 @@ export async function integrateLocation(hash: string, requestID: string): object
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
+  console.log(processedEstimateTime);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
   for (var i = 0; i < stopLocationQuantity; i++) {
     var groupKey = `g_${i}`;
