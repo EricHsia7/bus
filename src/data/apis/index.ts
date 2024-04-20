@@ -713,9 +713,15 @@ export async function integrateLocation(hash: string, requestID: string): object
       formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode) : null;
       formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(thisProcessedBusEvent) : null;
       formattedItem.name = Stop.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`) ? `${thisRoute.n} - 往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}` : null;
+      formattedItem.routeId = thisRouteID;
       groupedItems[groupKey].push(formattedItem);
       itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
     }
+  }
+  for (var key in groupedItems) {
+    groupedItems[key] = groupedItems[key].sort(function (a, b) {
+      return a.routeId - b.routeId;
+    });
   }
   var result = {
     groupedItems: groupedItems,
