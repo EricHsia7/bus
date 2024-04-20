@@ -172,7 +172,7 @@
   position: absolute;
   top: 0px;
   right: 45px;
-  width: 60px;
+  width: 80px;
   height: 55px;
   display: flex;
   align-items: center;
@@ -180,6 +180,8 @@
   color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
   user-select: none;
   -webkit-user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .settings_page_field .settings_page_settings .setting[type="info"] .setting_status {
