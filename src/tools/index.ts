@@ -156,3 +156,73 @@ export function generateLetterLabels(quantity: number): string[] {
   }
   return result;
 }
+
+const base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+// Function to encode an MD5 hash into a shortened string
+export function encodeHexToShortString(md5Hash: string, len: number): string {
+  // Function to convert a hexadecimal string to binary
+  function hexToBinary(hexString) {
+    const hex = '0123456789abcdef';
+    let binaryString = '';
+    for (let i = 0; i < hexString.length; i += 2) {
+      const byte = parseInt(hexString.substr(i, 2), 16);
+      binaryString += String.fromCharCode(byte);
+    }
+    return binaryString;
+  }
+
+  // Function to encode binary data using Base64-like encoding
+  function base64LikeEncode(binaryData: string, len: number): string {
+    let encodedString = '';
+    for (let i = 0; i < binaryData.length; i += 3) {
+      const chunk = binaryData.substr(i, 3);
+      let chunkBits = '';
+      for (let j = 0; j < chunk.length; j++) {
+        const byte = chunk.charCodeAt(j);
+        chunkBits += byte.toString(2).padStart(8, '0');
+      }
+      while (chunkBits.length < 24) {
+        chunkBits += '00000000'; // Padding to ensure 24 bits
+      }
+      const indices = [parseInt(chunkBits.substr(0, 6), 2), parseInt(chunkBits.substr(6, 6), 2), parseInt(chunkBits.substr(12, 6), 2), parseInt(chunkBits.substr(18, 6), 2)];
+      for (const index of indices) {
+        encodedString += base64Chars.charAt(index);
+      }
+    }
+    return String(encodedString).substring(0, len);
+  }
+  // Convert the hexadecimal MD5 hash to binary
+  const binaryHash = hexToBinary(md5Hash);
+  // Encode the binary hash using Base64-like encoding with A-Za-z0-9_- characters
+  const encodedString = base64LikeEncode(binaryHash, len);
+  return encodedString;
+}
+
+// Function to decode a shortened string back to the original MD5 hash without padding
+export function decodeShortStringToHex(encodedString: string, len: number): string {
+  // Function to convert binary data to hexadecimal
+  function binaryToHex(binaryString: string): string {
+    let hexString = '';
+    for (let i = 0; i < binaryString.length; i += 8) {
+      const byte = binaryString.substr(i, 8);
+      const decimal = parseInt(byte, 2);
+      const hex = decimal.toString(16).padStart(2, '0');
+      hexString += hex;
+    }
+    return hexString;
+  }
+  let binaryString = '';
+  // Decode the Base64-like encoded string back to binary data
+  for (let i = 0; i < encodedString.length; i++) {
+    const char = encodedString.charAt(i);
+    const index = base64Chars.indexOf(char);
+    if (index >= 0) {
+      const bits = index.toString(2).padStart(6, '0');
+      binaryString += bits;
+    }
+  }
+  // Convert the binary data back to hexadecimal
+  const hexHash = binaryToHex(binaryString);
+  return String(hexHash).substring(0, len);
+}
