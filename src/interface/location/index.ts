@@ -32,6 +32,8 @@ var locationSliding = {
   fieldHeight: 0
 };
 
+var tabPadding = 20;
+
 function queryLocationFieldSize(): object {
   return {
     width: window.innerWidth,
@@ -211,15 +213,15 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth(groups[`g_${i}`].name, `500 17px "Noto Sans", sans-serif`);
+    var width = getTextWidth(groups[`g_${i}`].name, `500 17px "Noto Sans", sans-serif`) + tabPadding;
     locationSliding.groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-
-  updateLocationCSS(locationSliding.groupQuantity, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset);
+  var offset = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset * -1 + locationSliding.fieldWidth * 0.5 - locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width * 0.5;
+  updateLocationCSS(locationSliding.groupQuantity, offset);
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
