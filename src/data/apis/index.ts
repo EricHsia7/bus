@@ -71,6 +71,7 @@ async function processBusEvent(BusEvent: [], RouteID: number, PathAttributeId: [
 }
 
 async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
+  console.log(StopIDs);
   var result = {};
   for (var item of BusEvent) {
     var thisStopID = parseInt(item.StopID);
