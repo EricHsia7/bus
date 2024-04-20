@@ -136,14 +136,16 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
     {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
-      itemQuantity: defaultItemQuantity,
-      RouteName: '載入中',
-      RouteEndPoints: {
-        RouteDeparture: '載入中',
-        RouteDestination: '載入中'
+      groups: {
+        g_0: {
+          name: ''
+        },
+        g_1: {
+          name: ''
+        }
       },
-      RouteID: null,
-      PathAttributeId: []
+      itemQuantity: defaultItemQuantity,
+      LocationName: '載入中'
     },
     true
   );
