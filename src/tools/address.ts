@@ -239,7 +239,7 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
         .filter((e) => (e ? true : false))
         .sort(function (a, b) {
           if (typeof a === 'number' && typeof b === 'number') {
-            return a ? a : 0 - b ? b : 0;
+            return a - b;
           } else {
             return String(a).charCodeAt(0) - String(b).charCodeAt(0);
           }
