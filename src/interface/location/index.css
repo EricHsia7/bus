@@ -83,8 +83,20 @@
   height: 40px;
 }
 
-.location_field .location_head .location_group_tabs .location_group_tab {
-  display: flex;
+.location_field .location_head .location_group_tabs .location_group_tabs_tray {
+  white-space: nowrap;
+  word-break: keep-all;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: auto;
+  height: 40px;
+  display: inline-block;
+  transform: translateX(var(--b-location-tabs-tray-offset));
+}
+
+.location_field .location_head .location_group_tabs .location_group_tabs_tray .location_group_tab {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 17px;
@@ -94,6 +106,9 @@
   color: var(--b-333333);
   user-select: none;
   -webkit-user-select: none;
+  vertical-align: top;
+  width: var(--b-location-tab-width);
+  position: relative;
 }
 
 .location_field .location_head .location_group_tab_line_track {
