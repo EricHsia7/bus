@@ -57,7 +57,7 @@ export function getDataReceivingProgress(requestID: string): number {
         }
       }
       var progress = Math.min(Math.max(received / total, 0), 1);
-      return progress;
+      return progress === Infinity || isNaN(progress) ? 1 : progress;
     }
   }
   return 1;
