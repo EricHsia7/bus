@@ -48,7 +48,7 @@ export function ResizeField(): void {
 }
 
 function updateLocationCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tab-percentage:${percentage};--b-location-tab-width:${width}px;}`;
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tab-percentage:${percentage};--b-location-tab-width:${width};}`;
 }
 
 export function initializeLocationSliding(): void {
