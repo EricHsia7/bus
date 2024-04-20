@@ -704,7 +704,7 @@ export async function integrateLocation(hash: string, requestID: string): object
       var thisProcessedEstimateTime = processedEstimateTime[`s_${thisStopID}`];
       var thisProcessedBusEvent = processedBusEvent[`s_${thisStopID}`];
       var formattedItem = {};
-      formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime, time_formatting_mode) : null;
+      formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode) : null;
       formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(thisProcessedBusEvent) : null;
       formattedItem.name = Stop.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`) ? `${thisRoute.n} - 往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}` : null;
       //formattedItem.test = { thisProcessedEstimateTime };
