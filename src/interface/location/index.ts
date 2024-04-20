@@ -83,8 +83,8 @@ export function initializeLocationSliding(): void {
     } else {
       locationSliding.targetGroup = locationSliding.currentGroup - 1;
     }
-    var current_size = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`] || { width: 0 };
-    var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0 };
+    var current_size = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`] || { width: 0, offset: 0 };
+    var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0, offset: 0 };
     var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding.currentGroup);
     var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding.currentGroup)) * -1 + locationSliding.fieldWidth * 0.5 - tab_width * 0.5;
     updateLocationCSS(locationSliding.groupQuantity, offset, tab_width - tabPadding);
