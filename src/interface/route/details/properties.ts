@@ -1,11 +1,11 @@
-import { GeneratedElement } from '../../index.ts';
+import { GeneratedElement, FieldSize } from '../../index.ts';
 import { md5, compareThings } from '../../../tools/index.ts';
 import { icons } from '../../icons/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
 
 var previousProperties = [];
 
-function queryPropertiesFieldSize(): object {
+function queryPropertiesFieldSize(): FieldSize {
   return {
     width: window.innerWidth,
     height: window.innerHeight

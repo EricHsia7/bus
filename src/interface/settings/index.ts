@@ -2,8 +2,9 @@ import { md5 } from '../../tools/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { listSettings } from '../../data/settings/index.ts';
 import { icons } from '../icons/index.ts';
+import { GeneratedElement } from '../index.ts';
 
-function generateElementOfItem(item: object): object {
+function generateElementOfItem(item: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('setting');

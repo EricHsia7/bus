@@ -7,6 +7,7 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
+import { GeneratedElement, FieldSize } from '../index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 
@@ -78,7 +79,7 @@ export function initializeRouteSliding(): void {
   });
 }
 
-function queryRouteFieldSize(): object {
+function queryRouteFieldSize(): FieldSize {
   return {
     width: window.innerWidth,
     height: window.innerHeight
@@ -112,7 +113,7 @@ function updateUpdateTimer() {
   });
 }
 
-function generateElementOfItem(): object {
+function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('item');
@@ -125,7 +126,7 @@ function generateElementOfItem(): object {
   };
 }
 
-function generateElementOfGroup(): object {
+function generateElementOfGroup(): GeneratedElement {
   var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_group');
@@ -136,7 +137,7 @@ function generateElementOfGroup(): object {
   };
 }
 
-function generateElementOfTab(): object {
+function generateElementOfTab(): GeneratedElement {
   var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_group_tab');
@@ -147,7 +148,7 @@ function generateElementOfTab(): object {
   };
 }
 
-function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
+function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;

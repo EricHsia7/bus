@@ -29,3 +29,8 @@ export interface GeneratedElement {
   element: HTMLElement;
   id: string;
 }
+
+export interface FieldSize {
+  width: number;
+  height: number;
+}

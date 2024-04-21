@@ -5,6 +5,7 @@ import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
+import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration: object = {};
 
@@ -75,7 +76,7 @@ export function initializeLocationSliding(): void {
   });
 }
 
-function queryLocationFieldSize(): object {
+function queryLocationFieldSize(): FieldSize {
   return {
     width: window.innerWidth,
     height: window.innerHeight
@@ -109,7 +110,7 @@ function updateUpdateTimer() {
   });
 }
 
-function generateElementOfItem(): object {
+function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('item');
@@ -122,7 +123,7 @@ function generateElementOfItem(): object {
   };
 }
 
-function generateElementOfGroup(): object {
+function generateElementOfGroup(): GeneratedElement {
   var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
@@ -134,7 +135,7 @@ function generateElementOfGroup(): object {
   };
 }
 
-function generateElementOfTab(): object {
+function generateElementOfTab(): GeneratedElement {
   var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
@@ -145,7 +146,7 @@ function generateElementOfTab(): object {
   };
 }
 
-function generateElementOfGroupDetailsProperty(): object {
+function generateElementOfGroupDetailsProperty(): GeneratedElement {
   var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;

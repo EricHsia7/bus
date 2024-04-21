@@ -1,8 +1,9 @@
 import { md5 } from '../../tools/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getSetting, changeSettingOption } from '../../data/settings/index.ts';
+import { GeneratedElement } from '../index.ts';
 
-function generateElementOfItem(setting: object, item: object, index: number): object {
+function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('option');

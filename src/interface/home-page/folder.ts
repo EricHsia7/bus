@@ -5,6 +5,7 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { icons } from '../icons/index.ts';
+import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration = [];
 
@@ -21,14 +22,14 @@ var foldersRefreshTimer = {
   streamStarted: false
 };
 
-function queryFolderFieldSize(): object {
+function queryFolderFieldSize(): FieldSize {
   return {
     width: window.innerWidth,
     height: window.innerHeight
   };
 }
 
-function generateElementOfItem(): string {
+function generateElementOfItem(): GeneratedElement {
   var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
@@ -41,7 +42,7 @@ function generateElementOfItem(): string {
   };
 }
 
-function generateElementOfFolder(): object {
+function generateElementOfFolder(): GeneratedElement {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
@@ -53,7 +54,7 @@ function generateElementOfFolder(): object {
   };
 }
 
-export function setUpFolderFieldSkeletonScreen(Field: HTMLElement) {
+export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;

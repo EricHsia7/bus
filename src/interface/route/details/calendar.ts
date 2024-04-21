@@ -1,4 +1,4 @@
-import { GeneratedElement } from '../../index.ts';
+import { GeneratedElement, FieldSize } from '../../index.ts';
 import { indexToDay } from '../../../tools/format-time.ts';
 import { md5, compareThings } from '../../../tools/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
@@ -6,7 +6,7 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 const calendar_ratio = 100;
 var previousCalendar = {};
 
-function queryCalendarFieldSize(): object {
+function queryCalendarFieldSize(): FieldSize {
   return {
     width: window.innerWidth,
     height: window.innerHeight
