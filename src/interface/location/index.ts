@@ -115,7 +115,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="route_direction">${skeletonScreen ? '' : item.route_direction}</div><div class="route_name">${skeletonScreen ? '' : item.route_name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="route_direction">${skeletonScreen ? '' : item.route_direction}</div><div class="route_name">${skeletonScreen ? '' : item.route_name}</div><div class="stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -368,4 +368,13 @@ export function closeLocation(): void {
   var Field = document.querySelector('.location_field');
   Field.setAttribute('displayed', 'false');
   locationRefreshTimer.streaming = false;
+}
+
+export function stretchLocationItemBody(itemID: string): void {
+  var itemElement = document.querySelector(`.location_field .location_groups .location_grouped_items .item#${itemID}`);
+  if (itemElement.getAttribute('stretched') === 'true') {
+    itemElement.setAttribute('stretched', false);
+  } else {
+    itemElement.setAttribute('stretched', true);
+  }
 }
