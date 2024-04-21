@@ -26,11 +26,10 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   };
 }
 
-function generateElementOfDay(skeletonScreen: boolean): GeneratedElement {
+function generateElementOfDay(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_details_calendar_day');
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -38,11 +37,10 @@ function generateElementOfDay(skeletonScreen: boolean): GeneratedElement {
   };
 }
 
-function generateElementOfEventGroup(skeletonScreen: boolean): GeneratedElement {
+function generateElementOfEventGroup(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_details_calendar_grouped_events');
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -50,11 +48,10 @@ function generateElementOfEventGroup(skeletonScreen: boolean): GeneratedElement 
   };
 }
 
-function generateElementOfEvent(skeletonScreen: boolean): GeneratedElement {
+function generateElementOfEvent(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('route_details_calendar_event');
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   return {
     element: element,
@@ -172,9 +169,9 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
-        var thisElement = generateElementOfEventGroup(true);
-        elementQuerySelector(Field, '.route_details_calendar_events_groups').appendChild(thisElement.element);
-        var thisDayElement = generateElementOfDay(true);
+        var thisEventGroupElement = generateElementOfEventGroup();
+        elementQuerySelector(Field, '.route_details_calendar_events_groups').appendChild(thisEventGroupElement.element);
+        var thisDayElement = generateElementOfDay();
         elementQuerySelector(Field, '.route_details_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
@@ -194,8 +191,8 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfEvent(true);
-          thisEventGroupElement.appendChild(thisElement.element);
+          var thisEventElement = generateElementOfEvent();
+          thisEventGroupElement.appendChild(thisEventElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {

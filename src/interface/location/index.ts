@@ -341,8 +341,8 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items`).appendChild(thisElement.element);
+          var thisItemElement = generateElementOfItem();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items`).appendChild(thisItemElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_group .location_group_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
@@ -359,9 +359,9 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var propertyIndex = currentGroupPropertySeatQuantity + o;
-          var thisElement = generateElementOfGroupDetailsProperty();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body`).appendChild(thisElement.element);
+          //var propertyIndex = currentGroupPropertySeatQuantity + o;
+          var thisPropertyElement = generateElementOfGroupDetailsProperty();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body`).appendChild(thisPropertyElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {

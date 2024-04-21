@@ -164,9 +164,8 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     var capacity = currentFolderSeatQuantity - folderQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder();
-        Field.appendChild(thisElement.element);
+        var thisFolderElement = generateElementOfFolder();
+        Field.appendChild(thisFolderElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
@@ -183,8 +182,8 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content`).appendChild(thisElement.element);
+          var thisItemElement = generateElementOfItem();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content`).appendChild(thisItemElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {

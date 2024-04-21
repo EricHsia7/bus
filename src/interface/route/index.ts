@@ -271,6 +271,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
+
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -303,7 +304,6 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity + o;
         var thisGroupElement = generateElementOfGroup();
         elementQuerySelector(Field, `.route_groups`).appendChild(thisGroupElement.element);
         var thisTabElement = generateElementOfTab();
