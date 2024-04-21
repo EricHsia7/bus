@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-location
-      - dev-organize-api-functions
-      - dev-data-preloading-progress
 
 jobs:
   build:
