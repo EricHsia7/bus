@@ -225,6 +225,9 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         thisElement.setAttribute('stretched', false);
       }
     }
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+    }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
       updateName(thisElement, thisItem);
@@ -240,6 +243,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         updateBuses(thisElement, thisItem);
       }
       updateStretch(thisElement, skeletonScreen);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
@@ -249,6 +253,9 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.location_details_property_value').innerHTML = thisProperty.value;
+    }
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
@@ -260,6 +267,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       if (!compareThings(previousProperty.value, thisProperty.value)) {
         updateValue(thisElement, thisProperty);
       }
+      updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
 
@@ -380,7 +388,6 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items .item`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
