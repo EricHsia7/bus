@@ -191,7 +191,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.name, thisItem.name)) {
+      if (!compareThings(previousItem.route_name, thisItem.route_name) || !compareThings(previousItem.route_direction, thisItem.route_direction)) {
         updateName(thisElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
