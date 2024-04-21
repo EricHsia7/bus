@@ -1,4 +1,4 @@
-.search_page_keyboard {
+.search_keyboard {
   position: absolute;
   left: 0px;
   bottom: 0px;
@@ -14,14 +14,14 @@
   border-top: 1px solid var(--b-f9f9fb);
 }
 
-.search_page_keyboard[displayed="true"] {
+.search_keyboard[displayed="true"] {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
   grid-template-rows: auto;
 }
 
-.search_page_keyboard .search_page_keyboard_key {
+.search_keyboard .search_keyboard_key {
   position: relative;
   background: var(--b-ffffff);
   display: flex;
@@ -38,18 +38,18 @@
   box-sizing: border-box;
 }
 
-.search_page_keyboard .search_page_keyboard_key svg {
+.search_keyboard .search_keyboard_key svg {
   width: 20px;
   height: 20px;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.search_page_keyboard .search_page_keyboard_key svg path {
+.search_keyboard .search_keyboard_key svg path {
   fill: var(--b-333333);
 }
 
-.search_page_field .search_page_head .search_page_search_input .cursor {
+.search_field .search_head .search_search_input .cursor {
   position: absolute;
   top: 15px;
   left: 0px;

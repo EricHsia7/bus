@@ -1,4 +1,4 @@
-import { updateSearchResult } from './interface/search-page/index.ts';
+import { updateSearchResult } from './interface/search/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
@@ -6,11 +6,11 @@ import { openRouteDetails, closeRouteDetails } from './interface/route/details/i
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index.ts';
 import { openPermalink } from './tools/permalink.ts';
-import { openSearchPage, closeSearchPage } from './interface/search-page/index.ts';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search-page/keyboard.ts';
+import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
 import { initializeFolderStores, saveStop } from './data/folder/index.ts';
-import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home-page/folder.ts';
-import { preloadData } from './interface/home-page/index.ts';
+import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
+import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
@@ -21,10 +21,10 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 import './interface/theme.css';
 import './interface/index.css';
 import './interface/animation.css';
-import './interface/home-page/index.css';
-import './interface/home-page/folder.css';
-import './interface/search-page/index.css';
-import './interface/search-page/keyboard.css';
+import './interface/home/index.css';
+import './interface/home/folder.css';
+import './interface/search/index.css';
+import './interface/search/keyboard.css';
 import './interface/route/index.css';
 import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
@@ -63,7 +63,7 @@ window.bus = {
   initialize: function () {
     if (bus_initialized === false) {
       bus_initialized = true;
-      var FolderField = documentQuerySelector('.home_page_field .home_page_body .home_page_folders');
+      var FolderField = documentQuerySelector('.home_field .home_body .home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
         .then((e) => {
@@ -88,7 +88,7 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            var searchInputElement: HTMLElement = documentQuerySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
+            var searchInputElement: HTMLElement = documentQuerySelector('.search_field .search_head .search_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(event.target.value);
             });

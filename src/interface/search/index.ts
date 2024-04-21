@@ -1,13 +1,13 @@
 import { openKeyboard, closeKeyboard } from './keyboard.ts';
 import { prepareForSearch } from '../../data/search/searchRoute.ts';
 import { icons } from '../icons/index.ts';
-import { dataPreloadCompleted } from '../home-page/index.ts';
+import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
 
-const searchPageField = documentQuerySelector('.search_page_field');
-const searchInputElement = documentQuerySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
-const searchResultsElement = documentQuerySelector('.search_page_field .search_page_body .search_page_search_results');
+const searchPageField = documentQuerySelector('.search_field');
+const searchInputElement = documentQuerySelector('.search_field .search_head .search_search_input #search_route_input');
+const searchResultsElement = documentQuerySelector('.search_field .search_body .search_search_results');
 var currentFuse;
 
 export function openSearchPage(): void {
@@ -39,7 +39,7 @@ function containPhoneticSymbols(string: string): boolean {
 export function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
     var typeToIcon = ['route', 'location'];
-    var searchResults = currentFuse.search(query);
+    var searchResults = currentFuse.search(query).slice(0, 30);
     var html = [];
     for (var result of searchResults) {
       var name = result.item.n;
@@ -51,7 +51,7 @@ export function updateSearchResult(query: string): void {
       if (result.item.type === 1) {
         onclickScript = `bus.location.openLocation('${result.item.hash}')`; //openLocation
       }
-      html.push(`<div class="search_page_search_result" onclick="${onclickScript}"><div class="search_page_search_result_type">${typeIcon}</div><div class="search_page_search_result_route_name">${name}</div></div>`);
+      html.push(`<div class="search_search_result" onclick="${onclickScript}"><div class="search_search_result_type">${typeIcon}</div><div class="search_search_result_route_name">${name}</div></div>`);
     }
     searchResultsElement.innerHTML = html.join('');
   }
