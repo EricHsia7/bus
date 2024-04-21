@@ -13,7 +13,7 @@ import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration: object = {};
 
-var routeSliding = {
+var routeSliding: object = {
   currentGroup: 0,
   targetGroup: 0,
   groupQuantity: 0,

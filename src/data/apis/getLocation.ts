@@ -4,7 +4,7 @@ import { lfSetItem, lfGetItem } from '../storage/index.ts';
 import { md5 } from '../../tools/index.ts';
 import { mergeAddressesIntoOne, extractCommonFeaturesFromAddresses } from '../../tools/address.ts';
 
-var LocationAPIVariableCache = {
+var LocationAPIVariableCache: object = {
   merged: {
     available: false,
     data: {}
@@ -88,7 +88,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
     return result;
   }
 
-  var cache_time = 60 * 60 * 24 * 30 * 1000;
+  var cache_time: number = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
   var cache_key = `bus_${cache_type}_location_v11_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
