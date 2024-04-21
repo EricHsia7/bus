@@ -122,6 +122,18 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   };
 }
 
+function generateElementOfGroup(): object {
+  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.id = identifier;
+  element.classList.add('location_group');
+  element.innerHTML = `<div class="location_group_info"></div><div class="location_group_items"></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
@@ -236,24 +248,22 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentGroupSeatQuantity = Field.querySelectorAll(`.location_groups .location_grouped_items`).length;
+  var currentGroupSeatQuantity = Field.querySelectorAll(`.location_groups .location_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
-        var thisElement = document.createElement('div');
-        thisElement.classList.add('location_grouped_items');
-        thisElement.setAttribute('group', currentGroupSeatQuantity + o);
+        var thisElement = generateElementOfGroup();
+        Field.querySelector(`.location_groups`).appendChild(thisElement.element);
         var tabElement = document.createElement('div');
         tabElement.classList.add('location_group_tab');
-        Field.querySelector(`.location_groups`).appendChild(thisElement);
         Field.querySelector(`.location_head .location_group_tabs_tray`).appendChild(tabElement);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.location_groups .location_grouped_items`)[groupIndex].remove();
+        Field.querySelectorAll(`.location_groups .location_group`)[groupIndex].remove();
         Field.querySelectorAll(`.location_head .location_group_tabs_tray .location_group_tab`)[groupIndex].remove();
       }
     }
@@ -261,19 +271,19 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelector(`.location_groups .location_grouped_items[group="${i}"]`).appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
+          Field.querySelector(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items`).appendChild(thisElement.element);
+          //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_group .location_group_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`)[itemIndex].remove();
         }
       }
     }
@@ -285,7 +295,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.location_groups .location_grouped_items[group="${i}"] .item`)[j];
+      var thisElement = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
@@ -377,7 +387,7 @@ export function closeLocation(): void {
 }
 
 export function stretchLocationItemBody(itemID: string): void {
-  var itemElement = document.querySelector(`.location_field .location_groups .location_grouped_items .item#${itemID}`);
+  var itemElement = document.querySelector(`.location_field .location_groups .location_group .location_group_items .item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {

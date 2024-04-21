@@ -173,7 +173,7 @@
   grid-template-columns: repeat(var(--b-location-group-quantity), var(--b-l-fw));
 }
 
-.location_field .location_groups .location_grouped_items {
+.location_field .location_groups .location_group {
   position: relative;
   top: 0px;
   left: 0px;
@@ -184,15 +184,32 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   scroll-snap-align: center;
+
 }
 
-.location_field .location_groups .location_grouped_items::-webkit-scrollbar,
+.location_field .location_groups .location_group .location_group_info {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-top: 95px;
+}
+
+.location_field .location_groups .location_group .location_group_items {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: var(--safe-area-bottom);
+}
+
+.location_field .location_groups .location_group::-webkit-scrollbar,
 .location_field .location_groups::-webkit-scrollbar,
-.location_field .location_groups .location_grouped_items .item .body .buses::-webkit-scrollbar {
+.location_field .location_groups .location_group .location_group_items .item .body .buses::-webkit-scrollbar {
   display: none;
 }
 
-.location_field .location_groups .location_grouped_items .item {
+.location_field .location_groups .location_group .location_group_items .item {
   display: block;
   height: 50px;
   width: 100%;
@@ -206,19 +223,11 @@
   transition: none;
 }
 
-.location_field .location_groups .location_grouped_items .item:first-child {
-  margin-top: 95px;
-}
-
-.location_field .location_groups .location_grouped_items .item:last-child {
-  margin-bottom: var(--safe-area-bottom);
-}
-
-.location_field .location_groups .location_grouped_items .item[stretched="true"] {
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] {
   height: 221px;
 }
 
-.location_field .location_groups .location_grouped_items .item .head {
+.location_field .location_groups .location_group .location_group_items .item .head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -226,7 +235,7 @@
   height: 50px;
 }
 
-.location_field .location_groups .location_grouped_items .item .body {
+.location_field .location_groups .location_group .location_group_items .item .body {
   position: absolute;
   top: 50px;
   left: 0px;
@@ -236,11 +245,11 @@
   transition: opacity var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item[stretched="true"] .body {
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body {
   opacity: 1;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs {
   position: absolute;
   top: 5px;
   left: 10px;
@@ -253,12 +262,12 @@
   border-radius: 30px;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs::-webkit-scrollbar {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs::-webkit-scrollbar {
   display: none;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .tab,
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .tab,
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button {
   position: relative;
   height: 35px;
   display: inline-flex;
@@ -276,7 +285,7 @@
   vertical-align: top;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button .action_button_icon {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button .action_button_icon {
   position: relative;
   display: inline-flex;
   height: 35px;
@@ -284,45 +293,45 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button .action_button_icon svg {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button .action_button_icon svg {
   width: 15px;
   height: 15px;
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path {
   fill: var(--b-333333);
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
   fill: rgba(0, 0, 0, 0)
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
   fill: var(--b-f4252c);
 }
 
-.location_field .location_groups .location_grouped_items .item[stretched="true"] .body .tabs .tab,
-.location_field .location_groups .location_grouped_items .item[stretched="true"] .body .tabs .action_button {
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .tab,
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .action_button {
   transition: background var(--b-transition-duration), color var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
   transition: fill var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .tab[selected="true"],
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[highlighted="true"] {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .tab[selected="true"],
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"] {
   background: var(--b-333333);
   color: var(--b-ffffff);
 }
 
-.location_field .location_groups .location_grouped_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] {
+.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] {
   background: rgba(var(--b-f4252c-r), var(--b-f4252c-g), var(--b-f4252c-b), var(--b-f4252c-opacity-a));
   color: var(--b-f4252c);
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status {
+.location_field .location_groups .location_group .location_group_items .item .head .status {
   position: absolute;
   top: 7.5px;
   left: 10px;
@@ -332,8 +341,8 @@
   overflow: hidden;
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide,
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide,
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -352,63 +361,63 @@
   background: var(--b-ededf2);
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="6"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="6"],
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="5"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="5"],
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="4"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="4"],
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="3"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="3"] {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="6"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="6"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="5"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="5"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="4"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="4"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="3"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="3"] {
   color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
   font-size: 13px;
   font-weight: 500;
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="2"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="2"] {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="2"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="2"] {
   color: var(--b-ffffff);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="1"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="1"] {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="1"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="1"] {
   color: var(--b-main-color);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color-solid-transparent-c)
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .next_slide[code="1"],
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .head .status .next_slide[code="1"],
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
   background: var(--b-main-color-solid-transparent-c)
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="0.5"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="0.5"] {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="0.5"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="0.5"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .next_slide[code="0"],
-.location_field .location_groups .location_grouped_items .item .head .status .current_slide[code="0"] {
+.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="0"],
+.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
 }
 
-.location_field .location_groups .location_grouped_items .item .head .status .slide_fade_out {
+.location_field .location_groups .location_group .location_group_items .item .head .status .slide_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-transition-duration);
   animation-fill-mode: forwards;
 }
 
-.location_field .location_groups .location_grouped_items .item .route_direction {
+.location_field .location_groups .location_group .location_group_items .item .route_direction {
   position: absolute;
   top: 7.5px;
   left: 90px;
@@ -426,7 +435,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_groups .location_grouped_items .item .route_name {
+.location_field .location_groups .location_group .location_group_items .item .route_name {
   position: absolute;
   left: 90px;
   width: calc(100% - 20px - 70px - 35px - 20px);
@@ -444,7 +453,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_groups .location_grouped_items .item .head .stretch {
+.location_field .location_groups .location_group .location_group_items .item .head .stretch {
   position: absolute;
   top: 7.5px;
   right: 10px;
@@ -459,26 +468,26 @@
   justify-content: center;
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .head .stretch {
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .head .stretch {
   background: var(--b-ededf2-inflected);
 }
 
-.location_field .location_groups .location_grouped_items .item .head .stretch svg {
+.location_field .location_groups .location_group .location_group_items .item .head .stretch svg {
   width: 17px;
   height: 17px;
   transform: rotate(0deg);
   transition: transform var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item .head .stretch svg path {
+.location_field .location_groups .location_group .location_group_items .item .head .stretch svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
-.location_field .location_groups .location_grouped_items .item[stretched="true"] .head .stretch svg {
+.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .head .stretch svg {
   transform: rotate(180deg);
 }
 
-.location_field .location_groups .location_grouped_items .item .buses {
+.location_field .location_groups .location_group .location_group_items .item .buses {
   position: absolute;
   top: 45px;
   left: 10px;
@@ -495,12 +504,12 @@
   display: none;
 }
 
-.location_field .location_groups .location_grouped_items .item .buses[displayed="true"] {
+.location_field .location_groups .location_group .location_group_items .item .buses[displayed="true"] {
   display: block;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus,
-.location_field .location_groups .location_grouped_items .item .overlapping_route {
+.location_field .location_groups .location_group .location_group_items .item .bus,
+.location_field .location_groups .location_group .location_group_items .item .overlapping_route {
   position: relative;
   width: calc(var(--b-l-fw) * 0.6);
   height: 121px;
@@ -513,25 +522,25 @@
 }
 
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .bus,
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .overlapping_route {
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .bus,
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .overlapping_route {
   background: rgba(var(--b-ededf2-inflected-r), var(--b-ededf2-inflected-g), var(--b-ededf2-inflected-b), var(--b-ededf2-opacity-a))
 }
 
-.location_field .location_groups .location_grouped_items .item .bus[on-this-route="true"] {
+.location_field .location_groups .location_group .location_group_items .item .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.location_field .location_groups .location_grouped_items .item[segment-buffer="true"] .bus[on-this-route="true"] {
+.location_field .location_groups .location_group .location_group_items .item[segment-buffer="true"] .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-d));
 }
 
-.location_field .location_groups .location_grouped_items .item .bus:last-child,
-.location_field .location_groups .location_grouped_items .item .overlapping_route:last-child {
+.location_field .location_groups .location_group .location_group_items .item .bus:last-child,
+.location_field .location_groups .location_group .location_group_items .item .overlapping_route:last-child {
   margin-right: 0px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .bus_title {
+.location_field .location_groups .location_group .location_group_items .item .bus .bus_title {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -539,7 +548,7 @@
   height: 20px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .bus_title .car_icon {
+.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -550,16 +559,16 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .bus_title .car_icon svg path {
+.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon svg path {
   fill: var(--b-333333);
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .bus_title .car_icon svg {
+.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .bus_title .car_number {
+.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_number {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -574,7 +583,7 @@
   overflow: hidden;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes {
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -582,9 +591,9 @@
   height: 75px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_route,
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_status,
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_type {
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_route,
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_status,
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_type {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -598,19 +607,19 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_route {
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_route {
   top: 0px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_status {
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_status {
   top: 25px;
 }
 
-.location_field .location_groups .location_grouped_items .item .bus .car_attributes .car_type {
+.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_type {
   top: 50px;
 }
 
-.location_field .location_groups .location_grouped_items .item .buses .buses_message {
+.location_field .location_groups .location_group .location_group_items .item .buses .buses_message {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -641,17 +650,17 @@
   background: rgba(0, 0, 0, 0);
 }
 
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="false"] {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="false"] {
   transition: height var(--b-transition-duration);
 }
 
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .current_slide {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .next_slide,
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .current_slide {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
 }
 
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .route_name {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .route_name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   top: 7.5px;
@@ -659,20 +668,20 @@
   border-radius: 30px;
 }
 
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .stretch {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch {
   background: var(--b-ededf2);
 }
 
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .stretch svg {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch svg {
   display: none;
 }
 
 .location_field[skeleton-screen="true"] .location_head .location_name span,
 .location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tab span,
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .next_slide,
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .status .current_slide,
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .route_name,
-.location_field .location_groups .location_grouped_items .item[skeleton-screen="true"] .head .stretch {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .next_slide,
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .current_slide,
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .route_name,
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch {
   background: var(--b-ededf2);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
