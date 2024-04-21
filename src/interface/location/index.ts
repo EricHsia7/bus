@@ -134,6 +134,17 @@ function generateElementOfGroup(): object {
   };
 }
 
+function generateElementOfTab(): object {
+  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.id = identifier;
+  element.classList.add('location_group_tab');
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function generateElementOfGroupDetailsProperty(): object {
   var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
@@ -309,12 +320,10 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity + o;
-        var thisElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.location_groups`).appendChild(thisElement.element);
-        var tabElement = document.createElement('div');
-        tabElement.classList.add('location_group_tab');
-        elementQuerySelector(Field, `.location_head .location_group_tabs_tray`).appendChild(tabElement);
+        var thisGroupElement = generateElementOfGroup();
+        elementQuerySelector(Field, `.location_groups`).appendChild(thisGroupElement.element);
+        var thisTabElement = generateElementOfTab();
+        elementQuerySelector(Field, `.location_head .location_group_tabs_tray`).appendChild(thisTabElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
