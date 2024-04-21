@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
 import { getHTMLVersionHash } from './version.ts';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_current_location'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_current_location', 'use_addresses_as_location_labels'];
 
 var Settings = {
   time_formatting_mode: {
@@ -102,6 +102,26 @@ var Settings = {
       }
     ]
   },
+  use_addresses_as_location_labels: {
+    key: 'use_addresses_as_location_labels',
+    name: '站牌位置標籤',
+    icon: 'label',
+    status: '',
+    action: `bus.settingsPage.openSettingsOptionsPage('use_addresses_as_location_labels')`,
+    type: 'select',
+    default_option: 0,
+    option: 0,
+    options: [
+      {
+        name: '地址特徵',
+        value: true
+      },
+      {
+        name: '英文字母',
+        value: false
+      }
+    ]
+  },
   folder: {
     name: '資料夾',
     icon: 'folder',
@@ -143,7 +163,7 @@ var Settings = {
   }
 };
 
-export async function initializeSettings() {
+export async function initializeSettings(): void {
   var userSettings = await lfListItem(1);
   for (var key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {

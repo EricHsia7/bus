@@ -1,7 +1,8 @@
 import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute.ts';
 import { openRoute } from '../interface/route/index.ts';
-
-const PermalinkTypes = ['route', 'route_info'];
+import { openLocation } from '../interface/location/index.ts';
+import { encodeHexToShortString, decodeShortStringToHex } from './index.ts';
+const PermalinkTypes = ['route', 'location'];
 
 export function openPermalink(): void {
   var current_url = new URL(location.href);
@@ -25,6 +26,10 @@ export function openPermalink(): void {
           }
         });
       }
+      if (type === 1) {
+        var hash = decodeShortStringToHex(array[1], 32);
+        openLocation(hash);
+      }
       current_url.searchParams.get('route_name');
     }
   }
@@ -34,6 +39,9 @@ export function getPermalink(type: number, approach: object): string {
   var link = new URL('https://erichsia7.github.io/bus/');
   if (type === 0) {
     link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
+  }
+  if (type === 1) {
+    link.searchParams.set('permalink', `1@${encodeHexToShortString(approach.hash, 22)}`);
   }
   return decodeURIComponent(link.toString());
 }

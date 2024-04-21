@@ -2,6 +2,7 @@ import { getAPIURL } from './getURL.ts';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
 import { md5 } from '../../tools/index.ts';
+import { mergeAddressesIntoOne, extractCommonFeaturesFromAddresses } from '../../tools/address.ts';
 
 var LocationAPIVariableCache = {
   merged: {
@@ -21,10 +22,11 @@ function simplifyLocation(array: []): object {
     if (!result.hasOwnProperty(key)) {
       var simplified_item = {};
       simplified_item.n = item.nameZh;
-      simplified_item.lo = item.longitude;
-      simplified_item.la = item.latitude;
+      simplified_item.lo = parseFloat(item.longitude);
+      simplified_item.la = parseFloat(item.latitude);
       simplified_item.r = [item.routeId];
       simplified_item.s = [item.Id];
+      simplified_item.a = [item.address];
       result[key] = simplified_item;
     } else {
       if (!(result[key].r.indexOf(item.routeId) > -1)) {
@@ -33,6 +35,7 @@ function simplifyLocation(array: []): object {
       if (!(result[key].s.indexOf(item.Id) > -1)) {
         result[key].s.push(item.Id);
       }
+      result[key].a.push(item.address);
     }
   }
   return result;
@@ -41,11 +44,12 @@ function simplifyLocation(array: []): object {
 function mergeLocationByName(object: object): object {
   var result = {};
   for (var key in object) {
-    var nameKey = `ml_${md5(
+    var hash = md5(
       String(object[key].n)
         .trim()
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
-    )}`;
+    );
+    var nameKey = `ml_${hash}`;
     if (!result.hasOwnProperty(nameKey)) {
       result[nameKey] = {
         n: object[key].n,
@@ -53,7 +57,9 @@ function mergeLocationByName(object: object): object {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
-        id: [parseInt(key.split('_')[1])]
+        a: [mergeAddressesIntoOne(object[key].a)],
+        id: [parseInt(key.split('_')[1])],
+        hash: hash
       };
     } else {
       result[nameKey].id.push(parseInt(key.split('_')[1]));
@@ -61,6 +67,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].s.push(object[key].s);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
+      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
     }
   }
   return result;
@@ -83,7 +90,7 @@ export async function getLocation(requestID: string, merged: boolean = false): o
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_cache`;
+  var cache_key = `bus_${cache_type}_location_v11_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
