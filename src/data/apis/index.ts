@@ -716,7 +716,7 @@ export async function integrateLocation(hash: string, requestID: string): object
         {
           key: 'exact_position',
           icon: 'location',
-          value: `${thisLocation.la[i]}, ${thisLocation.lo[i]}`
+          value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
         }
       ]
     };
