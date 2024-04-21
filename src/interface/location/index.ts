@@ -135,7 +135,7 @@ function generateElementOfGroup(): object {
 }
 
 function generateElementOfGroupDetailsProperty(): object {
-  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('location_group_details_property');
@@ -242,6 +242,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
+    console.log(thisElement, thisProperty,previousProperty);
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.location_details_property_icon').innerHTML = icons[thisProperty.icon];
     }
@@ -363,8 +364,8 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
-            var previousItem = previousIntegration.groups[groupKey].properties[k];
-            updateProperty(thisElement, thisProperty, previousItem);
+            var previousProperty = previousIntegration.groups[groupKey].properties[k];
+            updateProperty(thisElement, thisProperty, previousProperty);
           } else {
             updateProperty(thisElement, thisProperty, null);
           }
