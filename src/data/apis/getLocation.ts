@@ -57,7 +57,7 @@ function mergeLocationByName(object: object): object {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
-        a: [mergeAddressesIntoOne(object[key].a, false)],
+        a: [mergeAddressesIntoOne(object[key].a)],
         id: [parseInt(key.split('_')[1])],
         hash: hash
       };
@@ -67,7 +67,7 @@ function mergeLocationByName(object: object): object {
       result[nameKey].s.push(object[key].s);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
-      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a, false));
+      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
     }
   }
   return result;

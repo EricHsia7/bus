@@ -1,6 +1,6 @@
 import { areItemsDifferent, generateLetterLabels } from './index.ts';
 
-export function mergeAddressesIntoOne(addresses: string[], convertToString: boolean): object | string {
+export function mergeAddressesIntoOne(addresses: string[]): object | string {
   const parts = [
     {
       suffixes: '市',
@@ -247,47 +247,41 @@ export function mergeAddressesIntoOne(addresses: string[], convertToString: bool
     }
     return result;
   }
+  return mergeAddresses(addresses);
+}
 
-  function addressToString(address: object): string {
-    return `${address.city.join('')}${address.district.join('')}${address.road.join('、')}${
-      address.road_section.sort(function (a, b) {
-        return a - b;
-      }).length > 0
-        ? address.road_section.join('、') + '段'
-        : ''
-    }${
-      address.alley.length > 0
-        ? address.alley
-            .sort(function (a, b) {
-              return a - b;
-            })
-            .join('、') + '巷'
-        : ''
-    }${
-      address.alley_branch.length > 0
-        ? address.alley_branch
-            .sort(function (a, b) {
-              return a - b;
-            })
-            .join('、') + '弄'
-        : ''
-    }${
-      address.doorplate.length > 0
-        ? address.doorplate
-            .sort(function (a, b) {
-              return a - b;
-            })
-            .join('、') + '號'
-        : ''
-    }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
-  }
-  var mergedAddresses = mergeAddresses(addresses);
-
-  if (convertToString) {
-    return addressToString(mergedAddresses);
-  } else {
-    return mergedAddresses;
-  }
+export function addressToString(address: object): string {
+  return `${address.city.join('')}${address.district.join('')}${address.road.join('、')}${
+    address.road_section.sort(function (a, b) {
+      return a - b;
+    }).length > 0
+      ? address.road_section.join('、') + '段'
+      : ''
+  }${
+    address.alley.length > 0
+      ? address.alley
+          .sort(function (a, b) {
+            return a - b;
+          })
+          .join('、') + '巷'
+      : ''
+  }${
+    address.alley_branch.length > 0
+      ? address.alley_branch
+          .sort(function (a, b) {
+            return a - b;
+          })
+          .join('、') + '弄'
+      : ''
+  }${
+    address.doorplate.length > 0
+      ? address.doorplate
+          .sort(function (a, b) {
+            return a - b;
+          })
+          .join('、') + '號'
+      : ''
+  }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
 }
 
 export function extractCommonFeaturesFromAddresses(addresses: string[]): string {

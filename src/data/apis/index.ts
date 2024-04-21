@@ -12,7 +12,7 @@ import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, 
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
 import { md5 } from '../../tools/index.ts';
-import { generateLabelFromAddresses } from '../../tools/address.ts';
+import { generateLabelFromAddresses, addressToString } from '../../tools/address.ts';
 import { generateLetterLabels } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 
@@ -706,7 +706,19 @@ export async function integrateLocation(hash: string, requestID: string): object
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
     groups[groupKey] = {
-      name: labels[i]
+      name: labels[i],
+      properties: [
+        {
+          key: 'address',
+          icon: 'personal_places',
+          value: addressToString(thisLocation.a)
+        },
+        {
+          key: 'exact_position',
+          icon: 'location',
+          value: `${thisLocation.la}, ${thisLocation.lo}`
+        }
+      ]
     };
     var stopQuantity = thisLocation.s[i].length;
     for (var o = 0; o < stopQuantity; o++) {

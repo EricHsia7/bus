@@ -172,7 +172,19 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupQuantity: defaultGroupQuantity,
       groups: {
         g_0: {
-          name: '載入中'
+          name: '載入中',
+          properties: [
+            {
+              key: '0',
+              icon: 'none',
+              value: ''
+            },
+            {
+              key: '1',
+              icon: 'none',
+              value: ''
+            }
+          ]
         }
       },
       itemQuantity: defaultItemQuantity,
@@ -229,6 +241,26 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       updateStretch(thisElement, skeletonScreen);
     }
   }
+  function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
+    function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
+      thisElement.querySelector('.location_details_property_icon')?.innerHTML = icons[thisProperty.icon];
+    }
+    function updateValue(thisElement: HTMLElement, thisProperty: object): void {
+      thisElement.querySelector('.location_details_property_value')?.innerHTML = thisProperty.value;
+    }
+    if (previousProperty === null) {
+      updateIcon(thisElement, thisProperty);
+      updateValue(thisElement, thisProperty);
+    } else {
+      if (!compareThings(previousProperty.icon, thisProperty.icon)) {
+        updateIcon(thisElement, thisProperty);
+      }
+      if (!compareThings(previousProperty.value, thisProperty.value)) {
+        updateValue(thisElement, thisProperty);
+      }
+    }
+  }
+
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -299,6 +331,24 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         }
       }
     }
+
+    var currentGroupPropertySeatQuantity = Field.querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`).length;
+    var groupPropertyQuantity = groups[groupKey].properties.length;
+    if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
+      var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
+      if (capacity < 0) {
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          var propertyIndex = currentGroupPropertySeatQuantity + o;
+          var thisElement = generateElementOfGroupDetailsProperty();
+          Field.querySelector(`.location_group_details .location_group_details_body`).appendChild(thisElement.element);
+        }
+      } else {
+        for (var o = 0; o < Math.abs(capacity); o++) {
+          var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
+          Field.querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
+        }
+      }
+    }
   }
 
   for (var i = 0; i < groupQuantity; i++) {
@@ -306,6 +356,26 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var thisTabElement = Field.querySelectorAll(`.location_head .location_group_tabs_tray .location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
+    var groupPropertyQuantity = groups[groupKey].properties.length;
+    for (var k = 0; k < groupPropertyQuantity; k++) {
+      var thisProperty = groups[groupKey].properties[k];
+      var thisElement = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[k];
+      if (previousIntegration.hasOwnProperty('groups')) {
+        if (previousIntegration.groups.hasOwnProperty(groupKey)) {
+          if (previousIntegration.groups[groupKey].properties[k]) {
+            var previousItem = previousIntegration.groups[groupKey].properties[k];
+            updateProperty(thisElement, thisProperty, previousItem);
+          } else {
+            updateProperty(thisElement, thisProperty, null);
+          }
+        } else {
+          updateProperty(thisElement, thisProperty, null);
+        }
+      } else {
+        updateProperty(thisElement, thisProperty, null);
+      }
+    }
+
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
