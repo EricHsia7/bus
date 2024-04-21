@@ -243,10 +243,10 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      thisElement.querySelector('.location_details_property_icon')?.innerHTML = icons[thisProperty.icon];
+      thisElement.querySelector('.location_details_property_icon').innerHTML = icons[thisProperty.icon];
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
-      thisElement.querySelector('.location_details_property_value')?.innerHTML = thisProperty.value;
+      thisElement.querySelector('.location_details_property_value').innerHTML = thisProperty.value;
     }
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);

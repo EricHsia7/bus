@@ -1,7 +1,7 @@
 import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute.ts';
 import { openRoute } from '../interface/route/index.ts';
 import { openLocation } from '../interface/location/index.ts';
-import { encodeHashToShortString, decodeShortStringToHex } from './index.ts';
+import { encodeHexToShortString, decodeShortStringToHex } from './index.ts';
 const PermalinkTypes = ['route', 'location'];
 
 export function openPermalink(): void {
@@ -41,7 +41,7 @@ export function getPermalink(type: number, approach: object): string {
     link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
   }
   if (type === 1) {
-    link.searchParams.set('permalink', `1@${encodeHashToShortString(approach.hash, 22)}`);
+    link.searchParams.set('permalink', `1@${encodeHexToShortString(approach.hash, 22)}`);
   }
   return decodeURIComponent(link.toString());
 }
