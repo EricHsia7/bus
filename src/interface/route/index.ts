@@ -125,6 +125,28 @@ function generateElementOfItem(): object {
   };
 }
 
+function generateElementOfGroup(): object {
+  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('route_group');
+  element.id = identifier;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
+function generateElementOfTab(): object {
+  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('route_group_tab');
+  element.id = identifier;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
@@ -276,23 +298,21 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   Field.setAttribute('skeleton-screen', skeletonScreen);
   elementQuerySelector(Field, '.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.route_field .route_grouped_items`).length;
+  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.route_field .route_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
-        var thisElement = document.createElement('div');
-        thisElement.classList.add('route_grouped_items');
-        var tabElement = document.createElement('div');
-        tabElement.classList.add('route_group_tab');
-        elementQuerySelector(Field, `.route_groups`).appendChild(thisElement);
-        elementQuerySelector(Field, `.route_head .route_group_tabs`).appendChild(tabElement);
+        var thisGroupElement = generateElementOfGroup();
+        elementQuerySelector(Field, `.route_groups`).appendChild(thisGroupElement.element);
+        var thisTabElement = generateElementOfTab();
+        elementQuerySelector(Field, `.route_head .route_group_tabs`).appendChild(thisTabElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.route_groups .route_group`)[groupIndex].remove();
         elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
       }
     }
@@ -300,19 +320,19 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem();
-          elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i].appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
+          elementQuerySelectorAll(Field, `.route_groups .route_group`)[i].appendChild(thisElement.element);
+          //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_group[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`)[itemIndex].remove();
         }
       }
     }
@@ -323,7 +343,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var thisTabElement = elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
