@@ -9,7 +9,7 @@ import { prompt_message } from '../prompt/index.ts';
 
 //const ripple = require('@erichsia7/ripple');
 
-var previousIntegration = {};
+var previousIntegration: object = {};
 
 var routeSliding = {
   currentGroup: 0,
@@ -21,7 +21,7 @@ var routeSliding = {
   fieldHeight: 0
 };
 
-var routeRefreshTimer = {
+var routeRefreshTimer: object = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
@@ -172,7 +172,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
+function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       var nextSlide = thisElement.querySelector('.status .next_slide');
@@ -387,7 +387,7 @@ export function streamRoute(): void {
     });
 }
 
-export function openRoute(RouteID: number, PathAttributeId: [number]) {
+export function openRoute(RouteID: number, PathAttributeId: [number]): void {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
   var Field = document.querySelector('.route_field');
@@ -405,7 +405,7 @@ export function openRoute(RouteID: number, PathAttributeId: [number]) {
   }
 }
 
-export function closeRoute() {
+export function closeRoute(): void {
   var Field = document.querySelector('.route_field');
   Field.setAttribute('displayed', 'false');
   routeRefreshTimer.streaming = false;

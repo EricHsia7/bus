@@ -7,6 +7,16 @@ import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 
 var previousIntegration: object = {};
 
+var locationSliding = {
+  currentGroup: 0,
+  targetGroup: 0,
+  groupQuantity: 0,
+  groupStyles: {},
+  scrollLog: [],
+  fieldWidth: 0,
+  fieldHeight: 0
+};
+
 var locationRefreshTimer: object = {
   defaultInterval: 15 * 1000,
   minInterval: 5 * 1000,
@@ -24,51 +34,7 @@ var currentHashSet: object = {
   hash: ''
 };
 
-var locationSliding = {
-  currentGroup: 0,
-  targetGroup: 0,
-  groupQuantity: 0,
-  groupStyles: {},
-  scrollLog: [],
-  fieldWidth: 0,
-  fieldHeight: 0
-};
-
 var tabPadding = 20;
-
-function queryLocationFieldSize(): object {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
-
-export function ResizeLocationField(): void {
-  const FieldSize = queryLocationFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
-  document.querySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
-}
-
-function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
-}
-
-function updateUpdateTimer() {
-  var time = new Date().getTime();
-  var percentage = 0;
-  if (locationRefreshTimer.refreshing) {
-    percentage = -1 + getDataReceivingProgress(locationRefreshTimer.currentRequestID);
-  } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
-  }
-  document.querySelector('.location_update_timer').style.setProperty('--b-update-timer', percentage);
-  window.requestAnimationFrame(function () {
-    if (locationRefreshTimer.streaming) {
-      updateUpdateTimer();
-    }
-  });
-}
 
 export function initializeLocationSliding(): void {
   var element = document.querySelector('.location_field .location_groups');
@@ -105,6 +71,40 @@ export function initializeLocationSliding(): void {
     var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding.currentGroup);
     var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding.currentGroup)) * -1 + locationSliding.fieldWidth * 0.5 - tab_width * 0.5;
     updateLocationCSS(locationSliding.groupQuantity, offset, tab_width - tabPadding);
+  });
+}
+
+function queryLocationFieldSize(): object {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+}
+
+export function ResizeLocationField(): void {
+  const FieldSize = queryLocationFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
+  document.querySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
+}
+
+function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number): void {
+  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
+}
+
+function updateUpdateTimer() {
+  var time = new Date().getTime();
+  var percentage = 0;
+  if (locationRefreshTimer.refreshing) {
+    percentage = -1 + getDataReceivingProgress(locationRefreshTimer.currentRequestID);
+  } else {
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
+  }
+  document.querySelector('.location_update_timer').style.setProperty('--b-update-timer', percentage);
+  window.requestAnimationFrame(function () {
+    if (locationRefreshTimer.streaming) {
+      updateUpdateTimer();
+    }
   });
 }
 
@@ -364,7 +364,7 @@ export function openLocation(hash: string): void {
   }
 }
 
-export function closeLocation() {
+export function closeLocation(): void {
   var Field = document.querySelector('.location_field');
   Field.setAttribute('displayed', 'false');
   locationRefreshTimer.streaming = false;
