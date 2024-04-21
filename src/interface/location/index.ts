@@ -340,12 +340,12 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         for (var o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity + o;
           var thisElement = generateElementOfGroupDetailsProperty();
-          Field.querySelector(`.location_group_details .location_group_details_body`).appendChild(thisElement.element);
+          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelector(`.location_group_details .location_group_details_body`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          Field.querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
+          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
         }
       }
     }
