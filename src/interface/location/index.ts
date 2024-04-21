@@ -72,7 +72,7 @@ export function initializeLocationSliding(): void {
     var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0, offset: 0 };
     var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding.currentGroup);
     var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding.currentGroup)) * -1 + locationSliding.fieldWidth * 0.5 - tab_width * 0.5;
-    updateLocationCSS(locationSliding.groupQuantity, offset, tab_width - tabPadding);
+    updateLocationCSS(locationSliding.groupQuantity, offset, tab_width - tabPadding, slidingGroupIndex);
   });
 }
 
@@ -90,8 +90,8 @@ export function ResizeLocationField(): void {
   documentQuerySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
 }
 
-function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number): void {
-  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
+function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
+  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width};--b-location-percentage:${percentage};}`;
 }
 
 function updateUpdateTimer() {
@@ -312,7 +312,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     cumulativeOffset += width;
   }
   var offset = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset * -1 + locationSliding.fieldWidth * 0.5 - locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width * 0.5;
-  updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding);
+  updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding, locationSliding.currentGroup);
   elementQuerySelector(Field, '.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
@@ -378,6 +378,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var thisTabElement = elementQuerySelectorAll(Field, `.location_head .location_group_tabs_tray .location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
+    thisTabElement.style.setProperty('--b-location-tab-index', i);
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (var k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];
