@@ -204,6 +204,10 @@
   display: inline-block;
   background: var(--b-f9f9fb);
   border-radius: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  box-sizing: border-box;
 }
 
 .location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property {
