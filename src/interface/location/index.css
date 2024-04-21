@@ -411,8 +411,8 @@
 .location_field .location_groups .location_grouped_items .item .route_direction {
   position: absolute;
   top: 7.5px;
-  left: 85px;
-  width: calc(100% - 85px - 10px);
+  left: 90px;
+  width: calc(100% - 90px - 10px);
   font-size: 12px;
   height: 12px;
   line-height: 12px;
