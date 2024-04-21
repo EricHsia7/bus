@@ -82,6 +82,7 @@ window.bus = {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
                   ResizeRouteField();
+                  ResizeLocationField();
                 });
               }
             }

@@ -183,6 +183,11 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
       thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
     }
+    function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      if (skeletonScreen) {
+        thisElement.setAttribute('stretched', false);
+      }
+    }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
       updateName(thisElement, thisItem);
@@ -197,6 +202,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
+      updateStretch(thisElement, skeletonScreen);
     }
   }
   const FieldSize = queryLocationFieldSize();
