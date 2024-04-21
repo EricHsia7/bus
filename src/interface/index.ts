@@ -1,3 +1,5 @@
+import { documentQuerySelector } from '../tools/query-selector.ts';
+
 var splashScreenTimer = {
   minimalTimeOut: 1024,
   openTime: new Date().getTime()
@@ -5,7 +7,7 @@ var splashScreenTimer = {
 
 export function fadeOutSplashScreen() {
   function fadeOut() {
-    var element: HTMLElement = document.querySelector('.splash-screen');
+    var element: HTMLElement = documentQuerySelector('.splash-screen');
     element.classList.add('splash-screen-fade-out');
     element.addEventListener(
       'animationend',

@@ -1,5 +1,6 @@
 import { updateSearchResult } from './index.ts';
 import { getTextWidth } from '../../tools/index.ts';
+import { documentQuerySelector } from '../../tools/query-selector.ts';
 import { icons } from '../icons/index.ts';
 
 let keyboard_keys = [
@@ -9,8 +10,8 @@ let keyboard_keys = [
   ['更多', '幹線', '清空', '0', '刪除']
 ];
 
-const searchInputElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
-const keyboardElement = document.querySelector('.search_page_field .search_page_body .search_page_keyboard');
+const searchInputElement = documentQuerySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
+const keyboardElement = documentQuerySelector('.search_page_field .search_page_body .search_page_keyboard');
 
 function supportTouch(): boolean {
   if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -79,5 +80,5 @@ export function emptyInput(): void {
 
 function uodateCursor(value) {
   var offset = getTextWidth(value, `400 20px "Noto Sans", sans-serif`);
-  document.querySelector('#search_style').innerHTML = `:root {--cursor-offset:${offset}px}`;
+  documentQuerySelector('#search_style').innerHTML = `:root {--cursor-offset:${offset}px}`;
 }

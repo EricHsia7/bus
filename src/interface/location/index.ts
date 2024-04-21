@@ -3,6 +3,7 @@ import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 
 var previousIntegration: object = {};
@@ -37,7 +38,7 @@ var currentHashSet: object = {
 var tabPadding = 20;
 
 export function initializeLocationSliding(): void {
-  var element = document.querySelector('.location_field .location_groups');
+  var element = documentQuerySelector('.location_field .location_groups');
   function monitorScrollLeft(element, callback) {
     locationSliding.scrollLog.push(element.scrollLeft);
     if (locationSliding.scrollLog.length > 10) {
@@ -85,11 +86,11 @@ export function ResizeLocationField(): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  document.querySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
+  documentQuerySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number): void {
-  document.querySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
+  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width}}`;
 }
 
 function updateUpdateTimer() {
@@ -100,7 +101,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
   }
-  document.querySelector('.location_update_timer').style.setProperty('--b-update-timer', percentage);
+  documentQuerySelector('.location_update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -197,8 +198,8 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
 function updateLocationField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = thisElement.querySelector('.status .next_slide');
-      var currentSlide = thisElement.querySelector('.status .current_slide');
+      var nextSlide = elementQuerySelector(thisElement, '.status .next_slide');
+      var currentSlide = elementQuerySelector(thisElement, '.status .current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
       currentSlide.addEventListener(
@@ -213,11 +214,11 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       currentSlide.classList.add('slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.route_name').innerText = thisItem.route_name;
-      thisElement.querySelector('.route_direction').innerText = thisItem.route_direction;
+      elementQuerySelector(thisElement, '.route_name').innerText = thisItem.route_name;
+      elementQuerySelector(thisElement, '.route_direction').innerText = thisItem.route_direction;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -244,10 +245,10 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     console.log(thisElement, thisProperty, previousProperty);
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      thisElement.querySelector('.location_details_property_icon').innerHTML = icons[thisProperty.icon];
+      elementQuerySelector(thisElement, '.location_details_property_icon').innerHTML = icons[thisProperty.icon];
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
-      thisElement.querySelector('.location_details_property_value').innerHTML = thisProperty.value;
+      elementQuerySelector(thisElement, '.location_details_property_value').innerHTML = thisProperty.value;
     }
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
@@ -290,50 +291,50 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   }
   var offset = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset * -1 + locationSliding.fieldWidth * 0.5 - locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width * 0.5;
   updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding);
-  Field.querySelector('.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
+  elementQuerySelector(Field, '.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentGroupSeatQuantity = Field.querySelectorAll(`.location_groups .location_group`).length;
+  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.location_groups .location_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity + o;
         var thisElement = generateElementOfGroup();
-        Field.querySelector(`.location_groups`).appendChild(thisElement.element);
+        elementQuerySelector(Field, `.location_groups`).appendChild(thisElement.element);
         var tabElement = document.createElement('div');
         tabElement.classList.add('location_group_tab');
-        Field.querySelector(`.location_head .location_group_tabs_tray`).appendChild(tabElement);
+        elementQuerySelector(Field, `.location_head .location_group_tabs_tray`).appendChild(tabElement);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.location_groups .location_group`)[groupIndex].remove();
-        Field.querySelectorAll(`.location_head .location_group_tabs_tray .location_group_tab`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.location_groups .location_group`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.location_head .location_group_tabs_tray .location_group_tab`)[groupIndex].remove();
       }
     }
   }
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelector(`.location_group_items`).appendChild(thisElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items`).appendChild(thisElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_group .location_group_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items .item`)[itemIndex].remove();
         }
       }
     }
 
-    var currentGroupPropertySeatQuantity = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`).length;
+    var currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body .location_group_details_property`).length;
     var groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
       var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
@@ -341,12 +342,12 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         for (var o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity + o;
           var thisElement = generateElementOfGroupDetailsProperty();
-          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelector(`.location_group_details .location_group_details_body`).appendChild(thisElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
         }
       }
     }
@@ -354,13 +355,13 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = Field.querySelectorAll(`.location_head .location_group_tabs_tray .location_group_tab`)[i];
+    var thisTabElement = elementQuerySelectorAll(Field, `.location_head .location_group_tabs_tray .location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (var k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];
-      var thisElement = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`)[k];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_details .location_group_details_body .location_group_details_property`)[k];
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
@@ -378,7 +379,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
 
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items .item`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
@@ -406,9 +407,9 @@ async function refreshLocation(): object {
   locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   locationRefreshTimer.refreshing = true;
   locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.location_update_timer').setAttribute('refreshing', true);
+  documentQuerySelector('.location_update_timer').setAttribute('refreshing', true);
   var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
-  var Field = document.querySelector('.location_field');
+  var Field = documentQuerySelector('.location_field');
   updateLocationField(Field, integration, false);
   locationRefreshTimer.lastUpdate = new Date().getTime();
   if (locationRefreshTimer.auto) {
@@ -419,7 +420,7 @@ async function refreshLocation(): object {
   }
   locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
   locationRefreshTimer.refreshing = false;
-  document.querySelector('.location_update_timer').setAttribute('refreshing', false);
+  documentQuerySelector('.location_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the location.' };
 }
 
@@ -448,7 +449,7 @@ export function streamLocation(): void {
 
 export function openLocation(hash: string): void {
   currentHashSet.hash = hash;
-  var Field = document.querySelector('.location_field');
+  var Field = documentQuerySelector('.location_field');
   Field.setAttribute('displayed', 'true');
   setUpLocationFieldSkeletonScreen(Field);
   if (!locationRefreshTimer.streaming) {
@@ -464,13 +465,13 @@ export function openLocation(hash: string): void {
 }
 
 export function closeLocation(): void {
-  var Field = document.querySelector('.location_field');
+  var Field = documentQuerySelector('.location_field');
   Field.setAttribute('displayed', 'false');
   locationRefreshTimer.streaming = false;
 }
 
 export function stretchLocationItemBody(itemID: string): void {
-  var itemElement = document.querySelector(`.location_field .location_groups .location_group .location_group_items .item#${itemID}`);
+  var itemElement = documentQuerySelector(`.location_field .location_groups .location_group .location_group_items .item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {

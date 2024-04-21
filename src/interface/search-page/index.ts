@@ -3,10 +3,11 @@ import { prepareForSearch } from '../../data/search/searchRoute.ts';
 import { icons } from '../icons/index.ts';
 import { dataPreloadCompleted } from '../home-page/index.ts';
 import { prompt_message } from '../prompt/index.ts';
+import { documentQuerySelector } from '../../tools/query-selector.ts';
 
-const searchPageField = document.querySelector('.search_page_field');
-const searchInputElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
-const searchResultsElement = document.querySelector('.search_page_field .search_page_body .search_page_search_results');
+const searchPageField = documentQuerySelector('.search_page_field');
+const searchInputElement = documentQuerySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
+const searchResultsElement = documentQuerySelector('.search_page_field .search_page_body .search_page_search_results');
 var currentFuse;
 
 export function openSearchPage(): void {

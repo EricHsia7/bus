@@ -1,8 +1,9 @@
 import { md5 } from '../../tools/index.ts';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 
 export function prompt_message(message: string, duration: number = 1200): void {
   message = String(message);
-  var all_prompt = document.querySelectorAll('.prompt');
+  var all_prompt = documentQuerySelectorAll('.prompt');
   if (!(all_prompt === null)) {
     var all_prompt_len = all_prompt.length;
     for (var e = 0; e < all_prompt_len; e++) {
