@@ -115,7 +115,7 @@ function generateElementOfItem(item: object, skeletonScreen: boolean): object {
   element.id = identifier;
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="route_direction">${skeletonScreen ? '' : item.route_direction}</div><div class="route_name">${skeletonScreen ? '' : item.route_name}</div><div class="stretch" onclick="bus.route.stretchItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -134,7 +134,8 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
     groupedItems[groupKey] = [];
     for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
       groupedItems[groupKey].push({
-        name: '',
+        route_name: '',
+        route_direction: '',
         status: { code: -1, text: '' },
         buses: null
       });

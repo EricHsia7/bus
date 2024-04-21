@@ -720,7 +720,8 @@ export async function integrateLocation(hash: string, requestID: string): object
         var formattedItem = {};
         formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? formatEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode) : null;
         formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(thisProcessedBusEvent) : null;
-        formattedItem.name = `${thisRoute.n} - 往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
+        formattedItem.route_name = thisRoute.n;
+        formattedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
         formattedItem.routeId = thisRouteID;
         groupedItems[groupKey].push(formattedItem);
         itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
