@@ -109,14 +109,13 @@ function updateUpdateTimer() {
   });
 }
 
-function generateElementOfItem(item: object, skeletonScreen: boolean): object {
+function generateElementOfItem(): object {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('item');
   element.id = identifier;
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="route_direction">${skeletonScreen ? '' : item.route_direction}</div><div class="route_name">${skeletonScreen ? '' : item.route_name}</div><div class="stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="0"></div><div class="current_slide" code="0"></div></div><div class="route_direction"></div><div class="route_name"></div><div class="stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -232,6 +231,8 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       updateStatus(thisElement, thisItem);
       updateName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
+      updateStretch(thisElement, skeletonScreen);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
@@ -260,6 +261,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!compareThings(previousProperty.icon, thisProperty.icon)) {
         updateIcon(thisElement, thisProperty);
@@ -330,7 +332,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem({}, true);
+          var thisElement = generateElementOfItem();
           elementQuerySelector(elementQuerySelectorAll(Field, `.location_groups .location_group`)[i], `.location_group_items`).appendChild(thisElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_group .location_group_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }

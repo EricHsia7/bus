@@ -112,14 +112,13 @@ function updateUpdateTimer() {
   });
 }
 
-function generateElementOfItem(item: object, skeletonScreen: boolean): object {
+function generateElementOfItem(): object {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('item');
   element.id = identifier;
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div><div class="current_slide" code="${skeletonScreen ? -1 : item.status.code}">${skeletonScreen ? '' : item.status.text}</div></div><div class="name">${skeletonScreen ? '' : item.name}</div><div class="stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="action_button_icon">${icons['favorite']}</div>收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="0"></div><div class="current_slide" code="0"></div></div><div class="name"></div><div class="stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -208,6 +207,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         thisElement.setAttribute('stretched', false);
       }
     }
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+    }
     function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
       elementQuerySelector(thisElement, '.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
@@ -222,6 +224,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
+      updateSkeletonScreen(thisElement, skeletonScreen);
       updateSaveStopActionButton(thisElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
@@ -243,6 +246,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateSaveStopActionButton(thisElement, thisItem, integration);
       }
       updateStretch(thisElement, skeletonScreen);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
   const FieldSize = queryRouteFieldSize();
@@ -280,7 +284,6 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         var groupIndex = currentGroupSeatQuantity + o;
         var thisElement = document.createElement('div');
         thisElement.classList.add('route_grouped_items');
-        thisElement.setAttribute('group', currentGroupSeatQuantity + o);
         var tabElement = document.createElement('div');
         tabElement.classList.add('route_group_tab');
         elementQuerySelector(Field, `.route_groups`).appendChild(thisElement);
@@ -297,19 +300,19 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem({}, true);
-          elementQuerySelector(Field, `.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          var thisElement = generateElementOfItem();
+          elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i].appendChild(thisElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`)[itemIndex].remove();
         }
       }
     }
@@ -320,8 +323,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var thisTabElement = elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[i], `.item`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {

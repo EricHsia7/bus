@@ -28,11 +28,10 @@ function queryFolderFieldSize(): object {
   };
 }
 
-function generateElementOfItem(skeletonScreen: boolean): string {
+function generateElementOfItem(): string {
   var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.setAttribute('stretched', false);
   element.classList.add('home_page_folder_item_stop');
   element.innerHTML = `<div class="home_page_folder_item_stop_status"><div class="next_slide" code="0"></div><div class="current_slide" code="0"></div></div><div class="home_page_folder_item_stop_route"></div><div class="home_page_folder_item_stop_name"></div>`;
@@ -42,13 +41,11 @@ function generateElementOfItem(skeletonScreen: boolean): string {
   };
 }
 
-function generateElementOfFolder(index: number, skeletonScreen: boolean): object {
+function generateElementOfFolder(): object {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.setAttribute('skeleton-screen', skeletonScreen);
   element.classList.add('home_page_folder');
-  element.setAttribute('index', index);
   element.innerHTML = `<div class="home_page_folder_head"><div class="home_page_folder_icon"></div><div class="home_page_folder_name"></div></div><div class="home_page_folder_content"></div>`;
   return {
     element: element,
@@ -168,7 +165,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity + o;
-        var thisElement = generateElementOfFolder(currentFolderSeatQuantity + o, true);
+        var thisElement = generateElementOfFolder();
         Field.appendChild(thisElement.element);
       }
     } else {
@@ -181,18 +178,18 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(Field, `.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content .home_page_folder_item_stop`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem(true);
-          elementQuerySelector(Field, `.home_page_folder[index="${i}"] .home_page_folder_content`).appendChild(thisElement.element);
+          var thisElement = generateElementOfItem();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content`).appendChild(thisElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(Field, `.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content .home_page_folder_item_stop`)[itemIndex].remove();
         }
       }
     }
@@ -200,13 +197,13 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var thisFolderElement = elementQuerySelector(Field, `.home_page_folder[index="${i}"]`);
+    var thisFolderElement = elementQuerySelectorAll(Field, `.home_page_folder`)[i];
     thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisHeadElement = elementQuerySelector(thisFolderElement, `.home_page_folder_head`);
     elementQuerySelector(thisHeadElement, '.home_page_folder_name').innerText = folders[folderKey].name;
     elementQuerySelector(thisHeadElement, '.home_page_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = elementQuerySelectorAll(Field, `.home_page_folder[index="${i}"] .home_page_folder_content .home_page_folder_item_stop`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.home_page_folder`)[i], `.home_page_folder_content .home_page_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
       if (previousIntegration.hasOwnProperty('foldedItems')) {
