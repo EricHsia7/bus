@@ -277,7 +277,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_items`).appendChild(thisElement.element);
+          Field.querySelectorAll(`.location_groups .location_group`)[i].querySelector(`.location_group_items`).appendChild(thisElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.location_groups .location_group .location_group_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
