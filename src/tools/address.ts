@@ -52,7 +52,7 @@ export function mergeAddressesIntoOne(addresses: string[]): object | string {
           return null;
         } else {
           return e.map((t) => {
-            return t.trim();
+            return t.replaceAll(/[\(\)\（\）]/gim, '').trim();
           });
         }
       },
