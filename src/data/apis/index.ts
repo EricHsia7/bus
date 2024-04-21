@@ -711,12 +711,12 @@ export async function integrateLocation(hash: string, requestID: string): object
         {
           key: 'address',
           icon: 'personal_places',
-          value: addressToString(thisLocation.a)
+          value: addressToString(thisLocation.a[i])
         },
         {
           key: 'exact_position',
           icon: 'location',
-          value: `${thisLocation.la}, ${thisLocation.lo}`
+          value: `${thisLocation.la[i]}, ${thisLocation.lo[i]}`
         }
       ]
     };
