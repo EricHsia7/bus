@@ -242,7 +242,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
-    console.log(thisElement, thisProperty,previousProperty);
+    console.log(thisElement, thisProperty, previousProperty);
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       thisElement.querySelector('.location_details_property_icon').innerHTML = icons[thisProperty.icon];
     }
@@ -333,7 +333,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       }
     }
 
-    var currentGroupPropertySeatQuantity = Field.querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`).length;
+    var currentGroupPropertySeatQuantity = Field.querySelectorAll(`.location_groups .location_group`)[i].querySelectorAll(`.location_group_details .location_group_details_body .location_group_details_property`).length;
     var groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
       var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
