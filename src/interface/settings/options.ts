@@ -1,4 +1,5 @@
 import { md5 } from '../../tools/index.ts';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getSetting, changeSettingOption } from '../../data/settings/index.ts';
 
 function generateElementOfItem(setting: object, item: object, index: number): object {
@@ -15,30 +16,30 @@ function generateElementOfItem(setting: object, item: object, index: number): ob
 
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
   var setting = getSetting(settingKey);
-  Field.querySelector('.settings_options_page_body .settings_options_page_options').innerHTML = '';
+  elementQuerySelector(Field, '.settings_options_page_body .settings_options_page_options').innerHTML = '';
   var index = 0;
   for (var item of setting.options) {
     var thisElement = generateElementOfItem(setting, item, index);
-    Field.querySelector('.settings_options_page_body .settings_options_page_options').appendChild(thisElement.element);
+    elementQuerySelector(Field, '.settings_options_page_body .settings_options_page_options').appendChild(thisElement.element);
     index += 1;
   }
 }
 
 export function openSettingsOptionsPage(settingKey: string): void {
   var setting = getSetting(settingKey);
-  var Field: HTMLElement = document.querySelector('.settings_options_page_field');
+  var Field: HTMLElement = documentQuerySelector('.settings_options_page_field');
   Field.setAttribute('displayed', 'true');
-  Field.querySelector('.settings_options_page_head .settings_options_page_title').innerText = setting.name;
+  elementQuerySelector(Field, '.settings_options_page_head .settings_options_page_title').innerText = setting.name;
   initializeSettingsOptionsField(Field, settingKey);
 }
 
 export function closeSettingsOptionsPage(): void {
-  var Field = document.querySelector('.settings_options_page_field');
+  var Field = documentQuerySelector('.settings_options_page_field');
   Field.setAttribute('displayed', 'false');
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {
-  var checkboxes = document.querySelectorAll('.settings_options_page_field .settings_options_page_body .settings_options_page_options .option .option_checkbox input[type="checkbox"]');
+  var checkboxes = documentQuerySelectorAll('.settings_options_page_field .settings_options_page_body .settings_options_page_options .option .option_checkbox input[type="checkbox"]');
   for (var checkbox of checkboxes) {
     checkbox.checked = false;
   }

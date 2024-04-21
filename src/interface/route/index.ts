@@ -3,6 +3,7 @@ import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
@@ -40,7 +41,7 @@ var currentRouteIDSet = {
 };
 
 export function initializeRouteSliding(): void {
-  var element = document.querySelector('.route_groups');
+  var element = documentQuerySelector('.route_groups');
   function monitorScrollLeft(element: HTMLElement, callback: Function): void {
     routeSliding.scrollLog.push(element.scrollLeft);
     if (routeSliding.scrollLog.length > 10) {
@@ -88,11 +89,11 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  document.querySelector('#route_field_size').innerHTML = `:root {--b-r-fw:${FieldWidth}px;--b-r-fh:${FieldHeight}px;}`;
+  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-r-fw:${FieldWidth}px;--b-r-fh:${FieldHeight}px;}`;
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  document.querySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
+  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
 }
 
 function updateUpdateTimer() {
@@ -103,7 +104,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
-  document.querySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
+  documentQuerySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -175,8 +176,8 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement) {
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = thisElement.querySelector('.status .next_slide');
-      var currentSlide = thisElement.querySelector('.status .current_slide');
+      var nextSlide = elementQuerySelector(thisElement, '.status .next_slide');
+      var currentSlide = elementQuerySelector(thisElement, '.status .current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
       currentSlide.addEventListener(
@@ -194,13 +195,13 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.name').innerText = thisItem.name;
+      elementQuerySelector(thisElement, '.name').innerText = thisItem.name;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateOverlappingRoutes(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.querySelector('.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -208,9 +209,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       }
     }
     function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      thisElement.querySelector('.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+      elementQuerySelector(thisElement, '.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
-        thisElement.querySelector('.body .tabs .action_button').setAttribute('highlighted', e);
+        elementQuerySelector(thisElement, '.body .tabs .action_button').setAttribute('highlighted', e);
       });
     }
 
@@ -267,11 +268,11 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
 
   updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  Field.querySelector('.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
+  elementQuerySelector(Field, '.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  Field.querySelector('.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
+  elementQuerySelector(Field, '.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  var currentGroupSeatQuantity = Field.querySelectorAll(`.route_field .route_grouped_items`).length;
+  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.route_field .route_grouped_items`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
@@ -282,33 +283,33 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         thisElement.setAttribute('group', currentGroupSeatQuantity + o);
         var tabElement = document.createElement('div');
         tabElement.classList.add('route_group_tab');
-        Field.querySelector(`.route_groups`).appendChild(thisElement);
-        Field.querySelector(`.route_head .route_group_tabs`).appendChild(tabElement);
+        elementQuerySelector(Field, `.route_groups`).appendChild(thisElement);
+        elementQuerySelector(Field, `.route_head .route_group_tabs`).appendChild(tabElement);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        Field.querySelectorAll(`.route_groups .route_grouped_items`)[groupIndex].remove();
-        Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.route_groups .route_grouped_items`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
       }
     }
   }
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem({}, true);
-          Field.querySelector(`.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
+          elementQuerySelector(Field, `.route_groups .route_grouped_items[group="${i}"]`).appendChild(thisElement.element);
           //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_grouped_items[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
+          elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`)[itemIndex].remove();
         }
       }
     }
@@ -316,10 +317,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = Field.querySelectorAll(`.route_head .route_group_tabs .route_group_tab`)[i];
+    var thisTabElement = elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = Field.querySelectorAll(`.route_groups .route_grouped_items[group="${i}"] .item`)[j];
+      var thisElement = elementQuerySelectorAll(Field, `.route_groups .route_grouped_items[group="${i}"] .item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
@@ -347,9 +348,9 @@ async function refreshRoute(): object {
   routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  document.querySelector('.route_update_timer').setAttribute('refreshing', true);
+  documentQuerySelector('.route_update_timer').setAttribute('refreshing', true);
   var integration = await integrateRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
-  var Field = document.querySelector('.route_field');
+  var Field = documentQuerySelector('.route_field');
   updateRouteField(Field, integration, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
   if (routeRefreshTimer.auto) {
@@ -360,7 +361,7 @@ async function refreshRoute(): object {
   }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
-  document.querySelector('.route_update_timer').setAttribute('refreshing', false);
+  documentQuerySelector('.route_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
 }
 
@@ -390,7 +391,7 @@ export function streamRoute(): void {
 export function openRoute(RouteID: number, PathAttributeId: [number]): void {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
-  var Field = document.querySelector('.route_field');
+  var Field = documentQuerySelector('.route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer.streaming) {
@@ -406,7 +407,7 @@ export function openRoute(RouteID: number, PathAttributeId: [number]): void {
 }
 
 export function closeRoute(): void {
-  var Field = document.querySelector('.route_field');
+  var Field = documentQuerySelector('.route_field');
   Field.setAttribute('displayed', 'false');
   routeRefreshTimer.streaming = false;
 }
@@ -417,7 +418,7 @@ export function switchRoute(RouteID: number, PathAttributeId: [number]) {
 }
 
 export function stretchRouteItemBody(itemID: string): void {
-  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`);
+  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {
@@ -426,26 +427,26 @@ export function stretchRouteItemBody(itemID: string): void {
 }
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`);
-  var tabs = itemElement.querySelector('.tabs');
-  var tab = tabs.querySelectorAll('.tab[selected="true"]');
+  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
+  var tabs = elementQuerySelector(itemElement, '.tabs');
+  var tab = elementQuerySelectorAll(tabs, '.tab[selected="true"]');
   for (var t of tab) {
     t.setAttribute('selected', 'false');
   }
-  tabs.querySelector(`.tab[code="${tabCode}"]`).setAttribute('selected', 'true');
+  elementQuerySelector(tabs, `.tab[code="${tabCode}"]`).setAttribute('selected', 'true');
   if (tabCode === 0) {
-    itemElement.querySelector('.buses').setAttribute('displayed', 'true');
-    itemElement.querySelector('.overlapping_routes').setAttribute('displayed', 'flase');
+    elementQuerySelector(itemElement, '.buses').setAttribute('displayed', 'true');
+    elementQuerySelector(itemElement, '.overlapping_routes').setAttribute('displayed', 'flase');
   }
   if (tabCode === 1) {
-    itemElement.querySelector('.buses').setAttribute('displayed', 'false');
-    itemElement.querySelector('.overlapping_routes').setAttribute('displayed', 'true');
+    elementQuerySelector(itemElement, '.buses').setAttribute('displayed', 'false');
+    elementQuerySelector(itemElement, '.overlapping_routes').setAttribute('displayed', 'true');
   }
 }
 
 export function saveItemAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
-  var itemElement = document.querySelector(`.route_field .route_groups .item#${itemID}`);
-  var actionButtonElement = itemElement.querySelector('.action_button[type="save-stop"]');
+  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
+  var actionButtonElement = elementQuerySelector(itemElement, '.action_button[type="save-stop"]');
   saveStop(folderId, StopID, RouteID).then((e) => {
     isSaved('stop', StopID).then((k) => {
       actionButtonElement.setAttribute('highlighted', k);

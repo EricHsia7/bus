@@ -16,6 +16,7 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -62,7 +63,7 @@ window.bus = {
   initialize: function () {
     if (bus_initialized === false) {
       bus_initialized = true;
-      var FolderField = document.querySelector('.home_page_field .home_page_body .home_page_folders');
+      var FolderField = documentQuerySelector('.home_page_field .home_page_body .home_page_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
         .then((e) => {
@@ -87,7 +88,7 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            var searchInputElement: HTMLElement = document.querySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
+            var searchInputElement: HTMLElement = documentQuerySelector('.search_page_field .search_page_head .search_page_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(event.target.value);
             });

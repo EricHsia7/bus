@@ -1,4 +1,5 @@
 import { lfSetItem, lfGetItem } from '../storage/index.ts';
+import { documentQuerySelector } from '../../tools/query-selector.ts';
 
 function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL
@@ -34,8 +35,8 @@ async function getAppVersion(): object {
   }
 }
 
-export function getHTMLVersionHash() :string{
-  return document.querySelector('head meta[name="version"]').getAttribute('content')
+export function getHTMLVersionHash(): string {
+  return documentQuerySelector('head meta[name="version"]').getAttribute('content');
 }
 
 export async function checkAppVersion(): object {
