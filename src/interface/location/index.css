@@ -187,12 +187,82 @@
 
 }
 
-.location_field .location_groups .location_group .location_group_info {
+.location_field .location_groups .location_group .location_group_details {
   position: relative;
   width: 100%;
   height: auto;
   display: inline-block;
   margin-top: 95px;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body {
+  position: relative;
+  top: 0px;
+  left: calc(100% - 20px);
+  height: auto;
+  display: inline-block;
+  background: var(--b-f9f9fb);
+  border-radius: 20px;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 40px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon svg path {
+  fill: var(--b-333333);
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_value {
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  width: calc(100% - 40px);
+  height: 30px;
+  color: var(--b-333333);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_icon {
+  top: 5px;
+  height: 20px;
+  width: 20px;
+  left: 10px;
+  border-radius: 20px;
+}
+
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_value {
+  top: 5px;
+  height: 20px;
+  width: calc(100% - 40px - 10px);
+  border-radius: 20px;
 }
 
 .location_field .location_groups .location_group .location_group_items {
@@ -681,7 +751,9 @@
 .location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .next_slide,
 .location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .current_slide,
 .location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .route_name,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch {
+.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch,
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_icon,
+.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_value {
   background: var(--b-ededf2);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;

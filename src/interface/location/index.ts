@@ -127,7 +127,19 @@ function generateElementOfGroup(): object {
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('location_group');
-  element.innerHTML = `<div class="location_group_info"></div><div class="location_group_items"></div>`;
+  element.innerHTML = `<div class="location_group_details"><div class="location_group_details_body"></div></div><div class="location_group_items"></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
+function generateElementOfGroupDetailsProperty(): object {
+  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.id = identifier;
+  element.classList.add('location_group_details_property');
+  element.innerHTML = `<div class="location_details_property_icon"></div><div class="location_details_property_value"></div>`;
   return {
     element: element,
     id: identifier
