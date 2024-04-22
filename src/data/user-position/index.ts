@@ -81,7 +81,7 @@ export function getNearestPosition(positions: position[], radius: number = 450):
   var currentUserPosition: position = getUserPosition();
   var result = [];
   for (var position of positions) {
-    var distance: number = getDistanceBetweenTwoPosition(latitude, longitude, position.latitude, position.longitude);
+    var distance: number = getDistanceBetweenTwoPosition(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
     if (radius <= 450) {
       result.push({ position, distance });
     }
