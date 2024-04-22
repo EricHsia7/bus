@@ -409,11 +409,13 @@
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="1"],
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
+  color: var(--b-main-color-inflected-to-segment-buffer);
   background: var(--b-main-color-inflected-to-segment-buffer-solid-transparent-c);
 }
 
 .route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="1"],
 .route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="1"] {
+  color: var(--b-main-color-inflected-to-user-position);
   background: var(--b-main-color-inflected-to-user-position-solid-transparent-c);
 }
 
