@@ -5,7 +5,6 @@ body {
   font-style: normal;
   font-variation-settings: "wdth" 100;
   background: var(--b-ffffff);
-  touch-action: manipulation;
 }
 
 body input[type="text"] {
