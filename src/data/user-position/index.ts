@@ -1,4 +1,5 @@
 import { getSettingOptionValue } from '../settings/index.ts';
+import { getDistanceBetweenTwoPosition } from '../../tools/position.ts';
 
 interface position {
   latitude: number;
@@ -17,7 +18,7 @@ var user_position = {
   id: 0
 };
 
-export function askForPositioningPermission() {
+export function askForPositioningPermission(): void {
   function successHandler(position: any): void {
     user_position.permission.gained = true;
     user_position.current.latitude = position.coords.latitude;
@@ -63,5 +64,35 @@ export function getUserPosition(): position {
   }
   if (user_position.permission.asked && !user_position.permission.gained) {
     return user_position.current;
+  }
+}
+
+export function isNearUserPosition(latitude: number, longitude: number, radius: number = 450): boolean {
+  var currentUserPosition: position = getUserPosition();
+  var distance: number = getDistanceBetweenTwoPosition(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
+  if (distance <= radius) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function getNearestPosition(positions: position[], radius: number = 450): position | null {
+  var currentUserPosition: position = getUserPosition();
+  var result = [];
+  for (var position of positions) {
+    var distance: number = getDistanceBetweenTwoPosition(latitude, longitude, position.latitude, position.longitude);
+    if (radius <= 450) {
+      result.push({ position, distance });
+    }
+  }
+
+  if (result.length > 0) {
+    result = result.sort(function (a, b) {
+      return a.distance - b.distance;
+    });
+    return result[0];
+  } else {
+    return null;
   }
 }
