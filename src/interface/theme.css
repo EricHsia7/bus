@@ -5,16 +5,16 @@
   --b-main-color-b: 255;
   --b-main-color-solid-transparent-c: #DEF2FC;
 
-  --b-main-color-inflected-to-segment-buffer: #9AD58F;
-  --b-main-color-inflected-to-segment-buffer-r: 154;
-  --b-main-color-inflected-to-segment-buffer-g: 213;
-  --b-main-color-inflected-to-segment-buffer-b: 143;
+  --b-main-color-inflected-to-segment-buffer: #88CB7B;
+  --b-main-color-inflected-to-segment-buffer-r: 136;
+  --b-main-color-inflected-to-segment-buffer-g: 203;
+  --b-main-color-inflected-to-segment-buffer-b: 123;
   --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #E9FCE7;
 
-  --b-main-color-inflected-to-user-position: #FFCF30;
-  --b-main-color-inflected-to-user-position-r: 255;
-  --b-main-color-inflected-to-user-position-g: 207;
-  --b-main-color-inflected-to-user-position-b: 48;
+  --b-main-color-inflected-to-user-position: #EEB700;
+  --b-main-color-inflected-to-user-position-r: 238;
+  --b-main-color-inflected-to-user-position-g: 183;
+  --b-main-color-inflected-to-user-position-b: 0;
   --b-main-color-inflected-to-user-position-solid-transparent-c: #FCF4DC;
 
   --b-main-color-opacity-a: 1;

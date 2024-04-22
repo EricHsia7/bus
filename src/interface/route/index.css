@@ -383,7 +383,7 @@
 
 .route_field .route_groups .route_group .item .head .status .next_slide[code="2"],
 .route_field .route_groups .route_group .item .head .status .current_slide[code="2"] {
-  color: var(--b-333333);
+  color: var(--b-ffffff);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
