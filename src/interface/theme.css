@@ -3,19 +3,19 @@
   --b-main-color-r: 24;
   --b-main-color-g: 178;
   --b-main-color-b: 255;
-  --b-main-color-solid-transparent-c: #DCF4FF;
+  --b-main-color-solid-transparent-c: #E4F6FF;
 
   --b-main-color-inflected-to-segment-buffer: #88CB7B;
   --b-main-color-inflected-to-segment-buffer-r: 136;
   --b-main-color-inflected-to-segment-buffer-g: 203;
   --b-main-color-inflected-to-segment-buffer-b: 123;
-  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #EDF7EB;
+  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #F8FCF7;
 
   --b-main-color-inflected-to-user-position: #EEB700;
   --b-main-color-inflected-to-user-position-r: 238;
   --b-main-color-inflected-to-user-position-g: 183;
   --b-main-color-inflected-to-user-position-b: 0;
-  --b-main-color-inflected-to-user-position-solid-transparent-c: #FDF4D9;
+  --b-main-color-inflected-to-user-position-solid-transparent-c: #FEFCF3;
 
   --b-main-color-opacity-a: 1;
   --b-main-color-opacity-b: 0.8;
@@ -34,15 +34,15 @@
   --b-f9f9fb-g: 249;
   --b-f9f9fb-b: 251;
 
-  --b-f9f9fb-inflected-to-segment-buffer: #E8F1E7;
-  --b-f9f9fb-inflected-to-segment-buffer-r: 232;
-  --b-f9f9fb-inflected-to-segment-buffer-g: 241;
-  --b-f9f9fb-inflected-to-segment-buffer-b: 231;
+  --b-f9f9fb-inflected-to-segment-buffer: #F8FCF7;
+  --b-f9f9fb-inflected-to-segment-buffer-r: 248;
+  --b-f9f9fb-inflected-to-segment-buffer-g: 252;
+  --b-f9f9fb-inflected-to-segment-buffer-b: 247;
 
-  --b-f9f9fb-inflected-to-user-position: #F7EFD5;
-  --b-f9f9fb-inflected-to-user-position-r: 247;
-  --b-f9f9fb-inflected-to-user-position-g: 239;
-  --b-f9f9fb-inflected-to-user-position-b: 213;
+  --b-f9f9fb-inflected-to-user-position: #FEFCF3;
+  --b-f9f9fb-inflected-to-user-position-r: 254;
+  --b-f9f9fb-inflected-to-user-position-g: 252;
+  --b-f9f9fb-inflected-to-user-position-b: 243;
 
   --b-ededf2: #ededf2;
   --b-ededf2-r: 237;
@@ -50,15 +50,15 @@
   --b-ededf2-b: 242;
   --b-ededf2-opacity-a: 0.5;
 
-  --b-ededf2-inflected-to-segment-buffer: #DCE6DF;
-  --b-ededf2-inflected-to-segment-buffer-r: 220;
-  --b-ededf2-inflected-to-segment-buffer-g: 230;
-  --b-ededf2-inflected-to-segment-buffer-b: 223;
+  --b-ededf2-inflected-to-segment-buffer: #F2F6F3;
+  --b-ededf2-inflected-to-segment-buffer-r: 242;
+  --b-ededf2-inflected-to-segment-buffer-g: 246;
+  --b-ededf2-inflected-to-segment-buffer-b: 243;
 
-  --b-ededf2-inflected-to-user-position: #EBE3CE;
-  --b-ededf2-inflected-to-user-position-r: 235;
-  --b-ededf2-inflected-to-user-position-g: 227;
-  --b-ededf2-inflected-to-user-position-b: 206;
+  --b-ededf2-inflected-to-user-position: #F9F6EF;
+  --b-ededf2-inflected-to-user-position-r: 249;
+  --b-ededf2-inflected-to-user-position-g: 246;
+  --b-ededf2-inflected-to-user-position-b: 239;
 
   --b-aeaeb2: #aeaeb2;
   --b-aeaeb2-r: 174;
@@ -109,30 +109,30 @@
     --b-f9f9fb-g: 14;
     --b-f9f9fb-b: 17;
 
-    --b-f9f9fb-inflected-to-segment-buffer: #2E402D;
-    --b-f9f9fb-inflected-to-segment-buffer-r: 46;
-    --b-f9f9fb-inflected-to-segment-buffer-g: 64;
-    --b-f9f9fb-inflected-to-segment-buffer-b: 45;
+    --b-f9f9fb-inflected-to-segment-buffer: #1A211C;
+    --b-f9f9fb-inflected-to-segment-buffer-r: 26;
+    --b-f9f9fb-inflected-to-segment-buffer-g: 33;
+    --b-f9f9fb-inflected-to-segment-buffer-b: 28;
 
-    --b-f9f9fb-inflected-to-user-position: #3B300E;
-    --b-f9f9fb-inflected-to-user-position-r: 59;
-    --b-f9f9fb-inflected-to-user-position-g: 48;
-    --b-f9f9fb-inflected-to-user-position-b: 14;
+    --b-f9f9fb-inflected-to-user-position: #241F0F;
+    --b-f9f9fb-inflected-to-user-position-r: 36;
+    --b-f9f9fb-inflected-to-user-position-g: 31;
+    --b-f9f9fb-inflected-to-user-position-b: 15;
 
     --b-ededf2: #23232a;
     --b-ededf2-r: 35;
     --b-ededf2-g: 35;
     --b-ededf2-b: 42;
 
-    --b-ededf2-inflected-to-segment-buffer: #3E4F3F;
-    --b-ededf2-inflected-to-segment-buffer-r: 62;
-    --b-ededf2-inflected-to-segment-buffer-g: 79;
-    --b-ededf2-inflected-to-segment-buffer-b: 63;
+    --b-ededf2-inflected-to-segment-buffer: #2D3432;
+    --b-ededf2-inflected-to-segment-buffer-r: 42;
+    --b-ededf2-inflected-to-segment-buffer-g: 52;
+    --b-ededf2-inflected-to-segment-buffer-b: 50;
 
-    --b-ededf2-inflected-to-user-position: #4C4122;
-    --b-ededf2-inflected-to-user-position-r: 76;
-    --b-ededf2-inflected-to-user-position-g: 65;
-    --b-ededf2-inflected-to-user-position-b: 34;
+    --b-ededf2-inflected-to-user-position: #373226;
+    --b-ededf2-inflected-to-user-position-r: 55;
+    --b-ededf2-inflected-to-user-position-g: 50;
+    --b-ededf2-inflected-to-user-position-b: 38;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;
