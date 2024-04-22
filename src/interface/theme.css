@@ -1,21 +1,21 @@
 :root {
-  --b-main-color: #24aff5;
-  --b-main-color-r: 36;
-  --b-main-color-g: 175;
-  --b-main-color-b: 245;
-  --b-main-color-solid-transparent-c: #def3fe;
+  --b-main-color: #25A8E9;
+  --b-main-color-r: 37;
+  --b-main-color-g: 168;
+  --b-main-color-b: 233;
+  --b-main-color-solid-transparent-c: #DEF2FC;
 
-  --b-main-color-inflected-to-segment-buffer: #1dc1e6;
-  --b-main-color-inflected-to-segment-buffer-r: 29;
-  --b-main-color-inflected-to-segment-buffer-g: 193;
-  --b-main-color-inflected-to-segment-buffer-b: 230;
-  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #d6f1f6;
+  --b-main-color-inflected-to-segment-buffer: #ACECA1;
+  --b-main-color-inflected-to-segment-buffer-r: 172;
+  --b-main-color-inflected-to-segment-buffer-g: 236;
+  --b-main-color-inflected-to-segment-buffer-b: 161;
+  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #F3FCF1;
 
-  --b-main-color-inflected-to-user-position: #45b2d0;
-  --b-main-color-inflected-to-user-position-r: 69;
-  --b-main-color-inflected-to-user-position-g: 178;
-  --b-main-color-inflected-to-user-position-b: 208;
-  --b-main-color-inflected-to-user-position-solid-transparent-c: #dfeef1;
+  --b-main-color-inflected-to-user-position: #FFCF30;
+  --b-main-color-inflected-to-user-position-r: 255;
+  --b-main-color-inflected-to-user-position-g: 207;
+  --b-main-color-inflected-to-user-position-b: 48;
+  --b-main-color-inflected-to-user-position-solid-transparent-c: #FFF8E0;
 
   --b-main-color-opacity-a: 1;
   --b-main-color-opacity-b: 0.8;
@@ -34,15 +34,15 @@
   --b-f9f9fb-g: 249;
   --b-f9f9fb-b: 251;
 
-  --b-f9f9fb-inflected-to-segment-buffer: #f7faf9;
-  --b-f9f9fb-inflected-to-segment-buffer-r: 247;
-  --b-f9f9fb-inflected-to-segment-buffer-g: 250;
-  --b-f9f9fb-inflected-to-segment-buffer-b: 249;
+  --b-f9f9fb-inflected-to-segment-buffer: #F2FFF0;
+  --b-f9f9fb-inflected-to-segment-buffer-r: 242;
+  --b-f9f9fb-inflected-to-segment-buffer-g: 255;
+  --b-f9f9fb-inflected-to-segment-buffer-b: 240;
 
-  --b-f9f9fb-inflected-to-user-position: #fdf9f6;
-  --b-f9f9fb-inflected-to-user-position-r: 253;
-  --b-f9f9fb-inflected-to-user-position-g: 249;
-  --b-f9f9fb-inflected-to-user-position-b: 246;
+  --b-f9f9fb-inflected-to-user-position: #FFFAE9;
+  --b-f9f9fb-inflected-to-user-position-r: 255;
+  --b-f9f9fb-inflected-to-user-position-g: 250;
+  --b-f9f9fb-inflected-to-user-position-b: 233;
 
   --b-ededf2: #ededf2;
   --b-ededf2-r: 237;
@@ -50,15 +50,15 @@
   --b-ededf2-b: 242;
   --b-ededf2-opacity-a: 0.5;
 
-  --b-ededf2-inflected-to-segment-buffer: #dfebe6;
+  --b-ededf2-inflected-to-segment-buffer: #DFF8DD;
   --b-ededf2-inflected-to-segment-buffer-r: 223;
-  --b-ededf2-inflected-to-segment-buffer-g: 235;
-  --b-ededf2-inflected-to-segment-buffer-b: 230;
+  --b-ededf2-inflected-to-segment-buffer-g: 248;
+  --b-ededf2-inflected-to-segment-buffer-b: 221;
 
-  --b-ededf2-inflected-to-user-position: #faf4ed;
-  --b-ededf2-inflected-to-user-position-r: 250;
-  --b-ededf2-inflected-to-user-position-g: 244;
-  --b-ededf2-inflected-to-user-position-b: 237;
+  --b-ededf2-inflected-to-user-position: #F8EECF;
+  --b-ededf2-inflected-to-user-position-r: 248;
+  --b-ededf2-inflected-to-user-position-g: 238;
+  --b-ededf2-inflected-to-user-position-b: 207;
 
   --b-aeaeb2: #aeaeb2;
   --b-aeaeb2-r: 174;
@@ -90,9 +90,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --b-main-color-solid-transparent-c: #0e3549;
-    --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #0c404a;
-    --b-main-color-inflected-to-user-position-solid-transparent-c: #1e3b3e;
+    --b-main-color-solid-transparent-c: #0E3346;
+    --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #344631;
+    --b-main-color-inflected-to-user-position-solid-transparent-c: #4B3E12;
 
     --b-main-color-opacity-a: 1;
     --b-main-color-opacity-b: 0.8;
@@ -109,14 +109,14 @@
     --b-f9f9fb-g: 14;
     --b-f9f9fb-b: 17;
 
-    --b-f9f9fb-inflected-to-segment-buffer: #050e0d;
-    --b-f9f9fb-inflected-to-segment-buffer-r: 5;
-    --b-f9f9fb-inflected-to-segment-buffer-g: 14;
-    --b-f9f9fb-inflected-to-segment-buffer-b: 13;
+    --b-f9f9fb-inflected-to-segment-buffer: #131A15;
+    --b-f9f9fb-inflected-to-segment-buffer-r: 19;
+    --b-f9f9fb-inflected-to-segment-buffer-g: 26;
+    --b-f9f9fb-inflected-to-segment-buffer-b: 21;
 
-    --b-f9f9fb-inflected-to-user-position: #0f0d05;
-    --b-f9f9fb-inflected-to-user-position-r: 46;
-    --b-f9f9fb-inflected-to-user-position-g: 64;
+    --b-f9f9fb-inflected-to-user-position: #1C1706;
+    --b-f9f9fb-inflected-to-user-position-r: 28;
+    --b-f9f9fb-inflected-to-user-position-g: 23;
     --b-f9f9fb-inflected-to-user-position-b: 6;
 
     --b-ededf2: #23232a;
@@ -124,15 +124,15 @@
     --b-ededf2-g: 35;
     --b-ededf2-b: 42;
 
-    --b-ededf2-inflected-to-segment-buffer: #1f2925;
-    --b-ededf2-inflected-to-segment-buffer-r: 31;
-    --b-ededf2-inflected-to-segment-buffer-g: 47;
-    --b-ededf2-inflected-to-segment-buffer-b: 37;
+    --b-ededf2-inflected-to-segment-buffer: #192B1A;
+    --b-ededf2-inflected-to-segment-buffer-r: 25;
+    --b-ededf2-inflected-to-segment-buffer-g: 43;
+    --b-ededf2-inflected-to-segment-buffer-b: 26;
 
-    --b-ededf2-inflected-to-user-position: #201e18;
-    --b-ededf2-inflected-to-user-position-r: 32;
-    --b-ededf2-inflected-to-user-position-g: 30;
-    --b-ededf2-inflected-to-user-position-b: 24;
+    --b-ededf2-inflected-to-user-position: #28241A;
+    --b-ededf2-inflected-to-user-position-r: 40;
+    --b-ededf2-inflected-to-user-position-g: 36;
+    --b-ededf2-inflected-to-user-position-b: 26;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;
