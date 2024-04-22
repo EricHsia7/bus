@@ -5,10 +5,17 @@
   --b-main-color-b: 245;
   --b-main-color-solid-transparent-c: #def3fe;
 
-  --b-main-color-inflected: #1dc1e6;
-  --b-main-color-inflected-r: 29;
-  --b-main-color-inflected-g: 193;
-  --b-main-color-inflected-b: 230;
+  --b-main-color-inflected-to-segment-buffer: #1dc1e6;
+  --b-main-color-inflected-to-segment-buffer-r: 29;
+  --b-main-color-inflected-to-segment-buffer-g: 193;
+  --b-main-color-inflected-to-segment-buffer-b: 230;
+  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #d6f1f6;
+
+  --b-main-color-inflected-to-user-position: #45b2d0;
+  --b-main-color-inflected-to-user-position-r: 69;
+  --b-main-color-inflected-to-user-position-g: 178;
+  --b-main-color-inflected-to-user-position-b: 208;
+  --b-main-color-inflected-to-user-position-solid-transparent-c: #dfeef1;
 
   --b-main-color-opacity-a: 1;
   --b-main-color-opacity-b: 0.8;
@@ -27,10 +34,15 @@
   --b-f9f9fb-g: 249;
   --b-f9f9fb-b: 251;
 
-  --b-f9f9fb-inflected: #f7faf9;
-  --b-f9f9fb-inflected-r: 247;
-  --b-f9f9fb-inflected-g: 250;
-  --b-f9f9fb-inflected-b: 249;
+  --b-f9f9fb-inflected-to-segment-buffer: #f7faf9;
+  --b-f9f9fb-inflected-to-segment-buffer-r: 247;
+  --b-f9f9fb-inflected-to-segment-buffer-g: 250;
+  --b-f9f9fb-inflected-to-segment-buffer-b: 249;
+
+  --b-f9f9fb-inflected-to-user-position: #fdf9f6;
+  --b-f9f9fb-inflected-to-user-position-r: 253;
+  --b-f9f9fb-inflected-to-user-position-g: 249;
+  --b-f9f9fb-inflected-to-user-position-b: 246;
 
   --b-ededf2: #ededf2;
   --b-ededf2-r: 237;
@@ -38,10 +50,15 @@
   --b-ededf2-b: 242;
   --b-ededf2-opacity-a: 0.5;
 
-  --b-ededf2-inflected: #dfebe6;
-  --b-ededf2-inflected-r: 223;
-  --b-ededf2-inflected-g: 235;
-  --b-ededf2-inflected-b: 230;
+  --b-ededf2-inflected-to-segment-buffer: #dfebe6;
+  --b-ededf2-inflected-to-segment-buffer-r: 223;
+  --b-ededf2-inflected-to-segment-buffer-g: 235;
+  --b-ededf2-inflected-to-segment-buffer-b: 230;
+
+  --b-ededf2-inflected-to-user-position: #faf4ed;
+  --b-ededf2-inflected-to-user-position-r: 250;
+  --b-ededf2-inflected-to-user-position-g: 244;
+  --b-ededf2-inflected-to-user-position-b: 237;
 
   --b-aeaeb2: #aeaeb2;
   --b-aeaeb2-r: 174;
@@ -74,6 +91,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --b-main-color-solid-transparent-c: #0e3549;
+    --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #0c404a;
+    --b-main-color-inflected-to-user-position-solid-transparent-c: #1e3b3e;
 
     --b-main-color-opacity-a: 1;
     --b-main-color-opacity-b: 0.8;
@@ -90,20 +109,30 @@
     --b-f9f9fb-g: 14;
     --b-f9f9fb-b: 17;
 
-    --b-f9f9fb-inflected: #050e0d;
-    --b-f9f9fb-inflected-r: 5;
-    --b-f9f9fb-inflected-g: 14;
-    --b-f9f9fb-inflected-b: 13;
+    --b-f9f9fb-inflected-to-segment-buffer: #050e0d;
+    --b-f9f9fb-inflected-to-segment-buffer-r: 5;
+    --b-f9f9fb-inflected-to-segment-buffer-g: 14;
+    --b-f9f9fb-inflected-to-segment-buffer-b: 13;
+
+    --b-f9f9fb-inflected-to-user-position: #0f0d05;
+    --b-f9f9fb-inflected-to-user-position-r: 46;
+    --b-f9f9fb-inflected-to-user-position-g: 64;
+    --b-f9f9fb-inflected-to-user-position-b: 6;
 
     --b-ededf2: #23232a;
     --b-ededf2-r: 35;
     --b-ededf2-g: 35;
     --b-ededf2-b: 42;
 
-    --b-ededf2-inflected: #1f2925;
-    --b-ededf2-inflected-r: 31;
-    --b-ededf2-inflected-g: 47;
-    --b-ededf2-inflected-b: 37;
+    --b-ededf2-inflected-to-segment-buffer: #1f2925;
+    --b-ededf2-inflected-to-segment-buffer-r: 31;
+    --b-ededf2-inflected-to-segment-buffer-g: 47;
+    --b-ededf2-inflected-to-segment-buffer-b: 37;
+
+    --b-ededf2-inflected-to-user-position: #201e18;
+    --b-ededf2-inflected-to-user-position-r: 32;
+    --b-ededf2-inflected-to-user-position-g: 30;
+    --b-ededf2-inflected-to-user-position-b: 24;
 
     --b-aeaeb2: #5a5a6c;
     --b-aeaeb2-r: 90;

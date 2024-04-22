@@ -15,6 +15,7 @@ import { md5 } from '../../tools/index.ts';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address.ts';
 import { generateLetterLabels } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
+import { getNearestPosition } from '../user-position/index.ts';
 
 function processSegmentBuffer(buffer: string): object {
   const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
@@ -188,6 +189,7 @@ function formatOverlappingRoutes(array: []): [] {
 
 function processEstimateTime(EstimateTime: [], Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
   var result = [];
+  var positions = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
@@ -212,6 +214,12 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
             });
             item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
             item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
+            item.nearest = false;
+            positions.push({
+              latitude: item['_Stop'].la,
+              longitude: item['_Stop'].lo,
+              id: item.StopID
+            });
             for (var routeStopId of item['_overlappingRouteStops']) {
               item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
             }
@@ -232,7 +240,6 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
       }
     }
   }
-
   result = result.sort(function (a, b) {
     var c = 0;
     var d = 0;
@@ -247,6 +254,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   var result2 = [];
   var endpointCount = 0;
   var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
+  var nearestPosition = getNearestPosition(positions, 450);
   for (var item of result) {
     if (multipleEndpoints) {
       if (item._segmentBuffer) {
@@ -254,6 +262,11 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
       }
       if (endpointCount % 2 === 1) {
         item._segmentBuffer = true;
+      }
+    }
+    if (!(nearestPosition === null)) {
+      if (nearestPosition.id === item.StopID) {
+        item.nearest = true;
       }
     }
     result2.push(item);
@@ -295,6 +308,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
       latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
       longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
     };
+    formattedItem.nearest = item.nearest;
     formattedItem.segmentBuffer = item._segmentBuffer;
     formattedItem.id = item.StopID || null;
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';

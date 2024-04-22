@@ -169,6 +169,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
           latitude: null,
           longitude: null
         },
+        nearest: false,
         segmentBuffer: {
           endpoint: false,
           type: null
@@ -225,6 +226,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateOverlappingRoutes(thisElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisElement, '.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
+    function updateNearest(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.setAttribute('nearest', thisItem.nearest);
+    }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
         thisElement.setAttribute('stretched', false);
@@ -246,6 +250,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateBuses(thisElement, thisItem);
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
+      updateNearest(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateSaveStopActionButton(thisElement, thisItem, integration);
@@ -264,6 +269,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       }
       if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisElement, thisItem);
+      }
+      if (!(previousItem.nearest === thisItem.nearest)) {
+        updateNearest(thisElement, thisItem);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateSaveStopActionButton(thisElement, thisItem, integration);

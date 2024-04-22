@@ -206,7 +206,11 @@
 }
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] {
-  background: var(--b-f9f9fb-inflected);
+  background: var(--b-f9f9fb-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] {
+  background: var(--b-f9f9fb-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head {
@@ -304,7 +308,12 @@
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .body .tabs .tab,
 .route_field .route_groups .route_group .item[segment-buffer="true"] .body .tabs .action_button {
-  background: var(--b-ededf2-inflected);
+  background: var(--b-ededf2-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .body .tabs .tab,
+.route_field .route_groups .route_group .item[nearest="true"] .body .tabs .action_button {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .body .tabs .tab[selected="true"],
@@ -361,15 +370,15 @@
   font-weight: 500;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="6"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="6"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="5"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="5"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="4"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="4"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="3"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="3"] {
-  background: var(--b-ededf2-inflected);
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="6"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="6"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="5"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="5"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="4"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="4"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="3"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="3"] {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head .status .next_slide[code="2"],
@@ -382,7 +391,12 @@
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="2"],
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="2"] {
-  background: var(--b-main-color-inflected);
+  background: var(--b-main-color-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="2"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="2"] {
+  background: var(--b-main-color-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head .status .next_slide[code="1"],
@@ -390,12 +404,19 @@
   color: var(--b-main-color);
   font-size: 15px;
   font-weight: 700;
-  background: var(--b-main-color-solid-transparent-c)
+  background: var(--b-main-color-solid-transparent-c);
 }
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="1"],
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
-  background: var(--b-main-color-solid-transparent-c)
+  color: var(--b-main-color-inflected-to-segment-buffer);
+  background: var(--b-main-color-inflected-to-segment-buffer-solid-transparent-c);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="1"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="1"] {
+  color: var(--b-main-color-inflected-to-user-position);
+  background: var(--b-main-color-inflected-to-user-position-solid-transparent-c);
 }
 
 .route_field .route_groups .route_group .item .head .status .next_slide[code="0.5"],
@@ -407,7 +428,12 @@
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="0.5"],
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="0.5"] {
-  background: var(--b-ededf2-inflected);
+  background: var(--b-ededf2-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="0.5"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="0.5"] {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head .status .next_slide[code="0"],
@@ -420,7 +446,12 @@
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="0"],
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="0"] {
-  background: var(--b-ededf2-inflected);
+  background: var(--b-ededf2-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="0"],
+.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="0"] {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head .status .slide_fade_out {
@@ -464,7 +495,11 @@
 }
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .head .stretch {
-  background: var(--b-ededf2-inflected);
+  background: var(--b-ededf2-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .head .stretch {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field .route_groups .route_group .item .head .stretch svg {
@@ -518,10 +553,14 @@
   scroll-snap-align: center;
 }
 
-
 .route_field .route_groups .route_group .item[segment-buffer="true"] .bus,
 .route_field .route_groups .route_group .item[segment-buffer="true"] .overlapping_route {
-  background: rgba(var(--b-ededf2-inflected-r), var(--b-ededf2-inflected-g), var(--b-ededf2-inflected-b), var(--b-ededf2-opacity-a))
+  background: rgba(var(--b-ededf2-inflected-to-segment-buffer-r), var(--b-ededf2-inflected-to-segment-buffer-g), var(--b-ededf2-inflected-to-segment-buffer-b), var(--b-ededf2-opacity-a))
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .bus,
+.route_field .route_groups .route_group .item[nearest="true"] .overlapping_route {
+  background: rgba(var(--b-ededf2-inflected-to-user-position-r), var(--b-ededf2-inflected-to-user-position-g), var(--b-ededf2-inflected-to-user-position-b), var(--b-ededf2-opacity-a))
 }
 
 .route_field .route_groups .route_group .item .bus[on-this-route="true"] {
@@ -529,7 +568,11 @@
 }
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .bus[on-this-route="true"] {
-  background: rgba(var(--b-main-color-inflected-r), var(--b-main-color-inflected-g), var(--b-main-color-inflected-b), var(--b-main-color-opacity-d));
+  background: rgba(var(--b-main-color-inflected-to-segment-buffer-r), var(--b-main-color-inflected-to-segment-buffer-g), var(--b-main-color-inflected-to-segment-buffer-b), var(--b-main-color-opacity-d));
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .bus[on-this-route="true"] {
+  background: rgba(var(--b-main-color-inflected-to-user-position-r), var(--b-main-color-inflected-to-user-position-g), var(--b-main-color-inflected-to-user-position-b), var(--b-main-color-opacity-d));
 }
 
 .route_field .route_groups .route_group .item .bus:last-child,
@@ -675,7 +718,11 @@
 }
 
 .route_field .route_groups .route_group .item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
-  background: var(--b-ededf2-inflected);
+  background: var(--b-ededf2-inflected-to-segment-buffer);
+}
+
+.route_field .route_groups .route_group .item[nearest="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+  background: var(--b-ededf2-inflected-to-user-position);
 }
 
 .route_field[skeleton-screen="true"] .route_head .route_name span {
