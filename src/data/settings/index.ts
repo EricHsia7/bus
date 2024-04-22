@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
 import { getHTMLVersionHash } from './version.ts';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_current_location', 'use_addresses_as_location_labels'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'use_addresses_as_location_labels'];
 
 var Settings = {
   time_formatting_mode: {
@@ -82,12 +82,12 @@ var Settings = {
       }
     ]
   },
-  display_current_location: {
-    key: 'display_current_location',
-    name: '顯示位置',
+  display_user_location: {
+    key: 'display_user_location',
+    name: '顯示所在位置',
     icon: 'location',
     status: '',
-    action: `bus.settingsPage.openSettingsOptionsPage('display_current_location')`,
+    action: `bus.settingsPage.openSettingsOptionsPage('display_user_location')`,
     type: 'select',
     default_option: 1,
     option: 1,

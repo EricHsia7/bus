@@ -5,7 +5,7 @@ var splashScreenTimer = {
   openTime: new Date().getTime()
 };
 
-export function fadeOutSplashScreen() {
+export function fadeOutSplashScreen(callback: Function): void {
   function fadeOut() {
     var element: HTMLElement = documentQuerySelector('.splash-screen');
     element.classList.add('splash-screen-fade-out');
@@ -13,6 +13,9 @@ export function fadeOutSplashScreen() {
       'animationend',
       function () {
         element.style.display = 'none';
+        if (typeof callback === 'function') {
+          callback();
+        }
       },
       { once: true }
     );
