@@ -255,6 +255,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   var endpointCount = 0;
   var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
   var nearestPosition = getNearestPosition(positions, 450);
+console.log(positions, nearestPosition)
   for (var item of result) {
     if (multipleEndpoints) {
       if (item._segmentBuffer) {
