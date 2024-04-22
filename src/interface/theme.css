@@ -1,8 +1,8 @@
 :root {
-  --b-main-color: #33ADEB;
-  --b-main-color-r: 51;
-  --b-main-color-g: 173;
-  --b-main-color-b: 235;
+  --b-main-color: #18B2FF;
+  --b-main-color-r: 24;
+  --b-main-color-g: 178;
+  --b-main-color-b: 255;
   --b-main-color-solid-transparent-c: #DEF2FC;
 
   --b-main-color-inflected-to-segment-buffer: #9AD58F;
