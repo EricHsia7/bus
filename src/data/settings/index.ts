@@ -85,7 +85,7 @@ var Settings = {
   display_user_location: {
     key: 'display_user_location',
     name: '顯示所在位置',
-    icon: 'location',
+    icon: 'positioning',
     status: '',
     action: `bus.settingsPage.openSettingsOptionsPage('display_user_location')`,
     type: 'select',
