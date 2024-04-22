@@ -9,13 +9,13 @@
   --b-main-color-inflected-to-segment-buffer-r: 29;
   --b-main-color-inflected-to-segment-buffer-g: 193;
   --b-main-color-inflected-to-segment-buffer-b: 230;
-  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #ddf6fB;
+  --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #d6f1f6;
 
   --b-main-color-inflected-to-user-position: #45b2d0;
   --b-main-color-inflected-to-user-position-r: 69;
   --b-main-color-inflected-to-user-position-g: 178;
   --b-main-color-inflected-to-user-position-b: 208;
-  --b-main-color-inflected-to-user-position-solid-transparent-c: #e3f4f8;
+  --b-main-color-inflected-to-user-position-solid-transparent-c: #dfeef1;
 
   --b-main-color-opacity-a: 1;
   --b-main-color-opacity-b: 0.8;
@@ -39,10 +39,10 @@
   --b-f9f9fb-inflected-to-segment-buffer-g: 250;
   --b-f9f9fb-inflected-to-segment-buffer-b: 249;
 
-  --b-f9f9fb-inflected-to-user-position: #faf8f3;
+  --b-f9f9fb-inflected-to-user-position: #faf9f7;
   --b-f9f9fb-inflected-to-user-position-r: 250;
-  --b-f9f9fb-inflected-to-user-position-g: 248;
-  --b-f9f9fb-inflected-to-user-position-b: 243;
+  --b-f9f9fb-inflected-to-user-position-g: 249;
+  --b-f9f9fb-inflected-to-user-position-b: 247;
 
   --b-ededf2: #ededf2;
   --b-ededf2-r: 237;
@@ -91,8 +91,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --b-main-color-solid-transparent-c: #0e3549;
-    --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #0c3a45;
-    --b-main-color-inflected-to-user-position-solid-transparent-c: #17353f;
+    --b-main-color-inflected-to-segment-buffer-solid-transparent-c: #0c404a;
+    --b-main-color-inflected-to-user-position-solid-transparent-c: #1e3b3e;
 
     --b-main-color-opacity-a: 1;
     --b-main-color-opacity-b: 0.8;
