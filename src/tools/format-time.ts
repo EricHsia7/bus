@@ -47,10 +47,15 @@ export function formatTime(time: number, mode: number): string {
     return `${minutes}分`;
   }
   if (mode === 3) {
-    if (time >= 60) {
+    if (time >= 60 * 60) {
+      var hours = String(parseFloat((time / (60 * 60)).toFixed(1)));
+      return `${hours}時`;
+    }
+    if (60 <= time && time < 60 * 60) {
       var minutes = String(Math.floor(time / 60));
       return `${minutes}分`;
-    } else {
+    }
+    if (time < 60) {
       return `${time}秒`;
     }
   }
