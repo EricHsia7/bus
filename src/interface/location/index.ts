@@ -67,9 +67,9 @@ export function initializeLocationSliding(): void {
   element.addEventListener('scroll', function (event) {
     var slidingGroupIndex = event.target.scrollLeft / locationSliding.fieldWidth;
     if (slidingGroupIndex > locationSliding.currentGroup) {
-      locationSliding.targetGroup = locationSliding.currentGroup + 1;
+      locationSliding.targetGroup = Math.floor(slidingGroupIndex) + 1;
     } else {
-      locationSliding.targetGroup = locationSliding.currentGroup - 1;
+      locationSliding.targetGroup = Math.floor(slidingGroupIndex) - 1;
     }
     var current_size = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`] || { width: 0, offset: 0 };
     var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0, offset: 0 };
