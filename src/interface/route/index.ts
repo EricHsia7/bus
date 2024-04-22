@@ -20,7 +20,8 @@ var routeSliding: object = {
   groupStyles: {},
   scrollLog: [],
   fieldWidth: 0,
-  fieldHeight: 0
+  fieldHeight: 0,
+  sliding: false
 };
 
 var routeRefreshTimer: object = {
@@ -59,10 +60,12 @@ export function initializeRouteSliding(): void {
 
   element.addEventListener('touchstart', function (event) {
     routeSliding.currentGroup = Math.round(element.scrollLeft / routeSliding.fieldWidth);
+    routeSliding.sliding = true;
   });
   element.addEventListener('touchend', function (event) {
     monitorScrollLeft(element, function () {
       routeSliding.currentGroup = Math.round(element.scrollLeft / routeSliding.fieldWidth);
+      routeSliding.sliding = false;
     });
   });
   element.addEventListener('scroll', function (event) {
@@ -302,8 +305,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], `500 17px "Noto Sans", sans-serif`)
     };
   }
-
-  updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+  if (!routeSliding.sliding) {
+    updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+  }
   elementQuerySelector(Field, '.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
   elementQuerySelector(Field, '.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);

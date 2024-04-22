@@ -16,7 +16,8 @@ var locationSliding = {
   groupStyles: {},
   scrollLog: [],
   fieldWidth: 0,
-  fieldHeight: 0
+  fieldHeight: 0,
+  sliding: false
 };
 
 var locationRefreshTimer: object = {
@@ -55,10 +56,12 @@ export function initializeLocationSliding(): void {
   }
   element.addEventListener('touchstart', function (event) {
     locationSliding.currentGroup = Math.round(element.scrollLeft / locationSliding.fieldWidth);
+    locationSliding.sliding = true;
   });
   element.addEventListener('touchend', function (event) {
     monitorScrollLeft(element, function () {
       locationSliding.currentGroup = Math.round(element.scrollLeft / locationSliding.fieldWidth);
+      locationSliding.sliding = false;
     });
   });
   element.addEventListener('scroll', function (event) {
@@ -312,7 +315,9 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     cumulativeOffset += width;
   }
   var offset = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset * -1 + locationSliding.fieldWidth * 0.5 - locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width * 0.5;
-  updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding, locationSliding.currentGroup);
+  if (!locationSliding.sliding) {
+    updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding, locationSliding.currentGroup);
+  }
   elementQuerySelector(Field, '.location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
