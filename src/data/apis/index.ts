@@ -308,6 +308,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
       latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
       longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
     };
+    formattedItem.nearest = item.nearest;
     formattedItem.segmentBuffer = item._segmentBuffer;
     formattedItem.id = item.StopID || null;
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
