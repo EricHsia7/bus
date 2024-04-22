@@ -56,10 +56,12 @@ export function askForPositioningPermission() {
 export function getUserPosition(): position {
   if (user_position.permission.asked && user_position.permission.gained) {
     return user_position.current;
-  } else {
-    return {
-      longitude: 0,
-      latitude: 0
-    };
+  }
+  if (!user_position.permission.asked && !user_position.permission.gained) {
+    askForPositioningPermission();
+    return user_position.current;
+  }
+  if (user_position.permission.asked && !user_position.permission.gained) {
+    return user_position.current;
   }
 }
