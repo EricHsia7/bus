@@ -216,8 +216,8 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
             item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
             item.nearest = false;
             positions.push({
-              la: item['_Stop'].la,
-              lo: item['_Stop'].lo,
+              latitude: item['_Stop'].la,
+              longitude: item['_Stop'].lo,
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
