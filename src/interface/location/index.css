@@ -110,7 +110,8 @@
   width: var(--b-location-tab-width);
   height: 40px;
   position: relative;
-  font-weight: clamp(400, calc(500 - 100 * abs(var(--b-location-percentage) - var(--b-location-tab-index))), 500);
+  font-weight: 400;
+  /* clamp(400, calc(500 - 100 * abs(var(--b-location-percentage) - var(--b-location-tab-index))), 500)*/
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-location-percentage) - var(--b-location-tab-index))), 1);
 }
 
