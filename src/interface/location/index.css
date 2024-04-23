@@ -81,6 +81,15 @@
   left: 0px;
   width: 100%;
   height: 40px;
+  mask-image: linear-gradient(40 90deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.7) 15%,
+      rgba(0, 0, 0, 1) 35%,
+      rgba(0, 0, 0, 1) 50%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.7) 85%,
+      rgba(0, 0, 0, 0.3) 100%);
+  mask-repeat: no-repeat;
 }
 
 .location_field .location_head .location_group_tabs .location_group_tabs_tray {
