@@ -263,7 +263,6 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
-    console.log(thisElement, thisProperty, previousProperty);
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.location_details_property_icon').innerHTML = icons[thisProperty.icon];
     }
