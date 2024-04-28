@@ -747,8 +747,8 @@
   display: none;
 }
 
-.location_field[skeleton-screen="true"] .css_location_head .css_location_name span,
-.location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tab span,
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span,
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tab span,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_route_name,
