@@ -8,7 +8,7 @@
   display: none;
 }
 
-.search_field[displayed="true"] {
+.css_search_field[displayed="true"] {
   display: block;
 }
 

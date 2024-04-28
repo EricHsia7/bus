@@ -8,7 +8,7 @@
   display: none;
 }
 
-.location_field[displayed="true"] {
+.css_location_field[displayed="true"] {
   display: block;
 }
 

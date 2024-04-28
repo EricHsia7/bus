@@ -9,8 +9,8 @@
   display: none;
 }
 
-.settings_page_field[displayed="true"],
-.settings_options_page_field[displayed="true"] {
+.css_settings_page_field[displayed="true"],
+.css_settings_options_page_field[displayed="true"] {
   display: block;
 }
 

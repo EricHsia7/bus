@@ -8,7 +8,7 @@
   display: none;
 }
 
-.route_details_field[displayed="true"] {
+.css_route_details_field[displayed="true"] {
   display: block;
 }
 
