@@ -463,7 +463,7 @@ export function stretchRouteItemBody(itemID: string): void {
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
   var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
-  var tabs = elementQuerySelector(itemElement, '.tabs');
+  var tabs = elementQuerySelector(itemElement, '.css_tabs');
   var tab = elementQuerySelectorAll(tabs, '.css_tab[selected="true"]');
   for (var t of tab) {
     t.setAttribute('selected', 'false');
