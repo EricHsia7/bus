@@ -22,7 +22,7 @@ body * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.splash-screen {
+.css_splash_screen {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -36,18 +36,18 @@ body * {
   -webkit-user-select: none;
 }
 
-.splash-screen svg.splash-screen-icon {
+.css_splash_screen svg.css_splash_screen_icon {
   width: clamp(50px, calc(100vw * 0.45), 220px);
   height: clamp(50px, calc(100vw * 0.45), 220px);
   user-select: none;
   -webkit-user-select: none;
 }
 
-.splash-screen svg.splash-screen-icon path {
+.css_splash_screen svg.css_splash_screen_icon path {
   fill: var(--b-333333);
 }
 
-.splash-screen-fade-out {
+.css_splash_screen_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-transition-duration);

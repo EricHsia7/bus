@@ -64,6 +64,7 @@ async function outputVersionJSON() {
 }
 
 outputVersionJSON();
+const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -96,6 +97,12 @@ module.exports = (env, argv) => {
             }
           }
         ]
+      }),
+      new MangleCssClassPlugin({
+        classNameRegExp: '(css_|--b-)[a-zA-Z0-9_-]*',
+        mangleCssVariables: true,
+        ignorePrefix: ['--b-'],
+        log: true
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report

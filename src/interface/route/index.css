@@ -1,4 +1,4 @@
-.route_field {
+.css_route_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -8,11 +8,11 @@
   display: none;
 }
 
-.route_field[displayed="true"] {
+.css_route_field[displayed="true"] {
   display: block;
 }
 
-.route_field .route_head {
+.css_route_field .css_route_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -24,8 +24,8 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.route_field .route_head .route_button_left,
-.route_field .route_head .route_button_right {
+.css_route_field .css_route_head .css_route_button_left,
+.css_route_field .css_route_head .css_route_button_right {
   width: 55px;
   height: 55px;
   display: flex;
@@ -33,30 +33,30 @@
   align-items: center;
 }
 
-.route_field .route_head .route_button_left {
+.css_route_field .css_route_head .css_route_button_left {
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-.route_field .route_head .route_button_right {
+.css_route_field .css_route_head .css_route_button_right {
   position: absolute;
   top: 0px;
   right: 0px;
 }
 
-.route_field .route_head .route_button_left svg,
-.route_field .route_head .route_button_right svg {
+.css_route_field .css_route_head .css_route_button_left svg,
+.css_route_field .css_route_head .css_route_button_right svg {
   height: 20px;
   width: 20px;
 }
 
-.route_field .route_head .route_button_left svg path,
-.route_field .route_head .route_button_right svg path {
+.css_route_field .css_route_head .css_route_button_left svg path,
+.css_route_field .css_route_head .css_route_button_right svg path {
   fill: var(--b-333333);
 }
 
-.route_field .route_head .route_name {
+.css_route_field .css_route_head .css_route_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -75,7 +75,7 @@
   -webkit-user-select: none;
 }
 
-.route_field .route_head .route_group_tabs {
+.css_route_field .css_route_head .css_route_group_tabs {
   position: absolute;
   bottom: 5px;
   left: 0px;
@@ -85,7 +85,7 @@
   grid-template-columns: repeat(var(--b-route-group-quantity), 1fr);
 }
 
-.route_field .route_head .route_group_tabs .route_group_tab {
+.css_route_field .css_route_head .css_route_group_tabs .css_route_group_tab {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,7 +98,7 @@
   -webkit-user-select: none;
 }
 
-.route_field .route_head .route_group_tab_line_track {
+.css_route_field .css_route_head .css_route_group_tab_line_track {
   position: absolute;
   left: 0px;
   bottom: 1.2px;
@@ -106,7 +106,7 @@
   height: 2px;
 }
 
-.route_field .route_head .route_group_tab_line_track .route_group_tab_line {
+.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
   position: absolute;
   left: 0px;
   top: 0px;
@@ -117,7 +117,7 @@
   transform: translateX(calc(var(--b-r-fw) / var(--b-route-group-quantity) * var(--b-route-tab-percentage) + (var(--b-r-fw) / var(--b-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-route-tab-width) / 30));
 }
 
-.route_field .route_head .route_update_timer_box {
+.css_route_field .css_route_head .css_route_update_timer_box {
   position: absolute;
   left: 0px;
   bottom: 0px;
@@ -127,7 +127,7 @@
   background: var(--b-ededf2);
 }
 
-.route_field .route_head .route_update_timer_box .route_update_timer {
+.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -138,12 +138,12 @@
   transition: none;
 }
 
-.route_field .route_head .route_update_timer_box .route_update_timer[refreshing="true"] {
+.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
   transition: transform var(--b-transition-duration);
   transition-timing-function: linear;
 }
 
-.route_field .route_groups {
+.css_route_field .css_route_groups {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -159,7 +159,7 @@
   grid-template-columns: repeat(var(--b-route-group-quantity), var(--b-r-fw));
 }
 
-.route_field .route_groups .route_group {
+.css_route_field .css_route_groups .css_route_group {
   position: relative;
   top: 0px;
   left: 0px;
@@ -172,14 +172,14 @@
   scroll-snap-align: center;
 }
 
-.route_field .route_groups .route_group::-webkit-scrollbar,
-.route_field .route_groups::-webkit-scrollbar,
-.route_field .route_groups .route_group .item .body .buses::-webkit-scrollbar,
-.route_field .route_groups .route_group .item .body .overlapping_routes::-webkit-scrollbar {
+.css_route_field .css_route_groups .css_route_group::-webkit-scrollbar,
+.css_route_field .css_route_groups::-webkit-scrollbar,
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_buses::-webkit-scrollbar,
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_overlapping_routes::-webkit-scrollbar {
   display: none;
 }
 
-.route_field .route_groups .route_group .item {
+.css_route_field .css_route_groups .css_route_group .css_item {
   display: block;
   height: 50px;
   width: 100%;
@@ -193,27 +193,27 @@
   transition: none;
 }
 
-.route_field .route_groups .route_group .item:first-child {
+.css_route_field .css_route_groups .css_route_group .css_item:first-child {
   margin-top: 95px;
 }
 
-.route_field .route_groups .route_group .item:last-child {
+.css_route_field .css_route_groups .css_route_group .css_item:last-child {
   margin-bottom: var(--safe-area-bottom);
 }
 
-.route_field .route_groups .route_group .item[stretched="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] {
   height: 221px;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] {
   background: var(--b-f9f9fb-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] {
   background: var(--b-f9f9fb-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -221,7 +221,7 @@
   height: 50px;
 }
 
-.route_field .route_groups .route_group .item .body {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body {
   position: absolute;
   top: 50px;
   left: 0px;
@@ -231,11 +231,11 @@
   transition: opacity var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_group .item[stretched="true"] .body {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body {
   opacity: 1;
 }
 
-.route_field .route_groups .route_group .item .body .tabs {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs {
   position: absolute;
   top: 5px;
   left: 10px;
@@ -248,12 +248,12 @@
   border-radius: 30px;
 }
 
-.route_field .route_groups .route_group .item .body .tabs::-webkit-scrollbar {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs::-webkit-scrollbar {
   display: none;
 }
 
-.route_field .route_groups .route_group .item .body .tabs .tab,
-.route_field .route_groups .route_group .item .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_tab,
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button {
   position: relative;
   height: 35px;
   display: inline-flex;
@@ -271,7 +271,7 @@
   vertical-align: top;
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button .action_button_icon {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button .css_action_button_icon {
   position: relative;
   display: inline-flex;
   height: 35px;
@@ -279,55 +279,55 @@
   align-items: center;
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button .action_button_icon svg {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button .css_action_button_icon svg {
   width: 15px;
   height: 15px;
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .action_button_icon svg path {
   fill: var(--b-333333);
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
   fill: rgba(0, 0, 0, 0)
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
-.route_field .route_groups .route_group .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
   fill: var(--b-f4252c);
 }
 
-.route_field .route_groups .route_group .item[stretched="true"] .body .tabs .tab,
-.route_field .route_groups .route_group .item[stretched="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .tab,
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .action_button {
   transition: background var(--b-transition-duration), color var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_group .item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
   transition: fill var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .body .tabs .tab,
-.route_field .route_groups .route_group .item[segment-buffer="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .body .tabs .tab,
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .body .tabs .action_button {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .body .tabs .tab,
-.route_field .route_groups .route_group .item[nearest="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .body .tabs .tab,
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .body .tabs .action_button {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .body .tabs .tab[selected="true"],
-.route_field .route_groups .route_group .item .body .tabs .action_button[highlighted="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_tab[selected="true"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"] {
   background: var(--b-333333);
   color: var(--b-ffffff);
 }
 
-.route_field .route_groups .route_group .item .body .tabs .action_button[highlighted="true"][type="save-stop"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] {
   background: rgba(var(--b-f4252c-r), var(--b-f4252c-g), var(--b-f4252c-b), var(--b-f4252c-opacity-a));
   color: var(--b-f4252c);
 }
 
-.route_field .route_groups .route_group .item .head .status {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status {
   position: absolute;
   top: 7.5px;
   left: 10px;
@@ -337,8 +337,8 @@
   overflow: hidden;
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide,
-.route_field .route_groups .route_group .item .head .status .current_slide {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -357,111 +357,111 @@
   background: var(--b-ededf2);
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide[code="6"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="6"],
-.route_field .route_groups .route_group .item .head .status .next_slide[code="5"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="5"],
-.route_field .route_groups .route_group .item .head .status .next_slide[code="4"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="4"],
-.route_field .route_groups .route_group .item .head .status .next_slide[code="3"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="3"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="3"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="3"] {
   color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
   font-size: 13px;
   font-weight: 500;
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="6"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="6"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="5"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="5"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="4"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="4"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="3"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="3"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="3"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="3"] {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide[code="2"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="2"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="2"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="2"] {
   color: var(--b-ffffff);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color);
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="2"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="2"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_next_slide[code="2"],
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_current_slide[code="2"] {
   background: var(--b-main-color-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="2"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="2"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="2"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="2"] {
   background: var(--b-main-color-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide[code="1"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="1"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="1"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="1"] {
   color: var(--b-main-color);
   font-size: 15px;
   font-weight: 700;
   background: var(--b-main-color-solid-transparent-c);
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="1"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="1"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_next_slide[code="1"],
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_current_slide[code="1"] {
   color: var(--b-main-color-inflected-to-segment-buffer);
   background: var(--b-main-color-inflected-to-segment-buffer-solid-transparent-c);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="1"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="1"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="1"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="1"] {
   color: var(--b-main-color-inflected-to-user-position);
   background: var(--b-main-color-inflected-to-user-position-solid-transparent-c);
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide[code="0.5"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="0.5"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="0.5"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="0.5"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="0.5"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="0.5"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_next_slide[code="0.5"],
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_current_slide[code="0.5"] {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="0.5"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="0.5"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="0.5"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="0.5"] {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head .status .next_slide[code="0"],
-.route_field .route_groups .route_group .item .head .status .current_slide[code="0"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_next_slide[code="0"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_current_slide[code="0"] {
   color: var(--b-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .next_slide[code="0"],
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .status .current_slide[code="0"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_next_slide[code="0"],
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_status .css_current_slide[code="0"] {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .next_slide[code="0"],
-.route_field .route_groups .route_group .item[nearest="true"] .head .status .current_slide[code="0"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_next_slide[code="0"],
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_status .css_current_slide[code="0"] {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head .status .slide_fade_out {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_status .css_slide_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-transition-duration);
   animation-fill-mode: forwards;
 }
 
-.route_field .route_groups .route_group .item .name {
+.css_route_field .css_route_groups .css_route_group .css_item .css_name {
   position: absolute;
   top: 5px;
   left: 90px;
@@ -479,7 +479,7 @@
   user-select: none;
 }
 
-.route_field .route_groups .route_group .item .head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_stretch {
   position: absolute;
   top: 7.5px;
   right: 10px;
@@ -494,31 +494,31 @@
   justify-content: center;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .stretch {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .stretch {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field .route_groups .route_group .item .head .stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_stretch svg {
   width: 17px;
   height: 17px;
   transform: rotate(0deg);
   transition: transform var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_group .item .head .stretch svg path {
+.css_route_field .css_route_groups .css_route_group .css_item .css_head .css_stretch svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
-.route_field .route_groups .route_group .item[stretched="true"] .head .stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_head .stretch svg {
   transform: rotate(180deg);
 }
 
-.route_field .route_groups .route_group .item .buses,
-.route_field .route_groups .route_group .item .overlapping_routes {
+.css_route_field .css_route_groups .css_route_group .css_item .css_buses,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes {
   position: absolute;
   top: 45px;
   left: 10px;
@@ -535,13 +535,13 @@
   display: none;
 }
 
-.route_field .route_groups .route_group .item .buses[displayed="true"],
-.route_field .route_groups .route_group .item .overlapping_routes[displayed="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_buses[displayed="true"],
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes[displayed="true"] {
   display: block;
 }
 
-.route_field .route_groups .route_group .item .bus,
-.route_field .route_groups .route_group .item .overlapping_route {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_route {
   position: relative;
   width: calc(var(--b-r-fw) * 0.6);
   height: 121px;
@@ -553,35 +553,35 @@
   scroll-snap-align: center;
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .bus,
-.route_field .route_groups .route_group .item[segment-buffer="true"] .overlapping_route {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .bus,
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .overlapping_route {
   background: rgba(var(--b-ededf2-inflected-to-segment-buffer-r), var(--b-ededf2-inflected-to-segment-buffer-g), var(--b-ededf2-inflected-to-segment-buffer-b), var(--b-ededf2-opacity-a))
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .bus,
-.route_field .route_groups .route_group .item[nearest="true"] .overlapping_route {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .bus,
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .overlapping_route {
   background: rgba(var(--b-ededf2-inflected-to-user-position-r), var(--b-ededf2-inflected-to-user-position-g), var(--b-ededf2-inflected-to-user-position-b), var(--b-ededf2-opacity-a))
 }
 
-.route_field .route_groups .route_group .item .bus[on-this-route="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .bus[on-this-route="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-inflected-to-segment-buffer-r), var(--b-main-color-inflected-to-segment-buffer-g), var(--b-main-color-inflected-to-segment-buffer-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .bus[on-this-route="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-inflected-to-user-position-r), var(--b-main-color-inflected-to-user-position-g), var(--b-main-color-inflected-to-user-position-b), var(--b-main-color-opacity-d));
 }
 
-.route_field .route_groups .route_group .item .bus:last-child,
-.route_field .route_groups .route_group .item .overlapping_route:last-child {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus:last-child,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_route:last-child {
   margin-right: 0px;
 }
 
-.route_field .route_groups .route_group .item .bus .bus_title,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_title {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_bus_title,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_title {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -589,8 +589,8 @@
   height: 20px;
 }
 
-.route_field .route_groups .route_group .item .bus .bus_title .car_icon,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_icon {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_bus_title .css_car_icon,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -601,19 +601,19 @@
   align-items: center;
 }
 
-.route_field .route_groups .route_group .item .bus .bus_title .car_icon svg path,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_title .overlapping_route_icon svg path {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_bus_title .css_car_icon svg path,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_title .css_overlapping_route_icon svg path {
   fill: var(--b-333333);
 }
 
-.route_field .route_groups .route_group .item .bus .bus_title .car_icon svg,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_title .overlapping_route_icon svg {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_bus_title .css_car_icon svg,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_title .css_overlapping_route_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.route_field .route_groups .route_group .item .bus .bus_title .car_number,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_title .overlapping_route_name {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_bus_title .css_car_number,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_title .css_overlapping_route_name {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -628,7 +628,7 @@
   overflow: hidden;
 }
 
-.route_field .route_groups .route_group .item .bus .car_attributes {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -636,9 +636,9 @@
   height: 75px;
 }
 
-.route_field .route_groups .route_group .item .bus .car_attributes .car_route,
-.route_field .route_groups .route_group .item .bus .car_attributes .car_status,
-.route_field .route_groups .route_group .item .bus .car_attributes .car_type {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_route,
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_status,
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_type {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -652,20 +652,20 @@
   align-items: center;
 }
 
-.route_field .route_groups .route_group .item .bus .car_attributes .car_route {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_route {
   top: 0px;
 }
 
-.route_field .route_groups .route_group .item .bus .car_attributes .car_status {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_status {
   top: 25px;
 }
 
-.route_field .route_groups .route_group .item .bus .car_attributes .car_type {
+.css_route_field .css_route_groups .css_route_group .css_item .css_bus .css_car_attributes .css_car_type {
   top: 50px;
 }
 
-.route_field .route_groups .route_group .item .buses .buses_message,
-.route_field .route_groups .route_group .item .overlapping_routes .overlapping_route_message {
+.css_route_field .css_route_groups .css_route_group .css_item .css_buses .css_buses_message,
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes .css_overlapping_route_message {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -680,7 +680,7 @@
   font-size: 16px;
 }
 
-.route_field .route_groups .route_group .item .overlapping_route .overlapping_route_endpoints {
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_route .css_overlapping_route_endpoints {
   position: absolute;
   top: 35px;
   left: 10px;
@@ -696,7 +696,7 @@
   align-items: center;
 }
 
-.route_field .route_groups .route_group .item .overlapping_route .overlapping_route_actions {
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_route .css_overlapping_route_actions {
   position: absolute;
   top: 75px;
   left: 10px;
@@ -708,7 +708,7 @@
   grid-column-gap: 5px;
 }
 
-.route_field .route_groups .route_group .item .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+.css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_route .css_overlapping_route_actions .css_overlapping_route_action_button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -717,41 +717,41 @@
   color: var(--b-333333);
 }
 
-.route_field .route_groups .route_group .item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.route_field .route_groups .route_group .item[nearest="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.route_field[skeleton-screen="true"] .route_head .route_name span {
+.css_route_field[skeleton-screen="true"] .route_head .route_name span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   border-radius: 30px;
 }
 
-.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
+.css_route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   border-radius: 30px;
 }
 
-.route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line {
+.css_route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line {
   background: rgba(0, 0, 0, 0);
 }
 
-.route_field .route_groups .route_group .item[skeleton-screen="false"] {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="false"] {
   transition: height var(--b-transition-duration);
 }
 
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .status .next_slide,
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .status .current_slide {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
 }
 
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .name {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   top: 7.5px;
@@ -759,20 +759,20 @@
   border-radius: 30px;
 }
 
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch {
   background: var(--b-ededf2);
 }
 
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch svg {
   display: none;
 }
 
-.route_field[skeleton-screen="true"] .route_head .route_name span,
-.route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .status .next_slide,
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .status .current_slide,
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .name,
-.route_field .route_groups .route_group .item[skeleton-screen="true"] .head .stretch {
+.css_route_field[skeleton-screen="true"] .route_head .route_name span,
+.css_route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .name,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch {
   background: var(--b-ededf2);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;

@@ -1,5 +1,5 @@
-.settings_page_field,
-.settings_options_page_field {
+.css_settings_page_field,
+.css_settings_options_page_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -14,8 +14,8 @@
   display: block;
 }
 
-.settings_page_field .settings_page_head,
-.settings_options_page_field .settings_options_page_head {
+.css_settings_page_field .css_settings_page_head,
+.css_settings_options_page_field .css_settings_options_page_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -28,10 +28,10 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.settings_page_field .settings_page_head .settings_page_button_left,
-.settings_page_field .settings_page_head .settings_page_button_right,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_left,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_right {
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_left,
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_right,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_left,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_right {
   position: absolute;
   width: 55px;
   height: 55px;
@@ -40,35 +40,35 @@
   align-items: center;
 }
 
-.settings_page_field .settings_page_head .settings_page_button_left,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_left {
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_left,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_left {
   top: 0px;
   left: 0px;
 }
 
-.settings_page_field .settings_page_head .settings_page_button_right,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_right {
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_right,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_right {
   top: 0px;
   right: 0px;
 }
 
-.settings_page_field .settings_page_head .settings_page_button_left svg,
-.settings_page_field .settings_page_head .settings_page_button_right svg,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_left svg,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_right svg {
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_left svg,
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_right svg,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_left svg,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_right svg {
   width: 20px;
   height: 20px;
 }
 
-.settings_page_field .settings_page_head .settings_page_button_left svg path,
-.settings_page_field .settings_page_head .settings_page_button_right svg path,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_left svg path,
-.settings_options_page_field .settings_options_page_head .settings_options_page_button_right svg path {
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_left svg path,
+.css_settings_page_field .css_settings_page_head .css_settings_page_button_right svg path,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_left svg path,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_button_right svg path {
   fill: var(--b-333333);
 }
 
-.settings_page_field .settings_page_head .settings_page_title,
-.settings_options_page_field .settings_options_page_head .settings_options_page_title {
+.css_settings_page_field .css_settings_page_head .css_settings_page_title,
+.css_settings_options_page_field .css_settings_options_page_head .css_settings_options_page_title {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -84,8 +84,8 @@
   -webkit-user-select: none;
 }
 
-.settings_page_field .settings_page_body,
-.settings_options_page_field .settings_options_page_body {
+.css_settings_page_field .css_settings_page_body,
+.css_settings_options_page_field .css_settings_options_page_body {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -97,13 +97,13 @@
   overscroll-behavior: contain;
 }
 
-.settings_page_field .settings_page_body::-webkit-scrollbar,
-.settings_options_page_field .settings_options_page_body::-webkit-scrollbar {
+.css_settings_page_field .css_settings_page_body::-webkit-scrollbar,
+.css_settings_options_page_field .css_settings_options_page_body::-webkit-scrollbar {
   display: none;
 }
 
-.settings_page_field .settings_page_settings,
-.settings_options_page_field .settings_options_page_options {
+.css_settings_page_field .css_settings_page_settings,
+.css_settings_options_page_field .css_settings_options_page_options {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -114,14 +114,14 @@
   margin-bottom: var(--safe-area-bottom);
 }
 
-.settings_page_field .settings_page_settings .setting,
-.settings_options_page_field .settings_options_page_options .option {
+.css_settings_page_field .css_settings_page_settings .css_setting,
+.css_settings_options_page_field .css_settings_options_page_options .css_option {
   position: relative;
   width: 100%;
   height: 55px;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_icon {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -134,19 +134,19 @@
   -webkit-user-select: none;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_icon svg {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_icon svg {
   width: 20px;
   height: 20px;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_icon svg path {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_icon svg path {
   fill: var(--b-333333);
 }
 
-.settings_page_field .settings_page_settings .setting .setting_name,
-.settings_options_page_field .settings_options_page_options .option .option_name {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_name,
+.css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -163,12 +163,12 @@
   -webkit-user-select: none;
 }
 
-.settings_options_page_field .settings_options_page_options .option .option_name {
+.css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_name {
   width: calc(100% - 55px - 17.5px);
   left: 17.5px;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_status {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_status {
   position: absolute;
   top: 0px;
   right: 45px;
@@ -184,11 +184,11 @@
   word-break: keep-all;
 }
 
-.settings_page_field .settings_page_settings .setting[type="info"] .setting_status {
+.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_status {
   right: 17.5px;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_arrow {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_arrow {
   position: absolute;
   top: 0px;
   right: 17.5px;
@@ -201,22 +201,22 @@
   -webkit-user-select: none;
 }
 
-.settings_page_field .settings_page_settings .setting[type="info"] .setting_arrow {
+.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_arrow {
   display: none;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_arrow svg {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_arrow svg {
   width: 20px;
   height: 20px;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.settings_page_field .settings_page_settings .setting .setting_arrow svg path {
+.css_settings_page_field .css_settings_page_settings .css_setting .css_setting_arrow svg path {
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
-.settings_options_page_field .settings_options_page_options .option .option_checkbox {
+.css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_checkbox {
   position: absolute;
   right: 0px;
   top: 0px;
@@ -241,7 +241,7 @@
   initial-value: 32%;
 }
 
-.settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"] {
+.css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_checkbox input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   background: radial-gradient(circle, rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-checkbox-alpha)) 0%, rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-checkbox-alpha)) var(--b-checkbox-radius), rgba(0, 0, 0, 0) var(--b-checkbox-radius), rgba(0, 0, 0, 0) 100%);
@@ -258,7 +258,7 @@
   -webKit-user-select: none;
 }
 
-.settings_options_page_field .settings_options_page_options .option .option_checkbox input[type="checkbox"]:checked {
+.css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_checkbox input[type="checkbox"]:checked {
   --b-checkbox-radius: 58%;
   --b-checkbox-alpha: 1;
   border-color: var(--b-main-color);
