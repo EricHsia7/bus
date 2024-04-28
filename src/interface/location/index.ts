@@ -334,7 +334,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .location_group_tab`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[groupIndex].remove();
       }
     }
   }
@@ -379,7 +379,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .location_group_tab`)[i];
+    var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-location-tab-index', i);
