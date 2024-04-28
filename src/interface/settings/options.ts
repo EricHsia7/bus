@@ -40,7 +40,7 @@ export function closeSettingsOptionsPage(): void {
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {
-  var checkboxes = documentQuerySelectorAll('.settings_options_page_field .css_settings_options_page_body .css_settings_options_page_options .css_option .css_option_checkbox input[type="checkbox"]');
+  var checkboxes = documentQuerySelectorAll('.css_settings_options_page_field .css_settings_options_page_body .css_settings_options_page_options .css_option .css_option_checkbox input[type="checkbox"]');
   for (var checkbox of checkboxes) {
     checkbox.checked = false;
   }

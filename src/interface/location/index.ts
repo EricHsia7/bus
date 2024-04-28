@@ -495,7 +495,7 @@ export function closeLocation(): void {
 }
 
 export function stretchLocationItemBody(itemID: string): void {
-  var itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .location_group_items .item#${itemID}`);
+  var itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {
