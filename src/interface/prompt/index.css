@@ -1,7 +1,7 @@
 .css_prompt_content {
   width: calc(100% - 20px);
   height: 40px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   font-size: 16px;
   user-select: none;
   -webkit-user-select: none;
@@ -15,17 +15,17 @@
 .css_prompt {
   width: clamp(180px, calc(100% - 20px), 450px);
   height: 50px;
-  border-radius: var(--b-border-radius-default);
+  border-radius: var(--b-cssvar-border-radius-default);
   position: fixed;
   left: 50%;
   bottom: 0px;
   opacity: 0;
   transform: translateX(-50%) translateY(80px) scale(1);
-  background: rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.8);
+  background: rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.8);
   will-change: transform, opacity;
   -webkit-user-select: none;
   user-select: none;
-  border: 1px solid var(--b-ededf2);
+  border: 1px solid var(--b-cssvar-ededf2);
   /*box-shadow: 0px 0px 25px -12px rgba(0, 0, 0, 0.23);*/
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);

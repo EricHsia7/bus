@@ -18,7 +18,7 @@ function generateElementOfGridline(hours: number): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_route_details_calendar_gridline');
   element.id = identifier;
-  element.style.setProperty('--b-calendar-gridline-top', `${hours * calendar_ratio - 5}px`);
+  element.style.setProperty('--b-cssvar-calendar-gridline-top', `${hours * calendar_ratio - 5}px`);
   element.innerHTML = `<div class="css_route_details_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><div class="css_route_details_calendar_gridline_line"></div>`;
   return {
     element: element,
@@ -132,8 +132,8 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       thisDayStart.setMinutes(0);
       thisDayStart.setSeconds(0);
       thisDayStart.setMilliseconds(0);
-      thisElement.style.setProperty('--b-calendar-event-top', `${((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
-      thisElement.style.setProperty('--b-calendar-event-height', `${((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+      thisElement.style.setProperty('--b-cssvar-calendar-event-top', `${((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
+      thisElement.style.setProperty('--b-cssvar-calendar-event-height', `${((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
     }
     if (previousEvent === null) {
       updateText(thisElement, thisEvent);

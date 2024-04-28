@@ -4,7 +4,7 @@
   left: 0px;
   width: 100%;
   height: 100%;
-  background: var(--b-f9f9fb);
+  background: var(--b-cssvar-f9f9fb);
   display: none;
 }
 
@@ -18,9 +18,9 @@
   left: 0px;
   width: 100%;
   height: 55px;
-  border-bottom: 1px solid var(--b-ededf2);
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-a)) 0%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 80%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 100%);
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -53,7 +53,7 @@
 
 .css_route_details_field .css_route_details_head .css_route_details_button_left svg path,
 .css_route_details_field .css_route_details_head .css_route_details_button_right svg path {
-  fill: var(--b-333333);
+  fill: var(--b-cssvar-333333);
 }
 
 .css_route_details_field .css_route_details_head .css_route_details_title {
@@ -62,7 +62,7 @@
   left: 55px;
   width: calc(100% - 110px);
   height: 55px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,7 +139,7 @@
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon svg path {
-  fill: var(--b-333333);
+  fill: var(--b-cssvar-333333);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_name {
@@ -151,7 +151,7 @@
   display: flex;
   align-items: center;
   font-size: 15px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   line-height: 20px;
   user-select: none;
   -webkit-user-select: none;
@@ -162,7 +162,7 @@
   width: calc(100% - 20px);
   left: 10px;
   display: inline-block;
-  background: var(--b-ffffff);
+  background: var(--b-cssvar-ffffff);
   border-radius: 20px;
   user-select: none;
   -webkit-user-select: none;

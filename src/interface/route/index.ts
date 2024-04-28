@@ -93,11 +93,11 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-r-fw:${FieldWidth}px;--b-r-fh:${FieldHeight}px;}`;
+  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-cssvar-r-fw:${FieldWidth}px;--b-cssvar-r-fh:${FieldHeight}px;}`;
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
+  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-cssvar-route-group-quantity:${groupQuantity};--b-cssvar-route-tab-percentage:${percentage};--b-cssvar-route-tab-width:${width};}`;
 }
 
 function updateUpdateTimer() {
@@ -108,7 +108,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
-  documentQuerySelector('.css_route_update_timer').style.setProperty('--b-update-timer', percentage);
+  documentQuerySelector('.css_route_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -340,7 +340,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem();
           elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i].appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-333333)', 300);
+          //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {

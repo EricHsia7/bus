@@ -99,9 +99,9 @@ module.exports = (env, argv) => {
         ]
       }),
       new MangleCssClassPlugin({
-        classNameRegExp: '(css_|--b-)[a-z0-9_-]*',
+        classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
         mangleCssVariables: true,
-        ignorePrefix: ['--'],
+        /*ignorePrefix: [''],*/
         log: true
       }),
       new BundleAnalyzerPlugin({

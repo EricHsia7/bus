@@ -11,7 +11,7 @@ var progressElement: HTMLElement = documentQuerySelector('.css_home_button_right
 
 function updateDownloadProgress() {
   var pixels = (1 - getDataReceivingProgress(dataPreloadRequestID)) * 189;
-  progressElement.style.setProperty('--b-stroke-dashoffset', `${pixels}px`);
+  progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
   window.requestAnimationFrame(function () {
     if (dataPreloadCompleted === false) {
       updateDownloadProgress();
@@ -21,7 +21,7 @@ function updateDownloadProgress() {
 
 function setCompleteStatus() {
   if (dataPreloadCompleted) {
-    progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
+    progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
     documentQuerySelector('.css_home_button_right').setAttribute('complete', true);
     progressElement.removeEventListener('transitioncancel', setCompleteStatus);
   }

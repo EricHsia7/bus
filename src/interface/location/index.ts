@@ -90,11 +90,11 @@ export function ResizeLocationField(): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  documentQuerySelector('#location_field_size').innerHTML = `:root {--b-l-fw:${FieldWidth}px;--b-l-fh:${FieldHeight}px;}`;
+  documentQuerySelector('#location_field_size').innerHTML = `:root {--b-cssvar-l-fw:${FieldWidth}px;--b-cssvar-l-fh:${FieldHeight}px;}`;
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
-  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-location-group-quantity:${groupQuantity};--b-location-tabs-tray-offset:${offset}px;--b-location-tab-line-width:${tab_line_width};--b-location-percentage:${percentage};}`;
+  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-cssvar-location-group-quantity:${groupQuantity};--b-cssvar-location-tabs-tray-offset:${offset}px;--b-cssvar-location-tab-line-width:${tab_line_width};--b-cssvar-location-percentage:${percentage};}`;
 }
 
 function updateUpdateTimer() {
@@ -105,7 +105,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
   }
-  documentQuerySelector('.css_location_update_timer').style.setProperty('--b-update-timer', percentage);
+  documentQuerySelector('.css_location_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -348,7 +348,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisItemElement = generateElementOfItem();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(thisItemElement.element);
-          //ripple.__addToSingleElement(Field.QuerySelector(`.css_location_groups .css_location_group .css_location_group_items[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-333333)', 300);
+          //ripple.__addToSingleElement(Field.QuerySelector(`.css_location_groups .css_location_group .css_location_group_items[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
@@ -381,8 +381,8 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var groupKey = `g_${i}`;
     var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
-    thisTabElement.style.setProperty('--b-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
-    thisTabElement.style.setProperty('--b-location-tab-index', i);
+    thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
+    thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i);
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (var k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];

@@ -15,7 +15,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  background: var(--b-ffffff);
+  background: var(--b-cssvar-ffffff);
   border-radius: 20px;
   vertical-align: top;
   user-select: none;
@@ -30,5 +30,5 @@
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button svg path {
-  fill: var(--b-333333);
+  fill: var(--b-cssvar-333333);
 }
