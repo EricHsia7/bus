@@ -12,16 +12,16 @@ function queryPropertiesFieldSize(): FieldSize {
   };
 }
 
-function generateElementOfProperty(skeletonScreen: boolean): GeneratedElement {
-  var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
+function generateElementOfProperty(): GeneratedElement {
+  //var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_property');
-  element.setAttribute('skeleton-screen', skeletonScreen);
-  element.id = identifier;
+  //element.setAttribute('skeleton-screen', skeletonScreen);
+  //element.id = identifier;
   element.innerHTML = `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
@@ -49,9 +49,13 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_value').innerText = thisProperty.value;
     }
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+    thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
+}
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!compareThings(previousProperty, thisProperty)) {
         updateIcon(thisElement, thisProperty);
@@ -59,6 +63,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
+      updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
 
@@ -89,7 +94,6 @@ export function updatePropertiesField(Field: HTMLElement, properties: [], skelet
 
   for (var i = 0; i < propertyQuantity; i++) {
     var thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
-    thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisProperty = properties[i];
     if (previousProperties === []) {
       updateProperty(thisPropertyElement, thisProperty, null);
