@@ -3,7 +3,11 @@ export function documentQuerySelector(selectorExpression: string): HTMLElement {
 }
 
 export function documentQuerySelectorAll(selectorExpression: string): NodeListOf<HTMLElement> {
-  return document.querySelectorAll(selectorExpression);
+  try {
+    return document.querySelectorAll(selectorExpression);
+  } catch (e) {
+    console.log(selectorExpression);
+  }
 }
 
 export function elementQuerySelector(element: HTMLElement, selectorExpression: string): HTMLElement {
