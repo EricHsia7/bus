@@ -705,19 +705,19 @@
   font-size: 16px;
 }
 
-.location_field[skeleton-screen="true"] .css_location_head .css_location_name span {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
   border-radius: 30px;
 }
 
-.location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
   border-radius: 30px;
 }
 
-.location_field[skeleton-screen="true"] .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   background: rgba(0, 0, 0, 0);
 }
 
