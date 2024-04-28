@@ -1,34 +1,34 @@
-.home_field {
+.css_home_field {
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
-  background: var(--b-f9f9fb);
+  background: var(--b-cssvar-f9f9fb);
 }
 
-.home_field .home_head {
+.css_home_field .css_home_head {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 55px;
-  border-bottom: 1px solid var(--b-ededf2);
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-a)) 0%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 80%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 100%);
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   user-select: none;
   -webkit-user-select: none;
 }
 
-.home_field .home_head .home_title {
+.css_home_field .css_home_head .css_home_title {
   position: absolute;
   top: 0px;
   left: 55px;
   width: calc(100% - 110px);
   height: 55px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +38,8 @@
   -webkit-user-select: none;
 }
 
-.home_field .home_head .home_button_left,
-.home_field .home_head .home_button_right {
+.css_home_field .css_home_head .css_home_button_left,
+.css_home_field .css_home_head .css_home_button_right {
   position: absolute;
   width: 55px;
   height: 55px;
@@ -50,22 +50,22 @@
   -webkit-user-select: none;
 }
 
-.home_field .home_head .home_button_left {
+.css_home_field .css_home_head .css_home_button_left {
   top: 0px;
   left: 0px;
 }
 
-.home_field .home_head .home_button_right {
+.css_home_field .css_home_head .css_home_button_right {
   top: 0px;
   right: 0px;
 }
 
-.home_field .home_head .home_button_left svg {
+.css_home_field .css_home_head .css_home_button_left svg {
   width: 20px;
   height: 20px;
 }
 
-.home_field .home_head .home_button_right svg {
+.css_home_field .css_home_head .css_home_button_right svg {
   position: absolute;
   top: 17.5px;
   left: 17.5px;
@@ -73,61 +73,61 @@
   height: 20px;
 }
 
-.home_field .home_head .home_button_right svg#download-svg path[arrow="arrow"],
-.home_field .home_head .home_button_right svg#search-svg path,
-.home_field .home_head .home_button_left svg path {
-  fill: var(--b-333333);
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[arrow="arrow"],
+.css_home_field .css_home_head .css_home_button_right svg#search-svg path,
+.css_home_field .css_home_head .css_home_button_left svg path {
+  fill: var(--b-cssvar-333333);
 }
 
-.home_field .home_head .home_button_right svg#download-svg path[track="track"],
-.home_field .home_head .home_button_right svg#download-svg path[progress="progress"] {
-  stroke: var(--b-333333);
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[track="track"],
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[progress="progress"] {
+  stroke: var(--b-cssvar-333333);
 }
 
-@property --b-stroke-dashoffset {
+@property --b-cssvar-stroke-dashoffset {
   syntax: '<length>';
   inherits: false;
   initial-value: 189px;
 }
 
-@property --b-search-icon-scale {
+@property --b-cssvar-search-icon-scale {
   syntax: '<number>';
   inherits: false;
   initial-value: 1.4201187871;
 }
 
-.home_field .home_head .home_button_right svg path[progress="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg path[progress="progress"] {
   stroke-dasharray: 189px;
-  stroke-dashoffset: var(--b-stroke-dashoffset);
-  transition: --b-stroke-dashoffset var(--b-transition-duration);
+  stroke-dashoffset: var(--b-cssvar-stroke-dashoffset);
+  transition: --b-cssvar-stroke-dashoffset var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }
 
-.home_field .home_head .home_button_right svg#search-svg {
-  transform: scale(var(--b-search-icon-scale));
+.css_home_field .css_home_head .css_home_button_right svg#search-svg {
+  transform: scale(var(--b-cssvar-search-icon-scale));
   transform-origin: top left;
   opacity: 0;
-  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
+  transition: transform var(--b-cssvar-transition-duration), opacity var(--b-cssvar-transition-duration);
 }
 
-.home_field .home_head .home_button_right svg#download-svg {
+.css_home_field .css_home_head .css_home_button_right svg#download-svg {
   transform: scale(1);
   transform-origin: top left;
   opacity: 1;
-  transition: transform var(--b-transition-duration), opacity var(--b-transition-duration);
+  transition: transform var(--b-cssvar-transition-duration), opacity var(--b-cssvar-transition-duration);
 }
 
-.home_field .home_head .home_button_right[complete="true"] svg#search-svg {
+.css_home_field .css_home_head .css_home_button_right[complete="true"] svg#search-svg {
   transform: scale(1);
   opacity: 1;
 }
 
-.home_field .home_head .home_button_right[complete="true"] svg#download-svg {
-  transform: scale(calc(1 / var(--b-search-icon-scale)));
+.css_home_field .css_home_head .css_home_button_right[complete="true"] svg#download-svg {
+  transform: scale(calc(1 / var(--b-cssvar-search-icon-scale)));
   opacity: 0;
 }
 
-.home_field .home_body {
+.css_home_field .css_home_body {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -139,6 +139,6 @@
   overscroll-behavior: contain;
 }
 
-.home_field .home_body::-webkit-scrollbar {
+.css_home_field .css_home_body::-webkit-scrollbar {
   display: none;
 }

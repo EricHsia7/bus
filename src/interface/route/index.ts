@@ -43,7 +43,7 @@ var currentRouteIDSet = {
 };
 
 export function initializeRouteSliding(): void {
-  var element = documentQuerySelector('.route_groups');
+  var element = documentQuerySelector('.css_route_groups');
   function monitorScrollLeft(element: HTMLElement, callback: Function): void {
     routeSliding.scrollLog.push(element.scrollLeft);
     if (routeSliding.scrollLog.length > 10) {
@@ -93,11 +93,11 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-r-fw:${FieldWidth}px;--b-r-fh:${FieldHeight}px;}`;
+  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-cssvar-r-fw:${FieldWidth}px;--b-cssvar-r-fh:${FieldHeight}px;}`;
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-route-group-quantity:${groupQuantity};--b-route-tab-percentage:${percentage};--b-route-tab-width:${width};}`;
+  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-cssvar-route-group-quantity:${groupQuantity};--b-cssvar-route-tab-percentage:${percentage};--b-cssvar-route-tab-width:${width};}`;
 }
 
 function updateUpdateTimer() {
@@ -108,7 +108,7 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
   }
-  documentQuerySelector('.route_update_timer').style.setProperty('--b-update-timer', percentage);
+  documentQuerySelector('.css_route_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer.streaming) {
       updateUpdateTimer();
@@ -119,10 +119,10 @@ function updateUpdateTimer() {
 function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classList.add('item');
+  element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="head"><div class="status"><div class="next_slide" code="0"></div><div class="current_slide" code="0"></div></div><div class="name"></div><div class="stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="body"><div class="tabs"><div class="tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="buses" displayed="true"></div><div class="overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_name"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -132,7 +132,7 @@ function generateElementOfItem(): GeneratedElement {
 function generateElementOfGroup(): GeneratedElement {
   var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classList.add('route_group');
+  element.classList.add('css_route_group');
   element.id = identifier;
   return {
     element: element,
@@ -143,7 +143,7 @@ function generateElementOfGroup(): GeneratedElement {
 function generateElementOfTab(): GeneratedElement {
   var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classList.add('route_group_tab');
+  element.classList.add('css_route_group_tab');
   element.id = identifier;
   return {
     element: element,
@@ -202,8 +202,8 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = elementQuerySelector(thisElement, '.status .next_slide');
-      var currentSlide = elementQuerySelector(thisElement, '.status .current_slide');
+      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
+      var currentSlide = elementQuerySelector(thisElement, '.css_status .css_current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
       currentSlide.addEventListener(
@@ -211,23 +211,23 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         function () {
           currentSlide.setAttribute('code', thisItem.status.code);
           currentSlide.innerText = thisItem.status.text;
-          currentSlide.classList.remove('slide_fade_out');
+          currentSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classList.add('slide_fade_out');
+      currentSlide.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.name').innerText = thisItem.name;
+      elementQuerySelector(thisElement, '.css_name').innerText = thisItem.name;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.buses').innerHTML = thisItem.buses === null ? '<div class="buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="bus" on-this-route="${bus.onThisRoute}"><div class="bus_title"><div class="car_icon">${icons.bus}</div><div class="car_number">${bus.carNumber}</div></div><div class="car_attributes"><div class="car_route">路線：${bus.RouteName}</div><div class="car_status">狀態：${bus.status.text}</div><div class="car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateOverlappingRoutes(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="overlapping_route"><div class="overlapping_route_title"><div class="overlapping_route_icon">${icons.route}</div><div class="overlapping_route_name">${route.name}</div></div><div class="overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="overlapping_route_actions"><div class="overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
     function updateNearest(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('nearest', thisItem.nearest);
@@ -241,9 +241,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      elementQuerySelector(thisElement, '.body .tabs .action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+      elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
-        elementQuerySelector(thisElement, '.body .tabs .action_button').setAttribute('highlighted', e);
+        elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
       });
     }
 
@@ -308,44 +308,44 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   if (!routeSliding.sliding) {
     updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   }
-  elementQuerySelector(Field, '.route_name').innerHTML = `<span>${integration.RouteName}</span>`;
+  elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  elementQuerySelector(Field, '.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
+  elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.route_field .route_group`).length;
+  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var thisGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.route_groups`).appendChild(thisGroupElement.element);
+        elementQuerySelector(Field, `.css_route_groups`).appendChild(thisGroupElement.element);
         var thisTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.route_head .route_group_tabs`).appendChild(thisTabElement.element);
+        elementQuerySelector(Field, `.css_route_head .css_route_group_tabs`).appendChild(thisTabElement.element);
       }
     } else {
       for (var o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.route_groups .route_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[groupIndex].remove();
+        elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tab`)[groupIndex].remove();
       }
     }
   }
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisElement = generateElementOfItem();
-          elementQuerySelectorAll(Field, `.route_groups .route_group`)[i].appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.querySelector(`.route_groups .route_group[group="${i}"] .item#${thisElement.id} .stretch`), 'var(--b-333333)', 300);
+          elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i].appendChild(thisElement.element);
+          //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[itemIndex].remove();
         }
       }
     }
@@ -353,10 +353,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var thisTabElement = elementQuerySelectorAll(Field, `.route_head .route_group_tabs .route_group_tab`)[i];
+    var thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.route_groups .route_group`)[i], `.item`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
@@ -383,9 +383,9 @@ async function refreshRoute(): object {
   routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
-  documentQuerySelector('.route_update_timer').setAttribute('refreshing', true);
+  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
   var integration = await integrateRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
-  var Field = documentQuerySelector('.route_field');
+  var Field = documentQuerySelector('.css_route_field');
   updateRouteField(Field, integration, false);
   routeRefreshTimer.lastUpdate = new Date().getTime();
   if (routeRefreshTimer.auto) {
@@ -396,7 +396,7 @@ async function refreshRoute(): object {
   }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;
-  documentQuerySelector('.route_update_timer').setAttribute('refreshing', false);
+  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
 }
 
@@ -426,7 +426,7 @@ export function streamRoute(): void {
 export function openRoute(RouteID: number, PathAttributeId: [number]): void {
   currentRouteIDSet.RouteID = RouteID;
   currentRouteIDSet.PathAttributeId = PathAttributeId;
-  var Field = documentQuerySelector('.route_field');
+  var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer.streaming) {
@@ -442,7 +442,7 @@ export function openRoute(RouteID: number, PathAttributeId: [number]): void {
 }
 
 export function closeRoute(): void {
-  var Field = documentQuerySelector('.route_field');
+  var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'false');
   routeRefreshTimer.streaming = false;
 }
@@ -453,7 +453,7 @@ export function switchRoute(RouteID: number, PathAttributeId: [number]) {
 }
 
 export function stretchRouteItemBody(itemID: string): void {
-  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {
@@ -462,26 +462,26 @@ export function stretchRouteItemBody(itemID: string): void {
 }
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
-  var tabs = elementQuerySelector(itemElement, '.tabs');
-  var tab = elementQuerySelectorAll(tabs, '.tab[selected="true"]');
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
+  var tabs = elementQuerySelector(itemElement, '.css_tabs');
+  var tab = elementQuerySelectorAll(tabs, '.css_tab[selected="true"]');
   for (var t of tab) {
     t.setAttribute('selected', 'false');
   }
-  elementQuerySelector(tabs, `.tab[code="${tabCode}"]`).setAttribute('selected', 'true');
+  elementQuerySelector(tabs, `.css_tab[code="${tabCode}"]`).setAttribute('selected', 'true');
   if (tabCode === 0) {
-    elementQuerySelector(itemElement, '.buses').setAttribute('displayed', 'true');
-    elementQuerySelector(itemElement, '.overlapping_routes').setAttribute('displayed', 'flase');
+    elementQuerySelector(itemElement, '.css_buses').setAttribute('displayed', 'true');
+    elementQuerySelector(itemElement, '.css_overlapping_routes').setAttribute('displayed', 'flase');
   }
   if (tabCode === 1) {
-    elementQuerySelector(itemElement, '.buses').setAttribute('displayed', 'false');
-    elementQuerySelector(itemElement, '.overlapping_routes').setAttribute('displayed', 'true');
+    elementQuerySelector(itemElement, '.css_buses').setAttribute('displayed', 'false');
+    elementQuerySelector(itemElement, '.css_overlapping_routes').setAttribute('displayed', 'true');
   }
 }
 
 export function saveItemAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
-  var itemElement = documentQuerySelector(`.route_field .route_groups .item#${itemID}`);
-  var actionButtonElement = elementQuerySelector(itemElement, '.action_button[type="save-stop"]');
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
+  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
   saveStop(folderId, StopID, RouteID).then((e) => {
     isSaved('stop', StopID).then((k) => {
       actionButtonElement.setAttribute('highlighted', k);

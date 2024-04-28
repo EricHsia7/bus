@@ -1,14 +1,14 @@
-@property --b-calendar-ratio {
+@property --b-cssvar-calendar-ratio {
   syntax: '<length>';
   inherits: false;
   initial-value: 100px;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body {
-  height: calc(24 * var(--b-calendar-ratio) + 60px + 10px);
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body {
+  height: calc(24 * var(--b-cssvar-calendar-ratio) + 60px + 10px);
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_days {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -23,9 +23,9 @@
   -webkit-user-select: none;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_days .route_details_calendar_day {
-  background: var(--b-f9f9fb);
-  color: var(--b-333333);
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day {
+  background: var(--b-cssvar-f9f9fb);
+  color: var(--b-cssvar-333333);
   border-radius: 30px;
   display: flex;
   justify-content: center;
@@ -35,24 +35,24 @@
   font-weight: 500;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_days .route_details_calendar_day[selected="true"] {
-  background: var(--b-main-color);
-  color: var(--b-ffffff);
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[selected="true"] {
+  background: var(--b-cssvar-main-color);
+  color: var(--b-cssvar-ffffff);
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_gridlines {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines {
   position: absolute;
   top: 60px;
   left: 10px;
   width: calc(100% - 20px);
-  height: calc(24 * var(--b-calendar-ratio));
+  height: calc(24 * var(--b-cssvar-calendar-ratio));
   user-select: none;
   -webkit-user-select: none;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_gridlines .route_details_calendar_gridline {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline {
   position: absolute;
-  top: var(--b-calendar-gridline-top);
+  top: var(--b-cssvar-calendar-gridline-top);
   left: 0px;
   height: 10px;
   width: 100%;
@@ -60,7 +60,7 @@
   -webkit-user-select: none;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_gridlines .route_details_calendar_gridline .route_details_calendar_gridline_label {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline .css_route_details_calendar_gridline_label {
   position: absolute;
   top: 0px;
   height: 10px;
@@ -69,32 +69,32 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--b-aeaeb2);
+  color: var(--b-cssvar-aeaeb2);
   user-select: none;
   -webkit-user-select: none;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_gridlines .route_details_calendar_gridline .route_details_calendar_gridline_line {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline .css_route_details_calendar_gridline_line {
   position: absolute;
   top: 5px;
   left: 45px;
   width: calc(100% - 45px);
   height: 1.2px;
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
   user-select: none;
   -webkit-user-select: none;
   border-radius: 2px;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups {
   position: absolute;
   top: 60px;
   left: 10px;
   width: calc(100% - 20px);
-  height: calc(24 * var(--b-calendar-ratio));
+  height: calc(24 * var(--b-cssvar-calendar-ratio));
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events {
   position: absolute;
   top: 0px;
   left: 45px;
@@ -103,18 +103,18 @@
   display: none;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events[displayed="true"] {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events[displayed="true"] {
   display: block;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events .route_details_calendar_event {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event {
   position: absolute;
-  top: var(--b-calendar-event-top);
+  top: var(--b-cssvar-calendar-event-top);
   left: 0px;
   width: 100%;
-  height: var(--b-calendar-event-height);
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
-  color: var(--b-main-color);
+  height: var(--b-cssvar-calendar-event-height);
+  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  color: var(--b-cssvar-main-color);
   border-radius: 3px;
   user-select: none;
   -webkit-user-select: none;
@@ -124,7 +124,7 @@
   overflow: hidden;
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events .route_details_calendar_event::after {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event::after {
   position: absolute;
   content: '';
   top: 0px;
@@ -132,15 +132,15 @@
   border-radius: 3px 0px 0px 3px;
   width: 3px;
   height: 100%;
-  background: var(--b-main-color);
+  background: var(--b-cssvar-main-color);
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events .route_details_calendar_event[skeleton-screen="true"],
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_days .route_details_calendar_day[skeleton-screen="true"] {
-  background: var(--b-ededf2);
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[skeleton-screen="true"],
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[skeleton-screen="true"] {
+  background: var(--b-cssvar-ededf2);
   color: rgba(0, 0, 0, 0);
 }
 
-.route_details_field .route_details_body .route_details_groups .route_details_group[group="calendar"] .route_details_group_body .route_details_calendar_events_groups .route_details_calendar_grouped_events .route_details_calendar_event[skeleton-screen="true"]::after {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[skeleton-screen="true"]::after {
   display: none;
 }

@@ -1,31 +1,31 @@
-.location_field {
+.css_location_field {
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
-  background: var(--b-ffffff);
+  background: var(--b-cssvar-ffffff);
   display: none;
 }
 
-.location_field[displayed="true"] {
+.css_location_field[displayed="true"] {
   display: block;
 }
 
-.location_field .location_head {
+.css_location_field .css_location_head {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 95px;
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-a)) 0%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 70%, rgba(var(--b-ffffff-r), var(--b-ffffff-g), var(--b-ffffff-b), var(--b-ffffff-opacity-b)) 100%);
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 70%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-.location_field .location_head .location_button_left,
-.location_field .location_head .location_button_right {
+.css_location_field .css_location_head .css_location_button_left,
+.css_location_field .css_location_head .css_location_button_right {
   width: 55px;
   height: 55px;
   display: flex;
@@ -33,30 +33,30 @@
   align-items: center;
 }
 
-.location_field .location_head .location_button_left {
+.css_location_field .css_location_head .css_location_button_left {
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-.location_field .location_head .location_button_right {
+.css_location_field .css_location_head .css_location_button_right {
   position: absolute;
   top: 0px;
   right: 0px;
 }
 
-.location_field .location_head .location_button_left svg,
-.location_field .location_head .location_button_right svg {
+.css_location_field .css_location_head .css_location_button_left svg,
+.css_location_field .css_location_head .css_location_button_right svg {
   height: 20px;
   width: 20px;
 }
 
-.location_field .location_head .location_button_left svg path,
-.location_field .location_head .location_button_right svg path {
-  fill: var(--b-333333);
+.css_location_field .css_location_head .css_location_button_left svg path,
+.css_location_field .css_location_head .css_location_button_right svg path {
+  fill: var(--b-cssvar-333333);
 }
 
-.location_field .location_head .location_name {
+.css_location_field .css_location_head .css_location_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -67,7 +67,7 @@
   align-items: center;
   font-size: 20px;
   font-weight: 500;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
@@ -75,7 +75,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_head .location_group_tabs {
+.css_location_field .css_location_head .css_location_group_tabs {
   position: absolute;
   bottom: 5px;
   left: 0px;
@@ -92,7 +92,7 @@
   mask-repeat: no-repeat;
 }
 
-.location_field .location_head .location_group_tabs .location_group_tabs_tray {
+.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray {
   white-space: nowrap;
   word-break: keep-all;
   position: absolute;
@@ -101,10 +101,10 @@
   width: auto;
   height: 40px;
   display: inline-block;
-  transform: translateX(var(--b-location-tabs-tray-offset));
+  transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
 }
 
-.location_field .location_head .location_group_tabs .location_group_tabs_tray .location_group_tab {
+.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -112,19 +112,19 @@
   overflow: hidden;
   white-space: nowrap;
   word-break: keep-all;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   user-select: none;
   -webkit-user-select: none;
   vertical-align: top;
-  width: var(--b-location-tab-width);
+  width: var(--b-cssvar-location-tab-width);
   height: 40px;
   position: relative;
   font-weight: 400;
-  /* clamp(400, calc(500 - 100 * abs(var(--b-location-percentage) - var(--b-location-tab-index))), 500)*/
-  opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-location-percentage) - var(--b-location-tab-index))), 1);
+  /* clamp(400, calc(500 - 100 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 500)*/
+  opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 1);
 }
 
-.location_field .location_head .location_group_tab_line_track {
+.css_location_field .css_location_head .css_location_group_tab_line_track {
   position: absolute;
   left: 0px;
   bottom: 1.2px;
@@ -132,44 +132,44 @@
   height: 2px;
 }
 
-.location_field .location_head .location_group_tab_line_track .location_group_tab_line {
+.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   position: absolute;
   left: 50%;
   top: 0px;
-  background: var(--b-333333);
+  background: var(--b-cssvar-333333);
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(-50%) scaleX(calc(var(--b-location-tab-line-width) / 30));
+  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-line-width) / 30));
 }
 
-.location_field .location_head .location_update_timer_box {
+.css_location_field .css_location_head .css_location_update_timer_box {
   position: absolute;
   left: 0px;
   bottom: 0px;
   width: 100%;
   height: 1.2px;
   overflow: hidden;
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
 }
 
-.location_field .location_head .location_update_timer_box .location_update_timer {
+.css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-d));
+  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   height: 1.5px;
   width: 100%;
-  transform: translateX(calc(var(--b-update-timer) * 100%));
+  transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
   transition: none;
 }
 
-.location_field .location_head .location_update_timer_box .location_update_timer[refreshing="true"] {
-  transition: transform var(--b-transition-duration);
+.css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer[refreshing="true"] {
+  transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }
 
-.location_field .location_groups {
+.css_location_field .css_location_groups {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -182,15 +182,15 @@
   scroll-snap-type: x mandatory;
   display: grid;
   grid-column-gap: 0px;
-  grid-template-columns: repeat(var(--b-location-group-quantity), var(--b-l-fw));
+  grid-template-columns: repeat(var(--b-cssvar-location-group-quantity), var(--b-cssvar-l-fw));
 }
 
-.location_field .location_groups .location_group {
+.css_location_field .css_location_groups .css_location_group {
   position: relative;
   top: 0px;
   left: 0px;
-  width: var(--b-l-fw);
-  height: var(--b-l-fh);
+  width: var(--b-cssvar-l-fw);
+  height: var(--b-cssvar-l-fh);
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -199,7 +199,7 @@
 
 }
 
-.location_field .location_groups .location_group .location_group_details {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details {
   position: relative;
   width: 100%;
   height: auto;
@@ -207,15 +207,15 @@
   margin-top: 95px;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body {
   position: relative;
   top: 0px;
   left: 10px;
   width: calc(100% - 20px);
   height: auto;
   display: inline-block;
-  background: var(--b-ffffff);
-  border: 1px solid var(--b-f9f9fb);
+  background: var(--b-cssvar-ffffff);
+  border: 1px solid var(--b-cssvar-f9f9fb);
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   padding-top: 10px;
@@ -224,7 +224,7 @@
   box-sizing: border-box;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property {
   position: relative;
   width: 100%;
   height: 30px;
@@ -232,7 +232,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -243,22 +243,22 @@
   justify-content: center;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_icon svg path {
-  fill: var(--b-333333);
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon svg path {
+  fill: var(--b-cssvar-333333);
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property .location_details_property_value {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_value {
   position: absolute;
   top: 0px;
   left: 40px;
   width: calc(100% - 40px);
   height: 30px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   font-size: 20px;
   display: flex;
   align-items: center;
@@ -269,7 +269,7 @@
   overflow: hidden;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_icon {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon {
   top: 5px;
   height: 20px;
   width: 20px;
@@ -277,46 +277,46 @@
   border-radius: 20px;
 }
 
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_value {
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
   top: 5px;
   height: 20px;
   width: calc(100% - 40px - 10px);
   border-radius: 20px;
 }
 
-.location_field .location_groups .location_group .location_group_items {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items {
   position: relative;
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.location_field .location_groups .location_group::-webkit-scrollbar,
-.location_field .location_groups::-webkit-scrollbar,
-.location_field .location_groups .location_group .location_group_items .item .body .buses::-webkit-scrollbar {
+.css_location_field .css_location_groups .css_location_group::-webkit-scrollbar,
+.css_location_field .css_location_groups::-webkit-scrollbar,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buses::-webkit-scrollbar {
   display: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item {
   display: block;
   height: 50px;
   width: 100%;
   position: relative;
   margin: 0px;
   padding: 0px;
-  background: var(--b-ffffff);
+  background: var(--b-cssvar-ffffff);
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
   transition: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] {
   height: 221px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -324,21 +324,21 @@
   height: 50px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body {
   position: absolute;
   top: 50px;
   left: 0px;
   width: 100%;
   height: 171px;
   opacity: 0;
-  transition: opacity var(--b-transition-duration);
+  transition: opacity var(--b-cssvar-transition-duration);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body {
   opacity: 1;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs {
   position: absolute;
   top: 5px;
   left: 10px;
@@ -351,17 +351,17 @@
   border-radius: 30px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs::-webkit-scrollbar {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs::-webkit-scrollbar {
   display: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .tab,
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button {
   position: relative;
   height: 35px;
   display: inline-flex;
-  background: var(--b-ededf2);
-  color: var(--b-333333);
+  background: var(--b-cssvar-ededf2);
+  color: var(--b-cssvar-333333);
   border-radius: 30px;
   align-items: center;
   justify-content: center;
@@ -374,7 +374,7 @@
   vertical-align: top;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button .action_button_icon {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button .css_action_button_icon {
   position: relative;
   display: inline-flex;
   height: 35px;
@@ -382,45 +382,45 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button .action_button_icon svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button .css_action_button_icon svg {
   width: 15px;
   height: 15px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path {
-  fill: var(--b-333333);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path {
+  fill: var(--b-cssvar-333333);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
   fill: rgba(0, 0, 0, 0)
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
-  fill: var(--b-f4252c);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
+  fill: var(--b-cssvar-f4252c);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .tab,
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .action_button {
-  transition: background var(--b-transition-duration), color var(--b-transition-duration);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_tab,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_action_button {
+  transition: background var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
-  transition: fill var(--b-transition-duration);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon svg path {
+  transition: fill var(--b-cssvar-transition-duration);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .tab[selected="true"],
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"] {
-  background: var(--b-333333);
-  color: var(--b-ffffff);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab[selected="true"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"] {
+  background: var(--b-cssvar-333333);
+  color: var(--b-cssvar-ffffff);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .body .tabs .action_button[highlighted="true"][type="save-stop"] {
-  background: rgba(var(--b-f4252c-r), var(--b-f4252c-g), var(--b-f4252c-b), var(--b-f4252c-opacity-a));
-  color: var(--b-f4252c);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] {
+  background: rgba(var(--b-cssvar-f4252c-r), var(--b-cssvar-f4252c-g), var(--b-cssvar-f4252c-b), var(--b-cssvar-f4252c-opacity-a));
+  color: var(--b-cssvar-f4252c);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status {
   position: absolute;
   top: 7.5px;
   left: 10px;
@@ -430,8 +430,8 @@
   overflow: hidden;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide,
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -442,67 +442,67 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
   -webkit-user-select: none;
   user-select: none;
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="6"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="6"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="5"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="5"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="4"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="4"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="3"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="3"] {
-  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="6"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="6"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="3"] {
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   font-size: 13px;
   font-weight: 500;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="2"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="2"] {
-  color: var(--b-ffffff);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="2"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="2"] {
+  color: var(--b-cssvar-ffffff);
   font-size: 15px;
   font-weight: 700;
-  background: var(--b-main-color);
+  background: var(--b-cssvar-main-color);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="1"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="1"] {
-  color: var(--b-main-color);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="1"] {
+  color: var(--b-cssvar-main-color);
   font-size: 15px;
   font-weight: 700;
-  background: var(--b-main-color-solid-transparent-c)
+  background: var(--b-cssvar-main-color-solid-transparent-c)
 }
 
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="0.5"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="0.5"] {
-  color: var(--b-333333);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="0.5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="0.5"] {
+  color: var(--b-cssvar-333333);
   font-size: 15px;
   font-weight: 700;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .next_slide[code="0"],
-.location_field .location_groups .location_group .location_group_items .item .head .status .current_slide[code="0"] {
-  color: var(--b-333333);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_next_slide[code="0"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_current_slide[code="0"] {
+  color: var(--b-cssvar-333333);
   font-size: 15px;
   font-weight: 700;
   transition: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .status .slide_fade_out {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_status .css_slide_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
-  animation-duration: var(--b-transition-duration);
+  animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .route_direction {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_route_direction {
   position: absolute;
   top: 7.5px;
   left: 90px;
@@ -512,7 +512,7 @@
   line-height: 12px;
   display: flex;
   align-items: center;
-  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), 0.7);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
@@ -520,7 +520,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .route_name {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_route_name {
   position: absolute;
   left: 90px;
   width: calc(100% - 20px - 70px - 35px - 20px);
@@ -530,7 +530,7 @@
   line-height: 16px;
   display: flex;
   align-items: center;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
@@ -538,7 +538,7 @@
   -webkit-user-select: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .stretch {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_stretch {
   position: absolute;
   top: 7.5px;
   right: 10px;
@@ -547,28 +547,28 @@
   -webkit-user-select: none;
   user-select: none;
   border-radius: 25px;
-  background: var(--b-f9f9fb);
+  background: var(--b-cssvar-f9f9fb);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .stretch svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_stretch svg {
   width: 17px;
   height: 17px;
   transform: rotate(0deg);
-  transition: transform var(--b-transition-duration);
+  transition: transform var(--b-cssvar-transition-duration);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .head .stretch svg path {
-  fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_stretch svg path {
+  fill: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
 }
 
-.location_field .location_groups .location_group .location_group_items .item[stretched="true"] .head .stretch svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_head .css_stretch svg {
   transform: rotate(180deg);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .buses {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_buses {
   position: absolute;
   top: 45px;
   left: 10px;
@@ -585,33 +585,33 @@
   display: none;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .buses[displayed="true"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_buses[displayed="true"] {
   display: block;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus,
-.location_field .location_groups .location_group .location_group_items .item .overlapping_route {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_overlapping_route {
   position: relative;
-  width: calc(var(--b-l-fw) * 0.6);
+  width: calc(var(--b-cssvar-l-fw) * 0.6);
   height: 121px;
   box-sizing: border-box;
-  background: var(--b-f9f9fb);
+  background: var(--b-cssvar-f9f9fb);
   border-radius: 15px;
   display: inline-flex;
   margin-right: 5px;
   scroll-snap-align: center;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus[on-this-route="true"] {
-  background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus[on-this-route="true"] {
+  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus:last-child,
-.location_field .location_groups .location_group .location_group_items .item .overlapping_route:last-child {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus:last-child,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_overlapping_route:last-child {
   margin-right: 0px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .bus_title {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_bus_title {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -619,7 +619,7 @@
   height: 20px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_bus_title .css_car_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -630,16 +630,16 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon svg path {
-  fill: var(--b-333333);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_bus_title .css_car_icon svg path {
+  fill: var(--b-cssvar-333333);
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_icon svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_bus_title .css_car_icon svg {
   width: 20px;
   height: 20px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .bus_title .car_number {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_bus_title .css_car_number {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -648,13 +648,13 @@
   display: flex;
   align-items: center;
   font-size: 20px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -662,15 +662,15 @@
   height: 75px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_route,
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_status,
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_type {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_route,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_status,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_type {
   font-size: 17px;
   position: absolute;
   left: 0px;
   width: 100%;
   height: 25px;
-  color: var(--b-333333);
+  color: var(--b-cssvar-333333);
   overflow: hidden;
   white-space: nowrap;
   word-break: keep-all;
@@ -678,19 +678,19 @@
   align-items: center;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_route {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_route {
   top: 0px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_status {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_status {
   top: 25px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .bus .car_attributes .car_type {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_bus .css_car_attributes .css_car_type {
   top: 50px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item .buses .buses_message {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_buses .css_buses_message {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -699,64 +699,64 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
 }
 
-.location_field[skeleton-screen="true"] .location_head .location_name span {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
   border-radius: 30px;
 }
 
-.location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tabs_tray .location_group_tab span {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
   border-radius: 30px;
 }
 
-.location_field[skeleton-screen="true"] .location_head .location_group_tab_line_track .location_group_tab_line {
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   background: rgba(0, 0, 0, 0);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="false"] {
-  transition: height var(--b-transition-duration);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="false"] {
+  transition: height var(--b-cssvar-transition-duration);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .next_slide,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .current_slide {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .route_name {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_route_name {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-ededf2);
+  background: var(--b-cssvar-ededf2);
   top: 7.5px;
   height: 35px;
   border-radius: 30px;
 }
 
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch {
-  background: var(--b-ededf2);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_stretch {
+  background: var(--b-cssvar-ededf2);
 }
 
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch svg {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_stretch svg {
   display: none;
 }
 
-.location_field[skeleton-screen="true"] .location_head .location_name span,
-.location_field[skeleton-screen="true"] .location_head .location_group_tabs .location_group_tab span,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .next_slide,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .status .current_slide,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .route_name,
-.location_field .location_groups .location_group .location_group_items .item[skeleton-screen="true"] .head .stretch,
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_icon,
-.location_field .location_groups .location_group .location_group_details .location_group_details_body .location_group_details_property[skeleton-screen="true"] .location_details_property_value {
-  background: var(--b-ededf2);
-  /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span,
+.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tab span,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_route_name,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_stretch,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
+  background: var(--b-cssvar-ededf2);
+  /*background: linear-gradient(90deg, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 1) 35%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.45) 55%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;
   background-position-x: 180%;
   animation: skeleton-loading;
