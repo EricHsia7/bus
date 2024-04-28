@@ -15,10 +15,10 @@ export function prompt_message(message: string, duration: number = 1200): void {
   var prompt_id: string = md5(new Date().getTime() + Math.random());
   var prompt_element = document.createElement('div');
   prompt_element.id = prompt_id;
-  prompt_element.classlist.add('css_prompt');
-  prompt_element.classlist.add('css_prompt_animation_' + prompt_id);
+  prompt_element.classList.add('css_prompt');
+  prompt_element.classList.add('css_prompt_animation_' + prompt_id);
   var prompt_center_element = document.createElement('div');
-  prompt_center_element.classlist.add('css_prompt_content');
+  prompt_center_element.classList.add('css_prompt_content');
   prompt_center_element.innerText = message;
   prompt_element.appendChild(prompt_center_element);
   var prompt_css = `.css_prompt_animation_${prompt_id}{animation-timing-function:cubic-bezier(0.230, 1.000, 0.320, 1.000);animation-name:prompt${prompt_id};animation-duration:${duration + duration_base * 2}ms;animation-fill-mode:forwards;animation-timing-function:ease-in-out}@keyframes prompt${prompt_id}{0%{opacity:0;transform:translateX(-50%) translateY(${80}px) scale(1);}${Math.floor((duration_base / (duration + duration_base + 150)) * 100)}%{opacity:1;transform:translateX(-50%) translateY(clamp(-45px,calc(${translateY}px - var(--safe-area-bottom)),-20px)) scale(1);}${Math.floor(((duration_base + duration) / (duration + duration_base + 150)) * 100)}%{opacity:1;transform:translateX(-50%) translateY(clamp(-45px,calc(${translateY}px - var(--safe-area-bottom)),-20px)) scale(1);}100%{opacity:0;transform:translateX(-50%) translateY(80px) scale(1);}}`;

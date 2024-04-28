@@ -15,7 +15,7 @@ function queryPropertiesFieldSize(): FieldSize {
 function generateElementOfProperty(skeletonScreen: boolean): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_details_property');
+  element.classList.add('css_route_details_property');
   element.setAttribute('skeleton-screen', skeletonScreen);
   element.id = identifier;
   element.innerHTML = `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;

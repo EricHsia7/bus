@@ -16,7 +16,7 @@ function queryCalendarFieldSize(): FieldSize {
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_details_calendar_gridline');
+  element.classList.add('css_route_details_calendar_gridline');
   element.id = identifier;
   element.style.setProperty('--b-calendar-gridline-top', `${hours * calendar_ratio - 5}px`);
   element.innerHTML = `<div class="css_route_details_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><div class="css_route_details_calendar_gridline_line"></div>`;
@@ -29,7 +29,7 @@ function generateElementOfGridline(hours: number): GeneratedElement {
 function generateElementOfDay(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_details_calendar_day');
+  element.classList.add('css_route_details_calendar_day');
   element.id = identifier;
   return {
     element: element,
@@ -40,7 +40,7 @@ function generateElementOfDay(): GeneratedElement {
 function generateElementOfEventGroup(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_details_calendar_grouped_events');
+  element.classList.add('css_route_details_calendar_grouped_events');
   element.id = identifier;
   return {
     element: element,
@@ -51,7 +51,7 @@ function generateElementOfEventGroup(): GeneratedElement {
 function generateElementOfEvent(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_details_calendar_event');
+  element.classList.add('css_route_details_calendar_event');
   element.id = identifier;
   return {
     element: element,

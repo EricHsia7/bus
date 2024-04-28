@@ -116,7 +116,7 @@ function updateUpdateTimer() {
 function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_item');
+  element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
   element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_direction"></div><div class="css_route_name"></div><div class="css_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="css_buses" displayed="true"></div></div>`;
@@ -130,7 +130,7 @@ function generateElementOfGroup(): GeneratedElement {
   var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.classlist.add('css_location_group');
+  element.classList.add('css_location_group');
   element.innerHTML = `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
   return {
     element: element,
@@ -142,7 +142,7 @@ function generateElementOfTab(): GeneratedElement {
   var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.classlist.add('css_location_group_tab');
+  element.classList.add('css_location_group_tab');
   return {
     element: element,
     id: identifier
@@ -153,7 +153,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.classlist.add('css_location_group_details_property');
+  element.classList.add('css_location_group_details_property');
   element.innerHTML = `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
   return {
     element: element,
@@ -221,11 +221,11 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         function () {
           currentSlide.setAttribute('code', thisItem.status.code);
           currentSlide.innerText = thisItem.status.text;
-          currentSlide.classlist.remove('css_slide_fade_out');
+          currentSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classlist.add('css_slide_fade_out');
+      currentSlide.classList.add('css_slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisElement, '.css_route_name').innerText = thisItem.route_name;

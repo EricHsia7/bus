@@ -6,7 +6,7 @@ import { GeneratedElement } from '../index.ts';
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_option');
+  element.classList.add('css_option');
   element.id = identifier;
   element.innerHTML = `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {

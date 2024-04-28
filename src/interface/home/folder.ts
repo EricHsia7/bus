@@ -34,7 +34,7 @@ function generateElementOfItem(): GeneratedElement {
   var element = document.createElement('div');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.classlist.add('css_home_folder_item_stop');
+  element.classList.add('css_home_folder_item_stop');
   element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
   return {
     element: element,
@@ -46,7 +46,7 @@ function generateElementOfFolder(): GeneratedElement {
   var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.id = identifier;
-  element.classlist.add('css_home_folder');
+  element.classList.add('css_home_folder');
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
@@ -116,11 +116,11 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
         function () {
           currentSlide.setAttribute('code', thisItem.status.code);
           currentSlide.innerText = thisItem.status.text;
-          currentSlide.classlist.remove('css_slide_fade_out');
+          currentSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classlist.add('css_slide_fade_out');
+      currentSlide.classList.add('css_slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisElement, '.css_home_folder_item_stop_name').innerText = thisItem.name;

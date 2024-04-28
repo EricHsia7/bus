@@ -119,7 +119,7 @@ function updateUpdateTimer() {
 function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_item');
+  element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
   element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_name"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
@@ -132,7 +132,7 @@ function generateElementOfItem(): GeneratedElement {
 function generateElementOfGroup(): GeneratedElement {
   var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_group');
+  element.classList.add('css_route_group');
   element.id = identifier;
   return {
     element: element,
@@ -143,7 +143,7 @@ function generateElementOfGroup(): GeneratedElement {
 function generateElementOfTab(): GeneratedElement {
   var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_route_group_tab');
+  element.classList.add('css_route_group_tab');
   element.id = identifier;
   return {
     element: element,
@@ -211,11 +211,11 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         function () {
           currentSlide.setAttribute('code', thisItem.status.code);
           currentSlide.innerText = thisItem.status.text;
-          currentSlide.classlist.remove('css_slide_fade_out');
+          currentSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classlist.add('css_slide_fade_out');
+      currentSlide.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);

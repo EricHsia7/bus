@@ -8,7 +8,7 @@ var splashScreenTimer = {
 export function fadeOutSplashScreen(callback: Function): void {
   function fadeOut() {
     var element: HTMLElement = documentQuerySelector('.css_splash_screen');
-    element.classlist.add('css_splash_screen_fade_out');
+    element.classList.add('css_splash_screen_fade_out');
     element.addEventListener(
       'animationend',
       function () {

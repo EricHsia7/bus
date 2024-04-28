@@ -7,7 +7,7 @@ import { GeneratedElement } from '../index.ts';
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classlist.add('css_setting');
+  element.classList.add('css_setting');
   element.id = identifier;
   element.setAttribute('onclick', item.action);
   element.setAttribute('type', item.type);
