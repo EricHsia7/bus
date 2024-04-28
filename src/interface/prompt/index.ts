@@ -3,7 +3,7 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 
 export function prompt_message(message: string, duration: number = 1200): void {
   message = String(message);
-  var all_prompt = documentQuerySelectorAll('.prompt');
+  var all_prompt = documentQuerySelectorAll('.css_prompt');
   if (!(all_prompt === null)) {
     var all_prompt_len = all_prompt.length;
     for (var e = 0; e < all_prompt_len; e++) {
