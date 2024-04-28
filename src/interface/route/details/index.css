@@ -104,7 +104,7 @@
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group:last-child {
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head {

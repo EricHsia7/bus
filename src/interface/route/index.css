@@ -198,7 +198,7 @@
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item:last-child {
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] {

@@ -111,7 +111,7 @@
   background: var(--b-cssvar-ffffff);
   border-radius: 20px;
   margin-top: calc(10px + 55px);
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_settings_page_field .css_settings_page_settings .css_setting,

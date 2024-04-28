@@ -14,7 +14,7 @@
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder:last-child {
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head {

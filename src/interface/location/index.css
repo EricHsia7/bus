@@ -289,7 +289,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-bottom: var(--safe-area-bottom);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_location_field .css_location_groups .css_location_group::-webkit-scrollbar,

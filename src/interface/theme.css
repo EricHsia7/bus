@@ -152,26 +152,26 @@
 }
 
 :root {
-  --safe-area-left: 0px;
-  --safe-area-right: 0px;
-  --safe-area-top: 0px;
-  --safe-area-bottom: 0px;
+  --b-cssvar-safe-area-left: 0px;
+  --b-cssvar-safe-area-right: 0px;
+  --b-cssvar-safe-area-top: 0px;
+  --b-cssvar-safe-area-bottom: 0px;
 }
 
 @supports (bottom: constant(safe-area-inset-top)) {
   :root {
-    --safe-area-left: constant(safe-area-inset-left);
-    --safe-area-right: constant(safe-area-inset-right);
-    --safe-area-top: constant(safe-area-inset-top);
-    --safe-area-bottom: constant(safe-area-inset-bottom);
+    --b-cssvar-safe-area-left: constant(safe-area-inset-left);
+    --b-cssvar-safe-area-right: constant(safe-area-inset-right);
+    --b-cssvar-safe-area-top: constant(safe-area-inset-top);
+    --b-cssvar-safe-area-bottom: constant(safe-area-inset-bottom);
   }
 }
 
 @supports (bottom: env(safe-area-inset-top)) {
   :root {
-    --safe-area-left: env(safe-area-inset-left);
-    --safe-area-right: env(safe-area-inset-right);
-    --safe-area-top: env(safe-area-inset-top);
-    --safe-area-bottom: env(safe-area-inset-bottom);
+    --b-cssvar-safe-area-left: env(safe-area-inset-left);
+    --b-cssvar-safe-area-right: env(safe-area-inset-right);
+    --b-cssvar-safe-area-top: env(safe-area-inset-top);
+    --b-cssvar-safe-area-bottom: env(safe-area-inset-bottom);
   }
 }
