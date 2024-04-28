@@ -73,14 +73,20 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: '[contenthash].min.css' // Output CSS filename
       }),
-      new HtmlWebpackPlugin({
-        template: './src/index.html', // Path to your custom HTML template file
-        inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
+      new MangleCssClassPlugin({
+        classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
+        mangleCssVariables: true,
+        /*ignorePrefix: [''],*/
+        log: true
       }),
       new webpack.DefinePlugin({
         'process.env': {
           VERSION: JSON.stringify(thisVersion.hash) // You can adjust the length of the random string here (e.g., 8 characters)
         }
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/index.html', // Path to your custom HTML template file
+        inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
       }),
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
@@ -97,12 +103,6 @@ module.exports = (env, argv) => {
             }
           }
         ]
-      }),
-      new MangleCssClassPlugin({
-        classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
-        mangleCssVariables: true,
-        /*ignorePrefix: [''],*/
-        log: true
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
