@@ -310,7 +310,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
-  elementQuerySelector(Field, '.route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
+  elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
