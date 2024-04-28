@@ -9,6 +9,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { execSync } = require('child_process');
+const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -64,7 +65,6 @@ async function outputVersionJSON() {
 }
 
 outputVersionJSON();
-const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
