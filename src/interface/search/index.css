@@ -91,7 +91,7 @@
   overflow-y: scroll;
 }
 
-.css_search_field .css_search_body .css_search_search_results {
+.css_search_field .css_search_body .css_search_results {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -106,11 +106,11 @@
   background: var(--b-ffffff);
 }
 
-.css_search_field .css_search_body .css_search_search_results::-webkit-scrollbar {
+.css_search_field .css_search_body .css_search_results::-webkit-scrollbar {
   display: none;
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result {
+.css_search_field .css_search_body .css_search_results .css_search_search_result {
   margin: 0px;
   padding: 0px;
   width: 100%;
@@ -121,11 +121,11 @@
   -webkit-user-select: none;
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result:first-child {
+.css_search_field .css_search_body .css_search_results .css_search_search_result:first-child {
   margin-top: 55px;
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result .css_search_search_result_type {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -138,16 +138,16 @@
   -webkit-user-select: none;
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result .css_search_search_result_type svg {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type svg {
   height: 20px;
   width: 20px;
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result .css_search_search_result_type svg path {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type svg path {
   fill: var(--b-333333);
 }
 
-.css_search_field .css_search_body .css_search_search_results .css_search_search_result .css_search_search_result_route_name {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_route_name {
   position: absolute;
   top: 0px;
   left: 55px;

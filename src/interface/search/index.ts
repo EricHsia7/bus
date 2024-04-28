@@ -7,7 +7,7 @@ import { documentQuerySelector } from '../../tools/query-selector.ts';
 
 const searchPageField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
-const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_search_results');
+const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_results');
 var currentFuse;
 
 export function openSearchPage(): void {

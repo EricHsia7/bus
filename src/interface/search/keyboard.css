@@ -14,7 +14,7 @@
   border-top: 1px solid var(--b-f9f9fb);
 }
 
-.search_keyboard[displayed="true"] {
+.css_search_keyboard[displayed="true"] {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
