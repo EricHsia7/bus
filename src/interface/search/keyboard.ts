@@ -10,8 +10,8 @@ let keyboard_keys = [
   ['更多', '幹線', '清空', '0', '刪除']
 ];
 
-const searchInputElement = documentQuerySelector('.search_field .search_head .search_search_input #search_route_input');
-const keyboardElement = documentQuerySelector('.search_field .search_body .search_keyboard');
+const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+const keyboardElement = documentQuerySelector('.css_search_field .css_search_body .css_search_keyboard');
 
 function supportTouch(): boolean {
   if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -40,7 +40,7 @@ function initializeKeyboard(): void {
       if (supportTouch()) {
         var eventType = 'ontouchstart';
       }
-      result.push(`<div class="search_keyboard_key" ${eventType}="${eventScript}">${html}</div>`);
+      result.push(`<div class="css_search_keyboard_key" ${eventType}="${eventScript}">${html}</div>`);
     }
   }
   keyboardElement.innerHTML = result.join('');

@@ -7,7 +7,7 @@ import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, 
 var dataPreloadRequestID = 'preload_data';
 export var dataPreloadCompleted = false;
 var transitioned = false;
-var progressElement: HTMLElement = documentQuerySelector('.home_button_right svg#download-svg path[progress="progress"]');
+var progressElement: HTMLElement = documentQuerySelector('.css_home_button_right svg#download-svg path[progress="progress"]');
 
 function updateDownloadProgress() {
   var pixels = (1 - getDataReceivingProgress(dataPreloadRequestID)) * 189;
@@ -22,7 +22,7 @@ function updateDownloadProgress() {
 function setCompleteStatus() {
   if (dataPreloadCompleted) {
     progressElement.style.setProperty('--b-stroke-dashoffset', `${0}px`);
-    documentQuerySelector('.home_button_right').setAttribute('complete', true);
+    documentQuerySelector('.css_home_button_right').setAttribute('complete', true);
     progressElement.removeEventListener('transitioncancel', setCompleteStatus);
   }
 }

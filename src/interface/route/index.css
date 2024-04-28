@@ -231,7 +231,7 @@
   transition: opacity var(--b-transition-duration);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_body {
   opacity: 1;
 }
 
@@ -284,35 +284,35 @@
   height: 15px;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .action_button_icon svg path {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path {
   fill: var(--b-333333);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
   fill: rgba(0, 0, 0, 0)
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path,
-.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .action_button_icon svg path[filling="filling"] {
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path,
+.css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
   fill: var(--b-f4252c);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .tab,
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_body .css_tabs .css_tab,
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_body .css_tabs .css_action_button {
   transition: background var(--b-transition-duration), color var(--b-transition-duration);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .body .tabs .action_button .action_button_icon svg path {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon svg path {
   transition: fill var(--b-transition-duration);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .body .tabs .tab,
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_body .css_tabs .css_tab,
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_body .css_tabs .css_action_button {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .body .tabs .tab,
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .body .tabs .action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_body .css_tabs .css_tab,
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_body .css_tabs .css_action_button {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
@@ -494,11 +494,11 @@
   justify-content: center;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_head .css_stretch {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_head .css_stretch {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
@@ -513,7 +513,7 @@
   fill: rgba(var(--b-333333-r), var(--b-333333-g), var(--b-333333-b), var(--b-333333-opacity-b));
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_head .stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] .css_head .css_stretch svg {
   transform: rotate(180deg);
 }
 
@@ -553,13 +553,13 @@
   scroll-snap-align: center;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .bus,
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .overlapping_route {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_bus,
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_overlapping_route {
   background: rgba(var(--b-ededf2-inflected-to-segment-buffer-r), var(--b-ededf2-inflected-to-segment-buffer-g), var(--b-ededf2-inflected-to-segment-buffer-b), var(--b-ededf2-opacity-a))
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .bus,
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .overlapping_route {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_bus,
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_overlapping_route {
   background: rgba(var(--b-ededf2-inflected-to-user-position-r), var(--b-ededf2-inflected-to-user-position-g), var(--b-ededf2-inflected-to-user-position-b), var(--b-ededf2-opacity-a))
 }
 
@@ -567,11 +567,11 @@
   background: rgba(var(--b-main-color-r), var(--b-main-color-g), var(--b-main-color-b), var(--b-main-color-opacity-d));
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .bus[on-this-route="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-inflected-to-segment-buffer-r), var(--b-main-color-inflected-to-segment-buffer-g), var(--b-main-color-inflected-to-segment-buffer-b), var(--b-main-color-opacity-d));
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .bus[on-this-route="true"] {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_bus[on-this-route="true"] {
   background: rgba(var(--b-main-color-inflected-to-user-position-r), var(--b-main-color-inflected-to-user-position-g), var(--b-main-color-inflected-to-user-position-b), var(--b-main-color-opacity-d));
 }
 
@@ -717,27 +717,27 @@
   color: var(--b-333333);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_overlapping_route .css_overlapping_route_actions .css_overlapping_route_action_button {
   background: var(--b-ededf2-inflected-to-segment-buffer);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .overlapping_route .overlapping_route_actions .overlapping_route_action_button {
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] .css_overlapping_route .css_overlapping_route_actions .css_overlapping_route_action_button {
   background: var(--b-ededf2-inflected-to-user-position);
 }
 
-.css_route_field[skeleton-screen="true"] .route_head .route_name span {
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   border-radius: 30px;
 }
 
-.css_route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span {
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   border-radius: 30px;
 }
 
-.css_route_field[skeleton-screen="true"] .route_head .route_group_tab_line_track .route_group_tab_line {
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
   background: rgba(0, 0, 0, 0);
 }
 
@@ -751,7 +751,7 @@
   background: var(--b-ededf2);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .name {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-ededf2);
   top: 7.5px;
@@ -759,20 +759,20 @@
   border-radius: 30px;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch {
   background: var(--b-ededf2);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch svg {
   display: none;
 }
 
-.css_route_field[skeleton-screen="true"] .route_head .route_name span,
-.css_route_field[skeleton-screen="true"] .route_head .route_group_tabs .route_group_tab span,
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span,
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tab span,
 .css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_next_slide,
 .css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_status .css_current_slide,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .name,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .stretch {
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_name,
+.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch {
   background: var(--b-ededf2);
   /*background: linear-gradient(90deg, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 35%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 0.45) 55%, rgba(var(--b-f9f9fb-r), var(--b-f9f9fb-g), var(--b-f9f9fb-b), 1) 75%);
   background-size: 200% 100%;

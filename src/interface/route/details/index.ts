@@ -5,10 +5,10 @@ import { md5 } from '../../../tools/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
 
 async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: [number]): void {
-  var actionsField: HTMLElement = elementQuerySelector(Field, '.route_details_body .route_details_groups .route_details_group[group="actions"]');
-  var propertiesField: HTMLElement = elementQuerySelector(Field, '.route_details_body .route_details_groups .route_details_group[group="properties"]');
-  var calendarField: HTMLElement = elementQuerySelector(Field, '.route_details_body .route_details_groups .route_details_group[group="calendar"]');
-  elementQuerySelector(actionsField, '.route_details_group_body .route_details_action_button[action="link"]').setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
+  var actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
+  var propertiesField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
+  var calendarField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"]');
+  elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="link"]').setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
@@ -19,12 +19,12 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
 }
 
 export function openRouteDetails(RouteID: number, PathAttributeId: [number]): void {
-  var Field: HTMLElement = documentQuerySelector('.route_details_field');
+  var Field: HTMLElement = documentQuerySelector('.css_route_details_field');
   Field.setAttribute('displayed', true);
   initializeRouteDetailsField(Field, RouteID, PathAttributeId);
 }
 
 export function closeRouteDetails(): void {
-  var Field: HTMLElement = documentQuerySelector('.route_details_field');
+  var Field: HTMLElement = documentQuerySelector('.css_route_details_field');
   Field.setAttribute('displayed', false);
 }

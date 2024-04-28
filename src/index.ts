@@ -64,7 +64,7 @@ window.bus = {
   initialize: function () {
     if (bus_initialized === false) {
       bus_initialized = true;
-      var FolderField = documentQuerySelector('.home_field .home_body .home_folders');
+      var FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
         .then((e) => {
@@ -89,7 +89,7 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            var searchInputElement: HTMLElement = documentQuerySelector('.search_field .search_head .search_search_input #search_route_input');
+            var searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(event.target.value);
             });

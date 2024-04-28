@@ -5,9 +5,9 @@ import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
 
-const searchPageField = documentQuerySelector('.search_field');
-const searchInputElement = documentQuerySelector('.search_field .search_head .search_search_input #search_route_input');
-const searchResultsElement = documentQuerySelector('.search_field .search_body .search_search_results');
+const searchPageField = documentQuerySelector('.css_search_field');
+const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_search_results');
 var currentFuse;
 
 export function openSearchPage(): void {
@@ -51,7 +51,7 @@ export function updateSearchResult(query: string): void {
       if (result.item.type === 1) {
         onclickScript = `bus.location.openLocation('${result.item.hash}')`; //openLocation
       }
-      html.push(`<div class="search_search_result" onclick="${onclickScript}"><div class="search_search_result_type">${typeIcon}</div><div class="search_search_result_route_name">${name}</div></div>`);
+      html.push(`<div class="css_search_search_result" onclick="${onclickScript}"><div class="css_search_search_result_type">${typeIcon}</div><div class="css_search_search_result_route_name">${name}</div></div>`);
     }
     searchResultsElement.innerHTML = html.join('');
   }
