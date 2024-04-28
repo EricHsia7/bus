@@ -358,7 +358,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       }
     }
 
-    var currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .location_group_details_body .location_group_details_property`).length;
+    var currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
     var groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
       var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
@@ -366,12 +366,12 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         for (var o = 0; o < Math.abs(capacity); o++) {
           //var propertyIndex = currentGroupPropertySeatQuantity + o;
           var thisPropertyElement = generateElementOfGroupDetailsProperty();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .location_group_details_body`).appendChild(thisPropertyElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body`).appendChild(thisPropertyElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .location_group_details_body .location_group_details_property`)[propertyIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[propertyIndex].remove();
         }
       }
     }
@@ -386,7 +386,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (var k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .location_group_details_body .location_group_details_property`)[k];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[k];
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
