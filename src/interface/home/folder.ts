@@ -30,27 +30,27 @@ function queryFolderFieldSize(): FieldSize {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
+  //var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.id = identifier;
+  //element.id = identifier;
   element.setAttribute('stretched', false);
   element.classList.add('css_home_folder_item_stop');
   element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfFolder(): GeneratedElement {
-  var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
+  //var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.id = identifier;
+  //element.id = identifier;
   element.classList.add('css_home_folder');
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
