@@ -83,13 +83,9 @@ export function initializeRouteSliding(): void {
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
     updateRouteCanvas(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
-  window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-    if (e.matches) {
-      routeSliding.lineColor = '#f9f9fb';
-    } else {
-      routeSliding.lineColor = '#333';
-    }
-  });
+  var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaQueryList.addListener(updateRouteLineColor);
+  updateRouteLineColor(mediaQueryList);
 }
 
 function queryRouteFieldSize(): FieldSize {
@@ -129,6 +125,14 @@ function updateRouteCanvas(groupQuantity: number, percentage: number, width: num
   ctx.fillStyle = routeSliding.lineColor;
   ctx.clearRect(0, 0, routeSliding.fieldWidth * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
   ctx.fillRect(((routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2) * routeSliding.canvasScale, 0, width * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
+}
+
+function updateRouteLineColor(e): void {
+  if (e.matches) {
+    routeSliding.lineColor = '#f9f9fb';
+  } else {
+    routeSliding.lineColor = '#333';
+  }
 }
 
 function updateUpdateTimer() {
