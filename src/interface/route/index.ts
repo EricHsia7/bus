@@ -83,7 +83,7 @@ export function initializeRouteSliding(): void {
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
     updateRouteCanvas(routeSliding.groupQuantity, slidingGroupIndex, line_width);
   });
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener(function (e) {
+  window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
     if (e.matches) {
       canvas;
       routeSliding.lineColor = '#f9f9fb';
