@@ -138,7 +138,7 @@ function updateRouteLineColor(e): void {
     routeSliding.lineColor = '#333';
   }
   if (!routeSliding.sliding) {
-    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`]?.width);
   }
 }
 
