@@ -104,6 +104,8 @@
   bottom: 1.2px;
   width: 100%;
   height: 2px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
@@ -115,6 +117,8 @@
   height: 2px;
   border-radius: 0px;
   transform: translateX(calc(var(--b-cssvar-r-fw) / var(--b-cssvar-route-group-quantity) * var(--b-cssvar-route-tab-percentage) + (var(--b-cssvar-r-fw) / var(--b-cssvar-route-group-quantity) - 30px) / 2)) scaleX(calc(var(--b-cssvar-route-tab-width) / 30));
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box {
@@ -125,6 +129,8 @@
   height: 1.2px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer {
@@ -136,6 +142,8 @@
   width: 100%;
   transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
   transition: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
