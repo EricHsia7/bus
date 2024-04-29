@@ -745,7 +745,7 @@
 }
 
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
-  background: rgba(0, 0, 0, 0);
+  display: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="false"] {
