@@ -86,9 +86,6 @@ export function initializeRouteSliding(): void {
   var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
   mediaQueryList.addListener(updateRouteLineColor);
   updateRouteLineColor(mediaQueryList);
-  if (!routeSliding.sliding) {
-    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-  }
 }
 
 function queryRouteFieldSize(): FieldSize {
@@ -139,6 +136,9 @@ function updateRouteLineColor(e): void {
     routeSliding.lineColor = '#f9f9fb';
   } else {
     routeSliding.lineColor = '#333';
+  }
+  if (!routeSliding.sliding) {
+    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   }
 }
 
