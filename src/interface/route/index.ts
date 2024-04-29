@@ -85,7 +85,6 @@ export function initializeRouteSliding(): void {
   });
   window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
     if (e.matches) {
-      canvas;
       routeSliding.lineColor = '#f9f9fb';
     } else {
       routeSliding.lineColor = '#333';
