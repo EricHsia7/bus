@@ -21,7 +21,9 @@ var routeSliding: object = {
   scrollLog: [],
   fieldWidth: 0,
   fieldHeight: 0,
-  sliding: false
+  sliding: false,
+  lineHeight: 2,
+  lineColor: '#333'
 };
 
 var routeRefreshTimer: object = {
@@ -79,6 +81,15 @@ export function initializeRouteSliding(): void {
     var target_size = routeSliding.groupStyles[`g_${routeSliding.targetGroup}`] || { width: 0 };
     var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
     updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
+    updateRouteCanvas(routeSliding.groupQuantity, slidingGroupIndex, line_width);
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener(function (e) {
+    if (e.matches) {
+      canvas;
+      routeSliding.lineColor = '#f9f9fb';
+    } else {
+      routeSliding.lineColor = '#333';
+    }
   });
 }
 
@@ -98,6 +109,27 @@ export function ResizeRouteField(): void {
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
   documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-cssvar-route-group-quantity:${groupQuantity};--b-cssvar-route-tab-percentage:${percentage};--b-cssvar-route-tab-width:${width};}`;
+}
+
+export function ResizeRouteCanvas() {
+  const FieldSize = queryRouteFieldSize();
+  const FieldWidth = FieldSize.width;
+  const FieldHeight = FieldSize.height;
+  const canvasScale = window.devicePixelRatio;
+  const canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
+  canvas.width = FieldWidth * canvasScale;
+  canvas.height = routeSliding.lineHeight * canvasScale;
+  routeSliding.fieldWidth = FieldWidth;
+  routeSliding.fieldHeight = FieldHeight;
+  routeSliding.canvasScale = canvasScale;
+}
+
+function updateRouteCanvas(groupQuantity: number, percentage: number, width: number): void {
+  var canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
+  var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  ctx.fillStyle = routeSliding.lineColor;
+  ctx.clearRect(0, 0, routeSliding.fieldWidth * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
+  ctx.fillRect(((routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2) * routeSliding.canvasScale, 0, width * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
 }
 
 function updateUpdateTimer() {
@@ -297,8 +329,6 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   var groupedItems = integration.groupedItems;
 
   routeSliding.groupQuantity = groupQuantity;
-  routeSliding.fieldWidth = FieldWidth;
-  routeSliding.fieldHeight = FieldHeight;
 
   for (var i = 0; i < groupQuantity; i++) {
     routeSliding.groupStyles[`g_${i}`] = {
@@ -307,6 +337,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
   if (!routeSliding.sliding) {
     updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);

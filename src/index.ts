@@ -2,7 +2,7 @@ import { updateSearchResult } from './interface/search/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { askForPositioningPermission } from './data/user-position/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index.ts';
@@ -73,15 +73,18 @@ window.bus = {
             initializeRouteSliding();
             initializeLocationSliding();
             ResizeRouteField();
+            ResizeRouteCanvas();
             ResizeLocationField();
             window.addEventListener('resize', (event) => {
               ResizeRouteField();
+              ResizeRouteCanvas();
               ResizeLocationField();
             });
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
                   ResizeRouteField();
+                  ResizeRouteCanvas();
                   ResizeLocationField();
                 });
               }
