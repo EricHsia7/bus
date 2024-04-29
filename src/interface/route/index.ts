@@ -123,8 +123,10 @@ function updateRouteCanvas(groupQuantity: number, percentage: number, width: num
   var canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
   var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   ctx.fillStyle = routeSliding.lineColor;
-  ctx.clearRect(0, 0, routeSliding.fieldWidth * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
-  ctx.fillRect(((routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2) * routeSliding.canvasScale, 0, width * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
+  window.requestAnimationFrame(function () {
+    ctx.clearRect(0, 0, routeSliding.fieldWidth * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
+    ctx.fillRect(((routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2) * routeSliding.canvasScale, 0, width * routeSliding.canvasScale, routeSliding.lineHeight * routeSliding.canvasScale);
+  });
 }
 
 function updateRouteLineColor(e): void {
