@@ -1,4 +1,4 @@
-export function getRushHour(region: number): [] {
+export function getRushHour(period: number): [] {
   var rushHours = [
     [
       {
@@ -23,5 +23,5 @@ export function getRushHour(region: number): [] {
       }
     ]
   ];
-  return rushHours[region];
+  return rushHours[period];
 }
