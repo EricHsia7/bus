@@ -12,12 +12,15 @@ var trackingUpdateRate: trackingUpdateRate = {
   trackedStops: [],
   trackingID: null,
   tracking: false,
-  sampleQuantity: 64
+  sampleQuantity: 64,
+  monitorTimes: 60
 };
 
 export async function recordEstimateTime(EstimateTime: object): void {
+  var needToReset = false;
   if (!trackingUpdateRate.tracking) {
     trackingUpdateRate.tracking = true;
+    trackingUpdateRate.trackedStops = [];
     var today: Date = new Date();
     trackingUpdateRate.trackingID = `e_${md5(Math.random() + new Date().getTime())}`;
     var EstimateTimeLength: number = EstimateTime.length - 1;
@@ -40,9 +43,15 @@ export async function recordEstimateTime(EstimateTime: object): void {
         existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
       }
       existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+      if (existingRecordObject.data[`s_${item.StopID}`] > trackingUpdateRate.monitorTimes) {
+        needToReset = true;
+      }
     }
   }
   await lfSetItem(3, trackingUpdateRate.trackingID, JSON.stringify(existingRecordObject));
+  if (needToReset) {
+    trackingUpdateRate.tracking = false;
+  }
 }
 
 export async function listRecordedEstimateTime(): [] {
