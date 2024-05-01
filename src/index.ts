@@ -1,5 +1,6 @@
 import { updateSearchResult } from './interface/search/index.ts';
 import { calculateDataUsage } from './data/analytics/data-usage.ts';
+import { getUpdateRateInTime } from './data/analytics/update-rate.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { askForPositioningPermission } from './data/user-position/index.ts';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
@@ -154,7 +155,8 @@ window.bus = {
   test: {
     calculateDataUsage,
     initializeFolderStores,
-    calculateStoresSize
+    calculateStoresSize,
+    getUpdateRateInTime
   },
   settingsPage: {
     openSettingsPage,

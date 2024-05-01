@@ -1,4 +1,4 @@
-import { splitDataByDelta, pearsonCorrelation, md5 } from '../../tools/index.ts';
+import { splitDataByDelta, pearsonCorrelation, md5, formatTime } from '../../tools/index.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 interface trackingUpdateRate {
@@ -88,4 +88,41 @@ export async function getUpdateRate(): number {
   }
   weighted_average = total_correlation / total_weight;
   return isNaN(weighted_average) ? 0.8 : Math.abs(weighted_average);
+}
+
+export async function getUpdateRateInTime(): string {
+  var weighted_average: number = 0;
+  var total_weight: number = 0;
+  var total_average_change: number = 0;
+  var average_change: number = 0;
+  var collection = await listRecordedEstimateTime();
+  for (var dataSet of collection) {
+    var groups = splitDataByDelta(dataSet);
+    for (var group of groups) {
+      const firstColumn: number[] = group.map((item) => item[0]);
+      const secondColumn: number[] = group.map((item) => item[1]);
+      const rowCount: number = firstColumn.length;
+      var timeStampUponChanges: [] = [];
+      for (var i = 1; i < rowCount; i++) {
+        var change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
+        if (change > 0) {
+          timeStampUponChanges.push(secondColumn[i]);
+        }
+      }
+      var timeStampUponChangesLength = timeStampUponChanges.length;
+      var total_change: number = 0;
+      var average: number = 0;
+      for (var i = 1; i < timeStampUponChangesLength; i++) {
+        var change: number = Math.abs(timeStampUponChanges[i] - timeStampUponChanges[i - 1]); // measured in seconds
+        total_change += change;
+      }
+      average = total_change / (timeStampUponChangesLength - 1);
+      total_average_change += average * rowCount;
+      total_weight += rowCount;
+    }
+    average_change = total_average_change / total_weight;
+  }
+  weighted_average = total_correlation / total_weight;
+
+  return isNaN(weighted_average) ? '--' : formatTime(weighted_average, 3);
 }
