@@ -108,7 +108,7 @@ export async function getUpdateRateInTime(): string {
           timeStampUponChanges.push(secondColumn[i]);
         }
       }
-      var timeStampUponChangesLength = timeStampUponChanges.length;
+      var timeStampUponChangesLength :number= timeStampUponChanges.length;
       var total_change: number = 0;
       var average: number = 0;
       for (var i = 1; i < timeStampUponChangesLength; i++) {
@@ -121,5 +121,5 @@ export async function getUpdateRateInTime(): string {
     }
   }
   weighted_average_change = total_average_change / total_weight;
-  return isNaN(weighted_average_change) ? '--' : formatTime(weighted_average_change, 3);
+  return isNaN(weighted_average_change) ? '!' : formatTime(weighted_average_change, 3);
 }
