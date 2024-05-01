@@ -91,10 +91,9 @@ export async function getUpdateRate(): number {
 }
 
 export async function getUpdateRateInTime(): string {
-  var weighted_average: number = 0;
   var total_weight: number = 0;
   var total_average_change: number = 0;
-  var average_change: number = 0;
+  var weighted_average_change: number = 0;
   var collection = await listRecordedEstimateTime();
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
@@ -120,9 +119,7 @@ export async function getUpdateRateInTime(): string {
       total_average_change += average * rowCount;
       total_weight += rowCount;
     }
-    average_change = total_average_change / total_weight;
   }
-  weighted_average = total_correlation / total_weight;
-
-  return isNaN(weighted_average) ? '--' : formatTime(weighted_average, 3);
+  weighted_average_change = total_average_change / total_weight;
+  return isNaN(weighted_average_change) ? '--' : formatTime(weighted_average_change, 3);
 }
