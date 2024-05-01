@@ -13,7 +13,7 @@ var trackingUpdateRate: trackingUpdateRate = {
   trackingID: null,
   tracking: false,
   sampleQuantity: 64,
-  monitorTimes: 60
+  monitorTimes: 90
 };
 
 export async function recordEstimateTime(EstimateTime: object): void {
