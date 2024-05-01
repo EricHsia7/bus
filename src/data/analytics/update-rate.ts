@@ -43,7 +43,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
         existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
       }
       existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-      if (existingRecordObject.data[`s_${item.StopID}`] > trackingUpdateRate.monitorTimes) {
+      if (existingRecordObject.data[`s_${item.StopID}`].length > trackingUpdateRate.monitorTimes) {
         needToReset = true;
       }
     }
