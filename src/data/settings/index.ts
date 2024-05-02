@@ -199,7 +199,7 @@ export async function listSettings(): [] {
     if (item.key === 'refresh_interval') {
       if (item.option === 0) {
         var updateRate = await getUpdateRate();
-        item.status = `自動（${formatTime(15 / updateRate, 0)}）`;
+        item.status = `${formatTime(15 / updateRate, 0)}（自動）`;
       }
     }
     result.push(item);
