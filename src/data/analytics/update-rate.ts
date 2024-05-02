@@ -116,8 +116,8 @@ export async function getUpdateRateInTime(): string {
         total_change += change;
       }
       average = total_change / (timeStampUponChangesLength - 1);
-      total_average_change += average * rowCount;
-      total_weight += rowCount;
+      total_average_change += isNaN(average) ? 0 : average * rowCount;
+      total_weight += isNaN(average) ? 0 : rowCount;
     }
   }
   weighted_average_change = total_average_change / total_weight;
