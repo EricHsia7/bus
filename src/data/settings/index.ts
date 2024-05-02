@@ -1,4 +1,5 @@
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
+import { getUpdateRate } from '../analytics/update-rate.ts';
 import { formatTime } from '../../tools/format-time.ts';
 import { getHTMLVersionHash } from './version.ts';
 
