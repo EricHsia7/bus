@@ -61,7 +61,7 @@ export async function listRecordedEstimateTime(): [] {
   for (var key of keys) {
     var json = await lfGetItem(3, key);
     var object: object = JSON.parse(json);
-    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000)) {
+    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 3 * 1000)) {
       for (var key2 in object.data) {
         result.push(object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
       }
@@ -109,7 +109,7 @@ export async function getUpdateRateInTime(): string {
           timeStampUponChanges.push(secondColumn[i]);
         }
       }
-      var timeStampUponChangesLength :number= timeStampUponChanges.length;
+      var timeStampUponChangesLength: number = timeStampUponChanges.length;
       var total_change: number = 0;
       var average: number = 0;
       for (var i = 1; i < timeStampUponChangesLength; i++) {
