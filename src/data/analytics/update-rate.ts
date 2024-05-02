@@ -1,4 +1,5 @@
-import { splitDataByDelta, pearsonCorrelation, md5, formatTime } from '../../tools/index.ts';
+import { splitDataByDelta, pearsonCorrelation, md5 } from '../../tools/index.ts';
+import { formatTime } from '../../tools/format-time.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
 interface trackingUpdateRate {
