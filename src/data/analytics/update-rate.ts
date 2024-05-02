@@ -122,5 +122,5 @@ export async function getUpdateRateInTime(): string {
     }
   }
   weighted_average_change = total_average_change / total_weight;
-  return isNaN(weighted_average_change) ? '!' : formatTime(weighted_average_change, 3);
+  return isNaN(weighted_average_change) ? '!' : formatTime(weighted_average_change, 0);
 }
