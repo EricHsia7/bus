@@ -32,51 +32,51 @@ var Settings = {
     option: 0,
     options: [
       {
-        name: '自動',
+        name: '自動（15秒）',
         value: {
-          defaultInterval: 15 * 1000,
+          baseInterval: 15 * 1000,
           dynamic: true
         }
       },
       {
         name: '10秒',
         value: {
-          defaultInterval: 10 * 1000,
+          baseInterval: 10 * 1000,
           dynamic: false
         }
       },
       {
         name: '20秒',
         value: {
-          defaultInterval: 20 * 1000,
+          baseInterval: 20 * 1000,
           dynamic: false
         }
       },
       {
         name: '30秒',
         value: {
-          defaultInterval: 30 * 1000,
+          baseInterval: 30 * 1000,
           dynamic: false
         }
       },
       {
         name: '40秒',
         value: {
-          defaultInterval: 40 * 1000,
+          baseInterval: 40 * 1000,
           dynamic: false
         }
       },
       {
         name: '50秒',
         value: {
-          defaultInterval: 50 * 1000,
+          baseInterval: 50 * 1000,
           dynamic: false
         }
       },
       {
         name: '60秒',
         value: {
-          defaultInterval: 60 * 1000,
+          baseInterval: 60 * 1000,
           dynamic: false
         }
       }
@@ -182,7 +182,7 @@ export async function initializeSettings(): void {
   }
 }
 
-export function listSettings(): [] {
+export async function listSettings(): [] {
   var result = [];
   for (var key in Settings) {
     var item = Settings[key];
@@ -194,6 +194,12 @@ export function listSettings(): [] {
     }
     if (item.type === 'info' && key === 'version') {
       item.status = getHTMLVersionHash();
+    }
+    if (item.key === 'refresh_interval') {
+      if (item.option === 0) {
+        var updateRate = await getUpdateRate();
+        item.status = `自動（${formatTime(15 / updateRate, 0)}）`;
+      }
     }
     result.push(item);
   }

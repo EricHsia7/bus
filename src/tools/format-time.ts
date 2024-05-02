@@ -34,6 +34,7 @@ export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss
 }
 
 export function formatTime(time: number, mode: number): string {
+  time = Math.round(time);
   if (mode === 0) {
     return `${time}秒`;
   }

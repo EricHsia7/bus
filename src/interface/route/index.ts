@@ -27,7 +27,7 @@ var routeSliding: object = {
 };
 
 var routeRefreshTimer: object = {
-  defaultInterval: 15 * 1000,
+  baseInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
   auto: true,
@@ -421,7 +421,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 async function refreshRoute(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   routeRefreshTimer.auto = refresh_interval_setting.auto;
-  routeRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
+  routeRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer.refreshing = true;
   routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
@@ -431,9 +431,9 @@ async function refreshRoute(): object {
   routeRefreshTimer.lastUpdate = new Date().getTime();
   if (routeRefreshTimer.auto) {
     var updateRate = await getUpdateRate();
-    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, integration.dataUpdateTime + routeRefreshTimer.defaultInterval / updateRate);
+    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, integration.dataUpdateTime + routeRefreshTimer.baseInterval / updateRate);
   } else {
-    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.defaultInterval;
+    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.baseInterval;
   }
   routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
   routeRefreshTimer.refreshing = false;

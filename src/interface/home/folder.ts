@@ -10,7 +10,7 @@ import { GeneratedElement, FieldSize } from '../index.ts';
 var previousIntegration = [];
 
 var foldersRefreshTimer = {
-  defaultInterval: 15 * 1000,
+  baseInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
   auto: true,
@@ -228,7 +228,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
 export async function refreshFolders(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
-  foldersRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
+  foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer.refreshing = true;
   foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   var integration = await integrateFolders(foldersRefreshTimer.currentRequestID);
@@ -237,9 +237,9 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
   if (foldersRefreshTimer.auto) {
-    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, integration.dataUpdateTime + foldersRefreshTimer.defaultInterval / updateRate);
+    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, integration.dataUpdateTime + foldersRefreshTimer.baseInterval / updateRate);
   } else {
-    foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.defaultInterval;
+    foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.baseInterval;
   }
   foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime());
   foldersRefreshTimer.refreshing = false;

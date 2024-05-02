@@ -21,7 +21,7 @@ var locationSliding = {
 };
 
 var locationRefreshTimer: object = {
-  defaultInterval: 15 * 1000,
+  baseInterval: 15 * 1000,
   minInterval: 5 * 1000,
   dynamicInterval: 15 * 1000,
   auto: true,
@@ -428,7 +428,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 async function refreshLocation(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   locationRefreshTimer.auto = refresh_interval_setting.auto;
-  locationRefreshTimer.defaultInterval = refresh_interval_setting.defaultInterval;
+  locationRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer.refreshing = true;
   locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
@@ -438,9 +438,9 @@ async function refreshLocation(): object {
   locationRefreshTimer.lastUpdate = new Date().getTime();
   if (locationRefreshTimer.auto) {
     var updateRate = await getUpdateRate();
-    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.defaultInterval / updateRate);
+    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.baseInterval / updateRate);
   } else {
-    locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.defaultInterval;
+    locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.baseInterval;
   }
   locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
   locationRefreshTimer.refreshing = false;
