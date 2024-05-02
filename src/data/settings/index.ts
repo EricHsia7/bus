@@ -33,7 +33,7 @@ var Settings = {
     option: 0,
     options: [
       {
-        name: '自動（15秒）',
+        name: '自動',
         value: {
           baseInterval: 15 * 1000,
           dynamic: true
