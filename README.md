@@ -1,4 +1,6 @@
 # Bus
+[![latest version](https://img.shields.io/badge/dynamic/json?label=latest+version&query=hash&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
+[![latest build](https://img.shields.io/badge/dynamic/json?label=latest+builld&query=build&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
 
 Bus is a user-friendly web application designed to simplify your travel experience. Whether you're a frequent traveler, daily commuter, or simply exploring new places, Bus provides tools to help you find routes, manage locations, and organize your journeys effortlessly.
 
