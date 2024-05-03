@@ -40,7 +40,7 @@ Your privacy and security are our top priorities. Your all data are stored local
 
 ## Dependencies
 
-The project uses the following dependencies:
+The project uses the dependencies: [See in package.json](./package.json).
 
 ## Materials Used
 - [Google Material Symbols](https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols)
