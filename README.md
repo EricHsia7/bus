@@ -8,7 +8,7 @@ Bus is a user-friendly web application designed to simplify your travel experien
 
 ## Getting Started
 
-- **Spring into it**: Open the application in your browser:
+- **Spring into it**: Open this application in your browser via the urls.
   ```text
   https://erichsia7.github.io/bus
   ```
@@ -34,7 +34,7 @@ Quickly find routes, locations, and places of interest within the app.
 
 ### Integration
 
-- **All-in-One Page**: Display stops of a route or location in a single page.
+- **All-in-One Page**: Display stops of a route or location on a single page.
 - **Visualized Diagram**: Show scheduled departure time in a simplified and readable calendar.
 
 ### Personalization

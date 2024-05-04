@@ -1,6 +1,10 @@
 @keyframes skeleton-loading {
-  to {
-    background-position: -20%;
+  0% {
+    background-position: 0% 0%;
+  }
+
+  100% {
+    background-position: -135% 0%;
   }
 }
 
