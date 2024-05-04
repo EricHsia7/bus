@@ -42,7 +42,8 @@ Your privacy and security are our top priorities. Your all data are stored local
 
 ## Dependencies
 
-The project uses the dependencies: [See in package.json](./package.json).
+- Packages: See them in [package.json](./package.json).
+- Data References: See them in [getURL.ts](./src/data/apis/getURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
 
 ## Materials Used
 - [Google Material Symbols](https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols)
