@@ -1,4 +1,5 @@
-# ![icon](./pwaicon2/bus-icon.svg) Bus
+<h1><picture><source media="(prefers-color-scheme: dark)" srcset="./pwaicon2/bus-icon-dark-mode.svg"><source media="(prefers-color-scheme: light)" srcset="./pwaicon2/bus-icon-light-mode.svg"><img alt="Your image description" src="./pwaicon2/bus-icon-light-mode.svg"></picture>Bus</h1>
+
 [![latest version](https://img.shields.io/badge/dynamic/json?label=latest+version&query=hash&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
 [![latest build](https://img.shields.io/badge/dynamic/json?label=latest+builld&query=build&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
 ![Netlify Status](https://api.netlify.com/api/v1/badges/96537a9f-5bb2-4d96-8d04-c48820a1b60b/deploy-status)
