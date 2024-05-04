@@ -115,7 +115,7 @@ module.exports = (env, argv) => {
     output: {
       filename: isProduction ? '[contenthash].min.js' : 'index.js', // Output bundle filename
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
-      publicPath: 'https://erichsia7.github.io/bus/',
+      publicPath: './',
       library: {
         name: 'bus',
         type: 'umd',
