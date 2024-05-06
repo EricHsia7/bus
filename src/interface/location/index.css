@@ -507,9 +507,9 @@
   top: 7.5px;
   left: 90px;
   width: calc(100% - 90px - 10px);
-  font-size: 12px;
-  height: 12px;
-  line-height: 12px;
+  font-size: 13px;
+  height: 13px;
+  line-height: 13px;
   display: flex;
   align-items: center;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
@@ -525,9 +525,9 @@
   left: 90px;
   width: calc(100% - 20px - 70px - 35px - 20px);
   top: 21.5px;
-  font-size: 16px;
+  font-size: 17px;
   height: 23px;
-  line-height: 16px;
+  line-height: 17px;
   display: flex;
   align-items: center;
   color: var(--b-cssvar-333333);
