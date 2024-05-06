@@ -167,9 +167,9 @@
   top: 7.5px;
   left: 90px;
   width: calc(100% - 90px - 10px);
-  font-size: 13px;
-  height: 13px;
-  line-height: 13px;
+  font-size: 14px;
+  height: 14px;
+  line-height: 14px;
   display: flex;
   align-items: center;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
