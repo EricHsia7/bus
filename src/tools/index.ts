@@ -11,7 +11,7 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
   var totalWidth: number = 0;
   var textLength: number = text.length;
   if (!cachedTextWidth.hasOwnProperty(configKey)) {
-    cachedTextWidth[configKey] = [];
+    cachedTextWidth[configKey] = {};
   }
   for (var i = 0; i < textLength; i++) {
     var char = text.substring(i, i + 1);
