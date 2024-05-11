@@ -2,12 +2,14 @@ export const md5 = require('md5');
 
 var cachedTextWidth: object = {};
 
-export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, ital: number = 0): number {
+export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, style: string = 'normal', variant: string = 'none', lineHeight: string = 'normal'): number {
   const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
+  const font: string = `${style} ${variant} ${weight} ${size}/${lineHeight} ${fontFamily}`;
+
   canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${ital}`;
-  context.font = `${weight} ${size} ${fontFamily}`;
-  var configKey: string = `c_${md5(`${weight}${size}${fontFamily}${wdth}${ital}`)}`;
+  context.font = font;
+  var configKey: string = `c_${md5(font)}`;
   var totalWidth: number = 0;
   var textLength: number = text.length;
   if (!cachedTextWidth.hasOwnProperty(configKey)) {
