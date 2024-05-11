@@ -3,8 +3,8 @@ export const md5 = require('md5');
 export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, ital: number = 0): number {
   const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
-  canvas.style.fontVariationSettings = `"wght" ${weight}, "wdth" ${wdth}, "ital" ${ital}`;
-  context.font = `${weight} ${size} '${fontFamily}'`;
+  canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${ital}`;
+  context.font = `${weight} ${size} ${fontFamily}`;
   const metrics = context.measureText(text);
   return metrics.width;
 }
