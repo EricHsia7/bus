@@ -19,7 +19,7 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
     var unicode_key: string = `u_${char.charCodeAt(0)}`;
     var charWidth: number = 0;
     if (!cachedTextWidth[configKey].hasOwnProperty(unicode_key)) {
-      charWidth = Math.round(context.measureText(char).width);
+      charWidth = Math.ceil(context.measureText(char).width * 2);
       cachedTextWidth[configKey][unicode_key] = charWidth;
     } else {
       charWidth = cachedTextWidth[configKey][unicode_key];
