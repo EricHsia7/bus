@@ -7,7 +7,7 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
   const context = canvas.getContext('2d');
   const font: string = `${style} ${variant} ${weight} ${size}/${lineHeight} ${fontFamily}`;
 
-  canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${ital}`;
+  canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${style === 'normal' ? 0 : 1}`;
   context.font = font;
   var configKey: string = `c_${md5(font)}`;
   var totalWidth: number = 0;
