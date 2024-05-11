@@ -63,7 +63,7 @@
   animation-iteration-count: infinite;
   transform-origin: top left;
   display: block;
-  transform: translateX(var(--cursor-offset));
+  transform: translateX(var(--b-cssvar-cursor-offset));
   user-select: none;
   -webkit-user-select: none;
 }
