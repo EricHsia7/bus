@@ -1,12 +1,27 @@
 export const md5 = require('md5');
 
+var cachedTextWidth: object = {};
+
 export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, ital: number = 0): number {
   const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
   canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${ital}`;
   context.font = `${weight} ${size} ${fontFamily}`;
-  const metrics = context.measureText(text);
-  return metrics.width;
+  var totalWidth: number = 0;
+  var textLength: number = text.length;
+  for (var i = 0; i < textLength; i++) {
+    var char = text.substring(i, i + 1);
+    var unicode_key = `u_${char.charCodeAt(0)}`;
+    var charWidth: number = 0;
+    if (!cachedTextWidth.hasOwnProperty(unicode_key)) {
+      charWidth = context.measureText(char).width;
+      cachedTextWidth[unicode_key] = charWidth;
+    } else {
+      charWidth = cachedTextWidth[unicode_key];
+    }
+    totalWidth += charWidth;
+  }
+  return totalWidth;
 }
 
 export function compareThings(a: any, b: any): boolean {
