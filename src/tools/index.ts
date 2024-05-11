@@ -14,11 +14,11 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
     cachedTextWidth[configKey] = {};
   }
   for (var i = 0; i < textLength; i++) {
-    var char = text.substring(i, i + 1);
-    var unicode_key = `u_${char.charCodeAt(0)}`;
+    var char: string = text.substring(i, i + 1);
+    var unicode_key: string = `u_${char.charCodeAt(0)}`;
     var charWidth: number = 0;
     if (!cachedTextWidth[configKey].hasOwnProperty(unicode_key)) {
-      charWidth = context.measureText(char).width;
+      charWidth = parseFloat(context.measureText(char).width.toFixed(2));
       cachedTextWidth[configKey][unicode_key] = charWidth;
     } else {
       charWidth = cachedTextWidth[configKey][unicode_key];
