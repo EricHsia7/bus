@@ -5,7 +5,7 @@ var cachedTextWidth: object = {};
 export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, style: string = 'normal', variant: string = 'none', lineHeight: string = '1.2'): number {
   const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
-  const font: string = `${style} ${variant} ${weight} ${size}/${lineHeight} ${fontFamily}`;
+  const font: string = `${weight} ${size} ${fontFamily}`;
   canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${style === 'normal' ? 0 : 1}`;
   context.font = font;
   var configKey: string = `c_${md5(font)}`;
@@ -19,7 +19,7 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
     var unicode_key: string = `u_${char.charCodeAt(0)}`;
     var charWidth: number = 0;
     if (!cachedTextWidth[configKey].hasOwnProperty(unicode_key)) {
-      charWidth = Math.ceil(context.measureText(char).width * 2);
+      charWidth = context.measureText(char).width;
       cachedTextWidth[configKey][unicode_key] = charWidth;
     } else {
       charWidth = cachedTextWidth[configKey][unicode_key];
