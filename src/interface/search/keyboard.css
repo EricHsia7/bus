@@ -52,7 +52,7 @@
 .css_search_field .css_search_head .css_search_search_input .css_cursor {
   position: absolute;
   top: 15px;
-  left: 0px;
+  left: 2px;
   height: 25px;
   width: 2px;
   background: var(--b-cssvar-main-color);
