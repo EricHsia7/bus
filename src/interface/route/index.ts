@@ -110,7 +110,7 @@ export function ResizeRouteCanvas() {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const canvasScale = Math.log10(window.devicePixelRatio) / 0.15904041824;
+  const canvasScale = Math.round(Math.log10(window.devicePixelRatio) / 0.15904041824);
   //Math.log(Math.pow(3, 1 / 3) ≈ 0.15904041824
 
   const canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
