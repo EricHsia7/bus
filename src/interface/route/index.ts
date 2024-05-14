@@ -131,7 +131,7 @@ function updateRouteCanvas(groupQuantity: number, percentage: number, width: num
     var h = routeSliding.lineHeight;
     ctx.fillRect(x * routeSliding.canvasScale, 0, w * routeSliding.canvasScale, h * routeSliding.canvasScale);
     ctx.clearRect(0, 0, x * routeSliding.canvasScale, h * routeSliding.canvasScale);
-    ctx.clearRect((routeSliding.fieldWidth - (x + w)) * routeSliding.canvasScale, 0, (x + w) * routeSliding.canvasScale, h * routeSliding.canvasScale);
+    ctx.clearRect((x + w) * routeSliding.canvasScale, 0, (routeSliding.fieldWidth - (x + w)) * routeSliding.canvasScale, h * routeSliding.canvasScale);
   });
 }
 
