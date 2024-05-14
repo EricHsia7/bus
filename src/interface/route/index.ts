@@ -13,45 +13,39 @@ import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration: object = {};
 
-var routeSliding: object = {
-  currentGroup: 0,
-  targetGroup: 0,
-  groupQuantity: 0,
-  groupStyles: {},
-  scrollLog: [],
-  fieldWidth: 0,
-  fieldHeight: 0,
-  sliding: false,
-  lineHeight: 2,
-  lineColor: '#333'
-};
+var routeSliding_currentGroup: number = 0;
+var routeSliding_targetGroup: number = 0;
+var routeSliding_groupQuantity: number = 0;
+var routeSliding_groupStyles: object = {};
+var routeSliding_scrollLog: [] = [];
+var routeSliding_fieldWidth: number = 0;
+var routeSliding_fieldHeight: number = 0;
+var routeSliding_sliding: boolean = false;
+var routeSliding_lineHeight: number = 2;
+var routeSliding_lineColor: string = '#333';
 
-var routeRefreshTimer: object = {
-  baseInterval: 15 * 1000,
-  minInterval: 5 * 1000,
-  dynamicInterval: 15 * 1000,
-  auto: true,
-  streaming: false,
-  lastUpdate: 0,
-  nextUpdate: 0,
-  refreshing: false,
-  currentRequestID: '',
-  streamStarted: false
-};
+var routeRefreshTimer_baseInterval: number = 15 * 1000;
+var routeRefreshTimer_minInterval: number = 5 * 1000;
+var routeRefreshTimer_dynamicInterval: number = 15 * 1000;
+var routeRefreshTimer_auto: boolean = true;
+var routeRefreshTimer_streaming: boolean = false;
+var routeRefreshTimer_lastUpdate: number = 0;
+var routeRefreshTimer_nextUpdate: number = 0;
+var routeRefreshTimer_refreshing: boolean = false;
+var routeRefreshTimer_currentRequestID: string = '';
+var routeRefreshTimer_streamStarted: boolean = false;
 
-var currentRouteIDSet = {
-  RouteID: 0,
-  PathAttributeId: []
-};
+var currentRouteIDSet_RouteID: number = 0;
+var currentRouteIDSet_PathAttributeId: [] = [];
 
 export function initializeRouteSliding(): void {
   var element = documentQuerySelector('.css_route_groups');
   function monitorScrollLeft(element: HTMLElement, callback: Function): void {
-    routeSliding.scrollLog.push(element.scrollLeft);
-    if (routeSliding.scrollLog.length > 10) {
-      routeSliding.scrollLog = routeSliding.scrollLog.slice(1);
+    routeSliding_scrollLog.push(element.scrollLeft);
+    if (routeSliding_scrollLog.length > 10) {
+      routeSliding_scrollLog = routeSliding_scrollLog.slice(1);
     }
-    if (calculateStandardDeviation(routeSliding.scrollLog) < Math.pow(10, -10)) {
+    if (calculateStandardDeviation(routeSliding_scrollLog) < Math.pow(10, -10)) {
       callback();
     } else {
       window.requestAnimationFrame(function () {
@@ -61,27 +55,27 @@ export function initializeRouteSliding(): void {
   }
 
   element.addEventListener('touchstart', function (event) {
-    routeSliding.currentGroup = Math.round(element.scrollLeft / routeSliding.fieldWidth);
-    routeSliding.sliding = true;
+    routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+    routeSliding_sliding = true;
   });
   element.addEventListener('touchend', function (event) {
     monitorScrollLeft(element, function () {
-      routeSliding.currentGroup = Math.round(element.scrollLeft / routeSliding.fieldWidth);
-      routeSliding.sliding = false;
+      routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_sliding = false;
     });
   });
   element.addEventListener('scroll', function (event) {
-    var slidingGroupIndex = event.target.scrollLeft / routeSliding.fieldWidth;
-    if (slidingGroupIndex > routeSliding.currentGroup) {
-      routeSliding.targetGroup = routeSliding.currentGroup + 1;
+    var slidingGroupIndex = event.target.scrollLeft / routeSliding_fieldWidth;
+    if (slidingGroupIndex > routeSliding_currentGroup) {
+      routeSliding_targetGroup = routeSliding_currentGroup + 1;
     } else {
-      routeSliding.targetGroup = routeSliding.currentGroup - 1;
+      routeSliding_targetGroup = routeSliding_currentGroup - 1;
     }
-    var current_size = routeSliding.groupStyles[`g_${routeSliding.currentGroup}`] || { width: 0 };
-    var target_size = routeSliding.groupStyles[`g_${routeSliding.targetGroup}`] || { width: 0 };
-    var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding.currentGroup);
-    updateRouteCSS(routeSliding.groupQuantity, slidingGroupIndex, line_width);
-    updateRouteCanvas(routeSliding.groupQuantity, slidingGroupIndex, line_width);
+    var current_size = routeSliding_groupStyles[`g_${routeSliding_currentGroup}`] || { width: 0 };
+    var target_size = routeSliding_groupStyles[`g_${routeSliding_targetGroup}`] || { width: 0 };
+    var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding_currentGroup);
+    updateRouteCSS(routeSliding_groupQuantity, slidingGroupIndex, line_width);
+    updateRouteCanvas(routeSliding_groupQuantity, slidingGroupIndex, line_width);
   });
   var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
   mediaQueryList.addListener(updateRouteLineColor);
@@ -115,48 +109,46 @@ export function ResizeRouteCanvas() {
 
   const canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
   canvas.width = FieldWidth * canvasScale;
-  canvas.height = routeSliding.lineHeight * canvasScale;
-  routeSliding.fieldWidth = FieldWidth;
-  routeSliding.fieldHeight = FieldHeight;
-  routeSliding.canvasScale = canvasScale;
+  canvas.height = routeSliding_lineHeight * canvasScale;
+  routeSliding_fieldWidth = FieldWidth;
+  routeSliding_fieldHeight = FieldHeight;
+  routeSliding_canvasScale = canvasScale;
 }
 
 function updateRouteCanvas(groupQuantity: number, percentage: number, width: number): void {
   var canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
   var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-  ctx.fillStyle = routeSliding.lineColor;
+  ctx.fillStyle = routeSliding_lineColor;
   window.requestAnimationFrame(function () {
-    var x = (routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2;
-    var w = width;
-    var h = routeSliding.lineHeight;
-    ctx.fillRect(x * routeSliding.canvasScale, 0, w * routeSliding.canvasScale, h * routeSliding.canvasScale);
-    ctx.clearRect(0, 0, x * routeSliding.canvasScale, h * routeSliding.canvasScale);
-    ctx.clearRect((x + w) * routeSliding.canvasScale, 0, (routeSliding.fieldWidth - (x + w)) * routeSliding.canvasScale, h * routeSliding.canvasScale);
+    var x: number = (routeSliding_fieldWidth / groupQuantity) * percentage + (routeSliding_fieldWidth / groupQuantity - width) / 2;
+    ctx.fillRect(x * routeSliding_canvasScale, 0, routeSliding_fieldWidth * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
+    ctx.clearRect(0, 0, x * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
+    ctx.clearRect((x + routeSliding_fieldWidth) * routeSliding_canvasScale, 0, (routeSliding_fieldWidth - (x + routeSliding_fieldWidth)) * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
   });
 }
 
 function updateRouteLineColor(e): void {
   if (e.matches) {
-    routeSliding.lineColor = '#f9f9fb';
+    routeSliding_lineColor = '#f9f9fb';
   } else {
-    routeSliding.lineColor = '#333';
+    routeSliding_lineColor = '#333';
   }
-  if (!routeSliding.sliding) {
-    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`]?.width || 1);
+  if (!routeSliding_sliding) {
+    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`]?.width || 1);
   }
 }
 
 function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = 0;
-  if (routeRefreshTimer.refreshing) {
-    percentage = -1 + getDataReceivingProgress(routeRefreshTimer.currentRequestID);
+  if (routeRefreshTimer_refreshing) {
+    percentage = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer.lastUpdate) / routeRefreshTimer.dynamicInterval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
   documentQuerySelector('.css_route_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
-    if (routeRefreshTimer.streaming) {
+    if (routeRefreshTimer_streaming) {
       updateUpdateTimer();
     }
   });
@@ -342,16 +334,16 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   var itemQuantity = integration.itemQuantity;
   var groupedItems = integration.groupedItems;
 
-  routeSliding.groupQuantity = groupQuantity;
+  routeSliding_groupQuantity = groupQuantity;
 
   for (var i = 0; i < groupQuantity; i++) {
-    routeSliding.groupStyles[`g_${i}`] = {
+    routeSliding_groupStyles[`g_${i}`] = {
       width: getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2')
     };
   }
-  if (!routeSliding.sliding) {
-    updateRouteCSS(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
-    updateRouteCanvas(routeSliding.groupQuantity, routeSliding.currentGroup, routeSliding.groupStyles[`g_${routeSliding.currentGroup}`].width);
+  if (!routeSliding_sliding) {
+    updateRouteCSS(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`].width);
+    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`].width);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
@@ -424,23 +416,23 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
 async function refreshRoute(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  routeRefreshTimer.auto = refresh_interval_setting.auto;
-  routeRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
-  routeRefreshTimer.refreshing = true;
-  routeRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  routeRefreshTimer_auto = refresh_interval_setting.auto;
+  routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
+  routeRefreshTimer_refreshing = true;
+  routeRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
-  var integration = await integrateRoute(currentRouteIDSet.RouteID, currentRouteIDSet.PathAttributeId, routeRefreshTimer.currentRequestID);
+  var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');
   updateRouteField(Field, integration, false);
-  routeRefreshTimer.lastUpdate = new Date().getTime();
-  if (routeRefreshTimer.auto) {
+  routeRefreshTimer_lastUpdate = new Date().getTime();
+  if (routeRefreshTimer_auto) {
     var updateRate = await getUpdateRate();
-    routeRefreshTimer.nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer.minInterval, integration.dataUpdateTime + routeRefreshTimer.baseInterval / updateRate);
+    routeRefreshTimer_nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
   } else {
-    routeRefreshTimer.nextUpdate = new Date().getTime() + routeRefreshTimer.baseInterval;
+    routeRefreshTimer_nextUpdate = new Date().getTime() + routeRefreshTimer_baseInterval;
   }
-  routeRefreshTimer.dynamicInterval = Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime());
-  routeRefreshTimer.refreshing = false;
+  routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime());
+  routeRefreshTimer_refreshing = false;
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the route.' };
 }
@@ -448,36 +440,36 @@ async function refreshRoute(): object {
 export function streamRoute(): void {
   refreshRoute()
     .then((result) => {
-      if (routeRefreshTimer.streaming) {
-        routeRefreshTimer.timer = setTimeout(function () {
+      if (routeRefreshTimer_streaming) {
+        routeRefreshTimer_timer = setTimeout(function () {
           streamRoute();
-        }, Math.max(routeRefreshTimer.minInterval, routeRefreshTimer.nextUpdate - new Date().getTime()));
+        }, Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
-        routeRefreshTimer.streamStarted = false;
+        routeRefreshTimer_streamStarted = false;
       }
     })
     .catch((err) => {
       console.error(err);
-      if (routeRefreshTimer.streaming) {
-        routeRefreshTimer.timer = setTimeout(function () {
+      if (routeRefreshTimer_streaming) {
+        routeRefreshTimer_timer = setTimeout(function () {
           streamRoute();
-        }, routeRefreshTimer.minInterval);
+        }, routeRefreshTimer_minInterval);
       } else {
-        routeRefreshTimer.streamStarted = false;
+        routeRefreshTimer_streamStarted = false;
       }
     });
 }
 
 export function openRoute(RouteID: number, PathAttributeId: [number]): void {
-  currentRouteIDSet.RouteID = RouteID;
-  currentRouteIDSet.PathAttributeId = PathAttributeId;
+  currentRouteIDSet_RouteID = RouteID;
+  currentRouteIDSet_PathAttributeId = PathAttributeId;
   var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
-  if (!routeRefreshTimer.streaming) {
-    routeRefreshTimer.streaming = true;
-    if (!routeRefreshTimer.streamStarted) {
-      routeRefreshTimer.streamStarted = true;
+  if (!routeRefreshTimer_streaming) {
+    routeRefreshTimer_streaming = true;
+    if (!routeRefreshTimer_streamStarted) {
+      routeRefreshTimer_streamStarted = true;
       streamRoute();
     } else {
       refreshRoute();
@@ -489,11 +481,11 @@ export function openRoute(RouteID: number, PathAttributeId: [number]): void {
 export function closeRoute(): void {
   var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'false');
-  routeRefreshTimer.streaming = false;
+  routeRefreshTimer_streaming = false;
 }
 
 export function switchRoute(RouteID: number, PathAttributeId: [number]) {
-  routeRefreshTimer.streaming = false;
+  routeRefreshTimer_streaming = false;
   openRoute(RouteID, PathAttributeId);
 }
 
