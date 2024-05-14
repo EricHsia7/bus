@@ -35,29 +35,35 @@ export function compareThings(a: any, b: any): boolean {
   }
   var ax = anyToString(a);
   var bx = anyToString(b);
-  const length = 32;
-  if (ax.length > length || bx.length > length) {
-    var hash_a = md5(ax);
-    var hash_b = md5(bx);
+  const length: number = 32;
+  const axLength: number = ax.length;
+  const bxLength: number = bx.length;
+  if (axLength === bxLength) {
+    if (axLength > length || bxLength > length) {
+      var hash_a: string = md5(ax);
+      var hash_b: string = md5(bx);
 
-    for (var i = 0; i < 8; i++) {
-      var a_i = hash_a.charAt(i);
-      var b_i = hash_b.charAt(i);
-      var equal = true;
-      if (a_i === b_i) {
-        continue;
+      for (var i = 0; i < 8; i++) {
+        var a_i: string = hash_a.charAt(i);
+        var b_i: string = hash_b.charAt(i);
+        var equal: boolean = true;
+        if (a_i === b_i) {
+          continue;
+        } else {
+          equal = false;
+          break;
+        }
+      }
+      return equal;
+    } else {
+      if (ax === bx) {
+        return true;
       } else {
-        equal = false;
-        break;
+        return false;
       }
     }
-    return equal;
   } else {
-    if (ax === bx) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 }
 
