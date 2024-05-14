@@ -9,44 +9,38 @@ import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration: object = {};
 
-var locationSliding = {
-  currentGroup: 0,
-  targetGroup: 0,
-  groupQuantity: 0,
-  groupStyles: {},
-  scrollLog: [],
-  fieldWidth: 0,
-  fieldHeight: 0,
-  sliding: false
-};
+var locationSliding_currentGroup: number = 0;
+var locationSliding_targetGroup: number = 0;
+var locationSliding_groupQuantity: number = 0;
+var locationSliding_groupStyles: object = {};
+var locationSliding_scrollLog: [] = [];
+var locationSliding_fieldWidth: number = 0;
+var locationSliding_fieldHeight: number = 0;
+var locationSliding_sliding: boolean = false;
 
-var locationRefreshTimer: object = {
-  baseInterval: 15 * 1000,
-  minInterval: 5 * 1000,
-  dynamicInterval: 15 * 1000,
-  auto: true,
-  streaming: false,
-  lastUpdate: 0,
-  nextUpdate: 0,
-  refreshing: false,
-  currentRequestID: '',
-  streamStarted: false
-};
+var locationRefreshTimer_baseInterval: number = 15 * 1000;
+var locationRefreshTimer_minInterval: number = 5 * 1000;
+var locationRefreshTimer_dynamicInterval: number = 15 * 1000;
+var locationRefreshTimer_auto: boolean = true;
+var locationRefreshTimer_streaming: boolean = false;
+var locationRefreshTimer_lastUpdate: number = 0;
+var locationRefreshTimer_nextUpdate: number = 0;
+var locationRefreshTimer_refreshing: boolean = false;
+var locationRefreshTimer_currentRequestID: string = '';
+var locationRefreshTimer_streamStarted: boolean = false;
 
-var currentHashSet: object = {
-  hash: ''
-};
+var currentHashSet_hash: string = '';
 
-var tabPadding = 20;
+var tabPadding: number = 20;
 
 export function initializeLocationSliding(): void {
   var element = documentQuerySelector('.css_location_field .css_location_groups');
   function monitorScrollLeft(element, callback) {
-    locationSliding.scrollLog.push(element.scrollLeft);
-    if (locationSliding.scrollLog.length > 10) {
-      locationSliding.scrollLog = locationSliding.scrollLog.slice(1);
+    locationSliding_scrollLog.push(element.scrollLeft);
+    if (locationSliding_scrollLog.length > 10) {
+      locationSliding_scrollLog = locationSliding_scrollLog.slice(1);
     }
-    if (calculateStandardDeviation(locationSliding.scrollLog) < Math.pow(10, -10)) {
+    if (calculateStandardDeviation(locationSliding_scrollLog) < Math.pow(10, -10)) {
       callback();
     } else {
       window.requestAnimationFrame(function () {
@@ -55,27 +49,27 @@ export function initializeLocationSliding(): void {
     }
   }
   element.addEventListener('touchstart', function (event) {
-    locationSliding.currentGroup = Math.round(element.scrollLeft / locationSliding.fieldWidth);
-    locationSliding.sliding = true;
+    locationSliding_currentGroup = Math.round(element.scrollLeft / locationSliding_fieldWidth);
+    locationSliding_sliding = true;
   });
   element.addEventListener('touchend', function (event) {
     monitorScrollLeft(element, function () {
-      locationSliding.currentGroup = Math.round(element.scrollLeft / locationSliding.fieldWidth);
-      locationSliding.sliding = false;
+      locationSliding_currentGroup = Math.round(element.scrollLeft / locationSliding_fieldWidth);
+      locationSliding_sliding = false;
     });
   });
   element.addEventListener('scroll', function (event) {
-    var slidingGroupIndex = event.target.scrollLeft / locationSliding.fieldWidth;
-    if (slidingGroupIndex > locationSliding.currentGroup) {
-      locationSliding.targetGroup = locationSliding.currentGroup + 1;
+    var slidingGroupIndex = event.target.scrollLeft / locationSliding_fieldWidth;
+    if (slidingGroupIndex > locationSliding_currentGroup) {
+      locationSliding_targetGroup = locationSliding_currentGroup + 1;
     } else {
-      locationSliding.targetGroup = locationSliding.currentGroup - 1;
+      locationSliding_targetGroup = locationSliding_currentGroup - 1;
     }
-    var current_size = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`] || { width: 0, offset: 0 };
-    var target_size = locationSliding.groupStyles[`g_${locationSliding.targetGroup}`] || { width: 0, offset: 0 };
-    var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding.currentGroup);
-    var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding.currentGroup)) * -1 + locationSliding.fieldWidth * 0.5 - tab_width * 0.5;
-    updateLocationCSS(locationSliding.groupQuantity, offset, tab_width - tabPadding, slidingGroupIndex);
+    var current_size = locationSliding_groupStyles[`g_${locationSliding_currentGroup}`] || { width: 0, offset: 0 };
+    var target_size = locationSliding_groupStyles[`g_${locationSliding_targetGroup}`] || { width: 0, offset: 0 };
+    var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding_currentGroup);
+    var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding_currentGroup)) * -1 + locationSliding_fieldWidth * 0.5 - tab_width * 0.5;
+    updateLocationCSS(locationSliding_groupQuantity, offset, tab_width - tabPadding, slidingGroupIndex);
   });
 }
 
@@ -100,14 +94,14 @@ function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width
 function updateUpdateTimer() {
   var time = new Date().getTime();
   var percentage = 0;
-  if (locationRefreshTimer.refreshing) {
-    percentage = -1 + getDataReceivingProgress(locationRefreshTimer.currentRequestID);
+  if (locationRefreshTimer_refreshing) {
+    percentage = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer.lastUpdate) / locationRefreshTimer.dynamicInterval));
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   }
   documentQuerySelector('.css_location_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
-    if (locationRefreshTimer.streaming) {
+    if (locationRefreshTimer_streaming) {
       updateUpdateTimer();
     }
   });
@@ -300,22 +294,22 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   var groupedItems = integration.groupedItems;
   var groups = integration.groups;
 
-  locationSliding.groupQuantity = groupQuantity;
-  locationSliding.fieldWidth = FieldWidth;
-  locationSliding.fieldHeight = FieldHeight;
+  locationSliding_groupQuantity = groupQuantity;
+  locationSliding_fieldWidth = FieldWidth;
+  locationSliding_fieldHeight = FieldHeight;
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
     var width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
-    locationSliding.groupStyles[`g_${i}`] = {
+    locationSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  var offset = locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].offset * -1 + locationSliding.fieldWidth * 0.5 - locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width * 0.5;
-  if (!locationSliding.sliding) {
-    updateLocationCSS(locationSliding.groupQuantity, offset, locationSliding.groupStyles[`g_${locationSliding.currentGroup}`].width - tabPadding, locationSliding.currentGroup);
+  var offset = locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].width * 0.5;
+  if (!locationSliding_sliding) {
+    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].width - tabPadding, locationSliding_currentGroup);
   }
   elementQuerySelector(Field, '.css_location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
@@ -381,7 +375,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var groupKey = `g_${i}`;
     var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
-    thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding.groupStyles[groupKey].width}px`);
+    thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i);
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (var k = 0; k < groupPropertyQuantity; k++) {
@@ -427,23 +421,23 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
 async function refreshLocation(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  locationRefreshTimer.auto = refresh_interval_setting.auto;
-  locationRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
-  locationRefreshTimer.refreshing = true;
-  locationRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  locationRefreshTimer_auto = refresh_interval_setting.auto;
+  locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
+  locationRefreshTimer_refreshing = true;
+  locationRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
-  var integration = await integrateLocation(currentHashSet.hash, locationRefreshTimer.currentRequestID);
+  var integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_location_field');
   updateLocationField(Field, integration, false);
-  locationRefreshTimer.lastUpdate = new Date().getTime();
-  if (locationRefreshTimer.auto) {
+  locationRefreshTimer_lastUpdate = new Date().getTime();
+  if (locationRefreshTimer_auto) {
     var updateRate = await getUpdateRate();
-    locationRefreshTimer.nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer.minInterval, integration.dataUpdateTime + locationRefreshTimer.baseInterval / updateRate);
+    locationRefreshTimer_nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer_minInterval, integration.dataUpdateTime + locationRefreshTimer_baseInterval / updateRate);
   } else {
-    locationRefreshTimer.nextUpdate = new Date().getTime() + locationRefreshTimer.baseInterval;
+    locationRefreshTimer_nextUpdate = new Date().getTime() + locationRefreshTimer_baseInterval;
   }
-  locationRefreshTimer.dynamicInterval = Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime());
-  locationRefreshTimer.refreshing = false;
+  locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime());
+  locationRefreshTimer_refreshing = false;
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', false);
   return { status: 'Successfully refreshed the location.' };
 }
@@ -451,35 +445,35 @@ async function refreshLocation(): object {
 export function streamLocation(): void {
   refreshLocation()
     .then((result) => {
-      if (locationRefreshTimer.streaming) {
-        locationRefreshTimer.timer = setTimeout(function () {
+      if (locationRefreshTimer_streaming) {
+        locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
-        }, Math.max(locationRefreshTimer.minInterval, locationRefreshTimer.nextUpdate - new Date().getTime()));
+        }, Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
-        locationRefreshTimer.streamStarted = false;
+        locationRefreshTimer_streamStarted = false;
       }
     })
     .catch((err) => {
       console.error(err);
-      if (locationRefreshTimer.streaming) {
-        locationRefreshTimer.timer = setTimeout(function () {
+      if (locationRefreshTimer_streaming) {
+        locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
-        }, locationRefreshTimer.minInterval);
+        }, locationRefreshTimer_minInterval);
       } else {
-        locationRefreshTimer.streamStarted = false;
+        locationRefreshTimer_streamStarted = false;
       }
     });
 }
 
 export function openLocation(hash: string): void {
-  currentHashSet.hash = hash;
+  currentHashSet_hash = hash;
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'true');
   setUpLocationFieldSkeletonScreen(Field);
-  if (!locationRefreshTimer.streaming) {
-    locationRefreshTimer.streaming = true;
-    if (!locationRefreshTimer.streamStarted) {
-      locationRefreshTimer.streamStarted = true;
+  if (!locationRefreshTimer_streaming) {
+    locationRefreshTimer_streaming = true;
+    if (!locationRefreshTimer_streamStarted) {
+      locationRefreshTimer_streamStarted = true;
       streamLocation();
     } else {
       refreshLocation();
@@ -491,7 +485,7 @@ export function openLocation(hash: string): void {
 export function closeLocation(): void {
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'false');
-  locationRefreshTimer.streaming = false;
+  locationRefreshTimer_streaming = false;
 }
 
 export function stretchLocationItemBody(itemID: string): void {
