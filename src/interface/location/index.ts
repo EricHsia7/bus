@@ -28,6 +28,7 @@ var locationRefreshTimer_nextUpdate: number = 0;
 var locationRefreshTimer_refreshing: boolean = false;
 var locationRefreshTimer_currentRequestID: string = '';
 var locationRefreshTimer_streamStarted: boolean = false;
+var locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 var currentHashSet_hash: string = '';
 
