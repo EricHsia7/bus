@@ -125,7 +125,7 @@ function updateRouteCanvas(groupQuantity: number, percentage: number, width: num
     var x: number = (routeSliding_fieldWidth / groupQuantity) * percentage + (routeSliding_fieldWidth / groupQuantity - width) / 2;
     ctx.fillRect(x * routeSliding_canvasScale, 0, routeSliding_fieldWidth * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
     ctx.clearRect(0, 0, x * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
-    ctx.clearRect((x + routeSliding_fieldWidth) * routeSliding_canvasScale, 0, (routeSliding_fieldWidth - (x + routeSliding_fieldWidth)) * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
+    ctx.clearRect((x + width) * routeSliding_canvasScale, 0, (routeSliding_fieldWidth - (x + width)) * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
   });
 }
 
