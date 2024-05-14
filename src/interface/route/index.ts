@@ -23,6 +23,7 @@ var routeSliding_fieldHeight: number = 0;
 var routeSliding_sliding: boolean = false;
 var routeSliding_lineHeight: number = 2;
 var routeSliding_lineColor: string = '#333';
+var routeSliding_canvasScale: number = 1;
 
 var routeRefreshTimer_baseInterval: number = 15 * 1000;
 var routeRefreshTimer_minInterval: number = 5 * 1000;
