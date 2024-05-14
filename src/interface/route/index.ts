@@ -35,6 +35,7 @@ var routeRefreshTimer_nextUpdate: number = 0;
 var routeRefreshTimer_refreshing: boolean = false;
 var routeRefreshTimer_currentRequestID: string = '';
 var routeRefreshTimer_streamStarted: boolean = false;
+var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 var currentRouteIDSet_RouteID: number = 0;
 var currentRouteIDSet_PathAttributeId: [] = [];
