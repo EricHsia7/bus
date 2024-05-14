@@ -126,12 +126,12 @@ function updateRouteCanvas(groupQuantity: number, percentage: number, width: num
   var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   ctx.fillStyle = routeSliding.lineColor;
   window.requestAnimationFrame(function () {
-    var x = ((routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2) * routeSliding.canvasScale;
-    var w = width * routeSliding.canvasScale;
-    var h = routeSliding.lineHeight * routeSliding.canvasScale;
-    ctx.fillRect(x, 0, w, h);
-    ctx.clearRect(0, 0, x, h);
-    ctx.clearRect(routeSliding.fieldWidth - (x + w), 0, x + w, h);
+    var x = (routeSliding.fieldWidth / groupQuantity) * percentage + (routeSliding.fieldWidth / groupQuantity - width) / 2;
+    var w = width;
+    var h = routeSliding.lineHeight;
+    ctx.fillRect(x * routeSliding.canvasScale, 0, w * routeSliding.canvasScale, h * routeSliding.canvasScale);
+    ctx.clearRect(0, 0, x * routeSliding.canvasScale, h * routeSliding.canvasScale);
+    ctx.clearRect((routeSliding.fieldWidth - (x + w)) * routeSliding.canvasScale, 0, (x + w) * routeSliding.canvasScale, h * routeSliding.canvasScale);
   });
 }
 
