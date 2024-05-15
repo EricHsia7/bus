@@ -50,4 +50,30 @@ body {
   height: auto;
 }
 
-.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item {}
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item {
+  position: relative;
+  width: 100%;
+  height: 75px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: calc(75px - 20px);
+  height: calc(75px - 20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon svg {
+  width: 40px;
+  height: 40px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon svg path {
+  fill: var(--b-cssvar-333333);
+}
