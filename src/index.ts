@@ -10,7 +10,7 @@ import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationF
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
-import { initializeFolderStores, saveStop } from './data/folder/index.ts';
+import { initializeFolderStores, saveStop, saveToFolder } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
 import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
@@ -19,6 +19,7 @@ import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandl
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
+import { openSaveToFolder } from './interface/save-to-folder/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -34,6 +35,7 @@ import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
 import './interface/location/index.css';
 import './interface/settings/index.css';
+import './interface/save-to-folder/index.css';
 import './interface/prompt/index.css';
 
 //for development
@@ -143,7 +145,9 @@ window.bus = {
     stretchLocationItemBody
   },
   folder: {
-    saveStop: saveStop
+    saveStop,
+    openSaveToFolder,
+    saveToFolder
   },
   searchPage: {
     openSearchPage,
