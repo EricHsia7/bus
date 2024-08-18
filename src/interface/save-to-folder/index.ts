@@ -8,7 +8,7 @@ function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');
   element.id = identifier;
-  element.setAttribute('onclick', `bus.folder.saveToFolder()`); // need to set up folder id and content
+  element.setAttribute('onclick', `bus.folder.saveToFolder()`); // TODO: set up folder id and content
   element.innerHTML = `<div class="css_save_to_folder_item_icon">${icons[item.folder.icon]}</div><div class="css_save_to_folder_item_name">${item.name}</div>`;
   return {
     element: element,
