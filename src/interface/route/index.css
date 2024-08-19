@@ -206,8 +206,7 @@
   initial-value: 0%;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item::after {
-  content: '';
+.css_route_field .css_route_groups .css_route_group .css_item .css_thread {
   position: absolute;
   top: 25px;
   left: 26.5px;
@@ -216,6 +215,7 @@
   background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
   z-index: 1;
   transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
+  overflow: visible;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item:first-child {
