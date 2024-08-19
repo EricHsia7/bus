@@ -193,7 +193,7 @@
   position: relative;
   margin: 0px;
   padding: 0px;
-  background: var(--b-cssvar-ffffff);
+  /*background: var(--b-cssvar-ffffff);*/
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
