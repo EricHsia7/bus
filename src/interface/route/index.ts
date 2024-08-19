@@ -162,7 +162,7 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_thread"></div><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_name"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_thread"></div><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_name"><span></span><div class="css_status_text"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -242,26 +242,38 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
       var currentSlide = elementQuerySelector(thisElement, '.css_status .css_current_slide');
+      var currentTextSlide = elementQuerySelector(thisElement, '.css_status_text .css_current_slide');
+      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
+      var nextTextSlide = elementQuerySelector(thisElement, '.css_status_text .css_next_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
-      nextSlide.innerText = thisItem.status.text;
+      nextTextSlide.setAttribute('code', thisItem.status.code);
+      nextTextSlide.innerText = thisItem.status.text;
       currentSlide.addEventListener(
         'animationend',
         function () {
           currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.innerText = thisItem.status.text;
           currentSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
+      currentTextSlide.addEventListener(
+        'animationend',
+        function () {
+          currentTextSlide.setAttribute('code', thisItem.status.code);
+          currentTextSlide.innerText = thisItem.status.text;
+          currentTextSlide.classList.remove('css_slide_fade_out');
+        },
+        { once: true }
+      );
       currentSlide.classList.add('css_slide_fade_out');
+      currentTextSlide.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_name').innerText = thisItem.name;
+      elementQuerySelector(thisElement, '.css_name span').innerText = thisItem.name;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
