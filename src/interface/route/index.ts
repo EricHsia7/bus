@@ -289,6 +289,14 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       if (!(previousItem?.progress === 0) && thisItem.progress === 0) {
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${1 * 100}%`);
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${1 * 100}%`);
+        elementQuerySelector(thisElement, '.css_thread').addEventListener(
+          'transitionend',
+          function () {
+            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
+            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0 * 100}%`);
+          },
+          { once: true }
+        );
       } else {
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisItem.progress * 100}%`);
