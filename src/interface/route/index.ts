@@ -286,20 +286,22 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisElement.setAttribute('nearest', thisItem.nearest);
     }
     function updateProgress(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
-      if (!(previousItem?.progress === 0) && thisItem.progress === 0) {
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${1 * 100}%`);
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${1 * 100}%`);
+      var previousProgress = previousItem?.progress || 0;
+      var thisProgress = thisItem?.progress || 0;
+      if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
         elementQuerySelector(thisElement, '.css_thread').addEventListener(
           'transitionend',
           function () {
-            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
-            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0 * 100}%`);
+            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
           },
           { once: true }
         );
       } else {
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisItem.progress * 100}%`);
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
       }
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
