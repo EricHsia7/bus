@@ -220,8 +220,9 @@
   height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
   z-index: 1;
-  transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
-  overflow: visible;
+  transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item:first-child {
