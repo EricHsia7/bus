@@ -66,11 +66,11 @@ async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: nu
       item.index = String(item.BusID).charCodeAt(0);
     }
     if (BusDataObj.hasOwnProperty(thisBusID)) {
-      item.lon = BusDataObj[thisBusID].Longitude;
-      item.lat = BusDataObj[thisBusID].Latitude;
+      item.lo = BusDataObj[thisBusID].Longitude;
+      item.la = BusDataObj[thisBusID].Latitude;
     } else {
-      item.lon = 0;
-      item.lat = 0;
+      item.lo = 0;
+      item.la = 0;
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
     item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
@@ -216,23 +216,23 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
       item['_segmentBuffer'] = false; //0→starting of the range; 1→ending of the range
 
       if (Stop.hasOwnProperty('s_' + item.StopID)) {
-        item['_Stop'] = Stop['s_' + item.StopID];
+        item._Stop = Stop['s_' + item.StopID];
         if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
-            item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+            item._Stop.nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
-            if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
+            if (segmentBufferOfThisGroup.indexOf(item._Stop.nameZh) > -1) {
               item['_segmentBuffer'] = true;
             }
             item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
               return e === item.StopID ? false : true;
             });
-            item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
-            item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
+            item._Stop.la = Location[`l_${item._Stop.stopLocationId}`].la;
+            item._Stop.lo = Location[`l_${item._Stop.stopLocationId}`].lo;
             item.nearest = false;
             positions.push({
-              latitude: item['_Stop'].la,
-              longitude: item['_Stop'].lo,
+              latitude: item._Stop.la,
+              longitude: item._Stop.lo,
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
@@ -270,21 +270,26 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   var endpointCount = 0;
   var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
   var nearestPosition = getNearestPosition(positions, 450);
-  for (var item of result) {
+  var resultLength = result.length;
+  for (var i = 0; i < resultLength; i++) {
+    var currentItem = result[i];
+    var nextItem = result[i + 1] || currentItem;
+    var previousItem = result[i - 1] || currentItem;
+    console.log(item._Stop.nameZh, item._Stop.lo, item._Stop.la, previousItem._Stop.nameZh, nextItem._Stop.nameZh);
     if (multipleEndpoints) {
-      if (item._segmentBuffer) {
+      if (currentItem._segmentBuffer) {
         endpointCount += 1;
       }
       if (endpointCount % 2 === 1) {
-        item._segmentBuffer = true;
+        currentItem._segmentBuffer = true;
       }
     }
     if (!(nearestPosition === null)) {
-      if (nearestPosition.id === item.StopID) {
-        item.nearest = true;
+      if (nearestPosition.id === currentItem.StopID) {
+        currentItem.nearest = true;
       }
     }
-    result2.push(item);
+    result2.push(currentItem);
   }
   return result2;
 }
