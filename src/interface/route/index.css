@@ -200,6 +200,12 @@
   transition: none;
 }
 
+@property --b-cssvar-thread-progress {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 .css_route_field .css_route_groups .css_route_group .css_item::after {
   content: '';
   position: absolute;
@@ -208,7 +214,7 @@
   width: 2px;
   height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
   background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
-  z-index: 3;
+  z-index: 4;
   transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
 }
 
@@ -346,11 +352,6 @@
   color: var(--b-cssvar-f4252c);
 }
 
-@property --b-cssvar-thread-progress {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
 
 .css_route_field .css_route_groups .css_route_group .css_item .css_head .css_name {
   position: absolute;

@@ -285,7 +285,13 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         var y1 = currentItem._Stop.lo;
         var x2 = nextItem._Stop.la;
         var y2 = nextItem._Stop.lo;
-        progress = Math.max(0, Math.min(((x1 - x) / (x1 - x2)) * 0.5 + ((y1 - y) / (y1 - y2)) * 0.5, 1));
+        var a = x1 - x;
+        var b = x1 - x2;
+        var ab = b === 0 ? 0 : (a / b) * 0.5;
+        var c = y1 - y;
+        var d = y1 - y2;
+        var cd = d === 0 ? 0 : (c / d) * 0.5;
+        progress = Math.max(0, Math.min(ab + cd, 1));
       }
       currentItem.progress = progress;
     }
