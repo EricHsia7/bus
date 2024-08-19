@@ -196,7 +196,7 @@
   background: var(--b-cssvar-ffffff);
   -webkit-user-select: none;
   user-select: none;
-  overflow: hidden;
+  /*overflow: hidden;*/
   transition: none;
 }
 
@@ -347,7 +347,6 @@
   width: 2px;
   height: 50px;
   background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
-  z-index: 30;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item .css_head .css_name {
