@@ -284,6 +284,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateNearest(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('nearest', thisItem.nearest);
     }
+    function updateProgress(thisElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress', `${thisItem.progress * 100}%`);
+    }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
         thisElement.setAttribute('stretched', false);
@@ -306,6 +309,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateNearest(thisElement, thisItem);
+      updateProgress(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateSaveStopActionButton(thisElement, thisItem, integration);
@@ -327,6 +331,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       }
       if (!(previousItem.nearest === thisItem.nearest)) {
         updateNearest(thisElement, thisItem);
+      }
+      if (!(previousItem.progress === thisItem.progress)) {
+        updateProgress(thisElement, thisItem);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateSaveStopActionButton(thisElement, thisItem, integration);
