@@ -1,6 +1,7 @@
 import { getEstimateTime } from './getEstimateTime.ts';
 import { getStop } from './getStop.ts';
 import { getBusEvent } from './getBusEvent.ts';
+import { getBusData } from './getBusData.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
 import { getSemiTimeTable } from './getSemiTimeTable.ts';
@@ -46,16 +47,30 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEvent(BusEvent: [], RouteID: number, PathAttributeId: [number]): object {
+async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: number, PathAttributeId: number[]): object {
   var result = {};
+  var BusDataObj = {};
+  for (var item of BusData) {
+    var thisBusID = itme.BusID;
+    BusDataObj[thisBusID] = item;
+  }
+
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
+    var thisBusID = itme.BusID;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
       item.onThisRoute = true;
       item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
       item.onThisRoute = false;
       item.index = String(item.BusID).charCodeAt(0);
+    }
+    if (BusDataObj.hasOwnProperty(thisBusID)) {
+      item.lon = BusDataObj[thisBusID].Longitude;
+      item.lat = BusDataObj[thisBusID].Latitude;
+    } else {
+      item.lon = 0;
+      item.lat = 0;
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
     item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
@@ -290,7 +305,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   var Location = await getLocation(requestID, false);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
-  var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
+  var BusData = await getBusData(requestID);
+
+  var processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
   var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
   var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
