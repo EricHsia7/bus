@@ -206,7 +206,8 @@
   initial-value: 0%;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item .css_thread {
+.css_route_field .css_route_groups .css_route_group .css_item::after {
+  content: '';
   position: absolute;
   top: 25px;
   left: 26.5px;
