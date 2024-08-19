@@ -287,7 +287,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         progress = Math.max(0, Math.min(((x1 - x) / (x1 - x2)) * 0.5 + ((y1 - y) / (y1 - y2)) * 0.5, 1));
       }
     }
-    console.log(currentItem._Stop.nameZh, progress);
+    console.log(currentItem, progress);
     if (multipleEndpoints) {
       if (currentItem._segmentBuffer) {
         endpointCount += 1;
