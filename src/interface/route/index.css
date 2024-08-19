@@ -200,6 +200,18 @@
   transition: none;
 }
 
+.css_route_field .css_route_groups .css_route_group .css_item::after {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: 26.5px;
+  width: 2px;
+  height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
+  background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
+  z-index: 3;
+  transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
+}
+
 .css_route_field .css_route_groups .css_route_group .css_item:first-child {
   margin-top: 95px;
 }
@@ -338,18 +350,6 @@
   syntax: '<percentage>';
   inherits: false;
   initial-value: 0%;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item::after {
-  content: '';
-  position: absolute;
-  top: 25px;
-  left: 26.5px;
-  width: 2px;
-  height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
-  background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
-  z-index: 2;
-  transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item .css_head .css_name {
