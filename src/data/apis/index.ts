@@ -66,8 +66,8 @@ async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: nu
       item.index = String(item.BusID).charCodeAt(0);
     }
     if (BusDataObj.hasOwnProperty(thisBusID)) {
-      item.lo = BusDataObj[thisBusID].Longitude;
       item.la = BusDataObj[thisBusID].Latitude;
+      item.lo = BusDataObj[thisBusID].Longitude;
     } else {
       item.lo = 0;
       item.la = 0;
@@ -273,9 +273,21 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   var resultLength = result.length;
   for (var i = 0; i < resultLength; i++) {
     var currentItem = result[i];
-    var nextItem = result[i + 1] || currentItem;
     var previousItem = result[i - 1] || currentItem;
-    console.log(currentItem._Stop.nameZh, currentItem._Stop.lo, currentItem._Stop.la, previousItem._Stop.nameZh, nextItem._Stop.nameZh);
+    var nextItem = result[i + 1] || currentItem;
+    var progress = 0;
+    if (currentItem._BusEvent.length > 0) {
+      if (currentItem._BusEvent[0].RouteID === RouteID) {
+        var x = currentItem._BusEvent[0].la;
+        var y = currentItem._BusEvent[0].lo;
+        var x1 = previousItem._Stop.la;
+        var y1 = previousItem._Stop.lo;
+        var x2 = nextItem._Stop.la;
+        var y2 = nextItem._Stop.lo;
+        progress = Math.max(0, Math.min(((x1 - x) / (x1 - x2)) * 0.5 + ((y1 - y) / (y1 - y2)) * 0.5, 1));
+      }
+    }
+    console.log(currentItem._Stop.nameZh, progress);
     if (multipleEndpoints) {
       if (currentItem._segmentBuffer) {
         endpointCount += 1;
