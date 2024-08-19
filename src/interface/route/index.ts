@@ -286,7 +286,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisElement.setAttribute('nearest', thisItem.nearest);
     }
     function updateProgress(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.style.setProperty('--b-cssvar-thread-progress', `${thisItem.progress * 100}%`);
+      elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress', `${thisItem.progress * 100}%`);
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
