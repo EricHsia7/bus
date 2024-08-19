@@ -293,9 +293,8 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         var cd = d === 0 ? 0 : (c / d) * 0.5;
         progress = Math.max(0, Math.min(ab + cd, 1));
       }
-      currentItem.progress = progress;
     }
-    console.log(currentItem._Stop.nameZh, progress);
+    currentItem.progress = progress;
     if (multipleEndpoints) {
       if (currentItem._segmentBuffer) {
         endpointCount += 1;
