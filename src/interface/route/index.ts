@@ -285,8 +285,13 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateNearest(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('nearest', thisItem.nearest);
     }
-    function updateProgress(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress', `${thisItem.progress * 100}%`);
+    function updateProgress(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
+      if (!(previousItem?.progress === 0) && thisItem.progress === 0) {
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${1 * 100}%`);
+      } else {
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
+      }
+      elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisItem.progress * 100}%`);
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -310,7 +315,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateOverlappingRoutes(thisElement, thisItem);
       updateSegmentBuffer(thisElement, thisItem);
       updateNearest(thisElement, thisItem);
-      updateProgress(thisElement, thisItem);
+      updateProgress(thisElement, thisItem, previousItem);
       updateStretch(thisElement, skeletonScreen);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateSaveStopActionButton(thisElement, thisItem, integration);
@@ -334,7 +339,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateNearest(thisElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateProgress(thisElement, thisItem);
+        updateProgress(thisElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateSaveStopActionButton(thisElement, thisItem, integration);
