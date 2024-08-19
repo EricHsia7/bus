@@ -377,6 +377,7 @@
   border-radius: 20px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  z-index: 5;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_item .css_head .css_name .css_status_text {
