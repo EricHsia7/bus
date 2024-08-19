@@ -345,7 +345,7 @@
   top: 25px;
   left: 26.5px;
   width: 2px;
-  height: clamp(50px, calc(100% + 50px), 200%);
+  height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
   background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
   z-index: 2;
   transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
