@@ -275,7 +275,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
     var currentItem = result[i];
     var previousItem = result[i - 1] || currentItem;
     var nextItem = result[i + 1] || currentItem;
-    var progress = 0;
+    var progress: number = 0;
     if (currentItem._BusEvent.length > 0) {
       var firstBusEventRouteID: number = parseInt(currentItem._BusEvent[0].RouteID);
       if (firstBusEventRouteID === RouteID) {
@@ -292,7 +292,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         var d = y1 - y2;
         var cd = d === 0 ? 0 : (c / d) * 0.5;
         progress = Math.max(0, Math.min(ab + cd, 1));
-        console.log(a, b, c, d, progress);
+        console.log(currentItem._Stop.nameZh, a, b, c, d, progress);
       }
       currentItem.progress = progress;
     }
