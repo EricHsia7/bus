@@ -231,8 +231,8 @@
 .css_route_field .css_route_groups .css_route_group .css_item .css_body {
   position: absolute;
   top: 50px;
-  left: 0px;
-  width: 100%;
+  left: 55px;
+  width: calc(100% - 55px);
   height: 171px;
   opacity: 0;
   transition: opacity var(--b-cssvar-transition-duration);
@@ -246,7 +246,7 @@
   position: absolute;
   top: 5px;
   left: 10px;
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
   height: 35px;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -613,7 +613,7 @@
   position: absolute;
   top: 45px;
   left: 10px;
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
   height: 121px;
   overflow-x: scroll;
   overflow-y: hidden;
