@@ -275,7 +275,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
     var currentItem = result[i];
     var nextItem = result[i + 1] || currentItem;
     var previousItem = result[i - 1] || currentItem;
-    console.log(item._Stop.nameZh, item._Stop.lo, item._Stop.la, previousItem._Stop.nameZh, nextItem._Stop.nameZh);
+    console.log(currentItem._Stop.nameZh, currentItem._Stop.lo, currentItem._Stop.la, previousItem._Stop.nameZh, nextItem._Stop.nameZh);
     if (multipleEndpoints) {
       if (currentItem._segmentBuffer) {
         endpointCount += 1;
