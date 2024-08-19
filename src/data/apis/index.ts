@@ -66,8 +66,8 @@ async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: nu
       item.index = String(item.BusID).charCodeAt(0);
     }
     if (BusDataObj.hasOwnProperty(thisBusID)) {
-      item.la = BusDataObj[thisBusID].Latitude;
-      item.lo = BusDataObj[thisBusID].Longitude;
+      item.la = parseFloat(BusDataObj[thisBusID].Latitude);
+      item.lo = parseFloat(BusDataObj[thisBusID].Longitude);
     } else {
       item.lo = 0;
       item.la = 0;
