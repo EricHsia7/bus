@@ -277,7 +277,8 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
     var nextItem = result[i + 1] || currentItem;
     var progress = 0;
     if (currentItem._BusEvent.length > 0) {
-      if (currentItem._BusEvent[0].RouteID === RouteID) {
+      var firstBusEventRouteID: number = parseInt(currentItem._BusEvent[0].RouteID);
+      if (firstBusEventRouteID === RouteID) {
         var x = currentItem._BusEvent[0].la;
         var y = currentItem._BusEvent[0].lo;
         var x1 = previousItem._Stop.la;
