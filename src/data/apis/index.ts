@@ -51,13 +51,13 @@ async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: nu
   var result = {};
   var BusDataObj = {};
   for (var item of BusData) {
-    var thisBusID = itme.BusID;
+    var thisBusID = item.BusID;
     BusDataObj[thisBusID] = item;
   }
 
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
-    var thisBusID = itme.BusID;
+    var thisBusID = item.BusID;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
       item.onThisRoute = true;
       item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
@@ -300,6 +300,8 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
   var Route = await getRoute(requestID, true);
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, false);
