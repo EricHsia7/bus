@@ -308,7 +308,7 @@
   background: var(--b-cssvar-ffffff);
   -webkit-user-select: none;
   user-select: none;
-  overflow: hidden;
+ /* overflow: hidden;*/
   transition: none;
 }
 
