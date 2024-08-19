@@ -245,7 +245,7 @@
 .css_route_field .css_route_groups .css_route_group .css_item .css_body .css_tabs {
   position: absolute;
   top: 5px;
-  left: 10px;
+  left: 0px;
   width: calc(100% - 10px);
   height: 35px;
   overflow-x: scroll;
@@ -345,7 +345,7 @@
   top: 25px;
   left: 26.5px;
   width: 2px;
-  height: 50px;
+  height: clamp(50px, calc(100% + 50px), 200%);
   background: linear-gradient(180deg, var(--b-cssvar-main-color) 0%, var(--b-cssvar-main-color) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress), var(--b-cssvar-ededf2) 100%);
   z-index: 2;
   transition: --b-cssvar-thread-progress var(--b-cssvar-transition-duration);
@@ -612,7 +612,7 @@
 .css_route_field .css_route_groups .css_route_group .css_item .css_overlapping_routes {
   position: absolute;
   top: 45px;
-  left: 10px;
+  left: 0px;
   width: calc(100% - 10px);
   height: 121px;
   overflow-x: scroll;
