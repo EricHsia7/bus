@@ -288,10 +288,11 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateProgress(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
       if (!(previousItem?.progress === 0) && thisItem.progress === 0) {
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${1 * 100}%`);
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${1 * 100}%`);
       } else {
         elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0 * 100}%`);
+        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisItem.progress * 100}%`);
       }
-      elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisItem.progress * 100}%`);
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
