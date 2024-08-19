@@ -213,6 +213,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
           longitude: null
         },
         nearest: false,
+        progress: 0,
         segmentBuffer: {
           endpoint: false,
           type: null
