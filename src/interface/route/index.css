@@ -377,7 +377,6 @@
   width: 50px;
   height: 25px;
   border-radius: 20px;
-  display: inline-flex;
   overflow: hidden;
   -webkit-user-select: none;
   user-select: none;
