@@ -20,7 +20,14 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
     default:
       break;
   }
-  element.innerHTML = `<div class="css_save_to_folder_item_icon">${icons[item.folder.icon]}</div><div class="css_save_to_folder_item_name">${item.name}</div>`;
+  var iconHTML = '';
+  if (item.folder.icon.source === 'icons') {
+    iconHTML = icons[item.folder.icon.id];
+  }
+  if (item.folder.icon.source === 'svg') {
+    iconHTML = item.folder.icon.content;
+  }
+  element.innerHTML = `<div class="css_save_to_folder_item_icon">${iconHTML}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
   return {
     element: element,
     id: identifier

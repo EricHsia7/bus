@@ -21,8 +21,15 @@ var Folders = {
 
 export type FolderContentType = 'stop' | 'route' | 'bus';
 
+interface FolderIcon {
+  source: 'icons' | 'svg';
+  id: string | null;
+  content: string | null;
+}
+
 export interface Folder {
   name: string;
+  icon: FolderIcon;
   default: boolean;
   storeIndex: number;
   contentType: FolderContentType[];
@@ -58,6 +65,10 @@ export async function createFolder(name: string): boolean {
   var idintifier = `${md5(new Date().getTime() * Math.random())}`;
   var object: Folder = {
     name: name,
+    icon: {
+      source: 'icons',
+      id: 'none'
+    },
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],
