@@ -31,10 +31,12 @@
   transition: height var(--b-cssvar-transition-duration);
 }
 
+/* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
 
+/* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
 }

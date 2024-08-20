@@ -28,6 +28,16 @@
   transition: height var(--b-cssvar-transition-duration);
 }
 
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[segment-buffer="true"] {
+  background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[nearest="true"] {
+  background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
+}
+
 /* thread box > thread */
 @property --b-cssvar-thread-progress-a {
   syntax: '<percentage>';
@@ -49,6 +59,16 @@
   height: calc(100% - 10px);
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
   transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+}
+
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[segment-buffer="true"] .css_thread {
+  background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-segment-buffer) 0%, var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) 100%);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[nearest="true"] .css_thread {
+  background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-user-position) 0%, var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) 100%);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:last-child .css_thread {
