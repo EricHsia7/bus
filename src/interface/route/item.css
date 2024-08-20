@@ -210,6 +210,18 @@
   font-weight: 500;
 }
 
+/* code: 6, 5, 4, 3 && segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="3"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="6"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="5"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="4"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="3"] {
+  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+}
+
 /* code: 6, 5, 4, 3 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="6"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="5"],

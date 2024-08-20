@@ -83,7 +83,7 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
   }
 
   if (10 < time && time <= 90) {
-    return { code: 2, text: formatTime(time, mode) };
+    return { code: 1, text: formatTime(time, mode) };
   }
   if (90 < time && time <= 180) {
     return { code: 1, text: formatTime(time, mode) };
