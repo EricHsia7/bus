@@ -9,7 +9,6 @@ import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
-//const ripple = require('@erichsia7/ripple');
 
 var previousIntegration: object = {};
 
@@ -338,7 +337,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisItemElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
         elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
       });
@@ -442,7 +441,6 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
           var thisThreadBoxElement = generateElementOfThreadBox();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track').appendChild(thisItemElement.element);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track').appendChild(thisThreadBoxElement.element);
-          //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
