@@ -1,8 +1,9 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { GeneratedElement } from '../index.ts';
 import { md5 } from '../../tools/index.ts';
-import { listFoldersWithContent, FoldersWithContent, FolderContentType } from '../../data/folder/index';
+import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index.ts';
 import { icons } from '../icons/index.ts';
+import { prompt_message } from '../prompt/index.ts';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
@@ -11,7 +12,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   element.id = identifier;
   switch (type) {
     case 'stop':
-      element.setAttribute('onclick', `bus.route.saveItemAsStop('${parameters[2]}', '${item.folder.id}', ${parameters[0]}, ${parameters[1]})`); // TODO: set up folder id and content
+      element.setAttribute('onclick', `bus.folder.saveItemOnRouteAsStop('${parameters[2]}', '${item.folder.id}', ${parameters[0]}, ${parameters[1]})`); // TODO: set up folder id and content
       break;
     case 'route':
       break;
@@ -48,4 +49,21 @@ export function openSaveToFolder(type: FolderContentType, parameters: []): void 
   var Field = documentQuerySelector('.css_save_to_folder_field');
   Field.setAttribute('displayed', 'true');
   initializeSaveToFolderField(type, parameters);
+}
+
+export function closeSaveToFolder(): void {
+  var Field = documentQuerySelector('.css_save_to_folder_field');
+  Field.setAttribute('displayed', 'false');
+}
+
+export function saveItemOnRouteAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
+  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
+  saveStop(folderId, StopID, RouteID).then((e) => {
+    isSaved('stop', StopID).then((k) => {
+      actionButtonElement.setAttribute('highlighted', k);
+      prompt_message('已收藏站牌');
+      closeSaveToFolder();
+    });
+  });
 }

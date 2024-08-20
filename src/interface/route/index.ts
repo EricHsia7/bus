@@ -587,14 +587,3 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
     elementQuerySelector(itemElement, '.css_overlapping_routes').setAttribute('displayed', 'true');
   }
 }
-
-export function saveItemAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
-  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
-  saveStop(folderId, StopID, RouteID).then((e) => {
-    isSaved('stop', StopID).then((k) => {
-      actionButtonElement.setAttribute('highlighted', k);
-      prompt_message('已收藏站牌');
-    });
-  });
-}

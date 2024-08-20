@@ -3,7 +3,7 @@ import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { getUpdateRateInTime } from './data/analytics/update-rate.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { askForPositioningPermission } from './data/user-position/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index.ts';
@@ -19,7 +19,7 @@ import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandl
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
-import { openSaveToFolder } from './interface/save-to-folder/index.ts';
+import { openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -136,7 +136,6 @@ window.bus = {
     stretchRouteItemBody,
     openRoute,
     closeRoute,
-    saveItemAsStop,
     switchRoute,
     switchRouteBodyTab,
     openRouteDetails,
@@ -151,6 +150,7 @@ window.bus = {
   folder: {
     saveStop,
     openSaveToFolder,
+    saveItemOnRouteAsStop,
     saveToFolder
   },
   searchPage: {

@@ -74,8 +74,8 @@
 
 .css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0px;
+  left: 0px;
   width: 50px;
   height: 50px;
   display: flex;
