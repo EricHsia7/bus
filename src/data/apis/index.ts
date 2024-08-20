@@ -285,9 +285,14 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         var y1 = currentItem._Stop.lo;
         var x2 = nextItem._Stop.la;
         var y2 = nextItem._Stop.lo;
-        var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
-        var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-        progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
+        var vectorA = [x - x1, y - y1];
+        var vectorB = [x2 - x, y2 - y];
+        var dotProduct = vectorA[0] * vectorB[0] + vectorA[1] * vectorB[1];
+        if (dotProduct >= 0) {
+          var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+          var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
+          progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
+        }
       }
     }
     currentItem.progress = progress;

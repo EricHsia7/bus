@@ -15,10 +15,6 @@
   margin-top: calc(95px + 25px);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:last-child {
-  display: none;
-}
-
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[stretched="true"] {
   height: calc(25px + 171px + 25px);
 }
@@ -44,6 +40,10 @@
   height: 100%;
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
   transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:last-child .css_thread {
+  display: none;
 }
 
 /* thread box > thread > status */
