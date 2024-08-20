@@ -263,12 +263,12 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
-  function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
-    function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var currentSlide = elementQuerySelector(thisElement, '.css_status .css_current_slide');
-      var currentTextSlide = elementQuerySelector(thisElement, '.css_status_text .css_current_slide');
-      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
-      var nextTextSlide = elementQuerySelector(thisElement, '.css_status_text .css_next_slide');
+  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      var currentSlide = elementQuerySelector(thisItemElement, '.css_status .css_current_slide');
+      var currentTextSlide = elementQuerySelector(thisItemElement, '.css_status_text .css_current_slide');
+      var nextSlide = elementQuerySelector(thisItemElement, '.css_status .css_next_slide');
+      var nextTextSlide = elementQuerySelector(thisItemElement, '.css_status_text .css_next_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextTextSlide.setAttribute('code', thisItem.status.code);
       nextTextSlide.innerText = thisItem.status.text;
@@ -292,93 +292,95 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       currentSlide.classList.add('css_slide_fade_out');
       currentTextSlide.classList.add('css_slide_fade_out');
     }
-    function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
+    function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_name span').innerText = thisItem.name;
+    function updateName(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_name span').innerText = thisItem.name;
     }
-    function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+    function updateBuses(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
-    function updateOverlappingRoutes(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+    function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
-    function updateNearest(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.setAttribute('nearest', thisItem.nearest);
+    function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      thisItemElement.setAttribute('nearest', thisItem.nearest);
     }
-    function updateProgress(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
+    function updateThreadBox(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
       if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
-        elementQuerySelector(thisElement, '.css_thread').addEventListener(
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').addEventListener(
           'transitionend',
           function () {
-            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-            elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
+            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
           },
           { once: true }
         );
       } else {
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-        elementQuerySelector(thisElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
       }
     }
-    function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
+    function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
-        thisElement.setAttribute('stretched', false);
+        thisItemElement.setAttribute('stretched', false);
+        thisThreadBoxElement.setAttribute('stretched', false);
       }
     }
-    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+    function updateSkeletonScreen(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
+      thisItemElement.setAttribute('skeleton-screen', skeletonScreen);
+      thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
-    function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+    function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object, formattedItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
-        elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
+        elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
       });
     }
 
     if (previousItem === null) {
-      updateStatus(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateBuses(thisElement, thisItem);
-      updateOverlappingRoutes(thisElement, thisItem);
-      updateSegmentBuffer(thisElement, thisItem);
-      updateNearest(thisElement, thisItem);
-      updateProgress(thisElement, thisItem, previousItem);
-      updateStretch(thisElement, skeletonScreen);
-      updateSkeletonScreen(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem, integration);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
+      updateName(thisItemElement, thisItem);
+      updateBuses(thisItemElement, thisItem);
+      updateOverlappingRoutes(thisItemElement, thisItem);
+      updateSegmentBuffer(thisItemElement, thisItem);
+      updateNearest(thisItemElement, thisItem);
+      updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
+      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSaveStopActionButton(thisItemElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisElement, thisItem);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisElement, thisItem);
+        updateName(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
-        updateBuses(thisElement, thisItem);
+        updateBuses(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
-        updateOverlappingRoutes(thisElement, thisItem);
+        updateOverlappingRoutes(thisItemElement, thisItem);
       }
       if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
-        updateSegmentBuffer(thisElement, thisItem);
+        updateSegmentBuffer(thisItemElement, thisItem);
       }
       if (!(previousItem.nearest === thisItem.nearest)) {
-        updateNearest(thisElement, thisItem);
+        updateNearest(thisItemElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateProgress(thisElement, thisItem, previousItem);
+        updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem, integration);
+        updateSaveStopActionButton(thisItemElement, thisItem, integration);
       }
-      updateStretch(thisElement, skeletonScreen);
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
     }
   }
 
@@ -456,21 +458,22 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[j];
+      var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[j];
+      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             var previousItem = previousIntegration.groupedItems[groupKey][j];
-            updateItem(thisElement, thisItem, previousItem);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
           } else {
-            updateItem(thisElement, thisItem, null);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
           }
         } else {
-          updateItem(thisElement, thisItem, null);
+          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
         }
       } else {
-        updateItem(thisElement, thisItem, null);
+        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
       }
     }
   }
