@@ -26,6 +26,10 @@
   /* head: 50px + body: 171px */
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="false"] {
+  transition: height var(--b-cssvar-transition-duration);
+}
+
 .css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
@@ -61,6 +65,15 @@
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_name {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-cssvar-ededf2);
+  top: 7.5px;
+  height: 35px;
+  border-radius: 30px;
 }
 
 /* head > capsule */
@@ -117,6 +130,11 @@
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_stretch {
+  background: var(--b-cssvar-ededf2);
+}
+
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg {
   width: 15px;
   height: 15px;
@@ -124,12 +142,18 @@
   transition: transform var(--b-cssvar-transition-duration);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg path {
-  fill: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_stretch svg {
+  display: none;
 }
 
+/* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_head .css_capsule .css_stretch svg {
   transform: rotate(180deg);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg path {
+  fill: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
 }
 
 /* head > capsule > item_status */
@@ -260,8 +284,8 @@
 }
 
 /* code: 0 && segment buffer: true */
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_item_status .css_next_slide[code="0"],
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] .css_item_status .css_current_slide[code="0"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_item_status .css_next_slide[code="0"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_item_status .css_current_slide[code="0"] {
   background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
@@ -269,6 +293,13 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="0"] {
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
+}
+
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_current_slide {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-cssvar-ededf2);
 }
 
 /* fadeout */

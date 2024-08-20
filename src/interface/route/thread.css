@@ -19,6 +19,10 @@
   height: calc(25px + 171px + 25px);
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="false"] {
+  transition: height var(--b-cssvar-transition-duration);
+}
+
 /* thread box > thread */
 @property --b-cssvar-thread-progress-a {
   syntax: '<percentage>';

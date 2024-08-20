@@ -1,51 +1,9 @@
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
-  border-radius: 30px;
-}
-
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tab span {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
-  border-radius: 30px;
-}
-
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
-  display: none;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="false"] {
-  transition: height var(--b-cssvar-transition-duration);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_status .css_next_slide,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_status .css_current_slide {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_name {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
-  top: 7.5px;
-  height: 35px;
-  border-radius: 30px;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch {
-  background: var(--b-cssvar-ededf2);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch svg {
-  display: none;
-}
-
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span,
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tab span,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_status .css_next_slide,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_status .css_current_slide,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_name,
-.css_route_field .css_route_groups .css_route_group .css_item[skeleton-screen="true"] .css_head .css_stretch {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_name,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_stretch,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_current_slide {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;

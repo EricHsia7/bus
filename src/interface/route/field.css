@@ -75,6 +75,13 @@
   -webkit-user-select: none;
 }
 
+/* skeleton screen: true */
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-cssvar-ededf2);
+  border-radius: 30px;
+}
+
 .css_route_field .css_route_head .css_route_group_tabs {
   position: absolute;
   bottom: 5px;
@@ -98,6 +105,13 @@
   -webkit-user-select: none;
 }
 
+/* skeleton screen: true */
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tab span {
+  color: rgba(0, 0, 0, 0);
+  background: var(--b-cssvar-ededf2);
+  border-radius: 30px;
+}
+
 .css_route_field .css_route_head .css_route_group_tab_line_track {
   position: absolute;
   left: 0px;
@@ -118,6 +132,10 @@
   border-radius: 0px;
   -webkit-user-select: none;
   user-select: none;
+}
+
+.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
+  display: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box {
