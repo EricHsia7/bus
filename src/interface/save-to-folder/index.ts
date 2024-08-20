@@ -60,10 +60,14 @@ export function saveItemOnRouteAsStop(itemID: string, folderId: string, StopID: 
   var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
   var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
   saveStop(folderId, StopID, RouteID).then((e) => {
-    isSaved('stop', StopID).then((k) => {
-      actionButtonElement.setAttribute('highlighted', k);
-      prompt_message('已收藏站牌');
-      closeSaveToFolder();
-    });
+    if (e) {
+      isSaved('stop', StopID).then((k) => {
+        actionButtonElement.setAttribute('highlighted', k);
+        prompt_message('已收藏站牌');
+        closeSaveToFolder();
+      });
+    } else {
+      prompt_message('此資料夾不支援站牌類型項目');
+    }
   });
 }

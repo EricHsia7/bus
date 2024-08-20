@@ -16,6 +16,18 @@ var Folders = {
     storeIndex: 5,
     contentType: ['stop'],
     id: 'saved_stop'
+  },
+  f_saved_route: {
+    name: '已收藏路線',
+    icon: {
+      source: 'icons',
+      id: 'route'
+    },
+    default: true,
+    index: 1,
+    storeIndex: 6,
+    contentType: ['route'],
+    id: 'saved_route'
   }
 };
 
@@ -31,7 +43,7 @@ export interface Folder {
   name: string;
   icon: FolderIcon;
   default: boolean;
-  storeIndex: number;
+  storeIndex: number | null;
   contentType: FolderContentType[];
   id: string;
   time: string;
@@ -45,18 +57,20 @@ export interface FoldersWithContent {
 
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
-  var index = 1;
+  var index = 2; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
     var thisFolder = await lfGetItem(4, folderKey);
     if (thisFolder) {
-      var thisFolderObject = JSON.parse(thisFolder);
-      var storeIndex = await registerStore(thisFolderObject.name);
-      thisFolder.storeIndex = storeIndex;
-      thisFolder.index = index;
-      if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
-        Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
+      if (!thisFolder.default) {
+        var thisFolderObject: Folder = JSON.parse(thisFolder);
+        var storeIndex = await registerStore(thisFolderObject.id);
+        thisFolder.storeIndex = storeIndex;
+        thisFolder.index = index;
+        if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
+          Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
+        }
+        index += 1;
       }
-      index += 1;
     }
   }
 }
@@ -214,8 +228,8 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
       id: RouteID
     }
   };
-  await saveToFolder(folderID, content);
-  //console.log(`Successfully saved ${integration.thisStopName}!`);
+  var save = await saveToFolder(folderID, content);
+  return save;
 }
 
 export async function isSaved(type: string, id: number | string): boolean {

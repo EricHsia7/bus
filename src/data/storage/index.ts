@@ -8,9 +8,10 @@ const storage = {
   analyticsOfDataUsageStore: false,
   analyticsOfUpdateRateStore: false,
   folderListStore: false,
-  savedStopFolderStore: false
+  savedStopFolderStore: false,
+  savedRouteFolderStore: false
 };
-var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore'];
+var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
 async function dropInstance(store: number): any {
   var store_key = stores[store];
@@ -88,8 +89,8 @@ export async function calculateStoresSize(): string {
   return convertBytes(total_size);
 }
 
-export async function registerStore(name: string): number {
-  var store_key = `${name.replaceAll(/[\s\n\-]/gm, '')}Store`;
+export async function registerStore(id: string): number {
+  var store_key = `Store_${id}`;
   if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
     storage[store_key] = await localforage.createInstance({
       name: store_key
