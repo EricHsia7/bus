@@ -15,6 +15,11 @@
   margin-top: calc(95px + 25px);
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:last-child {
+  height: 25px;
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+}
+
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[stretched="true"] {
   height: calc(25px + 171px + 25px);
 }

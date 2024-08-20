@@ -99,7 +99,7 @@
 
 /* skeleton screen: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule {
-  background: rgba(0, 0, 0, 0);
+  background: var(--b-cssvar-ededf2);
 }
 
 /* head > capsule > capsule separator */
@@ -110,6 +110,11 @@
   width: 1px;
   height: 24px;
   background: var(--b-cssvar-aeaeb2);
+}
+
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_capsule_separator {
+  display: none;
 }
 
 /* head > capsule > stretch */
@@ -136,7 +141,7 @@
 
 /* skeleton screen: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_stretch {
-  background: var(--b-cssvar-ededf2);
+  display: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg {
@@ -144,11 +149,6 @@
   height: 15px;
   transform: rotate(0deg);
   transition: transform var(--b-cssvar-transition-duration);
-}
-
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_stretch svg {
-  display: none;
 }
 
 /* stretched: true */
@@ -169,6 +169,11 @@
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+}
+
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status {
+  display: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide,
@@ -297,13 +302,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="0"] {
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
-}
-
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_next_slide,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule .css_item_status .css_current_slide {
-  color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
 }
 
 /* fadeout */
