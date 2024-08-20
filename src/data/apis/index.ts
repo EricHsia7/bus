@@ -281,17 +281,13 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
       if (firstBusEventRouteID === RouteID) {
         var x = currentItem._BusEvent[0].la;
         var y = currentItem._BusEvent[0].lo;
-        var x1 = previousItem._Stop.la;
-        var y1 = previousItem._Stop.lo;
+        var x1 = currentItem._Stop.la;
+        var y1 = currentItem._Stop.lo;
         var x2 = nextItem._Stop.la;
         var y2 = nextItem._Stop.lo;
-        var a = x1 - x;
-        var b = x1 - x2;
-        var ab = b === 0 ? 0 : (a / b) * 0.5;
-        var c = y1 - y;
-        var d = y1 - y2;
-        var cd = d === 0 ? 0 : (c / d) * 0.5;
-        progress = Math.max(0, Math.min(ab + cd, 1));
+        var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+        var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
+        progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
       }
     }
     currentItem.progress = progress;
