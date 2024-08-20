@@ -1,0 +1,74 @@
+/* item */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: none;
+  display: block;
+  background: var(--b-cssvar-ffffff);
+  overflow: hidden;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item:first-child {
+  margin-top: 95px;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item:last-child {
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] {
+  height: calc(50px + 171px);
+  /*head: 50px + body: 171px*/
+}
+
+/* head */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 50px;
+}
+
+/* head > name */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_name {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  width: calc(100% - 80px - 15px);
+  /*capsule: 80px + padding: 15px*/
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  font-weight: 400;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* head > capsule */
+
+
+/* body */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  width: 100%;
+  height: 171px;
+  opacity: 0;
+  transition: opacity var(--b-cssvar-transition-duration);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_body {
+  opacity: 1;
+}

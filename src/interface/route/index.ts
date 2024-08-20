@@ -156,13 +156,26 @@ function updateUpdateTimer() {
   });
 }
 
+function generateElementOfThreadBox(): GeneratedElement {
+  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('css_thread_box');
+  element.id = identifier;
+  element.setAttribute('stretched', false);
+  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function generateElementOfItem(): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_thread"></div><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_head"><div class="css_name"><span></span><div class="css_status_text"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_head"><div class="css_name"><span></span><div class="css_status_text"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -174,6 +187,15 @@ function generateElementOfGroup(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_route_group');
   element.id = identifier;
+  var tracksElement = document.createElement('div');
+  tracksElement.classList.add('css_route_group_tracks');
+  var threadTrackElement = document.createElement('div');
+  threadTrackElement.classList.add('css_threads_track');
+  var itemsTrackElement = document.createElement('div');
+  itemsTrackElement.classList.add('css_items_track');
+  tracksElement.appendChild(threadTrackElement);
+  tracksElement.appendChild(itemsTrackElement);
+  element.appendChild(tracksElement);
   return {
     element: element,
     id: identifier
@@ -408,19 +430,22 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem();
-          elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i].appendChild(thisElement.element);
+          var thisItemElement = generateElementOfItem();
+          var thisThreadBoxElement = generateElementOfThreadBox();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track').appendChild(thisItemElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track').appendChild(thisThreadBoxElement.element);
           //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread`)[itemIndex].remove();
         }
       }
     }

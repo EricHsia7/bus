@@ -1,0 +1,52 @@
+@property --b-cssvar-thread-progress-a {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --b-cssvar-thread-progress-b {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box {
+  position: relative;
+  left: 0px;
+  height: calc(25px + 0px + 25px);
+  width: 45px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:first-child {
+  margin-top: calc(95px + 25px);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:last-child {
+  display: none;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[stretched="true"] {
+  height: calc(25px + 171px + 25px);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box .css_thread {
+  position: absolute;
+  top: 0px;
+  left: calc((45px - 2px) / 2);
+  width: 2px;
+  height: calc(25px + 100% + 25px);
+  background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
+  transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box .css_thread_status {
+  position: absolute;
+  top: calc(-1 * (10px / 2));
+  left: calc((45px - 10px) / 2);
+  width: 10px;
+  height: 10px;
+  background: var(--b-cssvar-ededf2);
+  border-radius: 5px;
+}
