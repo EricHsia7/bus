@@ -58,6 +58,7 @@
   height: calc(100% - 10px);
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
   transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+  z-index:2;
 }
 
 /* segment buffer: true */
