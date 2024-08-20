@@ -186,18 +186,16 @@
   display: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item {
-  display: block;
-  height: 50px;
-  width: 100%;
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks {
   position: relative;
-  margin: 0px;
-  padding: 0px;
-  /*background: var(--b-cssvar-ffffff);*/
-  -webkit-user-select: none;
-  user-select: none;
-  /*overflow: hidden;*/
-  transition: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 45px calc(100% - 45px);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track {
+  position: relative;
+  display: inline-block;
 }
 
 @property --b-cssvar-thread-progress-a {
@@ -212,28 +210,48 @@
   initial-value: 0%;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item .css_thread {
-  position: absolute;
-  top: 25px;
-  left: 26.5px;
-  width: 2px;
-  height: clamp(50px, calc(100% + 25px), calc(100% + 25px));
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread {
+  position: relative;
+  left: 15px;
+  height: 50px;
+  width: 15px;
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
-  z-index: 1;
   transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
   user-select: none;
   -webkit-user-select: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item:first-child {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track {
+  position: relative;
+  display: inline-block;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: none;
+  display: block;
+  /*background: var(--b-cssvar-ffffff);*/
+  /*overflow: hidden;*/
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread:first-child,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item:first-child {
   margin-top: 95px;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item:last-child {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread:last-child,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item:last-child {
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[stretched="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread[stretched="true"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] {
   height: 221px;
 }
 
