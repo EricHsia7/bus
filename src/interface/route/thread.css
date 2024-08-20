@@ -6,6 +6,7 @@
   width: 45px;
   user-select: none;
   -webkit-user-select: none;
+  overflow: visible;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box:first-child {

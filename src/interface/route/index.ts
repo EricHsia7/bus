@@ -167,13 +167,13 @@ function generateElementOfThreadBox(): GeneratedElement {
   };
 }
 
-function generateElementOfItem(threadIdentifier: string): GeneratedElement {
+function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_name"><span></span><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadIdentifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"><span></span><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -556,15 +556,15 @@ export function switchRoute(RouteID: number, PathAttributeId: [number]) {
   openRoute(RouteID, PathAttributeId);
 }
 
-export function stretchRouteItemBody(itemElementID: string, threadElementID: string): void {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group_tracks .css_items_track .css_item#${itemElementID}`);
-  var threadElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group_tracks .css_threads_track .css_thread#${threadElementID}`);
+export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item#${itemElementID}`);
+  var threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
-    threadElement.setAttribute('stretched', false);
+    threadBoxElement.setAttribute('stretched', false);
   } else {
     itemElement.setAttribute('stretched', true);
-    threadElement.setAttribute('stretched', true);
+    threadBoxElement.setAttribute('stretched', true);
   }
 }
 
