@@ -294,6 +294,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
       thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
+      thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
     function updateName(thisItemElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisItemElement, '.css_name span').innerText = thisItem.name;
@@ -447,7 +448,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[itemIndex].remove();
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[itemIndex].remove();
         }
       }
     }
@@ -459,7 +460,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[j];
-      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread`)[j];
+      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
