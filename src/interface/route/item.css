@@ -97,6 +97,11 @@
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_capsule {
+  background: rgba(0, 0, 0, 0);
+}
+
 /* head > capsule > capsule separator */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_capsule_separator {
   position: absolute;
