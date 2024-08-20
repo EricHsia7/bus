@@ -90,7 +90,7 @@ export async function calculateStoresSize(): string {
 }
 
 export async function registerStore(id: string): number {
-  var store_key = `Store_${id}`;
+  var store_key = `F${id}Store`;
   if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
     storage[store_key] = await localforage.createInstance({
       name: store_key
