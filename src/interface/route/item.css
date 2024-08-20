@@ -77,7 +77,60 @@
   -webkit-user-select: none;
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule {
+  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule {
+  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+}
+
+/* head > capsule > capsule separator */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_capsule_separator {
+  position: absolute;
+  top: 3px;
+  left: 49px;
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
+}
+
 /* head > capsule > stretch */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_stretch {
+  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_head .css_capsule .css_stretch {
+  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg {
+  width: 15px;
+  height: 15px;
+  transform: rotate(0deg);
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg path {
+  fill: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_head .css_capsule .css_stretch svg {
+  transform: rotate(180deg);
+}
 
 /* head > capsule > item_status */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status {
