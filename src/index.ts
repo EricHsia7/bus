@@ -138,7 +138,6 @@ window.bus = {
     closeRoute,
     switchRoute,
     switchRouteBodyTab,
-    saveItemAsStop,
     openRouteDetails,
     closeRouteDetails,
     shareRoutePermalink
@@ -150,6 +149,7 @@ window.bus = {
   },
   folder: {
     saveStop,
+    saveItemAsStop,
     openSaveToFolder,
     saveToFolder
   },

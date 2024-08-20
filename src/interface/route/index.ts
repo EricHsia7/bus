@@ -8,6 +8,7 @@ import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
+import { openSaveToFolder } from '../save-to-folder/index.ts';
 
 var previousIntegration: object = {};
 
@@ -173,7 +174,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${icons.expand}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${icons.expand}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.folder.openSaveToFolder('stop', [null, null, '${identifier}'])"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -340,7 +341,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisItemElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', [${thisItem.id}, ${integration.RouteID}, '${thisItemElement.id}'])`);
       isSaved('stop', thisItem.id).then((e) => {
         elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
       });
