@@ -1,15 +1,12 @@
 import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
-import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
-import { saveStop, isSaved } from '../../data/folder/index.ts';
-import { prompt_message } from '../prompt/index.ts';
+import { isSaved } from '../../data/folder/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
-
-//const ripple = require('@erichsia7/ripple');
 
 var previousIntegration: object = {};
 
@@ -156,13 +153,26 @@ function updateUpdateTimer() {
   });
 }
 
-function generateElementOfItem(): GeneratedElement {
+function generateElementOfThreadBox(): GeneratedElement {
+  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var element = document.createElement('div');
+  element.classList.add('css_thread_box');
+  element.id = identifier;
+  element.setAttribute('stretched', false);
+  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
+function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_name"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${icons.expand}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.folder.openSaveToFolder('stop', [null, null, '${identifier}'])"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -174,6 +184,15 @@ function generateElementOfGroup(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_route_group');
   element.id = identifier;
+  var tracksElement = document.createElement('div');
+  tracksElement.classList.add('css_route_group_tracks');
+  var threadTrackElement = document.createElement('div');
+  threadTrackElement.classList.add('css_threads_track');
+  var itemsTrackElement = document.createElement('div');
+  itemsTrackElement.classList.add('css_items_track');
+  tracksElement.appendChild(threadTrackElement);
+  tracksElement.appendChild(itemsTrackElement);
+  element.appendChild(tracksElement);
   return {
     element: element,
     id: identifier
@@ -213,6 +232,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
           longitude: null
         },
         nearest: false,
+        progress: 0,
         segmentBuffer: {
           endpoint: false,
           type: null
@@ -240,87 +260,129 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
-  function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
-    function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
-      var currentSlide = elementQuerySelector(thisElement, '.css_status .css_current_slide');
-      nextSlide.setAttribute('code', thisItem.status.code);
-      nextSlide.innerText = thisItem.status.text;
-      currentSlide.addEventListener(
+  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_current_slide');
+      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_next_slide');
+
+      var currentItemSlide = elementQuerySelector(thisItemElement, '.css_item_status .css_current_slide');
+      var nextItemSlide = elementQuerySelector(thisItemElement, '.css_item_status .css_next_slide');
+
+      nextThreadSlide.setAttribute('code', thisItem.status.code);
+
+      nextItemSlide.setAttribute('code', thisItem.status.code);
+      nextItemSlide.innerText = thisItem.status.text;
+      currentThreadSlide.addEventListener(
         'animationend',
         function () {
-          currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.innerText = thisItem.status.text;
-          currentSlide.classList.remove('css_slide_fade_out');
+          currentThreadSlide.setAttribute('code', thisItem.status.code);
+          currentThreadSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classList.add('css_slide_fade_out');
+      currentItemSlide.addEventListener(
+        'animationend',
+        function () {
+          currentItemSlide.setAttribute('code', thisItem.status.code);
+          currentItemSlide.innerText = thisItem.status.text;
+          currentItemSlide.classList.remove('css_slide_fade_out');
+        },
+        { once: true }
+      );
+      currentThreadSlide.classList.add('css_slide_fade_out');
+      currentItemSlide.classList.add('css_slide_fade_out');
     }
-    function updateSegmentBuffer(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
+    function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
+      thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_name').innerText = thisItem.name;
+    function updateName(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_name').innerText = thisItem.name;
     }
-    function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+    function updateBuses(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
-    function updateOverlappingRoutes(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+    function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
-    function updateNearest(thisElement: HTMLElement, thisItem: object): void {
-      thisElement.setAttribute('nearest', thisItem.nearest);
+    function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+      thisItemElement.setAttribute('nearest', thisItem.nearest);
+      thisThreadBoxElement.setAttribute('nearest', thisItem.nearest);
     }
-    function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      if (skeletonScreen) {
-        thisElement.setAttribute('stretched', false);
+    function updateThreadBox(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
+      var previousProgress = previousItem?.progress || 0;
+      var thisProgress = thisItem?.progress || 0;
+      if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').addEventListener(
+          'transitionend',
+          function () {
+            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
+          },
+          { once: true }
+        );
+      } else {
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
       }
     }
-    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+    function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
+      if (skeletonScreen) {
+        thisItemElement.setAttribute('stretched', false);
+        thisThreadBoxElement.setAttribute('stretched', false);
+      }
     }
-    function updateSaveStopActionButton(thisElement: HTMLElement, thisItem: object, formattedItem: object): void {
-      elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
+    function updateSkeletonScreen(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
+      thisItemElement.setAttribute('skeleton-screen', skeletonScreen);
+      thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
+    }
+    function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', [${thisItem.id}, ${integration.RouteID}, '${thisItemElement.id}'])`);
       isSaved('stop', thisItem.id).then((e) => {
-        elementQuerySelector(thisElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
+        elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
       });
     }
 
     if (previousItem === null) {
-      updateStatus(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateBuses(thisElement, thisItem);
-      updateOverlappingRoutes(thisElement, thisItem);
-      updateSegmentBuffer(thisElement, thisItem);
-      updateNearest(thisElement, thisItem);
-      updateStretch(thisElement, skeletonScreen);
-      updateSkeletonScreen(thisElement, skeletonScreen);
-      updateSaveStopActionButton(thisElement, thisItem, integration);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
+      updateName(thisItemElement, thisItem);
+      updateBuses(thisItemElement, thisItem);
+      updateOverlappingRoutes(thisItemElement, thisItem);
+      updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
+      updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
+      updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
+      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSaveStopActionButton(thisItemElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisElement, thisItem);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisElement, thisItem);
+        updateName(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
-        updateBuses(thisElement, thisItem);
+        updateBuses(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
-        updateOverlappingRoutes(thisElement, thisItem);
+        updateOverlappingRoutes(thisItemElement, thisItem);
       }
       if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
-        updateSegmentBuffer(thisElement, thisItem);
+        updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.nearest === thisItem.nearest)) {
-        updateNearest(thisElement, thisItem);
+        updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
+      }
+      if (!(previousItem.progress === thisItem.progress)) {
+        updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisElement, thisItem, integration);
+        updateSaveStopActionButton(thisItemElement, thisItem, integration);
       }
-      updateStretch(thisElement, skeletonScreen);
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
     }
   }
 
@@ -372,19 +434,21 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (var o = 0; o < Math.abs(capacity); o++) {
-          var thisElement = generateElementOfItem();
-          elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i].appendChild(thisElement.element);
-          //ripple.__addToSingleElement(Field.QuerySelector(`.css_route_groups .css_route_group[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
+          var thisThreadBoxElement = generateElementOfThreadBox();
+          var thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track').appendChild(thisItemElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track').appendChild(thisThreadBoxElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[itemIndex].remove();
         }
       }
     }
@@ -395,21 +459,22 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], `.css_item`)[j];
+      var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_items_track'), `.css_item`)[j];
+      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             var previousItem = previousIntegration.groupedItems[groupKey][j];
-            updateItem(thisElement, thisItem, previousItem);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
           } else {
-            updateItem(thisElement, thisItem, null);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
           }
         } else {
-          updateItem(thisElement, thisItem, null);
+          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
         }
       } else {
-        updateItem(thisElement, thisItem, null);
+        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
       }
     }
   }
@@ -491,12 +556,15 @@ export function switchRoute(RouteID: number, PathAttributeId: [number]) {
   openRoute(RouteID, PathAttributeId);
 }
 
-export function stretchRouteItemBody(itemID: string): void {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
+export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
+  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item#${itemElementID}`);
+  const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
+    threadBoxElement.setAttribute('stretched', false);
   } else {
     itemElement.setAttribute('stretched', true);
+    threadBoxElement.setAttribute('stretched', true);
   }
 }
 
@@ -516,15 +584,4 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
     elementQuerySelector(itemElement, '.css_buses').setAttribute('displayed', 'false');
     elementQuerySelector(itemElement, '.css_overlapping_routes').setAttribute('displayed', 'true');
   }
-}
-
-export function saveItemAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
-  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
-  saveStop(folderId, StopID, RouteID).then((e) => {
-    isSaved('stop', StopID).then((k) => {
-      actionButtonElement.setAttribute('highlighted', k);
-      prompt_message('已收藏站牌');
-    });
-  });
 }

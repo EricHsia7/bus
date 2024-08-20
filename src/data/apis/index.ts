@@ -1,6 +1,7 @@
 import { getEstimateTime } from './getEstimateTime.ts';
 import { getStop } from './getStop.ts';
 import { getBusEvent } from './getBusEvent.ts';
+import { getBusData } from './getBusData.ts';
 import { getRoute } from './getRoute.ts';
 import { getProvider } from './getProvider.ts';
 import { getSemiTimeTable } from './getSemiTimeTable.ts';
@@ -46,16 +47,30 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEvent(BusEvent: [], RouteID: number, PathAttributeId: [number]): object {
+async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: number, PathAttributeId: number[]): object {
   var result = {};
+  var BusDataObj = {};
+  for (var item of BusData) {
+    var thisBusID = item.BusID;
+    BusDataObj[thisBusID] = item;
+  }
+
   for (var item of BusEvent) {
     var thisRouteID = parseInt(item.RouteID);
+    var thisBusID = item.BusID;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
       item.onThisRoute = true;
       item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
       item.onThisRoute = false;
       item.index = String(item.BusID).charCodeAt(0);
+    }
+    if (BusDataObj.hasOwnProperty(thisBusID)) {
+      item.la = parseFloat(BusDataObj[thisBusID].Latitude);
+      item.lo = parseFloat(BusDataObj[thisBusID].Longitude);
+    } else {
+      item.lo = 0;
+      item.la = 0;
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
     item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
@@ -201,23 +216,23 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
       item['_segmentBuffer'] = false; //0→starting of the range; 1→ending of the range
 
       if (Stop.hasOwnProperty('s_' + item.StopID)) {
-        item['_Stop'] = Stop['s_' + item.StopID];
+        item._Stop = Stop['s_' + item.StopID];
         if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
           if (Stop.hasOwnProperty('s_' + item.StopID)) {
-            item['_Stop'].nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
+            item._Stop.nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
             var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
-            if (segmentBufferOfThisGroup.indexOf(item['_Stop'].nameZh) > -1) {
+            if (segmentBufferOfThisGroup.indexOf(item._Stop.nameZh) > -1) {
               item['_segmentBuffer'] = true;
             }
             item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
               return e === item.StopID ? false : true;
             });
-            item['_Stop'].la = Location[`l_${item._Stop.stopLocationId}`].la;
-            item['_Stop'].lo = Location[`l_${item._Stop.stopLocationId}`].lo;
+            item._Stop.la = Location[`l_${item._Stop.stopLocationId}`].la;
+            item._Stop.lo = Location[`l_${item._Stop.stopLocationId}`].lo;
             item.nearest = false;
             positions.push({
-              latitude: item['_Stop'].la,
-              longitude: item['_Stop'].lo,
+              latitude: item._Stop.la,
+              longitude: item._Stop.lo,
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
@@ -255,21 +270,46 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   var endpointCount = 0;
   var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
   var nearestPosition = getNearestPosition(positions, 450);
-  for (var item of result) {
+  var resultLength = result.length;
+  for (var i = 0; i < resultLength; i++) {
+    var currentItem = result[i];
+    var previousItem = result[i - 1] || currentItem;
+    var nextItem = result[i + 1] || currentItem;
+    var progress: number = 0;
+    if (currentItem._BusEvent.length > 0) {
+      var firstBusEventRouteID: number = parseInt(currentItem._BusEvent[0].RouteID);
+      if (firstBusEventRouteID === RouteID) {
+        var x = currentItem._BusEvent[0].la;
+        var y = currentItem._BusEvent[0].lo;
+        var x1 = currentItem._Stop.la;
+        var y1 = currentItem._Stop.lo;
+        var x2 = nextItem._Stop.la;
+        var y2 = nextItem._Stop.lo;
+        var vectorA = [x - x1, y - y1];
+        var vectorB = [x2 - x, y2 - y];
+        var dotProduct = vectorA[0] * vectorB[0] + vectorA[1] * vectorB[1];
+        if (dotProduct >= 0) { // ensure that (x, y) is between (x1, y1) and (x2, y2)
+          var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+          var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
+          progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
+        }
+      }
+    }
+    currentItem.progress = progress;
     if (multipleEndpoints) {
-      if (item._segmentBuffer) {
+      if (currentItem._segmentBuffer) {
         endpointCount += 1;
       }
       if (endpointCount % 2 === 1) {
-        item._segmentBuffer = true;
+        currentItem._segmentBuffer = true;
       }
     }
     if (!(nearestPosition === null)) {
-      if (nearestPosition.id === item.StopID) {
-        item.nearest = true;
+      if (nearestPosition.id === currentItem.StopID) {
+        currentItem.nearest = true;
       }
     }
-    result2.push(item);
+    result2.push(currentItem);
   }
   return result2;
 }
@@ -285,12 +325,16 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
   var Route = await getRoute(requestID, true);
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, false);
   var EstimateTime = await getEstimateTime(requestID);
   var BusEvent = await getBusEvent(requestID);
-  var processedBusEvent = await processBusEvent(BusEvent, RouteID, PathAttributeId);
+  var BusData = await getBusData(requestID);
+
+  var processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
   var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
   var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
@@ -310,6 +354,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
     };
     formattedItem.nearest = item.nearest;
     formattedItem.segmentBuffer = item._segmentBuffer;
+    formattedItem.progress = item.progress;
     formattedItem.id = item.StopID || null;
     var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
     if (!groupedItems.hasOwnProperty(group)) {

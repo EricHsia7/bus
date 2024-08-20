@@ -3,14 +3,14 @@ import { calculateDataUsage } from './data/analytics/data-usage.ts';
 import { getUpdateRateInTime } from './data/analytics/update-rate.ts';
 import { calculateStoresSize } from './data/storage/index.ts';
 import { askForPositioningPermission } from './data/user-position/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab, saveItemAsStop } from './interface/route/index.ts';
+import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab } from './interface/route/index.ts';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
 import { shareRoutePermalink } from './interface/route/details/actions.ts';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index.ts';
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
-import { initializeFolderStores, saveStop } from './data/folder/index.ts';
+import { initializeFolderStores, saveStop, saveToFolder } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
 import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
@@ -19,6 +19,7 @@ import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandl
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
+import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -27,6 +28,10 @@ import './interface/home/index.css';
 import './interface/home/folder.css';
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
+import './interface/route/field.css';
+import './interface/route/groups.css';
+import './interface/route/item.css';
+import './interface/route/thread.css';
 import './interface/route/index.css';
 import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
@@ -34,6 +39,7 @@ import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
 import './interface/location/index.css';
 import './interface/settings/index.css';
+import './interface/save-to-folder/index.css';
 import './interface/prompt/index.css';
 
 //for development
@@ -132,7 +138,6 @@ window.bus = {
     closeRoute,
     switchRoute,
     switchRouteBodyTab,
-    saveItemAsStop,
     openRouteDetails,
     closeRouteDetails,
     shareRoutePermalink
@@ -143,7 +148,11 @@ window.bus = {
     stretchLocationItemBody
   },
   folder: {
-    saveStop: saveStop
+    saveStop,
+    openSaveToFolder,
+    closeSaveToFolder,
+    saveItemOnRouteAsStop,
+    saveToFolder
   },
   searchPage: {
     openSearchPage,

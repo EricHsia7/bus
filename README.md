@@ -9,14 +9,18 @@ Bus is a user-friendly web application designed to simplify your travel experien
 ## Getting Started
 
 - **Spring into it**: Open this application in your browser via the urls.
+
   ```text
   https://erichsia7.github.io/bus
   ```
+
   or
+
   ```text
   https://erichsia7-bus.netlify.app
   ```
-- **<u>Without</u> Sign Up**: You don't need to create your account to gain access to this application.
+
+- **Without Sign Up**: You don't need to create your account to gain access to this application.
 - **Search**: Use the search bar to find routes and locations.
 - **Manage Stops**: Save important stops and destinations in folders for quick reference.
 - **Customize Settings**: Personalize your experience by adjusting settings.
@@ -25,8 +29,8 @@ Bus is a user-friendly web application designed to simplify your travel experien
 
 ### Supported Regions
 
-* Taipei, Taiwan
-* New Taipei, Taiwan
+- Taipei, Taiwan
+- New Taipei, Taiwan
 
 ### Easy Search
 
@@ -52,4 +56,5 @@ Your privacy and security are our top priorities. Your all data are stored local
 - Data References: See them in [getURL.ts](./src/data/apis/getURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
 
 ## Materials Used
+
 - [Google Material Symbols](https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols)

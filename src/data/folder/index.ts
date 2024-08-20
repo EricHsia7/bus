@@ -19,6 +19,30 @@ var Folders = {
   }
 };
 
+export type FolderContentType = 'stop' | 'route' | 'bus';
+
+interface FolderIcon {
+  source: 'icons' | 'svg';
+  id: string | null;
+  content: string | null;
+}
+
+export interface Folder {
+  name: string;
+  icon: FolderIcon;
+  default: boolean;
+  storeIndex: number;
+  contentType: FolderContentType[];
+  id: string;
+  time: string;
+  timeNumber: null | number;
+}
+
+export interface FoldersWithContent {
+  folder: Folder;
+  content: object[];
+}
+
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
   var index = 1;
@@ -39,8 +63,12 @@ export async function initializeFolderStores(): void {
 
 export async function createFolder(name: string): boolean {
   var idintifier = `${md5(new Date().getTime() * Math.random())}`;
-  var object = {
+  var object: Folder = {
     name: name,
+    icon: {
+      source: 'icons',
+      id: 'none'
+    },
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],
@@ -64,7 +92,7 @@ export function getFolder(folderID: string): object {
   return Folders[`f_${folderID}`];
 }
 
-export async function listFolders(): [] {
+export async function listFolders(): Folder[] {
   var result = [];
   for (var folder in Folders) {
     result.push(Folders[folder]);
@@ -72,14 +100,14 @@ export async function listFolders(): [] {
   return result;
 }
 
-export async function listFolderContent(folderID: string): [] {
+export async function listFolderContent(folderID: string): object[] {
   var result = [];
   var thisFolder = Folders[`f_${folderID}`];
   var itemKeys = await lfListItem(thisFolder.storeIndex);
   for (var itemKey of itemKeys) {
     var item = await lfGetItem(thisFolder.storeIndex, itemKey);
     if (item) {
-      var itemObject = JSON.parse(item);
+      var itemObject: object = JSON.parse(item);
       itemObject.timeNumber = new Date(itemObject.time).getTime();
       result.push(itemObject);
     }
@@ -90,7 +118,7 @@ export async function listFolderContent(folderID: string): [] {
   return result;
 }
 
-export async function listFoldersWithContent(): [] {
+export async function listFoldersWithContent(): FoldersWithContent[] {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {

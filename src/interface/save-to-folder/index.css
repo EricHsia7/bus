@@ -1,0 +1,139 @@
+.css_save_to_folder_field {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--b-cssvar-f9f9fb);
+  display: none;
+}
+
+.css_save_to_folder_field[displayed="true"] {
+  display: block;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left svg {
+  width: 20px;
+  height: 20px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left svg path {
+  fill: var(--b-cssvar-333333);
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_title {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 110px);
+  height: 55px;
+  color: var(--b-cssvar-333333);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body::-webkit-scrollbar {
+  display: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list {
+  position: relative;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: auto;
+  display: inline-block;
+  background: var(--b-cssvar-ffffff);
+  border-radius: 20px;
+  margin-top: calc(10px + 55px);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item {
+  position: relative;
+  width: 100%;
+  height: 55px;
+  background: var(--b-cssvar-ffffff);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon svg {
+  width: 20px;
+  height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon svg path {
+  fill: var(--b-cssvar-333333);
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_name {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px);
+  height: 55px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  font-weight: 400;
+  user-select: none;
+  -webkit-user-select: none;
+}
