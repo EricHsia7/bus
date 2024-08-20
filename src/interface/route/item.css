@@ -31,11 +31,11 @@
   transition: height var(--b-cssvar-transition-duration);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
 }
 
@@ -46,6 +46,7 @@
   left: 0px;
   width: 100%;
   height: 50px;
+  background:rgba(0, 0, 0, 0);
 }
 
 /* head > name */
