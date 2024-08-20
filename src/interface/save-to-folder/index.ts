@@ -38,7 +38,7 @@ async function initializeSaveToFolderField(type: FolderContentType, parameters: 
 }
 
 export function openSaveToFolder(type: FolderContentType, parameters: []): void {
-  var Field = documentQuerySelector('.css_route_field');
+  var Field = documentQuerySelector('.css_save_to_folder_field');
   Field.setAttribute('displayed', 'true');
   initializeSaveToFolderField(type, parameters);
 }
