@@ -557,8 +557,8 @@ export function switchRoute(RouteID: number, PathAttributeId: [number]) {
 }
 
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item#${itemElementID}`);
-  var threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box#${threadBoxElementID}`);
+  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item#${itemElementID}`);
+  const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
     threadBoxElement.setAttribute('stretched', false);
