@@ -26,6 +26,26 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left svg {
+  width: 20px;
+  height: 20px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left svg path {
+  fill: var(--b-cssvar-333333);
+}
+
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_title {
   position: absolute;
   top: 0px;
