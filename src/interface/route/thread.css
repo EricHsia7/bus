@@ -164,7 +164,6 @@
 }
 
 /* fadeout */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box .css_thread_status .css_slide_fade_out,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box .css_thread_status .css_slide_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
