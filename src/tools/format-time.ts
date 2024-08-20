@@ -81,11 +81,7 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
   if (0 <= time && time <= 10) {
     return { code: 2, text: '進站中' };
   }
-
-  if (10 < time && time <= 90) {
-    return { code: 1, text: formatTime(time, mode) };
-  }
-  if (90 < time && time <= 180) {
+  if (10 < time && time <= 180) {
     return { code: 1, text: formatTime(time, mode) };
   }
   if (180 < time && time <= 250) {
