@@ -1,14 +1,12 @@
 import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
-import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
-import { saveStop, isSaved } from '../../data/folder/index.ts';
-import { prompt_message } from '../prompt/index.ts';
+import { isSaved } from '../../data/folder/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
-import { openSaveToFolder } from '../save-to-folder/index.ts';
 
 var previousIntegration: object = {};
 

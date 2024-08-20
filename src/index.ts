@@ -19,7 +19,7 @@ import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandl
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
-import { openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
+import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -150,6 +150,7 @@ window.bus = {
   folder: {
     saveStop,
     openSaveToFolder,
+    closeSaveToFolder,
     saveItemOnRouteAsStop,
     saveToFolder
   },
