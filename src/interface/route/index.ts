@@ -336,7 +336,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisItemElement.setAttribute('skeleton-screen', skeletonScreen);
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
-    function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object, formattedItem: object): void {
+    function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.route.saveItemAsStop('${thisElement.id}', 'saved_stop', ${thisItem.id}, ${integration.RouteID})`);
       isSaved('stop', thisItem.id).then((e) => {
         elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
@@ -348,8 +348,8 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
-      updateSegmentBuffer(thisItemElement, thisItem);
-      updateNearest(thisItemElement, thisItem);
+      updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
+      updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
@@ -368,10 +368,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateOverlappingRoutes(thisItemElement, thisItem);
       }
       if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
-        updateSegmentBuffer(thisItemElement, thisItem);
+        updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.nearest === thisItem.nearest)) {
-        updateNearest(thisItemElement, thisItem);
+        updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
         updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
