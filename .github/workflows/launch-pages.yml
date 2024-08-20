@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-save-to-folder
 
 jobs:
   build:
