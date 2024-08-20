@@ -72,8 +72,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  top: 7.5px;
-  height: 35px;
   border-radius: 30px;
 }
 
