@@ -2,6 +2,7 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { GeneratedElement } from '../index.ts';
 import { md5 } from '../../tools/index.ts';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType } from '../../data/folder/index';
+import { icons } from '../icons/index.ts';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
