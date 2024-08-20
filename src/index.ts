@@ -136,6 +136,7 @@ window.bus = {
     stretchRouteItemBody,
     openRoute,
     closeRoute,
+    saveItemAsStop,
     switchRoute,
     switchRouteBodyTab,
     openRouteDetails,
@@ -149,7 +150,6 @@ window.bus = {
   },
   folder: {
     saveStop,
-    saveItemAsStop,
     openSaveToFolder,
     saveToFolder
   },
