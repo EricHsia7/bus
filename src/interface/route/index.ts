@@ -9,7 +9,6 @@ import { saveStop, isSaved } from '../../data/folder/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
-
 var previousIntegration: object = {};
 
 var routeSliding_currentGroup: number = 0;
@@ -161,7 +160,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   element.classList.add('css_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"></div>`;
+  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -174,7 +173,7 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_head"><div class="css_name"><span></span><div class="css_status_text"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"><span></span><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.route.saveItemAsStop('${identifier}', null, null, null)"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -264,32 +263,35 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
-      var currentSlide = elementQuerySelector(thisItemElement, '.css_status .css_current_slide');
-      var currentTextSlide = elementQuerySelector(thisItemElement, '.css_status_text .css_current_slide');
-      var nextSlide = elementQuerySelector(thisItemElement, '.css_status .css_next_slide');
-      var nextTextSlide = elementQuerySelector(thisItemElement, '.css_status_text .css_next_slide');
-      nextSlide.setAttribute('code', thisItem.status.code);
-      nextTextSlide.setAttribute('code', thisItem.status.code);
-      nextTextSlide.innerText = thisItem.status.text;
-      currentSlide.addEventListener(
+      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_current_slide');
+      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_next_slide');
+
+      var currentItemSlide = elementQuerySelector(thisItemElement, '.css_item_status .css_current_slide');
+      var nextItemSlide = elementQuerySelector(thisItemElement, '.css_item_status .css_next_slide');
+
+      nextThreadSlide.setAttribute('code', thisItem.status.code);
+
+      nextItemSlide.setAttribute('code', thisItem.status.code);
+      nextItemSlide.innerText = thisItem.status.text;
+      currentThreadSlide.addEventListener(
         'animationend',
         function () {
-          currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.classList.remove('css_slide_fade_out');
+          currentThreadSlide.setAttribute('code', thisItem.status.code);
+          currentThreadSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentTextSlide.addEventListener(
+      currentItemSlide.addEventListener(
         'animationend',
         function () {
-          currentTextSlide.setAttribute('code', thisItem.status.code);
-          currentTextSlide.innerText = thisItem.status.text;
-          currentTextSlide.classList.remove('css_slide_fade_out');
+          currentItemSlide.setAttribute('code', thisItem.status.code);
+          currentItemSlide.innerText = thisItem.status.text;
+          currentItemSlide.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentSlide.classList.add('css_slide_fade_out');
-      currentTextSlide.classList.add('css_slide_fade_out');
+      currentThreadSlide.classList.add('css_slide_fade_out');
+      currentItemSlide.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
       thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer);

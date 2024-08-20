@@ -26,6 +26,14 @@
   /*head: 50px + body: 171px*/
 }
 
+.css_route_field .css_route_groups .css_route_group .css_item[segment-buffer="true"] {
+  background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_item[nearest="true"] {
+  background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
+}
+
 /* head */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head {
   position: absolute;
