@@ -71,7 +71,7 @@
   width: 80px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -137,20 +137,10 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 30px;
   width: 49px;
+  height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status {
-  position: relative;
-  width: 50px;
-  height: 25px;
-  border-radius: 20px;
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide,
@@ -158,8 +148,8 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 50px;
-  width: 25px;
+  width: 49px;
+  height: 30px;
   white-space: nowrap;
   word-break: keep-all;
   display: flex;
