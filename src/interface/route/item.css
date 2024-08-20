@@ -46,13 +46,13 @@
 /* head > name */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_name {
   position: absolute;
-  top: 0px;
+  top: 10px;
   left: 0px;
-  height: 50px;
+  height: 30px;
   display: flex;
   align-items: center;
-  width: calc(100% - 80px - 15px);
-  /*capsule: 80px + padding: 15px*/
+  width: calc(100% - 85px - 15px - 5px);
+  /*capsule: 85px + padding: 15px + gap: 5px*/
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
@@ -68,7 +68,7 @@
   position: absolute;
   top: 10px;
   right: 15px;
-  width: 80px;
+  width: 85px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
   border-radius: 15px;
@@ -89,7 +89,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_capsule_separator {
   position: absolute;
   top: 3px;
-  left: 49px;
+  left: calc(55px - 1px);
   width: 1px;
   height: 24px;
   background: var(--b-cssvar-aeaeb2);
@@ -137,7 +137,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 49px;
+  width: calc(55px - 1px);
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
@@ -148,7 +148,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 49px;
+  width: calc(55px - 1px);
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;
@@ -190,7 +190,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="2"] {
   color: var(--b-cssvar-ffffff);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   background: var(--b-cssvar-main-color);
 }
@@ -211,7 +211,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="1"] {
   color: var(--b-cssvar-main-color);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   background: var(--b-cssvar-main-color-solid-transparent-c);
 }
@@ -234,7 +234,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide[code="0.5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="0.5"] {
   color: var(--b-cssvar-333333);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -254,7 +254,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="0"] {
   color: var(--b-cssvar-333333);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   transition: none;
 }

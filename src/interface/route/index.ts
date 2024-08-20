@@ -308,6 +308,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     }
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
       thisItemElement.setAttribute('nearest', thisItem.nearest);
+      thisThreadBoxElement.setAttribute('nearest', thisItem.nearest);
     }
     function updateThreadBox(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
       var previousProgress = previousItem?.progress || 0;
