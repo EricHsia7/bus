@@ -53,10 +53,12 @@ function generateRandomString(length) {
 
 const workflowRunNumber = parseInt(execSync('echo $GITHUB_RUN_NUMBER').toString().trim());
 const commitHash = execSync('git rev-parse HEAD').toString().trim();
+const branchName = execSync('git branch --show-current').toString().trim();
 const thisVersion = {
   build: workflowRunNumber,
   hash: commitHash.substring(0, 7),
-  fullHash: commitHash
+  fullHash: commitHash,
+  branchName: branchName
 };
 
 async function outputVersionJSON() {
@@ -81,7 +83,8 @@ module.exports = (env, argv) => {
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          VERSION: JSON.stringify(thisVersion.hash) // You can adjust the length of the random string here (e.g., 8 characters)
+          VERSION: JSON.stringify(thisVersion.hash),
+          BRANCH_NAME: JSON.stringify(thisVersion.branchName)
         }
       }),
       new HtmlWebpackPlugin({

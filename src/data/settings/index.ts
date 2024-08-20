@@ -1,7 +1,7 @@
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 import { getUpdateRate } from '../analytics/update-rate.ts';
 import { formatTime } from '../../tools/format-time.ts';
-import { getHTMLVersionHash } from './version.ts';
+import { getHTMLVersionBranchName, getHTMLVersionHash } from './version.ts';
 
 const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'use_addresses_as_location_labels'];
 
@@ -194,7 +194,7 @@ export async function listSettings(): [] {
       item.status = '';
     }
     if (item.type === 'info' && key === 'version') {
-      item.status = getHTMLVersionHash();
+      item.status = `${getHTMLVersionHash()}@${getHTMLVersionBranchName()}`;
     }
     if (item.key === 'refresh_interval') {
       if (item.option === 0) {

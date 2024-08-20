@@ -30,13 +30,18 @@ async function getAppVersion(): object {
     return {
       build: null,
       hash: null,
-      fullHash: null
+      fullHash: null,
+      branchName: null
     };
   }
 }
 
 export function getHTMLVersionHash(): string {
   return documentQuerySelector('head meta[name="version"]').getAttribute('content');
+}
+
+export function getHTMLVersionBranchName(): string {
+  return documentQuerySelector('head meta[name="branch-name"]').getAttribute('content');
 }
 
 export async function checkAppVersion(): object {
