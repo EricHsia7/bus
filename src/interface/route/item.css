@@ -206,7 +206,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="3"] {
   background: var(--b-cssvar-ededf2);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
 }
 
