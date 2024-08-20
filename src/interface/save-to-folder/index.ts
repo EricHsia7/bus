@@ -27,7 +27,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
 }
 
 async function initializeSaveToFolderField(type: FolderContentType, parameters: []): void {
-  var Field = documentQuerySelector('.css_route_field');
+  var Field = documentQuerySelector('.css_save_to_folder_field');
   elementQuerySelector(Field, '.css_save_to_folder_body .css_save_to_folder_list').innerHTML = '';
   var foldersWithContent = await listFoldersWithContent();
   for (var item of foldersWithContent) {
