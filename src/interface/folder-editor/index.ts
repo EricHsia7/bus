@@ -6,10 +6,10 @@ import { GeneratedElement } from '../index.ts';
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
-  element.classList.add('css_folder_editor_folder_content_item');
   element.id = identifier;
   switch (item.type) {
     case 'stop':
+      element.classList.add('css_folder_editor_folder_content_stop_item');
       element.innerHTML = `<div class="css_folder_editor_folder_content_stop_item_route">${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="css_folder_editor_folder_content_stop_item_name">${item.name}</div><div class="css_folder_editor_folder_content_stop_item_capsule"></div>`;
       break;
     default:
