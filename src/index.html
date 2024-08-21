@@ -300,7 +300,8 @@
       </svg>
     </div>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
+      /*document.addEventListener('DOMContentLoaded', function () {});*/
+      window.addEventListener('load', function () {
         bus.initialize();
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./service-worker.js');
