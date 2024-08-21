@@ -3,6 +3,7 @@ import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/inde
 import { md5 } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
+import { Icon } from '../../interface/icons/index.ts';
 
 var Folders = {
   f_saved_stop: {
@@ -33,15 +34,9 @@ var Folders = {
 
 export type FolderContentType = 'stop' | 'route' | 'bus';
 
-interface FolderIcon {
-  source: 'icons' | 'svg';
-  id: string | null;
-  content: string | null;
-}
-
 export interface Folder {
   name: string;
-  icon: FolderIcon;
+  icon: Icon;
   default: boolean;
   storeIndex: number | null;
   contentType: FolderContentType[];

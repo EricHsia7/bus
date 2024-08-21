@@ -10,7 +10,7 @@ import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationF
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
-import { initializeFolderStores, saveStop, saveToFolder } from './data/folder/index.ts';
+import { initializeFolderStores } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
 import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
@@ -18,28 +18,44 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
+import { documentQuerySelector } from './tools/query-selector.ts';
 import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
+import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 
 import './interface/theme.css';
+
 import './interface/index.css';
+
 import './interface/animation.css';
+
 import './interface/home/index.css';
 import './interface/home/folder.css';
+
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
+
 import './interface/route/field.css';
 import './interface/route/groups.css';
 import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
+
 import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
+
 import './interface/location/index.css';
 import './interface/settings/index.css';
+
 import './interface/save-to-folder/index.css';
+
+import './interface/folder-manager/field.css';
+import './interface/folder-manager/head.css';
+import './interface/folder-manager/body.css';
+import './interface/folder-manager/list.css';
+import './interface/folder-manager/item.css';
+
 import './interface/prompt/index.css';
 
 //for development
@@ -148,11 +164,11 @@ window.bus = {
     stretchLocationItemBody
   },
   folder: {
-    saveStop,
     openSaveToFolder,
     closeSaveToFolder,
-    saveItemOnRouteAsStop,
-    saveToFolder
+    openFolderManager,
+    closeFolderManager,
+    saveItemOnRouteAsStop
   },
   searchPage: {
     openSearchPage,

@@ -11,7 +11,7 @@ function generateElementOfItem(item: object): GeneratedElement {
   element.id = identifier;
   element.setAttribute('onclick', item.action);
   element.setAttribute('type', item.type);
-  element.innerHTML = `<div class="css_setting_icon">${icons[item.icon]}</div><div class="css_setting_name">${item.name}</div><div class="css_setting_status">${item.status}</div><div class="css_setting_arrow">${icons['arrow']}</div>`;
+  element.innerHTML = `<div class="css_setting_icon">${icons[item.icon]}</div><div class="css_setting_name">${item.name}</div><div class="css_setting_status">${item.status}</div><div class="css_setting_arrow">${icons.arrow}</div>`;
   return {
     element: element,
     id: identifier

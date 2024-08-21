@@ -128,7 +128,7 @@ var Settings = {
     icon: 'folder',
     status: '',
     type: 'page',
-    action: 'bus.folder.openFolderListPage()'
+    action: 'bus.folder.openFolderManager()'
   },
   data_usage: {
     key: 'data_usage',
