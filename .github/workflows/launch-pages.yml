@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - dev-folder-management
-      - dev-folder-manager
+      - dev-folder-editor
 
 jobs:
   build:
