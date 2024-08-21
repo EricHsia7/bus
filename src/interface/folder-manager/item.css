@@ -26,7 +26,7 @@
   fill: var(--b-cssvar-333333);
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_save_to_folder_item_name {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_name {
   position: absolute;
   top: 0px;
   left: 55px;
