@@ -10,7 +10,7 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_route {
   position: absolute;
   top: 7.5px;
-  left: 90px;
+  left: 10px;
   width: calc(100% - 10px - 85px - 10px);
   /* padding: 10px + capsule: 85px + padding: 10px */
   font-size: 14px;
