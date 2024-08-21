@@ -263,7 +263,7 @@ export async function streamFolders(): void {
     });
 }
 
-export function initializeFolders(RouteID: number, PathAttributeId: [number]) {
+export function initializeFolders(): void {
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   setUpFolderFieldSkeletonScreen(Field);
   if (!foldersRefreshTimer.streaming) {

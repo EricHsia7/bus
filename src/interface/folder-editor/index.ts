@@ -8,7 +8,14 @@ function generateElementOfItem(item: object): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_folder_editor_folder_content_item');
   element.id = identifier;
-  element.innerHTML = `${item.type}`;
+  switch (item.type) {
+    case 'stop':
+      element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route">${item.route.name}</div><div class="css_home_folder_item_stop_name">${item.name}</div>`;
+      break;
+    default:
+      element.innerHTML = '';
+      break;
+  }
   return {
     element: element,
     id: identifier
@@ -22,6 +29,7 @@ function updateFolderEditorField(folder: Folder, content: object[]): void {
   //const iconSelectElement;
   //const iconInputElement;
   const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
+  folderContentElement.innerHTML = '';
   for (var item of content) {
     var thisItemElement = generateElementOfItem(item);
     folderContentElement.appendChild(thisItemElement.element);
