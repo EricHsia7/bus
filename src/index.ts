@@ -60,6 +60,8 @@ import './interface/folder-manager/item.css';
 import './interface/folder-editor/field.css';
 import './interface/folder-editor/head.css';
 import './interface/folder-editor/body.css';
+import './interface/folder-editor/groups.css';
+import './interface/folder-editor/name.css';
 
 import './interface/prompt/index.css';
 
