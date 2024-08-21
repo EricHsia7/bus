@@ -20,6 +20,7 @@ import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector } from './tools/query-selector.ts';
 import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
+import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 
 import './interface/theme.css';
 import './interface/index.css';
@@ -41,7 +42,6 @@ import './interface/location/index.css';
 import './interface/settings/index.css';
 import './interface/save-to-folder/index.css';
 import './interface/prompt/index.css';
-import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.js';
 
 //for development
 /*
