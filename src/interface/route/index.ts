@@ -233,10 +233,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         },
         nearest: false,
         progress: 0,
-        segmentBuffer: {
-          endpoint: false,
-          type: null
-        },
+        segmentBuffer: false,
         id: null
       });
     }
