@@ -1,7 +1,6 @@
-import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
+import { integrateFolders } from '../../data/folder/index.ts';
 import { compareThings, md5 } from '../../tools/index.ts';
-import { formatEstimateTime } from '../../tools/format-time.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
 import { icons } from '../icons/index.ts';
@@ -30,27 +29,22 @@ function queryFolderFieldSize(): FieldSize {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  //var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
-  var element = document.createElement('div');
-  //element.id = identifier;
-  element.setAttribute('stretched', false);
+  const element = document.createElement('div');
   element.classList.add('css_home_folder_item_stop');
   element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
   return {
     element: element,
-    id: ''
+    id: null
   };
 }
 
 function generateElementOfFolder(): GeneratedElement {
-  //var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
-  var element = document.createElement('div');
-  //element.id = identifier;
+  const element = document.createElement('div');
   element.classList.add('css_home_folder');
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
-    id: ''
+    id: null
   };
 }
 

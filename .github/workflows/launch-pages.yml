@@ -7,6 +7,7 @@ on:
       - main
       - dev-folder-management
       - dev-folder-editor
+      - dev-optimization
 
 jobs:
   build:

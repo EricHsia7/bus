@@ -30,7 +30,7 @@ export function fadeOutSplashScreen(callback: Function): void {
 
 export interface GeneratedElement {
   element: HTMLElement;
-  id: string;
+  id: string | null;
 }
 
 export interface FieldSize {
