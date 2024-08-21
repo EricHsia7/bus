@@ -19,8 +19,8 @@ function updateFolderEditorField(folder: Folder, content: object[]): void {
   const Field = documentQuerySelector('.css_folder_manager_field');
   const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="name"] .css_folder_editor_group_body input');
   nameInputElement.value = folder.name;
-  const iconSelectElement;
-  const iconInputElement;
+  //const iconSelectElement;
+  //const iconInputElement;
   const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="content"] .css_folder_editor_group_body');
   for (var item of content) {
     var thisItemElement = generateElementOfItem(item);
