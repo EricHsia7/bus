@@ -257,7 +257,7 @@ export function generateIdentifier(): string {
   let result = '';
   const length: number = 16;
   for (var i = 0; i < length; i++) {
-    var randomNumber = Math.round(Math.random() * length);
+    var randomNumber = Math.round(Math.random() * characterSet.length);
     result += characterSet.substring(randomNumber, randomNumber + 1);
   }
   return result;
