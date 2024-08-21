@@ -1,4 +1,5 @@
 import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/index.ts';
+import { md5 } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { icons } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
