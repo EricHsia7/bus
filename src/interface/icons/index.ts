@@ -16,7 +16,7 @@ function getIconHTML(icon: Icon): string {
       return icon.content;
       break;
     default:
-      return icons['none'];
+      return icons.none;
       break;
   }
 }

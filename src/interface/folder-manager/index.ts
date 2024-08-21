@@ -9,7 +9,7 @@ function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_folder_manager_folder_item');
   element.id = identifier;
-  element.innerHTML = `<div class="css_folder_manager_folder_item_icon">${icons.getIconHTML(item.folder.icon)}</div><div class="css_folder_manager_folder_item_name">${item.folder.name}</div><div class="css_folder_manager_folder_item_capsule"></div>`;
+  element.innerHTML = `<div class="css_folder_manager_folder_item_icon">${icons.getIconHTML(item.folder.icon)}</div><div class="css_folder_manager_folder_item_name">${item.folder.name}</div><div class="css_folder_manager_folder_item_arrow">${icons.arrow}</div>`;
   return {
     element: element,
     id: identifier
