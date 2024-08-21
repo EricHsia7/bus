@@ -6,7 +6,7 @@ import { GeneratedElement } from '../index.ts';
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
-  element.classList.add('css_folder_manager_folder_item');
+  element.classList.add('css_folder_editor_folder_content_item');
   element.id = identifier;
   element.innerHTML = `${item.type}`;
   return {
@@ -16,12 +16,12 @@ function generateElementOfItem(item: object): GeneratedElement {
 }
 
 function updateFolderEditorField(folder: Folder, content: object[]): void {
-  const Field = documentQuerySelector('.css_folder_manager_field');
-  const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="name"] .css_folder_editor_group_body input');
+  const Field = documentQuerySelector('.css_folder_editor_field');
+  const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
   nameInputElement.value = folder.name;
   //const iconSelectElement;
   //const iconInputElement;
-  const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="content"] .css_folder_editor_group_body');
+  const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
   for (var item of content) {
     var thisItemElement = generateElementOfItem(item);
     folderContentElement.appendChild(thisItemElement.element);
@@ -36,12 +36,12 @@ async function initializeFolderEditorField(folderID: string): void {
 }
 
 export function openFolderEditor(folderID: string): void {
-  const Field = documentQuerySelector('.css_folder_manager_field');
+  const Field = documentQuerySelector('.css_folder_editor_field');
   Field.setAttribute('displayed', 'true');
   initializeFolderEditorField(folderID);
 }
 
 export function closeFolderEditor(): void {
-  const Field = documentQuerySelector('.css_folder_manager_field');
+  const Field = documentQuerySelector('.css_folder_editor_field');
   Field.setAttribute('displayed', 'false');
 }
