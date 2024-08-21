@@ -1,5 +1,5 @@
 import { integrateFolders } from '../../data/folder/index.ts';
-import { compareThings, md5 } from '../../tools/index.ts';
+import { compareThings, generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
@@ -224,7 +224,7 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
   foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer.refreshing = true;
-  foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  foldersRefreshTimer.currentRequestID = `r_${generateIdentifier()}`;
   var integration = await integrateFolders(foldersRefreshTimer.currentRequestID);
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   updateFolderField(Field, integration, false);

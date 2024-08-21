@@ -2,7 +2,7 @@ import { integrateRoute } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
 import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { isSaved } from '../../data/folder/index.ts';
@@ -154,7 +154,7 @@ function updateUpdateTimer() {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_thread_box');
   element.id = identifier;
@@ -167,7 +167,7 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
@@ -180,7 +180,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `g_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_group');
   element.id = identifier;
@@ -200,7 +200,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `t_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_group_tab');
   element.id = identifier;
@@ -486,7 +486,7 @@ async function refreshRoute(): object {
   routeRefreshTimer_auto = refresh_interval_setting.auto;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
-  routeRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  routeRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
   var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');

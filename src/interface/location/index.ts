@@ -1,9 +1,9 @@
 import { integrateLocation } from '../../data/apis/index.ts';
 import { icons } from '../icons/index.ts';
-import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
@@ -109,7 +109,7 @@ function updateUpdateTimer() {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
@@ -122,7 +122,7 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `g_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group');
@@ -134,7 +134,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `t_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_tab');
@@ -145,7 +145,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `p_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_details_property');
@@ -425,7 +425,7 @@ async function refreshLocation(): object {
   locationRefreshTimer_auto = refresh_interval_setting.auto;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
-  locationRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  locationRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
   var integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_location_field');

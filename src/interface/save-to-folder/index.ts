@@ -1,12 +1,12 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { GeneratedElement } from '../index.ts';
-import { md5 } from '../../tools/index.ts';
+import { generateIdentifier } from '../../tools/index.ts';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index.ts';
 import { icons } from '../icons/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');
   element.id = identifier;
