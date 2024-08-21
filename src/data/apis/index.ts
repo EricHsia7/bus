@@ -12,7 +12,7 @@ import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
-import { md5 } from '../../tools/index.ts';
+import { generateIdentifier } from '../../tools/index.ts';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address.ts';
 import { generateLetterLabels } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
@@ -396,7 +396,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
 }
 
 export async function integrateStop(StopID: number, RouteID: number): object {
-  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  const requestID = `r_${generateIdentifier()}`;
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, false);
   var Route = await getRoute(requestID);

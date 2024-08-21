@@ -1,5 +1,5 @@
-import { md5 } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { generateIdentifier } from '../../tools/index.ts';
+import { documentQuerySelectorAll } from '../../tools/query-selector.ts';
 
 export function prompt_message(message: string, duration: number = 1200): void {
   message = String(message);
@@ -12,7 +12,7 @@ export function prompt_message(message: string, duration: number = 1200): void {
   }
   var duration_base: number = 300;
   var translateY: number = -20;
-  var prompt_id: string = md5(new Date().getTime() + Math.random());
+  var prompt_id: string = generateIdentifier();
   var prompt_element = document.createElement('div');
   prompt_element.id = prompt_id;
   prompt_element.classList.add('css_prompt');

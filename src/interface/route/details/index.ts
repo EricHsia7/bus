@@ -1,8 +1,8 @@
 import { integrateRouteDetails } from '../../../data/apis/index.ts';
 import { initializeCalendarGridlines, setUpCalendarFieldSkeletonScreen, updateCalendarField } from './calendar.ts';
 import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './properties.ts';
-import { md5 } from '../../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
+import { generateIdentifier } from '../../../tools/index.ts';
+import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector.ts';
 
 async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: [number]): void {
   var actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
@@ -12,7 +12,7 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
-  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  const requestID = `r_${generateIdentifier()}`;
   var integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(propertiesField, integration.properties, false);
   updateCalendarField(calendarField, integration.calendar, false);

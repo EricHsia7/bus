@@ -1,7 +1,6 @@
 import { GeneratedElement, FieldSize } from '../../index.ts';
-import { indexToDay } from '../../../tools/format-time.ts';
-import { md5, compareThings } from '../../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
+import { generateIdentifier, compareThings } from '../../../tools/index.ts';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
 
 const calendar_ratio = 100;
 var previousCalendar = {};
@@ -14,7 +13,7 @@ function queryCalendarFieldSize(): FieldSize {
 }
 
 function generateElementOfGridline(hours: number): GeneratedElement {
-  var identifier = `l_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `l_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_calendar_gridline');
   element.id = identifier;
@@ -27,7 +26,7 @@ function generateElementOfGridline(hours: number): GeneratedElement {
 }
 
 function generateElementOfDay(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_calendar_day');
   element.id = identifier;
@@ -38,7 +37,7 @@ function generateElementOfDay(): GeneratedElement {
 }
 
 function generateElementOfEventGroup(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_calendar_grouped_events');
   element.id = identifier;
@@ -49,7 +48,7 @@ function generateElementOfEventGroup(): GeneratedElement {
 }
 
 function generateElementOfEvent(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_calendar_event');
   element.id = identifier;

@@ -1,4 +1,4 @@
-import { splitDataByDelta, pearsonCorrelation, md5 } from '../../tools/index.ts';
+import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index.ts';
 import { formatTime } from '../../tools/format-time.ts';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
 
@@ -22,8 +22,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
   if (!trackingUpdateRate.tracking) {
     trackingUpdateRate.tracking = true;
     trackingUpdateRate.trackedStops = [];
-    var today: Date = new Date();
-    trackingUpdateRate.trackingID = `e_${md5(Math.random() + new Date().getTime())}`;
+    trackingUpdateRate.trackingID = `e_${generateIdentifier()}`;
     var EstimateTimeLength: number = EstimateTime.length - 1;
     for (var i = 0; i < trackingUpdateRate.sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);

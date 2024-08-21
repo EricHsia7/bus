@@ -1,5 +1,5 @@
 import { GeneratedElement, FieldSize } from '../../index.ts';
-import { md5, compareThings } from '../../../tools/index.ts';
+import { compareThings } from '../../../tools/index.ts';
 import { icons } from '../../icons/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
 
@@ -13,11 +13,8 @@ function queryPropertiesFieldSize(): FieldSize {
 }
 
 function generateElementOfProperty(): GeneratedElement {
-  //var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_property');
-  //element.setAttribute('skeleton-screen', skeletonScreen);
-  //element.id = identifier;
   element.innerHTML = `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
   return {
     element: element,

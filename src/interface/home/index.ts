@@ -2,7 +2,7 @@ import { getRoute } from '../../data/apis/getRoute.ts';
 import { getStop } from '../../data/apis/getStop.ts';
 import { getLocation } from '../../data/apis/getLocation.ts';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { documentQuerySelector } from '../../tools/query-selector.ts';
 
 var dataPreloadRequestID = 'preload_data';
 export var dataPreloadCompleted = false;

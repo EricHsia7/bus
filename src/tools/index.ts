@@ -183,7 +183,7 @@ export function generateLetterLabels(quantity: number): string[] {
   return result;
 }
 
-const base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
 // Function to encode a hex into a shortened string
 export function encodeHexToShortString(inputHex: string, len: number): string {
@@ -213,7 +213,7 @@ export function encodeHexToShortString(inputHex: string, len: number): string {
       }
       const indices = [parseInt(chunkBits.substr(0, 6), 2), parseInt(chunkBits.substr(6, 6), 2), parseInt(chunkBits.substr(12, 6), 2), parseInt(chunkBits.substr(18, 6), 2)];
       for (const index of indices) {
-        encodedString += base64Chars.charAt(index);
+        encodedString += characterSet.charAt(index);
       }
     }
     return String(encodedString).substring(0, len);
@@ -242,7 +242,7 @@ export function decodeShortStringToHex(encodedString: string, len: number): stri
   // Decode the Base64-like encoded string back to binary data
   for (let i = 0; i < encodedString.length; i++) {
     const char = encodedString.charAt(i);
-    const index = base64Chars.indexOf(char);
+    const index = characterSet.indexOf(char);
     if (index >= 0) {
       const bits = index.toString(2).padStart(6, '0');
       binaryString += bits;
@@ -251,4 +251,14 @@ export function decodeShortStringToHex(encodedString: string, len: number): stri
   // Convert the binary data back to hexadecimal
   const hexHash = binaryToHex(binaryString);
   return String(hexHash).substring(0, len);
+}
+
+export function generateIdentifier(): string {
+  let result = '';
+  const length: number = 16;
+  for (var i = 0; i < length; i++) {
+    var randomNumber = Math.round(Math.random() * characterSet.length);
+    result += characterSet.substring(randomNumber, randomNumber + 1);
+  }
+  return result;
 }

@@ -1,6 +1,6 @@
 import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
 import { lfSetItem, lfGetItem, lfListItem, registerStore } from '../storage/index.ts';
-import { md5 } from '../../tools/index.ts';
+import { generateIdentifier } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 import { Icon } from '../../interface/icons/index.ts';
@@ -71,7 +71,7 @@ export async function initializeFolderStores(): void {
 }
 
 export async function createFolder(name: string): boolean {
-  var idintifier = `${md5(new Date().getTime() * Math.random())}`;
+  var idintifier = `${generateIdentifier()}`;
   var object: Folder = {
     name: name,
     icon: {
