@@ -10,7 +10,7 @@ function generateElementOfItem(item: object): GeneratedElement {
   element.id = identifier;
   switch (item.type) {
     case 'stop':
-      element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route">${item.route.name}</div><div class="css_home_folder_item_stop_name">${item.name}</div>`;
+      element.innerHTML = `<div class="css_folder_editor_folder_content_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_folder_editor_folder_content_item_stop_route">${item.route.name}</div><div class="css_folder_editor_folder_content_item_stop_name">${item.name}</div>`;
       break;
     default:
       element.innerHTML = '';

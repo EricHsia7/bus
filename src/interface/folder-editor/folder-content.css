@@ -1,0 +1,160 @@
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status {
+  position: absolute;
+  top: 7.5px;
+  left: 10px;
+  height: 35px;
+  width: 70px;
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 35px;
+  width: 70px;
+  white-space: nowrap;
+  word-break: keep-all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+  -webkit-user-select: none;
+  user-select: none;
+  background: var(--b-cssvar-ededf2);
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="6"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="6"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="5"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="5"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="4"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="4"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="3"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="3"] {
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="2"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="2"] {
+  color: var(--b-cssvar-ffffff);
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color);
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="1"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="1"] {
+  color: var(--b-cssvar-main-color);
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color-solid-transparent-c)
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="0.5"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="0.5"] {
+  color: var(--b-cssvar-333333);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_next_slide[code="0"],
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_current_slide[code="0"] {
+  color: var(--b-cssvar-333333);
+  font-size: 15px;
+  font-weight: 700;
+  transition: none;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_status .css_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_route {
+  position: absolute;
+  top: 7.5px;
+  left: 90px;
+  width: calc(100% - 90px - 10px);
+  font-size: 14px;
+  height: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_item .css_folder_editor_folder_content_item_stop_name {
+  position: absolute;
+  top: 21.5px;
+  left: 90px;
+  width: calc(100% - 90px - 10px);
+  font-size: 17px;
+  height: 23px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_folder_content_item[skeleton-screen="true"] .css_folder_editor_folder_content_item_stop_name,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_folder_content_item[skeleton-screen="true"] .css_folder_editor_folder_content_item_stop_route {
+  color: rgba(0, 0, 0, 0);
+  top: 7.5px;
+  height: 35px;
+  border-radius: 30px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups[skeleton-screen="true"] .css_folder_editor_group[group="folder-content"] .css_home_folder_head .css_home_folder_icon {
+  top: 5px;
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_name {
+  top: 5px;
+  left: 25px;
+  width: 50px;
+  height: 15px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_folder_content_item[skeleton-screen="true"] .css_folder_editor_folder_content_item_stop_status .css_next_slide,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_folder_content_item[skeleton-screen="true"] .css_folder_editor_folder_content_item_stop_status .css_current_slide,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_folder_content_item[skeleton-screen="true"] .css_folder_editor_folder_content_item_stop_name {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
