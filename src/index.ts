@@ -23,24 +23,39 @@ import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './in
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 
 import './interface/theme.css';
+
 import './interface/index.css';
+
 import './interface/animation.css';
+
 import './interface/home/index.css';
 import './interface/home/folder.css';
+
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
+
 import './interface/route/field.css';
 import './interface/route/groups.css';
 import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
+
 import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
+
 import './interface/location/index.css';
 import './interface/settings/index.css';
+
 import './interface/save-to-folder/index.css';
+
+import './interface/folder-manager/field.css';
+import './interface/folder-manager/head.css';
+import './interface/folder-manager/body.css';
+import './interface/folder-manager/list.css';
+import './interface/folder-manager/item.css';
+
 import './interface/prompt/index.css';
 
 //for development
