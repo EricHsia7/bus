@@ -1,5 +1,5 @@
 .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input {
-  position: absolute;
+  position: relative;
   top: 0px;
   left: 10px;
   width: calc(100% - 20px);
