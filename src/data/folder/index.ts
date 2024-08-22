@@ -301,7 +301,7 @@ export async function removeStop(folderID: string, StopID: number): boolean {
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
   console.log(0);
   var thisFolder = getFolder(folderID);
-  var thisFolderContent = listFolderContent(folderID);
+  var thisFolderContent = await listFolderContent(folderID);
   var thisContentKey = `${type}_${id}`;
   var thisContent = await lfGetItem(thisFolder.storeIndex, thisContentKey);
   console.log(1);
