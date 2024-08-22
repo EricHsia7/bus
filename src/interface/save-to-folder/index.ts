@@ -12,7 +12,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   element.id = identifier;
   switch (type) {
     case 'stop':
-      element.setAttribute('onclick', `bus.folder.saveItemOnRouteAsStop('${parameters[2]}', '${item.folder.id}', ${parameters[0]}, ${parameters[1]})`); // TODO: set up folder id and content
+      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[2]}', '${item.folder.id}', ${parameters[0]}, ${parameters[1]})`); // TODO: set up folder id and content
       break;
     case 'route':
       break;
@@ -49,10 +49,10 @@ export function closeSaveToFolder(): void {
   Field.setAttribute('displayed', 'false');
 }
 
-export function saveItemOnRouteAsStop(itemID: string, folderId: string, StopID: number, RouteID: number) {
+export function saveStopItemOnRoute(itemID: string, folderID: string, StopID: number, RouteID: number) {
   var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
   var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
-  saveStop(folderId, StopID, RouteID).then((e) => {
+  saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
       isSaved('stop', StopID).then((k) => {
         actionButtonElement.setAttribute('highlighted', k);
