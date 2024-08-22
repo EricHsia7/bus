@@ -1,4 +1,4 @@
-import { Folder, FolderContent, getFolder, listFolderContent, removeStop } from '../../data/folder/index.ts';
+import { Folder, FolderContent, getFolder, listFolderContent, removeStop, updateFolderContentIndex } from '../../data/folder/index.ts';
 import { generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { GeneratedElement } from '../index.ts';
@@ -70,7 +70,7 @@ export function removeStopItemOnFolderEditor(itemID: string, folderID: string, S
 }
 
 export function moveUpItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
-  updateContentPriority(folderID, type, id, 'up').then((e) => {
+  updateFolderContentIndex(folderID, type, id, 'up').then((e) => {
     if (e) {
       prompt_message('已往上移');
     } else {
@@ -80,7 +80,7 @@ export function moveUpItemOnFolderEditor(itemID: string, folderID: string, type:
 }
 
 export function moveDownItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
-  updateContentPriority(folderID, type, id, 'down').then((e) => {
+  updateFolderContentIndex(folderID, type, id, 'down').then((e) => {
     if (e) {
       prompt_message('已往下移');
     } else {
