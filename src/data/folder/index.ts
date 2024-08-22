@@ -317,8 +317,9 @@ export async function updateFolderContentIndex(folderID: string, type: FolderCon
         break;
     }
     var adjacentContentObject = thisFolderContent[thisContentObject.index + offset];
-    var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
     if (adjacentContentObject) {
+      var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
+
       var thisContentIndex = thisContentObject.index;
       var adjacentContentIndex = adjacentContentObject.index;
       thisContentObject.index = adjacentContentIndex;
