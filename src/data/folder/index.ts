@@ -272,7 +272,7 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): boolean {
   var integration = await integrateStop(StopID, RouteID);
-  var folderContentLength = getFolderContentLength(folderID);
+  var folderContentLength = await getFolderContentLength(folderID);
   var content: FolderStop = {
     type: 'stop',
     id: StopID,
