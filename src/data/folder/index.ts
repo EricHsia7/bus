@@ -52,6 +52,7 @@ export interface FolderStop {
   name: string;
   direction: number;
   route: FolderStopRoute;
+  index: number;
 }
 
 export interface FolderRoute {
@@ -59,6 +60,7 @@ export interface FolderRoute {
   id: number;
   time: string;
   name: string;
+  index: number;
 }
 
 export interface Folder {
@@ -126,7 +128,7 @@ export async function createFolder(name: string): boolean {
   return false;
 }
 
-export function getFolder(folderID: string): object {
+export function getFolder(folderID: string): Folder {
   return Folders[`f_${folderID}`];
 }
 
@@ -146,14 +148,21 @@ export async function listFolderContent(folderID: string): FolderContent[] {
     var item = await lfGetItem(thisFolder.storeIndex, itemKey);
     if (item) {
       var itemObject: object = JSON.parse(item);
-      itemObject.timeNumber = new Date(itemObject.time).getTime();
       result.push(itemObject);
     }
   }
   result = result.sort(function (a, b) {
-    return a.timeNumber - b.timeNumber;
+    var c = a?.index || 0;
+    var d = b?.index || 0;
+    return c - d;
   });
   return result;
+}
+
+async function getFolderContentLength(folderID: string): number {
+  var thisFolder = getFolder(folderID);
+  var itemKeys = await lfListItem(thisFolder.storeIndex);
+  return itemKeys.length;
 }
 
 export async function listFoldersWithContent(): FoldersWithContent[] {
@@ -263,6 +272,7 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): boolean {
   var integration = await integrateStop(StopID, RouteID);
+  var folderContentLength = getFolderContentLength(folderID);
   var content: FolderStop = {
     type: 'stop',
     id: StopID,
@@ -275,7 +285,8 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
         departure: integration.thisRouteDeparture,
         destination: integration.thisRouteDestination
       },
-      id: RouteID
+      id: RouteID,
+      index: folderContentLength
     }
   };
   var save = await saveToFolder(folderID, content);
@@ -285,4 +296,38 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
 export async function removeStop(folderID: string, StopID: number): boolean {
   var removal = await removeFromFolder(folderID, 'stop', StopID);
   return removal;
+}
+
+export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
+  var thisFolder = getFolder(folderID);
+  var thisFolderContent = listFolderContent(folderID);
+  var thisContentKey = `${type}_${id}`;
+  var thisContent = await lfGetItem(thisFolder.storeIndex, thisContentKey);
+  if (thisContent) {
+    var thisContentObject: FolderContent = JSON.parse(thisContent);
+    switch (direction) {
+      case 'up':
+        var offset = -1;
+        break;
+      case 'down':
+        var offset = 1;
+        break;
+      default:
+        var offset = 0;
+        break;
+    }
+    var adjacentContentObject = thisFolderContent[thisContentObject.index + offset];
+    var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
+    if (adjacentContentObject) {
+      var thisContentIndex = thisContentObject.index;
+      var adjacentContentIndex = adjacentContentObject.index;
+      thisContentObject.index = adjacentContentIndex;
+      adjacentContentObject.index = thisContentIndex;
+      await lfSetItem(thisFolder.storeIndex, thisContentKey, JSON.stringify(thisContentObject));
+      await lfSetItem(thisFolder.storeIndex, adjacentContentKey, JSON.stringify(adjacentContentObject));
+      return true;
+    }
+  } else {
+    return false; // content dosen't exist
+  }
 }

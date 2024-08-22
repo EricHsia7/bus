@@ -12,7 +12,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   switch (item.type) {
     case 'stop':
       element.classList.add('css_folder_editor_folder_content_stop_item');
-      element.innerHTML = `<div class="css_folder_editor_folder_content_stop_item_route">${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="css_folder_editor_folder_content_stop_item_name">${item.name}</div><div class="css_folder_editor_folder_content_stop_item_capsule"><div class="css_folder_editor_folder_content_stop_item_sort_control_up">${icons.expand}</div><div class="css_folder_editor_folder_content_stop_item_sort_control_down">${icons.expand}</div><div class="css_folder_editor_folder_content_stop_item_delete" onclick="bus.folder.removeStopItemOnFolderEditor('${identifier}', '${folder.id}', ${item.id})">${icons.delete}</div></div>`;
+      element.innerHTML = `<div class="css_folder_editor_folder_content_stop_item_route">${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="css_folder_editor_folder_content_stop_item_name">${item.name}</div><div class="css_folder_editor_folder_content_stop_item_capsule"><div class="css_folder_editor_folder_content_stop_item_sort_control_up" onclick="bus.folder.moveUpItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id})">${icons.expand}</div><div class="css_folder_editor_folder_content_stop_item_sort_control_down" onclick="bus.folder.moveDownItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id})">${icons.expand}</div><div class="css_folder_editor_folder_content_stop_item_delete" onclick="bus.folder.removeStopItemOnFolderEditor('${identifier}', '${folder.id}', ${item.id})">${icons.delete}</div></div>`;
       break;
     default:
       element.innerHTML = '';
@@ -65,6 +65,26 @@ export function removeStopItemOnFolderEditor(itemID: string, folderID: string, S
       prompt_message('已移除站牌');
     } else {
       prompt_message('無法移除站牌');
+    }
+  });
+}
+
+export function moveUpItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
+  updateContentPriority(folderID, type, id, 'up').then((e) => {
+    if (e) {
+      prompt_message('已往上移');
+    } else {
+      prompt_message('無法移動');
+    }
+  });
+}
+
+export function moveDownItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
+  updateContentPriority(folderID, type, id, 'down').then((e) => {
+    if (e) {
+      prompt_message('已往下移');
+    } else {
+      prompt_message('無法移動');
     }
   });
 }
