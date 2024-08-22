@@ -81,7 +81,6 @@ export function moveUpItemOnFolderEditor(itemID: string, folderID: string, type:
 
 export function moveDownItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
   updateFolderContentIndex(folderID, type, id, 'down').then((e) => {
-console.log(1, e)
     if (e) {
       prompt_message('已往下移');
     } else {
