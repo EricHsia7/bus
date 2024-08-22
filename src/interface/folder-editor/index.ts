@@ -3,7 +3,7 @@ import { generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { GeneratedElement } from '../index.ts';
 import { icons } from '../icons/index.ts';
-import { prompt_message } from '../prompt/index.js';
+import { prompt_message } from '../prompt/index.ts';
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
