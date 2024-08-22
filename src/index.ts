@@ -21,7 +21,7 @@ import { fadeOutSplashScreen } from './interface/index.ts';
 import { documentQuerySelector } from './tools/query-selector.ts';
 import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index.ts';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
-import { closeFolderEditor, openFolderEditor, removeStopItemOnFolderEditor } from './interface/folder-editor/index.ts';
+import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeStopItemOnFolderEditor } from './interface/folder-editor/index.ts';
 
 import './interface/theme.css';
 
@@ -179,7 +179,8 @@ window.bus = {
     openFolderEditor,
     closeFolderEditor,
     saveStopItemOnRoute,
-    removeStopItemOnFolderEditor
+    removeStopItemOnFolderEditor,
+    moveItemOnFolderEditor
   },
   searchPage: {
     openSearchPage,
