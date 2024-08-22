@@ -293,10 +293,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   return save;
 }
 
-export async function removeStop(folderID: string, StopID: number): boolean {
-  var removal = await removeFromFolder(folderID, 'stop', StopID);
-  return removal;
-}
+//TODO: saveRoute, saveBus
 
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
   var thisFolder = getFolder(folderID);
