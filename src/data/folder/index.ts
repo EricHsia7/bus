@@ -299,14 +299,11 @@ export async function removeStop(folderID: string, StopID: number): boolean {
 }
 
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
-  console.log(0);
   var thisFolder = getFolder(folderID);
   var thisFolderContent = await listFolderContent(folderID);
   var thisContentKey = `${type}_${id}`;
   var thisContent = await lfGetItem(thisFolder.storeIndex, thisContentKey);
-  console.log(1);
   if (thisContent) {
-    console.log(2);
     var thisContentObject: FolderContent = JSON.parse(thisContent);
     var offset: number = 0;
     switch (direction) {
@@ -320,16 +317,12 @@ export async function updateFolderContentIndex(folderID: string, type: FolderCon
         offset = 0;
         break;
     }
-    console.log(thisContentObject, direction, offset, thisFolderContent);
     var adjacentContentObject = thisFolderContent[thisContentObject.index + offset];
-
     if (adjacentContentObject) {
-      console.log(3);
       var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
 
       var thisContentIndex = thisContentObject.index;
       var adjacentContentIndex = adjacentContentObject.index;
-      console.log(4, thisContentIndex, adjacentContentIndex);
       thisContentObject.index = adjacentContentIndex;
       adjacentContentObject.index = thisContentIndex;
       await lfSetItem(thisFolder.storeIndex, thisContentKey, JSON.stringify(thisContentObject));
@@ -337,8 +330,6 @@ export async function updateFolderContentIndex(folderID: string, type: FolderCon
       return true;
     }
   } else {
-    console.log(5);
     return false; // content dosen't exist
   }
-  console.log(5);
 }
