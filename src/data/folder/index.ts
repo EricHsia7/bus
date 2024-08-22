@@ -285,9 +285,9 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
         departure: integration.thisRouteDeparture,
         destination: integration.thisRouteDestination
       },
-      id: RouteID,
-      index: folderContentLength
-    }
+      id: RouteID
+    },
+    index: folderContentLength
   };
   var save = await saveToFolder(folderID, content);
   return save;
