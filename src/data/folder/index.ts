@@ -308,18 +308,21 @@ export async function updateFolderContentIndex(folderID: string, type: FolderCon
   if (thisContent) {
     console.log(2);
     var thisContentObject: FolderContent = JSON.parse(thisContent);
+    var offset: number = 0;
     switch (direction) {
       case 'up':
-        var offset = -1;
+        offset = -1;
         break;
       case 'down':
-        var offset = 1;
+        offset = 1;
         break;
       default:
-        var offset = 0;
+        offset = 0;
         break;
     }
+    console.log(thisContentObject, direction, offset, thisFolderContent);
     var adjacentContentObject = thisFolderContent[thisContentObject.index + offset];
+
     if (adjacentContentObject) {
       console.log(3);
       var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
