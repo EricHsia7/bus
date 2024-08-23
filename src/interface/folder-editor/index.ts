@@ -27,9 +27,22 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
 function updateFolderEditorField(folder: Folder, content: FolderContent[]): void {
   const Field = documentQuerySelector('.css_folder_editor_field');
   const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
-  nameInputElement.value = folder.name;
   const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
+  const leftButtonElement = elementQuerySelector(Field, '.css_folder_icon_selector_head .css_folder_icon_selector_button_left');
+
+  nameInputElement.value = folder.name;
   iconInputElement.value = folder.icon;
+
+  if (folder.default) {
+    nameInputElement.setAttribute('readonly', 'readonly');
+    iconInputElement.setAttribute('readonly', 'readonly');
+  } else {
+    nameInputElement.removeAttribute('readonly');
+    iconInputElement.removeAttribute('readonly');
+  }
+
+  leftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
+
   const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
   folderContentElement.innerHTML = '';
   for (var item of content) {
@@ -120,4 +133,16 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
       prompt_message('無法移動');
     }
   });
+}
+
+export async function saveEditedFolder(folderID: string): void {
+  const Field = documentQuerySelector('.css_folder_editor_field');
+  const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
+  const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
+  var thisFolder: Folder = await getFolder(folderID);
+  if (!thisFolder.default) {
+    thisFolder.name = nameInputElement.value;
+    thisFolder.icon = iconInputElement.value;
+  }
+  closeFolderEditor();
 }

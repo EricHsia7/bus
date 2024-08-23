@@ -16,3 +16,7 @@
   background: rgba(0, 0, 0, 0);
   border-radius: 0px;
 }
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input:read-only {
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+}
