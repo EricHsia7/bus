@@ -67,6 +67,8 @@ import './interface/folder-editor/groups.css';
 import './interface/folder-editor/folder-name.css';
 import './interface/folder-editor/folder-content.css';
 
+import './interface/folder-icon-selector/field.css';
+
 import './interface/prompt/index.css';
 
 //for development
