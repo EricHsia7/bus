@@ -1,11 +1,11 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
-import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols.js';
+import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols.ts';
 import { generateIdentifier } from '../../tools/index.ts';
 import { elementQuerySelector } from '../../tools/query-selector.ts';
-import { dataPreloadCompleted } from '../home/index.js';
+import { dataPreloadCompleted } from '../home/index.ts';
 import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
-import { prompt_message } from '../prompt/index.js';
+import { prompt_message } from '../prompt/index.ts';
 
 var currentFuse;
 
