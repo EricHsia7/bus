@@ -22,7 +22,7 @@ import { documentQuerySelector } from './tools/query-selector.ts';
 import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index.ts';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor } from './interface/folder-editor/index.ts';
-import { cloaseFolderIconSelector, openFolderIconSelector } from './interface/folder-icon-selector/index.ts';
+import { closeFolderIconSelector, openFolderIconSelector, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
 
 import './interface/theme.css';
 
@@ -131,9 +131,9 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            var searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+            const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (event) {
-              updateSearchResult(event.target.value);
+              updateSearchResult(searchInputElement.value);
             });
             searchInputElement.addEventListener('cut', function () {
               updateSearchResult(searchInputElement.value);
@@ -146,6 +146,23 @@ window.bus = {
             });
             searchInputElement.addEventListener('keyup', function () {
               updateSearchResult(searchInputElement.value);
+            });
+
+            const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+            searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            document.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
             });
             openPermalink();
             fadeOutSplashScreen(function () {
@@ -187,7 +204,7 @@ window.bus = {
     openFolderEditor,
     closeFolderEditor,
     openFolderIconSelector,
-    cloaseFolderIconSelector,
+    closeFolderIconSelector,
     saveStopItemOnRoute,
     removeItemOnFolderEditor,
     moveItemOnFolderEditor

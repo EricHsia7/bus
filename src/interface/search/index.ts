@@ -4,11 +4,12 @@ import { getIconHTML } from '../icons/index.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
+import { containPhoneticSymbols } from '../../tools/index.ts';
 
 const searchPageField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
 const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_results');
-var currentFuse;
+var currentFuse: any = false;
 
 export function openSearchPage(): void {
   if (dataPreloadCompleted) {
@@ -27,17 +28,8 @@ export function closeSearchPage(): void {
   searchPageField.setAttribute('displayed', 'false');
 }
 
-function containPhoneticSymbols(string: string): boolean {
-  var regex = /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm;
-  if (regex.test(string)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 export function updateSearchResult(query: string): void {
-  if (!containPhoneticSymbols(query)) {
+  if (!containPhoneticSymbols(query) && currentFuse) {
     var typeToIcon = ['route', 'location_on'];
     var searchResults = currentFuse.search(query).slice(0, 30);
     var html = [];

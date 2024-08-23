@@ -1,13 +1,13 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
 import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols.ts';
-import { generateIdentifier } from '../../tools/index.ts';
+import { containPhoneticSymbols, generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
 import { prompt_message } from '../prompt/index.ts';
 
-var currentFuse;
+var currentFuse: any = false;
 
 function generateElementOfSymbol(symbol: string): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
@@ -23,13 +23,26 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
 
 async function initializeFolderIconSelectorField(): void {
   const Field = documentQuerySelector('.css_folder_icon_selector_field');
-  const bodyElement = elementQuerySelector(Field, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
-  bodyElement.innerHTML = '';
+  const materialSymbolsElement = elementQuerySelector(Field, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
+  materialSymbolsElement.innerHTML = '';
   const requestID: string = `r_${generateIdentifier()}`;
   const materialSymbols = await getMaterialSymbols(requestID);
   for (const symbol of materialSymbols) {
     const symbolElement = generateElementOfSymbol(symbol);
-    bodyElement.appendChild(symbolElement.element);
+    materialSymbolsElement.appendChild(symbolElement.element);
+  }
+}
+
+export function updateMaterialSymbolsSearchResult(query: string): void {
+  const Field = documentQuerySelector('.css_folder_icon_selector_field');
+  const materialSymbolsSearchResultsElement = elementQuerySelector(Field, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results');
+  materialSymbolsSearchResultsElement.innerHTML = '';
+  if (!containPhoneticSymbols(query) && currentFuse) {
+    var searchResults = currentFuse.search(query).slice(0, 30);
+    for (var result of searchResults) {
+      const symbolElement = generateElementOfSymbol(result);
+      materialSymbolsSearchResultsElement.appendChild(symbolElement.element);
+    }
   }
 }
 
@@ -46,7 +59,7 @@ export function openFolderIconSelector(): void {
   }
 }
 
-export function cloaseFolderIconSelector(): void {
+export function closeFolderIconSelector(): void {
   const Field = documentQuerySelector('.css_folder_icon_selector_field');
   Field.setAttribute('displayed', 'false');
 }

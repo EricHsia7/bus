@@ -269,3 +269,12 @@ export function getNoCacheParameter(interval: number): string {
   var str = g.toString(36);
   return str;
 }
+
+export function containPhoneticSymbols(string: string): boolean {
+  var regex = /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm;
+  if (regex.test(string)) {
+    return true;
+  } else {
+    return false;
+  }
+}
