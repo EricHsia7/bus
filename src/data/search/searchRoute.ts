@@ -1,6 +1,8 @@
 import { getRoute } from '../apis/getRoute.ts';
 import { getLocation } from '../apis/getLocation.ts';
-import { Fuse, generateIdentifier } from '../../tools/index.ts';
+import { generateIdentifier } from '../../tools/index.ts';
+
+const Fuse = require('fuse.js/basic');
 
 export async function searchRouteByName(query: string): Array {
   var requestID = `r_${generateIdentifier()}`;

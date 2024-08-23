@@ -1,5 +1,4 @@
 export const md5 = require('md5');
-export const Fuse = require('fuse.js/basic');
 
 var cachedTextWidth: object = {};
 
