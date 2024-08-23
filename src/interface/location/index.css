@@ -268,6 +268,7 @@
   width: 20px;
   left: 10px;
   border-radius: 20px;
+  color: rgba(0, 0, 0, 0);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
