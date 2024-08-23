@@ -3,7 +3,7 @@ import { getStop } from '../../data/apis/getStop.ts';
 import { getLocation } from '../../data/apis/getLocation.ts';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.js';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
 
 var dataPreloadRequestID = 'preload_data';
 export var dataPreloadCompleted = false;
