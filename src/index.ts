@@ -27,6 +27,8 @@ import './interface/theme.css';
 
 import './interface/index.css';
 
+import './interface/icons/index.css';
+
 import './interface/animation.css';
 
 import './interface/home/index.css';

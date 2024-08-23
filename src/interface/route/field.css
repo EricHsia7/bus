@@ -45,15 +45,11 @@
   right: 0px;
 }
 
-.css_route_field .css_route_head .css_route_button_left svg,
-.css_route_field .css_route_head .css_route_button_right svg {
+.css_route_field .css_route_head .css_route_button_left span.css_material_symbols_rounded  ,
+.css_route_field .css_route_head .css_route_button_right span.css_material_symbols_rounded   {
   height: 20px;
   width: 20px;
-}
-
-.css_route_field .css_route_head .css_route_button_left svg path,
-.css_route_field .css_route_head .css_route_button_right svg path {
-  fill: var(--b-cssvar-333333);
+ color: var(--b-cssvar-333333);
 }
 
 .css_route_field .css_route_head .css_route_name {

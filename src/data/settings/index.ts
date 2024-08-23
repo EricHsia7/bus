@@ -9,7 +9,7 @@ var Settings = {
   time_formatting_mode: {
     key: 'time_formatting_mode',
     name: '預估時間格式',
-    icon: 'format',
+    icon: 'text_fields',
     status: '',
     action: `bus.settingsPage.openSettingsOptionsPage('time_formatting_mode')`,
     type: 'select',
@@ -25,7 +25,7 @@ var Settings = {
   refresh_interval: {
     key: 'refresh_interval',
     name: '預估時間更新頻率',
-    icon: 'frequency',
+    icon: 'pace',
     status: '',
     action: `bus.settingsPage.openSettingsOptionsPage('refresh_interval')`,
     type: 'select',
@@ -86,7 +86,7 @@ var Settings = {
   display_user_location: {
     key: 'display_user_location',
     name: '顯示所在位置',
-    icon: 'positioning',
+    icon: 'near_me',
     status: '',
     action: `bus.settingsPage.openSettingsOptionsPage('display_user_location')`,
     type: 'select',
@@ -141,7 +141,7 @@ var Settings = {
   storage: {
     key: 'storage',
     name: '儲存空間',
-    icon: 'inventory',
+    icon: 'database',
     status: '',
     type: 'page',
     action: 'bus.storage.openStoragePage()'
@@ -157,7 +157,7 @@ var Settings = {
   github: {
     key: 'github',
     name: 'GitHub',
-    icon: 'github',
+    icon: 'book_2',
     status: '@EricHsia7/bus',
     type: 'info',
     action: ''

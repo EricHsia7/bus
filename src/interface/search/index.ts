@@ -1,6 +1,6 @@
 import { openKeyboard, closeKeyboard } from './keyboard.ts';
 import { prepareForSearch } from '../../data/search/searchRoute.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
@@ -38,12 +38,12 @@ function containPhoneticSymbols(string: string): boolean {
 
 export function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
-    var typeToIcon = ['route', 'location'];
+    var typeToIcon = ['route', 'location_on'];
     var searchResults = currentFuse.search(query).slice(0, 30);
     var html = [];
     for (var result of searchResults) {
       var name = result.item.n;
-      var typeIcon = icons[typeToIcon[result.item.type]];
+      var typeIcon = getIconHTML(typeToIcon[result.item.type]);
       var onclickScript = '';
       if (result.item.type === 0) {
         onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;

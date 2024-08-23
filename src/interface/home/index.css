@@ -60,9 +60,10 @@
   right: 0px;
 }
 
-.css_home_field .css_home_head .css_home_button_left svg {
+.css_home_field .css_home_head .css_home_button_left span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
+  color: var(--b-cssvar-333333);
 }
 
 .css_home_field .css_home_head .css_home_button_right svg {
@@ -74,8 +75,7 @@
 }
 
 .css_home_field .css_home_head .css_home_button_right svg#download-svg path[arrow="arrow"],
-.css_home_field .css_home_head .css_home_button_right svg#search-svg path,
-.css_home_field .css_home_head .css_home_button_left svg path {
+.css_home_field .css_home_head .css_home_button_right svg#search-svg path {
   fill: var(--b-cssvar-333333);
 }
 

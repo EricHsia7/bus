@@ -2,7 +2,7 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { GeneratedElement } from '../index.ts';
 import { generateIdentifier } from '../../tools/index.ts';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
@@ -21,7 +21,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
     default:
       break;
   }
-  element.innerHTML = `<div class="css_save_to_folder_item_icon">${icons.getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
+  element.innerHTML = `<div class="css_save_to_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
   return {
     element: element,
     id: identifier
