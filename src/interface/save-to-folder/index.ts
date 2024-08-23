@@ -21,7 +21,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
     default:
       break;
   }
-  element.innerHTML = `<div class="css_save_to_folder_item_icon">${icons.getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
+  element.innerHTML = `<div class="css_save_to_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
   return {
     element: element,
     id: identifier

@@ -1,7 +1,7 @@
 import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/index.ts';
 import { generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
 
 function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
@@ -10,7 +10,7 @@ function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   element.classList.add('css_folder_manager_folder_item');
   element.id = identifier;
   element.setAttribute('onclick', `bus.folder.openFolderEditor('${item.folder.id}')`);
-  element.innerHTML = `<div class="css_folder_manager_folder_item_icon">${icons.getIconHTML(item.folder.icon)}</div><div class="css_folder_manager_folder_item_name">${item.folder.name}</div><div class="css_folder_manager_folder_item_status">${item.content.length}</div><div class="css_folder_manager_folder_item_arrow">${icons.arrow}</div>`;
+  element.innerHTML = `<div class="css_folder_manager_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_folder_manager_folder_item_name">${item.folder.name}</div><div class="css_folder_manager_folder_item_status">${item.content.length}</div><div class="css_folder_manager_folder_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
   return {
     element: element,
     id: identifier

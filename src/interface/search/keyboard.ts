@@ -1,7 +1,7 @@
 import { updateSearchResult } from './index.ts';
 import { getTextWidth } from '../../tools/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -32,7 +32,7 @@ function initializeKeyboard(): void {
       var html = column;
       if (column === '刪除') {
         eventScript = 'bus.searchPage.deleteCharFromInout()';
-        html = icons.backspace;
+        html = getIconHTML('backspace');
       }
       if (column === '清空') {
         eventScript = 'bus.searchPage.emptyInput()';

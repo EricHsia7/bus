@@ -1,24 +1,10 @@
-var svg_tag_start = `<svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">`;
-var svg_tag_end = `</svg>`;
-
 export interface Icon {
-  source: 'icons' | 'svg';
+  source: 'material_symbols';
   id: string | null;
-  content: string | null;
 }
 
-function getIconHTML(icon: Icon): string {
-  switch (icon.source) {
-    case 'icons':
-      return icons[icon.id];
-      break;
-    case 'svg':
-      return icon.content;
-      break;
-    default:
-      return icons.none;
-      break;
-  }
+export function getIconHTML(iconID: string): string {
+  return `<span class="css_material_symbols_rounded">${iconID}</span>`;
 }
 
 export let icons = {

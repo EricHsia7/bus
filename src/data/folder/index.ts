@@ -3,15 +3,11 @@ import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '.
 import { generateIdentifier } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
-import { Icon } from '../../interface/icons/index.ts';
 
 var Folders = {
   f_saved_stop: {
     name: '已收藏站牌',
-    icon: {
-      source: 'icons',
-      id: 'favorite'
-    },
+    icon: 'favorite',
     default: true,
     index: 0,
     storeIndex: 5,
@@ -20,10 +16,7 @@ var Folders = {
   },
   f_saved_route: {
     name: '已收藏路線',
-    icon: {
-      source: 'icons',
-      id: 'route'
-    },
+    icon: 'route',
     default: true,
     index: 1,
     storeIndex: 6,
@@ -65,7 +58,7 @@ export interface FolderRoute {
 
 export interface Folder {
   name: string;
-  icon: Icon;
+  icon: string;
   default: boolean;
   storeIndex: number | null;
   contentType: FolderContentType[];
@@ -105,10 +98,7 @@ export async function createFolder(name: string): boolean {
   var idintifier = `${generateIdentifier()}`;
   var object: Folder = {
     name: name,
-    icon: {
-      source: 'icons',
-      id: 'none'
-    },
+    icon: 'none',
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],

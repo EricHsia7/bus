@@ -3,7 +3,7 @@ import { compareThings, generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration = [];
@@ -195,7 +195,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
-    elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
+    elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
