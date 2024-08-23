@@ -73,7 +73,11 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].min.css' // Output CSS filename
+          filename: '[name].css',
+      chunkFilename: '[name].css', // Ensures CSS is not split into chunks
+    
+        //filename: '[contenthash].min.css' 
+// Output CSS filename
       }),
       new MangleCssClassPlugin({
         classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
@@ -182,7 +186,13 @@ module.exports = (env, argv) => {
             minChunks: 1,
             priority: -20,
             reuseExistingChunk: true
-          }
+          },
+          styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true,
+        }
           // Add more cache groups if needed
         }
       }
