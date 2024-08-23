@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
         cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
           {
-            urlPattern: new RegExp('^https://fonts.googleapis.com'),
+            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'google-fonts-stylesheets'
