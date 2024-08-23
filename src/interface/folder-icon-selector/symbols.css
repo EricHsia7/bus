@@ -1,22 +1,30 @@
-.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols {
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols,
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results {
   position: relative;
   width: 100%;
   margin-top: 55px;
-  display: grid;
+  display: none;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   /* min box width: 50px */
   /* Responsive columns */
   gap: 5px;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols .css_folder_icon_selector_symbol {
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols[displayed="true"],
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results[displayed="true"] {
+  display: grid;
+}
+
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols .css_folder_icon_selector_symbol,
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results .css_folder_icon_selector_symbol {
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols .css_folder_icon_selector_symbol span.css_material_symbols_rounded {
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols .css_folder_icon_selector_symbol span.css_material_symbols_rounded,
+.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results .css_folder_icon_selector_symbol span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
