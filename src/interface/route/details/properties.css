@@ -23,13 +23,10 @@
   justify-content: center;
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon svg {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon svg path {
-  fill: var(--b-cssvar-333333)
+  color: var(--b-cssvar-333333);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_value {

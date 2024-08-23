@@ -72,13 +72,10 @@
   right: 0px;
 }
 
-.css_search_field .css_search_head .css_search_button_left svg {
+.css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-}
-
-.css_search_field .css_search_head .css_search_button_left svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 .css_search_field .css_search_body {
@@ -138,13 +135,10 @@
   -webkit-user-select: none;
 }
 
-.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type svg {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type span.css_material_symbols_rounded {
   height: 20px;
   width: 20px;
-}
-
-.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_route_name {

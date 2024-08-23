@@ -22,13 +22,10 @@
   -webkit-user-select: none;
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button svg {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button span.css_material_symbols_rounded {
   width: 25px;
   height: 25px;
   user-select: none;
   -webkit-user-select: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }

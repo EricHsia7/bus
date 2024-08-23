@@ -38,15 +38,12 @@
   box-sizing: border-box;
 }
 
-.css_search_keyboard .css_search_keyboard_key svg {
+.css_search_keyboard .css_search_keyboard_key span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   user-select: none;
   -webkit-user-select: none;
-}
-
-.css_search_keyboard .css_search_keyboard_key svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 .css_search_field .css_search_head .css_search_search_input .css_cursor {

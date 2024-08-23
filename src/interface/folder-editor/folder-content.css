@@ -89,21 +89,16 @@
   left: 60px;
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up svg,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down svg,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete svg {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up span.css_material_symbols_rounded,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down span.css_material_symbols_rounded,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
+  color: var(--b-cssvar-333333);
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up svg {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up span.css_material_symbols_rounded {
   transform: rotate(180deg);
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up svg path,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down svg path,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete svg path {
-  fill: var(--b-cssvar-333333);
 }
 
 /* stop item > capsule > separator */
