@@ -68,6 +68,8 @@ import './interface/folder-editor/folder-name.css';
 import './interface/folder-editor/folder-content.css';
 
 import './interface/folder-icon-selector/field.css';
+import './interface/folder-icon-selector/body.css';
+import './interface/folder-icon-selector/head.css';
 
 import './interface/prompt/index.css';
 
