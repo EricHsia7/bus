@@ -14,6 +14,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_icon_selector_symbol');
+  element.setAttribute('onclick', `bus.folder.selectFolderIcon('${symbol}')`);
   element.innerHTML = getIconHTML(symbol);
   return {
     element: element,
@@ -47,6 +48,13 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
     materialSymbolsSearchResultsElement.setAttribute('displayed', searchResults.length > 0 ? 'true' : 'false');
     materialSymbolsElement.setAttribute('displayed', searchResults.length > 0 ? 'false' : 'true');
   }
+}
+
+export function selectFolderIcon(symbol: string): void {
+  const Field = documentQuerySelector('.css_folder_editor_field');
+  const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
+  iconInputElement.value = symbol;
+  closeFolderIconSelector();
 }
 
 export function openFolderIconSelector(): void {
