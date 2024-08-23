@@ -73,8 +73,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-          filename: 'styles.min.css'
-        //filename: '[contenthash].min.css' 
+        filename: '[contenthash].min.css' 
 // Output CSS filename
       }),
       new MangleCssClassPlugin({
@@ -184,13 +183,7 @@ module.exports = (env, argv) => {
             minChunks: 1,
             priority: -20,
             reuseExistingChunk: true
-          },
-          styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
-        }
+          }
           // Add more cache groups if needed
         }
       }
