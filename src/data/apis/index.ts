@@ -695,22 +695,22 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
       },
       {
         key: 'pricing',
-        icon: 'money',
+        icon: 'attach_money',
         value: thisRoute.ticketPriceDescriptionZh
       },
       {
         key: 'provider_name',
-        icon: 'company',
+        icon: 'corporate_fare',
         value: thisProvider.nameZn
       },
       {
         key: 'provider_phone',
-        icon: 'phone',
+        icon: 'call',
         value: thisProvider.phoneInfo
       },
       {
         key: 'provider_email',
-        icon: 'email',
+        icon: 'alternate_email',
         value: thisProvider.email
       }
     ]
@@ -775,7 +775,7 @@ export async function integrateLocation(hash: string, requestID: string): object
         },
         {
           key: 'exact_position',
-          icon: 'location',
+          icon: 'location_on',
           value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
         }
       ]

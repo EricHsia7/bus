@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { listSettings } from '../../data/settings/index.ts';
-import { icons ,getIconHTML} from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
 
 function generateElementOfItem(item: object): GeneratedElement {
