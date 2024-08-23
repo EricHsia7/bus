@@ -7,7 +7,7 @@ var MaterialSymbolsAPIVariableCache: object = {
   data: []
 };
 
-export async function getMaterialSymbols(requestID: string, symbolID: string): object {
+export async function getMaterialSymbols(requestID: string): [] {
   async function getData() {
     var apiurl = getMaterialSymbolsAPIURL();
     var data = await fetchData(apiurl, requestID, 'getMaterialSymbols');
