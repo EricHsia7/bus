@@ -1,4 +1,4 @@
-.css_folder_icon_selector_field .css_folder_icon_selector_body .css_folder_icon_selector_symbol {
+.css_folder_icon_selector_field .css_folder_icon_selector_body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   /* min box width: 50px */
