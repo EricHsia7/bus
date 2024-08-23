@@ -23,7 +23,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
 
 async function initializeFolderIconSelectorField(): void {
   const Field = documentQuerySelector('.css_folder_icon_selector_field');
-  const bodyElement = elementQuerySelector(Field, '.css_folder_icon_selector_body');
+  const bodyElement = elementQuerySelector(Field, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   bodyElement.innerHTML = '';
   const requestID: string = `r_${generateIdentifier()}`;
   const materialSymbols = await getMaterialSymbols(requestID);
