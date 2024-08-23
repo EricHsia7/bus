@@ -41,7 +41,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
   if (!containPhoneticSymbols(query) && currentFuse) {
     var searchResults = currentFuse.search(query).slice(0, 30);
     for (var result of searchResults) {
-      const symbolElement = generateElementOfSymbol(result);
+      const symbolElement = generateElementOfSymbol(result.item);
       materialSymbolsSearchResultsElement.appendChild(symbolElement.element);
     }
     materialSymbolsSearchResultsElement.setAttribute('displayed', searchResults.length > 0 ? 'true' : 'false');
