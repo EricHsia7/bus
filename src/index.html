@@ -301,9 +301,10 @@
       </svg>
     </div>
     <script>
-      /*document.addEventListener('load', function () {});*/
-      window.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', function () {
         bus.initialize();
+      });
+      window.addEventListener('load', function () {
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./service-worker.js');
         }
