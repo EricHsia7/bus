@@ -29,7 +29,7 @@ async function initializeFolderIconSelectorField(): void {
   const materialSymbols = await getMaterialSymbols(requestID);
   for (const symbol of materialSymbols) {
     const symbolElement = generateElementOfSymbol(symbol);
-    bodyElement.appendChild(symbolElement);
+    bodyElement.appendChild(symbolElement.element);
   }
 }
 
