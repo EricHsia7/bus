@@ -38,6 +38,10 @@
   align-items: center;
 }
 
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector[disabled="true"] {
+  opacity: 0.6;
+}
+
 .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;

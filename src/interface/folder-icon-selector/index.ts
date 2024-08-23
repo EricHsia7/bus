@@ -58,15 +58,19 @@ export function selectFolderIcon(symbol: string): void {
 }
 
 export function openFolderIconSelector(): void {
-  const Field = documentQuerySelector('.css_folder_icon_selector_field');
-  if (dataPreloadCompleted) {
-    Field.setAttribute('displayed', 'true');
-    initializeFolderIconSelectorField();
-    prepareForMaterialSymbolsSearch().then((preparation) => {
-      currentFuse = preparation;
-    });
-  } else {
-    prompt_message('資料還在下載中');
+  const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
+  const folderEditorField = documentQuerySelector('.css_folder_editor_field');
+  const openFolderIconSelectorElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
+  if (openFolderIconSelectorElement.getAttribute('disabled') === 'false') {
+    if (dataPreloadCompleted) {
+      folderIconSelectorField.setAttribute('displayed', 'true');
+      initializeFolderIconSelectorField();
+      prepareForMaterialSymbolsSearch().then((preparation) => {
+        currentFuse = preparation;
+      });
+    } else {
+      prompt_message('資料還在下載中');
+    }
   }
 }
 

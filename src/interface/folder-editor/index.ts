@@ -28,7 +28,8 @@ function updateFolderEditorField(folder: Folder, content: FolderContent[]): void
   const Field = documentQuerySelector('.css_folder_editor_field');
   const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
   const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
-  const leftButtonElement = elementQuerySelector(Field, '.css_folder_icon_selector_head .css_folder_icon_selector_button_left');
+  const openFolderIconSelectorElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
+  const leftButtonElement = elementQuerySelector(Field, '.css_folder_editor_head .css_folder_editor_button_left');
 
   nameInputElement.value = folder.name;
   iconInputElement.value = folder.icon;
@@ -36,9 +37,11 @@ function updateFolderEditorField(folder: Folder, content: FolderContent[]): void
   if (folder.default) {
     nameInputElement.setAttribute('readonly', 'readonly');
     iconInputElement.setAttribute('readonly', 'readonly');
+    openFolderIconSelectorElement.setAttribute('disabled', 'true');
   } else {
     nameInputElement.removeAttribute('readonly');
     iconInputElement.removeAttribute('readonly');
+    openFolderIconSelectorElement.setAttribute('disabled', 'false');
   }
 
   leftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
