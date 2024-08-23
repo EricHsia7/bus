@@ -1,8 +1,6 @@
 import { getRoute } from '../apis/getRoute.ts';
 import { getLocation } from '../apis/getLocation.ts';
-import { generateIdentifier } from '../../tools/index.ts';
-
-const Fuse = require('fuse.js/basic');
+import { Fuse, generateIdentifier } from '../../tools/index.ts';
 
 export async function searchRouteByName(query: string): Array {
   var requestID = `r_${generateIdentifier()}`;
@@ -58,7 +56,7 @@ export async function searchRouteByPathAttributeId(PathAttributeId: [number]) {
   return result;
 }
 
-export async function prepareForSearch() {
+export async function prepareForRouteSearch() {
   var requestID = `r_${generateIdentifier()}`;
   var Route = await getRoute(requestID, true);
   var mergedLocation = await getLocation(requestID, true);

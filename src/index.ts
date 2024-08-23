@@ -22,6 +22,7 @@ import { documentQuerySelector } from './tools/query-selector.ts';
 import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index.ts';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor } from './interface/folder-editor/index.ts';
+import { cloaseFolderIconSelector, openFolderIconSelector } from './interface/folder-icon-selector/index.ts';
 
 import './interface/theme.css';
 
@@ -180,6 +181,8 @@ window.bus = {
     closeFolderManager,
     openFolderEditor,
     closeFolderEditor,
+    openFolderIconSelector,
+    cloaseFolderIconSelector,
     saveStopItemOnRoute,
     removeItemOnFolderEditor,
     moveItemOnFolderEditor

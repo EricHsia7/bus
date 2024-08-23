@@ -1,5 +1,5 @@
 import { openKeyboard, closeKeyboard } from './keyboard.ts';
-import { prepareForSearch } from '../../data/search/searchRoute.ts';
+import { prepareForRouteSearch } from '../../data/search/searchRoute.ts';
 import { getIconHTML } from '../icons/index.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
@@ -14,11 +14,11 @@ export function openSearchPage(): void {
   if (dataPreloadCompleted) {
     searchPageField.setAttribute('displayed', 'true');
     openKeyboard();
-    prepareForSearch().then((preparation) => {
+    prepareForRouteSearch().then((preparation) => {
       currentFuse = preparation;
     });
   } else {
-    prompt_message('資料還在下載中', 1200);
+    prompt_message('資料還在下載中');
   }
 }
 

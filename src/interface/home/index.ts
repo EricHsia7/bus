@@ -3,6 +3,7 @@ import { getStop } from '../../data/apis/getStop.ts';
 import { getLocation } from '../../data/apis/getLocation.ts';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.js';
 
 var dataPreloadRequestID = 'preload_data';
 export var dataPreloadCompleted = false;
@@ -34,11 +35,13 @@ export async function preloadData(): void {
   setDataReceivingProgress(dataPreloadRequestID, 'getStop_1', 0, false);
   setDataReceivingProgress(dataPreloadRequestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(dataPreloadRequestID, 'getLocation_1', 0, false);
+  setDataReceivingProgress(dataPreloadRequestID, 'getMaterialSymbols', 0, false);
   updateDownloadProgress();
   progressElement.addEventListener('transitioncancel', setCompleteStatus);
   await getRoute(dataPreloadRequestID, true);
   await getStop(dataPreloadRequestID);
   await getLocation(dataPreloadRequestID, true);
+  await getMaterialSymbols(dataPreloadRequestID);
   dataPreloadCompleted = true;
   setCompleteStatus();
   deleteDataReceivingProgress(dataPreloadRequestID);
