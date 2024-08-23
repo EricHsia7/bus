@@ -262,3 +262,10 @@ export function generateIdentifier(): string {
   }
   return result;
 }
+
+export function getNoCacheParameter(interval: number): string {
+  var t = new Date().getTime();
+  var g = (t / interval).toFixed(0) * interval;
+  var str = g.toString(36);
+  return str;
+}
