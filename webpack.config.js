@@ -73,9 +73,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-          filename: '[name].css',
-      chunkFilename: '[name].css', // Ensures CSS is not split into chunks
-    
+          filename: 'styles.min.css'
         //filename: '[contenthash].min.css' 
 // Output CSS filename
       }),
