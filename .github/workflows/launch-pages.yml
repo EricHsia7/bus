@@ -6,9 +6,7 @@ on:
     branches:
       - main
       - dev-folder-management
-      - dev-folder-editor
-      - dev-folder-content-sort-control-2
-      - dev-icons-v2
+      - dev-folder-creator
 
 jobs:
   build:
