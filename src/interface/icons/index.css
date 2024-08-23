@@ -24,4 +24,5 @@ span.css_material_symbols_rounded {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }

@@ -54,6 +54,10 @@
   border-radius: 20px;
 }
 
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_icon span.css_material_symbols_rounded {
+  color: rgba(0, 0, 0, 0);
+}
+
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_value {
   top: 5px;
   height: 20px;
