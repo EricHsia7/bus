@@ -1,7 +1,7 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
 import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols.ts';
 import { generateIdentifier } from '../../tools/index.ts';
-import { elementQuerySelector } from '../../tools/query-selector.ts';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement } from '../index.ts';
@@ -22,7 +22,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
 }
 
 async function initializeFolderIconSelectorField(): void {
-  const Field = elementQuerySelector('.css_folder_icon_selector_field');
+  const Field = documentQuerySelector('.css_folder_icon_selector_field');
   const bodyElement = elementQuerySelector(Field, '.css_folder_icon_selector_body');
   bodyElement.innerHTML = '';
   const requestID: string = `r_${generateIdentifier()}`;
@@ -34,7 +34,7 @@ async function initializeFolderIconSelectorField(): void {
 }
 
 export function openFolderIconSelector(): void {
-  const Field = elementQuerySelector('.css_folder_icon_selector_field');
+  const Field = documentQuerySelector('.css_folder_icon_selector_field');
   if (dataPreloadCompleted) {
     Field.setAttribute('displayed', 'true');
     initializeFolderIconSelectorField();
@@ -47,6 +47,6 @@ export function openFolderIconSelector(): void {
 }
 
 export function cloaseFolderIconSelector(): void {
-  const Field = elementQuerySelector('.css_folder_icon_selector_field');
+  const Field = documentQuerySelector('.css_folder_icon_selector_field');
   Field.setAttribute('displayed', 'false');
 }
