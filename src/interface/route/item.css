@@ -150,6 +150,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
+  font-size: 18px;
   transform: rotate(0deg);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
   transition: transform var(--b-cssvar-transition-duration);
@@ -393,6 +394,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
+  font-size: 18px;
   color: var(--b-cssvar-333333);
 }
 

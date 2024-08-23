@@ -47,6 +47,7 @@
   user-select: none;
   -webkit-user-select: none;
   color: var(--b-cssvar-333333);
+  font-size: 18px;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group .css_folder_editor_group_head .css_folder_editor_group_name {

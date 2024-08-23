@@ -379,6 +379,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
+  font-size: 18px;
   color: var(--b-cssvar-333333);
 }
 
@@ -547,6 +548,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_head .css_stretch span.css_material_symbols_rounded {
   width: 17px;
   height: 17px;
+  font-size: 20px;
   transform: rotate(0deg);
   transition: transform var(--b-cssvar-transition-duration);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));

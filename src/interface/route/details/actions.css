@@ -28,4 +28,5 @@
   user-select: none;
   -webkit-user-select: none;
   color: var(--b-cssvar-333333);
+  font-size: 29px;
 }
