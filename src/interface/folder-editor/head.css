@@ -1,4 +1,4 @@
-.css_folder_manager_field .css_folder_manager_head {
+.css_folder_editor_field .css_folder_editor_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -11,8 +11,7 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left,
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right {
+.css_folder_editor_field .css_folder_editor_head .css_folder_editor_button_left {
   width: 55px;
   height: 55px;
   display: flex;
@@ -20,26 +19,19 @@
   align-items: center;
 }
 
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left {
+.css_folder_editor_field .css_folder_editor_head .css_folder_editor_button_left {
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-}
-
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left span.css_material_symbols_rounded,
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right span.css_material_symbols_rounded {
-  height: 20px;
+.css_folder_editor_field .css_folder_editor_head .css_folder_editor_button_left span.css_material_symbols_rounded {
   width: 20px;
+  height: 20px;
   color: var(--b-cssvar-333333);
 }
 
-.css_folder_manager_field .css_folder_manager_head .css_folder_manager_title {
+.css_folder_editor_field .css_folder_editor_head .css_folder_editor_title {
   position: absolute;
   top: 0px;
   left: 55px;

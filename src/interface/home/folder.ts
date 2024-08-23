@@ -1,10 +1,9 @@
-import { listFolders, listFolderContent, integrateFolders } from '../../data/folder/index.ts';
-import { compareThings, md5 } from '../../tools/index.ts';
-import { formatEstimateTime } from '../../tools/format-time.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { integrateFolders } from '../../data/folder/index.ts';
+import { compareThings, generateIdentifier } from '../../tools/index.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
 var previousIntegration = [];
@@ -30,27 +29,22 @@ function queryFolderFieldSize(): FieldSize {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  //var identifier = `s_${md5(Math.random() + new Date().getTime())}`;
-  var element = document.createElement('div');
-  //element.id = identifier;
-  element.setAttribute('stretched', false);
+  const element = document.createElement('div');
   element.classList.add('css_home_folder_item_stop');
   element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
   return {
     element: element,
-    id: ''
+    id: null
   };
 }
 
 function generateElementOfFolder(): GeneratedElement {
-  //var identifier = `f_${md5(Math.random() + new Date().getTime())}`;
-  var element = document.createElement('div');
-  //element.id = identifier;
+  const element = document.createElement('div');
   element.classList.add('css_home_folder');
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
-    id: ''
+    id: null
   };
 }
 
@@ -201,7 +195,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
-    elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = folders[folderKey].icon.source === 'icons' ? icons[folders[folderKey].icon.id] : '';
+    elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
@@ -230,7 +224,7 @@ export async function refreshFolders(): object {
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
   foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer.refreshing = true;
-  foldersRefreshTimer.currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  foldersRefreshTimer.currentRequestID = `r_${generateIdentifier()}`;
   var integration = await integrateFolders(foldersRefreshTimer.currentRequestID);
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   updateFolderField(Field, integration, false);
@@ -269,7 +263,7 @@ export async function streamFolders(): void {
     });
 }
 
-export function initializeFolders(RouteID: number, PathAttributeId: [number]) {
+export function initializeFolders(): void {
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   setUpFolderFieldSkeletonScreen(Field);
   if (!foldersRefreshTimer.streaming) {

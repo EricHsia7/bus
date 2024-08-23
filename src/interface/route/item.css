@@ -48,7 +48,7 @@
   left: 0px;
   width: 100%;
   height: 50px;
-  background:rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0);
 }
 
 /* head > name */
@@ -147,20 +147,17 @@
   display: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg {
-  width: 15px;
-  height: 15px;
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
   transform: rotate(0deg);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
   transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_head .css_capsule .css_stretch svg {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_head .css_capsule .css_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_stretch svg path {
-  fill: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
 }
 
 /* head > capsule > item_status */
@@ -393,22 +390,20 @@
   align-items: center;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button .css_action_button_icon svg {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
+  font-size: 18px;
+  color: var(--b-cssvar-333333);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path {
-  fill: var(--b-cssvar-333333);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
-  fill: rgba(0, 0, 0, 0)
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
-  fill: var(--b-cssvar-f4252c);
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-f4252c);
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon svg path {
@@ -546,15 +541,11 @@
   align-items: center;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buses .css_bus .css_bus_title .css_car_icon svg,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_overlapping_routes .css_overlapping_route .css_overlapping_route_title .css_overlapping_route_icon svg {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buses .css_bus .css_bus_title .css_car_icon span.css_material_symbols_rounded,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_overlapping_routes .css_overlapping_route .css_overlapping_route_title .css_overlapping_route_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buses .css_bus .css_bus_title .css_car_icon svg path,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_overlapping_routes .css_overlapping_route .css_overlapping_route_title .css_overlapping_route_icon svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 

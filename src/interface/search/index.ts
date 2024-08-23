@@ -1,24 +1,25 @@
 import { openKeyboard, closeKeyboard } from './keyboard.ts';
-import { prepareForSearch } from '../../data/search/searchRoute.ts';
-import { icons } from '../icons/index.ts';
+import { prepareForRouteSearch } from '../../data/search/searchRoute.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { dataPreloadCompleted } from '../home/index.ts';
 import { prompt_message } from '../prompt/index.ts';
 import { documentQuerySelector } from '../../tools/query-selector.ts';
+import { containPhoneticSymbols } from '../../tools/index.ts';
 
 const searchPageField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
 const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_results');
-var currentFuse;
+var currentFuse: any = false;
 
 export function openSearchPage(): void {
   if (dataPreloadCompleted) {
     searchPageField.setAttribute('displayed', 'true');
     openKeyboard();
-    prepareForSearch().then((preparation) => {
+    prepareForRouteSearch().then((preparation) => {
       currentFuse = preparation;
     });
   } else {
-    prompt_message('資料還在下載中', 1200);
+    prompt_message('資料還在下載中');
   }
 }
 
@@ -27,23 +28,14 @@ export function closeSearchPage(): void {
   searchPageField.setAttribute('displayed', 'false');
 }
 
-function containPhoneticSymbols(string: string): boolean {
-  var regex = /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm;
-  if (regex.test(string)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 export function updateSearchResult(query: string): void {
-  if (!containPhoneticSymbols(query)) {
-    var typeToIcon = ['route', 'location'];
+  if (!containPhoneticSymbols(query) && currentFuse) {
+    var typeToIcon = ['route', 'location_on'];
     var searchResults = currentFuse.search(query).slice(0, 30);
     var html = [];
     for (var result of searchResults) {
       var name = result.item.n;
-      var typeIcon = icons[typeToIcon[result.item.type]];
+      var typeIcon = getIconHTML(typeToIcon[result.item.type]);
       var onclickScript = '';
       if (result.item.type === 0) {
         onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;

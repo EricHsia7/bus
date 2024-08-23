@@ -12,7 +12,7 @@ import { getLocation } from './getLocation.ts';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader.ts';
 import { recordEstimateTime } from '../analytics/update-rate.ts';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time.ts';
-import { md5 } from '../../tools/index.ts';
+import { generateIdentifier } from '../../tools/index.ts';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address.ts';
 import { generateLetterLabels } from '../../tools/index.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
@@ -288,7 +288,8 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
         var vectorA = [x - x1, y - y1];
         var vectorB = [x2 - x, y2 - y];
         var dotProduct = vectorA[0] * vectorB[0] + vectorA[1] * vectorB[1];
-        if (dotProduct >= 0) { // ensure that (x, y) is between (x1, y1) and (x2, y2)
+        if (dotProduct >= 0) {
+          // ensure that (x, y) is between (x1, y1) and (x2, y2)
           var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
           var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
           progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
@@ -396,18 +397,18 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
 }
 
 export async function integrateStop(StopID: number, RouteID: number): object {
-  const requestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  const requestID = `r_${generateIdentifier()}`;
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, false);
   var Route = await getRoute(requestID);
-  var thisStop = Stop[`s_${StopID}`];
-  var thisStopDirection = thisStop.goBack;
-  var thisLocation = Location[`l_${thisStop.stopLocationId}`];
-  var thisStopName = thisLocation.n;
-  var thisRoute = Route[`r_${RouteID}`];
-  var thisRouteName = thisRoute.n;
-  var thisRouteDeparture = thisRoute.dep;
-  var thisRouteDestination = thisRoute.des;
+  var thisStop: object = Stop[`s_${StopID}`];
+  var thisStopDirection: number = parseInt(thisStop.goBack);
+  var thisLocation: object = Location[`l_${thisStop.stopLocationId}`];
+  var thisStopName: string = thisLocation.n;
+  var thisRoute: object = Route[`r_${RouteID}`];
+  var thisRouteName: string = thisRoute.n;
+  var thisRouteDeparture: string = thisRoute.dep;
+  var thisRouteDestination: string = thisRoute.des;
   return {
     thisStopName,
     thisStopDirection,
@@ -694,22 +695,22 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
       },
       {
         key: 'pricing',
-        icon: 'money',
+        icon: 'attach_money',
         value: thisRoute.ticketPriceDescriptionZh
       },
       {
         key: 'provider_name',
-        icon: 'company',
+        icon: 'corporate_fare',
         value: thisProvider.nameZn
       },
       {
         key: 'provider_phone',
-        icon: 'phone',
+        icon: 'call',
         value: thisProvider.phoneInfo
       },
       {
         key: 'provider_email',
-        icon: 'email',
+        icon: 'alternate_email',
         value: thisProvider.email
       }
     ]
@@ -774,7 +775,7 @@ export async function integrateLocation(hash: string, requestID: string): object
         },
         {
           key: 'exact_position',
-          icon: 'location',
+          icon: 'location_on',
           value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
         }
       ]

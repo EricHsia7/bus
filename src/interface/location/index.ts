@@ -1,9 +1,9 @@
 import { integrateLocation } from '../../data/apis/index.ts';
-import { icons } from '../icons/index.ts';
-import { getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader.ts';
+import { getIconHTML } from '../icons/index.ts';
+import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { GeneratedElement, FieldSize } from '../index.ts';
 
@@ -109,12 +109,12 @@ function updateUpdateTimer() {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_direction"></div><div class="css_route_name"></div><div class="css_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${icons.expand}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="css_buses" displayed="true"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_direction"></div><div class="css_route_name"></div><div class="css_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="css_buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -122,7 +122,7 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `g_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group');
@@ -134,7 +134,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `t_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_tab');
@@ -145,7 +145,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `p_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_details_property');
@@ -227,7 +227,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       elementQuerySelector(thisElement, '.css_route_direction').innerText = thisItem.route_direction;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -259,7 +259,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = icons[thisProperty.icon];
+      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon)
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_location_details_property_value').innerHTML = thisProperty.value;
@@ -425,7 +425,7 @@ async function refreshLocation(): object {
   locationRefreshTimer_auto = refresh_interval_setting.auto;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
-  locationRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  locationRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
   var integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_location_field');

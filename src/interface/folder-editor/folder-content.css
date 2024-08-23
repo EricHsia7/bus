@@ -1,0 +1,121 @@
+/* stop item */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+
+/* stop item > route */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_route {
+  position: absolute;
+  top: 7.5px;
+  left: 10px;
+  width: calc(100% - 10px - 90px - 10px);
+  /* padding: 10px + capsule: 90px + padding: 10px */
+  font-size: 14px;
+  height: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* stop item > stop name */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_name {
+  position: absolute;
+  top: 21.5px;
+  left: 10px;
+  width: calc(100% - 10px - 90px - 10px);
+  /* padding: 10px + capsule: 90px + padding: 10px */
+  font-size: 17px;
+  height: 23px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* stop item > capsule */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 30px;
+  background: var(--b-cssvar-ededf2);
+  border-radius: 15px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* stop item > capsule > sort control, delete */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up {
+  top: 0px;
+  left: 0px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down {
+  top: 0px;
+  left: 30px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete {
+  top: 0px;
+  left: 60px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up span.css_material_symbols_rounded,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_down span.css_material_symbols_rounded,
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_delete span.css_material_symbols_rounded {
+  width: 15px;
+  height: 15px;
+  color: var(--b-cssvar-333333);
+  font-size: 18px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_sort_control_up span.css_material_symbols_rounded {
+  transform: rotate(180deg);
+}
+
+/* stop item > capsule > separator */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_capsule_separator {
+  position: absolute;
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_capsule_separator:nth-child(2) {
+  top: 3px;
+  left: 29.5px;
+}
+
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_content_stop_item .css_folder_editor_folder_content_stop_item_capsule .css_folder_editor_folder_content_stop_item_capsule_separator:nth-child(4) {
+  top: 3px;
+  left: 59.5px;
+}

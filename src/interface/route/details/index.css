@@ -45,15 +45,11 @@
   right: 0px;
 }
 
-.css_route_details_field .css_route_details_head .css_route_details_button_left svg,
-.css_route_details_field .css_route_details_head .css_route_details_button_right svg {
+.css_route_details_field .css_route_details_head .css_route_details_button_left span.css_material_symbols_rounded,
+.css_route_details_field .css_route_details_head .css_route_details_button_right span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-}
-
-.css_route_details_field .css_route_details_head .css_route_details_button_left svg path,
-.css_route_details_field .css_route_details_head .css_route_details_button_right svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 .css_route_details_field .css_route_details_head .css_route_details_title {
@@ -131,15 +127,12 @@
   -webkit-user-select: none;
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon svg {
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon span.css_material_symbols_rounded {
   height: 15px;
   width: 15px;
   user-select: none;
   -webkit-user-select: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon svg path {
-  fill: var(--b-cssvar-333333);
+  color: var(--b-cssvar-333333);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_name {

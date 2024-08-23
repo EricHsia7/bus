@@ -58,6 +58,23 @@ export async function lfGetItem(store: number, key: string): any {
   }
 }
 
+export async function lfRemoveItem(store: number, key: string): any {
+  try {
+    var store_key = stores[store];
+    if (storage[store_key] === false) {
+      storage[store_key] = await localforage.createInstance({
+        name: store_key
+      });
+    }
+    var operation = await storage[store_key].removeItem(key);
+    return operation;
+  } catch (err) {
+    console.error(err);
+    await dropInstance(store);
+    return null;
+  }
+}
+
 export async function lfListItem(store: number): [] {
   try {
     var store_key = stores[store];

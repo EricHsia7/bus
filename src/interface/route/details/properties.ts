@@ -1,6 +1,6 @@
 import { GeneratedElement, FieldSize } from '../../index.ts';
-import { md5, compareThings } from '../../../tools/index.ts';
-import { icons } from '../../icons/index.ts';
+import { compareThings } from '../../../tools/index.ts';
+import { getIconHTML } from '../../icons/index.ts';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
 
 var previousProperties = [];
@@ -13,11 +13,8 @@ function queryPropertiesFieldSize(): FieldSize {
 }
 
 function generateElementOfProperty(): GeneratedElement {
-  //var identifier = `p_${md5(Math.random() + new Date().getTime())}`;
   var element = document.createElement('div');
   element.classList.add('css_route_details_property');
-  //element.setAttribute('skeleton-screen', skeletonScreen);
-  //element.id = identifier;
   element.innerHTML = `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
   return {
     element: element,
@@ -44,7 +41,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
 export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = icons[thisProperty.icon];
+      elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon)
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_value').innerText = thisProperty.value;
