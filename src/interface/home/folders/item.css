@@ -20,6 +20,10 @@
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon {
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--b-cssvar-border-radius-default);
 }
 
@@ -58,6 +62,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context {
   width: calc(100% - 50px - 85px - 15px - 5px);
   border-radius: var(--b-cssvar-border-radius-default);
+  color: rgba(0, 0, 0, 0);
 }
 
 /* folders > folder > content > item > main */
@@ -84,6 +89,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
   width: calc(100% - 50px - 85px - 15px - 5px);
   border-radius: var(--b-cssvar-border-radius-default);
+  color: rgba(0, 0, 0, 0);
 }
 
 /* folders > folder > content > item > capsule */
@@ -106,7 +112,7 @@
 }
 
 /* folders > folder > content > item > capsule > separator */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_capsule_separator {
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
   position: absolute;
   top: 3px;
   left: calc(55px - 1px / 2);
@@ -116,7 +122,7 @@
 }
 
 /* skeleton screen: true */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_capsule_separator {
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
   display: none;
 }
 
@@ -125,7 +131,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: calc(55px - 1px);
+  width:55px;
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
@@ -141,7 +147,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: calc(55px - 1px);
+  width: 55px;
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;

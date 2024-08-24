@@ -109,7 +109,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_capsule_separator {
   position: absolute;
   top: 3px;
-  left: calc(55px - 1px);
+  left: calc(55px - 1px / 2);
   width: 1px;
   height: 24px;
   background: var(--b-cssvar-aeaeb2);
@@ -165,7 +165,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: calc(55px - 1px);
+  width: 55px;
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
@@ -181,7 +181,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: calc(55px - 1px);
+  width: 55px;
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;
