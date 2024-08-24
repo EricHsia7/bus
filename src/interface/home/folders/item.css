@@ -87,7 +87,9 @@
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
+  top: calc(21.5px + 5px);
   width: calc(100% - 50px - 85px - 15px - 5px);
+  height: calc(23px - 5px);
   border-radius: var(--b-cssvar-border-radius-default);
   color: rgba(0, 0, 0, 0);
 }
@@ -131,7 +133,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width:55px;
+  width: 55px;
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
