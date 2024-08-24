@@ -102,23 +102,23 @@ export async function createFolder(name: string, icon: string): boolean {
     return false;
   }
 
-  var idintifier = `${generateIdentifier()}`;
+  const identifier: string = generateIdentifier();
   var object: Folder = {
     name: name,
     icon: icon,
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],
-    id: idintifier,
+    id: identifier,
     time: new Date().toISOString()
   };
 
-  if (!Folders.hasOwnProperty(`f_${idintifier}`)) {
-    var existingFolder = await lfGetItem(4, `f_${idintifier}`);
+  if (!Folders.hasOwnProperty(`f_${identifier}`)) {
+    var existingFolder = await lfGetItem(4, `f_${identifier}`);
     if (!existingFolder) {
-      Folders[`f_${idintifier}`] = object;
-      await lfSetItem(4, `f_${idintifier}`, JSON.stringify(object));
-      await registerStore(idintifier);
+      Folders[`f_${identifier}`] = object;
+      await lfSetItem(4, `f_${identifier}`, JSON.stringify(object));
+      await registerStore(identifier);
       return true;
     }
     return false;
