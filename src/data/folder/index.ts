@@ -131,7 +131,7 @@ export async function createFolder(name: string, icon: string): boolean {
         icon: icon,
         default: false,
         storeIndex: storeIndex,
-        index: folderKeys.length,
+        index: folderKeys.length + 2,
         contentType: ['stop', 'route', 'bus'],
         id: identifier,
         time: new Date().toISOString()
