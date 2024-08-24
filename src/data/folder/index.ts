@@ -27,7 +27,7 @@ var Folders = {
   }
 };
 
-export type FolderContentType = 'stop' | 'route' | 'bus';
+export type FolderContentType = 'stop' | 'route' | 'bus' | 'empty';
 
 interface FolderRouteEndPoints {
   departure: string;
@@ -78,6 +78,7 @@ export interface Folder {
   icon: string;
   default: boolean;
   storeIndex: number | null;
+  index: number | null;
   contentType: FolderContentType[];
   id: string;
   time: string;
@@ -118,6 +119,8 @@ export async function createFolder(name: string, icon: string): boolean {
     return false;
   }
 
+  var folderKeys = await lfListItem(4);
+
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
     var existingFolder = await lfGetItem(4, `f_${identifier}`);
@@ -128,6 +131,7 @@ export async function createFolder(name: string, icon: string): boolean {
         icon: icon,
         default: false,
         storeIndex: storeIndex,
+        index: folderKeys.length,
         contentType: ['stop', 'route', 'bus'],
         id: identifier,
         time: new Date().toISOString()
