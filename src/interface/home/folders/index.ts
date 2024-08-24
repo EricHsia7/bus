@@ -195,43 +195,47 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
       if (!(thisItem.type === previousItem.type)) {
         updateType(thisElement, thisItem);
         updateIcon(thisElement, thisItem);
-      }
-      switch (thisItem.type) {
-        case 'stop':
-          if (!compareThings(previousItem.route, thisItem.route)) {
-            updateContext(thisElement, thisItem);
-          }
-          if (!compareThings(previousItem.name, thisItem.name)) {
-            updateMain(thisElement, thisItem);
-          }
-          if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-            updateStatus(thisElement, thisItem);
-          }
-          break;
-        case 'route':
-          if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
-            updateContext(thisElement, thisItem);
-          }
-          if (!compareThings(previousItem.name, thisItem.name)) {
-            updateMain(thisElement, thisItem);
-          }
-          break;
-        case 'bus':
-          if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
-            updateContext(thisElement, thisItem);
-          }
-          if (!compareThings(previousItem.busID, thisItem.busID)) {
-            updateMain(thisElement, thisItem);
-          }
-          break;
-        case 'empty':
-          if (!(thisItem.type === previousItem.type)) {
-            updateContext(thisElement, thisItem);
-            updateMain(thisElement, thisItem);
-          }
-          break;
-        default:
-          break;
+        updateStatus(thisElement, thisItem);
+        updateMain(thisElement, thisItem);
+        updateContext(thisElement, thisItem);
+      } else {
+        switch (thisItem.type) {
+          case 'stop':
+            if (!compareThings(previousItem.route, thisItem.route)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateMain(thisElement, thisItem);
+            }
+            if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+              updateStatus(thisElement, thisItem);
+            }
+            break;
+          case 'route':
+            if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          case 'bus':
+            if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.busID, thisItem.busID)) {
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          case 'empty':
+            if (!(thisItem.type === previousItem.type)) {
+              updateContext(thisElement, thisItem);
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          default:
+            break;
+        }
       }
     }
   }
