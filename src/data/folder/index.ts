@@ -6,6 +6,9 @@ import { getSettingOptionValue } from '../settings/index.ts';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols.ts';
 import { openFolderEditor } from '../../interface/folder-editor/index.js';
 
+var _ = {};
+_.cloneDeep = require('lodash/cloneDeep');
+
 var Folders = {
   f_saved_stop: {
     name: '已收藏站牌',
@@ -27,7 +30,7 @@ var Folders = {
   }
 };
 
-const defaultFolderQuantity = 2
+const defaultFolderQuantity = 2;
 
 export type FolderContentType = 'stop' | 'route' | 'bus' | 'empty';
 
@@ -149,8 +152,27 @@ export async function createFolder(name: string, icon: string): boolean {
   }
 }
 
+export async function updateFolder(folder: Folder): boolean {
+  if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
+    var existingFolder: string = await lfGetItem(4, `f_${folder.id}`);
+    if (existingFolder) {
+      var materialSymbols = await getMaterialSymbols(requestID);
+      if (materialSymbols.indexOf(folder.icon) < 0) {
+        return false;
+      } else {
+        await lfSetItem(4, `f_${folder.id}`, JSON.stringify(folder));
+        return true;
+      }
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 export function getFolder(folderID: string): Folder {
-  return Folders[`f_${folderID}`];
+  return _.cloneDeep(Folders[`f_${folderID}`]);
 }
 
 export async function listFolders(): Folder[] {

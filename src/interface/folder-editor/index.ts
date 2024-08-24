@@ -1,4 +1,4 @@
-import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolderContentIndex } from '../../data/folder/index.ts';
+import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index.ts';
 import { generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { GeneratedElement } from '../index.ts';
@@ -10,7 +10,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_editor_folder_item');
-  element.setAttribute('type', item.type)
+  element.setAttribute('type', item.type);
   var context = '';
   var main = '';
   var icon = '';
@@ -161,14 +161,13 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
   });
 }
 
-export async function saveEditedFolder(folderID: string): void {
+export function saveEditedFolder(folderID: string): void {
   const Field = documentQuerySelector('.css_folder_editor_field');
   const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
   const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
-  var thisFolder: Folder = await getFolder(folderID);
-  if (!thisFolder.default) {
-    thisFolder.name = nameInputElement.value;
-    thisFolder.icon = iconInputElement.value;
-  }
+  var thisFolder: Folder = getFolder(folderID);
+  thisFolder.name = nameInputElement.value;
+  thisFolder.icon = iconInputElement.value;
+  updateFolder(thisFolder);
   closeFolderEditor();
 }
