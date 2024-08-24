@@ -118,6 +118,7 @@ export async function createFolder(name: string, icon: string): boolean {
     if (!existingFolder) {
       Folders[`f_${idintifier}`] = object;
       await lfSetItem(4, `f_${idintifier}`, JSON.stringify(object));
+      await registerStore(idintifier);
       return true;
     }
     return false;
