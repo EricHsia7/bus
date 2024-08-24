@@ -227,12 +227,42 @@
         </div>
         <div class="css_folder_manager_title">資料夾</div>
         <div class="css_folder_manager_button_right" onclick="bus.folder.openFolderCreator()">
-          <span class="css_material_symbols_rounded">add</span>
+          <span class="css_material_symbols_rounded">create_new_folder</span>
         </div>
       </div>
     </div>
     <div class="css_folder_creator_field" displayed="false">
-      <div class="css_folder_creator_body"></div>
+      <div class="css_folder_creator_body">
+        <div class="css_folder_creator_groups">
+          <div class="css_folder_creator_group" group="folder-name">
+            <div class="css_folder_creator_group_head">
+              <div class="css_folder_creator_group_icon">
+                <span class="css_material_symbols_rounded">match_case</span>
+              </div>
+              <div class="css_folder_creator_group_name">名稱</div>
+            </div>
+            <div class="css_folder_creator_group_body">
+              <input type="text" placeholder="名稱" />
+            </div>
+          </div>
+          <div class="css_folder_creator_group" group="folder-icon">
+            <div class="css_folder_creator_group_head">
+              <div class="css_folder_creator_group_icon">
+                <span class="css_material_symbols_rounded">folder_special</span>
+              </div>
+              <div class="css_folder_creator_group_name">圖標</div>
+            </div>
+            <div class="css_folder_creator_group_body">
+              <div class="css_folder_creator_icon_input">
+                <input type="text" placeholder="圖標" />
+                <div class="css_folder_creator_open_folder_icon_selector" onclick="bus.folder.openFolderIconSelector()">
+                  <span class="css_material_symbols_rounded">gallery_thumbnail</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="css_folder_creator_head">
         <div class="css_folder_creator_button_left" onclick="bus.folder.closeFolderCreator()">
           <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
