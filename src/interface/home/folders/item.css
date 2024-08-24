@@ -188,17 +188,17 @@
 }
 
 /* type: route */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_status {
   display: none;
 }
 
 /* type: bus */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_status {
   display: none;
 }
 
 /* type: empty */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_status {
   display: none;
 }
 

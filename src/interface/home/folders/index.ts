@@ -117,7 +117,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
           icon = 'directions_bus';
           break;
         case 'empty':
-          icon = 'help';
+          icon = 'lightbulb';
           break;
         default:
           icon = '';
