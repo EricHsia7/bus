@@ -1,0 +1,199 @@
+/* folders > folder > content > item */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+
+/* folders > folder > content > item > icon */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 50px;
+  height: 50px;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+/* folders > folder > content > item > context */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_context {
+  position: absolute;
+  top: 7.5px;
+  left: 50px;
+  width: calc(100% - 50px - 85px - 10px);
+  /* icon: 50px + capsule: 85px + padding: 10px */
+  font-size: 14px;
+  height: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+/* folders > folder > content > item > main */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_main {
+  position: absolute;
+  top: 21.5px;
+  left: 90px;
+  width: calc(100% - 50px - 85px - 10px);
+  /* icon: 50px + capsule: 85px + padding: 10px */
+  font-size: 17px;
+  height: 23px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* folders > folder > content > item > capsule */
+
+/* folders > folder > content > item > capsule > status */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status {
+  position: absolute;
+  top: 7.5px;
+  left: 10px;
+  height: 35px;
+  width: 70px;
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 35px;
+  width: 70px;
+  white-space: nowrap;
+  word-break: keep-all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+  -webkit-user-select: none;
+  user-select: none;
+  background: var(--b-cssvar-ededf2);
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="6"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="6"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="4"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="4"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="3"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="3"] {
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="2"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="2"] {
+  color: var(--b-cssvar-ffffff);
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color);
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="1"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="1"] {
+  color: var(--b-cssvar-main-color);
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color-solid-transparent-c)
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="0.5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="0.5"] {
+  color: var(--b-cssvar-333333);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_next_slide[code="0"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_current_slide[code="0"] {
+  color: var(--b-cssvar-333333);
+  font-size: 15px;
+  font-weight: 700;
+  transition: none;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
+}
+
+/* folders > folder > content > item > capsule > button */
+
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context {
+  color: rgba(0, 0, 0, 0);
+  top: 7.5px;
+  height: 35px;
+  border-radius: 30px;
+}
+
+.css_home_field .css_home_body .css_home_folders[skeleton-screen="true"] .css_home_folder .css_home_folder_head .css_home_folder_icon {
+  top: 5px;
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name {
+  top: 5px;
+  left: 25px;
+  width: 50px;
+  height: 15px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_status .css_next_slide,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_status .css_current_slide,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
+.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}

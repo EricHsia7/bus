@@ -30,8 +30,8 @@ function queryFolderFieldSize(): FieldSize {
 
 function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
-  element.classList.add('css_home_folder_item_stop');
-  element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
+  element.classList.add('css_home_folder_item');
+  element.innerHTML = `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div></div>`;
   return {
     element: element,
     id: null
@@ -100,7 +100,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
 export async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var statusSelector = '.css_home_folder_item_stop_status';
+      var statusSelector = '.css_home_folder_item_status';
       var nextSlide = elementQuerySelector(thisElement, `${statusSelector} .css_next_slide`);
       var currentSlide = elementQuerySelector(thisElement, `${statusSelector} .css_current_slide`);
       nextSlide.setAttribute('code', thisItem.status.code);
@@ -117,10 +117,10 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
       currentSlide.classList.add('css_slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_stop_name').innerText = thisItem.name;
+      elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = thisItem.name;
     }
     function updateRoute(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+      elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
     }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
@@ -172,7 +172,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
@@ -183,7 +183,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[itemIndex].remove();
         }
       }
     }
@@ -197,7 +197,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
     elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
       if (previousIntegration.hasOwnProperty('foldedItems')) {
