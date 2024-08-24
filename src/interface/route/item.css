@@ -397,7 +397,7 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon span.css_material_symbols_rounded {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] .css_action_button_icon span.css_material_symbols_rounded {
   color: var(--b-cssvar-f4252c);
   font-variation-settings:
     'FILL' 1,
@@ -426,7 +426,7 @@
   color: var(--b-cssvar-ffffff);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
   background-color: rgba(var(--b-cssvar-f4252c-r), var(--b-cssvar-f4252c-g), var(--b-cssvar-f4252c-b), var(--b-cssvar-f4252c-opacity-a));
   color: var(--b-cssvar-f4252c);
 }

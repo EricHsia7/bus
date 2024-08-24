@@ -51,12 +51,12 @@ export function closeSaveToFolder(): void {
 
 export function saveStopItemOnRoute(itemID: string, folderID: string, StopID: number, RouteID: number) {
   var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
-  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-stop"]');
+  var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
       isSaved('stop', StopID).then((k) => {
         actionButtonElement.setAttribute('highlighted', k);
-        prompt_message('已收藏站牌');
+        prompt_message('已儲存至資料夾');
         closeSaveToFolder();
       });
     } else {

@@ -386,12 +386,12 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[type="save-to-folder"] .css_action_button_icon svg path[filling="filling"] {
   fill: rgba(0, 0, 0, 0)
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] .css_action_button_icon svg path[filling="filling"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] .css_action_button_icon svg path,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] .css_action_button_icon svg path[filling="filling"] {
   fill: var(--b-cssvar-f4252c);
 }
 
@@ -410,7 +410,7 @@
   color: var(--b-cssvar-ffffff);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-stop"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
   background: rgba(var(--b-cssvar-f4252c-r), var(--b-cssvar-f4252c-g), var(--b-cssvar-f4252c-b), var(--b-cssvar-f4252c-opacity-a));
   color: var(--b-cssvar-f4252c);
 }
