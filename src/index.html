@@ -64,10 +64,6 @@
     <style id="route_style"></style>
     <style id="location_style"></style>
     <style id="search_style"></style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.media='all'" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" media="print" onload="this.media='all'" />
   </head>
   <body>
     <div class="css_home_field">
@@ -230,7 +226,51 @@
           <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
         </div>
         <div class="css_folder_manager_title">資料夾</div>
-        <div class="css_folder_manager_button_right" onclick="bus.folder.openFolderCreator()"></div>
+        <div class="css_folder_manager_button_right" onclick="bus.folder.openFolderCreator()">
+          <span class="css_material_symbols_rounded">create_new_folder</span>
+        </div>
+      </div>
+    </div>
+    <div class="css_folder_creator_field" displayed="false">
+      <div class="css_folder_creator_body">
+        <div class="css_folder_creator_groups">
+          <div class="css_folder_creator_group" group="folder-name">
+            <div class="css_folder_creator_group_head">
+              <div class="css_folder_creator_group_icon">
+                <span class="css_material_symbols_rounded">match_case</span>
+              </div>
+              <div class="css_folder_creator_group_name">名稱</div>
+            </div>
+            <div class="css_folder_creator_group_body">
+              <input type="text" placeholder="名稱" />
+            </div>
+          </div>
+          <div class="css_folder_creator_group" group="folder-icon">
+            <div class="css_folder_creator_group_head">
+              <div class="css_folder_creator_group_icon">
+                <span class="css_material_symbols_rounded">folder_special</span>
+              </div>
+              <div class="css_folder_creator_group_name">圖標</div>
+            </div>
+            <div class="css_folder_creator_group_body">
+              <div class="css_folder_creator_icon_input">
+                <input type="text" placeholder="圖標" />
+                <div class="css_folder_creator_open_folder_icon_selector" onclick="bus.folder.openFolderIconSelector('creator')" disabled="false">
+                  <span class="css_material_symbols_rounded">gallery_thumbnail</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="css_folder_creator_head">
+        <div class="css_folder_creator_button_left" onclick="bus.folder.closeFolderCreator()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_folder_creator_title">建立資料夾</div>
+        <div class="css_folder_creator_button_right"  onclick="bus.folder.createFormulatedFolder()">
+          <span class="css_material_symbols_rounded">check</span>
+        </div>
       </div>
     </div>
     <div class="css_folder_editor_field" displayed="false">
@@ -257,7 +297,7 @@
             <div class="css_folder_editor_group_body">
               <div class="css_folder_editor_icon_input">
                 <input type="text" placeholder="圖標" />
-                <div class="css_folder_editor_open_folder_icon_selector" onclick="bus.folder.openFolderIconSelector()">
+                <div class="css_folder_editor_open_folder_icon_selector" onclick="bus.folder.openFolderIconSelector('editor')" disabled="null">
                   <span class="css_material_symbols_rounded">gallery_thumbnail</span>
                 </div>
               </div>
@@ -301,12 +341,14 @@
       </svg>
     </div>
     <script>
-      /*document.addEventListener('DOMContentLoaded', function () {});*/
-      window.addEventListener('load', function () {
+      document.addEventListener('DOMContentLoaded', function () {
         bus.initialize();
+      });
+      window.addEventListener('load', function () {
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./service-worker.js');
         }
+        bus.lazily_load();
       });
     </script>
   </body>

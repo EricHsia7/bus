@@ -23,6 +23,8 @@ import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './inte
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index.ts';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
+import { loadFont } from './interface/lazy-font.ts';
+import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index.ts';
 
 import './interface/theme.css';
 
@@ -68,6 +70,13 @@ import './interface/folder-editor/folder-name.css';
 import './interface/folder-editor/folder-icon.css';
 import './interface/folder-editor/folder-content.css';
 
+import './interface/folder-creator/field.css';
+import './interface/folder-creator/head.css';
+import './interface/folder-creator/body.css';
+import './interface/folder-creator/groups.css';
+import './interface/folder-creator/folder-name.css';
+import './interface/folder-creator/folder-icon.css';
+
 import './interface/folder-icon-selector/field.css';
 import './interface/folder-icon-selector/head.css';
 import './interface/folder-icon-selector/body.css';
@@ -99,6 +108,7 @@ window.onerror = async function (message, source, lineno, colno, error) {
 */
 
 let bus_initialized = false;
+let bus_lazily_loaded = false;
 
 window.bus = {
   initialize: function () {
@@ -167,7 +177,7 @@ window.bus = {
             });
             openPermalink();
             fadeOutSplashScreen(function () {
-              preloadData().then((e) => {});
+              preloadData();
               askForPositioningPermission();
             });
           }
@@ -180,6 +190,13 @@ window.bus = {
           fadeOutSplashScreen();
           alert(e);
         });
+    }
+  },
+  lazily_load: function () {
+    if (!bus_lazily_loaded) {
+      bus_lazily_loaded = true;
+      loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap', 'Noto Sans', 'noto_sans');
+      loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
     }
   },
   route: {
@@ -206,6 +223,9 @@ window.bus = {
     closeFolderEditor,
     openFolderIconSelector,
     closeFolderIconSelector,
+    openFolderCreator,
+    closeFolderCreator,
+    createFormulatedFolder,
     saveEditedFolder,
     selectFolderIcon,
     saveStopItemOnRoute,

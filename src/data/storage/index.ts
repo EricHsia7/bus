@@ -2,7 +2,7 @@ import { convertBytes } from '../../tools/index.ts';
 
 const localforage = require('localforage');
 
-const storage = {
+var storage = {
   cacheStore: false,
   settingsStore: false,
   analyticsOfDataUsageStore: false,
@@ -11,6 +11,7 @@ const storage = {
   savedStopFolderStore: false,
   savedRouteFolderStore: false
 };
+
 var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
 async function dropInstance(store: number): any {
@@ -114,6 +115,7 @@ export async function registerStore(id: string): number {
     });
     stores.push(store_key);
     return stores.length - 1;
+  } else {
+    return stores.indexOf(store_key);
   }
-  return -1;
 }
