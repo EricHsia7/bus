@@ -21,7 +21,7 @@ async function initializeFolderManagerField(): void {
   var Field = documentQuerySelector('.css_folder_manager_field');
   var ListElement = elementQuerySelector(Field, '.css_folder_manager_body .css_folder_manager_folder_list');
   ListElement.innerHTML = '';
-  var foldersWithContent = await listFoldersWithContent(false);
+  var foldersWithContent = await listFoldersWithContent();
   for (var item of foldersWithContent) {
     var thisElement = generateElementOfItem(item);
     ListElement.appendChild(thisElement.element);

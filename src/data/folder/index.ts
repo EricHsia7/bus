@@ -120,12 +120,10 @@ export async function createFolder(name: string, icon: string): boolean {
       Folders[`f_${identifier}`] = object;
       await lfSetItem(4, `f_${identifier}`, JSON.stringify(object));
       return true;
-    }
-    else {
+    } else {
       return false;
     }
-  }
-  else {
+  } else {
     return false;
   }
 }
@@ -167,23 +165,21 @@ async function getFolderContentLength(folderID: string): number {
   return itemKeys.length;
 }
 
-export async function listFoldersWithContent(filterOutEmptyFolders: boolean = false): FoldersWithContent[] {
+export async function listFoldersWithContent(): FoldersWithContent[] {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {
     var folderContent = await listFolderContent(folder.id);
-    if (!filterOutEmptyFolders || folderContent.length > 0) {
-      result.push({
-        folder: folder,
-        content: folderContent
-      });
-    }
+    result.push({
+      folder: folder,
+      content: folderContent
+    });
   }
   return result;
 }
 
 export async function integrateFolders(requestID: string): [] {
-  var foldersWithContent = await listFoldersWithContent(false);
+  var foldersWithContent = await listFoldersWithContent();
   var StopIDs = [];
   for (var item of foldersWithContent) {
     StopIDs = StopIDs.concat(
