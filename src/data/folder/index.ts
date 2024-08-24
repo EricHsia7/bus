@@ -85,7 +85,7 @@ export async function initializeFolderStores(): void {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
         var storeIndex = await registerStore(thisFolderObject.id);
-        thisFolderObject.storeIndex = storeIndex;
+        thisFolderObject.storeIndex = storeIndex; // assign a new store index
         thisFolderObject.index = index;
         if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
           Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
@@ -104,27 +104,30 @@ export async function createFolder(name: string, icon: string): boolean {
   }
 
   const identifier: string = generateIdentifier();
-  var object: Folder = {
-    name: name,
-    icon: icon,
-    default: false,
-    storeIndex: null,
-    contentType: ['stop', 'route', 'bus'],
-    id: identifier,
-    time: new Date().toISOString()
-  };
-
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
     var existingFolder = await lfGetItem(4, `f_${identifier}`);
     if (!existingFolder) {
+      const storeIndex = await registerStore(identifier);
+      var object: Folder = {
+        name: name,
+        icon: icon,
+        default: false,
+        storeIndex: storeIndex,
+        contentType: ['stop', 'route', 'bus'],
+        id: identifier,
+        time: new Date().toISOString()
+      };
       Folders[`f_${identifier}`] = object;
       await lfSetItem(4, `f_${identifier}`, JSON.stringify(object));
-      await registerStore(identifier);
       return true;
     }
+    else {
+      return false;
+    }
+  }
+  else {
     return false;
   }
-  return false;
 }
 
 export function getFolder(folderID: string): Folder {
