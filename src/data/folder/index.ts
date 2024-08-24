@@ -83,7 +83,6 @@ export async function initializeFolderStores(): void {
     if (thisFolder) {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
-        console.log(thisFolderObject);
         var storeIndex = await registerStore(thisFolderObject.id);
         thisFolderObject.storeIndex = storeIndex;
         thisFolderObject.index = index;

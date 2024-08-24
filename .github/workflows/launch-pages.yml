@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-folder-management
-      - dev-folder-creator
 
 jobs:
   build:

@@ -77,26 +77,19 @@ export async function lfRemoveItem(store: number, key: string): any {
 }
 
 export async function lfListItem(store: number): [] {
-  console.log('b', 0);
   try {
-    console.log('b', 1);
     var store_key = stores[store];
     if (storage[store_key] === false) {
-      console.log('b', 2);
       storage[store_key] = await localforage.createInstance({
         name: store_key
       });
     }
-    console.log('b', 3);
     var keys = await storage[store_key].keys();
-    console.log('b', 4);
     return keys;
   } catch (err) {
-    console.log('b', 5);
     console.error(err);
     return [];
   }
-  console.log('b', 6);
 }
 
 export async function calculateStoresSize(): string {
@@ -115,20 +108,14 @@ export async function calculateStoresSize(): string {
 }
 
 export async function registerStore(id: string): number {
-  console.log('a', 0);
   var store_key = `F${id}Store`;
   if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
-    console.log('a', 1);
     storage[store_key] = await localforage.createInstance({
       name: store_key
     });
-    console.log('a', 2);
     stores.push(store_key);
-    console.log('a', 3);
     return stores.length - 1;
   } else {
-    console.log('a', 4);
     return stores.indexOf(store_key);
   }
-  console.log('a', 5);
 }
