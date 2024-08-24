@@ -64,10 +64,6 @@
     <style id="route_style"></style>
     <style id="location_style"></style>
     <style id="search_style"></style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.media='all'" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" media="print" onload="this.media='all'" />
   </head>
   <body>
     <div class="css_home_field">
@@ -308,6 +304,7 @@
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./service-worker.js');
         }
+        bus.lazily_load();
       });
     </script>
   </body>
