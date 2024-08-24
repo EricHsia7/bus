@@ -103,6 +103,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
       thisElement.setAttribute('type', thisItem.type);
     }
     function updateIcon(thisElement: HTMLElement, thisItem: object): void {
+      const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
       let icon = '';
       switch (thisItem.type) {
         case 'stop':
@@ -118,7 +119,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
           icon = '';
           break;
       }
-      thisElement.innerHTML = getIconHTML(icon);
+      iconElement.innerHTML = getIconHTML(icon);
     }
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       if (thisItem.type === 'stop') {
