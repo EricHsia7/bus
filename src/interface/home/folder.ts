@@ -99,42 +99,100 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
 
 export async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
+    function updateType(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.setAttribute('type', thisItem.type);
+    }
+    function updateIcon(thisElement: HTMLElement, thisItem: object): void {
+      let icon = '';
+      switch (thisItem.type) {
+        case 'stop':
+          icon = 'location_on';
+          break;
+        case 'route':
+          icon = 'route';
+          break;
+        case 'bus':
+          icon = 'directions_bus';
+          break;
+        default:
+          icon = '';
+          break;
+      }
+      thisElement.innerHTML = getIconHTML(icon);
+    }
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var statusSelector = '.css_home_folder_item_status';
-      var nextSlide = elementQuerySelector(thisElement, `${statusSelector} .css_next_slide`);
-      var currentSlide = elementQuerySelector(thisElement, `${statusSelector} .css_current_slide`);
-      nextSlide.setAttribute('code', thisItem.status.code);
-      nextSlide.innerText = thisItem.status.text;
-      currentSlide.addEventListener(
-        'animationend',
-        function () {
-          currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.innerText = thisItem.status.text;
-          currentSlide.classList.remove('css_slide_fade_out');
-        },
-        { once: true }
-      );
-      currentSlide.classList.add('css_slide_fade_out');
+      if (thisItem.type === 'stop') {
+        var nextSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide');
+        var currentSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide');
+        nextSlide.setAttribute('code', thisItem.status.code);
+        nextSlide.innerText = thisItem.status.text;
+        currentSlide.addEventListener(
+          'animationend',
+          function () {
+            currentSlide.setAttribute('code', thisItem.status.code);
+            currentSlide.innerText = thisItem.status.text;
+            currentSlide.classList.remove('css_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentSlide.classList.add('css_slide_fade_out');
+      }
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = thisItem.name;
+    function updateMain(thisElement: HTMLElement, thisItem: object): void {
+      let main: string = '';
+      switch (thisItem.type) {
+        case 'stop':
+          main = thisItem.name;
+          break;
+        case 'route':
+          main = thisItem.name;
+          break;
+        case 'bus':
+          main = thisItem.busID;
+          break;
+        default:
+          main = 'null';
+          break;
+      }
+      elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = main;
     }
-    function updateRoute(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+    function updateContext(thisElement: HTMLElement, thisItem: object): void {
+      let context: string = '';
+      switch (thisItem.type) {
+        case 'stop':
+          context = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+          break;
+        case 'route':
+          context = `${thisItem.endPoints.departure} \u21CC ${thisItem.endPoints.destination}`;
+          break;
+        case 'bus':
+          context = thisItem.currentRoute.name; // TODO: integration
+          break;
+        default:
+          context = 'null';
+          break;
+      }
+      elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
     if (previousItem === null) {
+      updateType(thisElement, thisItem);
+      updateIcon(thisElement, thisItem);
       updateStatus(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateRoute(thisElement, thisItem);
+      updateMain(thisElement, thisItem);
+      updateContext(thisElement, thisItem);
     } else {
+      if (!(thisItem.type === previousItem.type)) {
+        updateType(thisElement, thisItem);
+        updateIcon(thisElement, thisItem);
+      }
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisElement, thisItem);
       }
       if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisElement, thisItem);
+        updateMain(thisElement, thisItem);
       }
       if (!compareThings(previousItem.id, thisItem.id)) {
-        updateRoute(thisElement, thisItem);
+        updateContext(thisElement, thisItem);
       }
     }
   }

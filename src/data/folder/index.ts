@@ -29,14 +29,14 @@ var Folders = {
 
 export type FolderContentType = 'stop' | 'route' | 'bus';
 
-interface FolderStopRouteEndPoints {
+interface FolderRouteEndPoints {
   departure: string;
   destination: string;
 }
 
 interface FolderStopRoute {
   name: string;
-  endPoints: FolderStopRouteEndPoints;
+  endPoints: FolderRouteEndPoints;
   id: number;
 }
 
@@ -55,6 +55,7 @@ export interface FolderRoute {
   id: number;
   time: string;
   name: string;
+  endPoints: FolderRouteEndPoints;
   index: number;
 }
 
@@ -62,7 +63,7 @@ export interface FolderBus {
   type: 'bus';
   id: number; // CarID
   time: string;
-  name: string; // BusID (vehicle registration number)
+  busID: string; // BusID (vehicle registration number)
   index: number;
 }
 
