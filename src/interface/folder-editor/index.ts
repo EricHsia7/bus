@@ -16,7 +16,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   var icon = '';
   switch (item.type) {
     case 'stop':
-      icon = 'loacation_on';
+      icon = 'location_on';
       context = `${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}`;
       main = item.name;
       break;
