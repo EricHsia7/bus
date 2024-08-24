@@ -1,10 +1,10 @@
-import { integrateFolders } from '../../data/folder/index.ts';
-import { compareThings, generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
-import { getUpdateRate } from '../../data/analytics/update-rate.ts';
-import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { GeneratedElement, FieldSize } from '../index.ts';
+import { integrateFolders } from '../../../data/folder/index.ts';
+import { FieldSize, GeneratedElement } from '../../index.ts';
+import { getIconHTML } from '../../icons/index.ts';
+import { getSettingOptionValue } from '../../../data/settings/index.ts';
+import { getUpdateRate } from '../../../data/analytics/update-rate.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
+import { compareThings, generateIdentifier } from '../../../tools/index.ts';
 
 var previousIntegration = [];
 
@@ -97,7 +97,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-export async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
+async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateType(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('type', thisItem.type);
@@ -277,7 +277,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
   previousIntegration = integration;
 }
 
-export async function refreshFolders(): object {
+async function refreshFolders(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
   foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
@@ -298,7 +298,7 @@ export async function refreshFolders(): object {
   return { status: 'Successfully refreshed the folders.' };
 }
 
-export async function streamFolders(): void {
+async function streamFolders(): void {
   refreshFolders()
     .then((result) => {
       if (foldersRefreshTimer.streaming) {

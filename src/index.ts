@@ -11,7 +11,6 @@ import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
 import { initializeFolderStores } from './data/folder/index.ts';
-import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
 import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
 import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
@@ -25,6 +24,7 @@ import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItem
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
 import { loadFont } from './interface/lazy-font.ts';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index.ts';
+import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index.ts';
 
 import './interface/theme.css';
 
@@ -35,7 +35,8 @@ import './interface/icons/index.css';
 import './interface/animation.css';
 
 import './interface/home/index.css';
-import './interface/home/folder.css';
+import './interface/home/folders/folders.css';
+import './interface/home/folders/item.css';
 
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
