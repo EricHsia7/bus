@@ -196,16 +196,42 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         updateType(thisElement, thisItem);
         updateIcon(thisElement, thisItem);
       }
-      if (thisItem.type === 'stop') {
-        if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-          updateStatus(thisElement, thisItem);
-        }
-      }
-      if (!compareThings(previousItem.name, thisItem.name)) {
-        updateMain(thisElement, thisItem);
-      }
-      if (!compareThings(previousItem.id, thisItem.id)) {
-        updateContext(thisElement, thisItem);
+      switch (thisItem.type) {
+        case 'stop':
+          if (!compareThings(previousItem.route, thisItem.route)) {
+            updateContext(thisElement, thisItem);
+          }
+          if (!compareThings(previousItem.name, thisItem.name)) {
+            updateMain(thisElement, thisItem);
+          }
+          if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+            updateStatus(thisElement, thisItem);
+          }
+          break;
+        case 'route':
+          if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
+            updateContext(thisElement, thisItem);
+          }
+          if (!compareThings(previousItem.name, thisItem.name)) {
+            updateMain(thisElement, thisItem);
+          }
+          break;
+        case 'bus':
+          if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
+            updateContext(thisElement, thisItem);
+          }
+          if (!compareThings(previousItem.busID, thisItem.busID)) {
+            updateMain(thisElement, thisItem);
+          }
+          break;
+        case 'empty':
+          if (!(thisItem.type === previousItem.type)) {
+            updateContext(thisElement, thisItem);
+            updateMain(thisElement, thisItem);
+          }
+          break;
+        default:
+          break;
       }
     }
   }
