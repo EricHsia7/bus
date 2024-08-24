@@ -24,6 +24,8 @@ import { closeFolderManager, openFolderManager } from './interface/folder-manage
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index.ts';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
 import { loadFont } from './interface/lazy-font.ts';
+import { closeFolderCreator, openFolderCreator } from './interface/folder-creator/index.ts';
+
 
 import './interface/theme.css';
 
@@ -218,6 +220,8 @@ window.bus = {
     closeFolderEditor,
     openFolderIconSelector,
     closeFolderIconSelector,
+    openFolderCreator,
+    closeFolderCreator,
     saveEditedFolder,
     selectFolderIcon,
     saveStopItemOnRoute,
