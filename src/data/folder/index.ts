@@ -3,6 +3,7 @@ import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '.
 import { generateIdentifier } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols.js';
 
 var Folders = {
   f_saved_stop: {
@@ -94,11 +95,17 @@ export async function initializeFolderStores(): void {
   }
 }
 
-export async function createFolder(name: string): boolean {
+export async function createFolder(name: string, icon: string): boolean {
+  const requestID = `r_${generateIdentifier()}`;
+  var materialSymbols = await getMaterialSymbols(requestID);
+  if (materialSymbols.indexOf(icon) < 0) {
+    return false;
+  }
+
   var idintifier = `${generateIdentifier()}`;
   var object: Folder = {
     name: name,
-    icon: 'none',
+    icon: icon,
     default: false,
     storeIndex: null,
     contentType: ['stop', 'route', 'bus'],
