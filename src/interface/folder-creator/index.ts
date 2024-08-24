@@ -1,5 +1,5 @@
 import { createFolder } from '../../data/folder/index.ts';
-import { documentQuerySelector } from '../../tools/query-selector.ts';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
 import { prompt_message } from '../prompt/index.ts';
 
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
