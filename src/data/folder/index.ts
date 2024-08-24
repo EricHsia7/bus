@@ -4,6 +4,7 @@ import { generateIdentifier } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols.ts';
+import { openFolderEditor } from '../../interface/folder-editor/index.js';
 
 var Folders = {
   f_saved_stop: {
@@ -163,21 +164,23 @@ async function getFolderContentLength(folderID: string): number {
   return itemKeys.length;
 }
 
-export async function listFoldersWithContent(): FoldersWithContent[] {
+export async function listFoldersWithContent(filterOutEmptyFolders: boolean = false): FoldersWithContent[] {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {
     var folderContent = await listFolderContent(folder.id);
-    result.push({
-      folder: folder,
-      content: folderContent
-    });
+    if (!filterOutEmptyFolders || folderContent.length > 0) {
+      result.push({
+        folder: folder,
+        content: folderContent
+      });
+    }
   }
   return result;
 }
 
 export async function integrateFolders(requestID: string): [] {
-  var foldersWithContent = await listFoldersWithContent();
+  var foldersWithContent = await listFoldersWithContent(true);
   var StopIDs = [];
   for (var item of foldersWithContent) {
     StopIDs = StopIDs.concat(
