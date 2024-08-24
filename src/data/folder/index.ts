@@ -3,7 +3,7 @@ import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '.
 import { generateIdentifier } from '../../tools/index.ts';
 import { formatEstimateTime } from '../../tools/format-time.ts';
 import { getSettingOptionValue } from '../settings/index.ts';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols.js';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols.ts';
 
 var Folders = {
   f_saved_stop: {
