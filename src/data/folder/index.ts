@@ -58,6 +58,14 @@ export interface FolderRoute {
   index: number;
 }
 
+export interface FolderBus {
+  type: 'bus';
+  id: number; // CarID
+  time: string;
+  name: string; // BusID (vehicle registration number)
+  index: number;
+}
+
 export interface Folder {
   name: string;
   icon: string;
@@ -69,7 +77,7 @@ export interface Folder {
   timeNumber: null | number;
 }
 
-export type FolderContent = FolderStop | FolderRoute;
+export type FolderContent = FolderStop | FolderRoute | FolderBus;
 
 export interface FoldersWithContent {
   folder: Folder;
