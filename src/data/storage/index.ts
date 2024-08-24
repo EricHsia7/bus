@@ -2,15 +2,17 @@ import { convertBytes } from '../../tools/index.ts';
 
 const localforage = require('localforage');
 
-const storage = {
+var storage = {
   cacheStore: false,
   settingsStore: false,
   analyticsOfDataUsageStore: false,
   analyticsOfUpdateRateStore: false,
   folderListStore: false,
-  savedStopFolderStore: false
+  savedStopFolderStore: false,
+  savedRouteFolderStore: false
 };
-var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore'];
+
+var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
 async function dropInstance(store: number): any {
   var store_key = stores[store];
@@ -57,6 +59,23 @@ export async function lfGetItem(store: number, key: string): any {
   }
 }
 
+export async function lfRemoveItem(store: number, key: string): any {
+  try {
+    var store_key = stores[store];
+    if (storage[store_key] === false) {
+      storage[store_key] = await localforage.createInstance({
+        name: store_key
+      });
+    }
+    var operation = await storage[store_key].removeItem(key);
+    return operation;
+  } catch (err) {
+    console.error(err);
+    await dropInstance(store);
+    return null;
+  }
+}
+
 export async function lfListItem(store: number): [] {
   try {
     var store_key = stores[store];
@@ -88,14 +107,15 @@ export async function calculateStoresSize(): string {
   return convertBytes(total_size);
 }
 
-export async function registerStore(name: string): number {
-  var store_key = `${name.replaceAll(/[\s\n\-]/gm, '')}Store`;
+export async function registerStore(id: string): number {
+  var store_key = `F${id}Store`;
   if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
     storage[store_key] = await localforage.createInstance({
       name: store_key
     });
     stores.push(store_key);
     return stores.length - 1;
+  } else {
+    return stores.indexOf(store_key);
   }
-  return -1;
 }

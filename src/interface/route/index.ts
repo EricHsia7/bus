@@ -1,8 +1,8 @@
 import { integrateRoute } from '../../data/apis/index.ts';
-import { icons } from '../icons/index.ts';
+import { getIconHTML } from '../icons/index.ts';
 import { getDataReceivingProgress } from '../../data/apis/loader.ts';
 import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { compareThings, getTextWidth, calculateStandardDeviation, md5 } from '../../tools/index.ts';
+import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index.ts';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
 import { getUpdateRate } from '../../data/analytics/update-rate.ts';
 import { isSaved } from '../../data/folder/index.ts';
@@ -154,7 +154,7 @@ function updateUpdateTimer() {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_thread_box');
   element.id = identifier;
@@ -167,12 +167,12 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
-  var identifier = `i_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${icons.expand}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.folder.openSaveToFolder('stop', [null, null, '${identifier}'])"><div class="css_action_button_icon">${icons.favorite}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-stop" onclick="bus.folder.openSaveToFolder('stop', [null, null, '${identifier}'])"><div class="css_action_button_icon">${getIconHTML('favorite')}</div>收藏此站牌</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -180,7 +180,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `g_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_group');
   element.id = identifier;
@@ -200,7 +200,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${md5(Math.random() + new Date().getTime())}`;
+  var identifier = `t_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_route_group_tab');
   element.id = identifier;
@@ -233,10 +233,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         },
         nearest: false,
         progress: 0,
-        segmentBuffer: {
-          endpoint: false,
-          type: null
-        },
+        segmentBuffer: false,
         id: null
       });
     }
@@ -300,10 +297,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       elementQuerySelector(thisItemElement, '.css_name').innerText = thisItem.name;
     }
     function updateBuses(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${icons.bus}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisItemElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${icons.route}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
+      elementQuerySelector(thisItemElement, '.css_overlapping_routes').innerHTML = thisItem.overlappingRoutes === null ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button">收藏路線</div></div></div>`).join('');
     }
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
       thisItemElement.setAttribute('nearest', thisItem.nearest);
@@ -486,7 +483,7 @@ async function refreshRoute(): object {
   routeRefreshTimer_auto = refresh_interval_setting.auto;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
-  routeRefreshTimer_currentRequestID = `r_${md5(Math.random() * new Date().getTime())}`;
+  routeRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
   var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');

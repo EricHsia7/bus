@@ -1,0 +1,49 @@
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  width: calc(100% - 20px - 50px);
+  height: 50px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+  color: var(--b-cssvar-333333);
+  caret-color: var(--b-cssvar-main-color);
+  font-size: 20px;
+  font-weight: 400;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+}
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input:read-only {
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+}
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector[disabled="true"] {
+  opacity: 0.6;
+}
+
+.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}

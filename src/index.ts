@@ -10,7 +10,7 @@ import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationF
 import { openPermalink } from './tools/permalink.ts';
 import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
-import { initializeFolderStores, saveStop, saveToFolder } from './data/folder/index.ts';
+import { initializeFolderStores } from './data/folder/index.ts';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folder.ts';
 import { preloadData } from './interface/home/index.ts';
 import { checkAppVersion } from './data/settings/version.ts';
@@ -18,28 +18,70 @@ import { openSettingsPage, closeSettingsPage } from './interface/settings/index.
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
 import { initializeSettings } from './data/settings/index.ts';
 import { fadeOutSplashScreen } from './interface/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from './tools/query-selector.ts';
-import { closeSaveToFolder, openSaveToFolder, saveItemOnRouteAsStop } from './interface/save-to-folder/index.ts';
+import { documentQuerySelector } from './tools/query-selector.ts';
+import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index.ts';
+import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
+import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index.ts';
+import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
+import { loadFont } from './interface/lazy-font.ts';
+import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index.ts';
 
 import './interface/theme.css';
+
 import './interface/index.css';
+
+import './interface/icons/index.css';
+
 import './interface/animation.css';
+
 import './interface/home/index.css';
 import './interface/home/folder.css';
+
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
+
 import './interface/route/field.css';
 import './interface/route/groups.css';
 import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
+
 import './interface/route/details/index.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
+
 import './interface/location/index.css';
 import './interface/settings/index.css';
+
 import './interface/save-to-folder/index.css';
+
+import './interface/folder-manager/field.css';
+import './interface/folder-manager/head.css';
+import './interface/folder-manager/body.css';
+import './interface/folder-manager/list.css';
+import './interface/folder-manager/item.css';
+
+import './interface/folder-editor/field.css';
+import './interface/folder-editor/head.css';
+import './interface/folder-editor/body.css';
+import './interface/folder-editor/groups.css';
+import './interface/folder-editor/folder-name.css';
+import './interface/folder-editor/folder-icon.css';
+import './interface/folder-editor/folder-content.css';
+
+import './interface/folder-creator/field.css';
+import './interface/folder-creator/head.css';
+import './interface/folder-creator/body.css';
+import './interface/folder-creator/groups.css';
+import './interface/folder-creator/folder-name.css';
+import './interface/folder-creator/folder-icon.css';
+
+import './interface/folder-icon-selector/field.css';
+import './interface/folder-icon-selector/head.css';
+import './interface/folder-icon-selector/body.css';
+import './interface/folder-icon-selector/symbols.css';
+
 import './interface/prompt/index.css';
 
 //for development
@@ -66,6 +108,7 @@ window.onerror = async function (message, source, lineno, colno, error) {
 */
 
 let bus_initialized = false;
+let bus_lazily_loaded = false;
 
 window.bus = {
   initialize: function () {
@@ -99,9 +142,9 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            var searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+            const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
             searchInputElement.addEventListener('paste', function (event) {
-              updateSearchResult(event.target.value);
+              updateSearchResult(searchInputElement.value);
             });
             searchInputElement.addEventListener('cut', function () {
               updateSearchResult(searchInputElement.value);
@@ -115,9 +158,26 @@ window.bus = {
             searchInputElement.addEventListener('keyup', function () {
               updateSearchResult(searchInputElement.value);
             });
+
+            const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+            searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            document.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
             openPermalink();
             fadeOutSplashScreen(function () {
-              preloadData().then((e) => {});
+              preloadData();
               askForPositioningPermission();
             });
           }
@@ -130,6 +190,13 @@ window.bus = {
           fadeOutSplashScreen();
           alert(e);
         });
+    }
+  },
+  lazily_load: function () {
+    if (!bus_lazily_loaded) {
+      bus_lazily_loaded = true;
+      loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap', 'Noto Sans', 'noto_sans');
+      loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
     }
   },
   route: {
@@ -148,11 +215,22 @@ window.bus = {
     stretchLocationItemBody
   },
   folder: {
-    saveStop,
     openSaveToFolder,
     closeSaveToFolder,
-    saveItemOnRouteAsStop,
-    saveToFolder
+    openFolderManager,
+    closeFolderManager,
+    openFolderEditor,
+    closeFolderEditor,
+    openFolderIconSelector,
+    closeFolderIconSelector,
+    openFolderCreator,
+    closeFolderCreator,
+    createFormulatedFolder,
+    saveEditedFolder,
+    selectFolderIcon,
+    saveStopItemOnRoute,
+    removeItemOnFolderEditor,
+    moveItemOnFolderEditor
   },
   searchPage: {
     openSearchPage,

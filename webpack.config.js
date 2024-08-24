@@ -73,7 +73,8 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].min.css' // Output CSS filename
+        filename: '[contenthash].min.css'
+        // Output CSS filename
       }),
       new MangleCssClassPlugin({
         classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
@@ -99,7 +100,7 @@ module.exports = (env, argv) => {
         cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
           {
-            urlPattern: new RegExp('^https://fonts.googleapis.com'),
+            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'google-fonts-stylesheets'
@@ -175,7 +176,7 @@ module.exports = (env, argv) => {
       splitChunks: {
         chunks: 'all',
         minSize: 20000,
-        maxSize: 90000,
+        maxSize: 50000,
         cacheGroups: {
           // Define your cache groups here with specific rules
           default: {
