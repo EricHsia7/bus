@@ -31,6 +31,7 @@ function queryFolderFieldSize(): FieldSize {
 function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_home_folder_item');
+  element.setAttribute('type', 'null');
   element.innerHTML = `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_capsule_separator"></div></div>`;
   return {
     element: element,
@@ -115,6 +116,9 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         case 'bus':
           icon = 'directions_bus';
           break;
+        case 'empty':
+          icon = 'help';
+          break;
         default:
           icon = '';
           break;
@@ -151,6 +155,9 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         case 'bus':
           main = thisItem.busID;
           break;
+        case 'empty':
+          main = '沒有內容';
+          break;
         default:
           main = 'null';
           break;
@@ -168,6 +175,9 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
           break;
         case 'bus':
           context = thisItem.currentRoute.name; // TODO: integration
+          break;
+        case 'empty':
+          context = '提示';
           break;
         default:
           context = 'null';

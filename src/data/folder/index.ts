@@ -67,6 +67,11 @@ export interface FolderBus {
   index: number;
 }
 
+export interface FolderEmpty {
+  type: 'empty';
+  index: number;
+}
+
 export interface Folder {
   name: string;
   icon: string;
@@ -78,7 +83,7 @@ export interface Folder {
   timeNumber: null | number;
 }
 
-export type FolderContent = FolderStop | FolderRoute | FolderBus;
+export type FolderContent = FolderStop | FolderRoute | FolderBus | FolderEmpty;
 
 export interface FoldersWithContent {
   folder: Folder;
@@ -153,18 +158,25 @@ export async function listFolderContent(folderID: string): FolderContent[] {
   var result = [];
   var thisFolder = Folders[`f_${folderID}`];
   var itemKeys = await lfListItem(thisFolder.storeIndex);
-  for (var itemKey of itemKeys) {
-    var item = await lfGetItem(thisFolder.storeIndex, itemKey);
-    if (item) {
-      var itemObject: object = JSON.parse(item);
-      result.push(itemObject);
+  if (itemKeys.length > 0) {
+    for (var itemKey of itemKeys) {
+      var item = await lfGetItem(thisFolder.storeIndex, itemKey);
+      if (item) {
+        var itemObject: object = JSON.parse(item);
+        result.push(itemObject);
+      }
     }
+    result = result.sort(function (a, b) {
+      var c = a?.index || 0;
+      var d = b?.index || 0;
+      return c - d;
+    });
+  } else {
+    result.push({
+      type: 'empty',
+      index: 0
+    });
   }
-  result = result.sort(function (a, b) {
-    var c = a?.index || 0;
-    var d = b?.index || 0;
-    return c - d;
-  });
   return result;
 }
 
@@ -189,6 +201,7 @@ export async function listFoldersWithContent(): FoldersWithContent[] {
 
 export async function integrateFolders(requestID: string): [] {
   var foldersWithContent = await listFoldersWithContent();
+
   var StopIDs = [];
   for (var item of foldersWithContent) {
     StopIDs = StopIDs.concat(
@@ -199,15 +212,28 @@ export async function integrateFolders(requestID: string): [] {
         .map((e) => e.id)
     );
   }
+  const EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
+
   var array = [];
-  var EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
     integratedFolder.folder = folder.folder;
     integratedFolder.content = [];
     for (var item of folder.content) {
       var integratedItem = item;
-      integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
+      switch (item.type) {
+        case 'stop':
+          integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
+          break;
+        case 'route':
+          break;
+        case 'bus':
+          break;
+        case 'empty':
+          break;
+        default:
+          break;
+      }
       integratedFolder.content.push(integratedItem);
     }
     array.push(integratedFolder);
@@ -228,7 +254,19 @@ export async function integrateFolders(requestID: string): [] {
     }
     for (var item2 of item.content) {
       var formattedItem = item2;
-      formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
+      switch (item2.type) {
+        case 'stop':
+          formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
+          break;
+        case 'route':
+          break;
+        case 'bus':
+          break;
+        case 'empty':
+          break;
+        default:
+          break;
+      }
       foldedItems[folderKey].push(formattedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
