@@ -9,15 +9,38 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.id = identifier;
+  element.classList.add('css_folder_editor_folder_item');
+  element.setAttribute('type', item.type)
+  var context = '';
+  var main = '';
+  var icon = '';
   switch (item.type) {
     case 'stop':
-      element.classList.add('css_folder_editor_folder_content_stop_item');
-      element.innerHTML = `<div class="css_folder_editor_folder_content_stop_item_route">${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}</div><div class="css_folder_editor_folder_content_stop_item_name">${item.name}</div><div class="css_folder_editor_folder_content_stop_item_capsule"><div class="css_folder_editor_folder_content_stop_item_sort_control_up" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'up')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_content_stop_item_capsule_separator"></div><div class="css_folder_editor_folder_content_stop_item_sort_control_down" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'down')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_content_stop_item_capsule_separator"></div><div class="css_folder_editor_folder_content_stop_item_delete" onclick="bus.folder.removeItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id})">${getIconHTML('delete')}</div></div>`;
+      icon = 'loaction_on';
+      context = `${item.route ? item.route.name : ''} - 往${item.route ? [item.route.endPoints.destination, item.route.endPoints.departure, ''][item.direction ? item.direction : 0] : ''}`;
+      main = item.name;
+      break;
+    case 'route':
+      icon = 'route';
+      context = '';
+      main = item.name;
+      break;
+    case 'bus':
+      context = '';
+      main = item.name;
+      break;
+    case 'empty':
+      icon = 'lightbulb';
+      context = '提示';
+      main = '沒有內容';
       break;
     default:
-      element.innerHTML = '';
+      icon = '';
+      context = 'null';
+      main = 'null';
       break;
   }
+  element.innerHTML = `<div class="css_folder_editor_folder_item_icon">${icon}</div><div class="css_folder_editor_folder_item_context">${context}</div><div class="css_folder_editor_folder_item_main">${main}</div><div class="css_folder_editor_folder_item_capsule"><div class="css_folder_editor_folder_item_sort_control_up" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'up')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_item_capsule_separator"></div><div class="css_folder_editor_folder_item_sort_control_down" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'down')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_item_capsule_separator"></div><div class="css_folder_editor_folder_item_delete" onclick="bus.folder.removeItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id})">${getIconHTML('delete')}</div></div>`;
   return {
     element: element,
     id: identifier
@@ -77,7 +100,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
   var className = '';
   switch (type) {
     case 'stop':
-      className = 'css_folder_editor_folder_content_stop_item';
+      className = 'css_folder_editor_folder_item';
       break;
     default:
       className = '';
@@ -105,7 +128,7 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
   var className = '';
   switch (type) {
     case 'stop':
-      className = 'css_folder_editor_folder_content_stop_item';
+      className = 'css_folder_editor_folder_item';
       break;
     default:
       className = '';

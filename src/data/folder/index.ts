@@ -69,6 +69,7 @@ export interface FolderBus {
 
 export interface FolderEmpty {
   type: 'empty';
+  id: null;
   index: number;
 }
 
@@ -174,6 +175,7 @@ export async function listFolderContent(folderID: string): FolderContent[] {
   } else {
     result.push({
       type: 'empty',
+      id: null,
       index: 0
     });
   }
