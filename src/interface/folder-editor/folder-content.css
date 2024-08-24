@@ -28,7 +28,7 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_context {
   position: absolute;
   top: 7.5px;
-  left: 10px;
+  left: 50px;
   width: calc(100% - 50px - 90px - 10px);
   /* icon: 50px + capsule: 90px + padding: 10px */
   font-size: 14px;
@@ -48,7 +48,7 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_main {
   position: absolute;
   top: 21.5px;
-  left: 10px;
+  left: 50px;
   width: calc(100% - 50px - 90px - 10px);
   /* icon: 50px + capsule: 90px + padding: 10px */
   font-size: 17px;
@@ -77,7 +77,6 @@
   user-select: none;
   -webkit-user-select: none;
 }
-
 
 /* type: stop */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
