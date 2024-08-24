@@ -79,14 +79,14 @@ export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
   var index = 2; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
-    var thisFolder = await lfGetItem(4, folderKey);
+    var thisFolder: string = await lfGetItem(4, folderKey);
     if (thisFolder) {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
         console.log(thisFolderObject);
         var storeIndex = await registerStore(thisFolderObject.id);
-        thisFolder.storeIndex = storeIndex;
-        thisFolder.index = index;
+        thisFolderObject.storeIndex = storeIndex;
+        thisFolderObject.index = index;
         if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
           Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
         }

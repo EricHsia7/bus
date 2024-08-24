@@ -128,7 +128,6 @@ export async function registerStore(id: string): number {
     return stores.length - 1;
   } else {
     console.log('a', 4);
-
     return stores.indexOf(store_key);
   }
   console.log('a', 5);
