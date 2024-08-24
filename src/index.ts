@@ -69,6 +69,9 @@ import './interface/folder-editor/folder-name.css';
 import './interface/folder-editor/folder-icon.css';
 import './interface/folder-editor/folder-content.css';
 
+import './interface/folder-creator/field.css';
+import './interface/folder-creator/head.css';
+
 import './interface/folder-icon-selector/field.css';
 import './interface/folder-icon-selector/head.css';
 import './interface/folder-icon-selector/body.css';
