@@ -136,6 +136,45 @@
 }
   */
 
+
+/* folders > folder > content > item > capsule > button */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+/* type: stop */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: flex;
+}
+
+/* type: route */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: flex;
+}
+
+/* type: bus */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: none;
+}
+
+/* type: empty */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: none;
+}
+
 /* folders > folder > content > item > capsule > separator */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
   position: absolute;
@@ -280,9 +319,6 @@
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }
-
-/* folders > folder > content > item > capsule > button */
-
 
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon,
