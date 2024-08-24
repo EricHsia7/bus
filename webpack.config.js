@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
         classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
         mangleCssVariables: true,
         /*ignorePrefix: [''],*/
-        log: true
+        log: false
       }),
       new webpack.DefinePlugin({
         'process.env': {

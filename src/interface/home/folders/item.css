@@ -1,0 +1,340 @@
+/* folders > folder > content > item */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+
+/* folders > folder > content > item > icon */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon {
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--b-cssvar-border-radius-default);
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon span.css_material_symbols_rounded {
+  display: none;
+}
+
+/* folders > folder > content > item > context */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_context {
+  position: absolute;
+  top: 7.5px;
+  left: 50px;
+  width: calc(100% - 50px - 85px - 10px);
+  /* icon: 50px + capsule: 85px + padding: 10px */
+  font-size: 14px;
+  height: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context {
+  width: calc(100% - 50px - 85px - 10px - 5px);
+  border-radius: var(--b-cssvar-border-radius-default);
+  color: rgba(0, 0, 0, 0);
+}
+
+/* folders > folder > content > item > main */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_main {
+  position: absolute;
+  top: 21.5px;
+  left: 50px;
+  width: calc(100% - 50px - 85px - 10px);
+  /* icon: 50px + capsule: 85px + padding: 10px */
+  font-size: 17px;
+  height: 23px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
+  top: calc(21.5px + 5px);
+  width: calc(100% - 50px - 85px - 10px - 5px);
+  height: calc(23px - 5px);
+  border-radius: var(--b-cssvar-border-radius-default);
+  color: rgba(0, 0, 0, 0);
+}
+
+/* folders > folder > content > item > capsule */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 85px;
+  height: 30px;
+  background: var(--b-cssvar-ededf2);
+  border-radius: 15px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* type: stop */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule {
+  display: block;
+}
+
+/* type: route */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule {
+  display: block;
+  width: 30px;
+}
+
+/* type: bus */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule {
+  display: none;
+}
+
+/* type: empty */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule {
+  display: none;
+}
+
+/* skeleton screen: true */
+/*
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule {
+  background: var(--b-cssvar-ededf2);
+}
+*/
+
+/* folders > folder > content > item > capsule > button */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+/* type: stop */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: flex;
+}
+
+/* type: route */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: flex;
+}
+
+/* type: bus */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: none;
+}
+
+/* type: empty */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  display: none;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
+  display: none;
+}
+
+/* folders > folder > content > item > capsule > separator */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  position: absolute;
+  top: 3px;
+  left: calc(55px - 1px / 2);
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
+}
+
+/* type: stop */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  display: block;
+}
+
+/* type: route */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  display: none;
+}
+
+/* type: bus */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  display: none;
+}
+
+/* type: empty */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  display: none;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  display: none;
+}
+
+/* folders > folder > content > item > capsule > status */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  overflow: hidden;
+  background: var(--b-cssvar-ededf2);
+}
+
+/* type: stop */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
+  display: block;
+}
+
+/* type: route */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_status {
+  display: none;
+}
+
+/* type: bus */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_status {
+  display: none;
+}
+
+/* type: empty */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_status {
+  display: none;
+}
+
+/* skeleton screen: true */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_status {
+  display: none;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  white-space: nowrap;
+  word-break: keep-all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* code: 6, 5, 4, 3 */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="6"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="4"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="3"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="6"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="4"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="3"] {
+  background: var(--b-cssvar-ededf2);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* code: 2 */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="2"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="2"] {
+  color: var(--b-cssvar-ffffff);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color);
+}
+
+/* code: 1 */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="1"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="1"] {
+  color: var(--b-cssvar-main-color);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color-solid-transparent-c);
+}
+
+/* code: 0.5 */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="0.5"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="0.5"] {
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* code: 0 */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="0"],
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="0"] {
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+  transition: none;
+}
+
+/* fadeout */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
+}
+
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context,
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}

@@ -1,10 +1,10 @@
-import { integrateFolders } from '../../data/folder/index.ts';
-import { compareThings, generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector.ts';
-import { getUpdateRate } from '../../data/analytics/update-rate.ts';
-import { getSettingOptionValue } from '../../data/settings/index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { GeneratedElement, FieldSize } from '../index.ts';
+import { integrateFolders } from '../../../data/folder/index.ts';
+import { FieldSize, GeneratedElement } from '../../index.ts';
+import { getIconHTML } from '../../icons/index.ts';
+import { getSettingOptionValue } from '../../../data/settings/index.ts';
+import { getUpdateRate } from '../../../data/analytics/update-rate.ts';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
+import { compareThings, generateIdentifier } from '../../../tools/index.ts';
 
 var previousIntegration = [];
 
@@ -30,8 +30,9 @@ function queryFolderFieldSize(): FieldSize {
 
 function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
-  element.classList.add('css_home_folder_item_stop');
-  element.innerHTML = `<div class="css_home_folder_item_stop_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_stop_route"></div><div class="css_home_folder_item_stop_name"></div>`;
+  element.classList.add('css_home_folder_item');
+  element.setAttribute('type', 'stop');
+  element.innerHTML = `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_capsule_separator"></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div></div>`;
   return {
     element: element,
     id: null
@@ -97,44 +98,144 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-export async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
+async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
+    function updateType(thisElement: HTMLElement, thisItem: object): void {
+      thisElement.setAttribute('type', thisItem.type);
+    }
+    function updateIcon(thisElement: HTMLElement, thisItem: object): void {
+      const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
+      let icon = '';
+      switch (thisItem.type) {
+        case 'stop':
+          icon = 'location_on';
+          break;
+        case 'route':
+          icon = 'route';
+          break;
+        case 'bus':
+          icon = 'directions_bus';
+          break;
+        case 'empty':
+          icon = 'lightbulb';
+          break;
+        default:
+          icon = '';
+          break;
+      }
+      iconElement.innerHTML = getIconHTML(icon);
+    }
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var statusSelector = '.css_home_folder_item_stop_status';
-      var nextSlide = elementQuerySelector(thisElement, `${statusSelector} .css_next_slide`);
-      var currentSlide = elementQuerySelector(thisElement, `${statusSelector} .css_current_slide`);
-      nextSlide.setAttribute('code', thisItem.status.code);
-      nextSlide.innerText = thisItem.status.text;
-      currentSlide.addEventListener(
-        'animationend',
-        function () {
-          currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.innerText = thisItem.status.text;
-          currentSlide.classList.remove('css_slide_fade_out');
-        },
-        { once: true }
-      );
-      currentSlide.classList.add('css_slide_fade_out');
+      if (thisItem.type === 'stop') {
+        var nextSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide');
+        var currentSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide');
+        nextSlide.setAttribute('code', thisItem.status.code);
+        nextSlide.innerText = thisItem.status.text;
+        currentSlide.addEventListener(
+          'animationend',
+          function () {
+            currentSlide.setAttribute('code', thisItem.status.code);
+            currentSlide.innerText = thisItem.status.text;
+            currentSlide.classList.remove('css_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentSlide.classList.add('css_slide_fade_out');
+      }
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_stop_name').innerText = thisItem.name;
+    function updateMain(thisElement: HTMLElement, thisItem: object): void {
+      let main: string = '';
+      switch (thisItem.type) {
+        case 'stop':
+          main = thisItem.name;
+          break;
+        case 'route':
+          main = thisItem.name;
+          break;
+        case 'bus':
+          main = thisItem.busID;
+          break;
+        case 'empty':
+          main = '沒有內容';
+          break;
+        default:
+          main = 'null';
+          break;
+      }
+      elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = main;
     }
-    function updateRoute(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_home_folder_item_stop_route').innerText = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+    function updateContext(thisElement: HTMLElement, thisItem: object): void {
+      let context: string = '';
+      switch (thisItem.type) {
+        case 'stop':
+          context = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
+          break;
+        case 'route':
+          context = `${thisItem.endPoints.departure} \u21CC ${thisItem.endPoints.destination}`;
+          break;
+        case 'bus':
+          context = thisItem.currentRoute.name; // TODO: integration
+          break;
+        case 'empty':
+          context = '提示';
+          break;
+        default:
+          context = 'null';
+          break;
+      }
+      elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
     if (previousItem === null) {
+      updateType(thisElement, thisItem);
+      updateIcon(thisElement, thisItem);
       updateStatus(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateRoute(thisElement, thisItem);
+      updateMain(thisElement, thisItem);
+      updateContext(thisElement, thisItem);
     } else {
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+      if (!(thisItem.type === previousItem.type)) {
+        updateType(thisElement, thisItem);
+        updateIcon(thisElement, thisItem);
         updateStatus(thisElement, thisItem);
-      }
-      if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisElement, thisItem);
-      }
-      if (!compareThings(previousItem.id, thisItem.id)) {
-        updateRoute(thisElement, thisItem);
+        updateMain(thisElement, thisItem);
+        updateContext(thisElement, thisItem);
+      } else {
+        switch (thisItem.type) {
+          case 'stop':
+            if (!compareThings(previousItem.route, thisItem.route)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateMain(thisElement, thisItem);
+            }
+            if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+              updateStatus(thisElement, thisItem);
+            }
+            break;
+          case 'route':
+            if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          case 'bus':
+            if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
+              updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.busID, thisItem.busID)) {
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          case 'empty':
+            if (!(thisItem.type === previousItem.type)) {
+              updateContext(thisElement, thisItem);
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          default:
+            break;
+        }
       }
     }
   }
@@ -172,7 +273,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
 
   for (var i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
@@ -183,7 +284,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[itemIndex].remove();
         }
       }
     }
@@ -197,7 +298,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
     elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item_stop`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedItems[folderKey][j];
       if (previousIntegration.hasOwnProperty('foldedItems')) {
@@ -219,7 +320,7 @@ export async function updateFolderField(Field: HTMLElement, integration: {}, ske
   previousIntegration = integration;
 }
 
-export async function refreshFolders(): object {
+async function refreshFolders(): object {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
   foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
@@ -240,7 +341,7 @@ export async function refreshFolders(): object {
   return { status: 'Successfully refreshed the folders.' };
 }
 
-export async function streamFolders(): void {
+async function streamFolders(): void {
   refreshFolders()
     .then((result) => {
       if (foldersRefreshTimer.streaming) {
