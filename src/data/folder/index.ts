@@ -183,7 +183,7 @@ export async function listFoldersWithContent(filterOutEmptyFolders: boolean = fa
 }
 
 export async function integrateFolders(requestID: string): [] {
-  var foldersWithContent = await listFoldersWithContent(true);
+  var foldersWithContent = await listFoldersWithContent(false);
   var StopIDs = [];
   for (var item of foldersWithContent) {
     StopIDs = StopIDs.concat(
