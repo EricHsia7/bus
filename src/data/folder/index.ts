@@ -27,6 +27,8 @@ var Folders = {
   }
 };
 
+const defaultFolderQuantity = 2
+
 export type FolderContentType = 'stop' | 'route' | 'bus' | 'empty';
 
 interface FolderRouteEndPoints {
@@ -94,7 +96,7 @@ export interface FoldersWithContent {
 
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItem(4);
-  var index = 2; // avoid overwriting the default folders
+  var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
     var thisFolder: string = await lfGetItem(4, folderKey);
     if (thisFolder) {
@@ -131,7 +133,7 @@ export async function createFolder(name: string, icon: string): boolean {
         icon: icon,
         default: false,
         storeIndex: storeIndex,
-        index: folderKeys.length + 2,
+        index: folderKeys.length + defaultFolderQuantity,
         contentType: ['stop', 'route', 'bus'],
         id: identifier,
         time: new Date().toISOString()
