@@ -26,7 +26,6 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadFont } from './interface/lazy-font.ts';
 import { closeFolderCreator, openFolderCreator } from './interface/folder-creator/index.ts';
 
-
 import './interface/theme.css';
 
 import './interface/index.css';
@@ -73,6 +72,10 @@ import './interface/folder-editor/folder-content.css';
 
 import './interface/folder-creator/field.css';
 import './interface/folder-creator/head.css';
+import './interface/folder-creator/body.css';
+import './interface/folder-creator/groups.css';
+import './interface/folder-creator/folder-name.css';
+import './interface/folder-creator/folder-icon.css';
 
 import './interface/folder-icon-selector/field.css';
 import './interface/folder-icon-selector/head.css';
