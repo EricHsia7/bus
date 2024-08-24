@@ -196,8 +196,10 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         updateType(thisElement, thisItem);
         updateIcon(thisElement, thisItem);
       }
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisElement, thisItem);
+      if (thisItem.type === 'stop') {
+        if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+          updateStatus(thisElement, thisItem);
+        }
       }
       if (!compareThings(previousItem.name, thisItem.name)) {
         updateMain(thisElement, thisItem);
