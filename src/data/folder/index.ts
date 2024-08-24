@@ -156,6 +156,7 @@ export async function updateFolder(folder: Folder): boolean {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     var existingFolder: string = await lfGetItem(4, `f_${folder.id}`);
     if (existingFolder) {
+      const requestID = `r_${generateIdentifier()}`;
       var materialSymbols = await getMaterialSymbols(requestID);
       if (materialSymbols.indexOf(folder.icon) < 0) {
         return false;
