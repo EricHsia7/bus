@@ -1,4 +1,4 @@
-import { Folder, FolderContent, FoldersWithContent, listFoldersWithContent } from '../folder/index';
+import { listFoldersWithContent } from '../folder/index';
 
 export async function exportData(): Promise<string> {
   const foldersWithContent = await listFoldersWithContent();

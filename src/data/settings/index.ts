@@ -146,6 +146,14 @@ var Settings = {
     type: 'page',
     action: 'bus.storage.openStoragePage()'
   },
+  export: {
+    key: 'export',
+    name: '匯出資料',
+    icon: 'ios_share',
+    status: '',
+    type: 'action',
+    action: 'bus.settingsPage.downloadExportFile()'
+  },
   version: {
     key: 'version',
     name: '版本',
@@ -187,20 +195,23 @@ export async function listSettings(): [] {
   var result = [];
   for (var key in Settings) {
     var item = Settings[key];
-    if (item.type === 'select') {
-      item.status = item.options[item.option].name;
-    }
-    if (item.type === 'page') {
-      item.status = '';
-    }
-    if (item.type === 'info' && key === 'version') {
-      item.status = `${getHTMLVersionHash()}@${getHTMLVersionBranchName()}`;
-    }
-    if (item.key === 'refresh_interval') {
-      if (item.option === 0) {
-        var updateRate = await getUpdateRate();
-        item.status = `${formatTime(15 / updateRate, 0)}（自動）`;
-      }
+    switch (item.type) {
+      case 'select':
+        item.status = item.options[item.option].name;
+        break;
+      case 'page':
+        item.status = '';
+        break;
+      case 'action':
+        item.status = '';
+        break;
+      case 'info':
+        if (key === 'version') {
+          item.status = `${getHTMLVersionHash()}@${getHTMLVersionBranchName()}`;
+        }
+        break;
+      default:
+        break;
     }
     result.push(item);
   }

@@ -13,7 +13,7 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/
 import { initializeFolderStores } from './data/folder/index';
 import { preloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
-import { openSettingsPage, closeSettingsPage } from './interface/settings/index';
+import { openSettingsPage, closeSettingsPage, downloadExportFile } from './interface/settings/index';
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options';
 import { initializeSettings } from './data/settings/index';
 import { fadeOutSplashScreen } from './interface/index';
@@ -253,7 +253,8 @@ window.bus = {
     closeSettingsPage,
     openSettingsOptionsPage,
     closeSettingsOptionsPage,
-    settingsOptionsHandler
+    settingsOptionsHandler,
+    downloadExportFile
   }
 };
 

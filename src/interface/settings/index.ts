@@ -1,6 +1,7 @@
-import { generateIdentifier } from '../../tools/index';
+import { downloadFileViaBlobURL, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { listSettings } from '../../data/settings/index';
+import { exportData } from '../../data/export/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
 
@@ -36,4 +37,9 @@ export function openSettingsPage(): void {
 export function closeSettingsPage(): void {
   var Field: HTMLElement = documentQuerySelector('.css_settings_page_field');
   Field.setAttribute('displayed', 'false');
+}
+
+export async function downloadExportFile(): void {
+  const exportedData = await exportData();
+  downloadFileViaBlobURL(exportedData, 'application/json', 'bus-export.json');
 }
