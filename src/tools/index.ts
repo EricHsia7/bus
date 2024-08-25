@@ -281,7 +281,7 @@ export function containPhoneticSymbols(string: string): boolean {
 
 export function releaseFile(content: string, type: string = 'application/json', fileName: string): void {
   const blob = new Blob([content], { type: type });
-  const fileObj = new File([data], fileName, { type: type });
+  const fileObj = new File([blob], fileName, { type: type });
   if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
     navigator
       .share({
