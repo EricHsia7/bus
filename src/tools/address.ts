@@ -1,4 +1,4 @@
-import { areItemsDifferent, generateLetterLabels } from './index.ts';
+import { areItemsDifferent, generateLetterLabels } from './index';
 
 export function mergeAddressesIntoOne(addresses: string[]): object | string {
   const parts = [

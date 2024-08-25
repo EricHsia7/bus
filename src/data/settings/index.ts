@@ -1,7 +1,7 @@
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
-import { getUpdateRate } from '../analytics/update-rate.ts';
-import { formatTime } from '../../tools/format-time.ts';
-import { getHTMLVersionBranchName, getHTMLVersionHash } from './version.ts';
+import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
+import { getUpdateRate } from '../analytics/update-rate';
+import { formatTime } from '../../tools/format-time';
+import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
 const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'use_addresses_as_location_labels'];
 

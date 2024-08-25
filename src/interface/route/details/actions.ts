@@ -1,6 +1,6 @@
-import { searchRouteByRouteID } from '../../../data/search/searchRoute.ts';
-import { getPermalink } from '../../../tools/permalink.ts';
-import { prompt_message } from '../../prompt/index.ts';
+import { searchRouteByRouteID } from '../../../data/search/searchRoute';
+import { getPermalink } from '../../../tools/permalink';
+import { prompt_message } from '../../prompt/index';
 
 export async function shareRoutePermalink(RouteID: number): void {
   var search = await searchRouteByRouteID(RouteID);

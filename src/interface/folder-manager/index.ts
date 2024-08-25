@@ -1,8 +1,8 @@
-import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/index.ts';
-import { generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { GeneratedElement } from '../index.ts';
+import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/index';
+import { generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { getIconHTML } from '../icons/index';
+import { GeneratedElement } from '../index';
 
 function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;

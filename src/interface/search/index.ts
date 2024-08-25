@@ -1,10 +1,10 @@
-import { openKeyboard, closeKeyboard } from './keyboard.ts';
-import { prepareForRouteSearch } from '../../data/search/searchRoute.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { dataPreloadCompleted } from '../home/index.ts';
-import { prompt_message } from '../prompt/index.ts';
-import { documentQuerySelector } from '../../tools/query-selector.ts';
-import { containPhoneticSymbols } from '../../tools/index.ts';
+import { openKeyboard, closeKeyboard } from './keyboard';
+import { prepareForRouteSearch } from '../../data/search/searchRoute';
+import { getIconHTML } from '../icons/index';
+import { dataPreloadCompleted } from '../home/index';
+import { prompt_message } from '../prompt/index';
+import { documentQuerySelector } from '../../tools/query-selector';
+import { containPhoneticSymbols } from '../../tools/index';
 
 const searchPageField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');

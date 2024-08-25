@@ -1,9 +1,9 @@
-import { integrateStop, integrateEstimateTime2 } from '../apis/index.ts';
-import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '../storage/index.ts';
-import { generateIdentifier } from '../../tools/index.ts';
-import { formatEstimateTime } from '../../tools/format-time.ts';
-import { getSettingOptionValue } from '../settings/index.ts';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols.ts';
+import { integrateStop, integrateEstimateTime2 } from '../apis/index';
+import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '../storage/index';
+import { generateIdentifier } from '../../tools/index';
+import { formatEstimateTime } from '../../tools/format-time';
+import { getSettingOptionValue } from '../settings/index';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols';
 import { openFolderEditor } from '../../interface/folder-editor/index.js';
 
 var _ = {};

@@ -1,5 +1,5 @@
-import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { documentQuerySelector } from '../../tools/query-selector.ts';
+import { lfSetItem, lfGetItem } from '../storage/index';
+import { documentQuerySelector } from '../../tools/query-selector';
 
 function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL

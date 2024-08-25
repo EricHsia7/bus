@@ -1,11 +1,11 @@
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
-import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols.ts';
-import { containPhoneticSymbols, generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { dataPreloadCompleted } from '../home/index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { GeneratedElement } from '../index.ts';
-import { prompt_message } from '../prompt/index.ts';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';
+import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols';
+import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { dataPreloadCompleted } from '../home/index';
+import { getIconHTML } from '../icons/index';
+import { GeneratedElement } from '../index';
+import { prompt_message } from '../prompt/index';
 
 type Target = 'editor' | 'creator' | '';
 

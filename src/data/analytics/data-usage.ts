@@ -1,5 +1,5 @@
-import { convertBytes } from '../../tools/index.ts';
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
+import { convertBytes } from '../../tools/index';
+import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
 
 export async function recordRequest(requestID: string, data: object): void {
   var existingRecord = await lfGetItem(2, requestID);

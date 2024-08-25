@@ -1,5 +1,5 @@
-import { timeStampToNumber } from '../../tools/format-time.ts';
-import { recordRequest } from '../analytics/data-usage.ts';
+import { timeStampToNumber } from '../../tools/format-time';
+import { recordRequest } from '../analytics/data-usage';
 const { inflate } = require('pako');
 
 var dataReceivingProgress = {};

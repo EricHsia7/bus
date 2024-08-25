@@ -1,8 +1,8 @@
-import { generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { listSettings } from '../../data/settings/index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { GeneratedElement } from '../index.ts';
+import { generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { listSettings } from '../../data/settings/index';
+import { getIconHTML } from '../icons/index';
+import { GeneratedElement } from '../index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;

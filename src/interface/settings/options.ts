@@ -1,7 +1,7 @@
-import { generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector.ts';
-import { getSetting, changeSettingOption } from '../../data/settings/index.ts';
-import { GeneratedElement } from '../index.ts';
+import { generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
+import { getSetting, changeSettingOption } from '../../data/settings/index';
+import { GeneratedElement } from '../index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;

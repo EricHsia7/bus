@@ -1,9 +1,9 @@
-import { getRoute } from '../../data/apis/getRoute.ts';
-import { getStop } from '../../data/apis/getStop.ts';
-import { getLocation } from '../../data/apis/getLocation.ts';
-import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader.ts';
-import { documentQuerySelector } from '../../tools/query-selector.ts';
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols.ts';
+import { getRoute } from '../../data/apis/getRoute';
+import { getStop } from '../../data/apis/getStop';
+import { getLocation } from '../../data/apis/getLocation';
+import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';
+import { documentQuerySelector } from '../../tools/query-selector';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';
 
 var dataPreloadRequestID = 'preload_data';
 export var dataPreloadCompleted = false;

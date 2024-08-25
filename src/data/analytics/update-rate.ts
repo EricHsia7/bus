@@ -1,6 +1,6 @@
-import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index.ts';
-import { formatTime } from '../../tools/format-time.ts';
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index.ts';
+import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
+import { formatTime } from '../../tools/format-time';
+import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
 
 interface trackingUpdateRate {
   trackedStops: [];

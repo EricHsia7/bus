@@ -1,9 +1,9 @@
-import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index.ts';
-import { generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { GeneratedElement } from '../index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { prompt_message } from '../prompt/index.ts';
+import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
+import { generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { GeneratedElement } from '../index';
+import { getIconHTML } from '../icons/index';
+import { prompt_message } from '../prompt/index';
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
