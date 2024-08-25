@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  launch:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy things to dist
+      - name: Copy things to ./dist/
         run: |
           cp -r ./pwaicons/ ./dist/pwaicons/
           cp -r ./manifest.json ./dist/manifest.json
