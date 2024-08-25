@@ -218,7 +218,7 @@ async function getFolderContentLength(folderID: string): number {
   const thisFolder = getFolder(folderID);
   const itemKeys = await lfListItem(thisFolder.storeIndex);
   if (itemKeys.length === 1) {
-    const folderContent = listFolderContent(folderID);
+    const folderContent = await listFolderContent(folderID);
     const firstItem = folderContent[0];
     if (firstItem.type === 'empty') {
       return 0;
