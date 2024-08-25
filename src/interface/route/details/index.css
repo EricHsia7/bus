@@ -130,6 +130,7 @@
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon span.css_material_symbols_rounded {
   height: 15px;
   width: 15px;
+  font-size: 18px;
   user-select: none;
   -webkit-user-select: none;
   color: var(--b-cssvar-333333);
