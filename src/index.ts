@@ -84,6 +84,7 @@ import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
 
 import './interface/prompt/index.css';
+import { exportData } from './data/export/index';
 
 //for development
 /*
@@ -244,7 +245,8 @@ window.bus = {
     calculateDataUsage,
     initializeFolderStores,
     calculateStoresSize,
-    getUpdateRateInTime
+    getUpdateRateInTime,
+    exportData
   },
   settingsPage: {
     openSettingsPage,

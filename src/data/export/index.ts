@@ -82,5 +82,5 @@ export async function exportData(): Promise<string> {
   let result: string = '';
   const foldersWithContent: FoldersWithContent[] = listFoldersWithContent();
   result += generateFoldersWithContentExport(foldersWithContent);
-  return result
+  return result;
 }
