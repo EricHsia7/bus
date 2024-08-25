@@ -151,7 +151,7 @@
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
+  color: var(--b-cssvar-333333);
   transition: transform var(--b-cssvar-transition-duration);
 }
 
