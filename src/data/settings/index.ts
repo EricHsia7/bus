@@ -1,5 +1,4 @@
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
-import { getUpdateRate } from '../analytics/update-rate';
 import { formatTime } from '../../tools/format-time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
@@ -149,7 +148,7 @@ var Settings = {
   export: {
     key: 'export',
     name: '匯出資料',
-    icon: 'ios_share',
+    icon: 'upload',
     status: '',
     type: 'action',
     action: 'bus.settingsPage.downloadExportFile()'
