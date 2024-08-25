@@ -1,7 +1,7 @@
-import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute.ts';
-import { openRoute } from '../interface/route/index.ts';
-import { openLocation } from '../interface/location/index.ts';
-import { encodeHexToShortString, decodeShortStringToHex } from './index.ts';
+import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute';
+import { openRoute } from '../interface/route/index';
+import { openLocation } from '../interface/location/index';
+import { encodeHexToShortString, decodeShortStringToHex } from './index';
 const PermalinkTypes = ['route', 'location'];
 
 export function openPermalink(): void {

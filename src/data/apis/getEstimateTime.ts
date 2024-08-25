@@ -1,5 +1,5 @@
-import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataUpdateTime } from './loader.ts';
+import { getAPIURL } from './getURL';
+import { fetchData, setDataUpdateTime } from './loader';
 
 export async function getEstimateTime(requestID: string): [] {
   var apis = [

@@ -1,6 +1,6 @@
-import { getRoute } from '../apis/getRoute.ts';
-import { getLocation } from '../apis/getLocation.ts';
-import { generateIdentifier } from '../../tools/index.ts';
+import { getRoute } from '../apis/getRoute';
+import { getLocation } from '../apis/getLocation';
+import { generateIdentifier } from '../../tools/index';
 
 const Fuse = require('fuse.js/basic');
 

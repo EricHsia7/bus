@@ -1,6 +1,6 @@
-import { GeneratedElement, FieldSize } from '../../index.ts';
-import { generateIdentifier, compareThings } from '../../../tools/index.ts';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
+import { GeneratedElement, FieldSize } from '../../index';
+import { generateIdentifier, compareThings } from '../../../tools/index';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 
 const calendar_ratio = 100;
 var previousCalendar = {};

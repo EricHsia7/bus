@@ -1,9 +1,9 @@
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector.ts';
-import { GeneratedElement } from '../index.ts';
-import { generateIdentifier } from '../../tools/index.ts';
-import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index.ts';
-import { getIconHTML } from '../icons/index.ts';
-import { prompt_message } from '../prompt/index.ts';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { GeneratedElement } from '../index';
+import { generateIdentifier } from '../../tools/index';
+import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index';
+import { getIconHTML } from '../icons/index';
+import { prompt_message } from '../prompt/index';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;

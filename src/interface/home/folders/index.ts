@@ -1,10 +1,10 @@
-import { integrateFolders } from '../../../data/folder/index.ts';
-import { FieldSize, GeneratedElement } from '../../index.ts';
-import { getIconHTML } from '../../icons/index.ts';
-import { getSettingOptionValue } from '../../../data/settings/index.ts';
-import { getUpdateRate } from '../../../data/analytics/update-rate.ts';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector.ts';
-import { compareThings, generateIdentifier } from '../../../tools/index.ts';
+import { integrateFolders } from '../../../data/folder/index';
+import { FieldSize, GeneratedElement } from '../../index';
+import { getIconHTML } from '../../icons/index';
+import { getSettingOptionValue } from '../../../data/settings/index';
+import { getUpdateRate } from '../../../data/analytics/update-rate';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { compareThings, generateIdentifier } from '../../../tools/index';
 
 var previousIntegration = [];
 

@@ -1,5 +1,5 @@
-import { getSettingOptionValue } from '../settings/index.ts';
-import { getDistanceBetweenTwoPosition } from '../../tools/position.ts';
+import { getSettingOptionValue } from '../settings/index';
+import { getDistanceBetweenTwoPosition } from '../../tools/position';
 
 interface position {
   latitude: number;

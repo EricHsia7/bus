@@ -1,4 +1,4 @@
-import { convertBytes } from '../../tools/index.ts';
+import { convertBytes } from '../../tools/index';
 
 const localforage = require('localforage');
 

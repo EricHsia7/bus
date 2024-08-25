@@ -1,7 +1,7 @@
-import { updateSearchResult } from './index.ts';
-import { getTextWidth } from '../../tools/index.ts';
-import { documentQuerySelector } from '../../tools/query-selector.ts';
-import { getIconHTML } from '../icons/index.ts';
+import { updateSearchResult } from './index';
+import { getTextWidth } from '../../tools/index';
+import { documentQuerySelector } from '../../tools/query-selector';
+import { getIconHTML } from '../icons/index';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],

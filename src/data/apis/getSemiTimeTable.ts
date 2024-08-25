@@ -1,6 +1,6 @@
-import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
-import { lfSetItem, lfGetItem } from '../storage/index.ts';
+import { getAPIURL } from './getURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
+import { lfSetItem, lfGetItem } from '../storage/index';
 
 var SemiTimetableAPIVariableCache = { available: false, data: {} }
 

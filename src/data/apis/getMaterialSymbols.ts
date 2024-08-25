@@ -1,6 +1,6 @@
-import { fetchData, setDataReceivingProgress } from './loader.ts';
-import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { getMaterialSymbolsAPIURL } from './getURL.ts';
+import { fetchData, setDataReceivingProgress } from './loader';
+import { lfSetItem, lfGetItem } from '../storage/index';
+import { getMaterialSymbolsAPIURL } from './getURL';
 
 var MaterialSymbolsAPIVariableCache: object = {
   available: false,

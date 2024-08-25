@@ -1,30 +1,31 @@
-import { updateSearchResult } from './interface/search/index.ts';
-import { calculateDataUsage } from './data/analytics/data-usage.ts';
-import { getUpdateRateInTime } from './data/analytics/update-rate.ts';
-import { calculateStoresSize } from './data/storage/index.ts';
-import { askForPositioningPermission } from './data/user-position/index.ts';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab } from './interface/route/index.ts';
-import { openRouteDetails, closeRouteDetails } from './interface/route/details/index.ts';
-import { shareRoutePermalink } from './interface/route/details/actions.ts';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index.ts';
-import { openPermalink } from './tools/permalink.ts';
-import { openSearchPage, closeSearchPage } from './interface/search/index.ts';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard.ts';
-import { initializeFolderStores } from './data/folder/index.ts';
-import { preloadData } from './interface/home/index.ts';
-import { checkAppVersion } from './data/settings/version.ts';
-import { openSettingsPage, closeSettingsPage } from './interface/settings/index.ts';
-import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options.ts';
-import { initializeSettings } from './data/settings/index.ts';
-import { fadeOutSplashScreen } from './interface/index.ts';
-import { documentQuerySelector } from './tools/query-selector.ts';
-import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index.ts';
-import { closeFolderManager, openFolderManager } from './interface/folder-manager/index.ts';
-import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index.ts';
-import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index.ts';
-import { loadFont } from './interface/lazy-font.ts';
-import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index.ts';
-import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index.ts';
+import { updateSearchResult } from './interface/search/index';
+import { calculateDataUsage } from './data/analytics/data-usage';
+import { getUpdateRateInTime } from './data/analytics/update-rate';
+import { calculateStoresSize } from './data/storage/index';
+import { askForPositioningPermission } from './data/user-position/index';
+import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab } from './interface/route/index';
+import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
+import { shareRoutePermalink } from './interface/route/details/actions';
+import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
+import { openPermalink } from './tools/permalink';
+import { openSearchPage, closeSearchPage } from './interface/search/index';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard';
+import { initializeFolderStores } from './data/folder/index';
+import { preloadData } from './interface/home/index';
+import { checkAppVersion } from './data/settings/version';
+import { openSettingsPage, closeSettingsPage, downloadExportFile } from './interface/settings/index';
+import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options';
+import { initializeSettings } from './data/settings/index';
+import { fadeOutSplashScreen } from './interface/index';
+import { documentQuerySelector } from './tools/query-selector';
+import { closeSaveToFolder, openSaveToFolder, saveStopItemOnRoute } from './interface/save-to-folder/index';
+import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
+import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
+import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
+import { loadFont } from './interface/lazy-font';
+import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
+import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
+import { exportData } from './data/export/index';
 
 import './interface/theme.css';
 
@@ -244,14 +245,16 @@ window.bus = {
     calculateDataUsage,
     initializeFolderStores,
     calculateStoresSize,
-    getUpdateRateInTime
+    getUpdateRateInTime,
+    exportData
   },
   settingsPage: {
     openSettingsPage,
     closeSettingsPage,
     openSettingsOptionsPage,
     closeSettingsOptionsPage,
-    settingsOptionsHandler
+    settingsOptionsHandler,
+    downloadExportFile
   }
 };
 

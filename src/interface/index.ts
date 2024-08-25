@@ -1,4 +1,4 @@
-import { documentQuerySelector } from '../tools/query-selector.ts';
+import { documentQuerySelector } from '../tools/query-selector';
 
 var splashScreenTimer = {
   minimalTimeOut: 1024,

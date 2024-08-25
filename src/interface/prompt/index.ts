@@ -1,5 +1,5 @@
-import { generateIdentifier } from '../../tools/index.ts';
-import { documentQuerySelectorAll } from '../../tools/query-selector.ts';
+import { generateIdentifier } from '../../tools/index';
+import { documentQuerySelectorAll } from '../../tools/query-selector';
 
 export function prompt_message(message: string, duration: number = 1200): void {
   message = String(message);

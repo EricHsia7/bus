@@ -1,8 +1,8 @@
-import { getAPIURL } from './getURL.ts';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader.ts';
-import { lfSetItem, lfGetItem } from '../storage/index.ts';
-import { md5 } from '../../tools/index.ts';
-import { mergeAddressesIntoOne } from '../../tools/address.ts';
+import { getAPIURL } from './getURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
+import { lfSetItem, lfGetItem } from '../storage/index';
+import { md5 } from '../../tools/index';
+import { mergeAddressesIntoOne } from '../../tools/address';
 
 var LocationAPIVariableCache: object = {
   merged: {
