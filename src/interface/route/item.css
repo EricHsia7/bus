@@ -426,8 +426,8 @@
     'opsz' 24;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon svg path {
-  transition: fill var(--b-cssvar-transition-duration);
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
+  transition: color var(--b-cssvar-transition-duration);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_body .css_tabs .css_tab,
@@ -454,13 +454,13 @@
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
   background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-c));
-  color: var(--b-cssvar-main-color);
+  color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
   background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-c));
-  color: var(--b-cssvar-main-color);
+  color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* body > buses, overlapping routes */
