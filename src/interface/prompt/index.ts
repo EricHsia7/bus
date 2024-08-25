@@ -10,7 +10,7 @@ export function prompt_message(message: string, duration: number = 1200): void {
       all_prompt[e].remove();
     }
   }
-  const duration_base: number = 300;
+  const duration_base: number = 250;
   const translateY: number = -20;
   const prompt_id: string = generateIdentifier();
   const prompt_element = document.createElement('div');
