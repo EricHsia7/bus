@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy things to dist
         run: |
-          cp -r ./pwaicon2/ ./dist/pwaicon2/
+          cp -r ./pwaicons/ ./dist/pwaicons/
           cp -r ./manifest.json ./dist/manifest.json
 
       #- name: Generate splash screen

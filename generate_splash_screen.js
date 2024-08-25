@@ -81,8 +81,8 @@ async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
 
 // Function to process icon and background images for a single device
 async function processImageFiles(deviceInfo) {
-  const iconPath = 'pwaicon2/transparent.png';
-  const bgPath = 'pwaicon2/bg.png';
+  const iconPath = 'pwaicons/transparent.png';
+  const bgPath = 'pwaicons/bg.png';
   const iconImage = await loadImage(iconPath);
   const backgroundImage = await loadImage(bgPath);
   await processDeviceImage(deviceInfo, iconImage, backgroundImage);
