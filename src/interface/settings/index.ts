@@ -1,4 +1,4 @@
-import { downloadFileViaBlobURL, generateIdentifier } from '../../tools/index';
+import { releaseFile, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { listSettings } from '../../data/settings/index';
 import { exportData } from '../../data/export/index';
@@ -41,5 +41,5 @@ export function closeSettingsPage(): void {
 
 export async function downloadExportFile(): void {
   const exportedData = await exportData();
-  downloadFileViaBlobURL(exportedData, 'application/json', 'bus-export.json');
+  releaseFile(exportedData, 'application/json', 'bus-export.json');
 }

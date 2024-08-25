@@ -279,28 +279,25 @@ export function containPhoneticSymbols(string: string): boolean {
   }
 }
 
-export function getBlobURL(content: string, type: string = 'application/json'): string {
-  // Step 1: Create a Blob from the JSON string
+export function releaseFile(content: string, type: string = 'application/json', fileName: string): void {
   const blob = new Blob([content], { type: type });
-
-  // Step 2: Generate a Blob URL
-  const blobURL = URL.createObjectURL(blob);
-  return blobURL;
-}
-
-export function destroyBlobURL(blobURL): void {
-  URL.revokeObjectURL(blobURL);
-}
-
-export function downloadFileViaBlobURL(content: string, type: string = 'application/json', fileName: string): void {
-  const blobURL = getBlobURL(content, type);
-  const downloadLink = document.createElement('a');
-  downloadLink.href = blobURL;
-  downloadLink.download = fileName;
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  downloadLink.remove();
-  setTimeout(() => {
-    destroyBlobURL(blobURL);
-  }, 10 * 1000);
+  const fileObj = new File([data], fileName, { type: type });
+  if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
+    navigator
+      .share({
+        files: [fileObj]
+      })
+      .catch((error) => {});
+  } else {
+    const blobURL = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = blobURL;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+    setTimeout(() => {
+      URL.revokeObjectURL(blobURL);
+    }, 10 * 1000);
+  }
 }
