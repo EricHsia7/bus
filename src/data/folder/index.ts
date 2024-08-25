@@ -95,6 +95,7 @@ export type FolderContent = FolderStop | FolderRoute | FolderBus | FolderEmpty;
 export interface FoldersWithContent {
   folder: Folder;
   content: FolderContent[];
+  contentLength: number;
 }
 
 export async function initializeFolderStores(): void {
@@ -214,9 +215,19 @@ export async function listFolderContent(folderID: string): FolderContent[] {
 }
 
 async function getFolderContentLength(folderID: string): number {
-  var thisFolder = getFolder(folderID);
-  var itemKeys = await lfListItem(thisFolder.storeIndex);
-  return itemKeys.length;
+  const thisFolder = getFolder(folderID);
+  const itemKeys = await lfListItem(thisFolder.storeIndex);
+  if (itemKeys.length === 1) {
+    const folderContent = listFolderContent(folderID);
+    const firstItem = folderContent[0];
+    if (firstItem.type === 'empty') {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else {
+    return itemKeys.length;
+  }
 }
 
 export async function listFoldersWithContent(): FoldersWithContent[] {
@@ -224,9 +235,11 @@ export async function listFoldersWithContent(): FoldersWithContent[] {
   var result = [];
   for (var folder of Folders) {
     var folderContent = await listFolderContent(folder.id);
+    var folderContentLength = await getFolderContentLength(folder.id);
     result.push({
       folder: folder,
-      content: folderContent
+      content: folderContent,
+      contentLength: folderContentLength
     });
   }
   return result;
