@@ -25,6 +25,7 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadFont } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
+import { exportData } from './data/export/index';
 
 import './interface/theme.css';
 
@@ -84,7 +85,6 @@ import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
 
 import './interface/prompt/index.css';
-import { exportData } from './data/export/index';
 
 //for development
 /*
