@@ -175,8 +175,8 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        minSize: 20480,
-        maxSize: 32768,
+        minSize: 20000,
+        maxSize: 51200,
         cacheGroups: {
           // Define your cache groups here with specific rules
           default: {
