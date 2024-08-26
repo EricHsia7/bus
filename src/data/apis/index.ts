@@ -195,7 +195,7 @@ function formatOverlappingRoutes(array: Array): Array {
         html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
       },
       RouteID: route.id,
-      PathAttributeId: route.pid ? route.pid : Array
+      PathAttributeId: route.pid ? route.pid : []
     };
     result.push(formattedItem);
   }
@@ -236,7 +236,7 @@ function processEstimateTime(EstimateTime: Array, Stop: object, Location: object
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
-              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : Array);
+              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
             }
           }
           item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
