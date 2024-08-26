@@ -80,7 +80,8 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
             departure: null,
             destination: null
           },
-          id: null
+          id: null,
+          pathAttributeId: null
         }
       });
     }
