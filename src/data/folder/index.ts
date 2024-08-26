@@ -8,6 +8,7 @@ import { searchRouteByRouteID } from '../search/searchRoute';
 import { getRoute } from '../apis/getRoute';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getEstimateTime } from '../apis/getEstimateTime';
+import { recordEstimateTime } from '../analytics/update-rate';
 
 var _ = {};
 _.cloneDeep = require('lodash/cloneDeep');
@@ -353,6 +354,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
+  await recordEstimateTime(EstimateTime);
   return result;
 }
 
