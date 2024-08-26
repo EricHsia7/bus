@@ -19,6 +19,7 @@ var foldersRefreshTimer_nextUpdate: number = 0;
 var foldersRefreshTimer_refreshing: boolean = false;
 var foldersRefreshTimer_currentRequestID: string = '';
 var foldersRefreshTimer_streamStarted: boolean = false;
+var foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function queryFolderFieldSize(): FieldSize {
   return {
