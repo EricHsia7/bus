@@ -69,10 +69,12 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
 }
 
 export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
+  var actionButtonElement = documentQuerySelector('.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
       isSaved('route', RouteID).then((k) => {
         if (k) {
+          actionButtonElement.setAttribute('highlighted', 'true');
           prompt_message('已儲存至資料夾');
           closeSaveToFolder();
         }

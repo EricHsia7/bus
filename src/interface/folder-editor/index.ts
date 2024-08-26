@@ -97,16 +97,7 @@ export function closeFolderEditor(): void {
 
 export function removeItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
   const Field = documentQuerySelector('.css_folder_editor_field');
-  var className = '';
-  switch (type) {
-    case 'stop':
-      className = 'css_folder_editor_folder_item';
-      break;
-    default:
-      className = '';
-      break;
-  }
-  var itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .${className}#${itemID}`);
+  const itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
       itemElement.remove();
