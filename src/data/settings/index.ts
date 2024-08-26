@@ -190,7 +190,7 @@ export async function initializeSettings(): void {
   }
 }
 
-export async function listSettings(): [] {
+export function listSettings(): [] {
   var result = [];
   for (var key in Settings) {
     var item = Settings[key];

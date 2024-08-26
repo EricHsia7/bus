@@ -19,8 +19,8 @@ function generateElementOfItem(item: object): GeneratedElement {
   };
 }
 
-async function initializeSettingsField(Field: HTMLElement) {
-  var list = await listSettings();
+function initializeSettingsField(Field: HTMLElement) {
+  var list = listSettings();
   elementQuerySelector(Field, '.css_settings_page_body .css_settings_page_settings').innerHTML = '';
   for (var item of list) {
     var thisElement = generateElementOfItem(item);

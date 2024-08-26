@@ -185,12 +185,31 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
       }
       elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
+    function updateButton(thisElement: HTMLElement, thisItem: object): void {
+      let onclick = '';
+      switch (thisItem.type) {
+        case 'stop':
+          onclick = `bus.route.openRoute(${thisItem.route.id}, [${thisItem.route.pathAttributeId.join(',')}])`;
+          break;
+        case 'route':
+          onclick = `bus.route.openRoute(${thisItem.id}, [${thisItem.pathAttributeId.join(',')}])`;
+          break;
+        case 'bus':
+          break;
+        case 'empty':
+          break;
+        default:
+          break;
+      }
+      thisElement.setAttribute('onclick', onclick);
+    }
     if (previousItem === null) {
       updateType(thisElement, thisItem);
       updateIcon(thisElement, thisItem);
       updateStatus(thisElement, thisItem);
       updateMain(thisElement, thisItem);
       updateContext(thisElement, thisItem);
+      updateButton(thisElement, thisItem);
     } else {
       if (!(thisItem.type === previousItem.type)) {
         updateType(thisElement, thisItem);
@@ -198,11 +217,13 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         updateStatus(thisElement, thisItem);
         updateMain(thisElement, thisItem);
         updateContext(thisElement, thisItem);
+        updateButton(thisElement, thisItem);
       } else {
         switch (thisItem.type) {
           case 'stop':
             if (!compareThings(previousItem.route, thisItem.route)) {
               updateContext(thisElement, thisItem);
+              updateButton(thisElement, thisItem);
             }
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateMain(thisElement, thisItem);
@@ -212,6 +233,9 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
             }
             break;
           case 'route':
+            if (!compareThings(previousItem.id, thisItem.id)) {
+              updateButton(thisElement, thisItem);
+            }
             if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
               updateContext(thisElement, thisItem);
             }

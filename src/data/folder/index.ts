@@ -6,6 +6,7 @@ import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols';
 import { openFolderEditor } from '../../interface/folder-editor/index.js';
 import { searchRouteByRouteID } from '../search/searchRoute';
+import { getRoute } from '../apis/getRoute';
 
 var _ = {};
 _.cloneDeep = require('lodash/cloneDeep');
@@ -260,7 +261,7 @@ export async function integrateFolders(requestID: string): [] {
     );
   }
   const EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
-
+  const Route = await getRoute(requestID, true);
   var array = [];
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
@@ -273,6 +274,7 @@ export async function integrateFolders(requestID: string): [] {
           integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
           break;
         case 'route':
+          integratedItem._Route = Route[`r_${item.id}`];
           break;
         case 'bus':
           break;
@@ -304,8 +306,10 @@ export async function integrateFolders(requestID: string): [] {
       switch (item2.type) {
         case 'stop':
           formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
+          formattedItem.route.pathAttributeId = item2._Route.pid;
           break;
         case 'route':
+          formattedItem.pathAttributeId = item2._Route.pid;
           break;
         case 'bus':
           break;
