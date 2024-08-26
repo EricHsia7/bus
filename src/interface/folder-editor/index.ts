@@ -105,11 +105,14 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
         case 'stop':
           prompt_message('已移除站牌');
           break;
+        case 'route':
+          prompt_message('已移除路線');
+          break;
         default:
           break;
       }
     } else {
-      prompt_message('無法移除站牌');
+      prompt_message('無法移除');
     }
   });
 }
