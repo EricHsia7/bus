@@ -74,6 +74,7 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
       isSaved('route', RouteID).then((k) => {
         if (k) {
           prompt_message('已儲存至資料夾');
+          closeSaveToFolder();
         }
       });
     } else {
