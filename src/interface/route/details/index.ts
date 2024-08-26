@@ -13,8 +13,8 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   const svaeToFolderActionButtonElement = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   const getPermalinkActionButton = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
   
-  const saved = await isSaved('route', RouteID);
-  svaeToFolderActionButtonElement.setAttribute('highlighted', saved);
+  const existence = await isSaved('route', RouteID);
+  svaeToFolderActionButtonElement.setAttribute('highlighted', existence);
   svaeToFolderActionButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);
   getPermalinkActionButton.setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUpPropertiesFieldSkeletonScreen(propertiesField);
