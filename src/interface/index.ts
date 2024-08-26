@@ -10,6 +10,7 @@ export function setSplashScreenIconOffsetY(): void {
   let offset = 0;
   let screenHeight = 0;
   if (isRunningStandalone()) {
+    /*
     if (window.innerWidth < window.innerHeight) {
       // portrait
       screenHeight = Math.max(window.screen.height, window.screen.width);
@@ -22,7 +23,8 @@ export function setSplashScreenIconOffsetY(): void {
       // square
       screenHeight = window.screen.height;
     }
-    offset = (-1 * (screenHeight - window.innerHeight)) / 2;
+    */
+    offset = (-1 * (window.outerHeight - window.innerHeight)) / 2;
   }
   documentQuerySelector('.css_splash_screen svg.css_splash_screen_icon').style.setProperty('--b-cssvar-splash-screen-icon-offset-y', `${offset}px`);
 }
