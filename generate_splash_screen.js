@@ -12,6 +12,10 @@ const deviceData = [
   { device: '9.7“ iPad Air', width: 768, height: 1024, scaled_width: 1536, scaled_height: 2048 },
   { device: '10.2“ iPad', width: 810, height: 1080, scaled_width: 1620, scaled_height: 2160 },
   { device: '9.7“ iPad', width: 768, height: 1024, scaled_width: 1536, scaled_height: 2048 },
+  { device: 'iPhone 15 Pro Max', width: 430, height: 932, scaled_width: 1290, scaled_height: 2796 },
+  { device: 'iPhone 15 Pro', width: 393, height: 852, scaled_width: 1179, scaled_height: 2556 },
+  { device: 'iPhone 15 Plus', width: 430, height: 932, scaled_width: 1290, scaled_height: 2796 },
+  { device: 'iPhone 15', width: 393, height: 852, scaled_width: 1179, scaled_height: 2556 },
   { device: 'iPhone 14 Pro Max', width: 430, height: 932, scaled_width: 1290, scaled_height: 2796 },
   { device: 'iPhone 14 Pro', width: 393, height: 852, scaled_width: 1179, scaled_height: 2556 },
   { device: 'iPhone 14 Plus', width: 428, height: 926, scaled_width: 1284, scaled_height: 2778 },
@@ -73,7 +77,7 @@ async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
   // Wait for the image to finish writing, then add a link to the HTML links array
   await new Promise((resolve) => {
     outputStream.on('finish', () => {
-      htmlLinks.push(`<link rel="apple-touch-startup-image" href="https://erichsia7.github.io/bus/splash_screen/${fileName}.png" media="(device-width: ${deviceInfo.width}px) and (device-height: ${deviceInfo.height}px) and (-webkit-device-pixel-ratio: ${Math.round(scale)})">`);
+      htmlLinks.push(`<link rel="apple-touch-startup-image" href="./splash_screen/${fileName}.png" media="(device-width: ${deviceInfo.width}px) and (device-height: ${deviceInfo.height}px) and (-webkit-device-pixel-ratio: ${Math.round(scale)})">`);
       resolve();
     });
   });
