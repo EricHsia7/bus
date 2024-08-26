@@ -120,7 +120,7 @@ export async function initializeFolderStores(): void {
   }
 }
 
-export async function createFolder(name: string, icon: string): boolean {
+export async function createFolder(name: string, icon: string): Promise<boolean> {
   const requestID = `r_${generateIdentifier()}`;
   var materialSymbols = await getMaterialSymbols(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
@@ -155,7 +155,7 @@ export async function createFolder(name: string, icon: string): boolean {
   }
 }
 
-export async function updateFolder(folder: Folder): boolean {
+export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
     var existingFolder: string = await lfGetItem(4, folderKey);
@@ -181,7 +181,7 @@ export function getFolder(folderID: string): Folder {
   return _.cloneDeep(Folders[`f_${folderID}`]);
 }
 
-export async function listFolders(): Folder[] {
+export async function listFolders(): Promise<Array<Folder>> {
   var result = [];
   for (var folder in Folders) {
     result.push(Folders[folder]);
@@ -189,7 +189,7 @@ export async function listFolders(): Folder[] {
   return result;
 }
 
-export async function listFolderContent(folderID: string): FolderContent[] {
+export async function listFolderContent(folderID: string): Promise<Array<FolderContent>> {
   var result = [];
   var thisFolder = Folders[`f_${folderID}`];
   var itemKeys = await lfListItem(thisFolder.storeIndex);
@@ -216,7 +216,7 @@ export async function listFolderContent(folderID: string): FolderContent[] {
   return result;
 }
 
-async function getFolderContentLength(folderID: string): number {
+async function getFolderContentLength(folderID: string): Promise<number> {
   const thisFolder = getFolder(folderID);
   const itemKeys = await lfListItem(thisFolder.storeIndex);
   if (itemKeys.length === 1) {
@@ -232,7 +232,7 @@ async function getFolderContentLength(folderID: string): number {
   }
 }
 
-export async function listFoldersWithContent(): FoldersWithContent[] {
+export async function listFoldersWithContent(): Promise<Array<FoldersWithContent>> {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {
@@ -247,7 +247,7 @@ export async function listFoldersWithContent(): FoldersWithContent[] {
   return result;
 }
 
-export async function integrateFolders(requestID: string): [] {
+export async function integrateFolders(requestID: string): Promise<Array<object>> {
   var foldersWithContent = await listFoldersWithContent();
 
   var StopIDs = [];
@@ -334,7 +334,7 @@ export async function integrateFolders(requestID: string): [] {
   };
 }
 
-export async function saveToFolder(folderID: string, content: object): boolean {
+export async function saveToFolder(folderID: string, content: object): Promise<boolean> {
   var thisFolder: Folder = Folders[`f_${folderID}`];
   if (thisFolder.contentType.indexOf(content.type) > -1) {
     await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
@@ -343,7 +343,7 @@ export async function saveToFolder(folderID: string, content: object): boolean {
   return false;
 }
 
-export async function isSaved(type: FolderContentType, id: number | string): boolean {
+export async function isSaved(type: FolderContentType, id: number | string): Promise<boolean> {
   var folderList = await listFolders();
   for (var folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
@@ -358,7 +358,7 @@ export async function isSaved(type: FolderContentType, id: number | string): boo
   return false;
 }
 
-export async function removeFromFolder(folderID: string, type: FolderContentType, id: number): boolean {
+export async function removeFromFolder(folderID: string, type: FolderContentType, id: number): Promise<boolean> {
   var thisFolder: Folder = Folders[`f_${folderID}`];
   var existence = await isSaved(type, id);
   if (existence) {
@@ -369,7 +369,7 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
   }
 }
 
-export async function saveStop(folderID: string, StopID: number, RouteID: number): boolean {
+export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
   var integration = await integrateStop(StopID, RouteID);
   var folderContentLength = await getFolderContentLength(folderID);
   var content: FolderStop = {
@@ -392,7 +392,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   return save;
 }
 
-export async function saveRoute(folderID: string, RouteID: number): boolean {
+export async function saveRoute(folderID: string, RouteID: number): Promise<boolean> {
   var folderContentLength = await getFolderContentLength(folderID);
   var searchedRoute = await searchRouteByRouteID(RouteID);
   if (searchedRoute.length > 0) {
@@ -416,7 +416,7 @@ export async function saveRoute(folderID: string, RouteID: number): boolean {
 }
 //TODO: saveBus
 
-export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
+export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): Promise<boolean> {
   var thisFolder = getFolder(folderID);
   var thisFolderContent = await listFolderContent(folderID);
   var thisContentKey = `${type}_${id}`;

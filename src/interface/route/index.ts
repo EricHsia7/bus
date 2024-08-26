@@ -14,7 +14,7 @@ var routeSliding_currentGroup: number = 0;
 var routeSliding_targetGroup: number = 0;
 var routeSliding_groupQuantity: number = 0;
 var routeSliding_groupStyles: object = {};
-var routeSliding_scrollLog: [] = [];
+var routeSliding_scrollLog: Array = [];
 var routeSliding_fieldWidth: number = 0;
 var routeSliding_fieldHeight: number = 0;
 var routeSliding_sliding: boolean = false;
@@ -35,7 +35,7 @@ var routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 var currentRouteIDSet_RouteID: number = 0;
-var currentRouteIDSet_PathAttributeId: [] = [];
+var currentRouteIDSet_PathAttributeId: Array = [];
 
 export function initializeRouteSliding(): void {
   var element = documentQuerySelector('.css_route_groups');
@@ -250,7 +250,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         RouteDestination: '載入中'
       },
       RouteID: null,
-      PathAttributeId: []
+      PathAttributeId: Array
     },
     true
   );
@@ -478,7 +478,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   previousIntegration = integration;
 }
 
-async function refreshRoute(): object {
+async function refreshRoute(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   routeRefreshTimer_auto = refresh_interval_setting.auto;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;

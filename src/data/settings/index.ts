@@ -190,7 +190,7 @@ export async function initializeSettings(): void {
   }
 }
 
-export function listSettings(): [] {
+export function listSettings(): Array {
   var result = [];
   for (var key in Settings) {
     var item = Settings[key];
@@ -217,7 +217,7 @@ export function listSettings(): [] {
   return result;
 }
 
-export async function changeSettingOption(key: string, option: number): boolean {
+export async function changeSettingOption(key: string, option: number): Promise<boolean> {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       if (Settings[key].type === 'select') {

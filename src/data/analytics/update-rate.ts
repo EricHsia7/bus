@@ -3,14 +3,14 @@ import { formatTime } from '../../tools/format-time';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
 
 interface trackingUpdateRate {
-  trackedStops: [];
+  trackedStops: Array;
   trackingID: null;
   tracking: boolean;
   sampleQuantity: number;
 }
 
 var trackingUpdateRate: trackingUpdateRate = {
-  trackedStops: [],
+  trackedStops: Array,
   trackingID: null,
   tracking: false,
   sampleQuantity: 64,
@@ -54,7 +54,7 @@ export async function recordEstimateTime(EstimateTime: object): void {
   }
 }
 
-export async function listRecordedEstimateTime(): [] {
+export async function listRecordedEstimateTime(): Promise<Array> {
   var keys = await lfListItem(3);
   var result = [];
   for (var key of keys) {
@@ -69,7 +69,7 @@ export async function listRecordedEstimateTime(): [] {
   return result;
 }
 
-export async function getUpdateRate(): number {
+export async function getUpdateRate(): Promise<number> {
   var weighted_average: number = 0;
   var total_correlation: number = 0;
   var total_weight: number = 0;
@@ -90,7 +90,7 @@ export async function getUpdateRate(): number {
   return isNaN(weighted_average) ? 0.8 : Math.abs(weighted_average);
 }
 
-export async function getUpdateRateInTime(): string {
+export async function getUpdateRateInTime(): Promise<string> {
   var total_weight: number = 0;
   var total_average_change: number = 0;
   var weighted_average_change: number = 0;
@@ -101,7 +101,7 @@ export async function getUpdateRateInTime(): string {
       const firstColumn: number[] = group.map((item) => item[0]);
       const secondColumn: number[] = group.map((item) => item[1]);
       const rowCount: number = firstColumn.length;
-      var timeStampUponChanges: [] = [];
+      var timeStampUponChanges: Array = [];
       for (var i = 1; i < rowCount; i++) {
         var change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
         if (change > 0) {

@@ -103,7 +103,7 @@ export function convertBytes(contentLength: number): string {
 }
 
 // Function to split data based on delta
-export function splitDataByDelta(data: []): [] {
+export function splitDataByDelta(data: Array): Array {
   const result = [];
   let currentGroup = [];
   for (let i = 0; i < data.length; i++) {
@@ -153,7 +153,7 @@ export function pearsonCorrelation(x, y) {
   return numerator / denominator;
 }
 
-export function areItemsDifferent(arr: []): boolean {
+export function areItemsDifferent(arr: Array): boolean {
   for (let i = 0; i < arr.length; i++) {
     for (let j = i + 1; j < arr.length; j++) {
       if (arr[i] === arr[j]) {

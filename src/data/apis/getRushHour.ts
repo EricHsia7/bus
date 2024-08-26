@@ -1,4 +1,4 @@
-export function getRushHour(period: number): [] {
+export function getRushHour(period: number): Array {
   var rushHours = [
     [
       {

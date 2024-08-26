@@ -4,7 +4,7 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 
 var ProviderAPIVariableCache = { available: false, data: {} };
 
-export async function getProvider(requestID: string): object {
+export async function getProvider(requestID: string): Promise<object> {
   async function getData() {
     var apis = [
       [0, 9],

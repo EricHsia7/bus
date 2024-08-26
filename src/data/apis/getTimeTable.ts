@@ -4,7 +4,7 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 
 var TimetableAPIVariableCache = { available: false, data: {} };
 
-export async function getTimeTable(requestID: string): object {
+export async function getTimeTable(requestID: string): Promise<object> {
   async function getData() {
     var apis = [
       [0, 14],

@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL';
 import { fetchData, setDataUpdateTime } from './loader';
 
-export async function getEstimateTime(requestID: string): [] {
+export async function getEstimateTime(requestID: string): Promise<Array> {
   var apis = [
     [0, 4],
     [1, 4]

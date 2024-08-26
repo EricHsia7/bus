@@ -38,7 +38,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   updatePropertiesField(Field, properties, true);
 }
 
-export function updatePropertiesField(Field: HTMLElement, properties: [], skeletonScreen: boolean): void {
+export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon)

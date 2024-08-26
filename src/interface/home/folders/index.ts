@@ -81,7 +81,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
             destination: null
           },
           id: null,
-          pathAttributeId: []
+          pathAttributeId: Array
         }
       });
     }
@@ -346,7 +346,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
   previousIntegration = integration;
 }
 
-async function refreshFolders(): object {
+async function refreshFolders(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   foldersRefreshTimer.auto = refresh_interval_setting.auto;
   foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;

@@ -5,7 +5,7 @@ import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop
 import { getIconHTML } from '../icons/index';
 import { prompt_message } from '../prompt/index';
 
-function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: []): GeneratedElement {
+function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: Array): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
   var element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');
@@ -29,7 +29,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   };
 }
 
-async function initializeSaveToFolderField(type: FolderContentType, parameters: []): void {
+async function initializeSaveToFolderField(type: FolderContentType, parameters: Array): void {
   var Field = documentQuerySelector('.css_save_to_folder_field');
   elementQuerySelector(Field, '.css_save_to_folder_body .css_save_to_folder_list').innerHTML = '';
   var foldersWithContent = await listFoldersWithContent();
@@ -39,7 +39,7 @@ async function initializeSaveToFolderField(type: FolderContentType, parameters: 
   }
 }
 
-export function openSaveToFolder(type: FolderContentType, parameters: []): void {
+export function openSaveToFolder(type: FolderContentType, parameters: Array): void {
   var Field = documentQuerySelector('.css_save_to_folder_field');
   Field.setAttribute('displayed', 'true');
   initializeSaveToFolderField(type, parameters);

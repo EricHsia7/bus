@@ -13,7 +13,7 @@ var locationSliding_currentGroup: number = 0;
 var locationSliding_targetGroup: number = 0;
 var locationSliding_groupQuantity: number = 0;
 var locationSliding_groupStyles: object = {};
-var locationSliding_scrollLog: [] = [];
+var locationSliding_scrollLog: Array = [];
 var locationSliding_fieldWidth: number = 0;
 var locationSliding_fieldHeight: number = 0;
 var locationSliding_sliding: boolean = false;
@@ -420,7 +420,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   previousIntegration = integration;
 }
 
-async function refreshLocation(): object {
+async function refreshLocation(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
   locationRefreshTimer_auto = refresh_interval_setting.auto;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;

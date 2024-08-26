@@ -4,7 +4,7 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 
 var SemiTimetableAPIVariableCache = { available: false, data: {} }
 
-export async function getSemiTimeTable(requestID: string): object {
+export async function getSemiTimeTable(requestID: string): Promise<object> {
   async function getData() {
     var apis = [
       [0, 12],

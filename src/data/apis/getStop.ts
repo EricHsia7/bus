@@ -3,7 +3,7 @@ import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader
 import { lfSetItem, lfGetItem } from '../storage/index';
 var StopAPIVariableCache = { available: false, data: {} };
 
-function simplifyStop(array: []): object {
+function simplifyStop(array: Array): object {
   var result = {};
   for (var item of array) {
     var key = `s_${item.Id}`;
@@ -16,7 +16,7 @@ function simplifyStop(array: []): object {
   return result;
 }
 
-export async function getStop(requestID: string): object {
+export async function getStop(requestID: string): Promise<object> {
   async function getData() {
     var apis = [
       [0, 11],

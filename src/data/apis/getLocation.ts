@@ -15,7 +15,7 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(array: []): object {
+function simplifyLocation(array: Array): object {
   var result = {};
   for (var item of array) {
     var key = `l_${item.stopLocationId}`;
@@ -73,7 +73,7 @@ function mergeLocationByName(object: object): object {
   return result;
 }
 
-export async function getLocation(requestID: string, merged: boolean = false): object {
+export async function getLocation(requestID: string, merged: boolean = false): Promise<object> {
   async function getData() {
     var apis = [
       [0, 11],

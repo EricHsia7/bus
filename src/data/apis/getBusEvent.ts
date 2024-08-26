@@ -1,7 +1,7 @@
 import { getAPIURL } from './getURL';
 import { fetchData, setDataUpdateTime } from './loader';
 
-export async function getBusEvent(requestID: string): [] {
+export async function getBusEvent(requestID: string): Promise<Array> {
   var apis = [
     [0, 1],
     [1, 1]

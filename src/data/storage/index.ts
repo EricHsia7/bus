@@ -14,7 +14,7 @@ var storage = {
 
 var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
-async function dropInstance(store: number): any {
+async function dropInstance(store: number): Promise<any> {
   var store_key = stores[store];
   if (storage[store_key] === false) {
     storage[store_key] = await localforage.createInstance({
@@ -25,7 +25,7 @@ async function dropInstance(store: number): any {
   return operation;
 }
 
-export async function lfSetItem(store: number, key: string, value: any): any {
+export async function lfSetItem(store: number, key: string, value: any): Promise<any> {
   try {
     var store_key = stores[store];
     if (storage[store_key] === false) {
@@ -42,7 +42,7 @@ export async function lfSetItem(store: number, key: string, value: any): any {
   }
 }
 
-export async function lfGetItem(store: number, key: string): any {
+export async function lfGetItem(store: number, key: string): Promise<any> {
   try {
     var store_key = stores[store];
     if (storage[store_key] === false) {
@@ -59,7 +59,7 @@ export async function lfGetItem(store: number, key: string): any {
   }
 }
 
-export async function lfRemoveItem(store: number, key: string): any {
+export async function lfRemoveItem(store: number, key: string): Promise<any> {
   try {
     var store_key = stores[store];
     if (storage[store_key] === false) {
@@ -76,7 +76,7 @@ export async function lfRemoveItem(store: number, key: string): any {
   }
 }
 
-export async function lfListItem(store: number): [] {
+export async function lfListItem(store: number): Promise<Array> {
   try {
     var store_key = stores[store];
     if (storage[store_key] === false) {
@@ -92,7 +92,7 @@ export async function lfListItem(store: number): [] {
   }
 }
 
-export async function calculateStoresSize(): string {
+export async function calculateStoresSize(): Promise<string> {
   var total_size = 0;
   var index = 0;
   for (var store of stores) {
@@ -107,7 +107,7 @@ export async function calculateStoresSize(): string {
   return convertBytes(total_size);
 }
 
-export async function registerStore(id: string): number {
+export async function registerStore(id: string): Promise<number> {
   var store_key = `F${id}Store`;
   if (!storage.hasOwnProperty(store_key) && stores.indexOf(store_key) < 0) {
     storage[store_key] = await localforage.createInstance({

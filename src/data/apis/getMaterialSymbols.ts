@@ -4,10 +4,10 @@ import { getMaterialSymbolsAPIURL } from './getURL';
 
 var MaterialSymbolsAPIVariableCache: object = {
   available: false,
-  data: []
+  data: Array
 };
 
-export async function getMaterialSymbols(requestID: string): [] {
+export async function getMaterialSymbols(requestID: string): Promise<Array> {
   async function getData() {
     var apiurl = getMaterialSymbolsAPIURL();
     var data = await fetchData(apiurl, requestID, 'getMaterialSymbols');

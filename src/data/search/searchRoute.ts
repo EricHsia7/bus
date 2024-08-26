@@ -4,7 +4,7 @@ import { generateIdentifier } from '../../tools/index';
 
 const Fuse = require('fuse.js/basic');
 
-export async function searchRouteByName(query: string): Array {
+export async function searchRouteByName(query: string): Promise<Array> {
   var requestID = `r_${generateIdentifier()}`;
   var Route = await getRoute(requestID, true);
   var result = [];
@@ -22,7 +22,7 @@ export async function searchRouteByName(query: string): Array {
   return result;
 }
 
-export async function searchRouteByRouteID(RouteID: number): Array {
+export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
   var requestID = `r_${generateIdentifier()}`;
   var Route = await getRoute(requestID, true);
   var result = [];
@@ -89,7 +89,7 @@ export async function prepareForRouteSearch() {
       hash: mergedLocation[key].hash,
       dep: '',
       des: '',
-      pid: [],
+      pid: Array,
       type: 1
     });
   }

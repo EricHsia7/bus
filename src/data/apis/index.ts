@@ -47,7 +47,7 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: number, PathAttributeId: number[]): object {
+async function processBusEventWithBusData(BusEvent: Array, BusData: Array, RouteID: number, PathAttributeId: number[]): Promise<object> {
   var result = {};
   var BusDataObj = {};
   for (var item of BusData) {
@@ -88,7 +88,7 @@ async function processBusEventWithBusData(BusEvent: [], BusData: [], RouteID: nu
   return result;
 }
 
-async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
+async function processBusEvent2(BusEvent: Array, StopIDs: number[]): Promise<object> {
   var result = {};
   for (var item of BusEvent) {
     var thisStopID = parseInt(item.StopID);
@@ -113,7 +113,7 @@ async function processBusEvent2(BusEvent: [], StopIDs: number[]): object {
   return result;
 }
 
-function formatBusEvent(buses: []): [] | null {
+function formatBusEvent(buses: Array): Array | null {
   if (buses.length === 0) {
     return null;
   }
@@ -180,7 +180,7 @@ function formatBusEvent(buses: []): [] | null {
   return result;
 }
 
-function formatOverlappingRoutes(array: []): [] {
+function formatOverlappingRoutes(array: Array): Array {
   if (array.length === 0) {
     return null;
   }
@@ -195,14 +195,14 @@ function formatOverlappingRoutes(array: []): [] {
         html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
       },
       RouteID: route.id,
-      PathAttributeId: route.pid ? route.pid : []
+      PathAttributeId: route.pid ? route.pid : Array
     };
     result.push(formattedItem);
   }
   return result;
 }
 
-function processEstimateTime(EstimateTime: [], Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): [] {
+function processEstimateTime(EstimateTime: Array, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): Array {
   var result = [];
   var positions = [];
   for (var item of EstimateTime) {
@@ -236,7 +236,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
-              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
+              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : Array);
             }
           }
           item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
@@ -315,7 +315,7 @@ function processEstimateTime(EstimateTime: [], Stop: object, Location: object, B
   return result2;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): object {
+export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
@@ -396,7 +396,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: [number],
   return result;
 }
 
-export async function integrateStop(StopID: number, RouteID: number): object {
+export async function integrateStop(StopID: number, RouteID: number): Promise<object> {
   const requestID = `r_${generateIdentifier()}`;
   var Stop = await getStop(requestID);
   var Location = await getLocation(requestID, false);
@@ -418,7 +418,7 @@ export async function integrateStop(StopID: number, RouteID: number): object {
   };
 }
 
-function processEstimateTime2(EstimateTime: [], StopIDs: number[]): object {
+function processEstimateTime2(EstimateTime: Array, StopIDs: number[]): object {
   var result = {};
   for (var item of EstimateTime) {
     if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
@@ -428,7 +428,7 @@ function processEstimateTime2(EstimateTime: [], StopIDs: number[]): object {
   return result;
 }
 
-export async function integrateEstimateTime2(requestID: string, StopIDs: number[]): object {
+export async function integrateEstimateTime2(requestID: string, StopIDs: number[]): Promise<object> {
   setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
   var EstimateTime = await getEstimateTime(requestID);
   var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);
@@ -441,8 +441,8 @@ export async function integrateEstimateTime2(requestID: string, StopIDs: number[
   return result;
 }
 
-export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): object {
-  function getThisRoute(Route: [], RouteID: number): object {
+export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
+  function getThisRoute(Route: Array, RouteID: number): object {
     var thisRoute = {};
     for (var item of Route) {
       if (item.Id === RouteID) {
@@ -507,7 +507,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
     };
   }
 
-  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: [number], timeTableRules: object, SemiTimeTable: [], TimeTable: []): object {
+  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: [number], timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): object {
     function getThisWeekOrigin(): Date {
       var today: Date = new Date();
       var dayOfToday: number = today.getDay();
@@ -538,13 +538,13 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
 
     var calendar = {
       groupedEvents: {
-        d_0: [],
-        d_1: [],
-        d_2: [],
-        d_3: [],
-        d_4: [],
-        d_5: [],
-        d_6: []
+        d_0: Array,
+        d_1: Array,
+        d_2: Array,
+        d_3: Array,
+        d_4: Array,
+        d_5: Array,
+        d_6: Array
       },
       eventGroups: {
         d_0: {
@@ -663,7 +663,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
     return calendar;
   }
 
-  function getThisProvider(Provider: [], providerId: number): object {
+  function getThisProvider(Provider: Array, providerId: number): object {
     var thisProvider = {};
     for (var item of Provider) {
       if (item.id === providerId) {
@@ -718,7 +718,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
   return result;
 }
 
-export async function integrateLocation(hash: string, requestID: string): object {
+export async function integrateLocation(hash: string, requestID: string): Promise<object> {
   setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);

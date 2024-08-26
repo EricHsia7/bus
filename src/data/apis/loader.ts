@@ -5,7 +5,7 @@ const { inflate } = require('pako');
 var dataReceivingProgress = {};
 export var dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, tag: string): object {
+export async function fetchData(url: string, requestID: string, tag: string): Promise<object> {
   const startTimeStamp = new Date().getTime();
   const response = await fetch(url);
   if (!response.ok) {

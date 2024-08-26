@@ -13,7 +13,7 @@ export async function recordRequest(requestID: string, data: object): void {
   }
 }
 
-export async function calculateDataUsage(): number {
+export async function calculateDataUsage(): Promise<number> {
   var keys = await lfListItem(2);
   var total_content_length = 0;
   for (var key of keys) {

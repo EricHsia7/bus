@@ -16,7 +16,7 @@ function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   }
 }
 
-async function getAppVersion(): object {
+async function getAppVersion(): Promise<object> {
   try {
     var response = await fetch(`./version.json?_=${new Date().getTime()}`, {
       cache: 'no-store'
@@ -44,7 +44,7 @@ export function getHTMLVersionBranchName(): string {
   return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content');
 }
 
-export async function checkAppVersion(): object {
+export async function checkAppVersion(): Promise<object> {
   var app_version = await getAppVersion();
   if (app_version) {
     if (!(app_version.hash === null)) {
