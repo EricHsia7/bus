@@ -8,7 +8,7 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   var actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
   var propertiesField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
   var calendarField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"]');
-  elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]').setAttribute('onclick', `bus.route.openSaveToFolder('route', [${RouteID}])`);
+  elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]').setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);
   elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]').setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
