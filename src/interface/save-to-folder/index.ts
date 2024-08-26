@@ -1,7 +1,7 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement } from '../index';
 import { generateIdentifier } from '../../tools/index';
-import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved } from '../../data/folder/index';
+import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
 import { prompt_message } from '../prompt/index';
 
@@ -12,9 +12,10 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   element.id = identifier;
   switch (type) {
     case 'stop':
-      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[2]}', '${item.folder.id}', ${parameters[0]}, ${parameters[1]})`); // TODO: set up folder id and content
+      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.folder.id}', ${parameters[1]}, ${parameters[2]})`);
       break;
     case 'route':
+      element.setAttribute('onclick', `bus.folder.saveRouteOnDetailsPage('${item.folder.id}', ${parameters[0]})`);
       break;
     case 'bus':
       break;
@@ -49,18 +50,34 @@ export function closeSaveToFolder(): void {
   Field.setAttribute('displayed', 'false');
 }
 
-export function saveStopItemOnRoute(itemID: string, folderID: string, StopID: number, RouteID: number) {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
+export function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemElementID}`);
   var actionButtonElement = elementQuerySelector(itemElement, '.css_action_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
       isSaved('stop', StopID).then((k) => {
-        actionButtonElement.setAttribute('highlighted', k);
-        prompt_message('已儲存至資料夾');
-        closeSaveToFolder();
+        if (k) {
+          actionButtonElement.setAttribute('highlighted', k);
+          prompt_message('已儲存至資料夾');
+          closeSaveToFolder();
+        }
       });
     } else {
       prompt_message('此資料夾不支援站牌類型項目');
+    }
+  });
+}
+
+export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
+  saveRoute(folderID, RouteID).then((e) => {
+    if (e) {
+      isSaved('route', RouteID).then((k) => {
+        if (k) {
+          prompt_message('已儲存至資料夾');
+        }
+      });
+    } else {
+      prompt_message('此資料夾不支援路線類型項目');
     }
   });
 }

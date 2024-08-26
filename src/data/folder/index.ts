@@ -5,6 +5,7 @@ import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols';
 import { openFolderEditor } from '../../interface/folder-editor/index.js';
+import { searchRouteByRouteID } from '../search/searchRoute';
 
 var _ = {};
 _.cloneDeep = require('lodash/cloneDeep');
@@ -386,7 +387,29 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   return save;
 }
 
-//TODO: saveRoute, saveBus
+export async function saveRoute(folderID: string, RouteID: number): boolean {
+  var folderContentLength = await getFolderContentLength(folderID);
+  var searchedRoute = searchRouteByRouteID(RouteID);
+  if (searchedRoute.length > 0) {
+    var Route = searchedRoute[0];
+    var content: FolderRoute = {
+      type: 'route',
+      id: RouteID,
+      time: new Date().toISOString(),
+      name: Route.n,
+      endPoints: {
+        departure: Route.dep,
+        destination: Route.des
+      },
+      index: folderContentLength
+    };
+    var save = await saveToFolder(folderID, content);
+    return save;
+  } else {
+    return false;
+  }
+}
+//TODO: saveBus
 
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): boolean {
   var thisFolder = getFolder(folderID);
