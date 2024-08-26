@@ -31,8 +31,8 @@ jobs:
           cp -r ./manifest.json ./dist/manifest.json
           cp -r ./splash_screen/ ./dist/splash_screen/
 
-      - name: Generate splash screen
-        run: node generate_splash_screen.js
+      #- name: Generate splash screen
+      #  run: node generate_splash_screen.js
 
       - name: Deploy with gh-pages
         run: |
