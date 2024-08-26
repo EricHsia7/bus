@@ -187,6 +187,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
       elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
     function updateButton(thisElement: HTMLElement, thisItem: object): void {
+      const buttonElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_button');
       let onclick = '';
       switch (thisItem.type) {
         case 'stop':
@@ -202,7 +203,7 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
         default:
           break;
       }
-      thisElement.setAttribute('onclick', onclick);
+      buttonElement.setAttribute('onclick', onclick);
     }
     if (previousItem === null) {
       updateType(thisElement, thisItem);
