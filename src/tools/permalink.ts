@@ -13,24 +13,27 @@ export function openPermalink(): void {
       var array = permalinkString.split(/[\@\~]/);
       var type = parseInt(array[0]);
       //route
-      if (type === 0) {
-        searchRouteByRouteID(parseInt(array[1], 16)).then((e) => {
-          if (e.length > 0) {
-            openRoute(e[0].id, e[0].pid);
-          } else {
-            searchRouteByName(array[2]).then((p) => {
-              if (p.length > 0) {
-                openRoute(p[0].id, p[0].pid);
-              }
-            });
-          }
-        });
+      switch (type) {
+        case 0:
+          searchRouteByRouteID(parseInt(array[1], 16)).then((e) => {
+            if (e.length > 0) {
+              openRoute(e[0].id, e[0].pid);
+            } else {
+              searchRouteByName(array[2]).then((p) => {
+                if (p.length > 0) {
+                  openRoute(p[0].id, p[0].pid);
+                }
+              });
+            }
+          });
+          break;
+        case 1:
+          var hash = decodeShortStringToHex(array[1], 32);
+          openLocation(hash);
+          break;
+        default:
+          break;
       }
-      if (type === 1) {
-        var hash = decodeShortStringToHex(array[1], 32);
-        openLocation(hash);
-      }
-      current_url.searchParams.get('route_name');
     }
   }
 }

@@ -524,7 +524,7 @@ export function streamRoute(): void {
     });
 }
 
-export function openRoute(RouteID: number, PathAttributeId: [number]): void {
+export function openRoute(RouteID: number, PathAttributeId: number[]): void {
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   var Field = documentQuerySelector('.css_route_field');
@@ -548,7 +548,7 @@ export function closeRoute(): void {
   routeRefreshTimer_streaming = false;
 }
 
-export function switchRoute(RouteID: number, PathAttributeId: [number]) {
+export function switchRoute(RouteID: number, PathAttributeId: number[]) {
   routeRefreshTimer_streaming = false;
   openRoute(RouteID, PathAttributeId);
 }
