@@ -5,7 +5,7 @@ var lazyCSS = {
   material_symbols: false
 };
 
-export function loadCSS(url: string, identifier: string) {
+export function loadCSS(url: string, identifier: string): void {
   if (!lazyCSS[identifier]) {
     var link = document.createElement('link');
     link.setAttribute('href', url);
@@ -15,11 +15,11 @@ export function loadCSS(url: string, identifier: string) {
   }
 }
 
-export async function loadFont(url: string, fontName: string, identifier: string) {
+export async function loadFont(url: string, fontName: string, identifier: string): Promise<string> {
   loadCSS(url, identifier);
   if (typeof loadedCallback === 'function') {
     var font = new FontFaceObserver(fontName);
     await font.load();
-    return fontName
+    return fontName;
   }
 }
