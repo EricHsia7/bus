@@ -8,18 +8,16 @@ import { compareThings, generateIdentifier } from '../../../tools/index';
 
 var previousIntegration = [];
 
-var foldersRefreshTimer = {
-  baseInterval: 15 * 1000,
-  minInterval: 5 * 1000,
-  dynamicInterval: 15 * 1000,
-  auto: true,
-  streaming: false,
-  lastUpdate: 0,
-  nextUpdate: 0,
-  refreshing: false,
-  currentRequestID: '',
-  streamStarted: false
-};
+var foldersRefreshTimer_baseInterval: number = 15 * 1000;
+var foldersRefreshTimer_minInterval: number = 5 * 1000;
+var foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
+var foldersRefreshTimer_auto: number = true;
+var foldersRefreshTimer_streaming: boolean = false;
+var foldersRefreshTimer_lastUpdate: number = 0;
+var foldersRefreshTimer_nextUpdate: number = 0;
+var foldersRefreshTimer_refreshing: boolean = false;
+var foldersRefreshTimer_currentRequestID: string = '';
+var foldersRefreshTimer_streamStarted: boolean = false;
 
 function queryFolderFieldSize(): FieldSize {
   return {
@@ -47,6 +45,22 @@ function generateElementOfFolder(): GeneratedElement {
     element: element,
     id: null
   };
+}
+
+function updateUpdateTimer() {
+  var time = new Date().getTime();
+  var percentage = 0;
+  if (foldersRefreshTimer_refreshing) {
+    percentage = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
+  } else {
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
+  }
+  documentQuerySelector('.css_home_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
+  window.requestAnimationFrame(function () {
+    if (foldersRefreshTimer_streaming) {
+      updateUpdateTimer();
+    }
+  });
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
@@ -348,44 +362,46 @@ async function updateFolderField(Field: HTMLElement, integration: {}, skeletonSc
 
 async function refreshFolders(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  foldersRefreshTimer.auto = refresh_interval_setting.auto;
-  foldersRefreshTimer.baseInterval = refresh_interval_setting.baseInterval;
-  foldersRefreshTimer.refreshing = true;
-  foldersRefreshTimer.currentRequestID = `r_${generateIdentifier()}`;
-  var integration = await integrateFolders(foldersRefreshTimer.currentRequestID);
+  foldersRefreshTimer_auto = refresh_interval_setting.auto;
+  foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
+  foldersRefreshTimer_refreshing = true;
+  foldersRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
+  documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
+  var integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   updateFolderField(Field, integration, false);
-  foldersRefreshTimer.lastUpdate = new Date().getTime();
+  foldersRefreshTimer_lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  if (foldersRefreshTimer.auto) {
-    foldersRefreshTimer.nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer.minInterval, integration.dataUpdateTime + foldersRefreshTimer.baseInterval / updateRate);
+  if (foldersRefreshTimer_auto) {
+    foldersRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
   } else {
-    foldersRefreshTimer.nextUpdate = new Date().getTime() + foldersRefreshTimer.baseInterval;
+    foldersRefreshTimer_nextUpdate = new Date().getTime() + foldersRefreshTimer_baseInterval;
   }
-  foldersRefreshTimer.dynamicInterval = Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime());
-  foldersRefreshTimer.refreshing = false;
+  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime());
+  foldersRefreshTimer_refreshing = false;
+  documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the folders.' };
 }
 
 async function streamFolders(): void {
   refreshFolders()
     .then((result) => {
-      if (foldersRefreshTimer.streaming) {
-        foldersRefreshTimer.timer = setTimeout(function () {
+      if (foldersRefreshTimer_streaming) {
+        foldersRefreshTimer_timer = setTimeout(function () {
           streamFolders();
-        }, Math.max(foldersRefreshTimer.minInterval, foldersRefreshTimer.nextUpdate - new Date().getTime()));
+        }, Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
-        foldersRefreshTimer.streamStarted = false;
+        foldersRefreshTimer_streamStarted = false;
       }
     })
     .catch((err) => {
       console.error(err);
-      if (foldersRefreshTimer.streaming) {
-        foldersRefreshTimer.timer = setTimeout(function () {
+      if (foldersRefreshTimer_streaming) {
+        foldersRefreshTimer_timer = setTimeout(function () {
           streamFolders();
-        }, foldersRefreshTimer.minInterval);
+        }, foldersRefreshTimer_minInterval);
       } else {
-        foldersRefreshTimer.streamStarted = false;
+        foldersRefreshTimer_streamStarted = false;
       }
     });
 }
@@ -393,14 +409,14 @@ async function streamFolders(): void {
 export function initializeFolders(): void {
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
   setUpFolderFieldSkeletonScreen(Field);
-  if (!foldersRefreshTimer.streaming) {
-    foldersRefreshTimer.streaming = true;
-    if (!foldersRefreshTimer.streamStarted) {
-      foldersRefreshTimer.streamStarted = true;
+  if (!foldersRefreshTimer_streaming) {
+    foldersRefreshTimer_streaming = true;
+    if (!foldersRefreshTimer_streamStarted) {
+      foldersRefreshTimer_streamStarted = true;
       streamFolders();
     } else {
       refreshFolders();
     }
-    //updateUpdateTimer();
+    updateUpdateTimer();
   }
 }

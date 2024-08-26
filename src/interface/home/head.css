@@ -1,12 +1,3 @@
-.css_home_field {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background: var(--b-cssvar-f9f9fb);
-}
-
 .css_home_field .css_home_head {
   position: absolute;
   top: 0px;
@@ -127,18 +118,32 @@
   opacity: 0;
 }
 
-.css_home_field .css_home_body {
+.css_home_field .css_home_head .css_home_update_timer_box {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 1.2px;
+  overflow: hidden;
+  background: var(--b-cssvar-ededf2);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer {
   position: absolute;
   top: 0px;
   left: 0px;
+  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  height: 1.5px;
   width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
+  transition: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.css_home_field .css_home_body::-webkit-scrollbar {
-  display: none;
+.css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"] {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: linear;
 }

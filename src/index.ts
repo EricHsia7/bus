@@ -34,7 +34,10 @@ import './interface/icons/index.css';
 
 import './interface/animation.css';
 
-import './interface/home/index.css';
+import './interface/home/field.css';
+import './interface/home/head.css';
+import './interface/home/body.css';
+
 import './interface/home/folders/folders.css';
 import './interface/home/folders/item.css';
 
@@ -42,6 +45,7 @@ import './interface/search/index.css';
 import './interface/search/keyboard.css';
 
 import './interface/route/field.css';
+import './interface/route/head.css';
 import './interface/route/groups.css';
 import './interface/route/item.css';
 import './interface/route/thread.css';

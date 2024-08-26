@@ -484,7 +484,7 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', true);
+  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'true');
   var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');
   updateRouteField(Field, integration, false);
@@ -497,7 +497,7 @@ async function refreshRoute(): Promise<object> {
   }
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime());
   routeRefreshTimer_refreshing = false;
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', false);
+  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the route.' };
 }
 
