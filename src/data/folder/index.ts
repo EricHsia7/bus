@@ -389,7 +389,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
 
 export async function saveRoute(folderID: string, RouteID: number): boolean {
   var folderContentLength = await getFolderContentLength(folderID);
-  var searchedRoute = searchRouteByRouteID(RouteID);
+  var searchedRoute = await searchRouteByRouteID(RouteID);
   if (searchedRoute.length > 0) {
     var Route = searchedRoute[0];
     var content: FolderRoute = {
