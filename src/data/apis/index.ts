@@ -418,29 +418,6 @@ export async function integrateStop(StopID: number, RouteID: number): Promise<ob
   };
 }
 
-function processEstimateTime2(EstimateTime: Array, StopIDs: number[]): object {
-  var result = {};
-  for (var item of EstimateTime) {
-    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
-      result[`s_${item.StopID}`] = item;
-    }
-  }
-  return result;
-}
-
-export async function integrateEstimateTime2(requestID: string, StopIDs: number[]): Promise<object> {
-  setDataReceivingProgress(requestID, 'getEstimateTime', 0, false);
-  var EstimateTime = await getEstimateTime(requestID);
-  var processedEstimateTime2 = processEstimateTime2(EstimateTime, StopIDs);
-  var result = {
-    items: processedEstimateTime2,
-    dataUpdateTime: dataUpdateTime[requestID]
-  };
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
-  return result;
-}
-
 export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
   function getThisRoute(Route: Array, RouteID: number): object {
     var thisRoute = {};

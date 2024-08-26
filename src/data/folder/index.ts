@@ -1,12 +1,13 @@
-import { integrateStop, integrateEstimateTime2 } from '../apis/index';
+import { integrateStop } from '../apis/index';
 import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
 import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols';
-import { openFolderEditor } from '../../interface/folder-editor/index.js';
 import { searchRouteByRouteID } from '../search/searchRoute';
 import { getRoute } from '../apis/getRoute';
+import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime} from '../apis/loader';
+import { getEstimateTime } from '../apis/getEstimateTime';
 
 var _ = {};
 _.cloneDeep = require('lodash/cloneDeep');
@@ -247,7 +248,22 @@ export async function listFoldersWithContent(): Promise<Array<FoldersWithContent
   return result;
 }
 
+function processEstimateTime(EstimateTime: Array, StopIDs: number[]): object {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
+      result[`s_${item.StopID}`] = item;
+    }
+  }
+  return result;
+}
+
 export async function integrateFolders(requestID: string): Promise<Array<object>> {
+  setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
+  setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
+  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
+  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
+
   var foldersWithContent = await listFoldersWithContent();
 
   var StopIDs = [];
@@ -260,8 +276,11 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
         .map((e) => e.id)
     );
   }
-  const EstimateTime2 = await integrateEstimateTime2(requestID, StopIDs);
+
+  const EstimateTime = await getEstimateTime(requestID);
   const Route = await getRoute(requestID, true);
+  const processedEstimateTime = processEstimateTime(EstimateTime, StopIDs);
+
   var array = [];
   for (var folder of foldersWithContent) {
     var integratedFolder = {};
@@ -271,7 +290,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
       var integratedItem = item;
       switch (item.type) {
         case 'stop':
-          integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
+          integratedItem._EstimateTime = processedEstimateTime[`s_${item.id}`];
           integratedItem._Route = Route[`r_${item.route.id}`];
           break;
         case 'route':
@@ -325,13 +344,16 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
     folderQuantity += 1;
   }
 
-  return {
+  var result = {
     foldedItems: foldedItems,
     folders: folders,
     folderQuantity: folderQuantity,
     itemQuantity: itemQuantity,
-    dataUpdateTime: EstimateTime2.dataUpdateTime
+    dataUpdateTime: dataUpdateTime[requestID]
   };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  return result;
 }
 
 export async function saveToFolder(folderID: string, content: object): Promise<boolean> {
