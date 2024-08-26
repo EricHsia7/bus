@@ -1,7 +1,6 @@
 import { searchRouteByName, searchRouteByRouteID } from '../data/search/searchRoute';
 import { openRoute } from '../interface/route/index';
 import { openLocation } from '../interface/location/index';
-import { encodeHexToShortString, decodeShortStringToHex } from './index';
 const PermalinkTypes = ['route', 'location'];
 
 export function openPermalink(): void {
@@ -28,7 +27,7 @@ export function openPermalink(): void {
           });
           break;
         case 1:
-          var hash = decodeShortStringToHex(array[1], 32);
+          var hash = array[1];
           openLocation(hash);
           break;
         default:
@@ -40,11 +39,15 @@ export function openPermalink(): void {
 
 export function getPermalink(type: number, approach: object): string {
   var link = new URL('https://erichsia7.github.io/bus/');
-  if (type === 0) {
-    link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
-  }
-  if (type === 1) {
-    link.searchParams.set('permalink', `1@${encodeHexToShortString(approach.hash, 22)}`);
+  switch (type) {
+    case 0:
+      link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);
+      break;
+    case 1:
+      link.searchParams.set('permalink', `1@${approach.hash}`);
+      break;
+    default:
+      break;
   }
   return decodeURIComponent(link.toString());
 }
