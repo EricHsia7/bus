@@ -233,3 +233,7 @@ export function releaseFile(content: string, type: string = 'application/json', 
     }, 10 * 1000);
   }
 }
+
+export function isRunningStandalone(): boolean {
+  return window.matchMedia('(display-mode: standalone)').matches;
+}

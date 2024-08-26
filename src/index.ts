@@ -16,7 +16,7 @@ import { checkAppVersion } from './data/settings/version';
 import { openSettingsPage, closeSettingsPage, downloadExportFile } from './interface/settings/index';
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options';
 import { initializeSettings } from './data/settings/index';
-import { fadeOutSplashScreen } from './interface/index';
+import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
 import { documentQuerySelector } from './tools/query-selector';
 import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopItemOnRoute } from './interface/save-to-folder/index';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
@@ -115,6 +115,7 @@ window.bus = {
   initialize: function () {
     if (bus_initialized === false) {
       bus_initialized = true;
+      setSplashScreenIconOffsetY();
       var FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()

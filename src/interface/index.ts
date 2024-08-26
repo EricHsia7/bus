@@ -1,9 +1,18 @@
+import { isRunningStandalone } from '../tools/index';
 import { documentQuerySelector } from '../tools/query-selector';
 
 var splashScreenTimer = {
   minimalTimeOut: 1024,
   openTime: new Date().getTime()
 };
+
+export function setSplashScreenIconOffsetY(): void {
+  let offset = 0;
+  if (isRunningStandalone()) {
+    offset = (-1 * (window.screen.height - window.innerHeight)) / 2;
+  }
+  documentQuerySelector('.css_splash_screen svg.css_splash_screen_icon').style.setProperty('--b-cssvar-splash-screen-icon-offset-y', `${offset}px`);
+}
 
 export function fadeOutSplashScreen(callback: Function): void {
   function fadeOut() {
