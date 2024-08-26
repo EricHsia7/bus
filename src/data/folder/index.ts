@@ -272,6 +272,7 @@ export async function integrateFolders(requestID: string): [] {
       switch (item.type) {
         case 'stop':
           integratedItem._EstimateTime = EstimateTime2.items[`s_${item.id}`];
+          integratedItem._Route = Route[`r_${item.route.id}`];
           break;
         case 'route':
           integratedItem._Route = Route[`r_${item.id}`];
