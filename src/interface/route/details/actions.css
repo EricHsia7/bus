@@ -15,11 +15,17 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  background: var(--b-cssvar-ffffff);
+  background-color: var(--b-cssvar-ffffff);
   border-radius: 20px;
   vertical-align: top;
   user-select: none;
   -webkit-user-select: none;
+  transition: background-color var(--b-cssvar-transition-duration);
+}
+
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[highlighted="true"] {
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button span.css_material_symbols_rounded {
@@ -29,4 +35,14 @@
   -webkit-user-select: none;
   color: var(--b-cssvar-333333);
   font-size: 29px;
+  transition: color var(--b-cssvar-transition-duration);
+}
+
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[highlighted="true"] span.css_material_symbols_rounded {
+  color: var(--b-cssvar-main-color);
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
 }

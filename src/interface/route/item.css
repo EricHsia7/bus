@@ -390,6 +390,23 @@
   align-items: center;
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color);
+}
+
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
+  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
+  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
@@ -444,23 +461,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"] {
   background-color: var(--b-cssvar-333333);
   color: var(--b-cssvar-ffffff);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
-  color: var(--b-cssvar-main-color);
-}
-
-/* segment buffer: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-c));
-  color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
-}
-
-/* nearest: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-c));
-  color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* body > buses, overlapping routes */

@@ -22,12 +22,12 @@ export async function searchRouteByName(query: string): Array {
   return result;
 }
 
-export async function searchRouteByRouteID(query: string): Array {
+export async function searchRouteByRouteID(RouteID: number): Array {
   var requestID = `r_${generateIdentifier()}`;
   var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
-    if (String(key) === `r_${query}`) {
+    if (String(key) === `r_${RouteID}`) {
       result.push({
         id: parseInt(key.split('_')[1]),
         pid: Route[key].pid,
