@@ -8,8 +8,21 @@ var splashScreenTimer = {
 
 export function setSplashScreenIconOffsetY(): void {
   let offset = 0;
+  let screenHeight = 0;
   if (isRunningStandalone()) {
-    offset = (-1 * (window.screen.height - window.innerHeight)) / 2;
+    if (window.innerWidth < window.innerHeight) {
+      // portrait
+      screenHeight = window.screen.height;
+    }
+    if (window.innerWidth > window.innerHeight) {
+      // landscape
+      screenHeight = window.screen.width;
+    }
+    if (window.innerWidth === window.innerHeight) {
+      // square
+      screenHeight = window.screen.height;
+    }
+    offset = (-1 * (screenHeight - window.innerHeight)) / 2;
   }
   documentQuerySelector('.css_splash_screen svg.css_splash_screen_icon').style.setProperty('--b-cssvar-splash-screen-icon-offset-y', `${offset}px`);
 }
