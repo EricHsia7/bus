@@ -116,16 +116,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
 
 export function moveItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): void {
   const Field = documentQuerySelector('.css_folder_editor_field');
-  var className = '';
-  switch (type) {
-    case 'stop':
-      className = 'css_folder_editor_folder_item';
-      break;
-    default:
-      className = '';
-      break;
-  }
-  const itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .${className}#${itemID}`);
+  const itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {
       switch (direction) {
