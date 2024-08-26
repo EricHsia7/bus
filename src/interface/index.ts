@@ -12,11 +12,11 @@ export function setSplashScreenIconOffsetY(): void {
   if (isRunningStandalone()) {
     if (window.innerWidth < window.innerHeight) {
       // portrait
-      screenHeight = window.screen.height;
+      screenHeight = Math.max(window.screen.height, window.screen.width);
     }
     if (window.innerWidth > window.innerHeight) {
       // landscape
-      screenHeight = window.screen.width;
+      screenHeight = Math.min(window.screen.height, window.screen.width);
     }
     if (window.innerWidth === window.innerHeight) {
       // square
