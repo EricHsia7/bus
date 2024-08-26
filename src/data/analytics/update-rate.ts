@@ -3,14 +3,14 @@ import { formatTime } from '../../tools/format-time';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
 
 interface trackingUpdateRate {
-  trackedStops: Array;
+  trackedStops: [];
   trackingID: null;
   tracking: boolean;
   sampleQuantity: number;
 }
 
 var trackingUpdateRate: trackingUpdateRate = {
-  trackedStops: Array,
+  trackedStops: [],
   trackingID: null,
   tracking: false,
   sampleQuantity: 64,

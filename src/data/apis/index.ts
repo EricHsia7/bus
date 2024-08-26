@@ -538,13 +538,13 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
 
     var calendar = {
       groupedEvents: {
-        d_0: Array,
-        d_1: Array,
-        d_2: Array,
-        d_3: Array,
-        d_4: Array,
-        d_5: Array,
-        d_6: Array
+        d_0: [],
+        d_1: [],
+        d_2: [],
+        d_3: [],
+        d_4: [],
+        d_5: [],
+        d_6: []
       },
       eventGroups: {
         d_0: {

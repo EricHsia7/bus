@@ -89,7 +89,7 @@ export async function prepareForRouteSearch() {
       hash: mergedLocation[key].hash,
       dep: '',
       des: '',
-      pid: Array,
+      pid: [],
       type: 1
     });
   }

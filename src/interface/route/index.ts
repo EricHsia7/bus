@@ -250,7 +250,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         RouteDestination: '載入中'
       },
       RouteID: null,
-      PathAttributeId: Array
+      PathAttributeId: []
     },
     true
   );

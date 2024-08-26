@@ -81,7 +81,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
             destination: null
           },
           id: null,
-          pathAttributeId: Array
+          pathAttributeId: []
         }
       });
     }
