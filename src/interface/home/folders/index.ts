@@ -20,6 +20,7 @@ var foldersRefreshTimer_refreshing: boolean = false;
 var foldersRefreshTimer_currentRequestID: string = '';
 var foldersRefreshTimer_streamStarted: boolean = false;
 var foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
+var foldersRefreshTimer_currentPercentage: number = 0;
 
 function queryFolderFieldSize(): FieldSize {
   return {
@@ -49,7 +50,8 @@ function generateElementOfFolder(): GeneratedElement {
   };
 }
 
-function updateUpdateTimer() {
+function updateUpdateTimer(): void {
+  const updateTimerElement = documentQuerySelector('.css_home_update_timer');
   var time = new Date().getTime();
   var percentage = 0;
   if (foldersRefreshTimer_refreshing) {
@@ -57,7 +59,13 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
-  documentQuerySelector('.css_home_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
+  if (Math.abs(foldersRefreshTimer_currentPercentage - percentage) >= 0.1) {
+    updateTimerElement.setAttribute('transition', 'true');
+  } else {
+    updateTimerElement.setAttribute('transition', 'false');
+  }
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  foldersRefreshTimer_currentPercentage = percentage;
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();

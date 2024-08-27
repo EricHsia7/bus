@@ -33,6 +33,7 @@ var routeRefreshTimer_refreshing: boolean = false;
 var routeRefreshTimer_currentRequestID: string = '';
 var routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
+var routeRefreshTimer_currentPercentage: number = 0;
 
 var currentRouteIDSet_RouteID: number = 0;
 var currentRouteIDSet_PathAttributeId: Array = [];
@@ -137,7 +138,8 @@ function updateRouteLineColor(e): void {
   }
 }
 
-function updateUpdateTimer() {
+function updateUpdateTimer(): void {
+  const updateTimerElement = documentQuerySelector('.css_route_update_timer');
   var time = new Date().getTime();
   var percentage = 0;
   if (routeRefreshTimer_refreshing) {
@@ -145,7 +147,12 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
-  documentQuerySelector('.css_route_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
+  if (Math.abs(routeRefreshTimer_currentPercentage - percentage) > 0.1) {
+    updateTimerElement.setAttribute('transition', 'true');
+  } else {
+    updateTimerElement.setAttribute('transition', 'false');
+  }
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming) {
       updateUpdateTimer();

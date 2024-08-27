@@ -29,6 +29,7 @@ var locationRefreshTimer_refreshing: boolean = false;
 var locationRefreshTimer_currentRequestID: string = '';
 var locationRefreshTimer_streamStarted: boolean = false;
 var locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
+var locationRefreshTimer_currentPercentage: number = 0;
 
 var currentHashSet_hash: string = '';
 
@@ -92,7 +93,8 @@ function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width
   documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-cssvar-location-group-quantity:${groupQuantity};--b-cssvar-location-tabs-tray-offset:${offset}px;--b-cssvar-location-tab-line-width:${tab_line_width};--b-cssvar-location-percentage:${percentage};}`;
 }
 
-function updateUpdateTimer() {
+function updateUpdateTimer(): void {
+  const updateTimerElement = documentQuerySelector('.css_location_update_timer');
   var time = new Date().getTime();
   var percentage = 0;
   if (locationRefreshTimer_refreshing) {
@@ -100,7 +102,13 @@ function updateUpdateTimer() {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   }
-  documentQuerySelector('.css_location_update_timer').style.setProperty('--b-cssvar-update-timer', percentage);
+  if (Math.abs(locationRefreshTimer_currentPercentage - percentage) > 0.1) {
+    updateTimerElement.setAttribute('transition', 'true');
+  } else {
+    updateTimerElement.setAttribute('transition', 'false');
+  }
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  locationRefreshTimer_currentPercentage = percentage;
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -259,7 +267,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon)
+      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_location_details_property_value').innerHTML = thisProperty.value;
