@@ -53,7 +53,7 @@ Your privacy and security are our top priorities. Your all data are stored local
 ## Dependencies
 
 - Packages: See them in [package.json](./package.json).
-- Data References: See them in [getURL.ts](./src/data/apis/getURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
+- Data References: See them in [getAPIURL.ts](./src/data/apis/getAPIURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
 
 ## Materials Used
 

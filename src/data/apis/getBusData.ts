@@ -1,4 +1,4 @@
-import { getAPIURL } from './getURL';
+import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataUpdateTime } from './loader';
 
 interface BusDataItem {
