@@ -1,7 +1,23 @@
 import { getAPIURL } from './getURL';
 import { fetchData, setDataUpdateTime } from './loader';
 
-export async function getBusEvent(requestID: string): Promise<Array> {
+interface BusEventItem {
+  StationID: number;
+  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
+  BusID: string; // vehicle registration number
+  ProviderID: number;
+  CarID: number;
+  DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end
+  RouteID: string; // number in string
+  GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
+  StopID: string; // number in string
+  CarOnStop: string; // 0: leaving/left, 1: coming/came
+  DataTime: string; // timestamp
+}
+
+type BusEvent = Array<BusEventItem>
+
+export async function getBusEvent(requestID: string): Promise<BusEvent> {
   var apis = [
     [0, 1],
     [1, 1]

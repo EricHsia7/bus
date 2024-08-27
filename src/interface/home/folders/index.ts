@@ -116,7 +116,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-async function updateFolderField(Field: HTMLElement, integration: {}, skeletonScreen: boolean): void {
+async function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateType(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('type', thisItem.type);

@@ -71,7 +71,7 @@ export interface FolderBus {
   type: 'bus';
   id: number; // CarID
   time: string;
-  busID: string; // BusID (vehicle registration number)
+  busID: string; // BusID
   index: number;
 }
 
