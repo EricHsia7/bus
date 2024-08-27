@@ -1,4 +1,14 @@
-export function getRushHour(period: number): Array {
+interface TimeObject {
+  hours: number;
+  minutes: number;
+}
+
+interface RushHour {
+  start: TimeObject;
+  end: TimeObject;
+}
+
+export function getRushHour(period: number): RushHour {
   var rushHours = [
     [
       {

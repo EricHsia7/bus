@@ -3,9 +3,9 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 import { getMaterialSymbolsAPIURL } from './getURL';
 
 let MaterialSymbolsAPIVariableCache_available: boolean = false;
-let MaterialSymbolsAPIVariableCache_data: Array = [];
+let MaterialSymbolsAPIVariableCache_data: Array<string> = [];
 
-export async function getMaterialSymbols(requestID: string): Promise<Array> {
+export async function getMaterialSymbols(requestID: string): Promise<Array<string>> {
   async function getData() {
     var apiurl = getMaterialSymbolsAPIURL();
     var data = await fetchData(apiurl, requestID, 'getMaterialSymbols');

@@ -13,7 +13,7 @@ export async function getProvider(requestID: string): Promise<object> {
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getTimeTable_${api.e[0]}`);
+      var data = await fetchData(api.url, requestID, `getProvider_${api.e[0]}`);
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
