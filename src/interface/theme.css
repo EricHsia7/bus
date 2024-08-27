@@ -86,7 +86,7 @@
   --b-cssvar-border-radius-small: 8px;
 
   --b-cssvar-transition-duration: 0.32s;
-  --b-cssvar-transition-duration-short: 100ms;
+  --b-cssvar-transition-duration-short: 180ms;
 }
 
 @media (prefers-color-scheme: dark) {
