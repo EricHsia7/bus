@@ -165,11 +165,6 @@
   transition-timing-function: linear;
 }
 
-.css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer[transition="true"] {
-  transition: transform var(--b-cssvar-transition-duration-short);
-  transition-timing-function: linear;
-}
-
 .css_location_field .css_location_groups {
   position: absolute;
   top: 0px;
