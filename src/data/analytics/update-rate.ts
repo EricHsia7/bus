@@ -68,8 +68,8 @@ export async function getUpdateRate(): Promise<number> {
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
     for (var group of groups) {
-      const firstColumn: number[] = group.map((item) => item[0]);
-      const secondColumn: number[] = group.map((item) => item[1]);
+      const firstColumn: Array<number> = group.map((item) => item[0]);
+      const secondColumn: Array<number> = group.map((item) => item[1]);
       const correlation: number = pearsonCorrelation(firstColumn, secondColumn);
       if (!(correlation === 0) && Math.abs(correlation) > 0.2 && !isNaN(correlation)) {
         total_correlation += correlation * firstColumn.length;
@@ -89,8 +89,8 @@ export async function getUpdateRateInTime(): Promise<string> {
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
     for (var group of groups) {
-      const firstColumn: number[] = group.map((item) => item[0]);
-      const secondColumn: number[] = group.map((item) => item[1]);
+      const firstColumn: Array<number> = group.map((item) => item[0]);
+      const secondColumn: Array<number> = group.map((item) => item[1]);
       const rowCount: number = firstColumn.length;
       var timeStampUponChanges: Array = [];
       for (var i = 1; i < rowCount; i++) {

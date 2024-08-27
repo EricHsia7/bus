@@ -1,6 +1,6 @@
 import { areItemsDifferent, generateLetterLabels } from './index';
 
-export function mergeAddressesIntoOne(addresses: string[]): object | string {
+export function mergeAddressesIntoOne(addresses: Array<string>): object | string {
   const parts = [
     {
       suffixes: '市',
@@ -223,7 +223,7 @@ export function mergeAddressesIntoOne(addresses: string[]): object | string {
     return result;
   }
 
-  function mergeAddresses(addresses: string[]): object {
+  function mergeAddresses(addresses: Array<string>): object {
     var result = {};
     for (var address of addresses) {
       var parsedAddress = parseAddress(address);
@@ -284,7 +284,7 @@ export function addressToString(address: object): string {
   }${address.floornumber.length > 0 ? address.floornumber.join('、') + '樓' : ''}${address.direction.length > 0 ? '（朝' + address.direction.join('、') + '）' : ''}`;
 }
 
-export function extractCommonFeaturesFromAddresses(addresses: string[]): string {
+export function extractCommonFeaturesFromAddresses(addresses: Array<string>): string {
   // Create an object to store feature occurrences
   const featureCounts: { [key: string]: { count: number; chars: string; index: number } } = {};
 
@@ -344,7 +344,7 @@ export function extractCommonFeaturesFromAddresses(addresses: string[]): string 
   return commonFeatures.join('');
 }
 
-export function generateLabelFromAddresses(addresses: object[]): string[] {
+export function generateLabelFromAddresses(addresses: Array<object>): Array<string> {
   var result = [];
   var filledProperties = {};
   for (var address of addresses) {

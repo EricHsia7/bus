@@ -47,7 +47,7 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEventWithBusData(BusEvent: Array, BusData: Array, RouteID: number, PathAttributeId: number[]): Promise<object> {
+async function processBusEventWithBusData(BusEvent: Array, BusData: Array, RouteID: number, PathAttributeId: Array<number>): Promise<object> {
   var result = {};
   var BusDataObj = {};
   for (var item of BusData) {
@@ -88,7 +88,7 @@ async function processBusEventWithBusData(BusEvent: Array, BusData: Array, Route
   return result;
 }
 
-async function processBusEvent2(BusEvent: Array, StopIDs: number[]): Promise<object> {
+async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promise<object> {
   var result = {};
   for (var item of BusEvent) {
     var thisStopID = parseInt(item.StopID);
@@ -315,7 +315,7 @@ function processEstimateTime(EstimateTime: Array, Stop: object, Location: object
   return result2;
 }
 
-function processEstimateTime2(EstimateTime: Array, StopIDs: number[]): object {
+function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
   var result = {};
   for (var item of EstimateTime) {
     if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {

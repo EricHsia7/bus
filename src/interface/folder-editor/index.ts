@@ -47,7 +47,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   };
 }
 
-function updateFolderEditorField(folder: Folder, content: FolderContent[]): void {
+function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
   const Field = documentQuerySelector('.css_folder_editor_field');
   const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
   const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');

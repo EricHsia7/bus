@@ -175,7 +175,7 @@ function numberToLetters(number: number): string {
   return result;
 }
 
-export function generateLetterLabels(quantity: number): string[] {
+export function generateLetterLabels(quantity: number): Array<string> {
   var result = [];
   for (var i = 0; i < quantity; i++) {
     result.push(`地點${numberToLetters(i + 1)}`);

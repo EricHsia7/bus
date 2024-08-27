@@ -77,7 +77,7 @@ export function isNearUserPosition(latitude: number, longitude: number, radius: 
   }
 }
 
-export function getNearestPosition(positions: position[], radius: number = 450): position | null {
+export function getNearestPosition(positions: Array<position>, radius: number = 450): position | null {
   var currentUserPosition: position = getUserPosition();
   var result = [];
   for (var position of positions) {

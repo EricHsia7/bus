@@ -87,7 +87,7 @@ export interface Folder {
   default: boolean;
   storeIndex: number | null;
   index: number | null;
-  contentType: FolderContentType[];
+  contentType: Array<FolderContentType>;
   id: string;
   time: string;
   timeNumber: null | number;
@@ -97,7 +97,7 @@ export type FolderContent = FolderStop | FolderRoute | FolderBus | FolderEmpty;
 
 export interface FoldersWithContent {
   folder: Folder;
-  content: FolderContent[];
+  content: Array<FolderContent>;
   contentLength: number;
 }
 
@@ -248,7 +248,7 @@ export async function listFoldersWithContent(): Promise<Array<FoldersWithContent
   return result;
 }
 
-function processEstimateTime(EstimateTime: Array, StopIDs: number[]): object {
+function processEstimateTime(EstimateTime: Array, StopIDs: Array<number>): object {
   var result = {};
   for (var item of EstimateTime) {
     if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
