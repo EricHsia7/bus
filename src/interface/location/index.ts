@@ -29,7 +29,6 @@ var locationRefreshTimer_refreshing: boolean = false;
 var locationRefreshTimer_currentRequestID: string = '';
 var locationRefreshTimer_streamStarted: boolean = false;
 var locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
-var locationRefreshTimer_currentPercentage: number = 0;
 
 var currentHashSet_hash: string = '';
 
@@ -102,14 +101,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   }
-  const delta = Math.abs(locationRefreshTimer_currentPercentage - percentage);
-  if (delta > 0.25 || percentage >= 0) {
-    updateTimerElement.setAttribute('transition', 'true');
-  } else {
-    updateTimerElement.setAttribute('transition', 'false');
-  }
   updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
-  locationRefreshTimer_currentPercentage = percentage;
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer_streaming) {
       updateUpdateTimer();

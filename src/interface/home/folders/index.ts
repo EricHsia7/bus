@@ -20,7 +20,6 @@ var foldersRefreshTimer_refreshing: boolean = false;
 var foldersRefreshTimer_currentRequestID: string = '';
 var foldersRefreshTimer_streamStarted: boolean = false;
 var foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
-var foldersRefreshTimer_currentPercentage: number = 0;
 
 function queryFolderFieldSize(): FieldSize {
   return {
@@ -59,14 +58,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
-  const delta = Math.abs(foldersRefreshTimer_currentPercentage - percentage);
-  if (delta > 0.25 || percentage >= 0) {
-    updateTimerElement.setAttribute('transition', 'true');
-  } else {
-    updateTimerElement.setAttribute('transition', 'false');
-  }
   updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
-  foldersRefreshTimer_currentPercentage = percentage;
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();

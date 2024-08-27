@@ -33,7 +33,6 @@ var routeRefreshTimer_refreshing: boolean = false;
 var routeRefreshTimer_currentRequestID: string = '';
 var routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
-var routeRefreshTimer_currentPercentage: number = 0;
 
 var currentRouteIDSet_RouteID: number = 0;
 var currentRouteIDSet_PathAttributeId: Array = [];
@@ -146,12 +145,6 @@ function updateUpdateTimer(): void {
     percentage = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
-  }
-  const delta = Math.abs(routeRefreshTimer_currentPercentage - percentage);
-  if (delta > 0.25 || percentage >= 0) {
-    updateTimerElement.setAttribute('transition', 'true');
-  } else {
-    updateTimerElement.setAttribute('transition', 'false');
   }
   updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
   window.requestAnimationFrame(function () {
