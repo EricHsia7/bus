@@ -2,55 +2,46 @@ import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../
 import { formatTime } from '../../tools/format-time';
 import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
 
-interface trackingUpdateRate {
-  trackedStops: [];
-  trackingID: null;
-  tracking: boolean;
-  sampleQuantity: number;
-}
-
-var trackingUpdateRate: trackingUpdateRate = {
-  trackedStops: [],
-  trackingID: null,
-  tracking: false,
-  sampleQuantity: 64,
-  monitorTimes: 90
-};
+var trackingUpdateRate_trackedStops: Array = [];
+var trackingUpdateRate_trackingID: string = '';
+var trackingUpdateRate_tracking: boolean = false;
+var trackingUpdateRate_sampleQuantity: number = 64;
+var trackingUpdateRate_monitorTimes: number = 90;
 
 export async function recordEstimateTime(EstimateTime: object): void {
   var needToReset = false;
-  if (!trackingUpdateRate.tracking) {
-    trackingUpdateRate.tracking = true;
-    trackingUpdateRate.trackedStops = [];
-    trackingUpdateRate.trackingID = `e_${generateIdentifier()}`;
+  if (!trackingUpdateRate_tracking) {
+    trackingUpdateRate_tracking = true;
+    trackingUpdateRate_trackedStops = [];
+    trackingUpdateRate_trackingID = `e_${generateIdentifier()}`;
     var EstimateTimeLength: number = EstimateTime.length - 1;
-    for (var i = 0; i < trackingUpdateRate.sampleQuantity; i++) {
+    for (var i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
       var randomItem: object = EstimateTime[randomIndex];
-      trackingUpdateRate.trackedStops.push(randomItem.StopID);
+      trackingUpdateRate_trackedStops.push(randomItem.StopID);
     }
   }
   const currentTimeStamp: number = Math.floor(new Date().getTime() / 1000);
-  var existingRecord = await lfGetItem(3, trackingUpdateRate.trackingID);
+  var existingRecord = await lfGetItem(3, trackingUpdateRate_trackingID);
   if (!existingRecord) {
-    var existingRecordObject: object = { trackingID: trackingUpdateRate.trackingID, timeStamp: new Date().getTime(), data: {} };
+    var existingRecordObject: object = { trackingID: trackingUpdateRate_trackingID, timeStamp: new Date().getTime(), data: {} };
   } else {
     var existingRecordObject: object = JSON.parse(existingRecord);
   }
   for (var item of EstimateTime) {
-    if (trackingUpdateRate.trackedStops.indexOf(item.StopID) > -1) {
+    if (trackingUpdateRate_trackedStops.indexOf(item.StopID) > -1) {
       if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
         existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
       }
       existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-      if (existingRecordObject.data[`s_${item.StopID}`].length > trackingUpdateRate.monitorTimes) {
+      if (existingRecordObject.data[`s_${item.StopID}`].length > trackingUpdateRate_monitorTimes) {
         needToReset = true;
       }
     }
   }
-  await lfSetItem(3, trackingUpdateRate.trackingID, JSON.stringify(existingRecordObject));
+  await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(existingRecordObject));
   if (needToReset) {
-    trackingUpdateRate.tracking = false;
+    trackingUpdateRate_tracking = false;
   }
 }
 

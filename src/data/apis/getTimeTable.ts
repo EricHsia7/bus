@@ -2,7 +2,8 @@ import { getAPIURL } from './getURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
-var TimetableAPIVariableCache = { available: false, data: {} };
+let TimetableAPIVariableCache_available: boolean = false;
+let TimetableAPIVariableCache_data: object = {};
 
 export async function getTimeTable(requestID: string): Promise<object> {
   async function getData() {
@@ -26,9 +27,9 @@ export async function getTimeTable(requestID: string): Promise<object> {
     var result = await getData();
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
-    if (!TimetableAPIVariableCache.available) {
-      TimetableAPIVariableCache.available = true;
-      TimetableAPIVariableCache.data = result;
+    if (!TimetableAPIVariableCache_available) {
+      TimetableAPIVariableCache_available = true;
+      TimetableAPIVariableCache_data = result;
     }
     return result;
   } else {
@@ -38,15 +39,15 @@ export async function getTimeTable(requestID: string): Promise<object> {
       await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
       return result;
     } else {
-      if (!TimetableAPIVariableCache.available) {
+      if (!TimetableAPIVariableCache_available) {
         var cache = await lfGetItem(0, `${cache_key}`);
-        TimetableAPIVariableCache.available = true;
-        TimetableAPIVariableCache.data = JSON.parse(cache);
+        TimetableAPIVariableCache_available = true;
+        TimetableAPIVariableCache_data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getTimeTable_0', 0, true);
       setDataReceivingProgress(requestID, 'getTimeTable_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return TimetableAPIVariableCache.data;
+      return TimetableAPIVariableCache_data;
     }
   }
 }

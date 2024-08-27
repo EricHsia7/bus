@@ -1,7 +1,9 @@
 import { getAPIURL } from './getURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
-var StopAPIVariableCache = { available: false, data: {} };
+
+let StopAPIVariableCache_available: boolean = false;
+let StopAPIVariableCache_data: object = {};
 
 function simplifyStop(array: Array): object {
   var result = {};
@@ -39,9 +41,9 @@ export async function getStop(requestID: string): Promise<object> {
     var simplified_result = simplifyStop(result);
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
-    if (!StopAPIVariableCache.available) {
-      StopAPIVariableCache.available = true;
-      StopAPIVariableCache.data = simplified_result;
+    if (!StopAPIVariableCache_available) {
+      StopAPIVariableCache_available = true;
+      StopAPIVariableCache_data = simplified_result;
     }
     return simplified_result;
   } else {
@@ -52,15 +54,15 @@ export async function getStop(requestID: string): Promise<object> {
       await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
       return simplified_result;
     } else {
-      if (!StopAPIVariableCache.available) {
+      if (!StopAPIVariableCache_available) {
         var cache = await lfGetItem(0, `${cache_key}`);
-        StopAPIVariableCache.available = true;
-        StopAPIVariableCache.data = JSON.parse(cache);
+        StopAPIVariableCache_available = true;
+        StopAPIVariableCache_data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getStop_0', 0, true);
       setDataReceivingProgress(requestID, 'getStop_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return StopAPIVariableCache.data;
+      return StopAPIVariableCache_data;
     }
   }
 }

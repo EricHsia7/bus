@@ -2,7 +2,8 @@ import { getAPIURL } from './getURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
-var RouteAPIVariableCache = { available: false, data: {} };
+let RouteAPIVariableCache_available: boolean = false;
+let RouteAPIVariableCache_data: object = {};
 
 function simplifyRoute(Route: object): object {
   var result = {};
@@ -96,9 +97,9 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
     var simplified_result = simplifyRoute(result);
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
-    if (!RouteAPIVariableCache.available) {
-      RouteAPIVariableCache.available = true;
-      RouteAPIVariableCache.data = simplified_result;
+    if (!RouteAPIVariableCache_available) {
+      RouteAPIVariableCache_available = true;
+      RouteAPIVariableCache_data = simplified_result;
     }
     return simplified_result;
   } else {
@@ -107,21 +108,21 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
       var simplified_result = simplifyRoute(result);
       await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
       await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
-      if (!RouteAPIVariableCache.available) {
-        RouteAPIVariableCache.available = true;
-        RouteAPIVariableCache.data = simplified_result;
+      if (!RouteAPIVariableCache_available) {
+        RouteAPIVariableCache_available = true;
+        RouteAPIVariableCache_data = simplified_result;
       }
       return simplified_result;
     } else {
-      if (!RouteAPIVariableCache.available) {
+      if (!RouteAPIVariableCache_available) {
         var cache = await lfGetItem(0, `${cache_key}`);
-        RouteAPIVariableCache.available = true;
-        RouteAPIVariableCache.data = JSON.parse(cache);
+        RouteAPIVariableCache_available = true;
+        RouteAPIVariableCache_data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getRoute_0', 0, true);
       setDataReceivingProgress(requestID, 'getRoute_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return RouteAPIVariableCache.data;
+      return RouteAPIVariableCache_data;
     }
   }
 }

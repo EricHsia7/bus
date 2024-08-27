@@ -2,7 +2,8 @@ import { getAPIURL } from './getURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
-var ProviderAPIVariableCache = { available: false, data: {} };
+let ProviderAPIVariableCache_available: boolean = false;
+let ProviderAPIVariableCache_data: object = {};
 
 export async function getProvider(requestID: string): Promise<object> {
   async function getData() {
@@ -26,9 +27,9 @@ export async function getProvider(requestID: string): Promise<object> {
     var result = await getData();
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
-    if (!ProviderAPIVariableCache.available) {
-      ProviderAPIVariableCache.available = true;
-      ProviderAPIVariableCache.data = result;
+    if (!ProviderAPIVariableCache_available) {
+      ProviderAPIVariableCache_available = true;
+      ProviderAPIVariableCache_data = result;
     }
     return result;
   } else {
@@ -38,15 +39,15 @@ export async function getProvider(requestID: string): Promise<object> {
       await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
       return result;
     } else {
-      if (!ProviderAPIVariableCache.available) {
+      if (!ProviderAPIVariableCache_available) {
         var cache = await lfGetItem(0, `${cache_key}`);
-        ProviderAPIVariableCache.available = true;
-        ProviderAPIVariableCache.data = JSON.parse(cache);
+        ProviderAPIVariableCache_available = true;
+        ProviderAPIVariableCache_data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getProvider_0', 0, true);
       setDataReceivingProgress(requestID, 'getProvider_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return ProviderAPIVariableCache.data;
+      return ProviderAPIVariableCache_data;
     }
   }
 }
