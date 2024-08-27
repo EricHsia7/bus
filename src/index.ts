@@ -11,7 +11,7 @@ import { openPermalink } from './tools/permalink';
 import { openSearchPage, closeSearchPage } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput } from './interface/search/keyboard';
 import { initializeFolderStores } from './data/folder/index';
-import { preloadData } from './interface/home/index';
+import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
 import { openSettingsPage, closeSettingsPage, downloadExportFile } from './interface/settings/index';
 import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options';
@@ -183,7 +183,6 @@ window.bus = {
             });
             openPermalink();
             fadeOutSplashScreen(function () {
-              preloadData();
               askForPositioningPermission();
             });
           }
@@ -203,6 +202,7 @@ window.bus = {
       bus_lazily_loaded = true;
       loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap', 'Noto Sans', 'noto_sans');
       loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
+      downloadData();
     }
   },
   route: {

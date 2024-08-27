@@ -28,7 +28,7 @@ function setCompleteStatus() {
   }
 }
 
-export async function preloadData(): void {
+export async function downloadData(): void {
   setDataReceivingProgress(dataPreloadRequestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(dataPreloadRequestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(dataPreloadRequestID, 'getStop_0', 0, false);
