@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - update-dependencies
+      - dev-update-dependencies
 
 jobs:
   launch:
