@@ -144,6 +144,6 @@
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"],
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[transition="true"] {
-  transition: transform var(--b-cssvar-transition-duration);
+  transition: transform var(--b-cssvar-transition-duration-short);
   transition-timing-function: linear;
 }
