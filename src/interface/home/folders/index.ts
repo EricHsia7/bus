@@ -60,7 +60,7 @@ function updateUpdateTimer(): void {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
   const delta = Math.abs(foldersRefreshTimer_currentPercentage - percentage);
-  if (delta > 0.1 || delta === 0) {
+  if (delta > 0.1 || percentage < 0.01) {
     updateTimerElement.setAttribute('transition', 'true');
   } else {
     updateTimerElement.setAttribute('transition', 'false');
