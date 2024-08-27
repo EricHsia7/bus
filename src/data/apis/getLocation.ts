@@ -4,6 +4,28 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 import { md5 } from '../../tools/index';
 import { mergeAddressesIntoOne } from '../../tools/address';
 
+export interface SimplifiedLocationItem {
+  n: string; // name
+  lo: number; // longitude
+  la: number; // latitude
+  r: Array<number>; // RouteIDs
+  s: Array<number>; // StopIDs
+  a: Array<string>; // addresses
+}
+
+export type SimplifiedLocation = { [key: string]: SimplifiedLocationItem };
+
+export interface MergedLocationItem {
+  n: string; // name
+  lo: Array<number>; // longitude
+  la: Array<number>; // latitude
+  r: Array<Array<number>>; // RouteIDs
+  s: Array<Array<number>>; // StopIDs
+  a: Array<object | string>; // addresses
+}
+
+export type MergedLocation = { [key: string]: MergedLocationItem };
+
 var LocationAPIVariableCache: object = {
   merged: {
     available: false,
@@ -15,12 +37,12 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(array: Array): object {
-  var result = {};
+function simplifyLocation(array: Array): SimplifiedLocation {
+  var result: SimplifiedLocation = {};
   for (var item of array) {
     var key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
-      var simplified_item = {};
+      var simplified_item: SimplifiedLocationItem = {};
       simplified_item.n = item.nameZh;
       simplified_item.lo = parseFloat(item.longitude);
       simplified_item.la = parseFloat(item.latitude);
@@ -41,8 +63,8 @@ function simplifyLocation(array: Array): object {
   return result;
 }
 
-function mergeLocationByName(object: object): object {
-  var result = {};
+function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
+  var result: MergedLocation = {};
   for (var key in object) {
     var hash = md5(
       String(object[key].n)
@@ -73,7 +95,7 @@ function mergeLocationByName(object: object): object {
   return result;
 }
 
-export async function getLocation(requestID: string, merged: boolean = false): Promise<object> {
+export async function getLocation(requestID: string, merged: boolean = false): Promise<SimplifiedLocation | MergedLocation> {
   async function getData() {
     var apis = [
       [0, 11],

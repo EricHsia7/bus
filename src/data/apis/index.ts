@@ -1,14 +1,14 @@
-import { getEstimateTime } from './getEstimateTime';
+import { EstimateTime, getEstimateTime } from './getEstimateTime';
 import { getStop } from './getStop';
-import { getBusEvent } from './getBusEvent';
-import { getBusData } from './getBusData';
+import { BusEvent, getBusEvent } from './getBusEvent';
+import { BusData, getBusData } from './getBusData';
 import { getRoute } from './getRoute';
 import { getProvider } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
 import { searchRouteByPathAttributeId } from '../search/searchRoute';
-import { getLocation } from './getLocation';
+import { getLocation, SimplifiedLocation } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time';
@@ -47,7 +47,7 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEventWithBusData(BusEvent: Array, BusData: Array, RouteID: number, PathAttributeId: Array<number>): Promise<object> {
+async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, RouteID: number, PathAttributeId: Array<number>): Promise<object> {
   var result = {};
   var BusDataObj = {};
   for (var item of BusData) {
@@ -202,14 +202,14 @@ function formatOverlappingRoutes(array: Array): Array {
   return result;
 }
 
-function processEstimateTime(EstimateTime: Array, Stop: object, Location: object, BusEvent: object, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): Array {
+function processEstimateTime(EstimateTime: EstimateTime, Stop: object, Location: SimplifiedLocation, processedBusEvent: Array<object>, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): Array {
   var result = [];
   var positions = [];
   for (var item of EstimateTime) {
     var thisRouteID = parseInt(item.RouteID);
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      if (BusEvent.hasOwnProperty('s_' + item.StopID)) {
-        item['_BusEvent'] = BusEvent['s_' + item.StopID];
+      if (processedBusEvent.hasOwnProperty('s_' + item.StopID)) {
+        item['_BusEvent'] = processedBusEvent['s_' + item.StopID];
       } else {
         item['_BusEvent'] = [];
       }
@@ -236,7 +236,7 @@ function processEstimateTime(EstimateTime: Array, Stop: object, Location: object
               id: item.StopID
             });
             for (var routeStopId of item['_overlappingRouteStops']) {
-              item['_BusEvent'] = item['_BusEvent'].concat(BusEvent.hasOwnProperty('s_' + routeStopId) ? BusEvent['s_' + routeStopId] : []);
+              item['_BusEvent'] = item['_BusEvent'].concat(processedBusEvent.hasOwnProperty('s_' + routeStopId) ? processedBusEvent['s_' + routeStopId] : []);
             }
           }
           item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
