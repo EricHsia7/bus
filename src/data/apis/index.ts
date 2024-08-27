@@ -315,6 +315,16 @@ function processEstimateTime(EstimateTime: Array, Stop: object, Location: object
   return result2;
 }
 
+function processEstimateTime2(EstimateTime: Array, StopIDs: number[]): object {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
+      result[`s_${item.StopID}`] = item;
+    }
+  }
+  return result;
+}
+
 export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
