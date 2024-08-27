@@ -148,7 +148,7 @@ function updateUpdateTimer(): void {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
   const delta = Math.abs(routeRefreshTimer_currentPercentage - percentage);
-  if (delta > 0.25 || percentage > -0.01) {
+  if (delta > 0.25 || percentage >= 0) {
     updateTimerElement.setAttribute('transition', 'true');
   } else {
     updateTimerElement.setAttribute('transition', 'false');
