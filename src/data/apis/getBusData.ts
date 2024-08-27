@@ -5,8 +5,10 @@ interface BusDataItem {
   ProviderID: number;
   StationID: number;
   BusID: string; // vehicle registration number
-  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)  CarID: number;
-  DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end  BusStatus: string; // number in string
+  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
+  CarID: number;
+  DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end
+  BusStatus: string; // number in string
   RouteID: string; // number in string
   GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
   Longitude: string; // number in string
@@ -16,7 +18,7 @@ interface BusDataItem {
   DataTime: string; // timestamp
 }
 
-type BusData = Array<BusDataItem>;
+export type BusData = Array<BusDataItem>;
 
 export async function getBusData(requestID: string): Promise<BusData> {
   var apis = [

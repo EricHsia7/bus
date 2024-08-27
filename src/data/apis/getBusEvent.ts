@@ -15,7 +15,7 @@ interface BusEventItem {
   DataTime: string; // timestamp
 }
 
-type BusEvent = Array<BusEventItem>
+export type BusEvent = Array<BusEventItem>
 
 export async function getBusEvent(requestID: string): Promise<BusEvent> {
   var apis = [
