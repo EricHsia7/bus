@@ -10,8 +10,7 @@ import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setD
 import { getEstimateTime } from '../apis/getEstimateTime';
 import { recordEstimateTime } from '../analytics/update-rate';
 
-var _ = {};
-_.cloneDeep = require('lodash/cloneDeep');
+const cloneDeep = require('lodash/cloneDeep');
 
 var Folders = {
   f_saved_stop: {
@@ -180,7 +179,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
 }
 
 export function getFolder(folderID: string): Folder {
-  return _.cloneDeep(Folders[`f_${folderID}`]);
+  return cloneDeep(Folders[`f_${folderID}`]);
 }
 
 export async function listFolders(): Promise<Array<Folder>> {
