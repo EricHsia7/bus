@@ -1,10 +1,16 @@
+@property --font-variation-settings-fill {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 span.css_material_symbols_rounded {
   font-family: 'Material Symbols Rounded';
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
   font-variation-settings:
-    'FILL' 0,
+    'FILL' var(--font-variation-settings-fill),
     'wght' 300,
     'GRAD' 0,
     'opsz' 24;
