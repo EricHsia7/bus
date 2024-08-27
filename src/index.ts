@@ -89,29 +89,6 @@ import './interface/folder-icon-selector/symbols.css';
 
 import './interface/prompt/index.css';
 
-//for development
-/*
-const ErrorStackParser = require('error-stack-parser');
-const StackTrace = require('stacktrace-js');
-
-window.onerror = async function (message, source, lineno, colno, error) {
-  StackTrace.fromError(error).then(function (stackTrace) {
-    var parsedStackTrace = stackTrace.map(function (frame) {
-      return {
-        functionName: frame.functionName,
-        fileName: frame.fileName,
-        lineNumber: frame.lineNumber,
-        columnNumber: frame.columnNumber
-      };
-    });
-    console.log('%c ----------', 'color: #888;');
-    parsedStackTrace.forEach((e) => {
-      console.error(`func: ${e.functionName}\npath: ${e.fileName}\nlocation: L${e.lineNumber} C${e.columnNumber}`);
-    });
-  });
-};
-*/
-
 let bus_initialized = false;
 let bus_lazily_loaded = false;
 

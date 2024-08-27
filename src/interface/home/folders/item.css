@@ -302,6 +302,7 @@
 /* code: 0.5 */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="0.5"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="0.5"] {
+  background: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
@@ -310,6 +311,7 @@
 /* code: 0 */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="0"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="0"] {
+  background: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
