@@ -4,12 +4,12 @@
     transform: translateX(-50%) scale(0.85);
   }
 
-  5% {
+  10% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
 
-  92% {
+  84% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
@@ -38,7 +38,7 @@
   -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
   animation-name: css_show_prompt;
-  animation-duration: 6000ms;
+  animation-duration: 3000ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
   will-change: transform, opacity;
@@ -62,7 +62,7 @@
     --b-cssvar-font-variation-settings-fill: 0;
   }
 
-  8% {
+  10% {
     --b-cssvar-font-variation-settings-fill: 1;
   }
 
