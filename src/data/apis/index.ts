@@ -442,15 +442,19 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     }
     item.progress = progress;
 
-    if (multipleEndpoints && item.segmentBuffer) {
-      endpointCount += 1;
+    if (multipleEndpoints) {
+      if (item.segmentBuffer) {
+        endpointCount += 1;
+      }
       if (endpointCount % 2 === 1) {
         item.segmentBuffer = true;
       }
     }
 
-    if (nearestPosition && nearestPosition.id === item.StopID) {
-      item.nearest = true;
+    if (!(nearestPosition === null)) {
+      if (nearestPosition.id === item.id) {
+        item.nearest = true;
+      }
     }
 
     const groupKey = `g_${item.goBack}` || 'g_0';
