@@ -88,11 +88,13 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
       result['s_' + item.StopID].push(item);
     }
   }
+  /*
   for (var key in result) {
     result[key] = result[key].sort(function (a, b) {
       return a.index - b.index;
     });
   }
+  */
   return result;
 }
 
@@ -336,7 +338,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           buses.push(processedBusEvent[overlappingStopKey].map((e) => formatBus(e)));
         }
       }
-      integratedStopItem.buses = buses.flat();
+      integratedStopItem.buses = buses.flat().sort(function (a, b) {
+        return a.index - b.index;
+      });
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
