@@ -8,10 +8,10 @@ import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
 import { searchRouteByPathAttributeId } from '../search/searchRoute';
-import { getLocation, SimplifiedLocation } from './getLocation';
+import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
-import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time';
+import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, Status } from '../../tools/format-time';
 import { generateIdentifier, generateDirectionLabels } from '../../tools/index';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address';
 import { generateLetterLabels } from '../../tools/index';
@@ -47,7 +47,15 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
-async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, RouteID: number, PathAttributeId: Array<number>): Promise<object> {
+interface ProcessedBus {
+  BusID: string;
+  onThisRoute: boolean;
+  latitude: number;
+  longitude: number;
+  index: number;
+}
+
+async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, RouteID: number, PathAttributeId: Array<number>): Promise<{ [key: string]: Array<ProcessedBus> }> {
   var result = {};
   var BusDataObj = {};
   for (var item of BusData) {
@@ -66,8 +74,8 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
       item.index = String(item.BusID).charCodeAt(0);
     }
     if (BusDataObj.hasOwnProperty(thisBusID)) {
-      item.la = parseFloat(BusDataObj[thisBusID].Latitude);
-      item.lo = parseFloat(BusDataObj[thisBusID].Longitude);
+      item.latitude = parseFloat(BusDataObj[thisBusID].Latitude);
+      item.longitude = parseFloat(BusDataObj[thisBusID].Longitude);
     } else {
       item.lo = 0;
       item.la = 0;
@@ -202,117 +210,23 @@ function formatOverlappingRoutes(array: Array): Array {
   return result;
 }
 
-function processEstimateTime(EstimateTime: EstimateTime, Stop: SimplifiedStop, Location: SimplifiedLocation, processedBusEvent: Array<object>, Route: SimplifiedRoute, segmentBuffer: object, RouteID: number, PathAttributeId: Array<number>): Array {
-  var result = [];
-  var positions = [];
-  for (var item of EstimateTime) {
-    var thisRouteID = parseInt(item.RouteID);
-    if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      if (processedBusEvent.hasOwnProperty(`s_${item.StopID}`)) {
-        item['_BusEvent'] = processedBusEvent[`s_${item.StopID}`];
-      } else {
-        item['_BusEvent'] = [];
-      }
-      item['_segmentBuffer'] = false; //0→starting of the range; 1→ending of the range
+interface integratedStopItemPosition {
+  longitude: number;
+  latitude: number;
+}
 
-      if (Stop.hasOwnProperty(`s_${item.StopID}`)) {
-        item._Stop = Stop[`s_${item.StopID}`];
-        if (Location.hasOwnProperty(`l_${item._Stop.stopLocationId}`)) {
-          if (Stop.hasOwnProperty(`s_${item.StopID}`)) {
-            item._Stop.nameZh = Location[`l_${item._Stop.stopLocationId}`].n;
-            var segmentBufferOfThisGroup = (segmentBuffer[`g_${item._Stop.goBack}`] ? segmentBuffer[`g_${item._Stop.goBack}`] : segmentBuffer[`g_0`].reverse()) || [];
-            if (segmentBufferOfThisGroup.indexOf(item._Stop.nameZh) > -1) {
-              item['_segmentBuffer'] = true;
-            }
-            item['_overlappingRouteStops'] = Location[`l_${item._Stop.stopLocationId}`].s.filter((e) => {
-              return e === item.StopID ? false : true;
-            });
-            item._Stop.la = Location[`l_${item._Stop.stopLocationId}`].la;
-            item._Stop.lo = Location[`l_${item._Stop.stopLocationId}`].lo;
-            item.nearest = false;
-            positions.push({
-              latitude: item._Stop.la,
-              longitude: item._Stop.lo,
-              id: item.StopID
-            });
-            for (var routeStopId of item['_overlappingRouteStops']) {
-              item['_BusEvent'] = item['_BusEvent'].concat(processedBusEvent.hasOwnProperty('s_' + routeStopId) ? processedBusEvent['s_' + routeStopId] : []);
-            }
-          }
-          item['_overlappingRoutes'] = Location[`l_${item._Stop.stopLocationId}`].r
-            .map((routeId) => {
-              return Route.hasOwnProperty(`r_${routeId}`) ? Route[`r_${routeId}`] : {};
-            })
-            .filter((e) => {
-              return e.id === RouteID ? false : true;
-            });
-        }
-      }
-      if (item.hasOwnProperty('_Stop')) {
-        if (item._Stop.hasOwnProperty('nameZh')) {
-          result.push(item);
-        }
-      }
-    }
-  }
-  result = result.sort(function (a, b) {
-    var c = 0;
-    var d = 0;
-    if (a.hasOwnProperty('_Stop')) {
-      c = a._Stop.seqNo;
-    }
-    if (b.hasOwnProperty('_Stop')) {
-      d = b._Stop.seqNo;
-    }
-    return c - d;
-  });
-  var result2 = [];
-  var endpointCount = 0;
-  var multipleEndpoints = segmentBuffer['g_0'].length % 2 === 0 ? true : false;
-  var nearestPosition = getNearestPosition(positions, 450);
-  var resultLength = result.length;
-  for (var i = 0; i < resultLength; i++) {
-    var currentItem = result[i];
-    //var previousItem = result[i - 1] || currentItem;
-    var nextItem = result[i + 1] || currentItem;
-    var progress: number = 0;
-    if (currentItem._BusEvent.length > 0) {
-      var firstBusEventRouteID: number = parseInt(currentItem._BusEvent[0].RouteID);
-      if (firstBusEventRouteID === RouteID) {
-        var x = currentItem._BusEvent[0].la;
-        var y = currentItem._BusEvent[0].lo;
-        var x1 = currentItem._Stop.la;
-        var y1 = currentItem._Stop.lo;
-        var x2 = nextItem._Stop.la;
-        var y2 = nextItem._Stop.lo;
-        var vectorA = [x - x1, y - y1];
-        var vectorB = [x2 - x, y2 - y];
-        var dotProduct = vectorA[0] * vectorB[0] + vectorA[1] * vectorB[1];
-        if (dotProduct >= 0) {
-          // ensure that (x, y) is between (x1, y1) and (x2, y2)
-          var d1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
-          var d2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-          progress = Math.max(0, Math.min(d1 / (d1 + d2), 1));
-        }
-      }
-    }
-    currentItem.progress = progress;
-    if (multipleEndpoints) {
-      if (currentItem._segmentBuffer) {
-        endpointCount += 1;
-      }
-      if (endpointCount % 2 === 1) {
-        currentItem._segmentBuffer = true;
-      }
-    }
-    if (!(nearestPosition === null)) {
-      if (nearestPosition.id === currentItem.StopID) {
-        currentItem.nearest = true;
-      }
-    }
-    result2.push(currentItem);
-  }
-  return result2;
+interface integratedStopItem {
+  name: string | null;
+  goBack: '0' | '1' | '2';
+  status: Status;
+  buses: Array<object>;
+  overlappingRoutes: Array<object>;
+  sequence: number;
+  position: integratedStopItemPosition;
+  nearest: boolean;
+  segmentBuffer: boolean;
+  progress: number;
+  id: number | null;
 }
 
 function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
@@ -347,46 +261,150 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   var processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
   var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
-  var processedEstimateTime = processEstimateTime(EstimateTime, Stop, Location, processedBusEvent, Route, processedSegmentBuffer, RouteID, PathAttributeId);
+
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var thisRoute = Route[`r_${RouteID}`];
 
-  var groupedItems = {};
-  for (var item of processedEstimateTime) {
-    var formattedItem = {};
-    formattedItem.name = item.hasOwnProperty('_Stop') ? item._Stop.nameZh : null;
-    formattedItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
-    formattedItem.buses = item.hasOwnProperty('_BusEvent') ? formatBusEvent(item._BusEvent) : null;
-    formattedItem.overlappingRoutes = item.hasOwnProperty('_overlappingRoutes') ? formatOverlappingRoutes(item._overlappingRoutes) : null;
-    formattedItem.sequence = item.hasOwnProperty('_Stop') ? item._Stop.seqNo : -1;
-    formattedItem.location = {
-      latitude: item.hasOwnProperty('_Stop') ? item._Stop.la : null,
-      longitude: item.hasOwnProperty('_Stop') ? item._Stop.lo : null
-    };
-    formattedItem.nearest = item.nearest;
-    formattedItem.segmentBuffer = item._segmentBuffer;
-    formattedItem.progress = item.progress;
-    formattedItem.id = item.StopID || null;
-    var group = item.hasOwnProperty('_Stop') ? `g_${item._Stop.goBack}` : 'g_0';
-    if (!groupedItems.hasOwnProperty(group)) {
-      groupedItems[group] = [];
+  let result = [];
+  let positions = [];
+
+  for (const item of EstimateTime) {
+    let integratedStopItem: integratedStopItem = {};
+
+    const thisRouteID = item.RouteID;
+
+    // check whether this stop is on this route or not
+    if ([RouteID, RouteID * 10].includes(thisRouteID) || PathAttributeId.includes(thisRouteID)) {
+      // format status
+      integratedStopItem.status = formatEstimateTime(item.EstimateTime, time_formatting_mode);
+
+      // collect data from 'Stop'
+      const thisStopKey = `s_${item.StopID}`;
+      let thisStop: SimplifiedStopItem = {};
+      if (Stop.hasOwnProperty(thisStopKey)) {
+        thisStop = Stop[thisStopKey];
+      } else {
+        continue;
+      }
+      integratedStopItem.id = item.StopID;
+      integratedStopItem.sequence = thisStop.seqNo;
+      integratedStopItem.goBack = thisStop.goBack;
+
+      // collect data from 'Location'
+      const thisLocationKey = `l_${thisStop.stopLocationId}`;
+      let thisLocation: SimplifiedLocationItem = {};
+      if (Location.hasOwnProperty(thisLocationKey)) {
+        thisLocation = Location[thisLocationKey];
+      } else {
+        continue;
+      }
+      integratedStopItem.name = thisLocation.n;
+      integratedStopItem.overlappingRoutes = thisLocation.r
+        .filter((id: number) => id !== RouteID)
+        .map((id: number) => {
+          const overlappingRouteKey = `r_${id}`;
+          if (Route.hasOwnProperty(overlappingRouteKey)) {
+            return Route[overlappingRouteKey];
+          } else {
+            return null;
+          }
+        })
+        .filter((e) => {
+          return !(e === null);
+        });
+      positions.push({ latitude: thisLocation.la, longitude: thisLocation.lo, id: item.StopID });
+
+      // collect data from 'processedBusEvent'
+      let buses: Array<ProcessedBus> = thisLocation.s
+        .map((overlappingStopID) => {
+          // "overlapping stops" contains this stop
+          const overlappingStopKey = `s_${overlappingStopID}`;
+          if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
+            return processedBusEvent[overlappingStopKey];
+          } else {
+            return null;
+          }
+        })
+        .filter((e) => {
+          return !(e === null);
+        });
+      integratedStopItem.buses = buses;
+
+      // check whether this stop is segment buffer
+      let isSegmentBuffer: boolean = false;
+      const segmentBufferGroup = processedSegmentBuffer[`g_${item._Stop.goBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
+      if (segmentBufferGroup.includes(item._Stop.nameZh)) {
+        isSegmentBuffer = true;
+      }
+      integratedStopItem.segmentBuffer = isSegmentBuffer;
+
+      result.push(integratedStopItem);
     }
-    groupedItems[group].push(formattedItem);
   }
-  var groupQuantity = 0;
-  var itemQuantity = {};
-  for (var group in groupedItems) {
-    if (!itemQuantity.hasOwnProperty(group)) {
-      itemQuantity[group] = groupedItems[group].length;
+
+  result.sort(function (a, b) {
+    return a.sequence - b.sequence;
+  });
+
+  const nearestPosition = getNearestPosition(positions, 450);
+  const multipleEndpoints = processedSegmentBuffer['g_0'].length % 2 === 0;
+  let endpointCount = 0;
+  
+  let groupedItems = {};
+  let groupQuantity = 0;
+  let itemQuantity = {};
+
+  const resultLength = result.length;
+
+  for (let index = 0; index < resultLength; index++) {
+    let item = result[index];
+    const nextItem = result[index + 1] || item;
+    let progress = 0;
+
+    if (item.buses.length > 0) {
+      if (parseInt(item.buses[0].RouteID) === RouteID) {
+        const [x, y] = [item.buses[0].longitude, item.buses[0].latitude];
+        const [x1, y1] = [item.position.longitude, item.position.latitude];
+        const [x2, y2] = [nextItem.position.longitude, nextItem.position.latitude];
+        const dotProduct = (x - x1) * (x2 - x) + (y - y1) * (y2 - y);
+        if (dotProduct >= 0) {
+          // ensure that (x, y) is between (x1, y1) and (x2, y2)
+          const distance1 = Math.hypot(x - x1, y - y1);
+          const distance2 = Math.hypot(x - x2, y - y2);
+          progress = Math.max(0, Math.min(distance1 / (distance1 + distance2), 1));
+        }
+      }
     }
-    groupQuantity += 1;
+    item.progress = progress;
+
+    if (multipleEndpoints && item.segmentBuffer) {
+      endpointCount += 1;
+      if (endpointCount % 2 === 1) {
+        item.segmentBuffer = true;
+      }
+    }
+
+    if (nearestPosition && nearestPosition.id === item.StopID) {
+      item.nearest = true;
+    }
+
+    const groupKey = `g_${item.goBack}` || 'g_0';
+
+    if (!groupedItems.hasOwnProperty(groupKey)) {
+      groupedItems[groupKey] = [];
+      itemQuantity[groupKey] = 0;
+      groupQuantity += 1;
+    }
+
+    groupedItems[groupKey].push(item);
+    itemQuantity[groupKey] += 1;
   }
 
-  var thisRouteName = thisRoute.n;
-  var thisRouteDeparture = thisRoute.dep;
-  var thisRouteDestination = thisRoute.des;
+  const thisRoute = Route[`r_${RouteID}`];
+  const thisRouteName = thisRoute.n;
+  const thisRouteDeparture = thisRoute.dep;
+  const thisRouteDestination = thisRoute.des;
 
-  var result = {
+  const result = {
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,

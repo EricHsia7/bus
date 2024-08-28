@@ -63,7 +63,12 @@ export function formatTime(time: number, mode: number): string {
   return '--';
 }
 
-export function formatEstimateTime(EstimateTime: string, mode: number): object {
+export interface Status {
+  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6;
+  text: string;
+}
+
+export function formatEstimateTime(EstimateTime: string, mode: number): Status {
   var time = parseInt(EstimateTime);
   if (time === -3) {
     return { code: 6, text: '末班駛離' };
@@ -93,15 +98,15 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
 }
 
 interface Moment {
-  type: 'moment'
-  hours: number
-  minutes: number
+  type: 'moment';
+  hours: number;
+  minutes: number;
 }
 
 interface Range {
-  type: 'range'
-  min: number
-  max: number
+  type: 'range';
+  min: number;
+  max: number;
 }
 
 export function formatTimeCode(code: string, mode: number): Moment | Range {
