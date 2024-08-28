@@ -62,30 +62,31 @@ interface ProcessedBus {
 async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, RouteID: number, PathAttributeId: Array<number>): Promise<{ [key: string]: Array<ProcessedBus> }> {
   var result = {};
   var BusDataObj = {};
-  for (var item of BusData) {
-    var thisBusID = item.BusID;
-    BusDataObj[thisBusID] = item;
+  for (const BusDataItem of BusData) {
+    var thisBusID = BusDataItem.BusID;
+    BusDataObj[thisBusID] = BusDataItem;
   }
 
-  for (var item of BusEvent) {
+  for (let BusEventItem of BusEvent) {
     let processedItem = {};
 
     // collect data from 'BusEvent'
-    processedItem.CarType = item.CarType;
-    processedItem.BusStatus = item.BusStatus;
-    processedItem.BusID = item.BusID;
+    processedItem.CarType = BusEventItem.CarType;
+    processedItem.BusStatus = BusEventItem.BusStatus;
+    processedItem.BusID = BusEventItem.BusID;
+    processedItem.CarOnStop = BusEventItem.CarOnStop;
 
     // check whether this bus is on the route
-    const thisRouteID = parseInt(item.RouteID);
-    const thisBusID = item.BusID;
+    const thisRouteID = parseInt(BusEventItem.RouteID);
+    const thisBusID = BusEventItem.BusID;
     let isOnThisRoute: boolean = false;
     let index: number = 0;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10) {
       isOnThisRoute = true;
-      index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
+      index = String(BusEventItem.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
       isOnThisRoute = false;
-      index = String(item.BusID).charCodeAt(0);
+      index = String(BusEventItem.BusID).charCodeAt(0);
     }
     processedItem.onThisRoute = isOnThisRoute;
     processedItem.index = index;
@@ -108,7 +109,7 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
     processedItem.RouteName = searchedRoute ? searchedRoute.n : '';
     processedItem.RouteID = searchedRoute ? searchedRoute.id : null;
 
-    const StopKey = `s_${item.StopID}`;
+    const StopKey = `s_${BusEventItem.StopID}`;
     if (!result.hasOwnProperty(StopKey)) {
       result[StopKey] = [];
     }

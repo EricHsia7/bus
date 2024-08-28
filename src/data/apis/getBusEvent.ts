@@ -11,11 +11,11 @@ interface BusEventItem {
   RouteID: string; // number in string
   GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
   StopID: string; // number in string
-  CarOnStop: string; // 0: leaving/left, 1: coming/came
+  CarOnStop: '0' | '1'; // 0: leaving/left, 1: coming/came
   DataTime: string; // timestamp
 }
 
-export type BusEvent = Array<BusEventItem>
+export type BusEvent = Array<BusEventItem>;
 
 export async function getBusEvent(requestID: string): Promise<BusEvent> {
   var apis = [
