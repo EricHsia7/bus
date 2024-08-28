@@ -21,6 +21,7 @@ export function promptMessage(message: string, icon: string, duration: number = 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
   promptIconElement.innerHTML = getIconHTML(icon);
+  promptElement.appendChild(promptIconElement);
   const promptMessageElement = document.createElement('div');
   promptMessageElement.classList.add('css_prompt_message');
   promptMessageElement.innerText = message;
