@@ -41,6 +41,7 @@
   animation-duration: 6000ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
+  will-change: transform, opacity;
 }
 
 .css_prompt .css_prompt_icon {
