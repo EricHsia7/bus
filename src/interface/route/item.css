@@ -307,8 +307,8 @@
 }
 
 /* code: 0 && segment buffer: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_item_status .css_next_slide[code="0"],
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_item_status .css_current_slide[code="0"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_next_slide[code="0"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[segment-buffer="true"] .css_head .css_capsule .css_item_status .css_current_slide[code="0"] {
   background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
