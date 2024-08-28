@@ -183,6 +183,23 @@ export function generateLetterLabels(quantity: number): Array<string> {
   return result;
 }
 
+export function generateOrientationLabels(setsOfVectors: Array<Array<[number, number]>>): Array<string> {
+  const NorthVector = [0, 1]
+  const EastVector = [1,0]
+  const WestVector = [-1, 0]
+  const SouthVector = [0, -1]
+  
+  for (const vectorSet of setsOfVectors) {
+    let x = 0
+    let  y = 0
+        for (const vector of vectorSet) {
+      x += vector[0]
+      y += vector[1]
+        }
+    const meanVector = [x, y]
+  }
+}
+
 const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
 export function generateIdentifier(): string {

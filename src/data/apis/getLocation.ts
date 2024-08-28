@@ -34,7 +34,7 @@ export interface SimplifiedLocationItem {
   la: number; // latitude
   r: Array<number>; // RouteIDs
   s: Array<number>; // StopIDs
-  v: Array<[number, number]>; // vectors
+  v: Array<[number, number]>; // a set of vectors
   a: Array<string>; // addresses
 }
 
@@ -46,7 +46,7 @@ export interface MergedLocationItem {
   la: Array<number>; // latitude
   r: Array<Array<number>>; // RouteIDs
   s: Array<Array<number>>; // StopIDs
-  v: Array<Array<[number, number]>>; // vectors
+  v: Array<Array<[number, number]>>; // sets of vectors
   a: Array<object | string>; // addresses
 }
 
