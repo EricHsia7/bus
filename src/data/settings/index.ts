@@ -122,7 +122,7 @@ var Settings = {
       },
       {
         name: '方位',
-        value: 'orientations'
+        value: 'directions'
       }
     ]
   },

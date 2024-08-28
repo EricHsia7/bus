@@ -183,13 +183,20 @@ export function generateLetterLabels(quantity: number): Array<string> {
   return result;
 }
 
-export function generateOrientationLabels(setsOfVectors: Array<Array<[number, number]>>): Array<string> {
+export function generateDirectionLabels(setsOfVectors: Array<Array<[number, number]>>): Array<string> {
   let result = [];
+  // cardinal directions
   const NorthVector = [0, 1];
   const EastVector = [1, 0];
   const WestVector = [-1, 0];
   const SouthVector = [0, -1];
-  const orientations = [
+  // intercardinal directions
+  const NorthEastVector = [Math.sqrt(2) / 2, Math.sqrt(2) / 2]; // 45 degrees
+  const SouthEastVector = [Math.sqrt(2) / 2, -Math.sqrt(2) / 2]; // 135 degrees
+  const SouthWestVector = [-Math.sqrt(2) / 2, -Math.sqrt(2) / 2]; // 225 degrees
+  const NorthWestVector = [-Math.sqrt(2) / 2, Math.sqrt(2) / 2]; // 315 degrees
+
+  const directions = [
     {
       vector: NorthVector,
       label: '北'
@@ -205,6 +212,22 @@ export function generateOrientationLabels(setsOfVectors: Array<Array<[number, nu
     {
       vector: WestVector,
       label: '西'
+    },
+    {
+      vector: NorthEastVector,
+      label: '東北'
+    },
+    {
+      vector: SouthEastVector,
+      label: '東南'
+    },
+    {
+      vector: SouthWestVector,
+      label: '西南'
+    },
+    {
+      vector: NorthWestVector,
+      label: '西北'
     }
   ];
 
@@ -217,9 +240,9 @@ export function generateOrientationLabels(setsOfVectors: Array<Array<[number, nu
     }
     const meanVector = convertToUnitVector([x, y]);
     let result2 = [];
-    for (const orientation of orientations) {
-      var dotProduct = orientation.vector[0] * meanVector[0] + orientation.vector[1] * meanVector[1];
-      result2.push({ label: orientation.label, dotProduct: dotProduct });
+    for (const direction of directions) {
+      var dotProduct = direction.vector[0] * meanVector[0] + direction.vector[1] * meanVector[1];
+      result2.push({ label: direction.label, dotProduct: dotProduct });
     }
     result2 = result2.sort(function (a, b) {
       return b.dotProduct - a.dotProduct;

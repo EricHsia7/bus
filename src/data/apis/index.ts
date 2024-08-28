@@ -12,7 +12,7 @@ import { getLocation, SimplifiedLocation } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time';
-import { generateIdentifier, generateOrientationLabels } from '../../tools/index';
+import { generateIdentifier, generateDirectionLabels } from '../../tools/index';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address';
 import { generateLetterLabels } from '../../tools/index';
 import { getSettingOptionValue } from '../settings/index';
@@ -752,8 +752,8 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     case 'letters':
       labels = generateLetterLabels(stopLocationQuantity);
       break;
-    case 'orientations':
-      labels = generateOrientationLabels(setsOfVectors);
+    case 'directions':
+      labels = generateDirectionLabels(setsOfVectors);
       break;
     default:
       break;
