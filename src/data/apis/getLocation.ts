@@ -111,7 +111,7 @@ function simplifyLocation(array: Location): SimplifiedLocation {
       if (!(result[key].r.indexOf(item.routeId) > -1)) {
         result[key].r.push(item.routeId);
       }
-      if (!(result[key].s.indexOf(item.Id) > -1)) {
+      if (!(result[key].s.filter((e) => (e.id === item.Id ? true : false)).length > 0)) {
         result[key].s.push({ id: item.Id, v: vector });
       }
       result[key].a.push(item.address);
@@ -169,7 +169,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
 
   var cache_time: number = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v12_cache`;
+  var cache_key = `bus_${cache_type}_location_v13_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
