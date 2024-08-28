@@ -38,7 +38,7 @@
   -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
   animation-name: css_show_prompt;
-  animation-duration: 3820ms;
+  animation-duration: 6000ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
