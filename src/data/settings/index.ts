@@ -1,4 +1,4 @@
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { formatTime } from '../../tools/format-time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
@@ -172,7 +172,7 @@ var Settings = {
 };
 
 export async function initializeSettings(): void {
-  var userSettings = await lfListItem(1);
+  var userSettings = await lfListItemKeys(1);
   for (var key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
       var userSetting = await lfGetItem(1, key);

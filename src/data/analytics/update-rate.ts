@@ -1,6 +1,6 @@
 import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
 import { formatTime } from '../../tools/format-time';
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime';
 
 var trackingUpdateRate_trackedStops: Array = [];
@@ -47,7 +47,7 @@ export async function recordEstimateTime(EstimateTime: EstimateTime): void {
 }
 
 export async function listRecordedEstimateTime(): Promise<Array<[number, number]>> {
-  var keys = await lfListItem(3);
+  var keys = await lfListItemKeys(3);
   var result = [];
   for (var key of keys) {
     var json = await lfGetItem(3, key);

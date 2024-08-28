@@ -1,5 +1,5 @@
 import { convertBytes } from '../../tools/index';
-import { lfSetItem, lfGetItem, lfListItem } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 
 export async function recordRequest(requestID: string, data: object): void {
   var existingRecord = await lfGetItem(2, requestID);
@@ -14,7 +14,7 @@ export async function recordRequest(requestID: string, data: object): void {
 }
 
 export async function calculateDataUsage(): Promise<number> {
-  var keys = await lfListItem(2);
+  var keys = await lfListItemKeys(2);
   var total_content_length = 0;
   for (var key of keys) {
     var json = await lfGetItem(2, key);

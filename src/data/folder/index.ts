@@ -1,5 +1,5 @@
 import { integrateStop } from '../apis/index';
-import { lfSetItem, lfGetItem, lfListItem, registerStore, lfRemoveItem } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
 import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
@@ -102,7 +102,7 @@ export interface FoldersWithContent {
 }
 
 export async function initializeFolderStores(): void {
-  var folderKeys = await lfListItem(4);
+  var folderKeys = await lfListItemKeys(4);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
     var thisFolder: string = await lfGetItem(4, folderKey);
@@ -128,7 +128,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean>
     return false;
   }
 
-  var folderKeys = await lfListItem(4);
+  var folderKeys = await lfListItemKeys(4);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
@@ -193,7 +193,7 @@ export async function listFolders(): Promise<Array<Folder>> {
 export async function listFolderContent(folderID: string): Promise<Array<FolderContent>> {
   var result = [];
   var thisFolder = Folders[`f_${folderID}`];
-  var itemKeys = await lfListItem(thisFolder.storeIndex);
+  var itemKeys = await lfListItemKeys(thisFolder.storeIndex);
   if (itemKeys.length > 0) {
     for (var itemKey of itemKeys) {
       var item = await lfGetItem(thisFolder.storeIndex, itemKey);
@@ -219,7 +219,7 @@ export async function listFolderContent(folderID: string): Promise<Array<FolderC
 
 async function getFolderContentLength(folderID: string): Promise<number> {
   const thisFolder = getFolder(folderID);
-  const itemKeys = await lfListItem(thisFolder.storeIndex);
+  const itemKeys = await lfListItemKeys(thisFolder.storeIndex);
   if (itemKeys.length === 1) {
     const folderContent = await listFolderContent(folderID);
     const firstItem = folderContent[0];
@@ -370,7 +370,7 @@ export async function isSaved(type: FolderContentType, id: number | string): Pro
   var folderList = await listFolders();
   for (var folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
-      var itemKeys = await lfListItem(folder.storeIndex);
+      var itemKeys = await lfListItemKeys(folder.storeIndex);
       for (var itemKey of itemKeys) {
         if (itemKey.indexOf(`${type}_${id}`) > -1) {
           return true;

@@ -76,7 +76,7 @@ export async function lfRemoveItem(store: number, key: string): Promise<any> {
   }
 }
 
-export async function lfListItem(store: number): Promise<Array> {
+export async function lfListItemKeys(store: number): Promise<Array<string>> {
   try {
     var store_key = stores[store];
     if (storage[store_key] === false) {
@@ -96,7 +96,7 @@ export async function calculateStoresSize(): Promise<string> {
   var total_size = 0;
   var index = 0;
   for (var store of stores) {
-    var keysInStore = await lfListItem(index);
+    var keysInStore = await lfListItemKeys(index);
     for (var itemKey of keysInStore) {
       var item = await lfGetItem(index, itemKey);
       var itemInString = String(item);
