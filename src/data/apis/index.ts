@@ -737,7 +737,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   var stopLocationQuantity = stopLocationIds.length;
 
   for (var i = 0; i < stopLocationQuantity; i++) {
-    StopIDs = StopIDs.concat(thisLocation.s[i]);
+    StopIDs = StopIDs.concat(thisLocation.s[i].map((e) => e.id));
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
@@ -769,7 +769,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     };
     var stopQuantity = thisLocation.s[i].length;
     for (var o = 0; o < stopQuantity; o++) {
-      var thisStopID = thisLocation.s[i][o];
+      var thisStopID = thisLocation.s[i][o].id;
       var thisStop: SimplifiedStopItem = Stop[`s_${thisStopID}`];
       var thisRouteID: number = thisLocation.r[i][o];
       var thisRoute: SimplifiedRouteItem = Route[`r_${thisRouteID}`];

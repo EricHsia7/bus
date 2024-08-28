@@ -237,3 +237,21 @@ export function releaseFile(content: string, type: string = 'application/json', 
 export function isRunningStandalone(): boolean {
   return window.matchMedia('(display-mode: standalone)').matches;
 }
+
+export function convertToUnitVector(vector: Array<number>): Array<number> {
+  let sum = 0;
+  for (var x of vector) {
+    sum += Math.pow(x, 2);
+  }
+  let length = Math.sqrt(sum);
+  let newVector = [];
+  if (length > 0) {
+    let scale = 1 / length;
+    for (var x of vector) {
+      newVector.push(x * scale);
+    }
+    return newVector;
+  } else {
+    return vector;
+  }
+}
