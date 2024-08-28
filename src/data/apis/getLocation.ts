@@ -25,7 +25,7 @@ export type Location = Array<LocationItem>;
 
 export interface LocationStopItem {
   id: number;
-  vector: [number, number];
+  v: [number, number];
 }
 
 export interface SimplifiedLocationItem {
@@ -78,26 +78,27 @@ function simplifyLocation(array: Location): SimplifiedLocation {
   }
   var result: SimplifiedLocation = {};
   for (var item of array) {
+    let vector = [0, 0];
+    var locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
+    var locationsOnThisRouteLength = locationsOnThisRoute.length;
+    var nextLocation = null;
+    for (let i = 0; i < locationsOnThisRouteLength; i++) {
+      if (locationsOnThisRoute[i].Id === item.Id) {
+        let nextIndex = 0;
+        if (i < locationsOnThisRouteLength - 1) {
+          nextIndex = i + 1;
+        }
+        nextLocation = locationsOnThisRoute[nextIndex];
+      }
+    }
+    if (nextLocation) {
+      var x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
+      var y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
+      vector = convertToUnitVector([x, y]);
+    }
+
     var key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
-      var locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
-      var locationsOnThisRouteLength = locationsOnThisRoute.length;
-      var nextLocation = null;
-      for (let i = 0; i < locationsOnThisRouteLength; i++) {
-        if (locationsOnThisRoute[i].Id === item.Id) {
-          let nextIndex = 0;
-          if (i < locationsOnThisRouteLength - 1) {
-            nextIndex = i + 1;
-          }
-          nextLocation = locationsOnThisRoute[nextIndex];
-        }
-      }
-      let vector = [0, 0];
-      if (nextLocation) {
-        var x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
-        var y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
-        vector = convertToUnitVector([x, y]);
-      }
       var simplified_item: SimplifiedLocationItem = {};
       simplified_item.n = item.nameZh;
       simplified_item.lo = parseFloat(item.longitude);
@@ -111,7 +112,7 @@ function simplifyLocation(array: Location): SimplifiedLocation {
         result[key].r.push(item.routeId);
       }
       if (!(result[key].s.indexOf(item.Id) > -1)) {
-        result[key].s.push(item.Id);
+        result[key].s.push({ id: item.Id, v: vector });
       }
       result[key].a.push(item.address);
     }

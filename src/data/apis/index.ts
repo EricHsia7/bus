@@ -737,7 +737,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   var stopLocationQuantity = stopLocationIds.length;
 
   for (var i = 0; i < stopLocationQuantity; i++) {
-    StopIDs = StopIDs.concat(thisLocation.s[i].map((e) => e.id));
+    StopIDs = StopIDs.concat(thisLocation.s[i]).map((e) => e.id);
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
