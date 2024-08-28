@@ -6,7 +6,7 @@
   left: 50%;
   bottom: 0px;
   opacity: 0;
-  transform: translateX(-50%) translateY(80px) scale(1);
+  transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
   background: rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.8);
   will-change: transform, opacity;
   -webkit-user-select: none;
@@ -19,6 +19,35 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+
+@keyframes css_show_prompt {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+  }
+}
+
+.css_prompt_animation {
+  animation-name: css_show_prompt;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(.21, .75, .1, .96);
 }
 
 .css_prompt .css_prompt_icon {
@@ -40,6 +69,23 @@
   color: var(--b-cssvar-333333);
 }
 
+@keyframes css_fill_prompt_icon {
+  0% {
+    --b-cssvar-font-variation-settings-fill: 0;
+  }
+
+  100% {
+    --b-cssvar-font-variation-settings-fill: 1;
+  }
+}
+
+.css_prompt_animation .css_prompt_icon span.css_material_symbols_rounded {
+  animation-name: css_fill_prompt_icon;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
 .css_prompt .css_prompt_message {
   position: absolute;
   top: 0px;
@@ -55,50 +101,4 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-}
-
-.css_prompt_animation {
-  animation-name: css_show_prompt;
-  animation-duration: 2s;
-  animation-fill-mode: forwards;
-  animation-timing-function: cubic-bezier(.21, .75, .1, .96);
-}
-
-@keyframes css_show_prompt {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.8);
-  }
-
-  15% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
-  }
-
-  90% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
-  }
-}
-
-.css_prompt_animation .css_prompt_icon span.css_material_symbols_rounded {
-  animation-name: css_fill_prompt_icon;
-  animation-duration: var(--b-cssvar-transition-duration);
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes css_fill_prompt_icon {
-  0% {
-    --b-cssvar-font-variation-settings-fill: 0;
-  }
-
-  100% {
-    --b-cssvar-font-variation-settings-fill: 1;
-  }
 }
