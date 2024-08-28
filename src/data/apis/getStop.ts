@@ -2,11 +2,38 @@ import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
+export interface StopItem {
+  Id: number; // StopID
+  routeId: number; // RouteID
+  nameZh: string; // name in Chinese
+  nameEn: string; // name in English
+  seqNo: number; // sequence on the route
+  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
+  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
+  longitude: string; // number in string
+  latitude: string; // number in string
+  address: string;
+  stopLocationId: number; // LocationID
+  showLon: string; // number in string
+  showLat: string; // number in string
+  vector: string;
+}
+
+export type Stop = Array<StopItem>;
+
+export interface SimplifiedStopItem {
+  seqNo: number;
+  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
+  stopLocationId: number;
+}
+
+export type SimplifiedStop = { [key: string]: SimplifiedStopItem };
+
 let StopAPIVariableCache_available: boolean = false;
 let StopAPIVariableCache_data: object = {};
 
-function simplifyStop(array: Array): object {
-  var result = {};
+function simplifyStop(array: Stop): SimplifiedStop {
+  var result: SimplifiedStop = {};
   for (var item of array) {
     var key = `s_${item.Id}`;
     var simplified_item = {};
@@ -18,7 +45,7 @@ function simplifyStop(array: Array): object {
   return result;
 }
 
-export async function getStop(requestID: string): Promise<object> {
+export async function getStop(requestID: string): Promise<SimplifiedStop> {
   async function getData() {
     var apis = [
       [0, 11],
