@@ -306,12 +306,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-  var Route = await getRoute(requestID, true);
-  var Stop = await getStop(requestID);
-  var Location = await getLocation(requestID, false);
-  var EstimateTime = await getEstimateTime(requestID);
-  var BusEvent = await getBusEvent(requestID);
-  var BusData = await getBusData(requestID);
+  const Route = await getRoute(requestID, true);
+  const Stop = await getStop(requestID);
+  const Location = await getLocation(requestID, false);
+  const EstimateTime = await getEstimateTime(requestID);
+  const BusEvent = await getBusEvent(requestID);
+  const BusData = await getBusData(requestID);
 
   var processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
   var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
