@@ -1,26 +1,3 @@
-.css_prompt {
-  width: clamp(180px, calc(100% - 20px), 450px);
-  height: 50px;
-  border-radius: var(--b-cssvar-border-radius-default);
-  position: fixed;
-  left: 50%;
-  bottom: 0px;
-  opacity: 0;
-  transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
-  background: rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.8);
-  will-change: transform, opacity;
-  -webkit-user-select: none;
-  user-select: none;
-  border: 1px solid var(--b-cssvar-ededf2);
-  box-shadow: 0px 0px 25px -19px rgba(0, 0, 0, 0.23);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
 @keyframes css_show_prompt {
   0% {
     opacity: 0;
@@ -43,7 +20,23 @@
   }
 }
 
-.css_prompt_animation {
+.css_prompt {
+  width: clamp(180px, calc(100% - 20px), 450px);
+  height: 50px;
+  border-radius: var(--b-cssvar-border-radius-default);
+  position: fixed;
+  left: 50%;
+  bottom: 0px;
+  opacity: 0;
+  transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
+  background: rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.8);
+  -webkit-user-select: none;
+  user-select: none;
+  border: 1px solid var(--b-cssvar-ededf2);
+  box-shadow: 0px 0px 25px -19px rgba(0, 0, 0, 0.23);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
   animation-name: css_show_prompt;
   animation-duration: 3820ms;
   animation-fill-mode: forwards;
@@ -63,12 +56,6 @@
   align-items: center;
 }
 
-.css_prompt .css_prompt_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
-  color: var(--b-cssvar-333333);
-}
-
 @keyframes css_fill_prompt_icon {
   0% {
     --b-cssvar-font-variation-settings-fill: 0;
@@ -79,7 +66,10 @@
   }
 }
 
-.css_prompt_animation .css_prompt_icon span.css_material_symbols_rounded {
+.css_prompt .css_prompt_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
   animation-name: css_fill_prompt_icon;
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;

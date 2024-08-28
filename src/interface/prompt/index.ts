@@ -16,7 +16,6 @@ export function promptMessage(message: string, icon: string): void {
   const promptElement = document.createElement('div');
   promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
-  promptElement.classList.add('css_prompt_animation');
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
