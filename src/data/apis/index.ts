@@ -196,6 +196,7 @@ function formatBus(object: ProcessedBus): object {
   };
   result.RouteName = object.RouteName;
   result.onThisRoute = object.onThisRoute;
+  result.index = object.index
 
   return result;
 }
