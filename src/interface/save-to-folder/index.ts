@@ -3,7 +3,7 @@ import { GeneratedElement } from '../index';
 import { generateIdentifier } from '../../tools/index';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
-import { prompt_message } from '../prompt/index';
+import { promptMessage } from '../prompt/index';
 
 function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: Array): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
@@ -58,12 +58,12 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
       isSaved('stop', StopID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', k);
-          prompt_message('已儲存至資料夾');
+          promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      prompt_message('此資料夾不支援站牌類型項目');
+      promptMessage('此資料夾不支援站牌類型項目', 'warning');
     }
   });
 }
@@ -75,12 +75,12 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
       isSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
-          prompt_message('已儲存至資料夾');
+          promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      prompt_message('此資料夾不支援路線類型項目');
+      promptMessage('此資料夾不支援路線類型項目', 'warning');
     }
   });
 }

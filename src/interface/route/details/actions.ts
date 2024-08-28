@@ -1,6 +1,6 @@
 import { searchRouteByRouteID } from '../../../data/search/searchRoute';
 import { getPermalink } from '../../../tools/permalink';
-import { prompt_message } from '../../prompt/index';
+import { promptMessage } from '../../prompt/index';
 
 export async function shareRoutePermalink(RouteID: number): void {
   var search = await searchRouteByRouteID(RouteID);
@@ -16,10 +16,10 @@ export async function shareRoutePermalink(RouteID: number): void {
           url: link
         })
         .then(() => {
-          prompt_message('已分享路線連結');
+          promptMessage('已分享路線連結', 'link');
         })
         .catch((e) => {
-          prompt_message('已取消分享連結');
+          promptMessage('已取消分享連結', 'cancel');
           console.error(e);
         });
     }

@@ -1,6 +1,6 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { prompt_message } from '../prompt/index';
+import { promptMessage } from '../prompt/index';
 
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 
@@ -12,9 +12,9 @@ export function createFormulatedFolder(): void {
   createFolder(name, icon).then((e) => {
     if (e) {
       closeFolderCreator();
-      prompt_message('已建立資料夾');
+      promptMessage('已建立資料夾', 'folder');
     } else {
-      prompt_message('無法建立資料夾');
+      promptMessage('無法建立資料夾', 'error');
     }
   });
 }

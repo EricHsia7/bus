@@ -2,7 +2,7 @@ import { openKeyboard, closeKeyboard } from './keyboard';
 import { prepareForRouteSearch } from '../../data/search/searchRoute';
 import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
-import { prompt_message } from '../prompt/index';
+import { promptMessage } from '../prompt/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/index';
 
@@ -19,7 +19,7 @@ export function openSearchPage(): void {
       currentFuse = preparation;
     });
   } else {
-    prompt_message('資料還在下載中');
+    promptMessage('資料還在下載中', 'download_2');
   }
 }
 

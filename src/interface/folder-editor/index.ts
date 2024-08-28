@@ -3,7 +3,7 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement } from '../index';
 import { getIconHTML } from '../icons/index';
-import { prompt_message } from '../prompt/index';
+import { promptMessage } from '../prompt/index';
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
   var identifier = `i_${generateIdentifier()}`;
@@ -103,16 +103,16 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
       itemElement.remove();
       switch (type) {
         case 'stop':
-          prompt_message('已移除站牌');
+          promptMessage('已移除站牌', 'delete');
           break;
         case 'route':
-          prompt_message('已移除路線');
+          promptMessage('已移除路線', 'delete');
           break;
         default:
           break;
       }
     } else {
-      prompt_message('無法移除');
+      promptMessage('無法移除', 'error');
     }
   });
 }
@@ -128,20 +128,20 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
           if (previousSibling) {
             itemElement.parentNode.insertBefore(itemElement, previousSibling);
           }
-          prompt_message('已往上移');
+          promptMessage('已往上移', 'arrow_circle_up');
           break;
         case 'down':
           const nextSibling = itemElement.nextElementSibling;
           if (nextSibling) {
             itemElement.parentNode.insertBefore(nextSibling, itemElement);
           }
-          prompt_message('已往下移');
+          promptMessage('已往下移', 'arrow_circle_down');
           break;
         default:
           break;
       }
     } else {
-      prompt_message('無法移動');
+      promptMessage('無法移動', 'error');
     }
   });
 }

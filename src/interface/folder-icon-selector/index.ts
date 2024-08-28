@@ -5,7 +5,7 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
-import { prompt_message } from '../prompt/index';
+import { promptMessage } from '../prompt/index';
 
 type Target = 'editor' | 'creator' | '';
 
@@ -93,7 +93,7 @@ export function openFolderIconSelector(target: Target): void {
         currentFuse = preparation;
       });
     } else {
-      prompt_message('資料還在下載中');
+      promptMessage('資料還在下載中', 'download_2');
     }
   }
 }
