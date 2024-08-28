@@ -1,7 +1,7 @@
 import { openKeyboard, closeKeyboard } from './keyboard';
 import { prepareForRouteSearch } from '../../data/search/searchRoute';
 import { getIconHTML } from '../icons/index';
-import { dataPreloadCompleted } from '../home/index';
+import { dataDownloadCompleted } from '../home/index';
 import { prompt_message } from '../prompt/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/index';
@@ -12,7 +12,7 @@ const searchResultsElement = documentQuerySelector('.css_search_field .css_searc
 var currentFuse: any = false;
 
 export function openSearchPage(): void {
-  if (dataPreloadCompleted) {
+  if (dataDownloadCompleted) {
     searchPageField.setAttribute('displayed', 'true');
     openKeyboard();
     prepareForRouteSearch().then((preparation) => {

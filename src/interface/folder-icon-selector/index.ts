@@ -2,7 +2,7 @@ import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';
 import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols';
 import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { dataPreloadCompleted } from '../home/index';
+import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
 import { prompt_message } from '../prompt/index';
@@ -86,7 +86,7 @@ export function openFolderIconSelector(target: Target): void {
       break;
   }
   if (openFolderIconSelectorElement.getAttribute('disabled') === 'false') {
-    if (dataPreloadCompleted) {
+    if (dataDownloadCompleted) {
       folderIconSelectorField.setAttribute('displayed', 'true');
       initializeFolderIconSelectorField(currentTarget);
       prepareForMaterialSymbolsSearch().then((preparation) => {

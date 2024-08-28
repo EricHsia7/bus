@@ -5,23 +5,22 @@ import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceiving
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';
 
-var dataPreloadRequestID = 'preload_data';
-export var dataPreloadCompleted = false;
-var transitioned = false;
-var progressElement: HTMLElement = documentQuerySelector('.css_home_button_right svg#download-svg path[progress="progress"]');
+const dataDownloadRequestID = 'downloadData';
+export let dataDownloadCompleted = false;
+const progressElement: HTMLElement = documentQuerySelector('.css_home_button_right svg#download-svg path[progress="progress"]');
 
 function updateDownloadProgress() {
-  var pixels = (1 - getDataReceivingProgress(dataPreloadRequestID)) * 189;
+  var pixels = (1 - getDataReceivingProgress(dataDownloadRequestID)) * 189;
   progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
   window.requestAnimationFrame(function () {
-    if (dataPreloadCompleted === false) {
+    if (dataDownloadCompleted === false) {
       updateDownloadProgress();
     }
   });
 }
 
 function setCompleteStatus() {
-  if (dataPreloadCompleted) {
+  if (dataDownloadCompleted) {
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
     documentQuerySelector('.css_home_button_right').setAttribute('complete', true);
     progressElement.removeEventListener('transitioncancel', setCompleteStatus);
@@ -29,20 +28,20 @@ function setCompleteStatus() {
 }
 
 export async function downloadData(): void {
-  setDataReceivingProgress(dataPreloadRequestID, 'getRoute_0', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getRoute_1', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getStop_0', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getStop_1', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getLocation_0', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getLocation_1', 0, false);
-  setDataReceivingProgress(dataPreloadRequestID, 'getMaterialSymbols', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getRoute_0', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getStop_0', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getStop_1', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbols', 0, false);
   updateDownloadProgress();
   progressElement.addEventListener('transitioncancel', setCompleteStatus);
-  await getRoute(dataPreloadRequestID, true);
-  await getStop(dataPreloadRequestID);
-  await getLocation(dataPreloadRequestID, true);
-  await getMaterialSymbols(dataPreloadRequestID);
-  dataPreloadCompleted = true;
+  await getRoute(dataDownloadRequestID, true);
+  await getStop(dataDownloadRequestID);
+  await getLocation(dataDownloadRequestID, true);
+  await getMaterialSymbols(dataDownloadRequestID);
+  dataDownloadCompleted = true;
   setCompleteStatus();
-  deleteDataReceivingProgress(dataPreloadRequestID);
+  deleteDataReceivingProgress(dataDownloadRequestID);
 }
