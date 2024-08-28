@@ -188,7 +188,7 @@ function formatBusEvent(buses: Array): Array | null {
   return result;
 }
 
-function formatOverlappingRoutes(array: Array): Array {
+function formatOverlappingRoutes(array: Array<SimplifiedRouteItem>): Array<object> {
   if (array.length === 0) {
     return null;
   }
@@ -303,7 +303,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .map((id: number) => {
           const overlappingRouteKey = `r_${id}`;
           if (Route.hasOwnProperty(overlappingRouteKey)) {
-            return Route[overlappingRouteKey];
+            return formatOverlappingRoutes(Route[overlappingRouteKey]);
           } else {
             return null;
           }
@@ -319,7 +319,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           // "overlapping stops" contains this stop
           const overlappingStopKey = `s_${overlappingStopID}`;
           if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
-            return processedBusEvent[overlappingStopKey];
+            return formatBusEvent(processedBusEvent[overlappingStopKey]);
           } else {
             return null;
           }
@@ -349,9 +349,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const multipleEndpoints = processedSegmentBuffer['g_0'].length % 2 === 0;
   let endpointCount = 0;
 
-  let groupedItems = {};
-  let groupQuantity = 0;
-  let itemQuantity = {};
+  let groupedItems: { [key: string]: Array<integratedStopItem> } = {};
+  let groupQuantity: number = 0;
+  let itemQuantity: { [key: string]: number } = {};
 
   const resultLength = result.length;
 
