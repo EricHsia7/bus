@@ -103,7 +103,8 @@ export function ResizeRouteCanvas() {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const canvasScale = Math.min(Math.max(Math.round(window.devicePixelRatio / 1.5), 1), 4);
+  const canvasScale = 1;
+  //Math.min(Math.max(Math.round(window.devicePixelRatio / 1.5), 1), 4);
   //Math.round(Math.log10(window.devicePixelRatio) / 0.15904041824);
   //Math.log(Math.pow(3, 1 / 3) ≈ 0.15904041824
 
