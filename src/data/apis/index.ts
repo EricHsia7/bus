@@ -75,7 +75,7 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
     const thisBusID = item.BusID;
     let isOnThisRoute: boolean = false;
     let index: number = 0;
-    if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
+    if (thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10) {
       isOnThisRoute = true;
       index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
@@ -100,14 +100,14 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
     // search data from 'Route'
     const searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
     const searchedRoute = searchRouteResult.length > 0 ? searchRouteResult[0] : null;
-    item.RouteName = searchedRoute ? searchedRoute.n : '';
-    item.RouteID = searchedRoute ? searchedRoute.id : null;
+    processedItem.RouteName = searchedRoute ? searchedRoute.n : '';
+    processedItem.RouteID = searchedRoute ? searchedRoute.id : null;
 
     const StopKey = `s_${item.StopID}`;
     if (!result.hasOwnProperty(StopKey)) {
       result[StopKey] = [];
     }
-    result[StopKey].push(item);
+    result[StopKey].push(processedItem);
   }
   /*
   for (var key in result) {
