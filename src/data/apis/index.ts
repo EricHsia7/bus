@@ -122,51 +122,70 @@ async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promis
 }
 
 function formatBus(object: ProcessedBus): object {
-  var result = {};
-  var CarType = parseInt(object.CarType);
-  if (CarType === 0) {
-    result.type = '一般';
+  let result = {};
+
+  const CarType = parseInt(object.CarType);
+  let type = '';
+  switch (CarType) {
+    case 0:
+      type = '一般';
+      break;
+    case 1:
+      type = '低底盤';
+      break;
+    case 2:
+      type = '大復康巴士';
+      break;
+    case 3:
+      type = '狗狗友善專車';
+      break;
+    default:
+      type = '未知類型';
   }
-  if (CarType === 1) {
-    result.type = '低底盤';
+
+  result.type = type;
+
+  const CarOnStop = parseInt(object.CarOnStop);
+  let onStop = '';
+  switch (CarOnStop) {
+    case 0:
+      onStop = '離站';
+      break;
+    case 1:
+      onStop = '進站';
+      break;
+    default:
+      onStop = '未知狀態'; // Handle unexpected values if necessary
   }
-  if (CarType === 2) {
-    result.type = '大復康巴士';
+
+  const BusStatus = parseInt(object.BusStatus);
+  let situation = '';
+  switch (BusStatus) {
+    case 0:
+      situation = '正常';
+      break;
+    case 1:
+      situation = '車禍';
+      break;
+    case 2:
+      situation = '故障';
+      break;
+    case 3:
+      situation = '塞車';
+      break;
+    case 4:
+      situation = '緊急求援';
+      break;
+    case 5:
+      situation = '加油';
+      break;
+    case 99:
+      situation = '非營運狀態';
+      break;
+    default:
+      situation = '未知狀態'; // Handle unexpected values if necessary
   }
-  if (CarType === 3) {
-    result.type = '狗狗友善專車';
-  }
-  var CarOnStop = parseInt(object.CarOnStop);
-  var onStop = '';
-  if (CarOnStop === 0) {
-    onStop = '離站';
-  }
-  if (CarOnStop === 1) {
-    onStop = '進站';
-  }
-  var BusStatus = parseInt(object.BusStatus);
-  var situation = '';
-  if (BusStatus === 0) {
-    situation = '正常';
-  }
-  if (BusStatus === 1) {
-    situation = '車禍';
-  }
-  if (BusStatus === 2) {
-    situation = '故障';
-  }
-  if (BusStatus === 3) {
-    situation = '塞車';
-  }
-  if (BusStatus === 4) {
-    situation = '緊急求援';
-  }
-  if (BusStatus === 5) {
-    situation = '加油';
-  }
-  if (BusStatus === 99) {
-    situation = '非營運狀態';
-  }
+
   result.carNumber = object.BusID;
   result.status = {
     onStop: onStop,
@@ -175,6 +194,7 @@ function formatBus(object: ProcessedBus): object {
   };
   result.RouteName = object.RouteName;
   result.onThisRoute = object.onThisRoute;
+
   return result;
 }
 
@@ -185,28 +205,6 @@ function formatBusEvent(buses: Array): Array | null {
   var result = [];
   for (var bus of buses) {
     result.push(formatBus(bus));
-  }
-  return result;
-}
-
-function formatOverlappingRoutes(array: Array<SimplifiedRouteItem>): Array<object> {
-  if (array.length === 0) {
-    return null;
-  }
-  var result = [];
-  for (var route of array) {
-    var formattedItem = {
-      name: route.n,
-      RouteEndPoints: {
-        RouteDeparture: route.dep,
-        RouteDestination: route.des,
-        text: `${route.dep} \u21CC ${route.des}`, //u21CC -> '⇌'
-        html: `<span>${route.dep}</span><span>\u21CC</span><span>${route.des}</span>`
-      },
-      RouteID: route.id,
-      PathAttributeId: route.pid ? route.pid : []
-    };
-    result.push(formattedItem);
   }
   return result;
 }
@@ -324,23 +322,21 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .filter((e) => {
           return !(e === null);
         });
-      positions.push({ latitude: thisLocation.la, longitude: thisLocation.lo, id: item.StopID });
+      positions.push({
+        latitude: thisLocation.la,
+        longitude: thisLocation.lo,
+        id: item.StopID
+      });
 
       // collect data from 'processedBusEvent'
-      let buses: Array<ProcessedBus> = thisLocation.s
-        .map((overlappingStopID) => {
-          // "overlapping stops" contains this stop
-          const overlappingStopKey = `s_${overlappingStopID}`;
-          if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
-            return formatBus(processedBusEvent[overlappingStopKey]);
-          } else {
-            return null;
-          }
-        })
-        .filter((e) => {
-          return !(e === null);
-        });
-      integratedStopItem.buses = buses;
+      let buses: Array<ProcessedBus> = [];
+      for (var overlappingStopID of thisLocation.s) {
+        const overlappingStopKey = `s_${overlappingStopID}`;
+        if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
+          buses.push(processedBusEvent[overlappingStopKey].map((e) => formatBus(e)));
+        }
+      }
+      integratedStopItem.buses = buses.flat();
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
