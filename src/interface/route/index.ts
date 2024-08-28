@@ -224,18 +224,18 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
     for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
       groupedItems[groupKey].push({
         name: '',
-        status: { code: -1, text: '' },
-        buses: null,
-        overlappingRoutes: null,
+        status: { code: 0, text: '' },
+        buses: [],
+        overlappingRoutes: [],
         sequence: j,
         location: {
-          latitude: null,
-          longitude: null
+          latitude: 0,
+          longitude: 0
         },
         nearest: false,
         progress: 0,
         segmentBuffer: false,
-        id: null
+        id: 0
       });
     }
   }
