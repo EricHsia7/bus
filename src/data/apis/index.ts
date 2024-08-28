@@ -7,8 +7,8 @@ import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
-import { searchRouteByPathAttributeId, searchRouteByRouteID } from '../search/searchRoute';
-import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from './getLocation';
+import { searchRouteByPathAttributeId } from '../search/searchRoute';
+import { getLocation, SimplifiedLocationItem } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, Status } from '../../tools/format-time';
@@ -279,17 +279,21 @@ interface integratedStopItem {
   id: number | null;
 }
 
-function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
-  var result = {};
-  for (var item of EstimateTime) {
-    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
-      result[`s_${item.StopID}`] = item;
-    }
-  }
-  return result;
+export interface RouteIntegration {
+  groupedItems: {[key: string]: integratedStopItem},
+  groupQuantity: number,
+  itemQuantity:{[key:string]: number} ,
+  RouteName: string,
+  RouteEndPoints: {
+    RouteDeparture: string,
+    RouteDestination: string
+  },
+  dataUpdateTime: any,
+  RouteID: number,
+  PathAttributeId: Array<number>
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<object> {
+export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<RouteIntegration> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
@@ -474,7 +478,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const thisRouteDeparture = thisRoute.dep;
   const thisRouteDestination = thisRoute.des;
 
-  const result2 = {
+  const result2: RouteIntegration = {
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,
@@ -790,6 +794,16 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
       }
     ]
   };
+  return result;
+}
+
+function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
+      result[`s_${item.StopID}`] = item;
+    }
+  }
   return result;
 }
 
