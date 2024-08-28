@@ -185,6 +185,7 @@ export function generateLetterLabels(quantity: number): Array<string> {
 
 export function generateDirectionLabels(setsOfVectors: Array<Array<[number, number]>>): Array<string> {
   let result = [];
+  const unknownVector = [0, 0];
   // cardinal directions
   const NorthVector = [0, 1];
   const EastVector = [1, 0];
@@ -197,6 +198,10 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
   const NorthWestVector = [-Math.sqrt(2) / 2, Math.sqrt(2) / 2]; // 315 degrees
 
   const directions = [
+    {
+      vector: unknownVector,
+      label: '未知'
+    },
     {
       vector: NorthVector,
       label: '北'
@@ -248,11 +253,7 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
       return b.dotProduct - a.dotProduct;
     });
     const bestMatch = result2[0];
-    if (bestMatch.dotProduct > 0.5) {
-      result.push(bestMatch.label);
-    } else {
-      result.push('未知');
-    }
+    result.push(bestMatch.label);
   }
   return result;
 }
