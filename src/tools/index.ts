@@ -184,20 +184,49 @@ export function generateLetterLabels(quantity: number): Array<string> {
 }
 
 export function generateOrientationLabels(setsOfVectors: Array<Array<[number, number]>>): Array<string> {
-  const NorthVector = [0, 1]
-  const EastVector = [1,0]
-  const WestVector = [-1, 0]
-  const SouthVector = [0, -1]
-  
+  let result = [];
+  const NorthVector = [0, 1];
+  const EastVector = [1, 0];
+  const WestVector = [-1, 0];
+  const SouthVector = [0, -1];
+  const orientations = [
+    {
+      vector: NorthVector,
+      label: '北'
+    },
+    {
+      vector: EastVector,
+      label: '東'
+    },
+    {
+      vector: SouthVector,
+      label: '南'
+    },
+    {
+      vector: WestVector,
+      label: '西'
+    }
+  ];
+
   for (const vectorSet of setsOfVectors) {
-    let x = 0
-    let  y = 0
-        for (const vector of vectorSet) {
-      x += vector[0]
-      y += vector[1]
-        }
-    const meanVector = [x, y]
+    let x = 0;
+    let y = 0;
+    for (const vector of vectorSet) {
+      x += vector[0];
+      y += vector[1];
+    }
+    const meanVector = [x, y];
+    let result2 = [];
+    for (const orientation of orientations) {
+      var dotProduct = orientation.vector[0] * meanVector[0] + orientation.vector[1] * meanVector[1];
+      result2.push({ label: orientation.label, dotProduct: dotProduct });
+    }
+    result2 = result2.sort(function (a, b) {
+      return a.dotProduct - b.dotProduct;
+    });
+    result.push(result2[0].label);
   }
+  return result
 }
 
 const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
