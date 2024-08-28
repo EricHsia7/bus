@@ -47,11 +47,15 @@ function processSegmentBuffer(buffer: string): object {
   return result;
 }
 
+interface ProcessedBusPosition {
+  longitude: number;
+  latitude: number;
+}
+
 interface ProcessedBus {
   BusID: string;
   onThisRoute: boolean;
-  latitude: number;
-  longitude: number;
+  position: ProcessedBusPosition;
   index: number;
 }
 
@@ -64,31 +68,46 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
   }
 
   for (var item of BusEvent) {
-    var thisRouteID = parseInt(item.RouteID);
-    var thisBusID = item.BusID;
+    let processedItem = {};
+
+    // check whether this bus is on the route
+    const thisRouteID = parseInt(item.RouteID);
+    const thisBusID = item.BusID;
+    let isOnThisRoute: boolean = false;
+    let index: number = 0;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(String(thisRouteID)) > -1 || thisRouteID === RouteID * 10) {
-      item.onThisRoute = true;
-      item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
+      isOnThisRoute = true;
+      index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
     } else {
-      item.onThisRoute = false;
-      item.index = String(item.BusID).charCodeAt(0);
+      isOnThisRoute = false;
+      index = String(item.BusID).charCodeAt(0);
     }
+    processedItem.onThisRoute = isOnThisRoute;
+    processedItem.index = index;
+
+    // collect data from 'BusData'
+    let thisBusData = {};
     if (BusDataObj.hasOwnProperty(thisBusID)) {
-      item.latitude = parseFloat(BusDataObj[thisBusID].Latitude);
-      item.longitude = parseFloat(BusDataObj[thisBusID].Longitude);
+      thisBusData = BusDataObj[thisBusID];
     } else {
-      item.latitude = 0;
-      item.longitude = 0;
+      continue;
     }
-    var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
-    var searchedRoute = searchRouteResult.length > 0 ? searchRouteResult[0] : null;
+    processedItem.position = {
+      latitude: parseFloat(thisBusData.Latitude),
+      longitude: parseFloat(thisBusData.Longitude)
+    };
+
+    // search data from 'Route'
+    const searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
+    const searchedRoute = searchRouteResult.length > 0 ? searchRouteResult[0] : null;
     item.RouteName = searchedRoute ? searchedRoute.n : '';
     item.RouteID = searchedRoute ? searchedRoute.id : null;
-    if (!result.hasOwnProperty('s_' + item.StopID)) {
-      result['s_' + item.StopID] = [item];
-    } else {
-      result['s_' + item.StopID].push(item);
+
+    const StopKey = `s_${item.StopID}`;
+    if (!result.hasOwnProperty(StopKey)) {
+      result[StopKey] = [];
     }
+    result[StopKey].push(item);
   }
   /*
   for (var key in result) {
@@ -199,7 +218,7 @@ function formatBus(object: ProcessedBus): object {
   result.RouteName = object.RouteName;
   result.onThisRoute = object.onThisRoute;
   result.index = object.index;
-
+  result.position = object.position;
   return result;
 }
 
@@ -327,6 +346,10 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .filter((e) => {
           return !(e === null);
         });
+      integratedStopItem.position = {
+        longitude: thisLocation.lo,
+        latitude: thisLocation.la
+      };
       positions.push({
         latitude: thisLocation.la,
         longitude: thisLocation.lo,
@@ -378,7 +401,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
     if (item.buses.length > 0) {
       if (item.buses[0].onThisRoute) {
-        const [x, y] = [item.buses[0].longitude, item.buses[0].latitude];
+        const [x, y] = [item.buses[0].position.longitude, item.buses[0].position.latitude];
         const [x1, y1] = [item.position.longitude, item.position.latitude];
         const [x2, y2] = [nextItem.position.longitude, nextItem.position.latitude];
         const dotProduct = (x - x1) * (x2 - x) + (y - y1) * (y2 - y);
