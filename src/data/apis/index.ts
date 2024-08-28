@@ -7,7 +7,7 @@ import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
-import { searchRouteByPathAttributeId } from '../search/searchRoute';
+import { searchRouteByPathAttributeId, searchRouteByRouteID } from '../search/searchRoute';
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
@@ -81,7 +81,9 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
       item.longitude = 0;
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
-    item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
+    var searchedRoute = searchRouteResult.length > 0 ? searchRouteResult[0] : null;
+    item.RouteName = searchedRoute ? searchedRoute.n : '';
+    item.RouteID = searchedRoute ? searchedRoute.id : null;
     if (!result.hasOwnProperty('s_' + item.StopID)) {
       result['s_' + item.StopID] = [item];
     } else {
@@ -195,8 +197,8 @@ function formatBus(object: ProcessedBus): object {
     text: `${onStop} | ${situation}`
   };
   result.RouteName = object.RouteName;
-  result.onThisRoute = object.onThisRoute;
-  result.index = object.index
+  result.RouteID = object.result.onThisRoute = object.onThisRoute;
+  result.index = object.index;
 
   return result;
 }
