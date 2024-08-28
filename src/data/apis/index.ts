@@ -404,7 +404,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const thisRouteDeparture = thisRoute.dep;
   const thisRouteDestination = thisRoute.des;
 
-  const result = {
+  const result2 = {
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,
@@ -421,7 +421,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   await recordEstimateTime(EstimateTime);
-  return result;
+  return result2;
 }
 
 export async function integrateStop(StopID: number, RouteID: number): Promise<object> {
