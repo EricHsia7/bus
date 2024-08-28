@@ -113,7 +113,7 @@ var Settings = {
     option: 0,
     options: [
       {
-        name: '方位',
+        name: '行徑方向',
         value: 'directions'
       },
       {
