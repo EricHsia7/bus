@@ -9,7 +9,7 @@
     transform: translateX(-50%) scale(1);
   }
 
-  93% {
+  92% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
@@ -71,7 +71,7 @@
   height: 20px;
   color: var(--b-cssvar-333333);
   animation-name: css_fill_prompt_icon;
-  animation-duration: 800ms;
+  animation-duration: 320ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
