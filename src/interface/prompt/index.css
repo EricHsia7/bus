@@ -62,6 +62,10 @@
     --b-cssvar-font-variation-settings-fill: 0;
   }
 
+  8% {
+    --b-cssvar-font-variation-settings-fill: 1;
+  }
+
   100% {
     --b-cssvar-font-variation-settings-fill: 1;
   }
@@ -72,8 +76,7 @@
   height: 20px;
   color: var(--b-cssvar-333333);
   animation-name: css_fill_prompt_icon;
-  animation-duration: 320ms;
-  animation-delay: 100ms;
+  animation-duration: 6000ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
