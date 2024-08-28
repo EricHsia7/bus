@@ -32,7 +32,7 @@
     transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
   }
 
-  90% {
+  80% {
     opacity: 1;
     transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
   }
