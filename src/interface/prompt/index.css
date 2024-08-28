@@ -72,6 +72,7 @@
   color: var(--b-cssvar-333333);
   animation-name: css_fill_prompt_icon;
   animation-duration: 320ms;
+  animation-delay: 100ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
