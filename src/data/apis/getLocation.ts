@@ -4,6 +4,25 @@ import { lfSetItem, lfGetItem } from '../storage/index';
 import { md5 } from '../../tools/index';
 import { mergeAddressesIntoOne } from '../../tools/address';
 
+export interface LocationItem {
+  Id: number; // StopID
+  routeId: number; // RouteID
+  nameZh: string; // name in Chinese
+  nameEn: string; // name in English
+  seqNo: number; // sequence on the route
+  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
+  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
+  longitude: string; // number in string
+  latitude: string; // number in string
+  address: string;
+  stopLocationId: number; // LocationID
+  showLon: string; // number in string
+  showLat: string; // number in string
+  vector: string;
+}
+
+export type Location = Array<LocationItem>;
+
 export interface SimplifiedLocationItem {
   n: string; // name
   lo: number; // longitude
@@ -37,7 +56,7 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(array: Array): SimplifiedLocation {
+function simplifyLocation(array: Location): SimplifiedLocation {
   var result: SimplifiedLocation = {};
   for (var item of array) {
     var key = `l_${item.stopLocationId}`;

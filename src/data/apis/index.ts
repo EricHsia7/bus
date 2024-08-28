@@ -1,8 +1,8 @@
 import { EstimateTime, getEstimateTime } from './getEstimateTime';
-import { getStop, SimplifiedStop } from './getStop';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from './getStop';
 import { BusEvent, getBusEvent } from './getBusEvent';
 import { BusData, getBusData } from './getBusData';
-import { getRoute, Route, RouteItem, SimplifiedRoute } from './getRoute';
+import { getRoute, Route, RouteItem, SimplifiedRoute, SimplifiedRouteItem } from './getRoute';
 import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
@@ -770,9 +770,9 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     var stopQuantity = thisLocation.s[i].length;
     for (var o = 0; o < stopQuantity; o++) {
       var thisStopID = thisLocation.s[i][o];
-      var thisStop = Stop[`s_${thisStopID}`];
-      var thisRouteID = thisLocation.r[i][o];
-      var thisRoute = Route[`r_${thisRouteID}`];
+      var thisStop: SimplifiedStopItem = Stop[`s_${thisStopID}`];
+      var thisRouteID: number = thisLocation.r[i][o];
+      var thisRoute: SimplifiedRouteItem = Route[`r_${thisRouteID}`];
       var thisProcessedEstimateTime = processedEstimateTime[`s_${thisStopID}`];
       var thisProcessedBusEvent = processedBusEvent[`s_${thisStopID}`];
       if (Stop.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`)) {
