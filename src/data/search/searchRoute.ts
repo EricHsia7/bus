@@ -40,7 +40,7 @@ export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
   return result;
 }
 
-export async function searchRouteByPathAttributeId(PathAttributeId: [number]) {
+export async function searchRouteByPathAttributeId(PathAttributeId: Array<number>) {
   var requestID = `r_${generateIdentifier()}`;
   var Route = await getRoute(requestID, true);
   var result = [];

@@ -2,10 +2,68 @@ import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
+export interface RouteItem {
+  providerId: number;
+  providerName: string;
+  nameZh: string; // name in Chinese
+  nameEn: string; // name in English
+  aliasName: string; // another name in Chinese
+  pathAttributeId: number;
+  pathAttributeNId: string;
+  pathAttributeName: string; // another name in Chinese
+  pathAttributeEname: string; // another name in English
+  buildPeriod: '1' | '2' | '3' | '9' | '10';
+  departureZh: string; // departure stop name in Chinese
+  destinationZh: string; // destination stop name in Chinese
+  departureEn: string; // departure stop name in English
+  destinationEn: string; // destination stop name in English
+  goFirstBusTime: string; // time code (hhmm)
+  goLastBusTime: string;
+  backFirstBusTime: string;
+  backLastBusTime: string;
+  offPeakHeadway: string; // time code (hhmm or mm)
+  busTimeDesc: string;
+  roadMapUrl: string;
+  headwayDesc: string;
+  holidayGoFirstBusTime: string;
+  holidayBackFirstBusTime: string;
+  holidayBackLastBusTime: string;
+  holidayGoLastBusTime: string;
+  holidayBusTimeDesc: string;
+  realSequence: string; // number in string
+  holidayHeadwayDesc: string;
+  holidayOffPeakHeadway: string;
+  holidayPeakHeadway: string;
+  segmentBufferEn: string;
+  ticketPriceDescriptionZh: string;
+  ticketPriceDescriptionEn: string;
+  peakHeadway: string;
+  ttiaPathId: string;
+  segmentBufferZh: string;
+  distance: string;
+  NId: string;
+  Id: number; // RouteID
+  routeType: string;
+}
+
+export type Route = Array<RouteItem>;
+
+export interface SimplifiedRouteItem {
+  pd: number;
+  n: string;
+  pid: Array<number>;
+  dep: string;
+  des: string;
+  s: string;
+  id: number;
+}
+
+export type SimplifiedRoute = { [key: string]: SimplifiedRouteItem };
+
 let RouteAPIVariableCache_available: boolean = false;
 let RouteAPIVariableCache_data: object = {};
 
-function simplifyRoute(Route: object): object {
+function simplifyRoute(Route: Route): SimplifiedRouteItem {
   var result = {};
   let RouteRename = [
     { original: 'providerId', rename: true, newName: 'pd' },
@@ -47,7 +105,8 @@ function simplifyRoute(Route: object): object {
     { original: 'busTimeDesc', rename: false },
     { original: 'distance', rename: false },
     { original: 'NId', rename: false },
-    { original: 'genus', rename: false },
+    /*{ original: 'genus', rename: false },*/
+    { original: 'routeType', rename: false },
     { original: 'Id', rename: true, newName: 'id' }
   ];
 
@@ -72,7 +131,7 @@ function simplifyRoute(Route: object): object {
   return result;
 }
 
-export async function getRoute(requestID: string, simplify: boolean = true): Promise<object | Array> {
+export async function getRoute(requestID: string, simplify: boolean = true): Promise<SimplifiedRoute | Route> {
   async function getData() {
     var apis = [
       [0, 10],
@@ -90,7 +149,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
     return await getData();
   }
   var cache_time = 60 * 60 * 24 * 1 * 1000;
-  var cache_key = 'bus_route_cache';
+  var cache_key = 'bus_route_v2_cache';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();

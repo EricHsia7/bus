@@ -92,7 +92,19 @@ export function formatEstimateTime(EstimateTime: string, mode: number): object {
   }
 }
 
-export function formatTimeCode(code: string, mode: number): object {
+interface Moment {
+  type: 'moment'
+  hours: number
+  minutes: number
+}
+
+interface Range {
+  type: 'range'
+  min: number
+  max: number
+}
+
+export function formatTimeCode(code: string, mode: number): Moment | Range {
   if (mode === 0) {
     var hours = 0;
     var minutes = 0;

@@ -67,7 +67,7 @@ export function compareThings(a: any, b: any): boolean {
   }
 }
 
-export function calculateStandardDeviation(arr: [number]) {
+export function calculateStandardDeviation(arr: Array<number>) {
   // Step 1: Calculate the mean
   const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
   // Step 2: Calculate the squared difference between each element and the mean
@@ -79,7 +79,7 @@ export function calculateStandardDeviation(arr: [number]) {
   return standardDeviation;
 }
 
-export function standardizeArray(array: [number]) {
+export function standardizeArray(array: Array<number>) {
   // Calculate the mean of the array
   const mean = array.reduce((acc, val) => acc + val, 0) / array.length;
 

@@ -2,8 +2,8 @@ import { EstimateTime, getEstimateTime } from './getEstimateTime';
 import { getStop } from './getStop';
 import { BusEvent, getBusEvent } from './getBusEvent';
 import { BusData, getBusData } from './getBusData';
-import { getRoute } from './getRoute';
-import { getProvider } from './getProvider';
+import { getRoute, Route, RouteItem } from './getRoute';
+import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
@@ -202,7 +202,7 @@ function formatOverlappingRoutes(array: Array): Array {
   return result;
 }
 
-function processEstimateTime(EstimateTime: EstimateTime, Stop: object, Location: SimplifiedLocation, processedBusEvent: Array<object>, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: [number]): Array {
+function processEstimateTime(EstimateTime: EstimateTime, Stop: object, Location: SimplifiedLocation, processedBusEvent: Array<object>, Route: object, segmentBuffer: object, RouteID: number, PathAttributeId: Array<number>): Array {
   var result = [];
   var positions = [];
   for (var item of EstimateTime) {
@@ -325,7 +325,7 @@ function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): obje
   return result;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
+export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<object> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
@@ -428,9 +428,9 @@ export async function integrateStop(StopID: number, RouteID: number): Promise<ob
   };
 }
 
-export async function integrateRouteDetails(RouteID: number, PathAttributeId: [number], requestID: string): Promise<object> {
-  function getThisRoute(Route: Array, RouteID: number): object {
-    var thisRoute = {};
+export async function integrateRouteDetails(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<object> {
+  function getThisRoute(Route: Route, RouteID: number): RouteItem {
+    var thisRoute: RouteItem = {};
     for (var item of Route) {
       if (item.Id === RouteID) {
         thisRoute = item;
@@ -440,7 +440,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
     return thisRoute;
   }
 
-  function getTimeTableRules(thisRoute: object): object {
+  function getTimeTableRules(thisRoute: RouteItem): object {
     var thisRouteGoFirstBusTime = formatTimeCode(thisRoute.goFirstBusTime, 0);
     var thisRouteGoLastBusTime = formatTimeCode(thisRoute.goLastBusTime, 0);
 
@@ -485,7 +485,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
         },
         holiday: {
           first: thisRouteBackFirstBusTimeOnHoliday,
-          last: thisRouteBackFirstBusTimeOnHoliday,
+          last: thisRouteBackLastBusTimeOnHoliday,
           rushHourWindow: rushHourWindowOnHoliday,
           offRushHourWindow: offRushHourWindowOnHoliday
         }
@@ -494,7 +494,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
     };
   }
 
-  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: [number], timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): object {
+  function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): object {
     function getThisWeekOrigin(): Date {
       var today: Date = new Date();
       var dayOfToday: number = today.getDay();
@@ -650,7 +650,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: [n
     return calendar;
   }
 
-  function getThisProvider(Provider: Array, providerId: number): object {
+  function getThisProvider(Provider: Provider, providerId: number): ProviderItem {
     var thisProvider = {};
     for (var item of Provider) {
       if (item.id === providerId) {

@@ -5,7 +5,7 @@ import { generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
 import { isSaved } from '../../../data/folder/index';
 
-async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: [number]): void {
+async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: Array<number>): void {
   const actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
   const propertiesField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
   const calendarField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"]');
@@ -26,7 +26,7 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   updateCalendarField(calendarField, integration.calendar, false);
 }
 
-export function openRouteDetails(RouteID: number, PathAttributeId: [number]): void {
+export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
   var Field: HTMLElement = documentQuerySelector('.css_route_details_field');
   Field.setAttribute('displayed', true);
   initializeRouteDetailsField(Field, RouteID, PathAttributeId);

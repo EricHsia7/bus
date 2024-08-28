@@ -2,10 +2,24 @@ import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
 
+export interface ProviderItem {
+  id: number;
+  nameZn: string; // name in Chinese (Zhōngwén)
+  nameEn: string; // name in English
+  email: string;
+  phoneInfo: string;
+  stationId: string;
+  stationNameZn: string;
+  stationNameEn: string;
+  type: '0' | '1' | '2' | '3' | '4' | '5'; // 0: city bus station, 1: coach bus station, 2: MRT station, 3: train station, 4: airport, 5: port
+}
+
+export type Provider = Array<ProviderItem>;
+
 let ProviderAPIVariableCache_available: boolean = false;
 let ProviderAPIVariableCache_data: object = {};
 
-export async function getProvider(requestID: string): Promise<object> {
+export async function getProvider(requestID: string): Promise<Provider> {
   async function getData() {
     var apis = [
       [0, 9],
