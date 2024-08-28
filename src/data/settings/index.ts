@@ -113,16 +113,16 @@ var Settings = {
     option: 0,
     options: [
       {
+        name: '方位',
+        value: 'directions'
+      },
+      {
         name: '地址特徵',
         value: 'address'
       },
       {
         name: '英文字母',
         value: 'letters'
-      },
-      {
-        name: '方位',
-        value: 'directions'
       }
     ]
   },
