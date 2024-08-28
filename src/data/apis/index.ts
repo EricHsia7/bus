@@ -304,7 +304,19 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .map((id: number) => {
           const overlappingRouteKey = `r_${id}`;
           if (Route.hasOwnProperty(overlappingRouteKey)) {
-            return formatOverlappingRoutes(Route[overlappingRouteKey]);
+            const overlappingRoute: SimplifiedRouteItem = Route[overlappingRouteKey];
+            const formattedOverlappingRoute = {
+              name: overlappingRoute.n,
+              RouteEndPoints: {
+                RouteDeparture: overlappingRoute.dep,
+                RouteDestination: overlappingRoute.des,
+                text: `${overlappingRoute.dep} \u21CC ${overlappingRoute.des}`, //u21CC -> '⇌'
+                html: `<span>${overlappingRoute.dep}</span><span>\u21CC</span><span>${overlappingRoute.des}</span>`
+              },
+              RouteID: overlappingRoute.id,
+              PathAttributeId: overlappingRoute.pid
+            };
+            return formattedOverlappingRoute;
           } else {
             return null;
           }
