@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-update-dependencies
+      - dev-preprocessed-stops-v2
 
 jobs:
   launch:

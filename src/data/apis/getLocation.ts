@@ -1,7 +1,7 @@
 import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
-import { md5 } from '../../tools/index';
+import { convertToUnitVector, md5 } from '../../tools/index';
 import { mergeAddressesIntoOne } from '../../tools/address';
 
 export interface LocationItem {
@@ -23,12 +23,18 @@ export interface LocationItem {
 
 export type Location = Array<LocationItem>;
 
+export interface LocationStopItem {
+  id: number;
+  v: [number, number];
+}
+
 export interface SimplifiedLocationItem {
   n: string; // name
   lo: number; // longitude
   la: number; // latitude
   r: Array<number>; // RouteIDs
   s: Array<number>; // StopIDs
+  v: Array<[number, number]>; // a set of vectors
   a: Array<string>; // addresses
 }
 
@@ -40,6 +46,7 @@ export interface MergedLocationItem {
   la: Array<number>; // latitude
   r: Array<Array<number>>; // RouteIDs
   s: Array<Array<number>>; // StopIDs
+  v: Array<Array<[number, number]>>; // sets of vectors
   a: Array<object | string>; // addresses
 }
 
@@ -57,8 +64,41 @@ var LocationAPIVariableCache: object = {
 };
 
 function simplifyLocation(array: Location): SimplifiedLocation {
+  var locationsByRoute = {};
+  for (var item of array) {
+    var thisRouteID = item.routeId;
+    var key = `r_${thisRouteID}`;
+    if (!locationsByRoute.hasOwnProperty(key)) {
+      locationsByRoute[key] = [];
+    }
+    locationsByRoute[key].push(item);
+  }
+  for (var key in locationsByRoute) {
+    locationsByRoute[key] = locationsByRoute[key].sort(function (a, b) {
+      return a.seqNo - b.seqNo;
+    });
+  }
   var result: SimplifiedLocation = {};
   for (var item of array) {
+    let vector = [0, 0];
+    var locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
+    var locationsOnThisRouteLength = locationsOnThisRoute.length;
+    var nextLocation = null;
+    for (let i = 0; i < locationsOnThisRouteLength; i++) {
+      if (locationsOnThisRoute[i].Id === item.Id) {
+        let nextIndex = 0;
+        if (i < locationsOnThisRouteLength - 1) {
+          nextIndex = i + 1;
+        }
+        nextLocation = locationsOnThisRoute[nextIndex];
+      }
+    }
+    if (nextLocation) {
+      var x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
+      var y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
+      vector = convertToUnitVector([x, y]);
+    }
+
     var key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
       var simplified_item: SimplifiedLocationItem = {};
@@ -67,6 +107,7 @@ function simplifyLocation(array: Location): SimplifiedLocation {
       simplified_item.la = parseFloat(item.latitude);
       simplified_item.r = [item.routeId];
       simplified_item.s = [item.Id];
+      simplified_item.v = [vector];
       simplified_item.a = [item.address];
       result[key] = simplified_item;
     } else {
@@ -75,6 +116,7 @@ function simplifyLocation(array: Location): SimplifiedLocation {
       }
       if (!(result[key].s.indexOf(item.Id) > -1)) {
         result[key].s.push(item.Id);
+        result[key].v.push(vector);
       }
       result[key].a.push(item.address);
     }
@@ -98,6 +140,7 @@ function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
         la: [object[key].la],
         r: [object[key].r],
         s: [object[key].s],
+        v: [object[key].v],
         a: [mergeAddressesIntoOne(object[key].a)],
         id: [parseInt(key.split('_')[1])],
         hash: hash
@@ -106,6 +149,7 @@ function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
       result[nameKey].id.push(parseInt(key.split('_')[1]));
       result[nameKey].r.push(object[key].r);
       result[nameKey].s.push(object[key].s);
+      result[nameKey].v.push(object[key].v);
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
       result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
@@ -131,7 +175,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
 
   var cache_time: number = 60 * 60 * 24 * 30 * 1000;
   var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v11_cache`;
+  var cache_key = `bus_${cache_type}_location_v14_cache`;
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();

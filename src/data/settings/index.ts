@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { formatTime } from '../../tools/format-time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'use_addresses_as_location_labels'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels'];
 
 var Settings = {
   time_formatting_mode: {
@@ -102,23 +102,27 @@ var Settings = {
       }
     ]
   },
-  use_addresses_as_location_labels: {
-    key: 'use_addresses_as_location_labels',
+  location_labels: {
+    key: 'location_labels',
     name: '站牌位置標籤',
     icon: 'label',
     status: '',
-    action: `bus.settingsPage.openSettingsOptionsPage('use_addresses_as_location_labels')`,
+    action: `bus.settingsPage.openSettingsOptionsPage('location_labels')`,
     type: 'select',
     default_option: 0,
     option: 0,
     options: [
       {
+        name: '方位',
+        value: 'directions'
+      },
+      {
         name: '地址特徵',
-        value: true
+        value: 'address'
       },
       {
         name: '英文字母',
-        value: false
+        value: 'letters'
       }
     ]
   },

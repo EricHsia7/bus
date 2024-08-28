@@ -12,7 +12,7 @@ import { getLocation, SimplifiedLocation } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString } from '../../tools/format-time';
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, generateDirectionLabels } from '../../tools/index';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address';
 import { generateLetterLabels } from '../../tools/index';
 import { getSettingOptionValue } from '../settings/index';
@@ -722,7 +722,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   var Stop = await getStop(requestID);
   var BusEvent = await getBusEvent(requestID);
   var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var use_addresses_as_location_labels = getSettingOptionValue('use_addresses_as_location_labels');
+  var location_labels = getSettingOptionValue('location_labels');
   var groupedItems = {};
   var itemQuantity = {};
   var groups = {};
@@ -731,6 +731,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   var thisLocation = Location[LocationKey];
   var thisLocationName = thisLocation.n;
   var stopLocationIds = thisLocation.id;
+  var setsOfVectors = thisLocation.v;
 
   var StopIDs = [];
   var RouteIDs = [];
@@ -743,11 +744,21 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
   var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
   var labels = [];
-  if (use_addresses_as_location_labels) {
-    labels = generateLabelFromAddresses(thisLocation.a);
-  } else {
-    labels = generateLetterLabels(stopLocationQuantity);
+  switch (location_labels) {
+    case 'address':
+      labels = generateLabelFromAddresses(thisLocation.a);
+
+      break;
+    case 'letters':
+      labels = generateLetterLabels(stopLocationQuantity);
+      break;
+    case 'directions':
+      labels = generateDirectionLabels(setsOfVectors);
+      break;
+    default:
+      break;
   }
+
   for (var i = 0; i < stopLocationQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
