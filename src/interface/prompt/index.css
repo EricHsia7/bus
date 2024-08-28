@@ -29,7 +29,7 @@
   height: 50px;
   user-select: none;
   -webkit-user-select: none;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
