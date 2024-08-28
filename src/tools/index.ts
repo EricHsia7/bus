@@ -222,7 +222,7 @@ export function generateOrientationLabels(setsOfVectors: Array<Array<[number, nu
       result2.push({ label: orientation.label, dotProduct: dotProduct });
     }
     result2 = result2.sort(function (a, b) {
-      return a.dotProduct - b.dotProduct;
+      return b.dotProduct - a.dotProduct;
     });
     result.push(result2[0].label);
   }
