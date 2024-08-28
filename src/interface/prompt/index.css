@@ -47,7 +47,7 @@
   animation-name: css_show_prompt;
   animation-duration: 2s;
   animation-fill-mode: forwards;
-  animation-timing-function: cubic-bezier(.21, .75, .1, .96);
+  animation-timing-function: ease-in-out;
 }
 
 .css_prompt .css_prompt_icon {
