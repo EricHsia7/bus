@@ -77,8 +77,8 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
       item.latitude = parseFloat(BusDataObj[thisBusID].Latitude);
       item.longitude = parseFloat(BusDataObj[thisBusID].Longitude);
     } else {
-      item.lo = 0;
-      item.la = 0;
+      item.latitude = 0;
+      item.longitude = 0;
     }
     var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
     item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
@@ -348,7 +348,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const nearestPosition = getNearestPosition(positions, 450);
   const multipleEndpoints = processedSegmentBuffer['g_0'].length % 2 === 0;
   let endpointCount = 0;
-  
+
   let groupedItems = {};
   let groupQuantity = 0;
   let itemQuantity = {};
