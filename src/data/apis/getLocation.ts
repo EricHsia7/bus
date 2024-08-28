@@ -23,11 +23,6 @@ export interface LocationItem {
 
 export type Location = Array<LocationItem>;
 
-export interface LocationStopItem {
-  id: number;
-  v: [number, number];
-}
-
 export interface SimplifiedLocationItem {
   n: string; // name
   lo: number; // longitude
@@ -63,27 +58,27 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(array: Location): SimplifiedLocation {
-  var locationsByRoute = {};
-  for (var item of array) {
-    var thisRouteID = item.routeId;
-    var key = `r_${thisRouteID}`;
-    if (!locationsByRoute.hasOwnProperty(key)) {
-      locationsByRoute[key] = [];
+function simplifyLocation(Location: Location): SimplifiedLocation {
+  let locationsByRoute = {};
+  for (const item of Location) {
+    const thisRouteID = item.routeId;
+    const thisRouteKey = `r_${thisRouteID}`;
+    if (!locationsByRoute.hasOwnProperty(thisRouteKey)) {
+      locationsByRoute[thisRouteKey] = [];
     }
-    locationsByRoute[key].push(item);
+    locationsByRoute[thisRouteKey].push(item);
   }
-  for (var key in locationsByRoute) {
+  for (const key in locationsByRoute) {
     locationsByRoute[key] = locationsByRoute[key].sort(function (a, b) {
       return a.seqNo - b.seqNo;
     });
   }
-  var result: SimplifiedLocation = {};
-  for (var item of array) {
+  let result: SimplifiedLocation = {};
+  for (const item of Location) {
     let vector = [0, 0];
-    var locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
-    var locationsOnThisRouteLength = locationsOnThisRoute.length;
-    var nextLocation = null;
+    const locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
+    const locationsOnThisRouteLength = locationsOnThisRoute.length;
+    let nextLocation = null;
     for (let i = 0; i < locationsOnThisRouteLength; i++) {
       if (locationsOnThisRoute[i].Id === item.Id) {
         let nextIndex = 0;
@@ -94,22 +89,22 @@ function simplifyLocation(array: Location): SimplifiedLocation {
       }
     }
     if (nextLocation) {
-      var x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
-      var y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
+      const x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
+      const y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
       vector = convertToUnitVector([x, y]);
     }
 
-    var key = `l_${item.stopLocationId}`;
+    const key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
-      var simplified_item: SimplifiedLocationItem = {};
-      simplified_item.n = item.nameZh;
-      simplified_item.lo = parseFloat(item.longitude);
-      simplified_item.la = parseFloat(item.latitude);
-      simplified_item.r = [item.routeId];
-      simplified_item.s = [item.Id];
-      simplified_item.v = [vector];
-      simplified_item.a = [item.address];
-      result[key] = simplified_item;
+      let simplifiedItem: SimplifiedLocationItem = {};
+      simplifiedItem.n = item.nameZh;
+      simplifiedItem.lo = parseFloat(item.longitude);
+      simplifiedItem.la = parseFloat(item.latitude);
+      simplifiedItem.r = [item.routeId];
+      simplifiedItem.s = [item.Id];
+      simplifiedItem.v = [vector];
+      simplifiedItem.a = [item.address];
+      result[key] = simplifiedItem;
     } else {
       if (!(result[key].r.indexOf(item.routeId) > -1)) {
         result[key].r.push(item.routeId);

@@ -280,17 +280,17 @@ interface integratedStopItem {
 }
 
 export interface RouteIntegration {
-  groupedItems: {[key: string]: integratedStopItem},
-  groupQuantity: number,
-  itemQuantity:{[key:string]: number} ,
-  RouteName: string,
+  groupedItems: { [key: string]: integratedStopItem };
+  groupQuantity: number;
+  itemQuantity: { [key: string]: number };
+  RouteName: string;
   RouteEndPoints: {
-    RouteDeparture: string,
-    RouteDestination: string
-  },
-  dataUpdateTime: any,
-  RouteID: number,
-  PathAttributeId: Array<number>
+    RouteDeparture: string;
+    RouteDestination: string;
+  };
+  dataUpdateTime: any;
+  RouteID: number;
+  PathAttributeId: Array<number>;
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<RouteIntegration> {
@@ -699,7 +699,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
             if (thisHeadwayDate.getTime() > thisPeriodEndTimeDateObject.getTime()) {
               violateRules = true;
             }
-            /*need to complete - check timeTableRules*/
+            // TODO: check timeTableRules
             if (violateRules === false) {
               calendar.groupedEvents[dayOfWeek.code].push({
                 date: thisHeadwayDate,
@@ -721,7 +721,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
           var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
           var thisDepartureTime = formatTimeCode(item.DepartureTime, 0);
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
-          /*need to complete - check timeTableRules*/
+          // TODO: check timeTableRules
           if (violateRules === false) {
             calendar.groupedEvents[dayOfWeek.code].push({
               date: thisHeadwayDate,
