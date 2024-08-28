@@ -73,6 +73,7 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
     // collect data from 'BusEvent'
     processedItem.CarType = item.CarType;
     processedItem.BusStatus = item.BusStatus;
+    processedItem.BusID = item.BusID;
 
     // check whether this bus is on the route
     const thisRouteID = parseInt(item.RouteID);
