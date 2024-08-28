@@ -215,7 +215,7 @@ export function generateOrientationLabels(setsOfVectors: Array<Array<[number, nu
       x += vector[0];
       y += vector[1];
     }
-    const meanVector = [x, y];
+    const meanVector = convertToUnitVector([x, y]);
     let result2 = [];
     for (const orientation of orientations) {
       var dotProduct = orientation.vector[0] * meanVector[0] + orientation.vector[1] * meanVector[1];
@@ -226,7 +226,7 @@ export function generateOrientationLabels(setsOfVectors: Array<Array<[number, nu
     });
     result.push(result2[0].label);
   }
-  return result
+  return result;
 }
 
 const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
