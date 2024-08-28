@@ -150,8 +150,29 @@ async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promis
   return result;
 }
 
-function formatBus(object: ProcessedBus): object {
-  let result = {};
+interface FormattedBusStatus {
+  onStop: boolean;
+  situation: string;
+  text: string;
+}
+
+interface FormattedBusPosition {
+  longitude: number;
+  latitude: number;
+}
+
+interface FormattedBus {
+  type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
+  carNumber: string;
+  status: FormattedBusStatus;
+  RouteName: string;
+  onThisRoute: boolean;
+  index: number;
+  position: FormattedBusPosition;
+}
+
+function formatBus(object: ProcessedBus): FormattedBus {
+  let result: FormattedBus = {};
 
   const CarType = parseInt(object.CarType);
   let type = '';
@@ -228,7 +249,7 @@ function formatBus(object: ProcessedBus): object {
   return result;
 }
 
-function formatBusEvent(buses: Array): Array | null {
+function formatBusEvent(buses: Array<ProcessedBus>): Array<FormattedBus> | null {
   if (buses.length === 0) {
     return null;
   }
@@ -363,7 +384,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       });
 
       // collect data from 'processedBusEvent'
-      let buses: Array<ProcessedBus> = [];
+      let buses: Array<FormattedBus> = [];
       for (var overlappingStopID of thisLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
         if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
