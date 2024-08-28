@@ -197,7 +197,7 @@ function formatBus(object: ProcessedBus): object {
     text: `${onStop} | ${situation}`
   };
   result.RouteName = object.RouteName;
-  result.RouteID = object.result.onThisRoute = object.onThisRoute;
+  result.onThisRoute = object.onThisRoute;
   result.index = object.index;
 
   return result;
@@ -377,7 +377,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     let progress = 0;
 
     if (item.buses.length > 0) {
-      if (parseInt(item.buses[0].RouteID) === RouteID) {
+      if (item.buses[0].onThisRoute) {
         const [x, y] = [item.buses[0].longitude, item.buses[0].latitude];
         const [x1, y1] = [item.position.longitude, item.position.latitude];
         const [x2, y2] = [nextItem.position.longitude, nextItem.position.latitude];
