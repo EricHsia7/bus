@@ -4,12 +4,12 @@
     transform: translateX(-50%) scale(0.85);
   }
 
-  10% {
+  8% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
 
-  84% {
+  91% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
@@ -62,7 +62,7 @@
     --b-cssvar-font-variation-settings-fill: 0;
   }
 
-  10% {
+  8% {
     --b-cssvar-font-variation-settings-fill: 1;
   }
 
