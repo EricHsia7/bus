@@ -121,67 +121,68 @@ async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promis
   return result;
 }
 
+function formatBus(object: ProcessedBus): object {
+  var result = {};
+  var CarType = parseInt(object.CarType);
+  if (CarType === 0) {
+    result.type = '一般';
+  }
+  if (CarType === 1) {
+    result.type = '低底盤';
+  }
+  if (CarType === 2) {
+    result.type = '大復康巴士';
+  }
+  if (CarType === 3) {
+    result.type = '狗狗友善專車';
+  }
+  var CarOnStop = parseInt(object.CarOnStop);
+  var onStop = '';
+  if (CarOnStop === 0) {
+    onStop = '離站';
+  }
+  if (CarOnStop === 1) {
+    onStop = '進站';
+  }
+  var BusStatus = parseInt(object.BusStatus);
+  var situation = '';
+  if (BusStatus === 0) {
+    situation = '正常';
+  }
+  if (BusStatus === 1) {
+    situation = '車禍';
+  }
+  if (BusStatus === 2) {
+    situation = '故障';
+  }
+  if (BusStatus === 3) {
+    situation = '塞車';
+  }
+  if (BusStatus === 4) {
+    situation = '緊急求援';
+  }
+  if (BusStatus === 5) {
+    situation = '加油';
+  }
+  if (BusStatus === 99) {
+    situation = '非營運狀態';
+  }
+  result.carNumber = object.BusID;
+  result.status = {
+    onStop: onStop,
+    situation: situation,
+    text: `${onStop} | ${situation}`
+  };
+  result.RouteName = object.RouteName;
+  result.onThisRoute = object.onThisRoute;
+  return result;
+}
+
 function formatBusEvent(buses: Array): Array | null {
   if (buses.length === 0) {
     return null;
   }
   var result = [];
-  function formatBus(object: object): object {
-    var result = {};
-    var CarType = parseInt(object.CarType);
-    if (CarType === 0) {
-      result.type = '一般';
-    }
-    if (CarType === 1) {
-      result.type = '低底盤';
-    }
-    if (CarType === 2) {
-      result.type = '大復康巴士';
-    }
-    if (CarType === 3) {
-      result.type = '狗狗友善專車';
-    }
-    var CarOnStop = parseInt(object.CarOnStop);
-    var onStop = '';
-    if (CarOnStop === 0) {
-      onStop = '離站';
-    }
-    if (CarOnStop === 1) {
-      onStop = '進站';
-    }
-    var BusStatus = parseInt(object.BusStatus);
-    var situation = '';
-    if (BusStatus === 0) {
-      situation = '正常';
-    }
-    if (BusStatus === 1) {
-      situation = '車禍';
-    }
-    if (BusStatus === 2) {
-      situation = '故障';
-    }
-    if (BusStatus === 3) {
-      situation = '塞車';
-    }
-    if (BusStatus === 4) {
-      situation = '緊急求援';
-    }
-    if (BusStatus === 5) {
-      situation = '加油';
-    }
-    if (BusStatus === 99) {
-      situation = '非營運狀態';
-    }
-    result.carNumber = object.BusID;
-    result.status = {
-      onStop: onStop,
-      situation: situation,
-      text: `${onStop} | ${situation}`
-    };
-    result.RouteName = object.RouteName;
-    result.onThisRoute = object.onThisRoute;
-    return result;
-  }
   for (var bus of buses) {
     result.push(formatBus(bus));
   }
@@ -319,7 +320,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           // "overlapping stops" contains this stop
           const overlappingStopKey = `s_${overlappingStopID}`;
           if (processedBusEvent.hasOwnProperty(overlappingStopKey)) {
-            return formatBusEvent(processedBusEvent[overlappingStopKey]);
+            return formatBus(processedBusEvent[overlappingStopKey]);
           } else {
             return null;
           }
