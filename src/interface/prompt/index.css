@@ -1,22 +1,22 @@
 @keyframes css_show_prompt {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
+    transform: translateX(-50%) scale(0.85);
   }
 
   8% {
     opacity: 1;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+    transform: translateX(-50%) scale(1);
   }
 
   86% {
     opacity: 1;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+    transform: translateX(-50%) scale(1);
   }
 
   100% {
     opacity: 0;
-    transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(1);
+    transform: translateX(-50%) scale(1);
   }
 }
 
@@ -26,9 +26,9 @@
   border-radius: var(--b-cssvar-border-radius-default);
   position: fixed;
   left: 50%;
-  bottom: 0px;
+  bottom: calc(20px + var(--b-cssvar-safe-area-bottom));
   opacity: 0;
-  transform: translateX(-50%) translateY(clamp(-45px, calc(-20px - var(--b-cssvar-safe-area-bottom)), -20px)) scale(0.85);
+  transform: translateX(-50%) scale(0.85);
   background: rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.8);
   -webkit-user-select: none;
   user-select: none;
@@ -71,7 +71,7 @@
   height: 20px;
   color: var(--b-cssvar-333333);
   animation-name: css_fill_prompt_icon;
-  animation-duration: var(--b-cssvar-transition-duration);
+  animation-duration: 800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
