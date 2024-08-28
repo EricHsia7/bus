@@ -241,13 +241,18 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
     const meanVector = convertToUnitVector([x, y]);
     let result2 = [];
     for (const direction of directions) {
-      var dotProduct = direction.vector[0] * meanVector[0] + direction.vector[1] * meanVector[1];
+      const dotProduct = direction.vector[0] * meanVector[0] + direction.vector[1] * meanVector[1];
       result2.push({ label: direction.label, dotProduct: dotProduct });
     }
     result2 = result2.sort(function (a, b) {
       return b.dotProduct - a.dotProduct;
     });
-    result.push(result2[0].label);
+    const bestMatch = result2[0];
+    if (bestMatch.dotProduct > 0.5) {
+      result.push(bestMatch.label);
+    } else {
+      result.push('未知');
+    }
   }
   return result;
 }
