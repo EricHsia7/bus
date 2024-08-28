@@ -331,8 +331,8 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
-      const segmentBufferGroup = processedSegmentBuffer[`g_${item._Stop.goBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
-      if (segmentBufferGroup.includes(item._Stop.nameZh)) {
+      const segmentBufferGroup = processedSegmentBuffer[`g_${item.goBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
+      if (segmentBufferGroup.includes(thisLocation.n)) {
         isSegmentBuffer = true;
       }
       integratedStopItem.segmentBuffer = isSegmentBuffer;
