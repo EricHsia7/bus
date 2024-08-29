@@ -401,7 +401,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
-      console.log(item);
       const segmentBufferGroup = processedSegmentBuffer[`g_${item.GoBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
       if (segmentBufferGroup.includes(thisLocation.n)) {
         isSegmentBuffer = true;
