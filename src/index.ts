@@ -56,7 +56,13 @@ import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
 
+import './interface/location/field.css';
+import './interface/location/head.css';
+import './interface/location/groups.css';
+import './interface/location/group-details.css';
+import './interface/location/group-items.css';
 import './interface/location/index.css';
+
 import './interface/settings/index.css';
 
 import './interface/save-to-folder/index.css';

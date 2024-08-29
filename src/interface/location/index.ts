@@ -3,7 +3,7 @@ import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize } from '../index';
 
@@ -347,7 +347,6 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
         for (var o = 0; o < Math.abs(capacity); o++) {
           var thisItemElement = generateElementOfItem();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(thisItemElement.element);
-          //ripple.__addToSingleElement(Field.QuerySelector(`.css_location_groups .css_location_group .css_location_group_items[group="${i}"] .item#${thisElement.id} .css_stretch`), 'var(--b-cssvar-333333)', 300);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
