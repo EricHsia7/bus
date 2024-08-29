@@ -58,64 +58,24 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(Location: Location): SimplifiedLocation {
-  let locationsByRoute = {};
-  for (const item of Location) {
-    const thisRouteID = item.routeId;
-    const thisRouteKey = `r_${thisRouteID}`;
-    if (!locationsByRoute.hasOwnProperty(thisRouteKey)) {
-      locationsByRoute[thisRouteKey] = [];
-    }
-    locationsByRoute[thisRouteKey].push(item);
-  }
-  for (const key in locationsByRoute) {
-    locationsByRoute[key] = locationsByRoute[key].sort(function (a, b) {
-      return a.seqNo - b.seqNo;
-    });
-  }
-  let result: SimplifiedLocation = {};
-  for (const item of Location) {
-    let vector = [0, 0];
-    const locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
-    const locationsOnThisRouteLength = locationsOnThisRoute.length;
-    let nextLocation = null;
-    for (let i = 0; i < locationsOnThisRouteLength; i++) {
-      if (locationsOnThisRoute[i].Id === item.Id) {
-        let nextIndex = 0;
-        if (i < locationsOnThisRouteLength - 1) {
-          nextIndex = i + 1;
-        }
-        nextLocation = locationsOnThisRoute[nextIndex];
-      }
-    }
-    if (nextLocation) {
-      const x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
-      const y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
-      vector = convertToUnitVector([x, y]);
-    }
+async function simplifyLocation(Location: Location): Promise<SimplifiedLocation> {
+  const worker = new Worker(new URL('./getLocation-simplification-worker.ts', import.meta.url));
 
-    const key = `l_${item.stopLocationId}`;
-    if (!result.hasOwnProperty(key)) {
-      let simplifiedItem: SimplifiedLocationItem = {};
-      simplifiedItem.n = item.nameZh;
-      simplifiedItem.lo = parseFloat(item.longitude);
-      simplifiedItem.la = parseFloat(item.latitude);
-      simplifiedItem.r = [item.routeId];
-      simplifiedItem.s = [item.Id];
-      simplifiedItem.v = [vector];
-      simplifiedItem.a = [item.address];
-      result[key] = simplifiedItem;
-    } else {
-      if (!(result[key].r.indexOf(item.routeId) > -1)) {
-        result[key].r.push(item.routeId);
-      }
-      if (!(result[key].s.indexOf(item.Id) > -1)) {
-        result[key].s.push(item.Id);
-        result[key].v.push(vector);
-      }
-      result[key].a.push(item.address);
-    }
-  }
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(Location); // Send data to the worker
+  });
+
   return result;
 }
 
@@ -175,7 +135,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
   if (cached_time === null) {
     var result = await getData();
     var final_result = {};
-    var simplified_result = simplifyLocation(result);
+    var simplified_result = await simplifyLocation(result);
     if (merged) {
       var merged_result = mergeLocationByName(simplified_result);
       final_result = merged_result;
@@ -194,7 +154,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
       var final_result = {};
-      var simplified_result = simplifyLocation(result);
+      var simplified_result = await simplifyLocation(result);
       if (merged) {
         var merged_result = mergeLocationByName(simplified_result);
         final_result = merged_result;
