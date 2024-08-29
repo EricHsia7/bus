@@ -1,4 +1,5 @@
 .css_location_field .css_location_groups {
+  --b-cssvar-location-field-width: inherit;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -11,15 +12,17 @@
   scroll-snap-type: x mandatory;
   display: grid;
   grid-column-gap: 0px;
-  grid-template-columns: repeat(var(--b-cssvar-location-group-quantity), var(--b-cssvar-l-fw));
+  grid-template-columns: repeat(var(--b-cssvar-location-group-quantity), var(--b-cssvar-location-field-width));
 }
 
 .css_location_field .css_location_groups .css_location_group {
+  --b-cssvar-location-field-width: inherit;
+  --b-cssvar-location-field-height: inherit;
   position: relative;
   top: 0px;
   left: 0px;
-  width: var(--b-cssvar-l-fw);
-  height: var(--b-cssvar-l-fh);
+  width: var(--b-cssvar-location-field-width);
+  height: var(--b-cssvar-location-field-height);
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;

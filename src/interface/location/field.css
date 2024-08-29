@@ -1,3 +1,15 @@
+@property --b-cssvar-location-field-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-location-field-height {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
 .css_location_field {
   position: fixed;
   top: 0px;
