@@ -36,7 +36,7 @@ var tabPadding: number = 20;
 
 export function initializeLocationSliding(): void {
   var element = documentQuerySelector('.css_location_field .css_location_groups');
-  function monitorScrollLeft(element, callback) {
+  function monitorScrollLeft(element: HTMLElement, times: number, callback: Function) {
     locationSliding_scrollLog.push(element.scrollLeft);
     if (locationSliding_scrollLog.length > 10) {
       locationSliding_scrollLog = locationSliding_scrollLog.slice(1);
@@ -44,9 +44,11 @@ export function initializeLocationSliding(): void {
     if (calculateStandardDeviation(locationSliding_scrollLog) < Math.pow(10, -10)) {
       callback();
     } else {
-      window.requestAnimationFrame(function () {
-        monitorScrollLeft(element, callback);
-      });
+      if (times <= 4096) {
+        window.requestAnimationFrame(function () {
+          monitorScrollLeft(element, times + 1, callback);
+        });
+      }
     }
   }
   element.addEventListener('touchstart', function (event) {
@@ -54,7 +56,7 @@ export function initializeLocationSliding(): void {
     locationSliding_sliding = true;
   });
   element.addEventListener('touchend', function (event) {
-    monitorScrollLeft(element, function () {
+    monitorScrollLeft(element, 0, function () {
       locationSliding_currentGroup = Math.round(element.scrollLeft / locationSliding_fieldWidth);
       locationSliding_sliding = false;
     });

@@ -39,7 +39,7 @@ var currentRouteIDSet_PathAttributeId: Array = [];
 
 export function initializeRouteSliding(): void {
   var element = documentQuerySelector('.css_route_groups');
-  function monitorScrollLeft(element: HTMLElement, callback: Function): void {
+  function monitorScrollLeft(element: HTMLElement, times: number, callback: Function): void {
     routeSliding_scrollLog.push(element.scrollLeft);
     if (routeSliding_scrollLog.length > 10) {
       routeSliding_scrollLog = routeSliding_scrollLog.slice(1);
@@ -47,9 +47,11 @@ export function initializeRouteSliding(): void {
     if (calculateStandardDeviation(routeSliding_scrollLog) < Math.pow(10, -10)) {
       callback();
     } else {
-      window.requestAnimationFrame(function () {
-        monitorScrollLeft(element, callback);
-      });
+      if (times <= 4096) {
+        window.requestAnimationFrame(function () {
+          monitorScrollLeft(element, times + 1, callback);
+        });
+      }
     }
   }
 
@@ -58,7 +60,7 @@ export function initializeRouteSliding(): void {
     routeSliding_sliding = true;
   });
   element.addEventListener('touchend', function (event) {
-    monitorScrollLeft(element, function () {
+    monitorScrollLeft(element, 0, function () {
       routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
     });
