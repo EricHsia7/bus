@@ -46,6 +46,12 @@
   color: var(--b-cssvar-333333);
 }
 
+@property --b-cssvar-cursor-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 .css_search_field .css_search_head .css_search_search_input .css_cursor {
   position: absolute;
   top: 15px;

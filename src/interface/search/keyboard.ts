@@ -79,6 +79,6 @@ export function emptyInput(): void {
 }
 
 function uodateCursor(value: string): void {
-  var offset = getTextWidth(value, 500, '20px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
-  documentQuerySelector('#search_style').innerHTML = `:root {--b-cssvar-cursor-offset:${offset}px}`;
+  const offset = getTextWidth(value, 500, '20px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
+  documentQuerySelector('.css_search_field .css_search_head .css_search_search_input .css_cursor').style.setProperty('--b-cssvar-cursor-offset', `${offset}px`);
 }
