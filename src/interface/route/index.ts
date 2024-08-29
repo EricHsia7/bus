@@ -47,10 +47,12 @@ export function initializeRouteSliding(): void {
     if (calculateStandardDeviation(routeSliding_scrollLog) < Math.pow(10, -10)) {
       callback();
     } else {
-      if (times <= 4096) {
+      if (times < 2048) {
         window.requestAnimationFrame(function () {
           monitorScrollLeft(element, times + 1, callback);
         });
+      } else {
+        routeSliding_scrollLog = [];
       }
     }
   }
