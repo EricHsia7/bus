@@ -1,3 +1,15 @@
+@property --b-cssvar-route-field-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-route-field-height {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
 .css_route_field {
   position: fixed;
   top: 0px;

@@ -105,11 +105,12 @@
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
+  --b-cssvar-route-field-width: inherit;
   position: absolute;
   left: 0px;
   top: 0px;
   background: rgba(0, 0, 0, 0);
-  width: var(--b-cssvar-r-fw);
+  width: var(--b-cssvar-route-field-width);
   height: 2px;
   border-radius: 0px;
   -webkit-user-select: none;

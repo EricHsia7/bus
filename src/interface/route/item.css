@@ -481,7 +481,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buses .css_bus,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_overlapping_routes .css_overlapping_route {
   position: relative;
-  width: calc(var(--b-cssvar-r-fw) * 0.6);
+  width: calc(var(--b-cssvar-route-field-width) * 0.6);
   height: 121px;
   box-sizing: border-box;
   background: var(--b-cssvar-f9f9fb);

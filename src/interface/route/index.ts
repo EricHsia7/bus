@@ -92,7 +92,9 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  documentQuerySelector('#route_field_size').innerHTML = `:root {--b-cssvar-r-fw:${FieldWidth}px;--b-cssvar-r-fh:${FieldHeight}px;}`;
+  const Field = documentQuerySelector('.css_route_field');
+  Field.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
+  Field.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
