@@ -98,7 +98,10 @@ export function ResizeRouteField(): void {
 }
 
 function updateRouteCSS(groupQuantity: number, percentage: number, width: number): void {
-  documentQuerySelector(`style#route_style`).innerHTML = `:root{--b-cssvar-route-group-quantity:${groupQuantity};--b-cssvar-route-tab-percentage:${percentage};--b-cssvar-route-tab-width:${width};}`;
+  const Field = documentQuerySelector('.css_route_field');
+  Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
+  Field.style.setProperty('--b-cssvar-route-tab-percentage', percentage);
+  Field.style.setProperty(' --b-cssvar-route-tab-width', width);
 }
 
 export function ResizeRouteCanvas() {

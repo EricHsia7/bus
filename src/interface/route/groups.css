@@ -1,5 +1,6 @@
 .css_route_field .css_route_groups {
   --b-cssvar-route-field-width: inherit;
+  --b-cssvar-route-group-quantity: inherit;
   position: absolute;
   top: 0px;
   left: 0px;

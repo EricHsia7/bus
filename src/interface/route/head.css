@@ -65,6 +65,7 @@
 }
 
 .css_route_field .css_route_head .css_route_group_tabs {
+  --b-cssvar-route-group-quantity: inherit;
   position: absolute;
   bottom: 5px;
   left: 0px;
