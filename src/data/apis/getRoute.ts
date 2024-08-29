@@ -63,71 +63,24 @@ export type SimplifiedRoute = { [key: string]: SimplifiedRouteItem };
 let RouteAPIVariableCache_available: boolean = false;
 let RouteAPIVariableCache_data: object = {};
 
-function simplifyRoute(Route: Route): SimplifiedRouteItem {
-  var result = {};
-  let RouteRename = [
-    { original: 'providerId', rename: true, newName: 'pd' },
-    { original: 'providerName', rename: false },
-    { original: 'nameZh', newName: 'n', rename: true },
-    { original: 'nameEn', rename: false },
-    { original: 'aliasName', rename: false },
-    { original: 'pathAttributeId', newName: 'pid', rename: true },
-    { original: 'pathAttributeNId', rename: false },
-    { original: 'pathAttributeName', rename: false },
-    { original: 'pathAttributeEname', rename: false },
-    { original: 'buildPeriod', rename: false },
-    { original: 'departureZh', newName: 'dep', rename: true },
-    { original: 'destinationZh', newName: 'des', rename: true },
-    { original: 'departureEn', rename: false },
-    { original: 'destinationEn', rename: false },
-    { original: 'goFirstBusTime', rename: false },
-    { original: 'goLastBusTime', rename: false },
-    { original: 'backFirstBusTime', rename: false },
-    { original: 'backLastBusTime', rename: false },
-    { original: 'offPeakHeadway', rename: false },
-    { original: 'roadMapUrl', rename: false },
-    { original: 'headwayDesc', rename: false },
-    { original: 'holidayGoFirstBusTime', rename: false },
-    { original: 'holidayBackFirstBusTime', rename: false },
-    { original: 'holidayBackLastBusTime', rename: false },
-    { original: 'holidayGoLastBusTime', rename: false },
-    { original: 'holidayBusTimeDesc', rename: false },
-    { original: 'realSequence', rename: false },
-    { original: 'holidayHeadwayDesc', rename: false },
-    { original: 'holidayOffPeakHeadway', rename: false },
-    { original: 'holidayPeakHeadway', rename: false },
-    { original: 'segmentBufferEn', rename: false },
-    { original: 'ticketPriceDescriptionZh', rename: false },
-    { original: 'ticketPriceDescriptionEn', rename: false },
-    { original: 'peakHeadway', rename: false },
-    { original: 'ttiaPathId', rename: false },
-    { original: 'segmentBufferZh', newName: 's', rename: true },
-    { original: 'busTimeDesc', rename: false },
-    { original: 'distance', rename: false },
-    { original: 'NId', rename: false },
-    /*{ original: 'genus', rename: false },*/
-    { original: 'routeType', rename: false },
-    { original: 'Id', rename: true, newName: 'id' }
-  ];
+async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
+  const worker = new Worker(new URL('./getRoute-simplifyRoute-worker.ts', import.meta.url));
 
-  for (var item of Route) {
-    //rename the properties' key
-    for (var toRename of RouteRename) {
-      if (item.hasOwnProperty(toRename.original)) {
-        if (toRename.rename) {
-          //copy the original property to renamed path
-          item[toRename.newName] = item[toRename.original];
-        }
-        delete item[toRename.original];
-      }
-    }
-    item.pid = [item.pid];
-    if (!result.hasOwnProperty('r_' + item.id)) {
-      result['r_' + item.id] = item;
-    } else {
-      result['r_' + item.id]['pid'] = result['r_' + item.id]['pid'].concat(item.pid);
-    }
-  }
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(Route); // Send data to the worker
+  });
+
   return result;
 }
 
@@ -153,7 +106,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
-    var simplified_result = simplifyRoute(result);
+    var simplified_result = await simplifyRoute(result);
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
     if (!RouteAPIVariableCache_available) {
@@ -164,7 +117,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
-      var simplified_result = simplifyRoute(result);
+      var simplified_result = await simplifyRoute(result);
       await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
       await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
       if (!RouteAPIVariableCache_available) {

@@ -59,7 +59,7 @@ var LocationAPIVariableCache: object = {
 };
 
 async function simplifyLocation(Location: Location): Promise<SimplifiedLocation> {
-  const worker = new Worker(new URL('./getLocation-simplification-worker.ts', import.meta.url));
+  const worker = new Worker(new URL('./getLocation-simplifyLocation-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
@@ -79,8 +79,8 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
   return result;
 }
 
-async function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
-  const worker = new Worker(new URL('./getLocation-mergence-worker.ts', import.meta.url));
+async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLocation> {
+  const worker = new Worker(new URL('./getLocation-mergeLocationByName-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
