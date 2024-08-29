@@ -79,37 +79,24 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
   return result;
 }
 
-function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
-  var result: MergedLocation = {};
-  for (var key in object) {
-    var hash = md5(
-      String(object[key].n)
-        .trim()
-        .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
-    );
-    var nameKey = `ml_${hash}`;
-    if (!result.hasOwnProperty(nameKey)) {
-      result[nameKey] = {
-        n: object[key].n,
-        lo: [object[key].lo],
-        la: [object[key].la],
-        r: [object[key].r],
-        s: [object[key].s],
-        v: [object[key].v],
-        a: [mergeAddressesIntoOne(object[key].a)],
-        id: [parseInt(key.split('_')[1])],
-        hash: hash
-      };
-    } else {
-      result[nameKey].id.push(parseInt(key.split('_')[1]));
-      result[nameKey].r.push(object[key].r);
-      result[nameKey].s.push(object[key].s);
-      result[nameKey].v.push(object[key].v);
-      result[nameKey].lo.push(object[key].lo);
-      result[nameKey].la.push(object[key].la);
-      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
-    }
-  }
+async function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
+  const worker = new Worker(new URL('./getLocation-mergence-worker.ts', import.meta.url));
+
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(object); // Send data to the worker
+  });
+
   return result;
 }
 
@@ -137,7 +124,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
     var final_result = {};
     var simplified_result = await simplifyLocation(result);
     if (merged) {
-      var merged_result = mergeLocationByName(simplified_result);
+      var merged_result = await mergeLocationByName(simplified_result);
       final_result = merged_result;
     } else {
       final_result = simplified_result;
@@ -156,7 +143,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
       var final_result = {};
       var simplified_result = await simplifyLocation(result);
       if (merged) {
-        var merged_result = mergeLocationByName(simplified_result);
+        var merged_result = await mergeLocationByName(simplified_result);
         final_result = merged_result;
       } else {
         final_result = simplified_result;
