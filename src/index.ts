@@ -1,6 +1,6 @@
 import { updateSearchResult } from './interface/search/index';
 import { calculateDataUsage } from './data/analytics/data-usage';
-import { getUpdateRateInTime } from './data/analytics/update-rate';
+import { discardExpiredEstimateTimeRecords, getUpdateRateInTime } from './data/analytics/update-rate';
 import { calculateStoresSize } from './data/storage/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, ResizeRouteCanvas, switchRouteBodyTab } from './interface/route/index';
@@ -90,7 +90,7 @@ import './interface/folder-icon-selector/symbols.css';
 import './interface/prompt/index.css';
 
 let bus_initialized = false;
-let bus_lazily_loaded = false;
+let bus_secondly_initialized = false;
 
 window.bus = {
   initialize: function () {
@@ -174,12 +174,13 @@ window.bus = {
         });
     }
   },
-  lazily_load: function () {
-    if (!bus_lazily_loaded) {
-      bus_lazily_loaded = true;
+  secondlyInitialize: function () {
+    if (!bus_secondly_initialized) {
+      bus_secondly_initialized = true;
       loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap', 'Noto Sans', 'noto_sans');
       loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
       downloadData();
+      discardExpiredEstimateTimeRecords();
     }
   },
   route: {

@@ -1,6 +1,6 @@
 import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
 import { formatTime } from '../../tools/format-time';
-import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime';
 
 var trackingUpdateRate_trackedStops: Array = [];
@@ -47,18 +47,29 @@ export async function recordEstimateTime(EstimateTime: EstimateTime): void {
 }
 
 export async function listRecordedEstimateTime(): Promise<Array<[number, number]>> {
-  var keys = await lfListItemKeys(3);
+  const keys = await lfListItemKeys(3);
   var result = [];
-  for (var key of keys) {
-    var json = await lfGetItem(3, key);
-    var object: object = JSON.parse(json);
-    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 14 * 1000)) {
+  for (const key of keys) {
+    const json = await lfGetItem(3, key);
+    const object: object = JSON.parse(json);
+    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000)) {
       for (var key2 in object.data) {
         result.push(object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
       }
     }
   }
   return result;
+}
+
+export async function discardExpiredEstimateTimeRecords(): void {
+  const keys = await listRecordedEstimateTime();
+  for (const key of keys) {
+    const json = await lfGetItem(3, key);
+    const object: object = JSON.parse(json);
+    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000) {
+      await lfRemoveItem(3, key);
+    }
+  }
 }
 
 export async function getUpdateRate(): Promise<number> {

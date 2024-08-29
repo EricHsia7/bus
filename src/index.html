@@ -353,7 +353,7 @@
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./service-worker.js');
         }
-        bus.lazily_load();
+        bus.secondlyInitialize();
       });
     </script>
   </body>
