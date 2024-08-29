@@ -3,7 +3,7 @@ import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize } from '../index';
 
@@ -89,7 +89,12 @@ export function ResizeLocationField(): void {
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
-  documentQuerySelector(`style#location_style`).innerHTML = `:root{--b-cssvar-location-group-quantity:${groupQuantity};--b-cssvar-location-tabs-tray-offset:${offset}px;--b-cssvar-location-tab-line-width:${tab_line_width};--b-cssvar-location-percentage:${percentage};}`;
+  documentQuerySelector('.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line').style.setProperty('--b-cssvar-location-tab-line-width', tab_line_width);
+  documentQuerySelector('.css_location_field .css_location_groups').style.setProperty('--b-cssvar-location-group-quantity', groupQuantity);
+  documentQuerySelector('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray').style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset}px`);
+  documentQuerySelectorAll('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab').forEach((e) => {
+    e.style.setProperty('--b-cssvar-location-percentage', percentage);
+  });
 }
 
 function updateUpdateTimer(): void {

@@ -116,7 +116,6 @@
   height: 40px;
   position: relative;
   font-weight: 400;
-  /* clamp(400, calc(500 - 100 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 500)*/
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 1);
 }
 
