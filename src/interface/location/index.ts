@@ -85,9 +85,9 @@ export function ResizeLocationField(): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const Filed  = documentQuerySelector('.css_location_field');
-  Field.style.setProperty('--b-cssvar-location-field-width', `${FieldWidth}px`)
-  Field.style.setProperty('--b-cssvar-location-field-height', `${FieldHeight}px`)
+  const Field = documentQuerySelector('.css_location_field');
+  Field.style.setProperty('--b-cssvar-location-field-width', `${FieldWidth}px`);
+  Field.style.setProperty('--b-cssvar-location-field-height', `${FieldHeight}px`);
 }
 
 function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
