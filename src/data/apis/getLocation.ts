@@ -1,7 +1,7 @@
 import { getAPIURL } from './getAPIURL';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
 import { lfSetItem, lfGetItem } from '../storage/index';
-import { convertToUnitVector, md5 } from '../../tools/index';
+import { md5 } from '../../tools/index';
 import { mergeAddressesIntoOne } from '../../tools/address';
 
 export interface LocationItem {

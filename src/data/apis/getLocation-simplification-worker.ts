@@ -1,3 +1,4 @@
+import { convertToUnitVector } from '../../tools/index';
 import { Location, SimplifiedLocation } from './getLocation';
 
 self.onmessage = function (e) {
