@@ -35,41 +35,45 @@ export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss
 
 export function formatTime(time: number, mode: number): string {
   time = Math.round(time);
-  if (mode === 0) {
-    return `${time}秒`;
-  }
-  if (mode === 1) {
-    var minutes = String((time - (time % 60)) / 60);
-    var seconds = String(time % 60);
-    return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
-  }
-  if (mode === 2) {
-    var minutes = String(Math.floor(time / 60));
-    return `${minutes}分`;
-  }
-  if (mode === 3) {
-    if (time >= 60 * 60) {
-      var hours = String(parseFloat((time / (60 * 60)).toFixed(1)));
-      return `${hours}時`;
-    }
-    if (60 <= time && time < 60 * 60) {
-      var minutes = String(Math.floor(time / 60));
-      return `${minutes}分`;
-    }
-    if (time < 60) {
+  switch (mode) {
+    case 0:
       return `${time}秒`;
-    }
+      break;
+    case 1:
+      const minutes = String((time - (time % 60)) / 60);
+      const seconds = String(time % 60);
+      return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
+      break;
+    case 2:
+      const minutes = String(Math.floor(time / 60));
+      return `${minutes}分`;
+      break;
+    case 3:
+      if (time >= 60 * 60) {
+        const hours = String(parseFloat((time / (60 * 60)).toFixed(1)));
+        return `${hours}時`;
+      }
+      if (60 <= time && time < 60 * 60) {
+        const minutes = String(Math.floor(time / 60));
+        return `${minutes}分`;
+      }
+      if (time < 60) {
+        return `${time}秒`;
+      }
+      break;
+    default:
+      return '--';
+      break;
   }
-  return '--';
 }
 
-export interface Status {
+export interface EstimateTimeStatus {
   code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6;
   text: string;
 }
 
-export function formatEstimateTime(EstimateTime: string, mode: number): Status {
-  var time = parseInt(EstimateTime);
+export function formatEstimateTime(EstimateTime: string, mode: number): EstimateTimeStatus {
+  const time = parseInt(EstimateTime);
   if (time === -3) {
     return { code: 6, text: '末班駛離' };
   }
@@ -82,7 +86,6 @@ export function formatEstimateTime(EstimateTime: string, mode: number): Status {
   if (time === -1) {
     return { code: 3, text: '未發車' };
   }
-
   if (0 <= time && time <= 10) {
     return { code: 2, text: '進站中' };
   }

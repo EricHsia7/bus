@@ -11,7 +11,7 @@ import { searchRouteByPathAttributeId } from '../search/searchRoute';
 import { getLocation, SimplifiedLocationItem } from './getLocation';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
-import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, Status } from '../../tools/format-time';
+import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, EstimateTimeStatus } from '../../tools/format-time';
 import { generateIdentifier, generateDirectionLabels } from '../../tools/index';
 import { generateLabelFromAddresses, addressToString } from '../../tools/address';
 import { generateLetterLabels } from '../../tools/index';
@@ -268,7 +268,7 @@ interface integratedStopItemPosition {
 interface integratedStopItem {
   name: string | null;
   goBack: '0' | '1' | '2';
-  status: Status;
+  status: EstimateTimeStatus;
   buses: Array<object>;
   overlappingRoutes: Array<object>;
   sequence: number;
