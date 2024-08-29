@@ -8,7 +8,7 @@ interface BusEventItem {
   ProviderID: number;
   CarID: number;
   DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end
-  RouteID: string; // number in string
+  RouteID: string; // PathAttributeId (number in string)
   GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
   StopID: string; // number in string
   CarOnStop: '0' | '1'; // 0: leaving/left, 1: coming/came

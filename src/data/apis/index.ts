@@ -313,10 +313,10 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
 
-  var processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
-  var processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+  const processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
+  const processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
 
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
 
   let result = [];
   let positions = [];
@@ -401,7 +401,8 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
-      const segmentBufferGroup = processedSegmentBuffer[`g_${item.goBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
+      console.log(item);
+      const segmentBufferGroup = processedSegmentBuffer[`g_${item.GoBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
       if (segmentBufferGroup.includes(thisLocation.n)) {
         isSegmentBuffer = true;
       }
