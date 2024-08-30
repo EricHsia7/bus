@@ -1,11 +1,11 @@
-import { Route, SimplifiedRoute } from './getRoute';
+import { Route, SimplifiedRoute } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyRouteByWorker(e.data);
+  const result = simplifyRoute_worker(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyRouteByWorker(Route: Route): SimplifiedRoute {
+function simplifyRoute_worker(Route: Route): SimplifiedRoute {
   var result = {};
   let RouteRename = [
     { original: 'providerId', rename: true, newName: 'pd' },

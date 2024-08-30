@@ -5,7 +5,7 @@ import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols';
 import { searchRouteByRouteID } from '../search/searchRoute';
-import { getRoute } from '../apis/getRoute';
+import { getRoute } from '../apis/getRoute/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getEstimateTime } from '../apis/getEstimateTime';
 import { recordEstimateTime } from '../analytics/update-rate';

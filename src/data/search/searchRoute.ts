@@ -1,4 +1,4 @@
-import { getRoute } from '../apis/getRoute';
+import { getRoute } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 

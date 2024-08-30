@@ -1,4 +1,4 @@
-import { getRoute } from '../../data/apis/getRoute';
+import { getRoute } from '../../data/apis/getRoute/index';
 import { getStop } from '../../data/apis/getStop/index';
 import { getLocation } from '../../data/apis/getLocation/index';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';

@@ -2,7 +2,7 @@ import { getEstimateTime } from './getEstimateTime';
 import { getStop, SimplifiedStopItem } from './getStop/index';
 import { BusEvent, getBusEvent } from './getBusEvent';
 import { BusData, getBusData } from './getBusData';
-import { getRoute, Route, RouteItem, SimplifiedRouteItem } from './getRoute';
+import { getRoute, Route, RouteItem, SimplifiedRouteItem } from './getRoute/index';
 import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
