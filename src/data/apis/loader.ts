@@ -2,8 +2,8 @@ import { timeStampToNumber } from '../../tools/format-time';
 import { recordRequest } from '../analytics/data-usage';
 import { pakoInflate } from '../../tools/pako/index';
 
-var dataReceivingProgress = {};
-export var dataUpdateTime = {};
+let dataReceivingProgress = {};
+export let dataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, tag: string): Promise<object> {
   const startTimeStamp = new Date().getTime();

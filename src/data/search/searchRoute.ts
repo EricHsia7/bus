@@ -1,4 +1,4 @@
-import { getRoute } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 
@@ -40,11 +40,11 @@ export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
   return result;
 }
 
-export async function searchRouteByPathAttributeId(PathAttributeId: Array<number>) {
-  var requestID = `r_${generateIdentifier()}`;
-  var Route = await getRoute(requestID, true);
-  var result = [];
-  for (var key in Route) {
+export async function searchRouteByPathAttributeId(PathAttributeId: Array<number>): Promise<Array<SimplifiedRouteItem>> {
+  const requestID = `r_${generateIdentifier()}`;
+  const Route = await getRoute(requestID, true);
+  let result = [];
+  for (const key in Route) {
     if (String(Route[key].pid).indexOf(PathAttributeId) > -1) {
       result.push({
         id: parseInt(key.split('_')[1]),
