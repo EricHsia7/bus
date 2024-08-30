@@ -1,5 +1,5 @@
 import { getRoute } from '../../data/apis/getRoute';
-import { getStop } from '../../data/apis/getStop';
+import { getStop } from '../../data/apis/getStop/index';
 import { getLocation } from '../../data/apis/getLocation/index';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector } from '../../tools/query-selector';

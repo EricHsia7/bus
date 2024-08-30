@@ -1,6 +1,6 @@
-import { getAPIURL } from './getAPIURL';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
-import { lfSetItem, lfGetItem } from '../storage/index';
+import { getAPIURL } from '../getAPIURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { lfSetItem, lfGetItem } from '../../storage/index';
 
 export interface StopItem {
   Id: number; // StopID
@@ -33,7 +33,7 @@ let StopAPIVariableCache_available: boolean = false;
 let StopAPIVariableCache_data: object = {};
 
 async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
-  const worker = new Worker(new URL('./getStop-simplifyStop-worker.ts', import.meta.url));
+  const worker = new Worker(new URL('./simplifyStop-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
