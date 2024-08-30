@@ -59,15 +59,10 @@ export function initializeRouteSliding(): void {
 
   element.addEventListener('touchstart', function (event) {
     routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
-    routeSliding_sliding = true;
   });
-  element.addEventListener('touchend', function (event) {
-    monitorScrollLeft(element, 0, function () {
-      routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
-      routeSliding_sliding = false;
-    });
-  });
+
   element.addEventListener('scroll', function (event) {
+    routeSliding_sliding = true;
     var slidingGroupIndex = event.target.scrollLeft / routeSliding_fieldWidth;
     if (slidingGroupIndex > routeSliding_currentGroup) {
       routeSliding_targetGroup = routeSliding_currentGroup + 1;
@@ -80,6 +75,14 @@ export function initializeRouteSliding(): void {
     updateRouteCSS(routeSliding_groupQuantity, slidingGroupIndex, line_width);
     updateRouteCanvas(routeSliding_groupQuantity, slidingGroupIndex, line_width);
   });
+
+  element.addEventListener('touchend', function (event) {
+    monitorScrollLeft(element, 0, function () {
+      routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_sliding = false;
+    });
+  });
+
   var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
   mediaQueryList.addListener(updateRouteLineColor);
   updateRouteLineColor(mediaQueryList);
