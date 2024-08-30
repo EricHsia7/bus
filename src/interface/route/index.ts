@@ -10,8 +10,8 @@ import { GeneratedElement, FieldSize } from '../index';
 
 var previousIntegration: object = {};
 
-var routeSliding_currentGroup: number = 0;
-var routeSliding_targetGroup: number = 0;
+var routeSliding_initialIndex: number = 0;
+var routeSliding_targetIndex: number = 0;
 var routeSliding_groupQuantity: number = 0;
 var routeSliding_groupStyles: object = {};
 var routeSliding_scrollLog: Array = [];
@@ -39,48 +39,27 @@ var currentRouteIDSet_PathAttributeId: Array = [];
 
 export function initializeRouteSliding(): void {
   var element = documentQuerySelector('.css_route_groups');
-  function monitorScrollLeft(element: HTMLElement, times: number, callback: Function): void {
-    routeSliding_scrollLog.push(element.scrollLeft);
-    if (routeSliding_scrollLog.length > 10) {
-      routeSliding_scrollLog = routeSliding_scrollLog.slice(1);
-    }
-    if (calculateStandardDeviation(routeSliding_scrollLog) < Math.pow(10, -10)) {
-      callback();
-    } else {
-      if (times < 2048) {
-        window.requestAnimationFrame(function () {
-          monitorScrollLeft(element, times + 1, callback);
-        });
-      } else {
-        routeSliding_scrollLog = [];
-      }
-    }
-  }
-
   element.addEventListener('touchstart', function (event) {
-    routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+    routeSliding_sliding = true;
+    routeSliding_initialIndex = Math.round(element.scrollLeft / routeSliding_fieldWidth);
   });
 
   element.addEventListener('scroll', function (event) {
-    routeSliding_sliding = true;
-    var slidingGroupIndex = event.target.scrollLeft / routeSliding_fieldWidth;
-    if (slidingGroupIndex > routeSliding_currentGroup) {
-      routeSliding_targetGroup = routeSliding_currentGroup + 1;
+    var currentIndex = event.target.scrollLeft / routeSliding_fieldWidth;
+    if (currentIndex > routeSliding_initialIndex) {
+      routeSliding_targetIndex = routeSliding_initialIndex + 1;
     } else {
-      routeSliding_targetGroup = routeSliding_currentGroup - 1;
+      routeSliding_targetIndex = routeSliding_initialIndex - 1;
     }
-    var current_size = routeSliding_groupStyles[`g_${routeSliding_currentGroup}`] || { width: 0 };
-    var target_size = routeSliding_groupStyles[`g_${routeSliding_targetGroup}`] || { width: 0 };
-    var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - routeSliding_currentGroup);
-    updateRouteCSS(routeSliding_groupQuantity, slidingGroupIndex, line_width);
-    updateRouteCanvas(routeSliding_groupQuantity, slidingGroupIndex, line_width);
-  });
-
-  element.addEventListener('touchend', function (event) {
-    monitorScrollLeft(element, 0, function () {
-      routeSliding_currentGroup = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+    var current_size = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
+    var target_size = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
+    var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    updateRouteCSS(routeSliding_groupQuantity, currentIndex, line_width);
+    updateRouteCanvas(routeSliding_groupQuantity, currentIndex, line_width);
+    if (currentIndex === routeSliding_targetIndex) {
+      routeSliding_initialIndex = Math.round(element.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
-    });
+    }
   });
 
   var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
@@ -145,7 +124,7 @@ function updateRouteLineColor(e): void {
     routeSliding_lineColor = '#333';
   }
   if (!routeSliding_sliding) {
-    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`]?.width || 1);
+    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_initialIndex, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`]?.width || 1);
   }
 }
 
@@ -416,8 +395,8 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     };
   }
   if (!routeSliding_sliding) {
-    updateRouteCSS(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`].width);
-    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_currentGroup, routeSliding_groupStyles[`g_${routeSliding_currentGroup}`].width);
+    updateRouteCSS(routeSliding_groupQuantity, routeSliding_initialIndex, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width);
+    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_initialIndex, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
