@@ -13,7 +13,6 @@ let locationSliding_initialIndex: number = 0;
 let locationSliding_targetIndex: number = 0;
 let locationSliding_groupQuantity: number = 0;
 let locationSliding_groupStyles: object = {};
-let locationSliding_scrollLog: Array = [];
 let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;

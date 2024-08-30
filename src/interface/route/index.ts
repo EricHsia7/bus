@@ -54,8 +54,10 @@ export function initializeRouteSliding(): void {
     var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
     var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
     var lineWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+
     updateRouteCSS(routeSliding_groupQuantity, currentIndex, lineWidth);
     updateRouteCanvas(routeSliding_groupQuantity, currentIndex, lineWidth);
+
     if (currentIndex === routeSliding_targetIndex) {
       routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
