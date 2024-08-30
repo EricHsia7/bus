@@ -1,6 +1,6 @@
-import { SimplifiedLocation, MergedLocation } from './getLocation';
-import { md5 } from '../../tools/index';
-import { mergeAddressesIntoOne } from '../../tools/address';
+import { SimplifiedLocation, MergedLocation } from './index';
+import { md5 } from '../../../tools/index';
+import { mergeAddressesIntoOne } from '../../../tools/address';
 
 self.onmessage = function (e) {
   const result = mergeLocationByNameByWorker(e.data);

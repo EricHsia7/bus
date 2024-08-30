@@ -1,6 +1,6 @@
 import { getRoute } from '../../data/apis/getRoute';
 import { getStop } from '../../data/apis/getStop';
-import { getLocation } from '../../data/apis/getLocation';
+import { getLocation } from '../../data/apis/getLocation/index';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';

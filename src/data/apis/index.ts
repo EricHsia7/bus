@@ -8,7 +8,7 @@ import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
 import { searchRouteByPathAttributeId } from '../search/searchRoute';
-import { getLocation, SimplifiedLocationItem } from './getLocation';
+import { getLocation, SimplifiedLocationItem } from './getLocation/index'; 
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, EstimateTimeStatus } from '../../tools/format-time';

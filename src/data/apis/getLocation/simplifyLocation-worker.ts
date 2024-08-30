@@ -1,5 +1,5 @@
 import { convertToUnitVector } from '../../tools/index';
-import { Location, SimplifiedLocation } from './getLocation';
+import { Location, SimplifiedLocation } from './getLocation/index';
 
 self.onmessage = function (e) {
   const result = simplifyLocationByWorker(e.data);

@@ -1,8 +1,6 @@
-import { getAPIURL } from './getAPIURL';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
-import { lfSetItem, lfGetItem } from '../storage/index';
-import { md5 } from '../../tools/index';
-import { mergeAddressesIntoOne } from '../../tools/address';
+import { getAPIURL } from '../getAPIURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { lfGetItem, lfSetItem } from '../../storage/index';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -59,7 +57,7 @@ var LocationAPIVariableCache: object = {
 };
 
 async function simplifyLocation(Location: Location): Promise<SimplifiedLocation> {
-  const worker = new Worker(new URL('./getLocation-simplifyLocation-worker.ts', import.meta.url));
+  const worker = new Worker(new URL('./simplifyLocation-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
@@ -80,7 +78,7 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
 }
 
 async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLocation> {
-  const worker = new Worker(new URL('./getLocation-mergeLocationByName-worker.ts', import.meta.url));
+  const worker = new Worker(new URL('./mergeLocationByName-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
