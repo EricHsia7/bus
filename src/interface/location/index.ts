@@ -7,28 +7,28 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize } from '../index';
 
-var previousIntegration: object = {};
+let previousIntegration: object = {};
 
-var locationSliding_currentGroup: number = 0;
-var locationSliding_targetGroup: number = 0;
-var locationSliding_groupQuantity: number = 0;
-var locationSliding_groupStyles: object = {};
-var locationSliding_scrollLog: Array = [];
-var locationSliding_fieldWidth: number = 0;
-var locationSliding_fieldHeight: number = 0;
-var locationSliding_sliding: boolean = false;
+let locationSliding_initialIndex: number = 0;
+let locationSliding_targetIndex: number = 0;
+let locationSliding_groupQuantity: number = 0;
+let locationSliding_groupStyles: object = {};
+let locationSliding_scrollLog: Array = [];
+let locationSliding_fieldWidth: number = 0;
+let locationSliding_fieldHeight: number = 0;
+let locationSliding_sliding: boolean = false;
 
-var locationRefreshTimer_baseInterval: number = 15 * 1000;
-var locationRefreshTimer_minInterval: number = 5 * 1000;
-var locationRefreshTimer_dynamicInterval: number = 15 * 1000;
-var locationRefreshTimer_auto: boolean = true;
-var locationRefreshTimer_streaming: boolean = false;
-var locationRefreshTimer_lastUpdate: number = 0;
-var locationRefreshTimer_nextUpdate: number = 0;
-var locationRefreshTimer_refreshing: boolean = false;
-var locationRefreshTimer_currentRequestID: string = '';
-var locationRefreshTimer_streamStarted: boolean = false;
-var locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
+let locationRefreshTimer_baseInterval: number = 15 * 1000;
+let locationRefreshTimer_minInterval: number = 5 * 1000;
+let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
+let locationRefreshTimer_auto: boolean = true;
+let locationRefreshTimer_streaming: boolean = false;
+let locationRefreshTimer_lastUpdate: number = 0;
+let locationRefreshTimer_nextUpdate: number = 0;
+let locationRefreshTimer_refreshing: boolean = false;
+let locationRefreshTimer_currentRequestID: string = '';
+let locationRefreshTimer_streamStarted: boolean = false;
+let locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 var currentHashSet_hash: string = '';
 
@@ -36,45 +36,28 @@ var tabPadding: number = 20;
 
 export function initializeLocationSliding(): void {
   var element = documentQuerySelector('.css_location_field .css_location_groups');
-  function monitorScrollLeft(element: HTMLElement, times: number, callback: Function) {
-    locationSliding_scrollLog.push(element.scrollLeft);
-    if (locationSliding_scrollLog.length > 10) {
-      locationSliding_scrollLog = locationSliding_scrollLog.slice(1);
-    }
-    if (calculateStandardDeviation(locationSliding_scrollLog) < Math.pow(10, -10)) {
-      callback();
-    } else {
-      if (times < 2048) {
-        window.requestAnimationFrame(function () {
-          monitorScrollLeft(element, times + 1, callback);
-        });
-      } else {
-        locationSliding_scrollLog = [];
-      }
-    }
-  }
+
   element.addEventListener('touchstart', function (event) {
-    locationSliding_currentGroup = Math.round(element.scrollLeft / locationSliding_fieldWidth);
+    locationSliding_initialIndex = Math.round(element.scrollLeft / locationSliding_fieldWidth);
     locationSliding_sliding = true;
   });
-  element.addEventListener('touchend', function (event) {
-    monitorScrollLeft(element, 0, function () {
-      locationSliding_currentGroup = Math.round(element.scrollLeft / locationSliding_fieldWidth);
-      locationSliding_sliding = false;
-    });
-  });
+
   element.addEventListener('scroll', function (event) {
-    var slidingGroupIndex = event.target.scrollLeft / locationSliding_fieldWidth;
-    if (slidingGroupIndex > locationSliding_currentGroup) {
-      locationSliding_targetGroup = locationSliding_currentGroup + 1;
+    var cureentIndex = event.target.scrollLeft / locationSliding_fieldWidth;
+    if (cureentIndex > locationSliding_initialIndex) {
+      locationSliding_targetIndex = locationSliding_initialIndex + 1;
     } else {
-      locationSliding_targetGroup = locationSliding_currentGroup - 1;
+      locationSliding_targetIndex = locationSliding_initialIndex - 1;
     }
-    var current_size = locationSliding_groupStyles[`g_${locationSliding_currentGroup}`] || { width: 0, offset: 0 };
-    var target_size = locationSliding_groupStyles[`g_${locationSliding_targetGroup}`] || { width: 0, offset: 0 };
-    var tab_width = current_size.width + (target_size.width - current_size.width) * Math.abs(slidingGroupIndex - locationSliding_currentGroup);
-    var offset = (current_size.offset + (target_size.offset - current_size.offset) * Math.abs(slidingGroupIndex - locationSliding_currentGroup)) * -1 + locationSliding_fieldWidth * 0.5 - tab_width * 0.5;
-    updateLocationCSS(locationSliding_groupQuantity, offset, tab_width - tabPadding, slidingGroupIndex);
+    var initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
+    var targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
+    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(cureentIndex - locationSliding_initialIndex);
+    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(cureentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+    updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, cureentIndex);
+    if (cureentIndex === locationSliding_targetIndex) {
+      locationSliding_initialIndex = Math.round(element.scrollLeft / locationSliding_fieldWidth);
+      locationSliding_sliding = false;
+    }
   });
 }
 
@@ -318,9 +301,9 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     };
     cumulativeOffset += width;
   }
-  var offset = locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].width * 0.5;
+  var offset = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width * 0.5;
   if (!locationSliding_sliding) {
-    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_currentGroup}`].width - tabPadding, locationSliding_currentGroup);
+    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
   elementQuerySelector(Field, '.css_location_name').innerHTML = `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);

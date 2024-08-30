@@ -8,56 +8,56 @@ import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
 import { GeneratedElement, FieldSize } from '../index';
 
-var previousIntegration: object = {};
+let previousIntegration: object = {};
 
-var routeSliding_initialIndex: number = 0;
-var routeSliding_targetIndex: number = 0;
-var routeSliding_groupQuantity: number = 0;
-var routeSliding_groupStyles: object = {};
-var routeSliding_scrollLog: Array = [];
-var routeSliding_fieldWidth: number = 0;
-var routeSliding_fieldHeight: number = 0;
-var routeSliding_sliding: boolean = false;
-var routeSliding_lineHeight: number = 2;
-var routeSliding_lineColor: string = '#333';
-var routeSliding_canvasScale: number = 1;
+let routeSliding_initialIndex: number = 0;
+let routeSliding_targetIndex: number = 0;
+let routeSliding_groupQuantity: number = 0;
+let routeSliding_groupStyles: object = {};
+let routeSliding_fieldWidth: number = 0;
+let routeSliding_fieldHeight: number = 0;
+let routeSliding_sliding: boolean = false;
+let routeSliding_lineHeight: number = 2;
+let routeSliding_lineColor: string = '#333';
+let routeSliding_canvasScale: number = 1;
 
-var routeRefreshTimer_baseInterval: number = 15 * 1000;
-var routeRefreshTimer_minInterval: number = 5 * 1000;
-var routeRefreshTimer_dynamicInterval: number = 15 * 1000;
-var routeRefreshTimer_auto: boolean = true;
-var routeRefreshTimer_streaming: boolean = false;
-var routeRefreshTimer_lastUpdate: number = 0;
-var routeRefreshTimer_nextUpdate: number = 0;
-var routeRefreshTimer_refreshing: boolean = false;
-var routeRefreshTimer_currentRequestID: string = '';
-var routeRefreshTimer_streamStarted: boolean = false;
+let routeRefreshTimer_baseInterval: number = 15 * 1000;
+let routeRefreshTimer_minInterval: number = 5 * 1000;
+let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
+let routeRefreshTimer_auto: boolean = true;
+let routeRefreshTimer_streaming: boolean = false;
+let routeRefreshTimer_lastUpdate: number = 0;
+let routeRefreshTimer_nextUpdate: number = 0;
+let routeRefreshTimer_refreshing: boolean = false;
+let routeRefreshTimer_currentRequestID: string = '';
+let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
-var currentRouteIDSet_RouteID: number = 0;
-var currentRouteIDSet_PathAttributeId: Array = [];
+let currentRouteIDSet_RouteID: number = 0;
+let currentRouteIDSet_PathAttributeId: Array = [];
 
 export function initializeRouteSliding(): void {
-  var element = documentQuerySelector('.css_route_groups');
-  element.addEventListener('touchstart', function (event) {
+  const routeGroups = documentQuerySelector('.css_route_field .css_route_groups');
+
+  routeGroups.addEventListener('touchstart', function (event) {
+    routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
     routeSliding_sliding = true;
-    routeSliding_initialIndex = Math.round(element.scrollLeft / routeSliding_fieldWidth);
   });
 
-  element.addEventListener('scroll', function (event) {
+  routeGroups.addEventListener('scroll', function (event) {
     var currentIndex = event.target.scrollLeft / routeSliding_fieldWidth;
     if (currentIndex > routeSliding_initialIndex) {
       routeSliding_targetIndex = routeSliding_initialIndex + 1;
     } else {
       routeSliding_targetIndex = routeSliding_initialIndex - 1;
     }
-    var current_size = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
-    var target_size = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
-    var line_width = current_size.width + (target_size.width - current_size.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-    updateRouteCSS(routeSliding_groupQuantity, currentIndex, line_width);
-    updateRouteCanvas(routeSliding_groupQuantity, currentIndex, line_width);
+    var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
+    var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
+    var lineWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    updateRouteCSS(routeSliding_groupQuantity, currentIndex, lineWidth);
+    updateRouteCanvas(routeSliding_groupQuantity, currentIndex, lineWidth);
     if (currentIndex === routeSliding_targetIndex) {
-      routeSliding_initialIndex = Math.round(element.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
     }
   });
