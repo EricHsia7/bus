@@ -1,14 +1,14 @@
 import { getEstimateTime } from './getEstimateTime';
-import { getStop, SimplifiedStopItem } from './getStop';
+import { getStop, SimplifiedStopItem } from './getStop/index';
 import { BusEvent, getBusEvent } from './getBusEvent';
 import { BusData, getBusData } from './getBusData';
-import { getRoute, Route, RouteItem, SimplifiedRouteItem } from './getRoute';
+import { getRoute, Route, RouteItem, SimplifiedRoute, SimplifiedRouteItem } from './getRoute/index';
 import { getProvider, Provider, ProviderItem } from './getProvider';
 import { getSemiTimeTable } from './getSemiTimeTable';
 import { getTimeTable } from './getTimeTable';
 import { getRushHour } from './getRushHour';
 import { searchRouteByPathAttributeId } from '../search/searchRoute';
-import { getLocation, SimplifiedLocationItem } from './getLocation';
+import { getLocation, SimplifiedLocationItem } from './getLocation/index';
 import { setDataReceivingProgress, deleteDataReceivingProgress, dataUpdateTime, deleteDataUpdateTime } from './loader';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { formatEstimateTime, formatTimeCode, dateValueToDayOfWeek, dateToString, EstimateTimeStatus } from '../../tools/format-time';
@@ -59,7 +59,7 @@ interface ProcessedBus {
   index: number;
 }
 
-async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, RouteID: number, PathAttributeId: Array<number>): Promise<{ [key: string]: Array<ProcessedBus> }> {
+function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): { [key: string]: Array<ProcessedBus> } {
   var result = {};
   var BusDataObj = {};
   for (const BusDataItem of BusData) {
@@ -104,10 +104,19 @@ async function processBusEventWithBusData(BusEvent: BusEvent, BusData: BusData, 
     };
 
     // search data from 'Route'
-    const searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
-    const searchedRoute = searchRouteResult.length > 0 ? searchRouteResult[0] : null;
-    processedItem.RouteName = searchedRoute ? searchedRoute.n : '';
-    processedItem.RouteID = searchedRoute ? searchedRoute.id : null;
+    let searchedRoute = {};
+    let isRouteSearched = false;
+    for (const key in Route) {
+      const thisRouteItem = Route[key];
+      const pid = thisRouteItem.pid;
+      if (pid.indexOf(thisRouteID) > -1) {
+        searchedRoute = thisRouteItem;
+        isRouteSearched = true;
+        break;
+      }
+    }
+    processedItem.RouteName = isRouteSearched ? searchedRoute.n : '未知路線';
+    processedItem.RouteID = isRouteSearched ? searchedRoute.id : null;
 
     const StopKey = `s_${BusEventItem.StopID}`;
     if (!result.hasOwnProperty(StopKey)) {
@@ -313,7 +322,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
 
-  const processedBusEvent = await processBusEventWithBusData(BusEvent, BusData, RouteID, PathAttributeId);
+  const processedBusEvent = processBusEventWithBusData(BusEvent, BusData, Route, RouteID, PathAttributeId);
   const processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');

@@ -1,8 +1,6 @@
-import { getAPIURL } from './getAPIURL';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
-import { lfSetItem, lfGetItem } from '../storage/index';
-import { convertToUnitVector, md5 } from '../../tools/index';
-import { mergeAddressesIntoOne } from '../../tools/address';
+import { getAPIURL } from '../getAPIURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { lfGetItem, lfSetItem } from '../../storage/index';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -58,98 +56,45 @@ var LocationAPIVariableCache: object = {
   }
 };
 
-function simplifyLocation(Location: Location): SimplifiedLocation {
-  let locationsByRoute = {};
-  for (const item of Location) {
-    const thisRouteID = item.routeId;
-    const thisRouteKey = `r_${thisRouteID}`;
-    if (!locationsByRoute.hasOwnProperty(thisRouteKey)) {
-      locationsByRoute[thisRouteKey] = [];
-    }
-    locationsByRoute[thisRouteKey].push(item);
-  }
-  for (const key in locationsByRoute) {
-    locationsByRoute[key] = locationsByRoute[key].sort(function (a, b) {
-      return a.seqNo - b.seqNo;
-    });
-  }
-  let result: SimplifiedLocation = {};
-  for (const item of Location) {
-    let vector = [0, 0];
-    const locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
-    const locationsOnThisRouteLength = locationsOnThisRoute.length;
-    let nextLocation = null;
-    for (let i = 0; i < locationsOnThisRouteLength; i++) {
-      if (locationsOnThisRoute[i].Id === item.Id) {
-        let nextIndex = 0;
-        if (i < locationsOnThisRouteLength - 1) {
-          nextIndex = i + 1;
-        }
-        nextLocation = locationsOnThisRoute[nextIndex];
-      }
-    }
-    if (nextLocation) {
-      const x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
-      const y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
-      vector = convertToUnitVector([x, y]);
-    }
+async function simplifyLocation(Location: Location): Promise<SimplifiedLocation> {
+  const worker = new Worker(new URL('./simplifyLocation-worker.ts', import.meta.url));
 
-    const key = `l_${item.stopLocationId}`;
-    if (!result.hasOwnProperty(key)) {
-      let simplifiedItem: SimplifiedLocationItem = {};
-      simplifiedItem.n = item.nameZh;
-      simplifiedItem.lo = parseFloat(item.longitude);
-      simplifiedItem.la = parseFloat(item.latitude);
-      simplifiedItem.r = [item.routeId];
-      simplifiedItem.s = [item.Id];
-      simplifiedItem.v = [vector];
-      simplifiedItem.a = [item.address];
-      result[key] = simplifiedItem;
-    } else {
-      if (!(result[key].r.indexOf(item.routeId) > -1)) {
-        result[key].r.push(item.routeId);
-      }
-      if (!(result[key].s.indexOf(item.Id) > -1)) {
-        result[key].s.push(item.Id);
-        result[key].v.push(vector);
-      }
-      result[key].a.push(item.address);
-    }
-  }
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(Location); // Send data to the worker
+  });
+
   return result;
 }
 
-function mergeLocationByName(object: SimplifiedLocation): MergedLocation {
-  var result: MergedLocation = {};
-  for (var key in object) {
-    var hash = md5(
-      String(object[key].n)
-        .trim()
-        .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
-    );
-    var nameKey = `ml_${hash}`;
-    if (!result.hasOwnProperty(nameKey)) {
-      result[nameKey] = {
-        n: object[key].n,
-        lo: [object[key].lo],
-        la: [object[key].la],
-        r: [object[key].r],
-        s: [object[key].s],
-        v: [object[key].v],
-        a: [mergeAddressesIntoOne(object[key].a)],
-        id: [parseInt(key.split('_')[1])],
-        hash: hash
-      };
-    } else {
-      result[nameKey].id.push(parseInt(key.split('_')[1]));
-      result[nameKey].r.push(object[key].r);
-      result[nameKey].s.push(object[key].s);
-      result[nameKey].v.push(object[key].v);
-      result[nameKey].lo.push(object[key].lo);
-      result[nameKey].la.push(object[key].la);
-      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
-    }
-  }
+async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLocation> {
+  const worker = new Worker(new URL('./mergeLocationByName-worker.ts', import.meta.url));
+
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(object); // Send data to the worker
+  });
+
   return result;
 }
 
@@ -175,9 +120,9 @@ export async function getLocation(requestID: string, merged: boolean = false): P
   if (cached_time === null) {
     var result = await getData();
     var final_result = {};
-    var simplified_result = simplifyLocation(result);
+    var simplified_result = await simplifyLocation(result);
     if (merged) {
-      var merged_result = mergeLocationByName(simplified_result);
+      var merged_result = await mergeLocationByName(simplified_result);
       final_result = merged_result;
     } else {
       final_result = simplified_result;
@@ -194,9 +139,9 @@ export async function getLocation(requestID: string, merged: boolean = false): P
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
       var final_result = {};
-      var simplified_result = simplifyLocation(result);
+      var simplified_result = await simplifyLocation(result);
       if (merged) {
-        var merged_result = mergeLocationByName(simplified_result);
+        var merged_result = await mergeLocationByName(simplified_result);
         final_result = merged_result;
       } else {
         final_result = simplified_result;

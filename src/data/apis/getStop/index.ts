@@ -1,6 +1,6 @@
-import { getAPIURL } from './getAPIURL';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from './loader';
-import { lfSetItem, lfGetItem } from '../storage/index';
+import { getAPIURL } from '../getAPIURL';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { lfSetItem, lfGetItem } from '../../storage/index';
 
 export interface StopItem {
   Id: number; // StopID
@@ -32,16 +32,24 @@ export type SimplifiedStop = { [key: string]: SimplifiedStopItem };
 let StopAPIVariableCache_available: boolean = false;
 let StopAPIVariableCache_data: object = {};
 
-function simplifyStop(array: Stop): SimplifiedStop {
-  var result: SimplifiedStop = {};
-  for (var item of array) {
-    var key = `s_${item.Id}`;
-    var simplified_item = {};
-    simplified_item.seqNo = item.seqNo;
-    simplified_item.goBack = item.goBack;
-    simplified_item.stopLocationId = item.stopLocationId;
-    result[key] = simplified_item;
-  }
+async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
+  const worker = new Worker(new URL('./simplifyStop-worker.ts', import.meta.url));
+
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(array); // Send data to the worker
+  });
+
   return result;
 }
 
@@ -65,7 +73,7 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
-    var simplified_result = simplifyStop(result);
+    var simplified_result = await simplifyStop(result);
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
     if (!StopAPIVariableCache_available) {
@@ -76,7 +84,7 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       var result = await getData();
-      var simplified_result = simplifyStop(result);
+      var simplified_result = await simplifyStop(result);
       await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
       await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
       return simplified_result;
