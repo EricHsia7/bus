@@ -248,15 +248,7 @@ export async function listFoldersWithContent(): Promise<Array<FoldersWithContent
   return result;
 }
 
-function processEstimateTime(EstimateTime: Array, StopIDs: Array<number>): object {
-  var result = {};
-  for (var item of EstimateTime) {
-    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
-      result[`s_${item.StopID}`] = item;
-    }
-  }
-  return result;
-}
+function processEstimateTime(EstimateTime: Array, StopIDs: Array<number>): object {}
 
 export async function integrateFolders(requestID: string): Promise<Array<object>> {
   setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
@@ -264,12 +256,15 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
 
-  var foldersWithContent = await listFoldersWithContent();
+  const EstimateTime = await getEstimateTime(requestID);
+  const Route = await getRoute(requestID, true);
 
-  var StopIDs = [];
-  for (var item of foldersWithContent) {
+  const foldersWithContent = await listFoldersWithContent();
+
+  let StopIDs = [];
+  for (const folderWithContent1 of foldersWithContent) {
     StopIDs = StopIDs.concat(
-      item.content
+      folderWithContent1.content
         .filter((m) => {
           return m.type === 'stop' ? true : false;
         })
@@ -277,17 +272,20 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
     );
   }
 
-  const EstimateTime = await getEstimateTime(requestID);
-  const Route = await getRoute(requestID, true);
-  const processedEstimateTime = processEstimateTime(EstimateTime, StopIDs);
+  let processedEstimateTime = {};
+  for (const EstimateTimeItem of EstimateTime) {
+    if (StopIDs.indexOf(parseInt(EstimateTimeItem.StopID)) > -1) {
+      processedEstimateTime[`s_${EstimateTimeItem.StopID}`] = EstimateTimeItem;
+    }
+  }
 
-  var array = [];
-  for (var folder of foldersWithContent) {
+  let integratedFolders = [];
+  for (const folderWithContent2 of foldersWithContent) {
     var integratedFolder = {};
-    integratedFolder.folder = folder.folder;
+    integratedFolder.folder = folderWithContent2.folder;
     integratedFolder.content = [];
-    for (var item of folder.content) {
-      var integratedItem = item;
+    for (let item of folderWithContent2.content) {
+      let integratedItem = item;
       switch (item.type) {
         case 'stop':
           integratedItem._EstimateTime = processedEstimateTime[`s_${item.id}`];
@@ -305,16 +303,16 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
       }
       integratedFolder.content.push(integratedItem);
     }
-    array.push(integratedFolder);
+    integratedFolders.push(integratedFolder);
   }
 
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var foldedItems = {};
-  var itemQuantity = {};
-  var folderQuantity = 0;
-  var folders = {};
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  let foldedItems = {};
+  let itemQuantity = {};
+  let folderQuantity = 0;
+  let folders = {};
 
-  for (var item of array) {
+  for (var item of integratedFolders) {
     var folderKey = `f_${item.folder.index}`;
     if (!foldedItems.hasOwnProperty(folderKey)) {
       foldedItems[folderKey] = [];
