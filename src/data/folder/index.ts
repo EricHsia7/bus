@@ -248,8 +248,6 @@ export async function listFoldersWithContent(): Promise<Array<FoldersWithContent
   return result;
 }
 
-function processEstimateTime(EstimateTime: Array, StopIDs: Array<number>): object {}
-
 export async function integrateFolders(requestID: string): Promise<Array<object>> {
   setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);

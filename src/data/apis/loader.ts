@@ -1,6 +1,7 @@
 import { timeStampToNumber } from '../../tools/format-time';
 import { recordRequest } from '../analytics/data-usage';
-import { pakoInflate } from '../../tools/pako/index';
+
+const { inflate } = require('pako');
 
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
@@ -36,12 +37,11 @@ export async function fetchData(url: string, requestID: string, tag: string): Pr
   const endTimeStamp = new Date().getTime();
   await recordRequest(requestID, { time: endTimeStamp - startTimeStamp, content_length: contentLength });
 
-
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = await pakoInflate(buffer);
+  const inflatedData = inflate(buffer);
   return JSON.parse(inflatedData);
 }
 
