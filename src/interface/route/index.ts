@@ -41,10 +41,10 @@ export function initializeRouteSliding(): void {
 
   routeGroups.addEventListener('touchstart', function (event) {
     routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
-    routeSliding_sliding = true;
   });
 
   routeGroups.addEventListener('scroll', function (event) {
+    routeSliding_sliding = true;
     var currentIndex = event.target.scrollLeft / routeSliding_fieldWidth;
     if (currentIndex > routeSliding_initialIndex) {
       routeSliding_targetIndex = routeSliding_initialIndex + 1;

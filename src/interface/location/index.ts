@@ -38,10 +38,10 @@ export function initializeLocationSliding(): void {
 
   element.addEventListener('touchstart', function (event) {
     locationSliding_initialIndex = Math.round(element.scrollLeft / locationSliding_fieldWidth);
-    locationSliding_sliding = true;
   });
 
   element.addEventListener('scroll', function (event) {
+    locationSliding_sliding = true;
     var cureentIndex = event.target.scrollLeft / locationSliding_fieldWidth;
     if (cureentIndex > locationSliding_initialIndex) {
       locationSliding_targetIndex = locationSliding_initialIndex + 1;
