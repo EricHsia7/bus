@@ -7,7 +7,7 @@ on:
       - main
     types:
       - opened
-      - synchronize
+      #- synchronize
 
 jobs:
   generate-changelog:
@@ -38,11 +38,11 @@ jobs:
       - name: Generate Changelog
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: github_changelog_generator -u EricHsia7 -p bus -o ./CHANGELOG/index.md
+        run: github_changelog_generator -u EricHsia7 -p bus -o ./CHANGELOG/CHANGELOG.md
 
       - name: Commit with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npx gh-pages -add -d CHANGELOG -u "github-actions-bot <support+actions@github.com>" -b test-branch -m "Auto update CHANGELOG.md"
+          npx gh-pages -add -d CHANGELOG -u "github-actions-bot <support+actions@github.com>" -b main -m "Auto update CHANGELOG.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
