@@ -307,7 +307,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
         case 'stop':
           thisStopKey = `s_${item.id}`;
           thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
-          integratedItem.status = parseEstimateTime(thisProcessedEstimateTime, time_formatting_mode);
+          integratedItem.status = parseEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode);
 
           thisRouteKey = `r_${item.route.id}`;
           thisRoute = Route[thisRouteKey];
