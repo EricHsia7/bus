@@ -50,7 +50,7 @@ function initializeKeyboard(): void {
       }
 
       if (supportTouch()) {
-        var eventType = 'ontouchstart';
+        eventType = 'ontouchstart';
       }
       result.push(`<div class="css_search_keyboard_key" ${eventType}="${eventScript}">${html}</div>`);
     }
