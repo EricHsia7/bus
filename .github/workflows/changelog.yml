@@ -23,7 +23,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'  # Adjust as needed
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,7 +36,7 @@ jobs:
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: github_changelog_generator EricHsia7/bus
-      
+
       - name: Commit with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
