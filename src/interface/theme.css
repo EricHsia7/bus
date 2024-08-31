@@ -91,8 +91,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --b-cssvar-main-color-solid-transparent-c: #0E2337;
-    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #262D36;
-    --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #110F1D;
+    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #272F38;
+    --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #2F2C48;
 
     --b-cssvar-main-color-opacity-a: 1;
     --b-cssvar-main-color-opacity-b: 0.8;
