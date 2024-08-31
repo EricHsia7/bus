@@ -1,4 +1,4 @@
-import { integrateLocation } from '../../data/apis/index';
+import { integrateLocation } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';

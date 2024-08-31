@@ -1,4 +1,4 @@
-import { integrateRouteDetails } from '../../../data/apis/index';
+import { integrateRouteDetails } from '../../../data/route/details'; 
 import { initializeCalendarGridlines, setUpCalendarFieldSkeletonScreen, updateCalendarField } from './calendar';
 import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './properties';
 import { generateIdentifier } from '../../../tools/index';

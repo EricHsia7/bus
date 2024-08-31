@@ -1,14 +1,15 @@
-import { integrateStop } from '../apis/index';
+import { parseEstimateTime } from '../apis/index';
 import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
-import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/searchRoute';
-import { getRoute } from '../apis/getRoute/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTime } from '../analytics/update-rate';
+import { getStop } from '../apis/getStop/index';
+import { getLocation } from '../apis/getLocation/index';
+import { getRoute } from '../apis/getRoute/index';
 
 const cloneDeep = require('lodash/cloneDeep');
 
@@ -321,7 +322,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
       var formattedItem = item2;
       switch (item2.type) {
         case 'stop':
-          formattedItem.status = formatEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
+          formattedItem.status = parseEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
           formattedItem.route.pathAttributeId = item2._Route.pid;
           break;
         case 'route':
@@ -389,19 +390,33 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
 }
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
-  var integration = await integrateStop(StopID, RouteID);
+  const requestID = `r_${generateIdentifier()}`;
+  const Stop = await getStop(requestID);
+  const Location = await getLocation(requestID, false);
+  const Route = await getRoute(requestID);
+
+  const thisStop: object = Stop[`s_${StopID}`];
+  const thisStopDirection: number = parseInt(thisStop.goBack);
+  const thisLocation: object = Location[`l_${thisStop.stopLocationId}`];
+  const thisStopName: string = thisLocation.n;
+
+  const thisRoute: object = Route[`r_${RouteID}`];
+  const thisRouteName: string = thisRoute.n;
+  const thisRouteDeparture: string = thisRoute.dep;
+  const thisRouteDestination: string = thisRoute.des;
+
   var folderContentLength = await getFolderContentLength(folderID);
   var content: FolderStop = {
     type: 'stop',
     id: StopID,
     time: new Date().toISOString(),
-    name: integration.thisStopName,
-    direction: integration.thisStopDirection,
+    name: thisStopName,
+    direction: thisStopDirection,
     route: {
-      name: integration.thisRouteName,
+      name: thisRouteName,
       endPoints: {
-        departure: integration.thisRouteDeparture,
-        destination: integration.thisRouteDestination
+        departure: thisRouteDeparture,
+        destination: thisRouteDestination
       },
       id: RouteID
     },

@@ -1,5 +1,5 @@
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
-import { formatTime } from '../../tools/format-time';
+import { formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
 const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels'];

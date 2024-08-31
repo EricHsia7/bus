@@ -7,19 +7,19 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { compareThings, generateIdentifier } from '../../../tools/index';
 import { getDataReceivingProgress } from '../../../data/apis/loader';
 
-var previousIntegration = [];
+let previousIntegration = {}
 
-var foldersRefreshTimer_baseInterval: number = 15 * 1000;
-var foldersRefreshTimer_minInterval: number = 5 * 1000;
-var foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
-var foldersRefreshTimer_auto: number = true;
-var foldersRefreshTimer_streaming: boolean = false;
-var foldersRefreshTimer_lastUpdate: number = 0;
-var foldersRefreshTimer_nextUpdate: number = 0;
-var foldersRefreshTimer_refreshing: boolean = false;
-var foldersRefreshTimer_currentRequestID: string = '';
-var foldersRefreshTimer_streamStarted: boolean = false;
-var foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
+let foldersRefreshTimer_baseInterval: number = 15 * 1000;
+let foldersRefreshTimer_minInterval: number = 5 * 1000;
+let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
+let foldersRefreshTimer_auto: number = true;
+let foldersRefreshTimer_streaming: boolean = false;
+let foldersRefreshTimer_lastUpdate: number = 0;
+let foldersRefreshTimer_nextUpdate: number = 0;
+let foldersRefreshTimer_refreshing: boolean = false;
+let foldersRefreshTimer_currentRequestID: string = '';
+let foldersRefreshTimer_streamStarted: boolean = false;
+let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function queryFolderFieldSize(): FieldSize {
   return {

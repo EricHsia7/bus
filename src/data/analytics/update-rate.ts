@@ -1,5 +1,5 @@
 import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
-import { formatTime } from '../../tools/format-time';
+import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 

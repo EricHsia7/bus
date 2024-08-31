@@ -1,4 +1,4 @@
-import { timeStampToNumber } from '../../tools/format-time';
+import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
 const { inflate } = require('pako');
