@@ -260,6 +260,8 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
 
   const foldersWithContent = await listFoldersWithContent();
 
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+
   let StopIDs = [];
   for (const folderWithContent1 of foldersWithContent) {
     StopIDs = StopIDs.concat(
@@ -279,54 +281,34 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
   }
 
   let integratedFolders = [];
-  for (const folderWithContent2 of foldersWithContent) {
-    var integratedFolder = {};
-    integratedFolder.folder = folderWithContent2.folder;
-    integratedFolder.content = [];
-    for (let item of folderWithContent2.content) {
-      let integratedItem = item;
-      switch (item.type) {
-        case 'stop':
-          integratedItem._EstimateTime = processedEstimateTime[`s_${item.id}`];
-          integratedItem._Route = Route[`r_${item.route.id}`];
-          break;
-        case 'route':
-          integratedItem._Route = Route[`r_${item.id}`];
-          break;
-        case 'bus':
-          break;
-        case 'empty':
-          break;
-        default:
-          break;
-      }
-      integratedFolder.content.push(integratedItem);
-    }
-    integratedFolders.push(integratedFolder);
-  }
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  let foldedItems = {};
+  let foldedContent = {};
   let itemQuantity = {};
   let folderQuantity = 0;
   let folders = {};
 
-  for (var item of integratedFolders) {
-    var folderKey = `f_${item.folder.index}`;
-    if (!foldedItems.hasOwnProperty(folderKey)) {
-      foldedItems[folderKey] = [];
+  for (const folderWithContent2 of foldersWithContent) {
+    if (!foldedContent.hasOwnProperty(folderKey)) {
+      foldedContent[folderKey] = [];
       itemQuantity[folderKey] = 0;
-      folders[folderKey] = item.folder;
     }
-    for (var item2 of item.content) {
-      var formattedItem = item2;
-      switch (item2.type) {
+
+    for (let item of folderWithContent2.content) {
+      let integratedItem = item;
+      switch (item.type) {
         case 'stop':
-          formattedItem.status = parseEstimateTime(item2._EstimateTime.EstimateTime, time_formatting_mode);
-          formattedItem.route.pathAttributeId = item2._Route.pid;
+          const thisStopKey = `s_${item.id}`;
+          const thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
+          integratedItem.status = parseEstimateTime(thisProcessedEstimateTime, time_formatting_mode);
+
+          const thisRouteKey = `r_${item.route.id}`;
+          const thisRoute = Route[thisRouteKey];
+          integratedItem.route.pathAttributeId = thisRoute.pid;
           break;
         case 'route':
-          formattedItem.pathAttributeId = item2._Route.pid;
+          const thisRouteKey = `r_${item.id}`;
+          const thisRoute = Route[thisRouteKey];
+          integratedItem.route.pathAttributeId = thisRoute.pid;
           break;
         case 'bus':
           break;
@@ -335,14 +317,22 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
         default:
           break;
       }
-      foldedItems[folderKey].push(formattedItem);
+      const folderKey = `f_${item.folder.index}`;
+      foldedContent[folderKey].push(integratedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
+    folders[folderKey] = folderWithContent2.folder;
     folderQuantity += 1;
   }
 
+  for (var item of integratedFolders) {
+    for (var item2 of item.content) {
+      foldedContent[folderKey].push(item2);
+    }
+  }
+
   var result = {
-    foldedItems: foldedItems,
+    foldedContent: foldedContent,
     folders: folders,
     folderQuantity: folderQuantity,
     itemQuantity: itemQuantity,

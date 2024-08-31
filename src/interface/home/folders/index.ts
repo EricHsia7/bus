@@ -72,18 +72,18 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldHeight = FieldSize.height;
   var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
   var defaultFolderQuantity = 3;
-  var foldedItems = {};
+  var foldedContent = {};
   var folders = {};
   for (var i = 0; i < defaultFolderQuantity; i++) {
     var folderKey = `f_${i}`;
-    foldedItems[folderKey] = [];
+    foldedContent[folderKey] = [];
     folders[folderKey] = {
       name: '',
       index: i,
       icon: ''
     };
     for (var j = 0; j < defaultItemQuantity[folderKey]; j++) {
-      foldedItems[folderKey].push({
+      foldedContent[folderKey].push({
         type: 'stop',
         id: null,
         status: {
@@ -106,7 +106,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   updateFolderField(
     Field,
     {
-      foldedItems: foldedItems,
+      foldedContent: foldedContent,
       folders: folders,
       folderQuantity: defaultFolderQuantity,
       itemQuantity: defaultItemQuantity,
@@ -293,7 +293,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
 
   var folderQuantity = integration.folderQuantity;
   var itemQuantity = integration.itemQuantity;
-  var foldedItems = integration.foldedItems;
+  var foldedContent = integration.foldedContent;
   var folders = integration.folders;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
@@ -343,11 +343,11 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     for (var j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = foldedItems[folderKey][j];
-      if (previousIntegration.hasOwnProperty('foldedItems')) {
-        if (previousIntegration.foldedItems.hasOwnProperty(folderKey)) {
-          if (previousIntegration.foldedItems[folderKey][j]) {
-            var previousItem = previousIntegration.foldedItems[folderKey][j];
+      var thisItem = foldedContent[folderKey][j];
+      if (previousIntegration.hasOwnProperty('foldedContent')) {
+        if (previousIntegration.foldedContent.hasOwnProperty(folderKey)) {
+          if (previousIntegration.foldedContent[folderKey][j]) {
+            var previousItem = previousIntegration.foldedContent[folderKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
