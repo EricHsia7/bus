@@ -1,7 +1,7 @@
 import { getAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataUpdateTime } from '../loader';
 
-interface EstimateTimeItem {
+export interface EstimateTimeItem {
   RouteID: number;
   StopID: number;
   EstimateTime: string | '-1' | '-2' | '-3' | '-4'; // x (>=0): remaining time to wait measured in seconds, -1: no departed bus, -2: skip stopping (due to traffic moderation), -3: the next bus will not come until tomorrow, -4: not in operation

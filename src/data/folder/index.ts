@@ -5,11 +5,11 @@ import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/searchRoute';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTime } from '../analytics/update-rate';
 import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
-import { getRoute } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 
 const cloneDeep = require('lodash/cloneDeep');
 
@@ -296,19 +296,26 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
 
     for (let item of folderWithContent2.content) {
       let integratedItem = item;
+
+      let thisStopKey: string = '';
+      let thisProcessedEstimateTime: EstimateTimeItem = {};
+
+      let thisRouteKey: string = '';
+      let thisRoute: SimplifiedRouteItem = {};
+
       switch (item.type) {
         case 'stop':
-          const thisStopKey = `s_${item.id}`;
-          const thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
+          thisStopKey = `s_${item.id}`;
+          thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
           integratedItem.status = parseEstimateTime(thisProcessedEstimateTime, time_formatting_mode);
 
-          const thisRouteKey = `r_${item.route.id}`;
-          const thisRoute = Route[thisRouteKey];
+          thisRouteKey = `r_${item.route.id}`;
+          thisRoute = Route[thisRouteKey];
           integratedItem.route.pathAttributeId = thisRoute.pid;
           break;
         case 'route':
-          const thisRouteKey = `r_${item.id}`;
-          const thisRoute = Route[thisRouteKey];
+          thisRouteKey = `r_${item.id}`;
+          thisRoute = Route[thisRouteKey];
           integratedItem.pathAttributeId = thisRoute.pid;
           break;
         case 'bus':
