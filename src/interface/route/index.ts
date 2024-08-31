@@ -2,7 +2,7 @@ import { integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
+import { compareThings, getTextWidth, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
