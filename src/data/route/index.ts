@@ -5,7 +5,7 @@ import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute } from '../apis/getRoute/index';
 import { getStop } from '../apis/getStop/index';
-import { parseEstimateTime, processBuses, processSegmentBuffer } from '../apis/index';
+import { formatBus, parseEstimateTime, processBuses, processSegmentBuffer } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';
