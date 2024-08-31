@@ -249,7 +249,15 @@ export async function listFoldersWithContent(): Promise<Array<FoldersWithContent
   return result;
 }
 
-export async function integrateFolders(requestID: string): Promise<Array<object>> {
+interface integratedFolders {
+  foldedContent: { [key: string]: Array<FolderContent> }; // TODO: integratedFolderContent
+  folders: { [key: string]: Folder };
+  folderQuantity: number;
+  itemQuantity: { [key: string]: number };
+  dataUpdateTime: any;
+}
+
+export async function integrateFolders(requestID: string): Promise<integratedFolders> {
   setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
@@ -279,8 +287,6 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
       processedEstimateTime[`s_${EstimateTimeItem.StopID}`] = EstimateTimeItem;
     }
   }
-
-  let integratedFolders = [];
 
   let foldedContent = {};
   let itemQuantity = {};
@@ -332,13 +338,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
     folderQuantity += 1;
   }
 
-  for (var item of integratedFolders) {
-    for (var item2 of item.content) {
-      foldedContent[folderKey].push(item2);
-    }
-  }
-
-  var result = {
+  const result: integratedFolders = {
     foldedContent: foldedContent,
     folders: folders,
     folderQuantity: folderQuantity,
