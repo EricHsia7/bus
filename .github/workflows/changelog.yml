@@ -35,7 +35,7 @@ jobs:
       - name: Generate Changelog
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: github_changelog_generator EricHsia7/bus
+        run: github_changelog_generator -u EricHsia7 -p bus
 
       - name: Commit with gh-pages
         run: |
