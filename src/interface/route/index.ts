@@ -1,4 +1,4 @@
-import { integrateRoute } from '../../data/apis/index';
+import { integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
