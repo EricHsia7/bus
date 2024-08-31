@@ -31,15 +31,18 @@ jobs:
 
       - name: Install GitHub Changelog Generator
         run: gem install github_changelog_generator
+      
+      - name: Make a directory
+        run: mkdir -p ./CHANGELOG
 
       - name: Generate Changelog
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: github_changelog_generator -u EricHsia7 -p bus
+        run: github_changelog_generator -u EricHsia7 -p bus -o ./CHANGELOG/index.md
 
       - name: Commit with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npx gh-pages -add -d CHANGELOG.md -u "github-actions-bot <support+actions@github.com>" -b test-branch -m "Auto update CHANGELOG.md"
+          npx gh-pages -add -d CHANGELOG -u "github-actions-bot <support+actions@github.com>" -b test-branch -m "Auto update CHANGELOG.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
