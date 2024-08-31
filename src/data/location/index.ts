@@ -1,4 +1,4 @@
-import { deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
+import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getBusEvent } from '../apis/getBusEvent/index';

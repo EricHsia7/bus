@@ -3,7 +3,7 @@ import { getProvider } from "../apis/getProvider/index";
 import { getRoute } from "../apis/getRoute/index";
 import { getSemiTimeTable } from "../apis/getSemiTimeTable/index";
 import { getTimeTable } from "../apis/getTimeTable/index";
-import { dateToString, dateValueToDayOfWeek } from "../../tools/time";
+import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from "../../tools/time";
 
 function findRoute(Route: Route, RouteID: number): RouteItem {
   var thisRoute: RouteItem = {};
@@ -24,34 +24,6 @@ function findProvider(Provider: Provider, providerId: number): ProviderItem {
     }
   }
   return thisProvider;
-}
-
-function getThisWeekOrigin(): Date {
-  var today: Date = new Date();
-  var dayOfToday: number = today.getDay();
-  var originDate: number = today.getDate() - dayOfToday;
-  var origin: Date = new Date();
-  origin.setDate(originDate);
-  origin.setHours(0);
-  origin.setMinutes(0);
-  origin.setSeconds(0);
-  origin.setMilliseconds(0);
-  return origin;
-}
-
-function offsetDate(origin: Date, date: number, hours: number, minutes: number): Date {
-  var duplicatedOrigin = new Date();
-  duplicatedOrigin.setDate(1);
-  duplicatedOrigin.setMonth(0);
-  duplicatedOrigin.setHours(hours);
-  duplicatedOrigin.setMinutes(minutes);
-  duplicatedOrigin.setSeconds(0);
-  duplicatedOrigin.setMilliseconds(0);
-  duplicatedOrigin.setFullYear(origin.getFullYear());
-  duplicatedOrigin.setMonth(origin.getMonth());
-  duplicatedOrigin.setDate(origin.getDate());
-  duplicatedOrigin.setDate(duplicatedOrigin.getDate() + date);
-  return duplicatedOrigin;
 }
 
 function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): object {
