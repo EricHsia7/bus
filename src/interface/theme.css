@@ -9,13 +9,13 @@
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 59;
   --b-cssvar-main-color-inflected-to-segment-buffer-g: 122;
   --b-cssvar-main-color-inflected-to-segment-buffer-b: 145;
-  --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #F3F7F8;
+  --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #DFE4EA;
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
   --b-cssvar-main-color-inflected-to-user-position-g: 84;
   --b-cssvar-main-color-inflected-to-user-position-b: 199;
-  --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #F7F7FC;
+  --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #E0E0EF;
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
@@ -34,10 +34,10 @@
   --b-cssvar-f9f9fb-g: 249;
   --b-cssvar-f9f9fb-b: 251;
 
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #EDF1F5;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 237;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 241;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 245;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #F3F5F8;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 243;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 245;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 248;
 
   --b-cssvar-f9f9fb-inflected-to-user-position: #F2F1F9;
   --b-cssvar-f9f9fb-inflected-to-user-position-r: 242;
@@ -50,10 +50,10 @@
   --b-cssvar-ededf2-b: 242;
   --b-cssvar-ededf2-opacity-a: 0.5;
 
-  --b-cssvar-ededf2-inflected-to-segment-buffer: #E2E5EC;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-r: 226;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-g: 229;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-b: 236;
+  --b-cssvar-ededf2-inflected-to-segment-buffer: #E7E9EF;
+  --b-cssvar-ededf2-inflected-to-segment-buffer-r: 231;
+  --b-cssvar-ededf2-inflected-to-segment-buffer-g: 233;
+  --b-cssvar-ededf2-inflected-to-segment-buffer-b: 239;
 
   --b-cssvar-ededf2-inflected-to-user-position: #E6E6F0;
   --b-cssvar-ededf2-inflected-to-user-position-r: 230;
@@ -91,7 +91,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --b-cssvar-main-color-solid-transparent-c: #0E2337;
-    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #0B1214;
+    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #090D0F;
     --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #110F1D;
 
     --b-cssvar-main-color-opacity-a: 1;
@@ -109,10 +109,10 @@
     --b-cssvar-f9f9fb-g: 14;
     --b-cssvar-f9f9fb-b: 17;
 
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #131A1F;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 19;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 26;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 31;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #11161A;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 17;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 22;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 26;
 
     --b-cssvar-f9f9fb-inflected-to-user-position: #191728;
     --b-cssvar-f9f9fb-inflected-to-user-position-r: 25;
@@ -124,10 +124,10 @@
     --b-cssvar-ededf2-g: 35;
     --b-cssvar-ededf2-b: 42;
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: #262D35;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-r: 38;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-g: 45;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-b: 53;
+    --b-cssvar-ededf2-inflected-to-segment-buffer: #252931;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-r: 37;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-g: 41;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-b: 49;
 
     --b-cssvar-ededf2-inflected-to-user-position: #2B293E;
     --b-cssvar-ededf2-inflected-to-user-position-r: 43;
