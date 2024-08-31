@@ -288,7 +288,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
   let folders = {};
 
   for (const folderWithContent2 of foldersWithContent) {
-    const folderKey = `f_${item.folder.index}`;
+    const folderKey = `f_${folderWithContent2.folder.index}`;
     if (!foldedContent.hasOwnProperty(folderKey)) {
       foldedContent[folderKey] = [];
       itemQuantity[folderKey] = 0;
