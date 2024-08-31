@@ -7,7 +7,7 @@ let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
-  ['更多', '幹線', '清空', '0', '刪除']
+  ['鍵盤', '幹線', '清空', '0', '刪除']
 ];
 
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
@@ -27,16 +27,28 @@ function initializeKeyboard(): void {
   var result = [];
   for (var row of keyboard_keys) {
     for (var column of row) {
-      var eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
-      var eventType = 'onmousedown';
-      var html = column;
-      if (column === '刪除') {
-        eventScript = 'bus.searchPage.deleteCharFromInout()';
-        html = getIconHTML('backspace');
+      let eventScript = '';
+      let eventType = 'onmousedown';
+      let html = '';
+      switch (column) {
+        case '刪除':
+          eventScript = 'bus.searchPage.deleteCharFromInout()';
+          html = getIconHTML('backspace');
+          break;
+        case '清空':
+          eventScript = 'bus.searchPage.emptyInput()';
+          html = column;
+          break;
+        case '鍵盤':
+          eventScript = 'bus.searchPage.openSystemKeyboard()';
+          html = getIconHTML('keyboard');
+          break;
+        default:
+          eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
+          html = column;
+          break;
       }
-      if (column === '清空') {
-        eventScript = 'bus.searchPage.emptyInput()';
-      }
+
       if (supportTouch()) {
         var eventType = 'ontouchstart';
       }
@@ -52,8 +64,11 @@ export function openKeyboard() {
 }
 
 export function closeKeyboard() {
-  initializeKeyboard();
   keyboardElement.setAttribute('displayed', 'false');
+}
+
+export function openSystemKeyboard() {
+  searchInputElement.focus();
 }
 
 export function typeTextIntoInput(value): void {
