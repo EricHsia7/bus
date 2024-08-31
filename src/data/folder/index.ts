@@ -288,6 +288,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
   let folders = {};
 
   for (const folderWithContent2 of foldersWithContent) {
+    const folderKey = `f_${item.folder.index}`;
     if (!foldedContent.hasOwnProperty(folderKey)) {
       foldedContent[folderKey] = [];
       itemQuantity[folderKey] = 0;
@@ -308,7 +309,7 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
         case 'route':
           const thisRouteKey = `r_${item.id}`;
           const thisRoute = Route[thisRouteKey];
-          integratedItem.route.pathAttributeId = thisRoute.pid;
+          integratedItem.pathAttributeId = thisRoute.pid;
           break;
         case 'bus':
           break;
@@ -317,7 +318,6 @@ export async function integrateFolders(requestID: string): Promise<Array<object>
         default:
           break;
       }
-      const folderKey = `f_${item.folder.index}`;
       foldedContent[folderKey].push(integratedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
