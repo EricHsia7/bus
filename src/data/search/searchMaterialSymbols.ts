@@ -1,5 +1,5 @@
 import { generateIdentifier } from '../../tools/index';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 
 const Fuse = require('fuse.js/basic');
 

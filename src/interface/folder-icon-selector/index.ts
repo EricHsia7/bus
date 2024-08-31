@@ -1,4 +1,4 @@
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
 import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols';
 import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';

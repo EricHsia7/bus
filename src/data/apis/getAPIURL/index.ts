@@ -1,4 +1,4 @@
-import { getNoCacheParameter } from '../../tools/index';
+import { getNoCacheParameter } from '../../../tools/index';
 
 export function getAPIURL(city: number, api: number, interval: number = 5000): string {
   const cities = ['blobbus', 'ntpcbus'];

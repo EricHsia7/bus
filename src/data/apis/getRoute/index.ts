@@ -1,4 +1,4 @@
-import { getAPIURL } from '../getAPIURL';
+import { getAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 import { lfSetItem, lfGetItem } from '../../storage/index';
 

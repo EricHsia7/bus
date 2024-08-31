@@ -3,11 +3,11 @@ import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } fro
 import { generateIdentifier } from '../../tools/index';
 import { formatEstimateTime } from '../../tools/format-time';
 import { getSettingOptionValue } from '../settings/index';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/searchRoute';
 import { getRoute } from '../apis/getRoute/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { getEstimateTime } from '../apis/getEstimateTime';
+import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTime } from '../analytics/update-rate';
 
 const cloneDeep = require('lodash/cloneDeep');

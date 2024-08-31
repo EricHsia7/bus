@@ -1,7 +1,7 @@
 import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
 import { formatTime } from '../../tools/format-time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
-import { EstimateTime } from '../apis/getEstimateTime';
+import { EstimateTime } from '../apis/getEstimateTime/index';
 
 var trackingUpdateRate_trackedStops: Array = [];
 var trackingUpdateRate_trackingID: string = '';
