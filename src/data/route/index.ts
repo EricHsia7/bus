@@ -171,14 +171,13 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let isEndingPoint: boolean = false;
       let useReversed: boolean = false;
       if (hasSegmentBuffers) {
-        const groupKey = `g_${item.GoBack}`;
-        console.log(integratedStopItem.goBack, item.GoBack);
+        const groupKey = `g_${integratedStopItem.goBack}`;
         let segmentBufferGroup = [];
 
         if (thisSegmentBuffers.hasOwnProperty(groupKey)) {
           segmentBufferGroup = thisSegmentBuffers[groupKey];
         } else {
-          if (item.GoBack === '1') {
+          if (integratedStopItem.goBack === '1') {
             useReversed = true;
             segmentBufferGroup = thisSegmentBuffers['g_0'];
           }
@@ -263,6 +262,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
     if (isBufferZoneOpened && !isBufferZoneClosed) {
       item.segmentBuffer.isSegmentBuffer = true;
+    }
+
+    if (isBufferZoneOpened && isBufferZoneClosed) {
+      isBufferZoneOpened = false;
+      isBufferZoneClosed = false;
     }
 
     if (!(nearestPosition === null)) {
