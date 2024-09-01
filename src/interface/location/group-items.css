@@ -53,7 +53,7 @@
   opacity: 1;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons {
   position: absolute;
   top: 5px;
   left: 10px;
@@ -66,12 +66,12 @@
   border-radius: 30px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs::-webkit-scrollbar {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons::-webkit-scrollbar {
   display: none;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button {
   position: relative;
   height: 35px;
   display: inline-flex;
@@ -89,7 +89,7 @@
   vertical-align: top;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button .css_action_button_icon {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button .css_button_icon {
   position: relative;
   display: inline-flex;
   height: 35px;
@@ -97,39 +97,28 @@
   align-items: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button .css_action_button_icon span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_buttons .css_button {
+  transition: background var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button .css_button_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[type="save-to-folder"] .css_action_button_icon svg path[filling="filling"] {
-  fill: rgba(0, 0, 0, 0)
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_buttons .css_button .css_button_icon span.css_material_symbols_rounded {
+  transition: --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] .css_action_button_icon svg path,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] .css_action_button_icon svg path[filling="filling"] {
-  fill: var(--b-cssvar-f4252c);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button[highlighted="true"] {
+  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_tab,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_action_button {
-  transition: background var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[stretched="true"] .css_body .css_tabs .css_action_button .css_action_button_icon svg path {
-  transition: fill var(--b-cssvar-transition-duration);
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab[highlighted="true"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"] {
-  background: var(--b-cssvar-333333);
-  color: var(--b-cssvar-ffffff);
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"][type="save-to-folder"] {
-  background: rgba(var(--b-cssvar-f4252c-r), var(--b-cssvar-f4252c-g), var(--b-cssvar-f4252c-b), var(--b-cssvar-f4252c-opacity-a));
-  color: var(--b-cssvar-f4252c);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons .css_button[highlighted="true"] span.css_material_symbols_rounded {
+  color: var(--b-cssvar-main-color);
+  --b-cssvar-font-variation-settings-fill: 1;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_status {
