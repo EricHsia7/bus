@@ -1,8 +1,9 @@
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
+import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(message: string, icon: string): void {
+export function promptMessage(message: string, icon: MaterialSymbols): void {
   const all_prompt = documentQuerySelectorAll('.css_prompt');
   if (!(all_prompt === null)) {
     var all_prompt_len = all_prompt.length;
@@ -28,7 +29,7 @@ export function promptMessage(message: string, icon: string): void {
   promptElement.appendChild(promptMessageElement);
 
   document.body.appendChild(promptElement);
-  
+
   document.getElementById(promptID).addEventListener(
     'animationend',
     function () {

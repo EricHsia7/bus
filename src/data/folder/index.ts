@@ -10,6 +10,7 @@ import { recordEstimateTime } from '../analytics/update-rate';
 import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
 const cloneDeep = require('lodash/cloneDeep');
 
@@ -84,7 +85,7 @@ export interface FolderEmpty {
 
 export interface Folder {
   name: string;
-  icon: string;
+  icon: MaterialSymbols;
   default: boolean;
   storeIndex: number | null;
   index: number | null;
