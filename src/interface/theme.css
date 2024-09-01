@@ -3,7 +3,7 @@
   --b-cssvar-main-color-r: 50;
   --b-cssvar-main-color-g: 156;
   --b-cssvar-main-color-b: 255;
-  --b-cssvar-main-color-solid-transparent-c: #CCDDF3;
+  --b-cssvar-main-color-solid-transparent-c: #E7F3FF;
 
   --b-cssvar-main-color-inflected-to-segment-buffer: #3B7A91;
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 59;
@@ -90,7 +90,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --b-cssvar-main-color-solid-transparent-c: #28486B;
+    --b-cssvar-main-color-solid-transparent-c: #0E2337;
     --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #2A3B46;
     --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #312D4D;
 
