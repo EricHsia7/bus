@@ -17,7 +17,7 @@ const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
 
 function generateElementOfSymbol(symbol: string): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_icon_selector_symbol');
@@ -32,7 +32,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
 async function initializeFolderIconSelectorField(): void {
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsElement.innerHTML = '';
-  const requestID: string = `r_${generateIdentifier()}`;
+  const requestID: string = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   for (const symbol of materialSymbols) {
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);

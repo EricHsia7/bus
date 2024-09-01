@@ -5,7 +5,7 @@ import { generateIdentifier } from '../../tools/index';
 const Fuse = require('fuse.js/basic');
 
 export async function searchRouteByName(query: string): Promise<Array> {
-  var requestID = `r_${generateIdentifier()}`;
+  var requestID = generateIdentifier('r');
   var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
@@ -23,7 +23,7 @@ export async function searchRouteByName(query: string): Promise<Array> {
 }
 
 export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
-  var requestID = `r_${generateIdentifier()}`;
+  var requestID = generateIdentifier('r');
   var Route = await getRoute(requestID, true);
   var result = [];
   for (var key in Route) {
@@ -41,7 +41,7 @@ export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
 }
 
 export async function searchRouteByPathAttributeId(PathAttributeId: Array<number>): Promise<Array<SimplifiedRouteItem>> {
-  const requestID = `r_${generateIdentifier()}`;
+  const requestID = generateIdentifier('r');
   const Route = await getRoute(requestID, true);
   let result = [];
   for (const key in Route) {
@@ -59,7 +59,7 @@ export async function searchRouteByPathAttributeId(PathAttributeId: Array<number
 }
 
 export async function prepareForRouteSearch() {
-  var requestID = `r_${generateIdentifier()}`;
+  var requestID = generateIdentifier('r');
   var Route = await getRoute(requestID, true);
   var mergedLocation = await getLocation(requestID, true);
   var index = [];

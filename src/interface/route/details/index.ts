@@ -20,7 +20,7 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
-  const requestID = `r_${generateIdentifier()}`;
+  const requestID = generateIdentifier('r');
   var integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(propertiesField, integration.properties, false);
   updateCalendarField(calendarField, integration.calendar, false);

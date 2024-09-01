@@ -6,7 +6,7 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
 
 function generateElementOfItem(item: object): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_setting');
   element.id = identifier;

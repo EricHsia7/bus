@@ -101,7 +101,7 @@ function updateUpdateTimer(): void {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
@@ -114,7 +114,7 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${generateIdentifier()}`;
+  var identifier = generateIdentifier('g');
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group');
@@ -126,7 +126,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${generateIdentifier()}`;
+  var identifier = generateIdentifier('t');
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_tab');
@@ -137,7 +137,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  var identifier = `p_${generateIdentifier()}`;
+  var identifier = generateIdentifier('p');
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_details_property');
@@ -416,7 +416,7 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_auto = refresh_interval_setting.auto;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
-  locationRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
+  locationRefreshTimer_currentRequestID = generateIdentifier('r');
   documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
   var integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_location_field');

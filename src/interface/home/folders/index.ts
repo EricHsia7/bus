@@ -368,7 +368,7 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_auto = refresh_interval_setting.auto;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer_refreshing = true;
-  foldersRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
+  foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   var integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');

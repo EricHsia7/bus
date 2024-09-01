@@ -5,7 +5,7 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
 
 function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_folder_manager_folder_item');
   element.id = identifier;

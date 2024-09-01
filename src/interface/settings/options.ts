@@ -4,7 +4,7 @@ import { getSetting, changeSettingOption } from '../../data/settings/index';
 import { GeneratedElement } from '../index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_option');
   element.id = identifier;

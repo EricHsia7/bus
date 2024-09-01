@@ -123,7 +123,7 @@ export async function initializeFolderStores(): void {
 }
 
 export async function createFolder(name: string, icon: string): Promise<boolean> {
-  const requestID = `r_${generateIdentifier()}`;
+  const requestID = generateIdentifier('r');
   var materialSymbols = await getMaterialSymbols(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
@@ -162,7 +162,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
     const folderKey: string = `f_${folder.id}`;
     var existingFolder: string = await lfGetItem(4, folderKey);
     if (existingFolder) {
-      const requestID = `r_${generateIdentifier()}`;
+      const requestID = generateIdentifier('r');
       var materialSymbols = await getMaterialSymbols(requestID);
       if (materialSymbols.indexOf(folder.icon) < 0) {
         return false;
@@ -387,7 +387,7 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
 }
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
-  const requestID = `r_${generateIdentifier()}`;
+  const requestID = generateIdentifier('r');
   const Stop = await getStop(requestID);
   const Location = await getLocation(requestID, false);
   const Route = await getRoute(requestID);

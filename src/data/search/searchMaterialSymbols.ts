@@ -4,7 +4,7 @@ import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 const Fuse = require('fuse.js/basic');
 
 export async function prepareForMaterialSymbolsSearch(): Promise<any> {
-  const requestID: string = `r_${generateIdentifier()}`;
+  const requestID: string = generateIdentifier('r');
   var materialSymbols = await getMaterialSymbols(requestID);
   return new Fuse(materialSymbols);
 }

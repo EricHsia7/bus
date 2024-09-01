@@ -260,8 +260,8 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
 
 const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
-export function generateIdentifier(): string {
-  let result = '';
+export function generateIdentifier(prefix: string = ''): string {
+  let result = `${prefix}_`;
   const length: number = 16;
   for (var i = 0; i < length; i++) {
     var randomNumber = Math.round(Math.random() * characterSet.length);

@@ -148,7 +148,7 @@ function updateUpdateTimer(): void {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_thread_box');
   element.id = identifier;
@@ -161,7 +161,7 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_item');
   element.id = identifier;
@@ -174,7 +174,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = `g_${generateIdentifier()}`;
+  var identifier = generateIdentifier('g');
   var element = document.createElement('div');
   element.classList.add('css_route_group');
   element.id = identifier;
@@ -194,7 +194,7 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = `t_${generateIdentifier()}`;
+  var identifier = generateIdentifier('t');
   var element = document.createElement('div');
   element.classList.add('css_route_group_tab');
   element.id = identifier;
@@ -477,7 +477,7 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_auto = refresh_interval_setting.auto;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
-  routeRefreshTimer_currentRequestID = `r_${generateIdentifier()}`;
+  routeRefreshTimer_currentRequestID = generateIdentifier('r');
   documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'true');
   var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');

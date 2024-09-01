@@ -14,7 +14,7 @@ export async function recordEstimateTime(EstimateTime: EstimateTime): void {
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;
     trackingUpdateRate_trackedStops = [];
-    trackingUpdateRate_trackingID = `e_${generateIdentifier()}`;
+    trackingUpdateRate_trackingID = generateIdentifier('e');
     var EstimateTimeLength: number = EstimateTime.length - 1;
     for (var i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);

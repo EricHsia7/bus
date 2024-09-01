@@ -6,7 +6,7 @@ import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
-  var identifier = `i_${generateIdentifier()}`;
+  var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_editor_folder_item');
