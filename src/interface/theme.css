@@ -3,19 +3,19 @@
   --b-cssvar-main-color-r: 50;
   --b-cssvar-main-color-g: 156;
   --b-cssvar-main-color-b: 255;
-  --b-cssvar-main-color-solid-transparent-c: #E7F3FF;
+  --b-cssvar-main-color-solid-transparent-c: #CCDDF3;
 
   --b-cssvar-main-color-inflected-to-segment-buffer: #3B7A91;
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 59;
   --b-cssvar-main-color-inflected-to-segment-buffer-g: 122;
   --b-cssvar-main-color-inflected-to-segment-buffer-b: 145;
-  --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #DFE4EA;
+  --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #CED8E1;
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
   --b-cssvar-main-color-inflected-to-user-position-g: 84;
   --b-cssvar-main-color-inflected-to-user-position-b: 199;
-  --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #E0E0EF;
+  --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #D9D7EC;
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
@@ -90,9 +90,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --b-cssvar-main-color-solid-transparent-c: #0E2337;
-    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #28343E;
-    --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #2F2C48;
+    --b-cssvar-main-color-solid-transparent-c: #28486B;
+    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #2A3B46;
+    --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #312D4D;
 
     --b-cssvar-main-color-opacity-a: 1;
     --b-cssvar-main-color-opacity-b: 0.8;
