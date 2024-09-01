@@ -74,11 +74,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   const processedBuses = processBuses(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
-  let thisSegmentBuffer: SimplifiedSegmentBufferItem = {};
+  let hasSegmentBuffers: boolean = false;
+  let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
   if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
-    thisSegmentBuffer = SegmentBuffers[`r_${RouteID}`];
-  } else {
-    thisSegmentBuffer = {};
+    hasSegmentBuffers = true;
+    thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
@@ -168,19 +168,20 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let isSegmentBuffer: boolean = false;
       let isStartingPoint: boolean = false;
       let isEndingPoint: boolean = false;
-      const segmentBufferGroup = thisSegmentBuffer[`g_${item.GoBack}`] || thisSegmentBuffer['g_0'] || [];
-      for (const thisBufferZone of segmentBufferGroup) {
-        if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
-          isSegmentBuffer = true;
-        }
-        if (thisBufferZone.OriginStopID === item.StopID) {
-          isStartingPoint = true;
-        }
-        if (thisBufferZone.DestinationStopID === item.StopID) {
-          isEndingPoint = true;
+      if (hasSegmentBuffers) {
+        const segmentBufferGroup = thisSegmentBuffers[`g_${item.GoBack}`] || thisSegmentBuffers['g_0'];
+        for (const thisBufferZone of segmentBufferGroup) {
+          if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
+            isSegmentBuffer = true;
+          }
+          if (thisBufferZone.OriginStopID === item.StopID) {
+            isStartingPoint = true;
+          }
+          if (thisBufferZone.DestinationStopID === item.StopID) {
+            isEndingPoint = true;
+          }
         }
       }
-
       integratedStopItem.segmentBuffer = {
         isSegmentBuffer,
         isStartingPoint,
