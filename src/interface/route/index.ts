@@ -329,8 +329,8 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisItemElement.setAttribute('skeleton-screen', skeletonScreen);
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
-    function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
+    function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button[type="save-to-folder"]').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
       isSaved('stop', thisItem.id).then((e) => {
         elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button').setAttribute('highlighted', e);
       });
@@ -346,7 +346,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
-      updateSaveStopActionButton(thisItemElement, thisItem, integration);
+      updateSaveToFolderButton(thisItemElement, thisItem, integration);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
@@ -370,7 +370,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveStopActionButton(thisItemElement, thisItem, integration);
+        updateSaveToFolderButton(thisItemElement, thisItem, integration);
       }
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
