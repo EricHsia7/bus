@@ -25,9 +25,11 @@ function extractSegmentBuffers_worker(xml: string): SegmentBuffers {
       currentTagName = line.match(startingTagRegex)[1];
       currentValue = null;
       switch (currentTagName) {
+        /*
         case 'RouteFares':
           result = [];
           break;
+        */
         case 'RouteFare':
           result.push({});
           break;
