@@ -234,10 +234,7 @@ window.bus = {
   },
   test: {
     calculateDataUsage,
-    initializeFolderStores,
-    calculateStoresSize,
-    getUpdateRateInTime,
-    getSegmentBuffers
+    calculateStoresSize
   },
   settingsPage: {
     openSettingsPage,
