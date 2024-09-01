@@ -41,7 +41,7 @@ async function extractSegmentBuffers(xml: string): Promise<SegmentBuffers> {
   return result;
 }
 
-export async function getSegmentBuffers(requestID: string): Promise<Provider> {
+export async function getSegmentBuffers(requestID: string): Promise<SegmentBuffers> {
   async function getData() {
     var apis = [
       [0, 15],
@@ -57,7 +57,7 @@ export async function getSegmentBuffers(requestID: string): Promise<Provider> {
   }
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = 'bus_segment_buffers_cache';
+  var cache_key = 'bus_segment_buffers_v2_cache';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
