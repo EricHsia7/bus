@@ -88,35 +88,6 @@ export function parseTimeCode(code: string, mode: number): Moment | Range {
   }
 }
 
-export function processSegmentBuffer(buffer: string): object {
-  const regex = /[\u4E00-\u9FFF\(\)（）]*/gm;
-  const directionRegex = /[\(（]{1,3}[往去返回程]{1,3}[\)|）\:：\s]{1,3}/gm;
-  var result = {};
-  var current_group = 0;
-  var matches = buffer.matchAll(regex);
-  for (var match of matches) {
-    if (!(match === null)) {
-      if (directionRegex.test(match[0])) {
-        if (match[0].indexOf('往') > -1 || match[0].indexOf('去') > -1) {
-          current_group = 0;
-        }
-        if (match[0].indexOf('返') > -1 || match[0].indexOf('回') > -1) {
-          current_group = 1;
-        }
-      }
-      var key = `g_${current_group}`;
-      if (!result.hasOwnProperty(key)) {
-        result[key] = [];
-      }
-      var extractedName = String(match[0].replaceAll(directionRegex, '')).trim();
-      if (extractedName.length > 0) {
-        result[key].push(extractedName);
-      }
-    }
-  }
-  return result;
-}
-
 export interface ProcessedBusPosition {
   longitude: number;
   latitude: number;

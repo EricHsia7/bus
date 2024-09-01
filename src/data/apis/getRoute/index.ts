@@ -54,7 +54,6 @@ export interface SimplifiedRouteItem {
   pid: Array<number>;
   dep: string;
   des: string;
-  s: string;
   id: number;
 }
 
