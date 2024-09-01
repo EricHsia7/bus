@@ -165,28 +165,38 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       });
 
       // check whether this stop is segment buffer
+      console.log(0);
       let isSegmentBuffer: boolean = false;
       let isStartingPoint: boolean = false;
       let isEndingPoint: boolean = false;
+      console.log(1);
       if (hasSegmentBuffers) {
+        console.log(2);
         const segmentBufferGroup = thisSegmentBuffers[`g_${item.GoBack}`] || thisSegmentBuffers['g_0'];
+        console.log(3, segmentBufferGroup);
         for (const thisBufferZone of segmentBufferGroup) {
+          console.log(4, thisBufferZone);
           if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
             isSegmentBuffer = true;
+            console.log(5);
           }
           if (thisBufferZone.OriginStopID === item.StopID) {
             isStartingPoint = true;
+            console.log(6);
           }
           if (thisBufferZone.DestinationStopID === item.StopID) {
             isEndingPoint = true;
+            console.log(7);
           }
         }
+        console.log(8);
       }
       integratedStopItem.segmentBuffer = {
         isSegmentBuffer,
         isStartingPoint,
         isEndingPoint
       };
+      console.log(9, isSegmentBuffer, isStartingPoint, isEndingPoint);
 
       result.push(integratedStopItem);
     }
