@@ -94,6 +94,7 @@ import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
 
 import './interface/prompt/index.css';
+import { getSegmentBuffers } from './data/apis/getSegmentBuffers/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -235,7 +236,8 @@ window.bus = {
     calculateDataUsage,
     initializeFolderStores,
     calculateStoresSize,
-    getUpdateRateInTime
+    getUpdateRateInTime,
+    getSegmentBuffers
   },
   settingsPage: {
     openSettingsPage,

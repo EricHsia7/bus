@@ -43,7 +43,7 @@ function simplifyRoute_worker(Route: Route): SimplifiedRoute {
     { original: 'ticketPriceDescriptionEn', rename: false },
     { original: 'peakHeadway', rename: false },
     { original: 'ttiaPathId', rename: false },
-    { original: 'segmentBufferZh', newName: 's', rename: true },
+    { original: 'segmentBufferZh', rename: false },
     { original: 'busTimeDesc', rename: false },
     { original: 'distance', rename: false },
     { original: 'NId', rename: false },

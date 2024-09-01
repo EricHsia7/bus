@@ -8,7 +8,7 @@ let MaterialSymbolsAPIVariableCache_data: Array<string> = [];
 export async function getMaterialSymbols(requestID: string): Promise<Array<string>> {
   async function getData() {
     var apiurl = getMaterialSymbolsAPIURL();
-    var data = await fetchData(apiurl, requestID, 'getMaterialSymbols');
+    var data = await fetchData(apiurl, requestID, 'getMaterialSymbols', 'json');
     var result = data.list.split(',');
     return result;
   }

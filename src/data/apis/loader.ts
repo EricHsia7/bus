@@ -6,7 +6,7 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, tag: string): Promise<object> {
+export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   const startTimeStamp = new Date().getTime();
   const response = await fetch(url);
   if (!response.ok) {
@@ -42,7 +42,12 @@ export async function fetchData(url: string, requestID: string, tag: string): Pr
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
   const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
-  return JSON.parse(inflatedData);
+  if (fileType === 'json') {
+    return JSON.parse(inflatedData);
+  }
+  if (fileType === 'xml') {
+    return inflatedData;
+  }
 }
 
 export function getDataReceivingProgress(requestID: string): number {
