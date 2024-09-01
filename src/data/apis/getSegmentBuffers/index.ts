@@ -3,7 +3,7 @@ import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loade
 import { lfSetItem, lfGetItem } from '../../storage/index';
 
 export interface BufferZoneItem {
-  Direction: 0 | 1 | 2;
+  Direction: 0 | 1 | 2; // (goBack/GoBack)
   OriginStopID: number;
   DestinationStopID: number;
 }
@@ -45,7 +45,7 @@ async function extractSegmentBuffers(xml: string): Promise<SegmentBuffers> {
   return result;
 }
 
-async function simplifySegmentBuffers(array: SegmentBuffers): SimplifiedSegmentBuffer {
+async function simplifySegmentBuffers(array: SegmentBuffers): Promise<SimplifiedSegmentBuffer> {
   const worker = new Worker(new URL('./simplifySegmentBuffers-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
