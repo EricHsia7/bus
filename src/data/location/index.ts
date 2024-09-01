@@ -154,6 +154,6 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  await recordEstimateTime(EstimateTime);
+  //await recordEstimateTime(EstimateTime);
   return result;
 }
