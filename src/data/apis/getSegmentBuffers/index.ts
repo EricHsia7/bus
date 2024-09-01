@@ -49,7 +49,7 @@ export async function getSegmentBuffers(requestID: string): Promise<SegmentBuffe
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = '';
     for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'json');
+      var data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'xml');
       result = result.concat('\n').concat(data);
       setDataUpdateTime(requestID, -1);
     }
