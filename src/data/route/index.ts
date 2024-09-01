@@ -173,10 +173,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let isEndingPoint: boolean = false;
       let useReversed: boolean = false;
       if (hasSegmentBuffers) {
-        let segmentBufferGroup = thisSegmentBuffers[`g_${item.GoBack}`];
-        if (!segmentBufferGroup && item.GoBack === '1') {
+        let segmentBufferGroup = [];
+        if (!thisSegmentBuffers.hasOwnProperty(`g_${item.GoBack}`) && item.GoBack === '1') {
           useReversed = true;
           segmentBufferGroup = thisSegmentBuffers['g_0'];
+        } else {
+          segmentBufferGroup = thisSegmentBuffers[`g_${item.GoBack}`];
         }
         for (const thisBufferZone of segmentBufferGroup) {
           if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
