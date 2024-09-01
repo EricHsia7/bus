@@ -76,10 +76,13 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
+  console.log(SegmentBuffers);
   if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
+    console.log('hasSegmentBuffers');
     hasSegmentBuffers = true;
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
+  console.log(hasSegmentBuffers, thisSegmentBuffers);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
 

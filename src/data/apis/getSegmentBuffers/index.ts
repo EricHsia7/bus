@@ -22,7 +22,7 @@ export type SimplifiedSegmentBufferItem = { [key: string]: Array<BufferZoneItem>
 export type SimplifiedSegmentBuffer = { [key: string]: SimplifiedSegmentBufferItem };
 
 let SegmentBuffersAPIVariableCache_available: boolean = false;
-let SegmentBuffersAPIVariableCache_data: object = [];
+let SegmentBuffersAPIVariableCache_data: object = {};
 
 async function extractSegmentBuffers(xml: string): Promise<SegmentBuffers> {
   const worker = new Worker(new URL('./extractSegmentBuffers-worker.ts', import.meta.url));
