@@ -1,19 +1,11 @@
-export interface BufferZoneItem {
-  Direction: 0 | 1 | 2;
-  OriginStopID: number;
-  DestinationStopID: number;
-}
+import { SegmentBuffers } from './index';
 
-export type BufferZones = Array<BufferZoneItem>;
+self.onmessage = function (e) {
+  const result = extractSegmentBuffers_worker(e.data);
+  self.postMessage(result); // Send the result back to the main thread
+};
 
-export interface SegmentBufferItem {
-  RouteID: number;
-  BufferZones: BufferZones;
-}
-
-export type SegmentBuffers = Array<SegmentBufferItem>;
-
-function parseSegmentBuffers(xml: string): object {
+function extractSegmentBuffers_worker(xml: string): SegmentBuffers {
   const startingTagRegex = /^\s*<([a-z_]*)>/im;
   const endingTagRegex = /^\s*<\/([a-z_]*)>/im;
   const inlineRegex = /^\s*<([a-z_]*)>([^<>]*)<\/([a-z_]*)>/im;
@@ -69,7 +61,6 @@ function parseSegmentBuffers(xml: string): object {
         case 'Direction':
           result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['Direction'] = parseInt(currentValue);
           break;
-
         default:
           break;
       }
