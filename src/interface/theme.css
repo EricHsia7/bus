@@ -90,8 +90,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --b-cssvar-main-color: #3EA2FF;
+    --b-cssvar-main-color-r: 62;
+    --b-cssvar-main-color-g: 162;
+    --b-cssvar-main-color-b: 255;
     --b-cssvar-main-color-solid-transparent-c: #0E2337;
+
+    --b-cssvar-main-color-inflected-to-segment-buffer: #57B5D7;
+    --b-cssvar-main-color-inflected-to-segment-buffer-r: 87;
+    --b-cssvar-main-color-inflected-to-segment-buffer-g: 181;
+    --b-cssvar-main-color-inflected-to-segment-buffer-b: 215;
     --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #2A3B46;
+
+    --b-cssvar-main-color-inflected-to-user-position: #7866F1;
+    --b-cssvar-main-color-inflected-to-user-position-r: 120;
+    --b-cssvar-main-color-inflected-to-user-position-g: 102;
+    --b-cssvar-main-color-inflected-to-user-position-b: 241;
     --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #312D4D;
 
     --b-cssvar-main-color-opacity-a: 1;
