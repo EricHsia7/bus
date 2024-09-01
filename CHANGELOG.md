@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Improve segment buffer feature [\#62](https://github.com/EricHsia7/bus/pull/62) ([EricHsia7](https://github.com/EricHsia7))
 - Use web workers to offload heavy tasks [\#60](https://github.com/EricHsia7/bus/pull/60) ([EricHsia7](https://github.com/EricHsia7))
 - Add direction labels [\#59](https://github.com/EricHsia7/bus/pull/59) ([EricHsia7](https://github.com/EricHsia7))
 - Add save route feature [\#57](https://github.com/EricHsia7/bus/pull/57) ([EricHsia7](https://github.com/EricHsia7))
