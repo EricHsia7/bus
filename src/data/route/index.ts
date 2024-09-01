@@ -307,6 +307,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  await recordEstimateTime(EstimateTime);
+  //await recordEstimateTime(EstimateTime);
   return result2;
 }
