@@ -396,15 +396,6 @@
   background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
-/* body > buttons > button > css_button_icon */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buttons .css_button .css_button_icon {
-  position: relative;
-  display: inline-flex;
-  height: 35px;
-  width: 18px;
-  align-items: center;
-}
-
 /* highlighted: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buttons .css_button[highlighted="true"] {
   background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
@@ -421,6 +412,15 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[nearest="true"] .css_body .css_buttons .css_button[highlighted="true"] {
   background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-c));
   color: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
+/* body > buttons > button > css_button_icon */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buttons .css_button .css_button_icon {
+  position: relative;
+  display: inline-flex;
+  height: 35px;
+  width: 18px;
+  align-items: center;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buttons .css_button .css_button_icon span.css_material_symbols_rounded {

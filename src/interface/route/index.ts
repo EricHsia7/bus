@@ -330,9 +330,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button[type="save-to-folder"]').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
+      const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button[type="save-to-folder"]');
+      saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
       isSaved('stop', thisItem.id).then((e) => {
-        elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button').setAttribute('highlighted', e);
+        saveToFolderButtonElement.setAttribute('highlighted', e);
       });
     }
 
