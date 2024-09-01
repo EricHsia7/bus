@@ -77,7 +77,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
   if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
-    console.log('hasSegmentBuffers');
     hasSegmentBuffers = true;
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
