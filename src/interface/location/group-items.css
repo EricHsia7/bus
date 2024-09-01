@@ -121,7 +121,7 @@
   transition: fill var(--b-cssvar-transition-duration);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab[selected="true"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_tab[highlighted="true"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_tabs .css_action_button[highlighted="true"] {
   background: var(--b-cssvar-333333);
   color: var(--b-cssvar-ffffff);

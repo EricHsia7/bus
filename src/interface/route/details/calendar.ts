@@ -210,7 +210,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
     thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
     thisDayElement.innerText = thisDay.name;
-    thisDayElement.setAttribute('selected', new Date().getDay() === i ? true : false);
+    thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
     for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {

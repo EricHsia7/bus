@@ -166,7 +166,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div></div></div><div class="css_body"><div class="css_tabs"><div class="css_tab" selected="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">經過此站的公車</div><div class="css_tab" selected="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">經過此站的路線</div><div class="css_action_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_action_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_head"><div class="css_name"></div><div class="css_capsule"><div class="css_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_capsule_separator"></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div></div></div><div class="css_body"><div class="css_buttons"><div class="css_button" highlighted="true" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_button_icon">${getIconHTML('directions_bus')}</div>經過此站的公車</div><div class="css_button" highlighted="false" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_button_icon">${getIconHTML('route')}</div>經過此站的路線</div><div class="css_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_buses" displayed="true"></div><div class="css_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -330,9 +330,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
     }
     function updateSaveStopActionButton(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
+      elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button').setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
       isSaved('stop', thisItem.id).then((e) => {
-        elementQuerySelector(thisItemElement, '.css_body .css_tabs .css_action_button').setAttribute('highlighted', e);
+        elementQuerySelector(thisItemElement, '.css_body .css_buttons .css_button').setAttribute('highlighted', e);
       });
     }
 
@@ -561,12 +561,12 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
   var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemID}`);
-  var tabs = elementQuerySelector(itemElement, '.css_tabs');
-  var tab = elementQuerySelectorAll(tabs, '.css_tab[selected="true"]');
+  var buttons = elementQuerySelector(itemElement, '.css_buttons');
+  var tab = elementQuerySelectorAll(tabs, '.css_button[highlighted="true"]');
   for (var t of tab) {
-    t.setAttribute('selected', 'false');
+    t.setAttribute('highlighted', 'false');
   }
-  elementQuerySelector(tabs, `.css_tab[code="${tabCode}"]`).setAttribute('selected', 'true');
+  elementQuerySelector(tabs, `.css_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
   if (tabCode === 0) {
     elementQuerySelector(itemElement, '.css_buses').setAttribute('displayed', 'true');
     elementQuerySelector(itemElement, '.css_overlapping_routes').setAttribute('displayed', 'flase');
