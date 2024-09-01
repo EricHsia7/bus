@@ -75,14 +75,14 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
     var result = '';
     for (var api of apis) {
       var data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'xml');
-      result = result.concat('\n').concat(data);
+      result += data;
       setDataUpdateTime(requestID, -1);
     }
     return result;
   }
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = 'bus_segment_buffers_v4_cache';
+  var cache_key = 'bus_segment_buffers_v5_cache';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();
