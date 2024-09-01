@@ -17,7 +17,7 @@ export async function getEstimateTime(requestID: string): Promise<EstimateTime> 
   ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
   var result = [];
   for (var api of apis) {
-    var data = await fetchData(api.url, requestID, `getEstimateTime_${api.e[0]}`);
+    var data = await fetchData(api.url, requestID, `getEstimateTime_${api.e[0]}`, 'json');
     result = result.concat(data.BusInfo);
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }

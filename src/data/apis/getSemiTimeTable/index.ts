@@ -13,7 +13,7 @@ export async function getSemiTimeTable(requestID: string): Promise<object> {
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getSemiTimeTable_${api.e[0]}`);
+      var data = await fetchData(api.url, requestID, `getSemiTimeTable_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }

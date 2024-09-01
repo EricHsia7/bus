@@ -92,7 +92,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
     var result = [];
     for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getRoute_${api.e[0]}`);
+      var data = await fetchData(api.url, requestID, `getRoute_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
