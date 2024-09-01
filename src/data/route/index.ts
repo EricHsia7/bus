@@ -4,6 +4,7 @@ import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute } from '../apis/getRoute/index';
+import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop } from '../apis/getStop/index';
 import { formatBus, parseEstimateTime, processBuses, processSegmentBuffer } from '../apis/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
@@ -15,6 +16,11 @@ interface integratedStopItemPosition {
   latitude: number;
 }
 
+interface integratedStopItemSegmentBuffer {
+  isSegmentBuffer: boolean;
+  isStartingPoint: boolean;
+  isEndingPoint: boolean;
+}
 interface integratedStopItem {
   name: string | null;
   goBack: '0' | '1' | '2';
@@ -24,7 +30,7 @@ interface integratedStopItem {
   sequence: number;
   position: integratedStopItemPosition;
   nearest: boolean;
-  segmentBuffer: boolean;
+  segmentBuffer: integratedStopItemSegmentBuffer;
   progress: number;
   id: number | null;
 }
@@ -50,6 +56,8 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getStop_1', 0, false);
   setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
+  setDataReceivingProgress(requestID, 'getSegmentBuffers_0', 0, false);
+  setDataReceivingProgress(requestID, 'getSegmentBuffers_1', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
@@ -59,12 +67,19 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const Route = await getRoute(requestID, true);
   const Stop = await getStop(requestID);
   const Location = await getLocation(requestID, false);
+  const SegmentBuffers = await getSegmentBuffers(requestID);
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
 
   const processedBuses = processBuses(BusEvent, BusData, Route, RouteID, PathAttributeId);
-  const processedSegmentBuffer = processSegmentBuffer(Route[`r_${RouteID}`].s);
+
+  let thisSegmentBuffer: SimplifiedSegmentBufferItem = {};
+  if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
+    thisSegmentBuffer = SegmentBuffers[`r_${RouteID}`];
+  } else {
+    thisSegmentBuffer = {};
+  }
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
 
@@ -151,11 +166,26 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
-      const segmentBufferGroup = processedSegmentBuffer[`g_${item.GoBack}`] || processedSegmentBuffer['g_0'].reverse() || [];
-      if (segmentBufferGroup.includes(thisLocation.n)) {
-        isSegmentBuffer = true;
+      let isStartingPoint: boolean = false;
+      let isEndingPoint: boolean = false;
+      const segmentBufferGroup = thisSegmentBuffer[`g_${item.GoBack}`] || thisSegmentBuffer['g_0'] || [];
+      for (const thisBufferZone of segmentBufferGroup) {
+        if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
+          isSegmentBuffer = true;
+        }
+        if (thisBufferZone.OriginStopID === item.StopID) {
+          isStartingPoint = true;
+        }
+        if (thisBufferZone.DestinationStopID === item.StopID) {
+          isEndingPoint = true;
+        }
       }
-      integratedStopItem.segmentBuffer = isSegmentBuffer;
+
+      integratedStopItem.segmentBuffer = {
+        isSegmentBuffer,
+        isStartingPoint,
+        isEndingPoint
+      };
 
       result.push(integratedStopItem);
     }
@@ -166,8 +196,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   });
 
   const nearestPosition = getNearestPosition(positions, 450);
-  const multipleEndpoints = processedSegmentBuffer['g_0'].length % 2 === 0;
-  let endpointCount = 0;
+
+  let isBufferZoneOpened: boolean = false;
+  let isBufferZoneClosed: boolean = false;
 
   let groupedItems: { [key: string]: Array<integratedStopItem> } = {};
   let groupQuantity: number = 0;
@@ -196,13 +227,18 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     }
     item.progress = progress;
 
-    if (multipleEndpoints) {
-      if (item.segmentBuffer) {
-        endpointCount += 1;
+    if (item.segmentBuffer.isStartingPoint) {
+      isBufferZoneOpened = true;
+    }
+
+    if (item.segmentBuffer.isEndingPoint) {
+      if (isBufferZoneOpened) {
+        isBufferZoneClosed = true;
       }
-      if (endpointCount % 2 === 1) {
-        item.segmentBuffer = true;
-      }
+    }
+
+    if (isBufferZoneOpened && !isBufferZoneClosed) {
+      item.segmentBuffer.isSegmentBuffer = true;
     }
 
     if (!(nearestPosition === null)) {

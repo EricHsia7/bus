@@ -17,7 +17,7 @@ export interface SegmentBufferItem {
 
 export type SegmentBuffers = Array<SegmentBufferItem>;
 
-export type SimplifiedSegmentBufferItem = Array<BufferZoneItem>;
+export type SimplifiedSegmentBufferItem = { [key: string]: Array<BufferZoneItem> };
 
 export type SimplifiedSegmentBuffer = { [key: string]: SimplifiedSegmentBufferItem };
 
@@ -82,7 +82,7 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
   }
 
   var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = 'bus_segment_buffers_v3_cache';
+  var cache_key = 'bus_segment_buffers_v4_cache';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();

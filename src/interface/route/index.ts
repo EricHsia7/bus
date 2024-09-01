@@ -284,8 +284,8 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       currentItemSlide.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
-      thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
-      thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer);
+      thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer.isSegmentBuffer);
+      thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer.isSegmentBuffer);
     }
     function updateName(thisItemElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisItemElement, '.css_name').innerText = thisItem.name;
@@ -360,7 +360,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
         updateOverlappingRoutes(thisItemElement, thisItem);
       }
-      if (!(previousItem.segmentBuffer === thisItem.segmentBuffer)) {
+      if (!compareThings(previousItem.segmentBuffer, thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.nearest === thisItem.nearest)) {

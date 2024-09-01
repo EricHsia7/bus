@@ -6,12 +6,20 @@ self.onmessage = function (e) {
 };
 
 function simplifySegmentBuffers_worker(array: SegmentBuffers): SimplifiedSegmentBuffer {
-  let result = {};
+  let result: SimplifiedSegmentBuffer = {};
   for (const item of array) {
     if (item.hasOwnProperty('BufferZones')) {
       const routeKey = `r_${item.RouteID}`;
-      result[routeKey] = item.BufferZones;
-    } 
+      result[routeKey] = {};
+      const thisBufferZones = item.BufferZones;
+      for (const thisBufferZone of thisBufferZones) {
+        const groupKey = `g_${thisBufferZone.Direction}`;
+        if (!result[routeKey].hasOwnProperty(groupKey)) {
+          result[routeKey][groupKey] = [];
+        }
+        result[routeKey][groupKey].push(thisBufferZone);
+      }
+    }
   }
   return result;
 }
