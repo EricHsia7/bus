@@ -76,13 +76,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
-  console.log(SegmentBuffers);
   if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
     console.log('hasSegmentBuffers');
     hasSegmentBuffers = true;
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
-  console.log(hasSegmentBuffers, thisSegmentBuffers);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
 
@@ -173,13 +171,19 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let isEndingPoint: boolean = false;
       let useReversed: boolean = false;
       if (hasSegmentBuffers) {
+        const groupKey = `g_${item.GoBack}`;
+        console.log(integratedStopItem.goBack, item.GoBack);
         let segmentBufferGroup = [];
-        if (!thisSegmentBuffers.hasOwnProperty(`g_${item.GoBack}`) && item.GoBack === '1') {
-          useReversed = true;
-          segmentBufferGroup = thisSegmentBuffers['g_0'];
+
+        if (thisSegmentBuffers.hasOwnProperty(groupKey)) {
+          segmentBufferGroup = thisSegmentBuffers[groupKey];
         } else {
-          segmentBufferGroup = thisSegmentBuffers[`g_${item.GoBack}`];
+          if (item.GoBack === '1') {
+            useReversed = true;
+            segmentBufferGroup = thisSegmentBuffers['g_0'];
+          }
         }
+
         for (const thisBufferZone of segmentBufferGroup) {
           if (thisBufferZone.OriginStopID === item.StopID || thisBufferZone.DestinationStopID === item.StopID) {
             isSegmentBuffer = true;
