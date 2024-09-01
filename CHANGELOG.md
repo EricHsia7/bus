@@ -43,7 +43,7 @@
 - Version 2 [\#15](https://github.com/EricHsia7/bus/pull/15) ([EricHsia7](https://github.com/EricHsia7))
 - Add search page [\#14](https://github.com/EricHsia7/bus/pull/14) ([EricHsia7](https://github.com/EricHsia7))
 - Add home page [\#13](https://github.com/EricHsia7/bus/pull/13) ([EricHsia7](https://github.com/EricHsia7))
-- bus stops data and data integration performance optimization [\#11](https://github.com/EricHsia7/bus/pull/11) ([EricHsia7](https://github.com/EricHsia7))
+- Optimize integration performance for bus stops data [\#11](https://github.com/EricHsia7/bus/pull/11) ([EricHsia7](https://github.com/EricHsia7))
 - Dynamic color [\#10](https://github.com/EricHsia7/bus/pull/10) ([EricHsia7](https://github.com/EricHsia7))
 - Path buffer group [\#9](https://github.com/EricHsia7/bus/pull/9) ([EricHsia7](https://github.com/EricHsia7))
 - Path buffer [\#8](https://github.com/EricHsia7/bus/pull/8) ([EricHsia7](https://github.com/EricHsia7))
@@ -53,6 +53,7 @@
 
 **Merged pull requests:**
 
+- Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
 - Update the dependencies [\#58](https://github.com/EricHsia7/bus/pull/58) ([EricHsia7](https://github.com/EricHsia7))
 - Simplify and optimize code  [\#49](https://github.com/EricHsia7/bus/pull/49) ([EricHsia7](https://github.com/EricHsia7))
 - Implement css mangler [\#45](https://github.com/EricHsia7/bus/pull/45) ([EricHsia7](https://github.com/EricHsia7))
