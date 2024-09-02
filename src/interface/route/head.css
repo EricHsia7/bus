@@ -1,3 +1,9 @@
+@property --b-cssvar-route-tab-width {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 30;
+}
+
 .css_route_field .css_route_head {
   position: absolute;
   top: 0px;
