@@ -16,18 +16,6 @@
   initial-value: 2;
 }
 
-@property --b-cssvar-route-percentage {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
-
-@property --b-cssvar-route-tab-index {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
-}
-
 .css_route_field {
   position: fixed;
   top: 0px;

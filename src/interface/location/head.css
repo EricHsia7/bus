@@ -1,10 +1,12 @@
-@property --b-cssvar-location-group-quantity {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 2;
-}
+
 
 @property --b-cssvar-location-tab-width {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 30px;
+}
+
+@property --b-cssvar-location-tab-line-width {
   syntax: '<number>';
   inherits: false;
   initial-value: 30;
@@ -146,7 +148,7 @@
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-width) / 30));
+  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-line-width) / 30));
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box {

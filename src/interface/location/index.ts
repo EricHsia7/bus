@@ -76,8 +76,8 @@ export function ResizeLocationField(): void {
   Field.style.setProperty('--b-cssvar-location-field-height', `${FieldHeight}px`);
 }
 
-function updateLocationCSS(groupQuantity: number, offset: number, tabWidth: number, percentage: number): void {
-  documentQuerySelector('.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line').style.setProperty('--b-cssvar-location-tab-width', tabWidth);
+function updateLocationCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
+  documentQuerySelector('.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line').style.setProperty('--b-cssvar-location-tab-line-width', tab_line_width);
   documentQuerySelector('.css_location_field .css_location_groups').style.setProperty('--b-cssvar-location-group-quantity', groupQuantity);
   documentQuerySelector('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray').style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset}px`);
   documentQuerySelector('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray').style.setProperty('--b-cssvar-location-percentage', percentage);

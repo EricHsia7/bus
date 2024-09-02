@@ -1,7 +1,25 @@
-@property --b-cssvar-route-tab-width {
+@property --b-cssvar-route-percentage {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --b-cssvar-route-tab-index {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --b-cssvar-route-tab-line-width {
   syntax: '<number>';
   inherits: true;
   initial-value: 30;
+}
+
+@property --b-cssvar-route-tab-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 30px;
 }
 
 .css_route_field .css_route_head {
@@ -146,7 +164,7 @@
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-route-tab-width) / 30));
+  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-route-tab-line-width) / 30));
 }
 
 /* skeleton screen: true */
