@@ -101,7 +101,7 @@
   width: auto;
   height: 40px;
   display: inline-block;
-  transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
+  transform: translateX(var(--b-cssvar-route-tabs-tray-offset));
 }
 
 .css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab {
