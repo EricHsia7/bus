@@ -10,7 +10,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
-const SriPlugin = require('webpack-subresource-integrity');
+const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
           }
         ]
       }),
-      new SriPlugin({
+      new SubresourceIntegrityPlugin({
         hashFuncNames: ['sha256', 'sha384'], // Hash algorithms you want to use
         enabled: true
       }),
