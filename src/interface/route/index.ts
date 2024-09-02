@@ -53,6 +53,7 @@ export function initializeRouteSliding(): void {
     var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
     var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
+    console.log(initialSize, targetSize, tabWidth, offset, routeSliding_initialIndex);
     updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
