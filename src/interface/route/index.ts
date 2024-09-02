@@ -33,6 +33,8 @@ var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array = [];
 
+let tabPadding: number = 20;
+
 export function initializeRouteSliding(): void {
   const routeGroups = documentQuerySelector('.css_route_field .css_route_groups');
 
@@ -53,8 +55,7 @@ export function initializeRouteSliding(): void {
     var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
     var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
-    console.log(initialSize, targetSize, tabWidth, offset, routeSliding_initialIndex);
-    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth, currentIndex);
+    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
       routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
@@ -79,11 +80,11 @@ export function ResizeRouteField(): void {
   Field.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
 
-function updateRouteCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
+function updateRouteCSS(groupQuantity: number, offset: number, tabWidth: number, percentage: number): void {
   const Field = documentQuerySelector('.css_route_field');
   const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
   Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
-  Field.style.setProperty(' --b-cssvar-route-tab-width', tab_line_width);
+  Field.style.setProperty(' --b-cssvar-route-tab-width', tabWidth);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset}px`);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage);
 }
@@ -354,7 +355,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
+    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
@@ -363,7 +364,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
   var offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
-    updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width, routeSliding_initialIndex);
+    updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);
