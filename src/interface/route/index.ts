@@ -84,7 +84,7 @@ function updateRouteCSS(groupQuantity: number, offset: number, tabWidth: number,
   const Field = documentQuerySelector('.css_route_field');
   const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
   Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
-  Field.style.setProperty(' --b-cssvar-route-tab-width', tabWidth);
+  Field.style.setProperty('--b-cssvar-route-tab-width', tabWidth);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset}px`);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage);
 }
