@@ -10,6 +10,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
+const SriPlugin = require('webpack-subresource-integrity');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -39,16 +40,6 @@ async function createTextFile(filePath, data, encoding = 'utf-8') {
   } catch (err) {
     throw new Error(`Error writing to file: ${err}`);
   }
-}
-
-function generateRandomString(length) {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    result += charset[randomIndex];
-  }
-  return result;
 }
 
 const workflowRunNumber = parseInt(execSync('echo $GITHUB_RUN_NUMBER').toString().trim());
@@ -108,6 +99,10 @@ module.exports = (env, argv) => {
           }
         ]
       }),
+      new SriPlugin({
+        hashFuncNames: ['sha256', 'sha384'], // Hash algorithms you want to use
+        enabled: true
+      }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
         reportFilename: 'dist/bundle-analysis-report.html' // Output file path and name
@@ -120,6 +115,7 @@ module.exports = (env, argv) => {
       filename: isProduction ? '[contenthash].min.js' : 'index.js', // Output bundle filename
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
+      crossOriginLoading: 'anonymous', // Required for SRI
       library: {
         name: 'bus',
         type: 'umd',
