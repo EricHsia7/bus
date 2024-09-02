@@ -19,7 +19,6 @@ let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 let routeSliding_lineHeight: number = 2;
 let routeSliding_lineColor: string = '#333';
-let routeSliding_canvasScale: number = 1;
 
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
 let routeRefreshTimer_minInterval: number = 5 * 1000;
@@ -53,19 +52,16 @@ export function initializeRouteSliding(): void {
     }
     var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
     var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
-    var lineWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(cureentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
-    updateRouteCSS(routeSliding_groupQuantity, offset, lineWidth, currentIndex);
+    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
       routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
     }
   });
-
-  var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-  mediaQueryList.addListener(updateRouteLineColor);
-  updateRouteLineColor(mediaQueryList);
 }
 
 function queryRouteFieldSize(): FieldSize {
@@ -91,44 +87,6 @@ function updateRouteCSS(groupQuantity: number, offset: number, tab_line_width: n
   Field.style.setProperty(' --b-cssvar-route-tab-width', tab_line_width);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset}px`);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage);
-}
-
-export function ResizeRouteCanvas() {
-  const FieldSize = queryRouteFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
-  const canvasScale = Math.round(Math.log10(window.devicePixelRatio) / 0.15904041824);
-  // Math.log(Math.pow(3, 1 / 3) ≈ 0.15904041824
-
-  const canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
-  canvas.width = FieldWidth * canvasScale;
-  canvas.height = routeSliding_lineHeight * canvasScale;
-  routeSliding_fieldWidth = FieldWidth;
-  routeSliding_fieldHeight = FieldHeight;
-  routeSliding_canvasScale = canvasScale;
-}
-
-function updateRouteCanvas(groupQuantity: number, percentage: number, width: number): void {
-  var canvas: HTMLCanvasElement = documentQuerySelector('.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
-  var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-  ctx.fillStyle = routeSliding_lineColor;
-  window.requestAnimationFrame(function () {
-    var x: number = (routeSliding_fieldWidth / groupQuantity) * percentage + (routeSliding_fieldWidth / groupQuantity - width) / 2;
-    ctx.fillRect(x * routeSliding_canvasScale, 0, routeSliding_fieldWidth * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
-    ctx.clearRect(0, 0, x * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
-    ctx.clearRect((x + width) * routeSliding_canvasScale, 0, (routeSliding_fieldWidth - (x + width)) * routeSliding_canvasScale, routeSliding_lineHeight * routeSliding_canvasScale);
-  });
-}
-
-function updateRouteLineColor(e): void {
-  if (e.matches) {
-    routeSliding_lineColor = '#f9f9fb';
-  } else {
-    routeSliding_lineColor = '#333';
-  }
-  if (!routeSliding_sliding) {
-    updateRouteCanvas(routeSliding_groupQuantity, routeSliding_initialIndex, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`]?.width || 1);
-  }
 }
 
 function updateUpdateTimer(): void {
