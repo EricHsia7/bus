@@ -360,7 +360,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     };
     cumulativeOffset += width;
   }
-  var offset = locationSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
+  var offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width, routeSliding_initialIndex);
   }
