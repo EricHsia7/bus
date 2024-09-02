@@ -293,10 +293,10 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
+    var width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
     locationSliding_groupStyles[`g_${i}`] = {
       width: width,
-      offset: cumulativeOffset
+      offset: cumulativeOffset + tabPadding
     };
     cumulativeOffset += width;
   }

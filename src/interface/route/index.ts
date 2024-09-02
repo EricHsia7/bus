@@ -355,10 +355,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
+    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
-      offset: cumulativeOffset
+      offset: cumulativeOffset + tabPadding
     };
     cumulativeOffset += width;
   }
