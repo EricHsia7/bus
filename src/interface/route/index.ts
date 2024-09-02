@@ -349,8 +349,8 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   var groupedItems = integration.groupedItems;
 
   routeSliding_groupQuantity = groupQuantity;
-  locationSliding_fieldWidth = FieldWidth;
-  locationSliding_fieldHeight = FieldHeight;
+  routeSliding_fieldWidth = FieldWidth;
+  routeSliding_fieldHeight = FieldHeight;
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
