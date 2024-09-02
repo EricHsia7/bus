@@ -42,18 +42,18 @@ export function initializeLocationSliding(): void {
 
   element.addEventListener('scroll', function (event) {
     locationSliding_sliding = true;
-    var cureentIndex = event.target.scrollLeft / locationSliding_fieldWidth;
-    if (cureentIndex > locationSliding_initialIndex) {
+    var currentIndex = event.target.scrollLeft / locationSliding_fieldWidth;
+    if (currentIndex > locationSliding_initialIndex) {
       locationSliding_targetIndex = locationSliding_initialIndex + 1;
     } else {
       locationSliding_targetIndex = locationSliding_initialIndex - 1;
     }
     var initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
     var targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
-    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(cureentIndex - locationSliding_initialIndex);
-    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(cureentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
-    updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, cureentIndex);
-    if (cureentIndex === locationSliding_targetIndex) {
+    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - locationSliding_initialIndex);
+    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+    updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+    if (currentIndex === locationSliding_targetIndex) {
       locationSliding_initialIndex = Math.round(element.scrollLeft / locationSliding_fieldWidth);
       locationSliding_sliding = false;
     }

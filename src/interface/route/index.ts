@@ -53,7 +53,7 @@ export function initializeRouteSliding(): void {
     var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0 };
     var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0 };
     var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(cureentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
     updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth, currentIndex);
 
