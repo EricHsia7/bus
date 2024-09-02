@@ -55,7 +55,7 @@ export function initializeRouteSliding(): void {
     var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
     var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
-    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
       routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
@@ -364,7 +364,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
   var offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
-    updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
+    updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width, routeSliding_initialIndex);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', skeletonScreen);

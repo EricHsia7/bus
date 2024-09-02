@@ -140,7 +140,7 @@
   width: 30px;
   height: 2px;
   border-radius: 0px;
-  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-line-width) / 30));
+  transform: translateX(-50%) scaleX(calc((var(--b-cssvar-route-tab-width) - 20) / 30));
 }
 
 /* skeleton screen: true */
