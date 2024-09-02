@@ -82,7 +82,7 @@ export function ResizeRouteField(): void {
 
 function updateRouteCSS(groupQuantity: number, offset: number, tab_line_width: number, percentage: number): void {
   const Field = documentQuerySelector('.css_route_field');
-  const groupsTabsTrayElement = elementQuerySelector(Field, '.css_location_head .css_location_group_tabs .css_location_group_tabs_tray');
+  const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
   Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
   Field.style.setProperty(' --b-cssvar-route-tab-width', tab_line_width);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset}px`);
