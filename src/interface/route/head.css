@@ -116,7 +116,7 @@
   user-select: none;
   -webkit-user-select: none;
   vertical-align: top;
-  width: var(--b-cssvar-location-tab-width);
+  width: var(--b-cssvar-route-tab-width);
   height: 40px;
   position: relative;
   font-weight: 400;
