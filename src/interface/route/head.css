@@ -75,8 +75,37 @@
   grid-template-columns: repeat(var(--b-cssvar-route-group-quantity), 1fr);
 }
 
-.css_route_field .css_route_head .css_route_group_tabs .css_route_group_tab {
-  display: flex;
+.css_route_field .css_route_head .css_route_group_tabs {
+  position: absolute;
+  bottom: 5px;
+  left: 0px;
+  width: 100%;
+  height: 40px;
+  mask-image: linear-gradient(90deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.7) 15%,
+      rgba(0, 0, 0, 1) 35%,
+      rgba(0, 0, 0, 1) 50%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.7) 85%,
+      rgba(0, 0, 0, 0.3) 100%);
+  mask-repeat: no-repeat;
+}
+
+.css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray {
+  white-space: nowrap;
+  word-break: keep-all;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: auto;
+  height: 40px;
+  display: inline-block;
+  transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
+}
+
+.css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 17px;
@@ -86,6 +115,32 @@
   color: var(--b-cssvar-333333);
   user-select: none;
   -webkit-user-select: none;
+  vertical-align: top;
+  width: var(--b-cssvar-location-tab-width);
+  height: 40px;
+  position: relative;
+  font-weight: 400;
+  --b-cssvar-route-percentage: inherit;
+  opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-route-percentage) - var(--b-cssvar-route-tab-index))), 1);
+}
+
+.css_route_field .css_route_head .css_route_group_tab_line_track {
+  position: absolute;
+  left: 0px;
+  bottom: 1.2px;
+  width: 100%;
+  height: 2px;
+}
+
+.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
+  position: absolute;
+  left: 50%;
+  top: 0px;
+  background: var(--b-cssvar-333333);
+  width: 30px;
+  height: 2px;
+  border-radius: 0px;
+  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-line-width) / 30));
 }
 
 /* skeleton screen: true */
