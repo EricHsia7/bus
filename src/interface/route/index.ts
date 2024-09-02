@@ -85,7 +85,7 @@ function updateRouteCSS(groupQuantity: number, offset: number, tab_line_width: n
   const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
   Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
   Field.style.setProperty(' --b-cssvar-route-tab-width', tab_line_width);
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset}px`);
+  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset}px`);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage);
 }
 
@@ -353,7 +353,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
 
   var cumulativeOffset = 0;
   for (var i = 0; i < groupQuantity; i++) {
-    let width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
+    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans", sans-serif`, 100, 'normal', 'none', '1.2');
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
