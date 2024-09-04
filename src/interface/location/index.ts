@@ -459,6 +459,7 @@ export function streamLocation(): void {
 
 export function openLocation(hash: string): void {
   currentHashSet_hash = hash;
+  locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'true');
   setUpLocationFieldSkeletonScreen(Field);
