@@ -490,6 +490,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
+  documentQuerySelector('.css_route_field .css_route_groups').scrollLeft = 0;
   var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'true');
   setUpRouteFieldSkeletonScreen(Field);
