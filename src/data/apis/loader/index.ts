@@ -1,5 +1,5 @@
-import { timeStampToNumber } from '../../tools/time';
-import { recordRequest } from '../analytics/data-usage';
+import { timeStampToNumber } from '../../../tools/time';
+import { recordRequest } from '../../analytics/data-usage';
 
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
@@ -62,7 +62,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = pakoInflate(buffer); // Inflate and convert to string using pako
+  const inflatedData = await pakoInflate(buffer); // Inflate and convert to string using pako
   if (fileType === 'json') {
     return JSON.parse(inflatedData);
   }
