@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader/index';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 import { lfSetItem, lfGetItem } from '../../storage/index';
 
 export interface StopItem {
@@ -37,13 +37,13 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
-    worker.onmessage = function (event) {
-      resolve(event.data); // Resolve the promise with the worker's result
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
     };
 
-    worker.onerror = function (event) {
-      reject(event.message); // Reject the promise on error
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
       worker.terminate(); // Terminate the worker if an error occurs
     };
 

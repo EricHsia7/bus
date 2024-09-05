@@ -1,9 +1,9 @@
 import { Stop, SimplifiedStop } from './index';
 
-self.addEventListener('message', function (event) {
-  const result = simplifyStop_worker(event.data);
+self.onmessage = function (e) {
+  const result = simplifyStop_worker(e.data);
   self.postMessage(result); // Send the result back to the main thread
-});
+};
 
 function simplifyStop_worker(array: Stop): SimplifiedStop {
   var result: SimplifiedStop = {};

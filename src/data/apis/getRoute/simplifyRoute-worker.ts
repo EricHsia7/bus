@@ -1,9 +1,9 @@
 import { Route, SimplifiedRoute } from './index';
 
-self.addEventListener('message', function (event) {
-  const result = simplifyRoute_worker(event.data);
+self.onmessage = function (e) {
+  const result = simplifyRoute_worker(e.data);
   self.postMessage(result); // Send the result back to the main thread
-});
+};
 
 function simplifyRoute_worker(Route: Route): SimplifiedRoute {
   var result = {};

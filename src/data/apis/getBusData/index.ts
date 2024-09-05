@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataUpdateTime } from '../loader/index';
+import { fetchData, setDataUpdateTime } from '../loader';
 
 interface BusDataItem {
   ProviderID: number;

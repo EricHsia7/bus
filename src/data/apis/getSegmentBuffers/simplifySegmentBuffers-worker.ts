@@ -1,9 +1,9 @@
 import { SegmentBuffers, SimplifiedSegmentBuffer } from './index';
 
-self.addEventListener('message', function (event) {
-  const result = simplifySegmentBuffers_worker(event.data);
+self.onmessage = function (e) {
+  const result = simplifySegmentBuffers_worker(e.data);
   self.postMessage(result); // Send the result back to the main thread
-});
+};
 
 function simplifySegmentBuffers_worker(array: SegmentBuffers): SimplifiedSegmentBuffer {
   let result: SimplifiedSegmentBuffer = {};
