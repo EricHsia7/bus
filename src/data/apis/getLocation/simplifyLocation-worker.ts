@@ -1,10 +1,10 @@
 import { convertToUnitVector } from '../../../tools/index';
 import { Location, SimplifiedLocation } from './index';
 
-self.onmessage = function (event) {
+self.addEventListener('message', function (event) {
   const result = simplifyLocation_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
-};
+});
 
 function simplifyLocation_worker(Location: Location): SimplifiedLocation {
   let locationsByRoute = {};

@@ -1,9 +1,9 @@
 import { SegmentBuffers } from './index';
 
-self.onmessage = function (event) {
+self.addEventListener('message', function (event) {
   const result = extractSegmentBuffers_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
-};
+});
 
 function extractSegmentBuffers_worker(xml: string): SegmentBuffers {
   const startingTagRegex = /^\s*<([a-z_]*)>/im;

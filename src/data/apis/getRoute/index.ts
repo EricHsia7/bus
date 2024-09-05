@@ -67,15 +67,15 @@ async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
-    worker.onmessage = function (event) {
+    worker.addEventListener('message', function (event) {
       resolve(event.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
-    };
+    });
 
-    worker.onerror = function (event) {
+    worker.addEventListener('error', function (event) {
       reject(event.message); // Reject the promise on error
       worker.terminate(); // Terminate the worker if an error occurs
-    };
+    });
 
     worker.postMessage(Route); // Send data to the worker
   });
