@@ -13,16 +13,12 @@ async function pakoInflate(buffer: any): Promise<string> {
     sharedWorker.port.start();
 
     // Listen for the result from the worker
-    sharedWorker.port.addEventListener(
-      'message',
-      function (event) {
-        // Resolve the promise with the worker's result
-        resolve(event.data);
-        // Close the port once the result is received
-        sharedWorker.port.close();
-      },
-      { once: true }
-    );
+    sharedWorker.port.addEventListener('message', function (event) {
+      // Resolve the promise with the worker's result
+      resolve(event.data);
+      // Close the port once the result is received
+      sharedWorker.port.close();
+    });
 
     // Send data to the worker
     sharedWorker.port.postMessage(buffer);
