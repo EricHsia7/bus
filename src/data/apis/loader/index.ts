@@ -17,7 +17,7 @@ async function pakoInflate(buffer: any): Promise<string> {
       resolve(event.data); // Resolve the promise with the worker's result
 
       // Close the port once the result is received
-      worker.port.close();
+      sharedWorker.port.close();
     };
 
     // Send data to the worker
