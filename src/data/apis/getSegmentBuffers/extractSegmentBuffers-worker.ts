@@ -1,7 +1,7 @@
 import { SegmentBuffers } from './index';
 
-self.onmessage = function (e) {
-  const result = extractSegmentBuffers_worker(e.data);
+self.onmessage = function (event) {
+  const result = extractSegmentBuffers_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 

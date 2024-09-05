@@ -2,8 +2,8 @@ import { SimplifiedLocation, MergedLocation } from './index';
 import { md5 } from '../../../tools/index';
 import { mergeAddressesIntoOne } from '../../../tools/address';
 
-self.onmessage = function (e) {
-  const result = mergeLocationByName_worker(e.data);
+self.onmessage = function (event) {
+  const result = mergeLocationByName_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 

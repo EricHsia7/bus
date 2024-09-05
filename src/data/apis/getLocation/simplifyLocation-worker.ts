@@ -1,8 +1,8 @@
 import { convertToUnitVector } from '../../../tools/index';
 import { Location, SimplifiedLocation } from './index';
 
-self.onmessage = function (e) {
-  const result = simplifyLocation_worker(e.data);
+self.onmessage = function (event) {
+  const result = simplifyLocation_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 

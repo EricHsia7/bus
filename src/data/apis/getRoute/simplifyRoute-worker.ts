@@ -1,7 +1,7 @@
 import { Route, SimplifiedRoute } from './index';
 
-self.onmessage = function (e) {
-  const result = simplifyRoute_worker(e.data);
+self.onmessage = function (event) {
+  const result = simplifyRoute_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 

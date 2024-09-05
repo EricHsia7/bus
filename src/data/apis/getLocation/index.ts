@@ -61,13 +61,13 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
-    worker.onmessage = function (e) {
-      resolve(e.data); // Resolve the promise with the worker's result
+    worker.onmessage = function (event) {
+      resolve(event.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
     };
 
-    worker.onerror = function (e) {
-      reject(e.message); // Reject the promise on error
+    worker.onerror = function (event) {
+      reject(event.message); // Reject the promise on error
       worker.terminate(); // Terminate the worker if an error occurs
     };
 
@@ -82,13 +82,13 @@ async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLo
 
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
-    worker.onmessage = function (e) {
-      resolve(e.data); // Resolve the promise with the worker's result
+    worker.onmessage = function (event) {
+      resolve(event.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
     };
 
-    worker.onerror = function (e) {
-      reject(e.message); // Reject the promise on error
+    worker.onerror = function (event) {
+      reject(event.message); // Reject the promise on error
       worker.terminate(); // Terminate the worker if an error occurs
     };
 

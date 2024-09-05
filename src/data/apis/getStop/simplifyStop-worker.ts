@@ -1,7 +1,7 @@
 import { Stop, SimplifiedStop } from './index';
 
-self.onmessage = function (e) {
-  const result = simplifyStop_worker(e.data);
+self.onmessage = function (event) {
+  const result = simplifyStop_worker(event.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
