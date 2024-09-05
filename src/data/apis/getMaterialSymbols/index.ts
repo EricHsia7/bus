@@ -1,4 +1,4 @@
-import { fetchData, setDataReceivingProgress } from '../loader';
+import { fetchData, setDataReceivingProgress } from '../loader/index';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 

@@ -1,6 +1,6 @@
 import { integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
-import { getDataReceivingProgress } from '../../data/apis/loader';
+import { getDataReceivingProgress } from '../../data/apis/loader/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings, getTextWidth, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';

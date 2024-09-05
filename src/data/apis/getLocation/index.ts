@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader/index';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 
 export interface LocationItem {

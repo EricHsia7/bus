@@ -1,6 +1,6 @@
 import { integrateLocation } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
-import { getDataReceivingProgress } from '../../data/apis/loader';
+import { getDataReceivingProgress } from '../../data/apis/loader/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';

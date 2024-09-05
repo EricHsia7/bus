@@ -5,7 +5,7 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { compareThings, generateIdentifier } from '../../../tools/index';
-import { getDataReceivingProgress } from '../../../data/apis/loader';
+import { getDataReceivingProgress } from '../../../data/apis/loader/index';
 
 let previousIntegration = {}
 

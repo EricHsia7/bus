@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataUpdateTime } from '../loader';
+import { fetchData, setDataUpdateTime } from '../loader/index';
 
 export interface EstimateTimeItem {
   RouteID: number;

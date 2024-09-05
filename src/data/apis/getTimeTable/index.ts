@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader/index';
 import { lfSetItem, lfGetItem } from '../../storage/index';
 
 let TimetableAPIVariableCache_available: boolean = false;
