@@ -4,7 +4,7 @@
   left: 0px;
   width: 100%;
   height: 100%;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-normal);
   display: none;
 }
 
@@ -20,7 +20,7 @@
   height: 55px;
   border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-r), var(--b-cssvar-ffffff-g), var(--b-cssvar-ffffff-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -100,7 +100,7 @@
   overscroll-behavior: contain;
   user-select: none;
   -webkit-user-select: none;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-normal);
 }
 
 .css_search_field .css_search_body .css_search_results::-webkit-scrollbar {

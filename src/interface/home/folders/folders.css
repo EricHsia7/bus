@@ -89,14 +89,14 @@
   width: calc(100% - 20px);
   left: 10px;
   display: inline-block;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
 .css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;

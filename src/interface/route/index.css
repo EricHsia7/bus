@@ -5,7 +5,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[skeleton-screen="true"] .css_thread,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box[skeleton-screen="true"] .css_thread_status {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-r), var(--b-cssvar-f9f9fb-g), var(--b-cssvar-f9f9fb-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;
