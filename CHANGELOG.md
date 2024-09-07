@@ -54,6 +54,7 @@
 
 **Merged pull requests:**
 
+- Improve dark mode [\#63](https://github.com/EricHsia7/bus/pull/63) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
 - Update the dependencies [\#58](https://github.com/EricHsia7/bus/pull/58) ([EricHsia7](https://github.com/EricHsia7))
 - Simplify and optimize code  [\#49](https://github.com/EricHsia7/bus/pull/49) ([EricHsia7](https://github.com/EricHsia7))
