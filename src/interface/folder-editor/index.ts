@@ -22,7 +22,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
       break;
     case 'route':
       icon = 'route';
-      context = `${item.endPoints.departure} \u21CC ${item.endPoints.destination}`;
+      context = `${item.endPoints.departure} \u2194 ${item.endPoints.destination}`;
       main = item.name;
       break;
     case 'bus':

@@ -189,7 +189,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
           context = `${thisItem.route ? thisItem.route.name : ''} - 往${thisItem.route ? [thisItem.route.endPoints.destination, thisItem.route.endPoints.departure, ''][thisItem.direction ? thisItem.direction : 0] : ''}`;
           break;
         case 'route':
-          context = `${thisItem.endPoints.departure} \u21CC ${thisItem.endPoints.destination}`;
+          context = `${thisItem.endPoints.departure} \u2194 ${thisItem.endPoints.destination}`;
           break;
         case 'bus':
           context = thisItem.currentRoute.name; // TODO: integration
