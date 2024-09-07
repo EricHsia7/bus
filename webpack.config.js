@@ -11,6 +11,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
+const postcssCustomProperties = require('postcss-custom-properties');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -148,7 +149,22 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css|less?$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'postcss-loader', // Processes the CSS
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    postcssCustomProperties({
+                      preserve: false // Replace the variables with static values
+                    })
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     },
