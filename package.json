@@ -47,6 +47,7 @@
     "localforage": "^1.10.0",
     "fuse.js": "^7.0.0",
     "fontfaceobserver": "^2.3.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "preload-webpack-plugin": "^2.3.0"
   }
 }
