@@ -102,7 +102,7 @@
   width: 85px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-medium);
+  border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
