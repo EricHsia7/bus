@@ -332,7 +332,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_main {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-out-r), var(--b-cssvar-f9f9fb-out-g), var(--b-cssvar-f9f9fb-out-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-blocky-r), var(--b-cssvar-f9f9fb-blocky-g), var(--b-cssvar-f9f9fb-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;

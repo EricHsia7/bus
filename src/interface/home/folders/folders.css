@@ -89,7 +89,7 @@
   width: calc(100% - 20px);
   left: 10px;
   display: inline-block;
-  background: var(--b-cssvar-ffffff-normal);
+  background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
