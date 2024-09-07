@@ -148,12 +148,12 @@
   background: var(--b-cssvar-aeaeb2);
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(2) {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(4) {
   top: 3px;
   left: 29.5px;
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(4) {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(5) {
   top: 3px;
   left: 59.5px;
 }

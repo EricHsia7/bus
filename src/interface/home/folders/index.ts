@@ -32,7 +32,7 @@ function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_home_folder_item');
   element.setAttribute('type', 'stop');
-  element.innerHTML = `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_capsule_separator"></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div></div>`;
+  element.innerHTML = `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div><div class="css_home_folder_item_capsule_separator"></div></div>`;
   return {
     element: element,
     id: null
