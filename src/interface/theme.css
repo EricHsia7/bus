@@ -116,15 +116,15 @@
     --b-cssvar-main-color-opacity-c: 0.28;
     --b-cssvar-main-color-opacity-d: 0.15;
 
-    --b-cssvar-ffffff: #050506;
-    --b-cssvar-ffffff-r: 5;
-    --b-cssvar-ffffff-g: 5;
-    --b-cssvar-ffffff-b: 6;
+    --b-cssvar-ffffff: #0e0e11;
+    --b-cssvar-ffffff-r: 14;
+    --b-cssvar-ffffff-g: 14;
+    --b-cssvar-ffffff-b: 17;
 
-    --b-cssvar-f9f9fb: #0e0e11;
-    --b-cssvar-f9f9fb-r: 14;
-    --b-cssvar-f9f9fb-g: 14;
-    --b-cssvar-f9f9fb-b: 17;
+    --b-cssvar-f9f9fb: #050506;
+    --b-cssvar-f9f9fb-r: 5;
+    --b-cssvar-f9f9fb-g: 5;
+    --b-cssvar-f9f9fb-b: 6;
 
     --b-cssvar-f9f9fb-inflected-to-segment-buffer: #11161A;
     --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 17;
