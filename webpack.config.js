@@ -11,7 +11,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
-const postcssCustomProperties = require('postcss-custom-properties');
 
 async function makeDirectory(path) {
   // Check if the path already exists
