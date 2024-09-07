@@ -83,6 +83,13 @@ module.exports = (env, argv) => {
         template: './src/index.html', // Path to your custom HTML template file
         inject: 'head',
         minify: {
+          collapseWhitespace: true,
+          keepClosingSlash: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: false,
+          removeStyleLinkTypeAttributes: false,
+          useShortDoctype: false,
           minifyJS: true // This option minifies inline JavaScript
         }
       }),
