@@ -149,22 +149,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css|less?$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: 'postcss-loader', // Processes the CSS
-              options: {
-                postcssOptions: {
-                  plugins: [
-                    postcssCustomProperties({
-                      preserve: false // Replace the variables with static values
-                    })
-                  ]
-                }
-              }
-            }
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
         }
       ]
     },
