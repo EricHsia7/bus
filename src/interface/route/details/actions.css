@@ -15,7 +15,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  background-color: var(--b-cssvar-ffffff);
+  background-color: var(--b-cssvar-ffffff-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
   vertical-align: top;
   user-select: none;

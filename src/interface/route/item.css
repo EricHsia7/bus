@@ -9,7 +9,7 @@
   user-select: none;
   transition: none;
   display: block;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-normal);
   overflow: hidden;
 }
 
@@ -234,7 +234,7 @@
 /* code: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_head .css_capsule .css_item_status .css_current_slide[code="2"] {
-  color: var(--b-cssvar-ffffff);
+  color: var(--b-cssvar-ffffff-normal);
   font-size: 13px;
   font-weight: 700;
   background: var(--b-cssvar-main-color);
@@ -483,7 +483,7 @@
   width: calc(var(--b-cssvar-route-field-width) * 0.6);
   height: 121px;
   box-sizing: border-box;
-  background: var(--b-cssvar-f9f9fb);
+  background: var(--b-cssvar-f9f9fb-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
   display: inline-flex;
   margin-right: 5px;

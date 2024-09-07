@@ -7,11 +7,11 @@
   padding: 10px;
   padding-bottom: calc(var(--b-cssvar-safe-area-bottom) + 10px);
   box-sizing: border-box;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-normal);
   user-select: none;
   -webkit-user-select: none;
   display: none;
-  border-top: 1px solid var(--b-cssvar-f9f9fb);
+  border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
 }
 
 .css_search_keyboard[displayed="true"] {
@@ -23,7 +23,7 @@
 
 .css_search_keyboard .css_search_keyboard_key {
   position: relative;
-  background: var(--b-cssvar-ffffff);
+  background: var(--b-cssvar-ffffff-normal);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +31,7 @@
   font-size: 20px;
   font-weight: 500;
   color: var(--b-cssvar-333333);
-  border: 1px solid var(--b-cssvar-f9f9fb);
+  border: 1px solid var(--b-cssvar-f9f9fb-normal);
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.1);
   user-select: none;
   -webkit-user-select: none;
