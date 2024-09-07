@@ -14,7 +14,7 @@
   font-size: 20px;
   font-weight: 400;
   background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
+  border-radius: var(--b-cssvar-border-radius-none);
 }
 
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input:read-only {

@@ -82,8 +82,11 @@
 
   --b-cssvar-f4252c-opacity-a: 0.15;
 
-  --b-cssvar-border-radius-default: 15px;
+  --b-cssvar-border-radius-large: 30px;
+  --b-cssvar-border-radius-normal: 15px;
+  --b-cssvar-border-radius-medium: 12px;
   --b-cssvar-border-radius-small: 8px;
+  --b-cssvar-border-radius-none: 0px;
 
   --b-cssvar-transition-duration: 0.32s;
 }

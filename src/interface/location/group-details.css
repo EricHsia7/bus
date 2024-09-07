@@ -16,7 +16,7 @@
   background: var(--b-cssvar-ffffff);
   border: 1px solid var(--b-cssvar-f9f9fb);
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 10px;
@@ -70,7 +70,7 @@
   height: 20px;
   width: 20px;
   left: 10px;
-  border-radius: 20px;
+  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon span.css_material_symbols_rounded {
@@ -81,5 +81,5 @@
   top: 5px;
   height: 20px;
   width: calc(100% - 40px - 10px);
-  border-radius: 20px;
+  border-radius: var(--b-cssvar-border-radius-normal);
 }

@@ -75,7 +75,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item[skeleton-screen="true"] .css_head .css_name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  border-radius: 30px;
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 /* head > capsule */
@@ -86,7 +86,7 @@
   width: 85px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
-  border-radius: 15px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -352,7 +352,7 @@
   overflow-y: hidden;
   white-space: nowrap;
   word-break: keep-all;
-  border-radius: 30px;
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_items_track .css_item .css_body .css_buttons::-webkit-scrollbar {
@@ -366,7 +366,7 @@
   display: inline-flex;
   background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
-  border-radius: 30px;
+  border-radius: var(--b-cssvar-border-radius-large);
   align-items: center;
   justify-content: center;
   padding: 0px 9px;
@@ -467,7 +467,7 @@
   scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;
-  border-radius: 15px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   display: none;
 }
 
@@ -484,7 +484,7 @@
   height: 121px;
   box-sizing: border-box;
   background: var(--b-cssvar-f9f9fb);
-  border-radius: 15px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   display: inline-flex;
   margin-right: 5px;
   scroll-snap-align: center;
@@ -660,7 +660,7 @@
   justify-content: center;
   align-items: center;
   background: var(--b-cssvar-ededf2);
-  border-radius: 30px;
+  border-radius: var(--b-cssvar-border-radius-large);
   color: var(--b-cssvar-333333);
 }
 

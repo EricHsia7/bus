@@ -16,7 +16,7 @@
   align-items: center;
   margin-right: 10px;
   background-color: var(--b-cssvar-ffffff);
-  border-radius: 20px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   vertical-align: top;
   user-select: none;
   -webkit-user-select: none;
