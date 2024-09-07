@@ -2,7 +2,6 @@
   "name": "@erichsia7/bus",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.min.js",
   "private": false,
   "scripts": {
     "build": "webpack --mode=production",
@@ -12,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/EricHsia7/bus.git"
   },
-  "keywords": ["typescript", "progressive", "web", "application"],
+  "keywords": ["bus", "typescript", "progressive", "web", "application"],
   "author": "EricHsia7",
   "bugs": {
     "url": "https://github.com/erichsia7/bus/issues"
@@ -47,7 +46,6 @@
     "localforage": "^1.10.0",
     "fuse.js": "^7.0.0",
     "fontfaceobserver": "^2.3.0",
-    "lodash": "^4.17.21",
-    "preload-webpack-plugin": "^2.3.0"
+    "lodash": "^4.17.21"
   }
 }

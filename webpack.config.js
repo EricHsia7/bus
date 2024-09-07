@@ -11,7 +11,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -82,17 +81,10 @@ module.exports = (env, argv) => {
       }),
       new HtmlWebpackPlugin({
         template: './src/index.html', // Path to your custom HTML template file
-        inject: 'head' // Specify 'body' to insert the script tags just before the closing </body> tag
-      }),
-      new PreloadWebpackPlugin({
-        rel: 'preload', // Preload resources
-        as(entry) {
-          if (/\.css$/.test(entry)) return 'style';
-          if (/\.woff2$/.test(entry)) return 'font';
-          if (/\.png$/.test(entry)) return 'image';
-          return 'script'; // Default type is script for JavaScript files
-        },
-        include: 'allChunks'
+        inject: 'head',
+        minify: {
+          minifyJS: true // This option minifies inline JavaScript
+        }
       }),
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
