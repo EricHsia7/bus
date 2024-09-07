@@ -6,7 +6,7 @@
   height: 55px;
   border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(var(--b-cssvar-f9f9fb-blocky-r), var(--b-cssvar-f9f9fb-blocky-g), var(--b-cssvar-f9f9fb-blocky-b), var(--b-cssvar-f9f9fb-opacity-a)) 0%, rgba(var(--b-cssvar-f9f9fb-blocky-r), var(--b-cssvar-f9f9fb-blocky-g), var(--b-cssvar-f9f9fb-blocky-b), var(--b-cssvar-f9f9fb-opacity-b)) 80%, rgba(var(--b-cssvar-f9f9fb-blocky-r), var(--b-cssvar-f9f9fb-blocky-g), var(--b-cssvar-f9f9fb-blocky-b), var(--b-cssvar-f9f9fb-opacity-b)) 100%);
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
