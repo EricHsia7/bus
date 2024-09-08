@@ -21,7 +21,6 @@
   font-weight: 400;
   background: rgba(0, 0, 0, 0);
   border-radius: var(--b-cssvar-border-radius-none);
-  ;
 }
 
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input:read-only {

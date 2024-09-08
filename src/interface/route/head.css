@@ -171,7 +171,6 @@
   width: 30px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
-  ;
   transform: translateX(-50%) scaleX(calc(var(--b-cssvar-route-tab-line-width) / 30));
 }
 

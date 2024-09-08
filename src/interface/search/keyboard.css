@@ -60,7 +60,6 @@
   width: 1.5px;
   background: var(--b-cssvar-main-color);
   border-radius: var(--b-cssvar-border-radius-small);
-  ;
   animation-name: cursor;
   animation-duration: 0.9s;
   animation-timing-function: ease-in-out;
