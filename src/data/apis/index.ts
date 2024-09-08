@@ -10,6 +10,9 @@ interface EstimateTimeStatus {
 
 export function parseEstimateTime(EstimateTime: string, mode: number): EstimateTimeStatus {
   const time = parseInt(EstimateTime);
+  if (time === -4) {
+    return { code: 6, text: '發生錯誤' };
+  }
   if (time === -3) {
     return { code: 6, text: '末班駛離' };
   }

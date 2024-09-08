@@ -313,9 +313,12 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
       switch (item.type) {
         case 'stop':
           thisStopKey = `s_${item.id}`;
-          thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
-          integratedItem.status = parseEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode);
-
+          let thisProcessedEstimateTimeValue = '-4';
+          if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
+            thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
+            thisProcessedEstimateTimeValue = thisProcessedEstimateTime.EstimateTime;
+          }
+          integratedItem.status = parseEstimateTime(thisProcessedEstimateTimeValue, time_formatting_mode);
           thisRouteKey = `r_${item.route.id}`;
           thisRoute = Route[thisRouteKey];
           integratedItem.route.pathAttributeId = thisRoute.pid;
