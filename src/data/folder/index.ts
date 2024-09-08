@@ -313,7 +313,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
       switch (item.type) {
         case 'stop':
           thisStopKey = `s_${item.id}`;
-          let thisProcessedEstimateTimeValue = '-4';
+          let thisProcessedEstimateTimeValue = '';
           if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
             thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
             thisProcessedEstimateTimeValue = thisProcessedEstimateTime.EstimateTime;

@@ -4,15 +4,12 @@ import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
 
 interface EstimateTimeStatus {
-  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6;
+  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   text: string;
 }
 
 export function parseEstimateTime(EstimateTime: string, mode: number): EstimateTimeStatus {
   const time = parseInt(EstimateTime);
-  if (time === -4) {
-    return { code: 6, text: '發生錯誤' };
-  }
   if (time === -3) {
     return { code: 6, text: '末班駛離' };
   }
@@ -37,6 +34,7 @@ export function parseEstimateTime(EstimateTime: string, mode: number): EstimateT
   if (250 < time) {
     return { code: 0, text: formatTime(time, mode) };
   }
+  return { code: 7, text: '發生錯誤' };
 }
 
 interface Moment {
