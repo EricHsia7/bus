@@ -149,7 +149,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       // collect data from 'processedEstimateTime'
       let thisProcessedEstimateTime: EstimateTimeItem = {};
       if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
-        thisprocessedestimatetime = processedEstimateTime[thisStopKey];
+        thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
       }
       integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
 
