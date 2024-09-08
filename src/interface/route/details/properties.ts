@@ -41,14 +41,14 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
 export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon)
+      elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_value').innerText = thisProperty.value;
     }
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-    thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
-}
+      thisPropertyElement.setAttribute('skeleton-screen', skeletonScreen);
+    }
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);

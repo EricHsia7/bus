@@ -62,6 +62,10 @@
   z-index: 2;
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child .css_route_group_thread {
+  display: none;
+}
+
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread {
   background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-segment-buffer) 0%, var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) 100%);
@@ -70,10 +74,6 @@
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread {
   background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-user-position) 0%, var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) 100%);
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child .css_route_group_thread {
-  display: none;
 }
 
 /* skeleton screen: true */
