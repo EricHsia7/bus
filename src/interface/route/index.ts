@@ -112,7 +112,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   element.classList.add('css_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  element.innerHTML = `<div class="css_thread" transition="false"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -259,23 +259,34 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisItemElement.setAttribute('nearest', thisItem.nearest);
       thisThreadBoxElement.setAttribute('nearest', thisItem.nearest);
     }
-    function updateThreadBox(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
+    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
+      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_thread');
       if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
-        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
-        elementQuerySelector(thisThreadBoxElement, '.css_thread').addEventListener(
+        thisThreadElement.setAttribute('transition', 'true');
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
+        thisThreadElement.addEventListener(
           'transitionend',
           function () {
-            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-            elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
+            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
+            thisThreadElement.setAttribute('transition', 'false');
           },
           { once: true }
         );
       } else {
-        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-        elementQuerySelector(thisThreadBoxElement, '.css_thread').style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+        thisThreadElement.setAttribute('transition', 'true');
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+        thisThreadElement.addEventListener(
+          'transitionend',
+          function () {
+            thisThreadElement.setAttribute('transition', 'false');
+          },
+          { once: true }
+        );
       }
     }
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
@@ -303,7 +314,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateOverlappingRoutes(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
-      updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
+      updateThread(thisThreadBoxElement, thisItem, previousItem);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSaveToFolderButton(thisItemElement, thisItem, integration);
@@ -327,7 +338,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateThreadBox(thisThreadBoxElement, thisItem, previousItem);
+        updateThread(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateSaveToFolderButton(thisItemElement, thisItem, integration);
