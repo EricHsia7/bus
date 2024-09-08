@@ -121,7 +121,7 @@
 }
 
 /* head > capsule > stretch */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_stretch {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -134,20 +134,20 @@
   user-select: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_stretch {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
   background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_stretch {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule .css_stretch {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
   display: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_stretch span.css_material_symbols_rounded {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
@@ -156,7 +156,7 @@
 }
 
 /* stretched: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] .css_route_group_item_head .css_route_group_item_capsule .css_stretch span.css_material_symbols_rounded {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 

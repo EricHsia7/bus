@@ -184,7 +184,7 @@
 }
 
 /* items > item > head > stretch */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_stretch {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_stretch {
   position: absolute;
   top: 7.5px;
   right: 10px;
@@ -200,11 +200,11 @@
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_stretch {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch {
   background: var(--b-cssvar-ededf2);
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
@@ -213,12 +213,12 @@
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
   display: none;
 }
 
 /* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 
