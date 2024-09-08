@@ -104,7 +104,7 @@
     --b-cssvar-main-color-r: 62;
     --b-cssvar-main-color-g: 162;
     --b-cssvar-main-color-b: 255;
-    --b-cssvar-main-color-solid-transparent-c: #0E2337;
+    --b-cssvar-main-color-solid-transparent-c: #0A1F33;
 
     --b-cssvar-main-color-inflected-to-segment-buffer: #57B5D7;
     --b-cssvar-main-color-inflected-to-segment-buffer-r: 87;
@@ -153,10 +153,10 @@
     --b-cssvar-f9f9fb-inflected-to-user-position-g: 17;
     --b-cssvar-f9f9fb-inflected-to-user-position-b: 33;
 
-    --b-cssvar-ededf2: #17171C;
-    --b-cssvar-ededf2-r: 23;
-    --b-cssvar-ededf2-g: 23;
-    --b-cssvar-ededf2-b: 28;
+    --b-cssvar-ededf2: #202026;
+    --b-cssvar-ededf2-r: 32;
+    --b-cssvar-ededf2-g: 32;
+    --b-cssvar-ededf2-b: 38;
 
     --b-cssvar-ededf2-inflected-to-segment-buffer: #1C242B;
     --b-cssvar-ededf2-inflected-to-segment-buffer-r: 28;
