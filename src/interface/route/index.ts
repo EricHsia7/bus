@@ -112,7 +112,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   element.classList.add('css_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_thread" transition="false"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -264,7 +264,6 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       var thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_thread');
       if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-        thisThreadElement.setAttribute('transition', 'true');
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
         thisThreadElement.addEventListener(
@@ -272,23 +271,12 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
           function () {
             thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
             thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
-            thisThreadElement.setAttribute('transition', 'false');
           },
           { once: true }
         );
       } else {
-        if (Math.abs(thisProgress - previousProgress) > 0) {
-          thisThreadElement.setAttribute('transition', 'true');
-          thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-          thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
-          thisThreadElement.addEventListener(
-            'transitionend',
-            function () {
-              thisThreadElement.setAttribute('transition', 'false');
-            },
-            { once: true }
-          );
-        }
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
       }
     }
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
