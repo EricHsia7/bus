@@ -136,7 +136,7 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.js|ts|jsx|tsx?$/, // Use babel-loader for TypeScript files
+          test: /\.js|ts|jsx|tsx$/, // Use babel-loader for TypeScript files
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -147,7 +147,7 @@ module.exports = (env, argv) => {
           }
         },
         {
-          test: /\.css|less?$/,
+          test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader']
         }
       ]
