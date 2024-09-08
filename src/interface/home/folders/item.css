@@ -24,8 +24,7 @@
   left: 10px;
   width: 30px;
   height: 30px;
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon span.css_material_symbols_rounded {
@@ -62,8 +61,7 @@
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_context {
   width: calc(100% - 50px - 85px - 10px - 5px);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
 }
 
@@ -92,8 +90,7 @@
   top: calc(21.5px + 5px);
   width: calc(100% - 50px - 85px - 10px - 5px);
   height: calc(23px - 5px);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
 }
 
@@ -105,8 +102,7 @@
   width: 85px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;

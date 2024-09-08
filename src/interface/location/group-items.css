@@ -63,8 +63,7 @@
   overflow-y: hidden;
   white-space: nowrap;
   word-break: keep-all;
-  border-radius: 25px;
-  /* --b-cssvar-border-radius-large */
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item .css_body .css_buttons::-webkit-scrollbar {
@@ -78,8 +77,7 @@
   display: inline-flex;
   background: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
-  border-radius: 25px;
-  /* --b-cssvar-border-radius-large */
+  border-radius: var(--b-cssvar-border-radius-large);
   align-items: center;
   justify-content: center;
   padding: 0px 9px;
@@ -129,7 +127,7 @@
   left: 10px;
   height: 35px;
   width: 70px;
-  border-radius: 25px;
+  border-radius: var(--b-cssvar-border-radius-large);
   overflow: hidden;
 }
 
@@ -249,7 +247,7 @@
   width: 35px;
   -webkit-user-select: none;
   user-select: none;
-  border-radius: 25px;
+  border-radius: var(--b-cssvar-border-radius-large);
   background: var(--b-cssvar-f9f9fb-normal);
   display: flex;
   align-items: center;
@@ -281,8 +279,7 @@
   scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   display: none;
 }
 
@@ -297,8 +294,7 @@
   height: 121px;
   box-sizing: border-box;
   background: var(--b-cssvar-f9f9fb-normal);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   display: inline-flex;
   margin-right: 5px;
   scroll-snap-align: center;
@@ -406,15 +402,13 @@
 .css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  border-radius: 25px;
-  /* --b-cssvar-border-radius-large */
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  border-radius: 25px;
-  /* --b-cssvar-border-radius-large */
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
@@ -436,8 +430,7 @@
   background: var(--b-cssvar-ededf2);
   top: 7.5px;
   height: 35px;
-  border-radius: 25px;
-  /* --b-cssvar-border-radius-large */
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item[skeleton-screen="true"] .css_head .css_stretch {

@@ -14,8 +14,7 @@
   font-size: 20px;
   font-weight: 400;
   background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
-  /* --b-cssvar-border-radius-none */
+  border-radius: var(--b-cssvar-border-radius-none);
   ;
 }
 

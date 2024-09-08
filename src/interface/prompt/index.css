@@ -23,8 +23,7 @@
 .css_prompt {
   width: clamp(180px, calc(100% - 20px), 450px);
   height: 50px;
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   position: fixed;
   left: 50%;
   bottom: calc(20px + var(--b-cssvar-safe-area-bottom));

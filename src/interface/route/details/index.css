@@ -157,8 +157,7 @@
   left: 10px;
   display: inline-block;
   background: var(--b-cssvar-ffffff-blocky);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   user-select: none;
   -webkit-user-select: none;
 }

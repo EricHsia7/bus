@@ -82,8 +82,7 @@
   height: auto;
   display: inline-block;
   background: var(--b-cssvar-ffffff-blocky);
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
   margin-bottom: var(--b-cssvar-safe-area-bottom);
   user-select: none;

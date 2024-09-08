@@ -27,8 +27,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 15px;
-  /* --b-cssvar-border-radius-normal */
+  border-radius: var(--b-cssvar-border-radius-normal);
   font-size: 20px;
   font-weight: 500;
   color: var(--b-cssvar-333333);
@@ -60,8 +59,7 @@
   height: 25px;
   width: 1.5px;
   background: var(--b-cssvar-main-color);
-  border-radius: 8px;
-  /* --b-cssvar-border-radius-small */
+  border-radius: var(--b-cssvar-border-radius-small);
   ;
   animation-name: cursor;
   animation-duration: 0.9s;
