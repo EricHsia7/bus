@@ -161,17 +161,16 @@
   bottom: 1.2px;
   width: 100%;
   height: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
-  position: absolute;
-  left: 50%;
-  top: 0px;
   background: var(--b-cssvar-333333);
-  width: 30px;
+  width: var(--b-cssvar-route-tab-line-width);
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
-  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-route-tab-line-width) / 30));
 }
 
 /* skeleton screen: true */

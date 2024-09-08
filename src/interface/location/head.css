@@ -136,17 +136,16 @@
   bottom: 1.2px;
   width: 100%;
   height: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
-  position: absolute;
-  left: 50%;
-  top: 0px;
   background: var(--b-cssvar-333333);
-  width: 30px;
+  width: var(--b-cssvar-location-tab-line-width);
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
-  transform: translateX(-50%) scaleX(calc(var(--b-cssvar-location-tab-line-width) / 30));
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box {
