@@ -52,7 +52,7 @@
 }
 
 /* head > name */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_name {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_name {
   position: absolute;
   top: 10px;
   left: 0px;
@@ -72,7 +72,7 @@
 }
 
 /* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_name {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);

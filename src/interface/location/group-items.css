@@ -415,7 +415,7 @@
   height: 75px;
 }
 
-/* items > item > body > buses > bus > attributes > route, status, type */
+/* items > item > body > buses > bus > attributes > car route, car status, car type */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_route,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_status,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_type {

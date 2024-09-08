@@ -110,10 +110,10 @@ function updateUpdateTimer(): void {
 function generateElementOfThreadBox(): GeneratedElement {
   var identifier = generateIdentifier('i');
   var element = document.createElement('div');
-  element.classList.add('css_thread_box');
+  element.classList.add('css_route_group_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_thread"></div><div class="css_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  element.innerHTML = `<div class="css_route_group_thread"></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -126,7 +126,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_route_group_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_route_group_item_head"><div class="css_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>經過此站的公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>經過此站的路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>經過此站的公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>經過此站的路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -141,7 +141,7 @@ function generateElementOfGroup(): GeneratedElement {
   var tracksElement = document.createElement('div');
   tracksElement.classList.add('css_route_group_tracks');
   var threadTrackElement = document.createElement('div');
-  threadTrackElement.classList.add('css_threads_track');
+  threadTrackElement.classList.add('css_route_group_threads_track');
   var itemsTrackElement = document.createElement('div');
   itemsTrackElement.classList.add('css_route_group_items_track');
   tracksElement.appendChild(threadTrackElement);
@@ -213,8 +213,8 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
-      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_current_slide');
-      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_thread_status .css_next_slide');
+      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_current_slide');
+      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_next_slide');
 
       var currentItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_current_slide');
       var nextItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_next_slide');
@@ -248,7 +248,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer.isSegmentBuffer);
     }
     function updateName(thisItemElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisItemElement, '.css_name').innerText = thisItem.name;
+      elementQuerySelector(thisItemElement, '.css_route_group_item_name').innerText = thisItem.name;
     }
     function updateBuses(thisItemElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_route_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
@@ -263,7 +263,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateThread(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
-      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_thread');
+      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
       if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
@@ -401,13 +401,13 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
           var thisThreadBoxElement = generateElementOfThreadBox();
           var thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track').appendChild(thisItemElement.element);
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track').appendChild(thisThreadBoxElement.element);
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track').appendChild(thisThreadBoxElement.element);
         }
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[itemIndex].remove();
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[itemIndex].remove();
         }
       }
     }
@@ -421,7 +421,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i);
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
       var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
-      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_threads_track'), `.css_thread_box`)[j];
+      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
@@ -521,7 +521,7 @@ export function switchRoute(RouteID: number, PathAttributeId: Array<number>) {
 
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
-  const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_threads_track .css_thread_box#${threadBoxElementID}`);
+  const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
     threadBoxElement.setAttribute('stretched', false);
