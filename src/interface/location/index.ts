@@ -163,7 +163,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         route_name: '',
         route_direction: '',
         status: { code: -1, text: '' },
-        buses: null
+        buses: []
       });
     }
   }
