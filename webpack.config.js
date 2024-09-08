@@ -194,10 +194,10 @@ module.exports = (env, argv) => {
         }
       }
     },
-    /* devtool: 'source-map', */
+    devtool: 'source-map',
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
-      hot: true
+      hot: false
     }
     // Add any additional plugins and configurations as needed
   };
