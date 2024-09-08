@@ -76,11 +76,6 @@
   background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-user-position) 0%, var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) 100%);
 }
 
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread {
-  background: var(--b-cssvar-ededf2);
-}
-
 /* thread box > thread > status */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status {
   position: absolute;
@@ -93,11 +88,6 @@
   overflow: hidden;
   -webkit-user-select: none;
   user-select: none;
-}
-
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status {
-  background: var(--b-cssvar-ededf2);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide,

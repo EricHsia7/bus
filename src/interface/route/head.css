@@ -84,7 +84,6 @@
 /* skeleton screen: true */
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
@@ -151,7 +150,6 @@
 /* skeleton screen: true */
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
 }
 

@@ -74,7 +74,6 @@
 /* skeleton screen: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
@@ -98,11 +97,6 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule {
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
-}
-
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule {
-  background: var(--b-cssvar-ededf2);
 }
 
 /* head > capsule > capsule separator */

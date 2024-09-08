@@ -83,7 +83,6 @@
 
 .css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
@@ -138,7 +137,6 @@
 
 .css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span {
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
