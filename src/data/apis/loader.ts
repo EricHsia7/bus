@@ -44,7 +44,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
   if (fileType === 'json') {
     if (/^\<\!doctype html\>/.test(inflatedData)) {
-      const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'http://erichsia7.github.io/bus-alternative-static-apis/'));
+      const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'http://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType);
       return alternativeData;
     } else {
       return JSON.parse(inflatedData);
