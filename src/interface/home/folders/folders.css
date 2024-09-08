@@ -48,7 +48,9 @@
   left: 5px;
   width: 15px;
   height: 15px;
-  border-radius: var(--b-cssvar-border-radius-small);
+  border-radius: 8px;
+  /* --b-cssvar-border-radius-small */
+  ;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head .css_home_folder_icon span.css_material_symbols_rounded {
@@ -80,7 +82,9 @@
   left: 25px;
   width: 50px;
   height: 15px;
-  border-radius: var(--b-cssvar-border-radius-small);
+  border-radius: 8px;
+  /* --b-cssvar-border-radius-small */
+  ;
 }
 
 /* folders > folder > content */
@@ -90,7 +94,8 @@
   left: 10px;
   display: inline-block;
   background: var(--b-cssvar-ffffff-blocky);
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: 15px;
+  /* --b-cssvar-border-radius-normal */
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,

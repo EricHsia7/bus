@@ -85,7 +85,8 @@
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-large);
+  border-radius: 25px;
+  /* --b-cssvar-border-radius-large */
 }
 
 .css_route_field .css_route_head .css_route_group_tabs {
@@ -152,7 +153,8 @@
 .css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab span {
   color: rgba(0, 0, 0, 0);
   background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-large);
+  border-radius: 25px;
+  /* --b-cssvar-border-radius-large */
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track {
@@ -170,7 +172,9 @@
   background: var(--b-cssvar-333333);
   width: 30px;
   height: 2px;
-  border-radius: var(--b-cssvar-border-radius-none);
+  border-radius: 0px;
+  /* --b-cssvar-border-radius-none */
+  ;
   transform: translateX(-50%) scaleX(calc(var(--b-cssvar-route-tab-line-width) / 30));
 }
 

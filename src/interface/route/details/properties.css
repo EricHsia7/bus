@@ -51,7 +51,8 @@
   height: 20px;
   width: 20px;
   left: 10px;
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: 15px;
+  /* --b-cssvar-border-radius-normal */
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_icon span.css_material_symbols_rounded {
@@ -62,7 +63,8 @@
   top: 5px;
   height: 20px;
   width: calc(100% - 40px - 10px);
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: 15px;
+  /* --b-cssvar-border-radius-normal */
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_icon,
