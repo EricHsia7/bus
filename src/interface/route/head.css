@@ -11,9 +11,9 @@
 }
 
 @property --b-cssvar-route-tab-line-width {
-  syntax: '<number>';
+  syntax: '<length>';
   inherits: true;
-  initial-value: 30;
+  initial-value: 30px;
 }
 
 @property --b-cssvar-route-tab-width {

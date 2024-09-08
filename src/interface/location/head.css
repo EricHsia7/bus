@@ -5,9 +5,9 @@
 }
 
 @property --b-cssvar-location-tab-line-width {
-  syntax: '<number>';
+  syntax: '<length>';
   inherits: false;
-  initial-value: 30;
+  initial-value: 30px;
 }
 
 @property --b-cssvar-location-tabs-tray-offset {
