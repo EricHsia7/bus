@@ -86,8 +86,8 @@ function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: num
   const groupTabLineElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
   Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
   groupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset}px`);
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage);
+  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
+  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
 
 function updateUpdateTimer(): void {
