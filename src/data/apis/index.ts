@@ -277,12 +277,9 @@ export function formatBus(object: ProcessedBus): FormattedBus {
   return result;
 }
 
-export function formatBusEvent(buses: Array<ProcessedBus>): Array<FormattedBus> | null {
-  if (buses.length === 0) {
-    return null;
-  }
-  var result = [];
-  for (var bus of buses) {
+export function formatBusEvent(buses: Array<ProcessedBus>): Array<FormattedBus> {
+  let result = [];
+  for (const bus of buses) {
     result.push(formatBus(bus));
   }
   return result;
