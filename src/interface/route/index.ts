@@ -277,16 +277,18 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
           { once: true }
         );
       } else {
-        thisThreadElement.setAttribute('transition', 'true');
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
-        thisThreadElement.addEventListener(
-          'transitionend',
-          function () {
-            thisThreadElement.setAttribute('transition', 'false');
-          },
-          { once: true }
-        );
+        if (Math.abs(thisProgress - previousProgress) > 0) {
+          thisThreadElement.setAttribute('transition', 'true');
+          thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
+          thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+          thisThreadElement.addEventListener(
+            'transitionend',
+            function () {
+              thisThreadElement.setAttribute('transition', 'false');
+            },
+            { once: true }
+          );
+        }
       }
     }
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
