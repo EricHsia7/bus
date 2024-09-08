@@ -64,7 +64,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].min.css'
+        filename: isProduction ? '[contenthash].min.css' : 'index.css'
         // Output CSS filename
       }),
       new MangleCssClassPlugin({
@@ -194,7 +194,7 @@ module.exports = (env, argv) => {
         }
       }
     },
-    devtool: 'source-map',
+    /* devtool: 'source-map', */
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
       hot: true
