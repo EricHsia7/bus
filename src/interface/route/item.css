@@ -160,7 +160,7 @@
   transform: rotate(180deg);
 }
 
-/* head > capsule > item_status */
+/* head > capsule > status */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status {
   position: absolute;
   top: 0px;
