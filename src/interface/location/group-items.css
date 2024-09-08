@@ -7,12 +7,6 @@
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.css_location_field .css_location_groups .css_location_group::-webkit-scrollbar,
-.css_location_field .css_location_groups::-webkit-scrollbar,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses::-webkit-scrollbar {
-  display: none;
-}
-
 /* items > item */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item {
   display: block;
@@ -320,6 +314,7 @@
   --b-cssvar-font-variation-settings-fill: 1;
 }
 
+/* items > item > body > buses */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses {
   position: absolute;
   top: 45px;
@@ -337,10 +332,15 @@
   display: none;
 }
 
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses::-webkit-scrollbar {
+  display: none;
+}
+
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses[displayed="true"] {
   display: block;
 }
 
+/* items > item > body > buses > bus */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus {
   --b-cssvar-location-field-width: inherit;
   position: relative;
@@ -354,14 +354,16 @@
   scroll-snap-align: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus[on-this-route="true"] {
-  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
-}
-
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus:last-child {
   margin-right: 0px;
 }
 
+/* on this route: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus[on-this-route="true"] {
+  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+}
+
+/* items > item > body > buses > bus > title */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_bus_title {
   position: absolute;
   top: 10px;
@@ -370,6 +372,7 @@
   height: 20px;
 }
 
+/* items > item > body > buses > bus > title > icon */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_bus_title .css_car_icon {
   position: absolute;
   top: 0px;
@@ -387,6 +390,7 @@
   color: var(--b-cssvar-333333);
 }
 
+/* items > item > body > buses > bus > title > car number */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_bus_title .css_car_number {
   position: absolute;
   top: 0px;
@@ -402,6 +406,7 @@
   overflow: hidden;
 }
 
+/* items > item > body > buses > bus > attributes */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_bus .css_location_group_item_buses .css_car_attributes {
   position: absolute;
   top: 36px;
@@ -410,6 +415,7 @@
   height: 75px;
 }
 
+/* items > item > body > buses > bus > attributes > route, status, type */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_route,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_status,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_bus .css_car_attributes .css_car_type {
@@ -438,6 +444,7 @@
   top: 50px;
 }
 
+/* items > item > body > buses > message */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_buses_message {
   position: absolute;
   top: 0px;
