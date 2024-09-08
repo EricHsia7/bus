@@ -10,15 +10,15 @@
   initial-value: 0;
 }
 
-@property --b-cssvar-route-tab-line-width {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 30px;
+@property --b-cssvar-route-tab-line-width-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
 }
 
 @property --b-cssvar-route-tab-width {
   syntax: '<length>';
-  inherits: true;
+  inherits: false;
   initial-value: 30px;
 }
 
@@ -168,9 +168,10 @@
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
   background: var(--b-cssvar-333333);
-  width: var(--b-cssvar-route-tab-line-width);
+  width: 30px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
+  transform: scaleX(var(--b-cssvar-route-tab-line-width-scale));
 }
 
 /* skeleton screen: true */

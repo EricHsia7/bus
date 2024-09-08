@@ -4,10 +4,10 @@
   initial-value: 30px;
 }
 
-@property --b-cssvar-location-tab-line-width {
-  syntax: '<length>';
+@property --b-cssvar-location-tab-line-width-scale {
+  syntax: '<number>';
   inherits: false;
-  initial-value: 30px;
+  initial-value: 1;
 }
 
 @property --b-cssvar-location-tabs-tray-offset {
@@ -143,9 +143,10 @@
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   background: var(--b-cssvar-333333);
-  width: var(--b-cssvar-location-tab-line-width);
+  width: 30px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
+  transform: scaleX();
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box {
