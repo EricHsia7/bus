@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Improve dark mode [\#63](https://github.com/EricHsia7/bus/pull/63) ([EricHsia7](https://github.com/EricHsia7))
 - Improve segment buffer feature [\#62](https://github.com/EricHsia7/bus/pull/62) ([EricHsia7](https://github.com/EricHsia7))
 - Use web workers to offload heavy tasks [\#60](https://github.com/EricHsia7/bus/pull/60) ([EricHsia7](https://github.com/EricHsia7))
 - Add direction labels [\#59](https://github.com/EricHsia7/bus/pull/59) ([EricHsia7](https://github.com/EricHsia7))
@@ -54,7 +55,7 @@
 
 **Merged pull requests:**
 
-- Improve dark mode [\#63](https://github.com/EricHsia7/bus/pull/63) ([EricHsia7](https://github.com/EricHsia7))
+- Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
 - Update the dependencies [\#58](https://github.com/EricHsia7/bus/pull/58) ([EricHsia7](https://github.com/EricHsia7))
 - Simplify and optimize code  [\#49](https://github.com/EricHsia7/bus/pull/49) ([EricHsia7](https://github.com/EricHsia7))
