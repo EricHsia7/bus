@@ -123,57 +123,57 @@
     --b-cssvar-main-color-opacity-c: 0.28;
     --b-cssvar-main-color-opacity-d: 0.15;
 
-    --b-cssvar-ffffff-normal: #050506;
-    --b-cssvar-ffffff-normal-r: 5;
-    --b-cssvar-ffffff-normal-g: 5;
-    --b-cssvar-ffffff-normal-b: 6;
+    --b-cssvar-ffffff-normal: #000000;
+    --b-cssvar-ffffff-normal-r: 0;
+    --b-cssvar-ffffff-normal-g: 0;
+    --b-cssvar-ffffff-normal-b: 0;
 
-    --b-cssvar-ffffff-blocky: #0e0e11;
-    --b-cssvar-ffffff-blocky-r: 14;
-    --b-cssvar-ffffff-blocky-g: 14;
-    --b-cssvar-ffffff-blocky-b: 17;
+    --b-cssvar-ffffff-blocky: #08080A;
+    --b-cssvar-ffffff-blocky-r: 8;
+    --b-cssvar-ffffff-blocky-g: 8;
+    --b-cssvar-ffffff-blocky-b: 10;
 
-    --b-cssvar-f9f9fb-normal: #0e0e11;
-    --b-cssvar-f9f9fb-normal-r: 14;
-    --b-cssvar-f9f9fb-normal-g: 14;
-    --b-cssvar-f9f9fb-normal-b: 17;
+    --b-cssvar-f9f9fb-normal: #08080A;
+    --b-cssvar-f9f9fb-normal-r: 8;
+    --b-cssvar-f9f9fb-normal-g: 8;
+    --b-cssvar-f9f9fb-normal-b: 10;
 
-    --b-cssvar-f9f9fb-blocky: #050506;
-    --b-cssvar-f9f9fb-blocky-r: 5;
-    --b-cssvar-f9f9fb-blocky-g: 5;
-    --b-cssvar-f9f9fb-blocky-b: 6;
+    --b-cssvar-f9f9fb-blocky: #000000;
+    --b-cssvar-f9f9fb-blocky-r: 0;
+    --b-cssvar-f9f9fb-blocky-g: 0;
+    --b-cssvar-f9f9fb-blocky-b: 0;
 
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #11161A;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 17;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 22;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 26;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #0F171B;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 15;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 23;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 27;
 
-    --b-cssvar-f9f9fb-inflected-to-user-position: #191728;
-    --b-cssvar-f9f9fb-inflected-to-user-position-r: 25;
-    --b-cssvar-f9f9fb-inflected-to-user-position-g: 23;
-    --b-cssvar-f9f9fb-inflected-to-user-position-b: 40;
+    --b-cssvar-f9f9fb-inflected-to-user-position: #131121;
+    --b-cssvar-f9f9fb-inflected-to-user-position-r: 19;
+    --b-cssvar-f9f9fb-inflected-to-user-position-g: 17;
+    --b-cssvar-f9f9fb-inflected-to-user-position-b: 33;
 
-    --b-cssvar-ededf2: #23232a;
-    --b-cssvar-ededf2-r: 35;
-    --b-cssvar-ededf2-g: 35;
-    --b-cssvar-ededf2-b: 42;
+    --b-cssvar-ededf2: #131317;
+    --b-cssvar-ededf2-r: 19;
+    --b-cssvar-ededf2-g: 19;
+    --b-cssvar-ededf2-b: 23;
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: #252931;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-r: 37;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-g: 41;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-b: 49;
+    --b-cssvar-ededf2-inflected-to-segment-buffer: #182027;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-r: 24;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-g: 32;
+    --b-cssvar-ededf2-inflected-to-segment-buffer-b: 39;
 
-    --b-cssvar-ededf2-inflected-to-user-position: #2B293E;
-    --b-cssvar-ededf2-inflected-to-user-position-r: 43;
-    --b-cssvar-ededf2-inflected-to-user-position-g: 41;
-    --b-cssvar-ededf2-inflected-to-user-position-b: 62;
+    --b-cssvar-ededf2-inflected-to-user-position: #1D1B2D;
+    --b-cssvar-ededf2-inflected-to-user-position-r: 29;
+    --b-cssvar-ededf2-inflected-to-user-position-g: 27;
+    --b-cssvar-ededf2-inflected-to-user-position-b: 45;
 
-    --b-cssvar-aeaeb2: #5a5a6c;
-    --b-cssvar-aeaeb2-r: 90;
-    --b-cssvar-aeaeb2-g: 90;
-    --b-cssvar-aeaeb2-b: 108;
+    --b-cssvar-aeaeb2: #2B2B34;
+    --b-cssvar-aeaeb2-r: 43;
+    --b-cssvar-aeaeb2-g: 43;
+    --b-cssvar-aeaeb2-b: 52;
 
-    --b-cssvar-333333: #f9f9fb;
+    --b-cssvar-333333: #ffffff;
     --b-cssvar-333333-r: 255;
     --b-cssvar-333333-g: 255;
     --b-cssvar-333333-b: 255;
