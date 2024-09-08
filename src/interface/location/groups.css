@@ -15,6 +15,10 @@
   grid-template-columns: repeat(var(--b-cssvar-location-group-quantity), var(--b-cssvar-location-field-width));
 }
 
+.css_location_field .css_location_groups::-webkit-scrollbar {
+  display: none;
+}
+
 .css_location_field .css_location_groups .css_location_group {
   --b-cssvar-location-field-width: inherit;
   --b-cssvar-location-field-height: inherit;
@@ -28,4 +32,8 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   scroll-snap-align: center;
+}
+
+.css_location_field .css_location_groups .css_location_group::-webkit-scrollbar {
+  display: none;
 }
