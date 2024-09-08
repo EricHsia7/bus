@@ -9,30 +9,32 @@ interface EstimateTimeStatus {
 }
 
 export function parseEstimateTime(EstimateTime: string, mode: number): EstimateTimeStatus {
-  const time = parseInt(EstimateTime);
-  if (time === -3) {
-    return { code: 6, text: '末班駛離' };
-  }
-  if (time === -4) {
-    return { code: 5, text: '今日停駛' };
-  }
-  if (time === -2) {
-    return { code: 4, text: '交通管制' };
-  }
-  if (time === -1) {
-    return { code: 3, text: '未發車' };
-  }
-  if (0 <= time && time <= 10) {
-    return { code: 2, text: '進站中' };
-  }
-  if (10 < time && time <= 180) {
-    return { code: 1, text: formatTime(time, mode) };
-  }
-  if (180 < time && time <= 250) {
-    return { code: 0.5, text: formatTime(time, mode) };
-  }
-  if (250 < time) {
-    return { code: 0, text: formatTime(time, mode) };
+  if (typeof EstimateTime === 'string') {
+    const time = parseInt(EstimateTime);
+    if (time === -3) {
+      return { code: 6, text: '末班駛離' };
+    }
+    if (time === -4) {
+      return { code: 5, text: '今日停駛' };
+    }
+    if (time === -2) {
+      return { code: 4, text: '交通管制' };
+    }
+    if (time === -1) {
+      return { code: 3, text: '未發車' };
+    }
+    if (0 <= time && time <= 10) {
+      return { code: 2, text: '進站中' };
+    }
+    if (10 < time && time <= 180) {
+      return { code: 1, text: formatTime(time, mode) };
+    }
+    if (180 < time && time <= 250) {
+      return { code: 0.5, text: formatTime(time, mode) };
+    }
+    if (250 < time) {
+      return { code: 0, text: formatTime(time, mode) };
+    }
   }
   return { code: 7, text: '發生錯誤' };
 }

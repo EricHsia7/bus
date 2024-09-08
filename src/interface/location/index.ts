@@ -219,7 +219,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       elementQuerySelector(thisElement, '.css_route_direction').innerText = thisItem.route_direction;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses === null ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {

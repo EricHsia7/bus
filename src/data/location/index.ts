@@ -1,5 +1,5 @@
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getRoute } from '../apis/getRoute/index';
@@ -57,38 +57,39 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
-  var EstimateTime = await getEstimateTime(requestID);
-  var Location = await getLocation(requestID, true);
-  var Route = await getRoute(requestID, true);
-  var Stop = await getStop(requestID);
-  var BusEvent = await getBusEvent(requestID);
-  var time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  var location_labels = getSettingOptionValue('location_labels');
-  var groupedItems = {};
-  var itemQuantity = {};
-  var groups = {};
+  const EstimateTime = await getEstimateTime(requestID);
+  const Location = await getLocation(requestID, true);
+  const Route = await getRoute(requestID, true);
+  const Stop = await getStop(requestID);
+  const BusEvent = await getBusEvent(requestID);
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const location_labels = getSettingOptionValue('location_labels');
+  let groupedItems = {};
+  let itemQuantity = {};
+  let groups = {};
 
-  var LocationKey = `ml_${hash}`;
-  var thisLocation = Location[LocationKey];
-  var thisLocationName = thisLocation.n;
-  var stopLocationIds = thisLocation.id;
-  var setsOfVectors = thisLocation.v;
+  const thisLocationKey = `ml_${hash}`;
+  const thisLocation = Location[thisLocationKey];
+  const thisLocationName = thisLocation.n;
+  const stopLocationIds = thisLocation.id;
+  const setsOfVectors = thisLocation.v;
 
-  var StopIDs = [];
-  var RouteIDs = [];
-  var stopLocationQuantity = stopLocationIds.length;
+  let StopIDs = [];
+  let RouteIDs = [];
+  const stopLocationQuantity = stopLocationIds.length;
 
   for (var i = 0; i < stopLocationQuantity; i++) {
     StopIDs = StopIDs.concat(thisLocation.s[i]);
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
-  var processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
-  var processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
-  var labels = [];
+
+  const processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
+  const processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
+
+  let labels = [];
   switch (location_labels) {
     case 'address':
       labels = generateLabelFromAddresses(thisLocation.a);
-
       break;
     case 'letters':
       labels = generateLetterLabels(stopLocationQuantity);
@@ -101,7 +102,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   }
 
   for (var i = 0; i < stopLocationQuantity; i++) {
-    var groupKey = `g_${i}`;
+    const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
     groups[groupKey] = {
@@ -119,27 +120,51 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         }
       ]
     };
-    var stopQuantity = thisLocation.s[i].length;
-    for (var o = 0; o < stopQuantity; o++) {
-      var thisStopID = thisLocation.s[i][o];
-      var thisStop: SimplifiedStopItem = Stop[`s_${thisStopID}`];
-      var thisRouteID: number = thisLocation.r[i][o];
-      var thisRoute: SimplifiedRouteItem = Route[`r_${thisRouteID}`];
-      var thisProcessedEstimateTime = processedEstimateTime[`s_${thisStopID}`];
-      var thisProcessedBusEvent = processedBusEvent[`s_${thisStopID}`];
-      if (Stop.hasOwnProperty(`s_${thisStopID}`) && Route.hasOwnProperty(`r_${thisRouteID}`)) {
-        var formattedItem = {};
-        formattedItem.status = processedEstimateTime.hasOwnProperty(`s_${thisStopID}`) ? parseEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode) : null;
-        formattedItem.buses = processedBusEvent.hasOwnProperty(`s_${thisStopID}`) ? formatBusEvent(thisProcessedBusEvent) : null;
-        formattedItem.route_name = thisRoute.n;
-        formattedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
-        formattedItem.routeId = thisRouteID;
-        groupedItems[groupKey].push(formattedItem);
-        itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
+    const stopQuantity = thisLocation.s[i].length;
+    for (let o = 0; o < stopQuantity; o++) {
+      let integratedItem = {};
+      // collect data from 'Stop'
+      const thisStopID = thisLocation.s[i][o];
+      const thisStopKey = `s_${thisStopID}`;
+      let thisStop: SimplifiedStopItem = {};
+      if (Stop.hasOwnProperty(thisStopKey)) {
+        thisStop = Stop[thisStopKey];
+      } else {
+        continue;
       }
+
+      // collect data from 'Route'
+      const thisRouteID: number = thisLocation.r[i][o];
+      const thisRouteKey = `r_${thisRouteID}`;
+      let thisRoute: SimplifiedRouteItem = {};
+      if (Route.hasOwnProperty(thisRouteKey)) {
+        thisRoute = Route[thisRouteKey];
+      } else {
+        continue;
+      }
+      integratedItem.route_name = thisRoute.n;
+      integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
+      integratedItem.routeId = thisRouteID;
+
+      // collect data from 'processedEstimateTime'
+      let thisProcessedEstimateTime: EstimateTimeItem = {};
+      if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
+        thisprocessedestimatetime = processedEstimateTime[thisStopKey];
+      }
+      integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
+
+      // collect data from 'processedBusEvent'
+      let thisProcessedBusEvent = [];
+      if (processedBusEvent.hasOwnProperty(thisStopKey)) {
+        thisProcessedBusEvent = processedBusEvent[thisStopKey];
+      }
+      integratedItem.buses = formatBusEvent(thisProcessedBusEvent);
+
+      groupedItems[groupKey].push(integratedItem);
+      itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
     }
   }
-  for (var key in groupedItems) {
+  for (const key in groupedItems) {
     groupedItems[key] = groupedItems[key].sort(function (a, b) {
       return a.routeId - b.routeId;
     });

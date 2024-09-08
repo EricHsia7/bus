@@ -94,7 +94,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     // check whether this stop is on this route or not
     if ([RouteID, RouteID * 10].includes(thisRouteID) || PathAttributeId.includes(thisRouteID)) {
       // format status
-      integratedStopItem.status = parseEstimateTime(item.EstimateTime, time_formatting_mode);
+      integratedStopItem.status = parseEstimateTime(item?.EstimateTime, time_formatting_mode);
 
       // collect data from 'Stop'
       const thisStopKey = `s_${item.StopID}`;
