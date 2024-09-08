@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-improved-dark-mode
+      - dev-rename-css-classes
 
 jobs:
   launch:
@@ -38,6 +39,6 @@ jobs:
       - name: Deploy with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b v6-gh-pages
+          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b v7-gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

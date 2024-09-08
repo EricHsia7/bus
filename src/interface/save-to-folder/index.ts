@@ -51,7 +51,7 @@ export function closeSaveToFolder(): void {
 }
 
 export function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_item#${itemElementID}`);
+  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group_item#${itemElementID}`);
   var actionButtonElement = elementQuerySelector(itemElement, '.css_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {

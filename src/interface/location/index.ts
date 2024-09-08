@@ -103,10 +103,10 @@ function updateUpdateTimer(): void {
 function generateElementOfItem(): GeneratedElement {
   var identifier = generateIdentifier('i');
   var element = document.createElement('div');
-  element.classList.add('css_item');
+  element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_head"><div class="css_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_direction"></div><div class="css_route_name"></div><div class="css_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_body"><div class="css_buttons"><div class="css_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="css_buses" displayed="true"></div></div>`;
+  element.innerHTML = `<div class="css_location_group_item_head"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_location_group_item_body"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">此路線的公車</div></div><div class="css_location_group_item_buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -199,8 +199,8 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
 function updateLocationField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
-      var nextSlide = elementQuerySelector(thisElement, '.css_status .css_next_slide');
-      var currentSlide = elementQuerySelector(thisElement, '.css_status .css_current_slide');
+      var nextSlide = elementQuerySelector(thisElement, '.css_location_group_item_status .css_next_slide');
+      var currentSlide = elementQuerySelector(thisElement, '.css_location_group_item_status .css_current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
       currentSlide.addEventListener(
@@ -215,11 +215,11 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       currentSlide.classList.add('css_slide_fade_out');
     }
     function updateName(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_route_name').innerText = thisItem.route_name;
-      elementQuerySelector(thisElement, '.css_route_direction').innerText = thisItem.route_direction;
+      elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
+      elementQuerySelector(thisElement, '.css_location_group_item_route_direction').innerText = thisItem.route_direction;
     }
     function updateBuses(thisElement: HTMLElement, thisItem: object): void {
-      elementQuerySelector(thisElement, '.css_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
+      elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_bus" on-this-route="${bus.onThisRoute}"><div class="css_bus_title"><div class="css_car_icon">${getIconHTML('directions_bus')}</div><div class="css_car_number">${bus.carNumber}</div></div><div class="css_car_attributes"><div class="css_car_route">路線：${bus.RouteName}</div><div class="css_car_status">狀態：${bus.status.text}</div><div class="css_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -328,7 +328,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
   for (var i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_item`).length;
+    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
@@ -339,7 +339,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       } else {
         for (var o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_item`)[itemIndex].remove();
+          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[itemIndex].remove();
         }
       }
     }
@@ -390,7 +390,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
 
     for (var j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_item`)[j];
+      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
@@ -483,7 +483,7 @@ export function closeLocation(): void {
 }
 
 export function stretchLocationItemBody(itemID: string): void {
-  var itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_item#${itemID}`);
+  var itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
     itemElement.setAttribute('stretched', false);
   } else {
