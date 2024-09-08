@@ -146,7 +146,7 @@
   width: 30px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
-  transform: scaleX();
+  transform: scaleX(var(--b-cssvar-location-tab-line-width-scale));
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box {
