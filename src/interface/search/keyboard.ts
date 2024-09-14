@@ -161,11 +161,11 @@ export function updateSearchInput(value: string = ''): void {
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
   const value = searchInputElement.value;
-  const cursorOffset = Math.max(1, canvasContext.measureText(value).width);
+  const cursorOffset = Math.max(1, searchInputCanvasContext.measureText(value).width);
   const alpha = Math.abs(Math.sin(x));
-  canvasContext.globalAlpha = alpha;
-  canvasContext.clearRect(cursorOffset - 1, 0, 1.8 * scale + 2, height);
-  drawRoundedRect(canvasContext, cursorOffset, (height - 25 * searchInputCanvasScale) / 2, cursorWidth * searchInputCanvasScale, lineHeight, cursorBorderRadius, cursorColor);
+  searchInputCanvasContext.globalAlpha = alpha;
+  searchInputCanvasContext.clearRect(cursorOffset - 1, 0, 1.8 * scale + 2, height);
+  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - 25 * searchInputCanvasScale) / 2, cursorWidth * searchInputCanvasScale, lineHeight, cursorBorderRadius, cursorColor);
   if (playingCursorAnimation) {
     window.requestAnimationFrame(animateCursor);
   }
