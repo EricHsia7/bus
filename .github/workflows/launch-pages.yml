@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-improved-dark-mode
-      - dev-rename-css-classes
 
 jobs:
   launch:
