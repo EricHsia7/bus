@@ -160,7 +160,7 @@ export function updateSearchInput(value: string = ''): void {
 
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
-  const value = inputElement.value;
+  const value = searchInputElement.value;
   const cursorOffset = Math.max(1, canvasContext.measureText(value).width);
   const alpha = Math.abs(Math.sin(x));
   canvasContext.globalAlpha = alpha;
