@@ -20,7 +20,7 @@ const searchInputPlaceholder = '搜尋路線、地點';
 const searchInputCanvasScale = window.devicePixelRatio;
 
 const cursorWidth: number = 1.65 * searchInputCanvasScale;
-const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
+const cursorBorderRadius: number = 0.825 * searchInputCanvasScale;
 const lineHeight: number = 25 * searchInputCanvasScale;
 const fontSize: number = 20 * searchInputCanvasScale;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
