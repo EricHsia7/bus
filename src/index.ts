@@ -9,7 +9,7 @@ import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearchPage, closeSearchPage } from './interface/search/index';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize } from './interface/search/keyboard';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
 import { initializeFolderStores } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
