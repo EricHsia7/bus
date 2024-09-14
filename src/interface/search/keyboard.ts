@@ -27,6 +27,7 @@ const fontFamily: string = '"Noto Sans TC", sans-serif';
 let textColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
 let placeholderTextColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
 let cursorColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
+let cursorOffset: number = 0;
 let size = querySearchInputCanvasSize();
 let width = size.width * searchInputCanvasScale;
 let height = size.height * searchInputCanvasScale;
@@ -143,7 +144,6 @@ export function updateSearchInput(value: string = ''): void {
   textColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
   placeholderTextColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
   cursorColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
-  let cursorOffset: number = 0;
 
   searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
   searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
@@ -152,6 +152,7 @@ export function updateSearchInput(value: string = ''): void {
 
   cursorOffset = empty ? 1 : Math.max(1, searchInputCanvasContext.measureText(value).width);
 
+  searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
   searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2, height / 2);
 
@@ -160,12 +161,10 @@ export function updateSearchInput(value: string = ''): void {
 
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
-  const value = searchInputElement.value;
-  const cursorOffset = Math.max(1, searchInputCanvasContext.measureText(value).width);
   const alpha = Math.abs(Math.sin(x));
   searchInputCanvasContext.globalAlpha = alpha;
-  searchInputCanvasContext.clearRect(cursorOffset - 1, 0, 1.8 * scale + 2, height);
-  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - 25 * searchInputCanvasScale) / 2, cursorWidth * searchInputCanvasScale, lineHeight, cursorBorderRadius, cursorColor);
+  searchInputCanvasContext.clearRect(cursorOffset - 1, 0, cursorWidth + 2, height);
+  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   if (playingCursorAnimation) {
     window.requestAnimationFrame(animateCursor);
   }
