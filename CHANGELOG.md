@@ -55,6 +55,7 @@
 
 **Merged pull requests:**
 
+- Improve search input [\#65](https://github.com/EricHsia7/bus/pull/65) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
 - Update the dependencies [\#58](https://github.com/EricHsia7/bus/pull/58) ([EricHsia7](https://github.com/EricHsia7))
