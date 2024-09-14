@@ -81,6 +81,7 @@ function initializeKeyboard(): void {
 
 export function openKeyboard() {
   initializeKeyboard();
+  updateSearchInput('');
   keyboardElement.setAttribute('displayed', 'true');
 }
 
