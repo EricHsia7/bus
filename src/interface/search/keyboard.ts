@@ -119,6 +119,8 @@ export function updateSearchInput(value: string = ''): void {
     empty = true;
   }
   const size = querySearchInputCanvasSize();
+  const width = size.width * searchInputCanvasScale;
+  const height = size.height * searchInputCanvasScale;
   const fontSize: number = 20 * searchInputCanvasScale;
   const fontFamily: string = '"Noto Sans TC", sans-serif';
   const lineHeight: number = 25 * searchInputCanvasScale;
@@ -136,8 +138,8 @@ export function updateSearchInput(value: string = ''): void {
 
   cursorOffset = empty ? 1 : Math.max(1, searchInputCanvasContext.measureText(value).width);
 
-  searchInputCanvasContext.clearRect(0, 0, size.width, size.height);
-  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2, size.height / 2);
+  searchInputCanvasContext.clearRect(0, 0, width, height);
+  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2, height / 2);
 
-  drawRoundedRect(searchInputCanvasContext, cursorOffset, (size.height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
 }
