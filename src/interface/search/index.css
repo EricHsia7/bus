@@ -33,23 +33,33 @@
   height: 55px;
 }
 
-.css_search_field .css_search_head .css_search_search_input input {
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(0, 0, 0, 0);
-  border: none;
-  border-radius: none;
-  color: var(--b-cssvar-333333);
-  font-size: 20px;
-  font-weight: 500;
-  padding: 0px;
-  margin: 0px;
-  caret-color: var(--b-cssvar-main-color);
+.css_search_field .css_search_head .css_search_search_input canvas {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 55px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_search_field .css_search_head .css_search_search_input input {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  border-radius: 0px;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 0px;
+  margin: 0px;
+  color: rgba(0, 0, 0, 0);
+  caret-color: rgba(0, 0, 0, 0);
 }
 
 .css_search_field .css_search_head .css_search_button_left,

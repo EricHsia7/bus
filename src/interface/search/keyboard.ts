@@ -1,7 +1,8 @@
 import { updateSearchResult } from './index';
-import { getTextWidth } from '../../tools/index';
+import { drawRoundedRect, getTextWidth } from '../../tools/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
+import { FieldSize } from '../index';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -10,8 +11,26 @@ let keyboard_keys = [
   ['鍵盤', '幹線', '清空', '0', '刪除']
 ];
 
-const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
 const keyboardElement = documentQuerySelector('.css_search_field .css_search_body .css_search_keyboard');
+const searchInputCanvasElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input canvas');
+
+const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
+const searchInputPlaceholder = '搜尋路線、地點';
+const searchInputCanvasScale = window.devicePixelRatio;
+
+function querySearchInputCanvasSize(): FieldSize {
+  return {
+    width: window.innerWidth - 55,
+    height: 55
+  };
+}
+
+export function ResizeSearchInputCanvasSize(): void {
+  const size = querySearchInputCanvasSize();
+  searchInputCanvasElement.width = size.width;
+  searchInputCanvasElement.height = size.height;
+}
 
 function supportTouch(): boolean {
   if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -76,7 +95,7 @@ export function typeTextIntoInput(value): void {
   var newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  uodateCursor(newValue);
+  updateSearchInput(newValue);
 }
 
 export function deleteCharFromInout(): void {
@@ -84,16 +103,41 @@ export function deleteCharFromInout(): void {
   var newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  uodateCursor(newValue);
+  updateSearchInput(newValue);
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult('');
-  uodateCursor('');
+  updateSearchInput('');
 }
 
-function uodateCursor(value: string): void {
-  const offset = getTextWidth(value, 500, '20px', `"Noto Sans TC", sans-serif`, 100, 'normal', 'none', '1.2');
-  documentQuerySelector('.css_search_field .css_search_head .css_search_search_input .css_cursor').style.setProperty('--b-cssvar-cursor-offset', `${offset}px`);
+export function updateSearchInput(value: string = ''): void {
+  let empty = false;
+  if (value.length === 0) {
+    value = searchInputPlaceholder;
+    empty = true;
+  }
+  const size = querySearchInputCanvasSize();
+  const fontSize: number = 20 * searchInputCanvasScale;
+  const fontFamily: string = '"Noto Sans TC", sans-serif';
+  const lineHeight: number = 25 * searchInputCanvasScale;
+  const textColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
+  const placeholderTextColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
+  const cursorWidth: number = 1.8 * searchInputCanvasScale;
+  const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
+  const cursorColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
+  let cursorOffset: number = 0;
+
+  searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
+  searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
+  searchInputCanvasContext.textAlign = 'center';
+  searchInputCanvasContext.textBaseline = 'middle';
+
+  cursorOffset = empty ? 1 : Math.max(1, searchInputCanvasContext.measureText(value).width);
+
+  searchInputCanvasContext.clearRect(0, 0, size.width, size.height);
+  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2, size.height / 2);
+
+  drawRoundedRect(searchInputCanvasContext, cursorOffset, (size.height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
 }

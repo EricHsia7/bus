@@ -9,7 +9,7 @@ import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearchPage, closeSearchPage } from './interface/search/index';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard } from './interface/search/keyboard';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize } from './interface/search/keyboard';
 import { initializeFolderStores } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
@@ -114,36 +114,44 @@ window.bus = {
             initializeLocationSliding();
             ResizeRouteField();
             ResizeLocationField();
+            ResizeSearchInputCanvasSize();
             window.addEventListener('resize', (event) => {
               ResizeRouteField();
               ResizeLocationField();
+              ResizeSearchInputCanvasSize();
             });
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', (event) => {
                   ResizeRouteField();
                   ResizeLocationField();
+                  ResizeSearchInputCanvasSize();
                 });
               }
             }
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
-            const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_route_input');
+            const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value);
             });
             searchInputElement.addEventListener('cut', function () {
               updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value);
             });
             searchInputElement.addEventListener('selectionchange', function () {
               updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value);
             });
             document.addEventListener('selectionchange', function () {
               updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value);
             });
             searchInputElement.addEventListener('keyup', function () {
               updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value);
             });
 
             const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
