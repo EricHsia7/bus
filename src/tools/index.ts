@@ -71,11 +71,8 @@ export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: num
   // Complete the path
   ctx.closePath();
 
-  // Optionally, fill or stroke the rectangle
   ctx.fillStyle = fill;
-  ctx.strokeStyle = fill;
-  ctx.fill(); // To fill the rectangle
-  ctx.stroke(); // To add an outline (if needed)
+  ctx.fill(); // To fill the shape
 }
 
 export function compareThings(a: any, b: any): boolean {
