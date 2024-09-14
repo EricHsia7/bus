@@ -28,8 +28,10 @@ function querySearchInputCanvasSize(): FieldSize {
 
 export function ResizeSearchInputCanvasSize(): void {
   const size = querySearchInputCanvasSize();
-  searchInputCanvasElement.width = size.width;
-  searchInputCanvasElement.height = size.height;
+  const width = size.width;
+  const height = size.height;
+  searchInputCanvasElement.width = width * searchInputCanvasScale;
+  searchInputCanvasElement.height = height * searchInputCanvasScale;
 }
 
 function supportTouch(): boolean {
