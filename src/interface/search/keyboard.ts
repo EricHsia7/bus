@@ -17,7 +17,7 @@ const searchInputCanvasElement = documentQuerySelector('.css_search_field .css_s
 
 const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
 const searchInputPlaceholder = '搜尋路線、地點';
-const searchInputCanvasScale = window.devicePixelRatio + 1;
+const searchInputCanvasScale = window.devicePixelRatio;
 
 const padding: number = 15 * searchInputCanvasScale;
 const cursorWidth: number = 1.8 * searchInputCanvasScale;
