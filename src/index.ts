@@ -132,7 +132,11 @@ window.bus = {
             initializeFolderStores().then((e) => {
               initializeFolders();
             });
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
+            mediaQuery.addEventListener('change', function () {
+              updateSearchInput(searchInputElement.value);
+            });
             searchInputElement.addEventListener('paste', function (event) {
               updateSearchResult(searchInputElement.value);
               updateSearchInput(searchInputElement.value);
