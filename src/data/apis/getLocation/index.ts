@@ -41,6 +41,8 @@ export interface MergedLocationItem {
   s: Array<Array<number>>; // StopIDs
   v: Array<Array<[number, number]>>; // sets of vectors
   a: Array<object | string>; // addresses
+  id: Array<number>;
+  hash: string;
 }
 
 export type MergedLocation = { [key: string]: MergedLocationItem };
