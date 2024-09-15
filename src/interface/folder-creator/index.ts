@@ -1,6 +1,6 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { closePreviousPage, openPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
