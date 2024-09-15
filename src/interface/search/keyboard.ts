@@ -100,7 +100,7 @@ export function openKeyboard() {
 
   playingCursorAnimation = true;
   animateCursor();
-  
+
   const value = searchInputElement.value;
   updateSearchInput(value);
 }
@@ -158,17 +158,17 @@ export function updateSearchInput(value: string = ''): void {
 
   searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
-  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2, height / 2);
+  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2 + (Math.min(cursorOffset, width - 10 * searchInputCanvasScale) - cursorOffset), height / 2);
 
-  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - 10 * searchInputCanvasScale), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
 }
 
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
   const alpha = Math.abs(Math.sin(x));
   searchInputCanvasContext.globalAlpha = alpha;
-  searchInputCanvasContext.clearRect(cursorOffset - 1, 0, cursorWidth + 2, height);
-  drawRoundedRect(searchInputCanvasContext, cursorOffset, (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - 10 * searchInputCanvasScale) - 1, 0, cursorWidth + 2, height);
+  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - 10 * searchInputCanvasScale), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   if (playingCursorAnimation) {
     window.requestAnimationFrame(animateCursor);
   }
