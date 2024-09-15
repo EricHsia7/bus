@@ -5,7 +5,7 @@ import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
-import { GeneratedElement, FieldSize } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, revokePageHistory, openPreviousPage, closePreviousPage } from '../index';
 
 let previousIntegration: object = {};
 
@@ -458,6 +458,7 @@ export function streamLocation(): void {
 }
 
 export function openLocation(hash: string): void {
+  pushPageHistory('Location');
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');
@@ -474,12 +475,15 @@ export function openLocation(hash: string): void {
     }
     updateUpdateTimer();
   }
+  closePreviousPage();
 }
 
 export function closeLocation(): void {
+  // revokePageHistory('Location');
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'false');
   locationRefreshTimer_streaming = false;
+  openPreviousPage();
 }
 
 export function stretchLocationItemBody(itemID: string): void {

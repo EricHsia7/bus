@@ -5,15 +5,17 @@ import { dataDownloadCompleted } from '../home/index';
 import { promptMessage } from '../prompt/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/index';
+import { pushPageHistory, revokePageHistory } from '../index';
 
-const searchPageField = documentQuerySelector('.css_search_field');
+const searchField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
 const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_results');
 var currentFuse: any = false;
 
-export function openSearchPage(): void {
+export function openSearch(): void {
   if (dataDownloadCompleted) {
-    searchPageField.setAttribute('displayed', 'true');
+    pushPageHistory('Search');
+    searchField.setAttribute('displayed', 'true');
     openKeyboard();
     prepareForRouteSearch().then((preparation) => {
       currentFuse = preparation;
@@ -23,9 +25,10 @@ export function openSearchPage(): void {
   }
 }
 
-export function closeSearchPage(): void {
+export function closeSearch(): void {
+  revokePageHistory('Search');
   closeKeyboard();
-  searchPageField.setAttribute('displayed', 'false');
+  searchField.setAttribute('displayed', 'false');
 }
 
 export function updateSearchResult(query: string): void {

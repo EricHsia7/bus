@@ -4,7 +4,7 @@ import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';
-import { GeneratedElement } from '../index';
+import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 type Target = 'editor' | 'creator' | '';
@@ -72,6 +72,7 @@ export function selectFolderIcon(symbol: string): void {
 }
 
 export function openFolderIconSelector(target: Target): void {
+  pushPageHistory('FolderIconSelector');
   var openFolderIconSelectorElement;
   switch (target) {
     case 'editor':
@@ -99,5 +100,6 @@ export function openFolderIconSelector(target: Target): void {
 }
 
 export function closeFolderIconSelector(): void {
+  revokePageHistory('FolderIconSelector');
   folderIconSelectorField.setAttribute('displayed', 'false');
 }

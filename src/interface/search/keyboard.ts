@@ -2,7 +2,7 @@ import { updateSearchResult } from './index';
 import { drawRoundedRect, getTextWidth } from '../../tools/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
-import { FieldSize } from '../index';
+import { FieldSize, revokePageHistory } from '../index';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -68,19 +68,19 @@ function initializeKeyboard(): void {
       let html = '';
       switch (column) {
         case '刪除':
-          eventScript = 'bus.searchPage.deleteCharFromInout()';
+          eventScript = 'bus.search.deleteCharFromInout()';
           html = getIconHTML('backspace');
           break;
         case '清空':
-          eventScript = 'bus.searchPage.emptyInput()';
+          eventScript = 'bus.search.emptyInput()';
           html = column;
           break;
         case '鍵盤':
-          eventScript = 'bus.searchPage.openSystemKeyboard()';
+          eventScript = 'bus.search.openSystemKeyboard()';
           html = getIconHTML('keyboard');
           break;
         default:
-          eventScript = `bus.searchPage.typeTextIntoInput('${column}')`;
+          eventScript = `bus.search.typeTextIntoInput('${column}')`;
           html = column;
           break;
       }
@@ -96,10 +96,13 @@ function initializeKeyboard(): void {
 
 export function openKeyboard() {
   initializeKeyboard();
-  updateSearchInput('');
   keyboardElement.setAttribute('displayed', 'true');
+
   playingCursorAnimation = true;
   animateCursor();
+  
+  const value = searchInputElement.value;
+  updateSearchInput(value);
 }
 
 export function closeKeyboard() {

@@ -3,7 +3,7 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { listSettings } from '../../data/settings/index';
 import { exportData } from '../../data/export/index';
 import { getIconHTML } from '../icons/index';
-import { GeneratedElement } from '../index';
+import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -28,13 +28,15 @@ function initializeSettingsField(Field: HTMLElement) {
   }
 }
 
-export function openSettingsPage(): void {
+export function openSettings(): void {
+  pushPageHistory('Settings');
   var Field: HTMLElement = documentQuerySelector('.css_settings_page_field');
   Field.setAttribute('displayed', 'true');
   initializeSettingsField(Field);
 }
 
-export function closeSettingsPage(): void {
+export function closeSettings(): void {
+  revokePageHistory('Settings');
   var Field: HTMLElement = documentQuerySelector('.css_settings_page_field');
   Field.setAttribute('displayed', 'false');
 }

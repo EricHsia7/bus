@@ -2,7 +2,7 @@ import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/in
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
-import { GeneratedElement } from '../index';
+import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 
 function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -29,12 +29,14 @@ async function initializeFolderManagerField(): void {
 }
 
 export function openFolderManager(): void {
+  pushPageHistory('FolderManager');
   var Field = documentQuerySelector('.css_folder_manager_field');
   Field.setAttribute('displayed', 'true');
   initializeFolderManagerField();
 }
 
 export function closeFolderManager(): void {
+  revokePageHistory('FolderManager');
   var Field = documentQuerySelector('.css_folder_manager_field');
   Field.setAttribute('displayed', 'false');
 }
