@@ -1,8 +1,8 @@
 import { updateSearchResult } from './index';
-import { drawRoundedRect, getTextWidth } from '../../tools/index';
+import { drawRoundedRect } from '../../tools/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
-import { FieldSize, revokePageHistory } from '../index';
+import { FieldSize } from '../index';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -19,14 +19,17 @@ const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
 const searchInputPlaceholder = '搜尋路線、地點';
 const searchInputCanvasScale = window.devicePixelRatio;
 
+const padding: number = 15 * searchInputCanvasScale;
 const cursorWidth: number = 1.8 * searchInputCanvasScale;
 const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
 const lineHeight: number = 25 * searchInputCanvasScale;
 const fontSize: number = 20 * searchInputCanvasScale;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
+
 let textColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
 let placeholderTextColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
 let cursorColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
+let textWidth: number = 0;
 let cursorOffset: number = 0;
 let size = querySearchInputCanvasSize();
 let width = size.width * searchInputCanvasScale;
@@ -154,21 +157,22 @@ export function updateSearchInput(value: string = ''): void {
   searchInputCanvasContext.textAlign = 'center';
   searchInputCanvasContext.textBaseline = 'middle';
 
-  cursorOffset = empty ? 1 : Math.max(1, searchInputCanvasContext.measureText(value).width);
+  textWidth = searchInputCanvasContext.measureText(value).width;
+  cursorOffset = empty ? 1 : Math.max(1, textWidth);
 
   searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
-  searchInputCanvasContext.fillText(value, searchInputCanvasContext.measureText(value).width / 2 + (Math.min(cursorOffset, width - 10 * searchInputCanvasScale) - cursorOffset), height / 2);
+  searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
 
-  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - 10 * searchInputCanvasScale), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
 }
 
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
   const alpha = Math.abs(Math.sin(x));
   searchInputCanvasContext.globalAlpha = alpha;
-  searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - 10 * searchInputCanvasScale) - 1, 0, cursorWidth + 2, height);
-  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - 10 * searchInputCanvasScale), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
+  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   if (playingCursorAnimation) {
     window.requestAnimationFrame(animateCursor);
   }
