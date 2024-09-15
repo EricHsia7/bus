@@ -5,7 +5,7 @@ import { getBusEvent } from '../apis/getBusEvent/index';
 import { getRoute } from '../apis/getRoute/index';
 import { getStop } from '../apis/getStop/index';
 import { getSettingOptionValue } from '../settings/index';
-import { searchRouteByPathAttributeId } from '../search/searchRoute';
+import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/index';
 import { parseEstimateTime, formatBusEvent } from '../apis/index';

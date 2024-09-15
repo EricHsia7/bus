@@ -1,4 +1,4 @@
-import { searchRouteByRouteID } from '../../../data/search/searchRoute';
+import { searchRouteByRouteID } from '../../../data/search/index';
 import { getPermalink } from '../../../tools/permalink';
 import { promptMessage } from '../../prompt/index';
 

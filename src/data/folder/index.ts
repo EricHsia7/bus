@@ -3,7 +3,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } fro
 import { generateIdentifier } from '../../tools/index';
 import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
-import { searchRouteByRouteID } from '../search/searchRoute';
+import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTime } from '../analytics/update-rate';

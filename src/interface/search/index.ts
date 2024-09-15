@@ -1,5 +1,5 @@
 import { openKeyboard, closeKeyboard } from './keyboard';
-import { prepareForRouteSearch } from '../../data/search/searchRoute';
+import { prepareForSearch } from '../../data/search/index';
 import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
 import { promptMessage } from '../prompt/index';
@@ -17,7 +17,7 @@ export function openSearch(): void {
     pushPageHistory('Search');
     searchField.setAttribute('displayed', 'true');
     openKeyboard();
-    prepareForRouteSearch().then((preparation) => {
+    prepareForSearch().then((preparation) => {
       currentFuse = preparation;
     });
   } else {
