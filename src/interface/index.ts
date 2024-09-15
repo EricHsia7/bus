@@ -17,6 +17,7 @@ let pageHistory: Array<Page> = ['Home'];
 
 export function pushPageHistory(page: Page): void {
   pageHistory.push(page);
+  console.log(pageHistory);
 }
 
 export function revokePageHistory(page: Page): void {
