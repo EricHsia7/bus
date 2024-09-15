@@ -6,6 +6,8 @@
 
 **Implemented enhancements:**
 
+- Page history [\#66](https://github.com/EricHsia7/bus/pull/66) ([EricHsia7](https://github.com/EricHsia7))
+- Improve search input [\#65](https://github.com/EricHsia7/bus/pull/65) ([EricHsia7](https://github.com/EricHsia7))
 - Improve dark mode [\#63](https://github.com/EricHsia7/bus/pull/63) ([EricHsia7](https://github.com/EricHsia7))
 - Improve segment buffer feature [\#62](https://github.com/EricHsia7/bus/pull/62) ([EricHsia7](https://github.com/EricHsia7))
 - Use web workers to offload heavy tasks [\#60](https://github.com/EricHsia7/bus/pull/60) ([EricHsia7](https://github.com/EricHsia7))
@@ -55,7 +57,6 @@
 
 **Merged pull requests:**
 
-- Improve search input [\#65](https://github.com/EricHsia7/bus/pull/65) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
 - Update the dependencies [\#58](https://github.com/EricHsia7/bus/pull/58) ([EricHsia7](https://github.com/EricHsia7))
