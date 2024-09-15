@@ -8,13 +8,13 @@ import { openRouteDetails, closeRouteDetails } from './interface/route/details/i
 import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
-import { openSearchPage, closeSearchPage } from './interface/search/index';
+import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
 import { initializeFolderStores } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
-import { openSettingsPage, closeSettingsPage, downloadExportFile } from './interface/settings/index';
-import { openSettingsOptionsPage, closeSettingsOptionsPage, settingsOptionsHandler } from './interface/settings/options';
+import { openSettings, closeSettings, downloadExportFile } from './interface/settings/index';
+import { openSettingsOptions, closeSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
 import { initializeSettings } from './data/settings/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
 import { documentQuerySelector } from './tools/query-selector';
@@ -229,9 +229,9 @@ window.bus = {
     removeItemOnFolderEditor,
     moveItemOnFolderEditor
   },
-  searchPage: {
-    openSearchPage,
-    closeSearchPage,
+  search: {
+    openSearch,
+    closeSearch,
     typeTextIntoInput,
     deleteCharFromInout,
     emptyInput,
@@ -241,11 +241,11 @@ window.bus = {
     calculateDataUsage,
     calculateStoresSize
   },
-  settingsPage: {
-    openSettingsPage,
-    closeSettingsPage,
-    openSettingsOptionsPage,
-    closeSettingsOptionsPage,
+  settings: {
+    openSettings,
+    closeSettings,
+    openSettingsOptions,
+    closeSettingsOptions,
     settingsOptionsHandler,
     downloadExportFile
   }

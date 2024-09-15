@@ -6,7 +6,7 @@ import { compareThings, getTextWidth, generateIdentifier } from '../../tools/ind
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
-import { GeneratedElement, FieldSize } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, revokePageHistory, closePreviousPage, openPreviousPage } from '../index';
 
 let previousIntegration: object = {};
 
@@ -489,6 +489,7 @@ export function streamRoute(): void {
 }
 
 export function openRoute(RouteID: number, PathAttributeId: Array<number>): void {
+  pushPageHistory('Route');
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
@@ -506,12 +507,15 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
     }
     updateUpdateTimer();
   }
+  closePreviousPage();
 }
 
 export function closeRoute(): void {
+  // revokePageHistory('Route');
   var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
+  openPreviousPage();
 }
 
 export function switchRoute(RouteID: number, PathAttributeId: Array<number>) {

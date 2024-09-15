@@ -1,5 +1,5 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { GeneratedElement } from '../index';
+import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { generateIdentifier } from '../../tools/index';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
@@ -40,12 +40,14 @@ async function initializeSaveToFolderField(type: FolderContentType, parameters: 
 }
 
 export function openSaveToFolder(type: FolderContentType, parameters: Array): void {
+  pushPageHistory('SaveToFolder');
   var Field = documentQuerySelector('.css_save_to_folder_field');
   Field.setAttribute('displayed', 'true');
   initializeSaveToFolderField(type, parameters);
 }
 
 export function closeSaveToFolder(): void {
+  revokePageHistory('SaveToFolder');
   var Field = documentQuerySelector('.css_save_to_folder_field');
   Field.setAttribute('displayed', 'false');
 }

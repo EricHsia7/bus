@@ -1,9 +1,10 @@
 import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { GeneratedElement } from '../index';
+import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
+import { closeFolderManager } from '../folder-manager/index';
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -85,14 +86,18 @@ async function initializeFolderEditorField(folderID: string): void {
 }
 
 export function openFolderEditor(folderID: string): void {
+  pushPageHistory('FolderEditor');
   const Field = documentQuerySelector('.css_folder_editor_field');
   Field.setAttribute('displayed', 'true');
   initializeFolderEditorField(folderID);
+  closePreviousPage();
 }
 
 export function closeFolderEditor(): void {
+  // revokePageHistory('FolderEditor');
   const Field = documentQuerySelector('.css_folder_editor_field');
   Field.setAttribute('displayed', 'false');
+  openPreviousPage();
 }
 
 export function removeItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {

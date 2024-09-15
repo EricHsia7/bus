@@ -1,14 +1,15 @@
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
 import { getSetting, changeSettingOption } from '../../data/settings/index';
-import { GeneratedElement } from '../index';
+import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { closeSettings } from './index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_option');
   element.id = identifier;
-  element.innerHTML = `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settingsPage.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
+  element.innerHTML = `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settings.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
     id: identifier
@@ -26,17 +27,21 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
   }
 }
 
-export function openSettingsOptionsPage(settingKey: string): void {
+export function openSettingsOptions(settingKey: string): void {
+  pushPageHistory('SettingsOptions');
   var setting = getSetting(settingKey);
   var Field: HTMLElement = documentQuerySelector('.css_settings_options_page_field');
   Field.setAttribute('displayed', 'true');
   elementQuerySelector(Field, '.css_settings_options_page_head .css_settings_options_page_title').innerText = setting.name;
   initializeSettingsOptionsField(Field, settingKey);
+  closePreviousPage();
 }
 
-export function closeSettingsOptionsPage(): void {
+export function closeSettingsOptions(): void {
+  // revokePageHistory('SettingsOptions');
   var Field = documentQuerySelector('.css_settings_options_page_field');
   Field.setAttribute('displayed', 'false');
+  openPreviousPage();
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {

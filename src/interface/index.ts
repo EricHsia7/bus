@@ -1,10 +1,109 @@
 import { isRunningStandalone } from '../tools/index';
 import { documentQuerySelector } from '../tools/query-selector';
+import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
+import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
+import { closeFolderManager, openFolderManager } from './folder-manager/index';
+import { closeSearch, openSearch } from './search/index';
+import { closeSettings, openSettings } from './settings/index';
 
-var splashScreenTimer = {
+const splashScreenTimer = {
   minimalTimeOut: 1024,
   openTime: new Date().getTime()
 };
+
+type Page = 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions';
+
+let pageHistory: Array<Page> = [];
+
+export function pushPageHistory(page: Page): void {
+  pageHistory.push(page);
+}
+
+export function revokePageHistory(page: Page): void {
+  if (pageHistory.indexOf(page) > -1) {
+    const pageHistoryLength = pageHistory.length;
+    if (pageHistory[pageHistoryLength - 1] === page) {
+      pageHistory.pop();
+    }
+  }
+}
+
+export function closePreviousPage(): void {
+  const pageHistoryLength = pageHistory.length;
+  if (pageHistoryLength > 1) {
+    const previousPage = pageHistory[pageHistoryLength - 2];
+    switch (previousPage) {
+      case 'FolderCreator':
+        closeFolderCreator();
+        break;
+      case 'FolderEditor':
+        closeFolderEditor();
+        break;
+      case 'FolderIconSelector':
+        break;
+      case 'FolderManager':
+        closeFolderManager();
+        break;
+      case 'Location':
+        break;
+      case 'Route':
+        break;
+      case 'RouteDetails':
+        break;
+      case 'SaveToFolder':
+        break;
+      case 'Search':
+        closeSearch();
+        break;
+      case 'Settings':
+        closeSettings();
+        break;
+      case 'SettingsOptions':
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+export function openPreviousPage(): void {
+  const pageHistoryLength = pageHistory.length;
+  if (pageHistoryLength > 1) {
+    const previousPage = pageHistory[pageHistoryLength - 2];
+    pageHistory.pop();
+    switch (previousPage) {
+      case 'FolderCreator':
+        openFolderCreator();
+        break;
+      case 'FolderEditor':
+        openFolderEditor();
+        break;
+      case 'FolderIconSelector':
+        break;
+      case 'FolderManager':
+        openFolderManager();
+        break;
+      case 'Location':
+        break;
+      case 'Route':
+        break;
+      case 'RouteDetails':
+        break;
+      case 'SaveToFolder':
+        break;
+      case 'Search':
+        openSearch();
+        break;
+      case 'Settings':
+        openSettings();
+        break;
+      case 'SettingsOptions':
+        break;
+      default:
+        break;
+    }
+  }
+}
 
 export function setSplashScreenIconOffsetY(): void {
   let offset = 0;

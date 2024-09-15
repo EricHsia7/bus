@@ -1,5 +1,6 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
@@ -20,11 +21,13 @@ export function createFormulatedFolder(): void {
 }
 
 export function openFolderCreator(): void {
+  pushPageHistory('FolderCreator');
   const Field = documentQuerySelector('.css_folder_creator_field');
   Field.setAttribute('displayed', 'true');
 }
 
 export function closeFolderCreator(): void {
+  revokePageHistory('FolderCreator');
   const Field = documentQuerySelector('.css_folder_creator_field');
   Field.setAttribute('displayed', 'false');
 }
