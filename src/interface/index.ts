@@ -16,7 +16,11 @@ type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | '
 let pageHistory: Array<Page> = ['Home'];
 
 export function pushPageHistory(page: Page): void {
-  pageHistory.push(page);
+  const pageHistoryLength = pageHistory.length;
+  const lastPage = pageHistory[pageHistoryLength - 1];
+  if (!(lastPage === page)) {
+    pageHistory.push(page);
+  }
   console.log(pageHistory);
 }
 
