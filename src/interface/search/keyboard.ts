@@ -96,10 +96,13 @@ function initializeKeyboard(): void {
 
 export function openKeyboard() {
   initializeKeyboard();
-  updateSearchInput('');
   keyboardElement.setAttribute('displayed', 'true');
+
   playingCursorAnimation = true;
   animateCursor();
+  
+  const value = searchInputElement.value;
+  updateSearchInput(value);
 }
 
 export function closeKeyboard() {

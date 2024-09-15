@@ -21,7 +21,6 @@ export function pushPageHistory(page: Page): void {
   if (!(lastPage === page)) {
     pageHistory.push(page);
   }
-  console.log(pageHistory);
 }
 
 export function revokePageHistory(page: Page): void {
