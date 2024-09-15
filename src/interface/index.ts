@@ -11,9 +11,9 @@ const splashScreenTimer = {
   openTime: new Date().getTime()
 };
 
-type Page = 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions';
 
-let pageHistory: Array<Page> = [];
+let pageHistory: Array<Page> = ['Home'];
 
 export function pushPageHistory(page: Page): void {
   pageHistory.push(page);
@@ -33,6 +33,8 @@ export function closePreviousPage(): void {
   if (pageHistoryLength > 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
+      case 'Home':
+        break;
       case 'FolderCreator':
         closeFolderCreator();
         break;
@@ -72,6 +74,8 @@ export function openPreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     pageHistory.pop();
     switch (previousPage) {
+      case 'Home':
+        break;
       case 'FolderCreator':
         openFolderCreator();
         break;
