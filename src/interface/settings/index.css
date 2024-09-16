@@ -267,4 +267,5 @@
   -webkit-user-select: none;
   margin-top: 5px;
   margin-bottom: var(--b-cssvar-safe-area-bottom);
+  text-align: justify;
 }
