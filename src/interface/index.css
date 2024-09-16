@@ -53,3 +53,17 @@ body * {
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }
+
+@keyframes click {
+  0% {
+    opacity: 1
+  }
+
+  65% {
+    opacity: 0.5
+  }
+
+  100% {
+    opacity: 1
+  }
+}
