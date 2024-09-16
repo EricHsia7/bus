@@ -103,7 +103,7 @@ var Settings = {
         value: false
       }
     ],
-    description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求存取位置權限。'
+    description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
   },
   location_labels: {
     key: 'location_labels',

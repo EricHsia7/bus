@@ -15,22 +15,12 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
   };
 }
 
-function generateElementOfDescription(setting: object): GeneratedElement {
-  var identifier = generateIdentifier('d');
-  var element = document.createElement('div');
-  element.classList.add('css_options_description');
-  element.id = identifier;
-  element.innerText = setting.description;
-  return {
-    element: element,
-    id: identifier
-  };
-}
-
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
   const setting = getSetting(settingKey);
   const bodyElement = elementQuerySelector(Field, '.css_settings_options_page_body');
   const optionsElement = elementQuerySelector(bodyElement, '.css_settings_options_page_options');
+  const descriptionElement = elementQuerySelector(bodyElement, '.css_options_description');
+  descriptionElement.innerText = setting.description;
   optionsElement.innerHTML = '';
   let index = 0;
   for (const item of setting.options) {
@@ -38,8 +28,6 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
     optionsElement.appendChild(thisElement.element);
     index += 1;
   }
-  const descriptionElement = generateElementOfDescription(setting);
-  bodyElement.appendChild(descriptionElement.element);
 }
 
 export function openSettingsOptions(settingKey: string): void {
