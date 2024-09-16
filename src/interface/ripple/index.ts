@@ -2,9 +2,9 @@ import { generateIdentifier, supportTouch } from '../../tools/index';
 
 export function addRippleToElement(element: HTMLElement, color: string = 'var(--b-cssvar-333333)', duration: number = 450, callback?: Function): void {
   const eventlistener = supportTouch() ? 'touchstart' : 'mousedown';
-  element.addEventListener(eventlistener, (event) => {
-    const addedRipple = element.getAttribute('added-ripple');
-    if (!(addedRipple === 'added-ripple')) {
+  const addedRipple = element.getAttribute('added-ripple');
+  if (!(addedRipple === 'added-ripple')) {
+    element.addEventListener(eventlistener, (event) => {
       const rippleID = generateIdentifier();
       const scrollX = document.documentElement.scrollLeft;
       const scrollY = document.documentElement.scrollTop;
@@ -35,7 +35,7 @@ export function addRippleToElement(element: HTMLElement, color: string = 'var(--
         elementPosition = 'relative';
       }
 
-      const css = `.css_ripple_animation_${rippleID} {position:${elementPosition};overflow:hidden;width:${elementWidth}px;height:${elementHeight}px; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-mask-image: -webkit-radial-gradient(white, black);mask-image: -webkit-radial-gradient(white, black);}.css_ripple_animation_${rippleID} .css_ripple_${rippleID} {background:${color};width:${rippleSize}px; height:${rippleSize}px; border-radius:50%; position:absolute; top:${rippleBoundaryY}px; left:${rippleBoundaryX}px;transform:scale(0); opacity:0;animation-duration: ${duration}ms;animation-name: css_ripple_animation_opacity-${rippleID},css_ripple_animation_zoom-${rippleID};animation-iteration-count: forward;animation-timing-function:linear;}@keyframes css_ripple_animation_opacity-${rippleID} {0% {opacity:0.15;}60% {opacity:0.15;}100% { opacity:0;} } @keyframes css_ripple_animation_zoom-${rippleID} {0% {transform:scale(0.1)}65% {  transform:scale(${rippleScale})}100% {transform:scale(${rippleScale})}}`;
+      const css = `.css_ripple_animation_${rippleID} {position:${elementPosition};overflow:hidden;width:${elementWidth}px;height:${elementHeight}px; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-mask-image: -webkit-radial-gradient(white, black);mask-image: -webkit-radial-gradient(white, black);}.css_ripple_animation_${rippleID} .css_ripple_${rippleID} {background:${color};width:${rippleSize}px; height:${rippleSize}px; border-radius:50%; position:absolute; top:${rippleBoundaryY}px; left:${rippleBoundaryX}px;transform:scale(0); opacity:0;animation-duration: ${duration}ms;animation-name: css_ripple_animation_opacity_${rippleID},css_ripple_animation_zoom_${rippleID};animation-iteration-count: forward;animation-timing-function:linear;}@keyframes css_ripple_animation_opacity_${rippleID} {0% {opacity:0.15;}60% {opacity:0.15;}100% { opacity:0;} } @keyframes css_ripple_animation_zoom_${rippleID} {0% {transform:scale(0.1)}65% {  transform:scale(${rippleScale})}100% {transform:scale(${rippleScale})}}`;
 
       element.classList.add(`css_ripple_animation_${rippleID}`);
       element.setAttribute('added-ripple', 'added-ripple');
@@ -98,6 +98,6 @@ export function addRippleToElement(element: HTMLElement, color: string = 'var(--
           }
         }, duration + 50);
       }
-    }
-  });
+    });
+  }
 }
