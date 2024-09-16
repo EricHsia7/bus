@@ -38,6 +38,11 @@
   user-select: none;
   -webkit-user-select: none;
   box-sizing: border-box;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0px;
+  margin: 0px;
 }
 
 .css_search_keyboard .css_search_keyboard_key:hover {
