@@ -6,7 +6,8 @@ import { compareThings, getTextWidth, generateIdentifier } from '../../tools/ind
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
-import { GeneratedElement, FieldSize, pushPageHistory, revokePageHistory, closePreviousPage, openPreviousPage } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage } from '../index';
+import { addRippleToElement } from '../ripple/index';
 
 let previousIntegration: object = {};
 
@@ -297,6 +298,10 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         saveToFolderButtonElement.setAttribute('highlighted', e);
       });
     }
+    function updateRipple(thisItemElement: HTMLElement): void {
+      const stretchElement = elementQuerySelector(thisItemElement, '.css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch');
+      addRippleToElement(stretchElement, 'var(--b-cssvar-333333)', 450);
+    }
 
     if (previousItem === null) {
       updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
@@ -309,6 +314,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSaveToFolderButton(thisItemElement, thisItem, integration);
+      updateRipple(thisItemElement);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
@@ -336,6 +342,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       }
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateRipple(thisItemElement);
     }
   }
 
