@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add setting options description [\#67](https://github.com/EricHsia7/bus/pull/67) ([EricHsia7](https://github.com/EricHsia7))
 - Page history [\#66](https://github.com/EricHsia7/bus/pull/66) ([EricHsia7](https://github.com/EricHsia7))
 - Improve search input [\#65](https://github.com/EricHsia7/bus/pull/65) ([EricHsia7](https://github.com/EricHsia7))
 - Improve dark mode [\#63](https://github.com/EricHsia7/bus/pull/63) ([EricHsia7](https://github.com/EricHsia7))
