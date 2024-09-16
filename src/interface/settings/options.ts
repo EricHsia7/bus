@@ -29,7 +29,8 @@ function generateElementOfDescription(setting: object): GeneratedElement {
 
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
   const setting = getSetting(settingKey);
-  const optionsElement = elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options');
+  const bodyElement = elementQuerySelector(Field, '.css_settings_options_page_body');
+  const optionsElement = elementQuerySelector(bodyElement, '.css_settings_options_page_options');
   optionsElement.innerHTML = '';
   let index = 0;
   for (const item of setting.options) {
@@ -38,7 +39,7 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
     index += 1;
   }
   const descriptionElement = generateElementOfDescription(setting);
-  optionsElement.appendChild(descriptionElement.element);
+  bodyElement.appendChild(descriptionElement.element);
 }
 
 export function openSettingsOptions(settingKey: string): void {
