@@ -2,7 +2,6 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
 import { getSetting, changeSettingOption } from '../../data/settings/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
-import { closeSettings } from './index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -16,15 +15,30 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
   };
 }
 
+function generateElementOfDescription(setting: object): GeneratedElement {
+  var identifier = generateIdentifier('d');
+  var element = document.createElement('div');
+  element.classList.add('css_options_description');
+  element.id = identifier;
+  element.innerText = setting.description;
+  return {
+    element: element,
+    id: identifier
+  };
+}
+
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
-  var setting = getSetting(settingKey);
-  elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options').innerHTML = '';
-  var index = 0;
-  for (var item of setting.options) {
+  const setting = getSetting(settingKey);
+  const optionsElement = elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options');
+  optionsElement.innerHTML = '';
+  let index = 0;
+  for (const item of setting.options) {
     var thisElement = generateElementOfItem(setting, item, index);
-    elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options').appendChild(thisElement.element);
+    optionsElement.appendChild(thisElement.element);
     index += 1;
   }
+  const descriptionElement = generateElementOfDescription(setting);
+  optionsElement.appendChild(descriptionElement);
 }
 
 export function openSettingsOptions(settingKey: string): void {

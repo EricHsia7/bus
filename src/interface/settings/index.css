@@ -251,3 +251,12 @@
   --b-cssvar-checkbox-alpha: 1;
   border-color: var(--b-cssvar-main-color);
 }
+
+.css_settings_options_page_field .css_settings_options_page_options .css_options_description {
+  position: relative;
+  width: 100%;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 15px;
+  white-space: pre-line;
+  word-break: break-all;
+}
