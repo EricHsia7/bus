@@ -376,3 +376,13 @@ export function convertToUnitVector(vector: Array<number>): Array<number> {
     return vector;
   }
 }
+
+export function supportTouch(): boolean {
+  if ('ontouchstart' in window || navigator.maxTouchPoints) {
+    // Touch events are supported
+    return true;
+  } else {
+    // Touch events are not supported
+    return false;
+  }
+}

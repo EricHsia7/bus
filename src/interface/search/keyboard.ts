@@ -1,5 +1,5 @@
 import { updateSearchResult } from './index';
-import { drawRoundedRect } from '../../tools/index';
+import { drawRoundedRect, supportTouch } from '../../tools/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { FieldSize } from '../index';
@@ -50,16 +50,6 @@ export function ResizeSearchInputCanvasSize(): void {
   searchInputCanvasElement.width = width * searchInputCanvasScale;
   searchInputCanvasElement.height = height * searchInputCanvasScale;
   updateSearchInput(searchInputElement.value);
-}
-
-function supportTouch(): boolean {
-  if ('ontouchstart' in window || navigator.maxTouchPoints) {
-    // Touch events are supported
-    return true;
-  } else {
-    // Touch events are not supported
-    return false;
-  }
 }
 
 function initializeKeyboard(): void {
