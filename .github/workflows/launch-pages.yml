@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-page-history
+      - dev-setting-options-description
 
 jobs:
   launch:
