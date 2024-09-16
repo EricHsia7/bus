@@ -2,7 +2,6 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
 import { getSetting, changeSettingOption } from '../../data/settings/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
-import { closeSettings } from './index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -17,12 +16,16 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
 }
 
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
-  var setting = getSetting(settingKey);
-  elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options').innerHTML = '';
-  var index = 0;
-  for (var item of setting.options) {
-    var thisElement = generateElementOfItem(setting, item, index);
-    elementQuerySelector(Field, '.css_settings_options_page_body .css_settings_options_page_options').appendChild(thisElement.element);
+  const setting = getSetting(settingKey);
+  const bodyElement = elementQuerySelector(Field, '.css_settings_options_page_body');
+  const optionsElement = elementQuerySelector(bodyElement, '.css_settings_options_page_options');
+  const descriptionElement = elementQuerySelector(bodyElement, '.css_options_description');
+  descriptionElement.innerText = setting.description;
+  optionsElement.innerHTML = '';
+  let index = 0;
+  for (const item of setting.options) {
+    const thisElement = generateElementOfItem(setting, item, index);
+    optionsElement.appendChild(thisElement.element);
     index += 1;
   }
 }

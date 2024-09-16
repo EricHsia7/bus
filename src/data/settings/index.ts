@@ -19,7 +19,8 @@ var Settings = {
       { name: formatTime(61, 2), value: 2 },
       { name: formatTime(61, 1), value: 1 },
       { name: formatTime(61, 0), value: 0 }
-    ]
+    ],
+    description: '在首頁、路線頁面、地點頁面上的預估公車到站時間的顯示格式。'
   },
   refresh_interval: {
     key: 'refresh_interval',
@@ -80,7 +81,8 @@ var Settings = {
           dynamic: false
         }
       }
-    ]
+    ],
+    description: '在首頁、路線頁面、地點頁面上的預估公車到站時間、公車等即時資料更新的頻率。'
   },
   display_user_location: {
     key: 'display_user_location',
@@ -100,7 +102,8 @@ var Settings = {
         name: '關閉',
         value: false
       }
-    ]
+    ],
+    description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
   },
   location_labels: {
     key: 'location_labels',
@@ -124,14 +127,16 @@ var Settings = {
         name: '英文字母',
         value: 'letters'
       }
-    ]
+    ],
+    description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
   },
   folder: {
     name: '資料夾',
     icon: 'folder',
     status: '',
     type: 'page',
-    action: 'bus.folder.openFolderManager()'
+    action: 'bus.folder.openFolderManager()',
+    description: ''
   },
   data_usage: {
     key: 'data_usage',
@@ -139,7 +144,8 @@ var Settings = {
     icon: 'data_usage',
     status: '',
     type: 'page',
-    action: 'bus.dataUsage.openDataUsagePage()'
+    action: 'bus.dataUsage.openDataUsagePage()',
+    description: ''
   },
   storage: {
     key: 'storage',
@@ -147,7 +153,8 @@ var Settings = {
     icon: 'database',
     status: '',
     type: 'page',
-    action: 'bus.storage.openStoragePage()'
+    action: 'bus.storage.openStoragePage()',
+    description: ''
   },
   export: {
     key: 'export',
@@ -155,7 +162,8 @@ var Settings = {
     icon: 'upload',
     status: '',
     type: 'action',
-    action: 'bus.settings.downloadExportFile()'
+    action: 'bus.settings.downloadExportFile()',
+    description: ''
   },
   version: {
     key: 'version',
@@ -163,7 +171,8 @@ var Settings = {
     icon: 'info',
     status: '',
     type: 'info',
-    action: ''
+    action: '',
+    description: ''
   },
   github: {
     key: 'github',
@@ -171,7 +180,8 @@ var Settings = {
     icon: 'book_2',
     status: '@EricHsia7/bus',
     type: 'info',
-    action: ''
+    action: '',
+    description: ''
   }
 };
 
