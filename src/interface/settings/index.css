@@ -105,7 +105,6 @@
   background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
-  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 .css_settings_page_field .css_settings_page_settings .css_setting,
@@ -262,4 +261,6 @@
   word-break: break-all;
   user-select: none;
   -webkit-user-select: none;
+  margin-top: 10px;
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
