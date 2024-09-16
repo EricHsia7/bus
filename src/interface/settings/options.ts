@@ -33,12 +33,12 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
   optionsElement.innerHTML = '';
   let index = 0;
   for (const item of setting.options) {
-    var thisElement = generateElementOfItem(setting, item, index);
+    const thisElement = generateElementOfItem(setting, item, index);
     optionsElement.appendChild(thisElement.element);
     index += 1;
   }
   const descriptionElement = generateElementOfDescription(setting);
-  optionsElement.appendChild(descriptionElement);
+  optionsElement.appendChild(descriptionElement.element);
 }
 
 export function openSettingsOptions(settingKey: string): void {
