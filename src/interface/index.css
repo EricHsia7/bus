@@ -56,14 +56,14 @@ body * {
 
 @keyframes click {
   0% {
-    opacity: 1
+    opacity: 1;
   }
 
   45% {
-    opacity: 0.5
+    opacity: 0.5;
   }
 
   100% {
-    opacity: 1
+    opacity: 1;
   }
 }

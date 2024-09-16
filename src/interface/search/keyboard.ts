@@ -81,7 +81,7 @@ function initializeKeyboard(): void {
       if (supportTouch()) {
         eventType = 'ontouchstart';
       }
-      result.push(`<div class="css_search_keyboard_key" ${eventType}="${eventScript}">${html}</div>`);
+      result.push(`<div class="css_search_keyboard_key" ${eventType}="${eventScript}" onclick="this.blur()">${html}</div>`);
     }
   }
   keyboardElement.innerHTML = result.join('');
