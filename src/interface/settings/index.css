@@ -107,6 +107,10 @@
   margin-top: calc(10px + 55px);
 }
 
+.css_settings_page_field .css_settings_page_settings {
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+}
+
 .css_settings_page_field .css_settings_page_settings .css_setting,
 .css_settings_options_page_field .css_settings_options_page_options .css_option {
   position: relative;
