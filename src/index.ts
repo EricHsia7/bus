@@ -1,5 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
-import { calculateDataUsage } from './data/analytics/data-usage';
+import { calculateDataUsage, generateSVGGraph } from './data/analytics/data-usage';
 import { discardExpiredEstimateTimeRecords } from './data/analytics/update-rate';
 import { calculateStoresSize } from './data/storage/index';
 import { askForPositioningPermission } from './data/user-position/index';
@@ -243,7 +243,8 @@ window.bus = {
   },
   test: {
     calculateDataUsage,
-    calculateStoresSize
+    calculateStoresSize,
+    generateSVGGraph
   },
   settings: {
     openSettings,
