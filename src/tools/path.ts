@@ -6,8 +6,8 @@ interface Segment {
 type Segments = Array<Segment>;
 
 function distanceToSegment(point: Segment, start: Segment, end: Segment): number {
-  const dx = end.x - start.x;
-  const dy = end.y - start.y;
+  let dx = end.x - start.x;
+  let dy = end.y - start.y;
   const d = dx * dx + dy * dy;
   const t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / d;
 
