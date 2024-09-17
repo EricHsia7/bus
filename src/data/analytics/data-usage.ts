@@ -93,7 +93,7 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
 
     const simplifiedPath = simplifyPath(points, 0.8);
     const linePathData = segmentsToPath(simplifiedPath, 1);
-    const simplifiedFillingPath = simplifiedPath(
+    const simplifiedFillingPath = simplifyPath(
       [{ x: padding, y: height + padding }].concat(points).concat([
         { x: padding + width, y: height + padding },
         { x: padding, y: height + padding }
