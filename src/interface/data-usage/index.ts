@@ -47,7 +47,7 @@ export function closeDataUsage(): void {
 }
 
 export function switchDataUsageGraphAggregationPeriod(aggregationPeriod: AggregationPeriod): void {
-  const elements = elementQuerySelectorAll(graphAggregationPeriodsElement, 'css_data_usage_graph_aggregation_period');
+  const elements = elementQuerySelectorAll(graphAggregationPeriodsElement, '.css_data_usage_graph_aggregation_period');
   for (const element of elements) {
     const period = element.getAttribute('period');
     if (period === aggregationPeriod) {
