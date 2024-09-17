@@ -58,9 +58,7 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
   });
   const startTimeArray = graphDataArray.map((e) => e.start_time);
   const minStartTime = Math.min(...startTimeArray);
-
-  const endTimeArray = graphDataArray.map((e) => e.end_time);
-  const maxEndTime = Math.max(...endTimeArray);
+  const maxStartTime = Math.max(...startTimeArray);
 
   const contentLengthArray = graphDataArray.map((e) => e.content_length);
   const maxContentLength = Math.max(...contentLengthArray);
@@ -68,7 +66,7 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
   let path = [];
   for (const graphData of graphDataArray) {
     const point = {
-      x: ((graphData.start_time - minStartTime) / (maxEndTime - minStartTime)) * width,
+      x: ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width,
       y: (1 - graphData.content_length / maxContentLength) * height
     };
     path.push(point);
@@ -76,5 +74,5 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
 
   const simplifiedPath = simplifyPath(path, 0.8);
   const svgPath = segmentsToPath(simplifiedPath, 1);
-  return svgPath;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path d="${svgPath}" fill="none" stroke="var(--b-cssvar-main-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
 }
