@@ -75,6 +75,6 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
   }
 
   const simplifiedPath = simplifyPath(path, 0.8);
-  const svgPath = segmentsToPath(simplifiedPath);
+  const svgPath = segmentsToPath(simplifiedPath, 1);
   return svgPath;
 }
