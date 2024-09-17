@@ -3,13 +3,16 @@
   left: 10px;
   width: calc(100% - 20px);
   background: var(--b-cssvar-ffffff-blocky);
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
+  min-height: 55px;
 }
 
 .css_data_usage_field .css_data_usage_body .css_data_usage_graph svg {
   position: relative;
-  left: 10px;
-  top: 10px;
+  user-select: none;
+  -webkit-user-select: none;
 }

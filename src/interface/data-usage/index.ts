@@ -1,5 +1,4 @@
 import { getDataUsageGraph } from '../../data/analytics/data-usage';
-import { getHTMLVersionBranchName } from '../../data/settings/version';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 
@@ -19,7 +18,13 @@ async function initializeDataUsage(): void {
   const graphWidth = size.width - 40;
   const graphHeight = (9 / 16) * graphWidth;
   const graph = await getDataUsageGraph(graphWidth, graphHeight, 'var(--b-cssvar-main-color)', 2);
-  graphElement.innerHTML = graph;
+  if (typeof graph === 'string') {
+    graphElement.innerHTML = graph;
+  } else {
+    if (graph === false) {
+      graphElement.innerText = '目前資料不足，無法描繪圖表。';
+    }
+  }
 }
 
 export function openDataUsage(): void {
