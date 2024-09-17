@@ -34,7 +34,7 @@ export async function getDataUsageGraph(width: number, height: number, padding: 
     const json = await lfGetItem(2, key);
     const object = JSON.parse(json);
     const startDate = new Date(object.start_time);
-    const graphDataKey = `d_${dateToString(startDate, 'YYYY_MM_DD_hh')}`;
+    const graphDataKey = `d_${dateToString(startDate, 'YYYY_MM_DD_hh_mm_ss')}`;
     if (!graphData.hasOwnProperty(graphDataKey)) {
       graphData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
     }
@@ -64,16 +64,16 @@ export async function getDataUsageGraph(width: number, height: number, padding: 
     const contentLengthArray = graphDataArray.map((e) => e.content_length);
     const maxContentLength = Math.max(...contentLengthArray);
 
-    let path = [];
+    let points = [];
     for (const graphData of graphDataArray) {
       const point = {
         x: padding + ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width,
         y: padding + (1 - graphData.content_length / maxContentLength) * height
       };
-      path.push(point);
+      points.push(point);
     }
 
-    const simplifiedPath = simplifyPath(path, 0.8);
+    const simplifiedPath = simplifyPath(points, 0.8);
     const svgPath = segmentsToPath(simplifiedPath, 1);
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><path d="${svgPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
   } else {
