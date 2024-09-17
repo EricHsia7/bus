@@ -69,7 +69,7 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
   for (const graphData of graphDataArray) {
     const point = {
       x: ((graphData.start_time - minStartTime) / (maxEndTime - minStartTime)) * width,
-      y: (graphData.content_length / maxContentLength) * height
+      y: (1 - graphData.content_length / maxContentLength) * height
     };
     path.push(point);
   }
