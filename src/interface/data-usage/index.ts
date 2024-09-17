@@ -18,8 +18,8 @@ function queryDataUsageFieldSize(): FieldSize {
 async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void {
   const size = queryDataUsageFieldSize();
   const graphWidth = size.width;
-  const graphHeight = (5 / 18) * graphWidth;
-  const graph = await getDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20, 'var(--b-cssvar-main-color)', 2);
+  const graphHeight = Math.min((5 / 18) * graphWidth, size.height * 0.33);
+  const graph = await getDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20);
   if (typeof graph === 'string') {
     graphSVGElement.innerHTML = graph;
   } else {

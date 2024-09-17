@@ -28,7 +28,10 @@ export async function calculateDataUsage(): Promise<number> {
 
 export type AggregationPeriod = 'minutely' | 'hourly' | 'daily';
 
-export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number, stroke: string = '#000000', strokeWidth: number = 2): Promise<string | boolean> {
+export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number): Promise<string | boolean> {
+  const stroke = 'var(--b-cssvar-main-color)';
+  const strokeWidth = 2;
+
   const keys = await lfListItemKeys(2);
   let dateToStringTemplate = 'YYYY_MM_DD_hh_mm_ss';
   switch (aggregationPeriod) {
@@ -89,8 +92,9 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
     }
 
     const simplifiedPath = simplifyPath(points, 0.8);
-    const svgPath = segmentsToPath(simplifiedPath, 1);
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><path d="${svgPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
+    const linePathData = segmentsToPath(simplifiedPath, 1);
+    const fillingPathData = `M${0 + padding},${padding + height} ${linePathData} L${padding + width},${padding + height} L${0 + padding},${padding + height}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs><linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.3);" /><stop offset="73%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.09);" /><stop offset="100%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);" /></linearGradient></defs><path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)"/><path d="${linePathData}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
   } else {
     return false;
   }
