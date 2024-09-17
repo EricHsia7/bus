@@ -34,7 +34,7 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
     const json = await lfGetItem(2, key);
     const object = JSON.parse(json);
     const startDate = new Date(object.start_time);
-    const graphDataKey = `d_${dateToString(startDate, 'YYYY_MM_DD')}`;
+    const graphDataKey = `d_${dateToString(startDate, 'YYYY_MM_DD_hh_mm')}`;
     if (!graphData.hasOwnProperty(graphDataKey)) {
       graphData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
     }
