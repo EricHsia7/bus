@@ -67,6 +67,6 @@ export function segmentsToPath(segments: Segments, scale: number): string {
     pathCommand += `Q${current.x * scale},${current.y * scale},${(current.x * scale + next.x * scale) / 2},${(current.y * scale + next.y * scale) / 2}`;
   }
   const lastPoint = segments[segments.length - 1];
-  pathCommand += `M${lastPoint.x * scale},${lastPoint.y * scale}`;
+  pathCommand += `L${lastPoint.x * scale},${lastPoint.y * scale}`;
   return pathCommand;
 }
