@@ -15,9 +15,9 @@ function queryDataUsageFieldSize(): FieldSize {
 
 async function initializeDataUsage(): void {
   const size = queryDataUsageFieldSize();
-  const graphWidth = size.width - 40;
+  const graphWidth = size.width;
   const graphHeight = (9 / 16) * graphWidth;
-  const graph = await getDataUsageGraph(graphWidth, graphHeight, 'var(--b-cssvar-main-color)', 2);
+  const graph = await getDataUsageGraph(graphWidth, graphHeight, 20, 'var(--b-cssvar-main-color)', 2);
   if (typeof graph === 'string') {
     graphElement.innerHTML = graph;
   } else {

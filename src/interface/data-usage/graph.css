@@ -9,6 +9,9 @@
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
   min-height: 55px;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .css_data_usage_field .css_data_usage_body .css_data_usage_graph svg {
