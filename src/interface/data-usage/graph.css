@@ -31,10 +31,15 @@
 /* body > graph > aggregation periods */
 .css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods {
   position: relative;
-  width: calc(100% - 10px);
+  left: 10px;
+  width: calc(100% - 20px);
   height: 55px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 /* body > graph > aggregation periods > aggregation period */
@@ -47,6 +52,9 @@
   user-select: none;
   -webkit-user-select: none;
   transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* highlighted: true */
