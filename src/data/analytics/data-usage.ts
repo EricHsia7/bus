@@ -85,8 +85,8 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
     let points = [];
     for (const graphData of graphDataArray) {
       const point = {
-        x: padding + ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width,
-        y: padding + (1 - (graphData.content_length - minContentLength) / (maxContentLength - minContentLength)) * height
+        x: parseFloat((padding + ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width).toFixed(1)),
+        y: parseFloat((padding + (1 - (graphData.content_length - minContentLength) / (maxContentLength - minContentLength)) * height).toFixed(1))
       };
       points.push(point);
     }
