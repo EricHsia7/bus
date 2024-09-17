@@ -76,13 +76,14 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
     const maxStartTime = Math.max(...startTimeArray);
 
     const contentLengthArray = graphDataArray.map((e) => e.content_length);
+    const minContentLength = Math.min(...contentLengthArray);
     const maxContentLength = Math.max(...contentLengthArray);
 
     let points = [];
     for (const graphData of graphDataArray) {
       const point = {
         x: padding + ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width,
-        y: padding + (1 - graphData.content_length / maxContentLength) * height
+        y: padding + (1 - (graphData.content_length - minContentLength) / (maxContentLength - minContentLength)) * height
       };
       points.push(point);
     }
