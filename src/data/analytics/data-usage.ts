@@ -26,7 +26,7 @@ export async function calculateDataUsage(): Promise<number> {
   return convertBytes(totalContentLength);
 }
 
-export async function getDataUsageGraph(width: number, height: number, stroke: string = 'var(--b-cssvar-main-color)', strokeWidth: number = 2): Promise<string> {
+export async function getDataUsageGraph(width: number, height: number, stroke: string = '#000000', strokeWidth: number = 2): Promise<string> {
   const keys = await lfListItemKeys(2);
   let totalContentLength = 0;
   let graphData = {};
@@ -74,5 +74,5 @@ export async function getDataUsageGraph(width: number, height: number, stroke: s
 
   const simplifiedPath = simplifyPath(path, 0.8);
   const svgPath = segmentsToPath(simplifiedPath, 1);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path d="${svgPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}px" height="${height}px" viewBox="0 0 ${width} ${height}"><path d="${svgPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
 }
