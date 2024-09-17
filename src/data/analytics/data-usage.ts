@@ -49,7 +49,7 @@ export async function generateSVGGraph(width: number, height: number): Promise<s
   }
 
   let graphDataArray = [];
-  for (const graphDataKey of graphData) {
+  for (const graphDataKey in graphData) {
     const item = graphData[graphDataKey];
     graphDataArray.push(item);
   }
