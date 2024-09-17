@@ -26,31 +26,45 @@ export async function calculateDataUsage(): Promise<number> {
   return convertBytes(totalContentLength);
 }
 
-export async function getDataUsageGraph(width: number, height: number, padding: number, stroke: string = '#000000', strokeWidth: number = 2): Promise<string | boolean> {
+export type AggregationPeriod = 'minutely' | 'hourly' | 'daily';
+
+export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number, stroke: string = '#000000', strokeWidth: number = 2): Promise<string | boolean> {
   const keys = await lfListItemKeys(2);
-  let totalContentLength = 0;
-  let graphData = {};
+  let dateToStringTemplate = 'YYYY_MM_DD_hh_mm_ss';
+  switch (aggregationPeriod) {
+    case 'minutely':
+      dateToStringTemplate = 'YYYY_MM_DD_hh_mm';
+      break;
+    case 'hourly':
+      dateToStringTemplate = 'YYYY_MM_DD_hh';
+      break;
+    case 'daily':
+      dateToStringTemplate = 'YYYY_MM_DD';
+      break;
+    default:
+      break;
+  }
+  let aggregatedData = {};
   for (const key of keys) {
     const json = await lfGetItem(2, key);
     const object = JSON.parse(json);
     const startDate = new Date(object.start_time);
-    const graphDataKey = `d_${dateToString(startDate, 'YYYY_MM_DD_hh_mm_ss')}`;
-    if (!graphData.hasOwnProperty(graphDataKey)) {
-      graphData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
+    const graphDataKey = `d_${dateToString(startDate, dateToStringTemplate)}`;
+    if (!aggregatedData.hasOwnProperty(graphDataKey)) {
+      aggregatedData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
     }
-    graphData[graphDataKey].content_length = graphData[graphDataKey].content_length + object.content_length;
-    if (object.start_time < graphData[graphDataKey].start_time) {
-      graphData[graphDataKey].start_time = object.start_time;
+    aggregatedData[graphDataKey].content_length = aggregatedData[graphDataKey].content_length + object.content_length;
+    if (object.start_time < aggregatedData[graphDataKey].start_time) {
+      aggregatedData[graphDataKey].start_time = object.start_time;
     }
-    if (object.end_time > graphData[graphDataKey].end_time) {
-      graphData[graphDataKey].end_time = object.end_time;
+    if (object.end_time > aggregatedData[graphDataKey].end_time) {
+      aggregatedData[graphDataKey].end_time = object.end_time;
     }
-    totalContentLength += object.content_length;
   }
 
   let graphDataArray = [];
-  for (const graphDataKey in graphData) {
-    const item = graphData[graphDataKey];
+  for (const graphDataKey in aggregatedData) {
+    const item = aggregatedData[graphDataKey];
     graphDataArray.push(item);
   }
   if (graphDataArray.length > 3) {

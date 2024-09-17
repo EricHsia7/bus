@@ -1,10 +1,12 @@
-import { getDataUsageGraph } from '../../data/analytics/data-usage';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { AggregationPeriod, getDataUsageGraph } from '../../data/analytics/data-usage';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
 const graphElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_graph');
+const graphSVGElement = elementQuerySelector(graphElement, '.css_data_usage_graph_svg');
+const graphAggregationPeriodsElement = elementQuerySelector(graphElement, '.css_data_usage_graph_aggregation_periods');
 
 function queryDataUsageFieldSize(): FieldSize {
   return {
@@ -13,18 +15,22 @@ function queryDataUsageFieldSize(): FieldSize {
   };
 }
 
-async function initializeDataUsage(): void {
+async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void {
   const size = queryDataUsageFieldSize();
   const graphWidth = size.width;
   const graphHeight = (9 / 16) * graphWidth;
-  const graph = await getDataUsageGraph(graphWidth, graphHeight, 20, 'var(--b-cssvar-main-color)', 2);
+  const graph = await getDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20, 'var(--b-cssvar-main-color)', 2);
   if (typeof graph === 'string') {
-    graphElement.innerHTML = graph;
+    graphSVGElement.innerHTML = graph;
   } else {
     if (graph === false) {
-      graphElement.innerText = '目前資料不足，無法描繪圖表。';
+      graphSVGElement.innerText = '目前資料不足，無法描繪圖表。';
     }
   }
+}
+
+function initializeDataUsage(): void {
+  updateDataUsageGraph('daily');
 }
 
 export function openDataUsage(): void {
@@ -38,4 +44,17 @@ export function closeDataUsage(): void {
   // revokePageHistory('DataUsage');
   dataUsageField.setAttribute('displayed', 'false');
   openPreviousPage();
+}
+
+export function switchDataUsageGraphAggregationPeriod(aggregationPeriod: AggregationPeriod): void {
+  const elements = elementQuerySelectorAll(graphAggregationPeriodsElement, 'css_data_usage_graph_aggregation_period');
+  for (const element of elements) {
+    const period = element.getAttribute('period');
+    if (period === aggregationPeriod) {
+      element.setAttribute('highlighted', 'true');
+    } else {
+      element.setAttribute('highlighted', 'false');
+    }
+  }
+  updateDataUsageGraph(aggregationPeriod);
 }

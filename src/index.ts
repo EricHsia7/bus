@@ -24,7 +24,7 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadFont } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
-import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
+import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
 
 import './interface/theme.css';
 
@@ -250,7 +250,8 @@ window.bus = {
   },
   dataUsage: {
     openDataUsage,
-    closeDataUsage
+    closeDataUsage,
+    switchDataUsageGraphAggregationPeriod
   },
   settings: {
     openSettings,

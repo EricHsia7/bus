@@ -1,11 +1,10 @@
+/* body > graph */
 .css_data_usage_field .css_data_usage_body .css_data_usage_graph {
   position: relative;
   left: 10px;
   width: calc(100% - 20px);
   background: var(--b-cssvar-ffffff-blocky);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
   min-height: 55px;
@@ -14,8 +13,44 @@
   font-weight: 400;
 }
 
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph svg {
+/* body > graph > svg */
+.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_svg {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_svg svg {
   position: relative;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* body > graph > aggregation periods */
+.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods {
+  position: relative;
+  width: calc(100% - 10px);
+  height: 55px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* body > graph > aggregation periods > aggregation period */
+.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods .css_data_usage_graph_aggregation_period {
+  background-color: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--b-cssvar-333333);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
+}
+
+/* highlighted: true */
+.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods .css_data_usage_graph_aggregation_period[highlighted="true"] {
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color);
 }
