@@ -12,7 +12,7 @@ var storage = {
   savedRouteFolderStore: false
 };
 
-var stores = ['cacheStore', 'settingsStore', 'analyticsOfDataUsageStore', 'analyticsOfUpdateRateStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
+var stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
 async function dropInstance(store: number): Promise<any> {
   var store_key = stores[store];
