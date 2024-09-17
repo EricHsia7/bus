@@ -5,8 +5,8 @@ const localforage = require('localforage');
 var storage = {
   cacheStore: false,
   settingsStore: false,
-  analyticsOfDataUsageStore: false,
-  analyticsOfUpdateRateStore: false,
+  dataUsageRecordsStore: false,
+  updateRateRecordsStore: false,
   folderListStore: false,
   savedStopFolderStore: false,
   savedRouteFolderStore: false
