@@ -26,7 +26,7 @@ export async function calculateDataUsage(): Promise<number> {
   return convertBytes(totalContentLength);
 }
 
-export function generateSVGGraph(width: number, height: number): string {
+export async function generateSVGGraph(width: number, height: number): Promise<string> {
   const keys = await lfListItemKeys(2);
   let totalContentLength = 0;
   let graphData = {};
