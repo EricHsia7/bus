@@ -93,11 +93,7 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
 
     const simplifiedPath = simplifyPath(points, 0.8);
     const linePathData = segmentsToPath(simplifiedPath, 1);
-    const simplifiedFillingPath = [{ x: padding, y: height + padding }].concat(simplifiedPath).concat([
-      { x: padding + width, y: height + padding },
-      { x: padding, y: height + padding }
-    ]);
-    const fillingPathData = segmentsToPath(simplifiedFillingPath, 1);
+    const fillingPathData = `M${padding},${height + padding} ${linePathData} Q${padding + width},${height + padding} M${padding},${height + padding}`;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs><linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.3);" /><stop offset="73%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.09);" /><stop offset="100%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);" /></linearGradient></defs><path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)" /><path d="${linePathData}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="1" /></svg>`;
   } else {
     return false;
