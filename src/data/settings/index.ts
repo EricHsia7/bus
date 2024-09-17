@@ -144,7 +144,7 @@ var Settings = {
     icon: 'data_usage',
     status: '',
     type: 'page',
-    action: 'bus.dataUsage.openDataUsagePage()',
+    action: 'bus.dataUsage.openDataUsage()',
     description: ''
   },
   storage: {
