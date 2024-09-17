@@ -1,4 +1,4 @@
-import { convertBytes, smoothArray } from '../../tools/index';
+import { convertBytes } from '../../tools/index';
 import { segmentsToPath, simplifyPath } from '../../tools/path';
 import { dateToString } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';

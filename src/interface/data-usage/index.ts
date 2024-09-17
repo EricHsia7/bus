@@ -18,7 +18,7 @@ function queryDataUsageFieldSize(): FieldSize {
 async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void {
   const size = queryDataUsageFieldSize();
   const graphWidth = size.width;
-  const graphHeight = (9 / 21) * graphWidth;
+  const graphHeight = (5 / 18) * graphWidth;
   const graph = await getDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20, 'var(--b-cssvar-main-color)', 2);
   if (typeof graph === 'string') {
     graphSVGElement.innerHTML = graph;
