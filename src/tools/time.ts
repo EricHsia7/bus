@@ -141,3 +141,8 @@ export function dateValueToDayOfWeek(dateValue: string): object {
   var index = int - 1;
   return indexToDay(index);
 }
+
+export interface TimeStampPeriod {
+  start: Date
+  end: Date
+}

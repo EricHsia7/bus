@@ -232,6 +232,38 @@
         <div class="css_settings_options_page_title"></div>
       </div>
     </div>
+    <div class="css_data_usage_field" displayed="false">
+      <div class="css_data_usage_body">
+        <div class="css_data_usage_graph">
+          <div class="css_data_usage_graph_aggregation_periods">
+            <div class="css_data_usage_graph_aggregation_period" highlighted="true" onclick="bus.dataUsage.switchDataUsageGraphAggregationPeriod('daily')" period="daily">每天</div>
+            <div class="css_data_usage_graph_aggregation_period" highlighted="false" onclick="bus.dataUsage.switchDataUsageGraphAggregationPeriod('hourly')" period="hourly">每小時</div>
+            <div class="css_data_usage_graph_aggregation_period" highlighted="false" onclick="bus.dataUsage.switchDataUsageGraphAggregationPeriod('minutely')" period="minutely">每分鐘</div>
+          </div>
+          <div class="css_data_usage_graph_svg"></div>
+        </div>
+        <div class="css_data_usage_statistics">
+          <div class="css_data_usage_statistics_item" name="total-data-usage">
+            <div class="css_data_usage_statistics_item_name">總傳輸量</div>
+            <div class="css_data_usage_statistics_item_value"></div>
+          </div>
+          <div class="css_data_usage_statistics_item" name="start-time">
+            <div class="css_data_usage_statistics_item_name">統計起始時間</div>
+            <div class="css_data_usage_statistics_item_value"></div>
+          </div>
+          <div class="css_data_usage_statistics_item" name="end-time">
+            <div class="css_data_usage_statistics_item_name">統計結束時間</div>
+            <div class="css_data_usage_statistics_item_value"></div>
+          </div>
+        </div>
+      </div>
+      <div class="css_data_usage_head">
+        <div class="css_data_usage_button_left" onclick="bus.dataUsage.closeDataUsage()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_data_usage_title">網路使用量</div>
+      </div>
+    </div>
     <div class="css_folder_manager_field" displayed="false">
       <div class="css_folder_manager_body">
         <div class="css_folder_manager_folder_list"></div>

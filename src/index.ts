@@ -1,5 +1,4 @@
 import { updateSearchResult } from './interface/search/index';
-import { calculateDataUsage } from './data/analytics/data-usage';
 import { discardExpiredEstimateTimeRecords } from './data/analytics/update-rate';
 import { calculateStoresSize } from './data/storage/index';
 import { askForPositioningPermission } from './data/user-position/index';
@@ -25,6 +24,7 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadFont } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
+import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
 
 import './interface/theme.css';
 
@@ -93,8 +93,13 @@ import './interface/folder-icon-selector/head.css';
 import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
 
+import './interface/data-usage/field.css';
+import './interface/data-usage/head.css';
+import './interface/data-usage/body.css';
+import './interface/data-usage/graph.css';
+import './interface/data-usage/statistics.css';
+
 import './interface/prompt/index.css';
-import { getSegmentBuffers } from './data/apis/getSegmentBuffers/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -242,8 +247,12 @@ window.bus = {
     openSystemKeyboard
   },
   test: {
-    calculateDataUsage,
     calculateStoresSize
+  },
+  dataUsage: {
+    openDataUsage,
+    closeDataUsage,
+    switchDataUsageGraphAggregationPeriod
   },
   settings: {
     openSettings,

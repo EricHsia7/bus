@@ -386,3 +386,15 @@ export function supportTouch(): boolean {
     return false;
   }
 }
+
+export function smoothArray(array: Array<number>): Array<number> {
+  const arrayLength = array.length;
+  let result = [];
+  for (let i = 1; i < arrayLength; i += 3) {
+    const currentItem = array[i];
+    const previousItem = array[i - 1] || currentItem;
+    const nextItem = array[i + 1] || currentItem;
+    result.push((previousItem + currentItem + nextItem) / 3);
+  }
+  return result;
+}

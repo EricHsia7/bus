@@ -35,7 +35,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
 
   const endTimeStamp = new Date().getTime();
-  await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength });
+  await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength }, receivedLength < contentLength ? true : false);
 
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
