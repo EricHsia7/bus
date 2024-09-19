@@ -98,7 +98,7 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
 
     // Axis Labels
     const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)">時間</text>`;
-    const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding}, ${padding + height / 2})">傳輸量</text>`;
+    const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding * 0.7}, ${padding + height / 2})">傳輸量</text>`;
 
     // Paths
     const simplifiedPath = simplifyPath(points, 1.1);
