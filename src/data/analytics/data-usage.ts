@@ -1,6 +1,6 @@
 import { convertBytes } from '../../tools/index';
 import { segmentsToPath, simplifyPath } from '../../tools/path';
-import { dateToString } from '../../tools/time';
+import { dateToString, TimeStampPeriod } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 
 export async function recordRequest(requestID: string, data: object): void {
@@ -15,7 +15,26 @@ export async function recordRequest(requestID: string, data: object): void {
   }
 }
 
-export async function calculateDataUsage(): Promise<number> {
+export async function getDataUsageRecordsPeriod(): Promise<TimeStampPeriod> {
+  const keys = await lfListItemKeys(2);
+  let startTimeArray = [];
+  let endTimeArray = [];
+  for (const key of keys) {
+    const json = await lfGetItem(2, key);
+    const object = JSON.parse(json);
+    startTimeArray.push(object.start_time);
+    endTimeArray.push(object.end_time);
+  }
+  const minStartTime = new Date(Math.min(...startTimeArray));
+  const maxEndTime = new Date(Math.max(...endTimeArray));
+
+  return {
+    start: minStartTime,
+    end: maxEndTime
+  };
+}
+
+export async function calculateTotalDataUsage(): Promise<string> {
   const keys = await lfListItemKeys(2);
   let totalContentLength = 0;
   for (const key of keys) {
@@ -28,7 +47,7 @@ export async function calculateDataUsage(): Promise<number> {
 
 export type AggregationPeriod = 'minutely' | 'hourly' | 'daily';
 
-export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number): Promise<string | boolean> {
+export async function generateDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number): Promise<string | boolean> {
   const keys = await lfListItemKeys(2);
   let dateToStringTemplate = 'YYYY_MM_DD_hh_mm_ss';
   switch (aggregationPeriod) {

@@ -1,12 +1,20 @@
-import { AggregationPeriod, getDataUsageGraph } from '../../data/analytics/data-usage';
+import { AggregationPeriod, calculateTotalDataUsage, generateDataUsageGraph } from '../../data/analytics/data-usage';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { dateToString } from '../../tools/time';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
+
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
+
 const graphElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_graph');
 const graphSVGElement = elementQuerySelector(graphElement, '.css_data_usage_graph_svg');
 const graphAggregationPeriodsElement = elementQuerySelector(graphElement, '.css_data_usage_graph_aggregation_periods');
+
+const statisticsElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_statistics');
+const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="start-time"] .css_data_usage_statistics_item_value');
+const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
+const totalDataUsageElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="total-data-usage-time"] .css_data_usage_statistics_item_value');
 
 function queryDataUsageFieldSize(): FieldSize {
   return {
@@ -19,7 +27,7 @@ async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void 
   const size = queryDataUsageFieldSize();
   const graphWidth = size.width;
   const graphHeight = Math.min((5 / 18) * graphWidth, size.height * 0.33);
-  const graph = await getDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20);
+  const graph = await generateDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20);
   if (typeof graph === 'string') {
     graphSVGElement.innerHTML = graph;
   } else {
@@ -29,8 +37,17 @@ async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void 
   }
 }
 
+async function updateDataUsageStatistics(): void {
+  const totalDataUsage = await calculateTotalDataUsage();
+  const recordsPeriod = await getDataUsageRecordsPeriod();
+  totalDataUsageElement.innerText = totalDataUsage;
+  startTimeElement.innerText = dateToString(recordsPeriod.start, 'YYYY-MM-DD hh:mm:ss');
+  endTimeElement.innerText = dateToString(recordsPeriod.end, 'YYYY-MM-DD hh:mm:ss');
+}
+
 function initializeDataUsage(): void {
   switchDataUsageGraphAggregationPeriod('daily');
+  updateDataUsageStatistics();
 }
 
 export function openDataUsage(): void {
