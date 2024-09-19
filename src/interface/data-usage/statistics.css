@@ -6,10 +6,11 @@
   background: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
-  margin-top: calc(10px + 55px);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   font-size: 15px;
   font-weight: 400;
+  margin-top: 10px;
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
 /* body > statistics > item */
