@@ -3,15 +3,20 @@ import { segmentsToPath, simplifyPath } from '../../tools/path';
 import { dateToString, TimeStampPeriod } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 
-export async function recordRequest(requestID: string, data: object): void {
-  var existingRecord = await lfGetItem(2, requestID);
-  if (existingRecord) {
-    var existingRecordObject = JSON.parse(existingRecord);
-    existingRecordObject.end_time = existingRecordObject.end_time;
-    existingRecordObject.content_length = existingRecordObject.content_length + data.content_length;
-    await lfSetItem(2, requestID, JSON.stringify(existingRecordObject));
+let incompleteRecords = {};
+
+export async function recordRequest(requestID: string, data: object, incomplete: boolean): void {
+  if (incomplete) {
+    if (!incompleteRecords.hasOwnProperty(requestID)) {
+      incompleteRecords[requestID] = data;
+    }
+    incompleteRecords[requestID].end_time = data.end_time;
+    incompleteRecords[requestID].content_length = incompleteRecords[requestID].content_length + data.content_length;
   } else {
-    await lfSetItem(2, requestID, JSON.stringify(data));
+    if (incompleteRecords.hasOwnProperty(requestID)) {
+      await lfSetItem(2, requestID, JSON.stringify(incompleteRecords[requestID]));
+      delete incompleteRecords[requestID];
+    }
   }
 }
 
