@@ -6,9 +6,19 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
+async function timeoutPromise(promise: PromiseConstructor, time: number): Promise<any> {
+  // Create a promise that rejects in 'time' milliseconds
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout exceeded')), time));
+
+  // Use Promise.race to race between the timeout and the actual promise
+  return Promise.race([promise, timeout]);
+}
+
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   const startTimeStamp = new Date().getTime();
-  const response = await fetch(url);
+  const request = timeoutPromise(fetch(url), 60 * 1000);
+  const response = await request;
+
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

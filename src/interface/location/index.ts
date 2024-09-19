@@ -6,6 +6,7 @@ import { compareThings, getTextWidth, calculateStandardDeviation, generateIdenti
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize, pushPageHistory, revokePageHistory, openPreviousPage, closePreviousPage } from '../index';
+import { promptMessage } from '../prompt/index';
 
 let previousIntegration: object = {};
 
@@ -17,6 +18,7 @@ let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
+let locationRefreshTimer_retryInterval: number = 60 * 1000;
 let locationRefreshTimer_baseInterval: number = 15 * 1000;
 let locationRefreshTimer_minInterval: number = 5 * 1000;
 let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
@@ -448,9 +450,10 @@ export function streamLocation(): void {
     .catch((err) => {
       console.error(err);
       if (locationRefreshTimer_streaming) {
+        promptMessage(`發生錯誤，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
         locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
-        }, locationRefreshTimer_minInterval);
+        }, locationRefreshTimer_retryInterval);
       } else {
         locationRefreshTimer_streamStarted = false;
       }
