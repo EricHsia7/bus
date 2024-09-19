@@ -6,9 +6,9 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
-async function timeoutPromise(promise: PromiseConstructor, time: number): Promise<any> {
+async function timeoutPromise<T>(promise: Promise<T>, time: number): Promise<T> {
   // Create a promise that rejects in 'time' milliseconds
-  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout exceeded')), time));
+  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout exceeded')), time));
 
   // Use Promise.race to race between the timeout and the actual promise
   return Promise.race([promise, timeout]);
