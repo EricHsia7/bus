@@ -12,9 +12,9 @@ const graphSVGElement = elementQuerySelector(graphElement, '.css_data_usage_grap
 const graphAggregationPeriodsElement = elementQuerySelector(graphElement, '.css_data_usage_graph_aggregation_periods');
 
 const statisticsElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_statistics');
+const totalDataUsageElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="total-data-usage"] .css_data_usage_statistics_item_value');
 const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="start-time"] .css_data_usage_statistics_item_value');
 const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
-const totalDataUsageElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="total-data-usage-time"] .css_data_usage_statistics_item_value');
 
 function queryDataUsageFieldSize(): FieldSize {
   return {
