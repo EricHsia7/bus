@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add data usage page [\#68](https://github.com/EricHsia7/bus/pull/68) ([EricHsia7](https://github.com/EricHsia7))
 - Add setting options description [\#67](https://github.com/EricHsia7/bus/pull/67) ([EricHsia7](https://github.com/EricHsia7))
 - Page history [\#66](https://github.com/EricHsia7/bus/pull/66) ([EricHsia7](https://github.com/EricHsia7))
 - Improve search input [\#65](https://github.com/EricHsia7/bus/pull/65) ([EricHsia7](https://github.com/EricHsia7))
