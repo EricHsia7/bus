@@ -97,8 +97,8 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
     const yAxis = `<line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height + padding}" stroke="var(--b-cssvar-333333)" stroke-width="1" />`;
 
     // Axis Labels
-    const xAxisLabel = `<text x="${padding + width / 2}" y="${height + padding * 1.5}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)">時間</text>`;
-    const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding / 2}, ${padding + height / 2})">傳輸量</text>`;
+    const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)">時間</text>`;
+    const yAxisLabel = `<text x="${padding}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding / 2}, ${padding + height / 2})">傳輸量</text>`;
 
     // Paths
     const simplifiedPath = simplifyPath(points, 1.1);
@@ -109,7 +109,7 @@ export async function getDataUsageGraph(aggregationPeriod: AggregationPeriod, wi
     const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.3);" /><stop offset="73%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.09);" /><stop offset="100%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);" /></linearGradient>`;
 
     // SVG
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}${fillingPath}${path}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${fillingPath}${path}${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}</svg>`;
   } else {
     return false;
   }
