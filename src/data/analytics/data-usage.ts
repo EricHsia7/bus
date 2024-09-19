@@ -6,13 +6,13 @@ import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 let incompleteRecords = {};
 
 export async function recordRequest(requestID: string, data: object, incomplete: boolean): void {
-  if (incomplete) {
-    if (!incompleteRecords.hasOwnProperty(requestID)) {
-      incompleteRecords[requestID] = data;
-    }
-    incompleteRecords[requestID].end_time = data.end_time;
-    incompleteRecords[requestID].content_length = incompleteRecords[requestID].content_length + data.content_length;
-  } else {
+  if (!incompleteRecords.hasOwnProperty(requestID)) {
+    incompleteRecords[requestID] = data;
+  }
+  incompleteRecords[requestID].end_time = data.end_time;
+  incompleteRecords[requestID].content_length = incompleteRecords[requestID].content_length + data.content_length;
+
+  if (!incomplete) {
     if (incompleteRecords.hasOwnProperty(requestID)) {
       await lfSetItem(2, requestID, JSON.stringify(incompleteRecords[requestID]));
       delete incompleteRecords[requestID];
