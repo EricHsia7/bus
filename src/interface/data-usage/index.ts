@@ -1,4 +1,4 @@
-import { AggregationPeriod, calculateTotalDataUsage, generateDataUsageGraph } from '../../data/analytics/data-usage';
+import { AggregationPeriod, calculateTotalDataUsage, generateDataUsageGraph, getDataUsageRecordsPeriod } from '../../data/analytics/data-usage';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { dateToString } from '../../tools/time';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';

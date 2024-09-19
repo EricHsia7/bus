@@ -1,0 +1,58 @@
+/* body > statistics */
+.css_data_usage_field .css_data_usage_body .css_data_usage_statistics {
+  position: relative;
+  left: 10px;
+  width: calc(100% - 20px);
+  background: var(--b-cssvar-ffffff-blocky);
+  display: inline-block;
+  border-radius: var(--b-cssvar-border-radius-normal);
+  margin-top: calc(10px + 55px);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* body > statistics > item */
+.css_data_usage_field .css_data_usage_body .css_data_usage_statistics .css_data_usage_statistics_item {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 55px;
+}
+
+/* body > statistics > item > name */
+.css_data_usage_field .css_data_usage_body .css_data_usage_statistics .css_data_usage_statistics_item_name {
+  position: absolute;
+  left: 17.5px;
+  display: inline-flex;
+  align-items: center;
+  width: calc(100% - 55px - 17.5px);
+  height: 55px;
+  top: 0px;
+  color: var(--b-cssvar-333333);
+  font-size: 18px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* body > statistics > item > value */
+.css_data_usage_field .css_data_usage_body .css_data_usage_statistics .css_data_usage_statistics_item_value {
+  position: absolute;
+  top: 0px;
+  right: 17.5px;
+  width: 80px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
+}
