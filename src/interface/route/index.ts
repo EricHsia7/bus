@@ -7,6 +7,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
 import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage } from '../index';
+import { promptMessage } from '../prompt/index';
 
 let previousIntegration: object = {};
 
@@ -18,6 +19,7 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
+let routeRefreshTimer_retryInterval: number = 60 * 1000;
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
 let routeRefreshTimer_minInterval: number = 5 * 1000;
 let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
@@ -480,8 +482,9 @@ export function streamRoute(): void {
       console.error(err);
       if (routeRefreshTimer_streaming) {
         routeRefreshTimer_timer = setTimeout(function () {
+          promptMessage(`發生錯誤，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
           streamRoute();
-        }, routeRefreshTimer_minInterval);
+        }, routeRefreshTimer_retryInterval);
       } else {
         routeRefreshTimer_streamStarted = false;
       }
