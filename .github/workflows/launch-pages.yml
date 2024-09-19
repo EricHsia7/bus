@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-data-usage-page
+      - dev-handle-endless-pending-status
 
 jobs:
   launch:
