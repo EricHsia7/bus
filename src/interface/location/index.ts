@@ -450,7 +450,7 @@ export function streamLocation(): void {
     .catch((err) => {
       console.error(err);
       if (locationRefreshTimer_streaming) {
-        promptMessage(`發生錯誤，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`,'error');
+        promptMessage(`發生錯誤，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
         locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
         }, locationRefreshTimer_retryInterval);
