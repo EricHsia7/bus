@@ -6,33 +6,68 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
-  const startTimeStamp = new Date().getTime();
-  let endTimeStamp = new Date().getTime();
+async function timeoutPromise<T>(promise: Promise<T>, time: number): Promise<T> {
+  // Create a promise that rejects in 'time' milliseconds
+  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout exceeded')), time));
 
-  const response = await fetch(url);
+  // Use Promise.race to race between the timeout and the actual promise
+  return Promise.race([promise, timeout]);
+}
+export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 5 * 1000, loadingTimeoutDuration: number = 30 * 1000): Promise<object> {
+  const startTimeStamp = new Date().getTime();
+
+  // Create a connection timeout promise
+  const connectionTimeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out')), connectionTimeoutDuration));
+
+  // Race between fetch and connection timeout
+  const response = await Promise.race([fetch(url), connectionTimeoutPromise]).catch((error) => {
+    // Handle connection timeout error
+    setDataReceivingProgress(requestID, tag, 0, true);
+    throw error;
+  });
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
+
   const contentLength = parseInt(String(response.headers.get('content-length')));
   let receivedLength = 0;
   const reader = response.body.getReader();
   const chunks = [];
+
+  // A utility function to read chunks with loading timeout
+  const readChunk = () => {
+    return new Promise(async (resolve, reject) => {
+      const loadingTimeout = setTimeout(() => {
+        reject(new Error('Loading timed out'));
+      }, loadingTimeoutDuration);
+
+      const { done, value } = await reader.read();
+      clearTimeout(loadingTimeout);
+
+      if (done) {
+        resolve({ done });
+      } else {
+        resolve({ done, value });
+      }
+    });
+  };
+
+  // Loop to read chunks with loading timeout for each chunk
   while (true) {
-    var { done, value } = await reader.read();
+    const { done, value } = await readChunk().catch((error) => {
+      // Handle loading timeout error
+      setDataReceivingProgress(requestID, tag, receivedLength / contentLength, true);
+      throw error;
+    });
+
     if (done) {
       break;
     }
+
     chunks.push(value);
     receivedLength += value.length;
     setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
-    endTimeStamp = new Date().getTime();
-    if (endTimeStamp - startTimeStamp > 5 * 1000) {
-      if (receivedLength < 1) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-    }
   }
 
   // Concatenate all the chunks into a single Uint8Array
@@ -43,22 +78,24 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  endTimeStamp = new Date().getTime();
-  await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength }, receivedLength < contentLength ? true : false);
+  const endTimeStamp = new Date().getTime();
+  await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength }, receivedLength < contentLength);
 
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
   const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
+
   if (fileType === 'json') {
     if (/^\<\!doctype html\>/.test(inflatedData)) {
-      const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType);
+      const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType, connectionTimeoutDuration, loadingTimeoutDuration);
       return alternativeData;
     } else {
       return JSON.parse(inflatedData);
     }
   }
+
   if (fileType === 'xml') {
     return inflatedData;
   }

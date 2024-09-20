@@ -9,7 +9,6 @@ import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/index';
 import { parseEstimateTime, formatBusEvent } from '../apis/index';
-import { recordEstimateTime } from '../analytics/update-rate';
 
 async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promise<object> {
   var result = {};
