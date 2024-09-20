@@ -6,10 +6,12 @@ import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { compareThings, generateIdentifier } from '../../../tools/index';
 import { getDataReceivingProgress } from '../../../data/apis/loader';
+import { promptMessage } from '../../prompt/index';
 
-let previousIntegration = {}
+let previousIntegration = {};
 
-let foldersRefreshTimer_baseInterval: number = 15 * 1000;
+let foldersRefreshTimer_retryInterval: number = 60 * 1000;
+let foldersRefreshTimer_baseInterval: number = 30 * 1000;
 let foldersRefreshTimer_minInterval: number = 5 * 1000;
 let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
 let foldersRefreshTimer_auto: number = true;
@@ -400,9 +402,10 @@ async function streamFolders(): void {
     .catch((err) => {
       console.error(err);
       if (foldersRefreshTimer_streaming) {
+        promptMessage(`發生錯誤，將在${foldersRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
         foldersRefreshTimer_timer = setTimeout(function () {
           streamFolders();
-        }, foldersRefreshTimer_minInterval);
+        }, foldersRefreshTimer_retryInterval);
       } else {
         foldersRefreshTimer_streamStarted = false;
       }

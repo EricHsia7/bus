@@ -19,7 +19,7 @@ let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
 let locationRefreshTimer_retryInterval: number = 60 * 1000;
-let locationRefreshTimer_baseInterval: number = 15 * 1000;
+let locationRefreshTimer_baseInterval: number = 30 * 1000;
 let locationRefreshTimer_minInterval: number = 5 * 1000;
 let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
 let locationRefreshTimer_auto: boolean = true;
