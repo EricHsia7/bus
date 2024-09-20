@@ -481,8 +481,8 @@ export function streamRoute(): void {
     .catch((err) => {
       console.error(err);
       if (routeRefreshTimer_streaming) {
+        promptMessage(`發生錯誤，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
         routeRefreshTimer_timer = setTimeout(function () {
-          promptMessage(`發生錯誤，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
           streamRoute();
         }, routeRefreshTimer_retryInterval);
       } else {
