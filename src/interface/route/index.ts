@@ -19,7 +19,7 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
-let routeRefreshTimer_retryInterval: number = 60 * 1000;
+let routeRefreshTimer_retryInterval: number = 10 * 1000;
 let routeRefreshTimer_baseInterval: number = 30 * 1000;
 let routeRefreshTimer_minInterval: number = 5 * 1000;
 let routeRefreshTimer_dynamicInterval: number = 15 * 1000;

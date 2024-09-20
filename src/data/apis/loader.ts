@@ -6,18 +6,11 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
-async function timeoutPromise<T>(promise: Promise<T>, time: number): Promise<T> {
-  // Create a promise that rejects in 'time' milliseconds
-  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout exceeded')), time));
-
-  // Use Promise.race to race between the timeout and the actual promise
-  return Promise.race([promise, timeout]);
-}
-
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   const startTimeStamp = new Date().getTime();
-  const request = timeoutPromise(fetch(url), 60 * 1000);
-  const response = await request;
+  let endTimeStamp = new Date().getTime();
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -34,6 +27,12 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     chunks.push(value);
     receivedLength += value.length;
     setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
+    endTimeStamp = new Date().getTime();
+    if (endTimeStamp - startTimeStamp > 5 * 1000) {
+      if (receivedLength < 1) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    }
   }
 
   // Concatenate all the chunks into a single Uint8Array
@@ -44,7 +43,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  const endTimeStamp = new Date().getTime();
+  endTimeStamp = new Date().getTime();
   await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength }, receivedLength < contentLength ? true : false);
 
   // Create a blob from the concatenated Uint8Array

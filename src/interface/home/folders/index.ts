@@ -10,7 +10,7 @@ import { promptMessage } from '../../prompt/index';
 
 let previousIntegration = {};
 
-let foldersRefreshTimer_retryInterval: number = 60 * 1000;
+let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 30 * 1000;
 let foldersRefreshTimer_minInterval: number = 5 * 1000;
 let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
