@@ -29,13 +29,13 @@ var Settings = {
     status: '',
     action: `bus.settings.openSettingsOptions('refresh_interval')`,
     type: 'select',
-    default_option: 0,
-    option: 0,
+    default_option: 3,
+    option: 3,
     options: [
       {
         name: '自動',
         value: {
-          baseInterval: 30 * 1000,
+          baseInterval: 15 * 1000,
           dynamic: true
         }
       },
