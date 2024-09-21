@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy'];
 
 var Settings = {
   time_formatting_mode: {
