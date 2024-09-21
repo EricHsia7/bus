@@ -6,7 +6,7 @@ const { inflate } = require('pako');
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
-export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 5 * 1000, loadingTimeoutDuration: number = 30 * 1000): Promise<object> {
+export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
   const startTimeStamp = new Date().getTime();
 
   // Create a connection timeout promise
