@@ -6,11 +6,12 @@ export default {
     // Get query parameters from the original request
     const params = new URLSearchParams(url.search);
 
-    // For example, extract a specific query parameter `id`
-    const apiUrl = params.get('url'); // ?id=123
+    // Extract the query parameters
+    const apiUrl = params.get('url');
+    const _ = params.get('_');
 
     // Forward the modified request to the API
-    const response = await fetch(apiUrl, {
+    const response = await fetch(`${apiUrl}?_=${_}`, {
       method: request.method,
       headers: request.headers,
       body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.text() : null
