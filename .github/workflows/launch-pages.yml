@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-api-proxy
 
 jobs:
   launch:
