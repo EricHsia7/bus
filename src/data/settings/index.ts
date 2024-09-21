@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels'];
+const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy'];
 
 var Settings = {
   time_formatting_mode: {
@@ -129,6 +129,27 @@ var Settings = {
       }
     ],
     description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
+  },
+  proxy: {
+    key: 'proxy',
+    name: '網路代理',
+    icon: 'router',
+    status: '',
+    action: `bus.settings.openSettingsOptions('proxy')`,
+    type: 'select',
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '開啟',
+        value: true
+      },
+      {
+        name: '關閉',
+        value: false
+      }
+    ],
+    description: '使用網路代理來擷取資料。'
   },
   folder: {
     name: '資料夾',
