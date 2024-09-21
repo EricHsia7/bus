@@ -59,6 +59,7 @@
 
 **Merged pull requests:**
 
+- Add api proxy [\#70](https://github.com/EricHsia7/bus/pull/70) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
