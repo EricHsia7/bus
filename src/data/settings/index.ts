@@ -51,7 +51,14 @@ type SettingsObject = { [key: string]: Setting };
 
 type SettingsArray = Array<Setting>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy'];
+interface SettingWithOption {
+  key: string;
+  option: number;
+}
+
+export type SettingsWithOptions = Array<SettingWithOption>;
+
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'version', 'github'];
 
 var Settings: SettingsObject = {
   time_formatting_mode: {
@@ -302,7 +309,23 @@ export function listSettings(): SettingsArray {
   return result;
 }
 
-export function listSettingsWithValues() {}
+export function listSettingsWithOptions(): SettingsWithOptions {
+  let result: SettingsWithOptions = [];
+  for (const key in Settings) {
+    if (SettingKeys.indexOf(key) > -1) {
+      if (Settings.hasOwnProperty(key)) {
+        if (Settings[key].type === 'select') {
+          const item: SettingWithOption = {
+            key: key,
+            option: Settings[key].option
+          };
+          result.push(item);
+        }
+      }
+    }
+  }
+  return result;
+}
 
 export async function changeSettingOption(key: string, option: number): Promise<boolean> {
   if (SettingKeys.indexOf(key) > -1) {

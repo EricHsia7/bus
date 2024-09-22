@@ -1,4 +1,3 @@
-
-export function importData(data: object): void {
-
+export function importData(data: string): void {
+  
 }

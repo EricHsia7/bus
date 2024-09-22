@@ -103,6 +103,8 @@ export interface FoldersWithContent {
   contentLength: number;
 }
 
+export type FoldersWithContentArray = Array<FoldersWithContent>;
+
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItemKeys(4);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
@@ -235,7 +237,7 @@ async function getFolderContentLength(folderID: string): Promise<number> {
   }
 }
 
-export async function listFoldersWithContent(): Promise<Array<FoldersWithContent>> {
+export async function listFoldersWithContent(): Promise<FoldersWithContentArray> {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {
