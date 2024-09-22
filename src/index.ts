@@ -100,6 +100,7 @@ import './interface/data-usage/graph.css';
 import './interface/data-usage/statistics.css';
 
 import './interface/prompt/index.css';
+import { importData } from './data/import/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -247,7 +248,8 @@ window.bus = {
     openSystemKeyboard
   },
   test: {
-    calculateStoresSize
+    calculateStoresSize,
+    importData
   },
   dataUsage: {
     openDataUsage,

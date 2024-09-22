@@ -125,7 +125,7 @@ export async function initializeFolderStores(): void {
   }
 }
 
-export async function createFolder(name: string, icon: string): Promise<boolean> {
+export async function createFolder(name: string, icon: string): Promise<boolean | string> {
   const requestID = generateIdentifier('r');
   var materialSymbols = await getMaterialSymbols(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
@@ -136,7 +136,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean>
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
-    var existingFolder = await lfGetItem(4, `f_${identifier}`);
+    const existingFolder = await lfGetItem(4, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
       var object: Folder = {
@@ -151,7 +151,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean>
       };
       Folders[`f_${identifier}`] = object;
       await lfSetItem(4, `f_${identifier}`, JSON.stringify(object));
-      return true;
+      return identifier;
     } else {
       return false;
     }
@@ -163,10 +163,10 @@ export async function createFolder(name: string, icon: string): Promise<boolean>
 export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
-    var existingFolder: string = await lfGetItem(4, folderKey);
+    const existingFolder: string = await lfGetItem(4, folderKey);
     if (existingFolder) {
       const requestID = generateIdentifier('r');
-      var materialSymbols = await getMaterialSymbols(requestID);
+      const materialSymbols = await getMaterialSymbols(requestID);
       if (materialSymbols.indexOf(folder.icon) < 0) {
         return false;
       } else {
