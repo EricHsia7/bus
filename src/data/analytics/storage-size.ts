@@ -27,7 +27,7 @@ function storeIndexToCategory(store: number): string {
       result = '資料夾';
       break;
     default:
-      if (storeKey.startsWith('F_') && storeKey.endsWith('Store')) {
+      if (storeKey.startsWith('F') && storeKey.endsWith('Store')) {
         result = '資料夾';
       } else {
         result = '其他';
