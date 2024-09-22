@@ -1,10 +1,59 @@
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 import { formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
-const SettingKeys = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy'];
+type SettingType = 'select' | 'page' | 'info';
 
-var Settings = {
+interface SettingSelectOption {
+  name: string;
+  value: any;
+}
+
+type SettingSelectOptions = Array<SettingSelectOption>;
+
+interface SettingSelect {
+  key: string;
+  name: string;
+  icon: MaterialSymbols;
+  status: string;
+  action: string;
+  type: 'select';
+  default_option: number;
+  option: number;
+  options: SettingSelectOptions;
+  description: string;
+}
+
+interface SettingPage {
+  key: string;
+  name: string;
+  icon: MaterialSymbols;
+  status: string;
+  type: 'page';
+  action: string;
+  description: string;
+}
+
+interface SettingInfo {
+  key: string;
+  name: string;
+  icon: MaterialSymbols;
+  status: string;
+  type: 'info';
+  action: string;
+  description: string;
+}
+
+type Setting = SettingSelect | SettingPage | SettingInfo;
+
+type SettingsObject = { [key: string]: Setting };
+
+type SettingsArray = Array<Setting>;
+
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy'];
+
+var Settings: SettingsObject = {
   time_formatting_mode: {
     key: 'time_formatting_mode',
     name: '預估時間格式',
@@ -152,6 +201,7 @@ var Settings = {
     description: '使用網路代理來擷取資料。'
   },
   folder: {
+    key: 'folder',
     name: '資料夾',
     icon: 'folder',
     status: '',
@@ -225,10 +275,10 @@ export async function initializeSettings(): void {
   }
 }
 
-export function listSettings(): Array {
-  var result = [];
-  for (var key in Settings) {
-    var item = Settings[key];
+export function listSettings(): SettingsArray {
+  let result: SettingsArray = [];
+  for (const key in Settings) {
+    let item = Settings[key];
     switch (item.type) {
       case 'select':
         item.status = item.options[item.option].name;
@@ -251,6 +301,8 @@ export function listSettings(): Array {
   }
   return result;
 }
+
+export function listSettingsWithValues() {}
 
 export async function changeSettingOption(key: string, option: number): Promise<boolean> {
   if (SettingKeys.indexOf(key) > -1) {
