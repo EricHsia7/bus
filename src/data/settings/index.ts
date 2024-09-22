@@ -243,6 +243,15 @@ var Settings: SettingsObject = {
     action: 'bus.settings.downloadExportFile()',
     description: ''
   },
+  import: {
+    key: 'import',
+    name: '匯入資料',
+    icon: 'download',
+    status: '',
+    type: 'action',
+    action: 'bus.settings.openFileToImportData()',
+    description: ''
+  },
   version: {
     key: 'version',
     name: '版本',
@@ -342,7 +351,7 @@ export async function changeSettingOption(key: string, option: number): Promise<
   return false;
 }
 
-export function getSetting(key: string): Setting  {
+export function getSetting(key: string): Setting {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       return Settings[key];

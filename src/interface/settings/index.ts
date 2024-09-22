@@ -4,6 +4,8 @@ import { listSettings } from '../../data/settings/index';
 import { exportData } from '../../data/export/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { importData } from '../../data/import/index';
+import { promptMessage } from '../prompt/index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -44,4 +46,51 @@ export function closeSettings(): void {
 export async function downloadExportFile(): void {
   const exportedData = await exportData();
   releaseFile(exportedData, 'application/json', 'bus-export.json');
+}
+
+export function openFileToImportData(): void {
+  const identifier = generateIdentifier('i');
+  const fileInput = document.createElement('input');
+  fileInput.setAttribute('type', 'file');
+  fileInput.setAttribute('accept', 'application/json');
+  fileInput.setAttribute('name', identifier);
+  fileInput.id = identifier;
+  fileInput.classList.add('css_import_file_input');
+  fileInput.addEventListener(
+    'change',
+    function (event) {
+      // Check if a file is selected
+      if (!event.target.files.length) {
+        documentQuerySelector(`body #${identifier}`).remove();
+        return;
+      }
+
+      // Get the first file selected by the user
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      // When the file is successfully read
+      reader.onload = function (e) {
+        // Get the file content as text
+        const fileTextContent = e.target.result;
+
+        // Import the data
+        importData(fileTextContent).then((f) => {
+          if (f) {
+            promptMessage('已匯入資料', 'check_circle');
+          } else {
+            promptMessage('無法匯入資料', 'error');
+          }
+          documentQuerySelector(`body #${identifier}`).remove();
+        });
+      };
+
+      // Read the file as text
+      reader.readAsText(file);
+    },
+    { once: true }
+  );
+
+  document.body.append(fileInput);
+  documentQuerySelector(`body #${identifier}`).click();
 }

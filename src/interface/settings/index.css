@@ -269,3 +269,19 @@
   margin-bottom: var(--b-cssvar-safe-area-bottom);
   text-align: justify;
 }
+
+.css_import_file_input {
+  display: block;
+  width: 10px;
+  height: 10px;
+  position: fixed;
+  left: -30px;
+  top: -30px;
+  opacity: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 0px;
+  background: rgba(0, 0, 0, 0);
+  font-size: 0px;
+}

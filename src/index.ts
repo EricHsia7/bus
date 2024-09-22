@@ -12,7 +12,7 @@ import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard,
 import { initializeFolderStores } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
-import { openSettings, closeSettings, downloadExportFile } from './interface/settings/index';
+import { openSettings, closeSettings, downloadExportFile, openFileToImportData } from './interface/settings/index';
 import { openSettingsOptions, closeSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
 import { initializeSettings } from './data/settings/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
@@ -262,7 +262,8 @@ window.bus = {
     openSettingsOptions,
     closeSettingsOptions,
     settingsOptionsHandler,
-    downloadExportFile
+    downloadExportFile,
+    openFileToImportData
   }
 };
 
