@@ -6,6 +6,8 @@
 
 **Implemented enhancements:**
 
+- Add storage analytics [\#71](https://github.com/EricHsia7/bus/pull/71) ([EricHsia7](https://github.com/EricHsia7))
+- Add api proxy [\#70](https://github.com/EricHsia7/bus/pull/70) ([EricHsia7](https://github.com/EricHsia7))
 - Add data usage page [\#68](https://github.com/EricHsia7/bus/pull/68) ([EricHsia7](https://github.com/EricHsia7))
 - Add setting options description [\#67](https://github.com/EricHsia7/bus/pull/67) ([EricHsia7](https://github.com/EricHsia7))
 - Page history [\#66](https://github.com/EricHsia7/bus/pull/66) ([EricHsia7](https://github.com/EricHsia7))
@@ -59,7 +61,6 @@
 
 **Merged pull requests:**
 
-- Add api proxy [\#70](https://github.com/EricHsia7/bus/pull/70) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
