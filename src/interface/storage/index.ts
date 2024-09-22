@@ -19,8 +19,8 @@ function generateElementOfItem(item: StoreSize): GeneratedElement {
 async function initializeStorageStatistics() {
   const statistics = await getStoresSizeStatistics();
   StatisticsElement.innerHTML = '';
-  for (const key in statistics) {
-    const item = statistics[key];
+  for (const key in statistics.categorizedSizes) {
+    const item = statistics.categorizedSizes[key];
     const itemElement = generateElementOfItem(item);
     StatisticsElement.appendChild(itemElement.element);
   }
