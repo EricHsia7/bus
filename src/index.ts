@@ -1,6 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
 import { discardExpiredEstimateTimeRecords } from './data/analytics/update-rate';
-import { calculateStoresSize } from './data/storage/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
@@ -25,6 +24,7 @@ import { loadFont } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
+import { closeStorage, openStorage } from './interface/storage/index';
 
 import './interface/theme.css';
 
@@ -99,8 +99,12 @@ import './interface/data-usage/body.css';
 import './interface/data-usage/graph.css';
 import './interface/data-usage/statistics.css';
 
+import './interface/storage/field.css';
+import './interface/storage/head.css';
+import './interface/storage/body.css';
+import './interface/storage/statistics.css';
+
 import './interface/prompt/index.css';
-import { importData } from './data/import/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -247,9 +251,9 @@ window.bus = {
     emptyInput,
     openSystemKeyboard
   },
-  test: {
-    calculateStoresSize,
-    importData
+  storage: {
+    openStorage,
+    closeStorage
   },
   dataUsage: {
     openDataUsage,
