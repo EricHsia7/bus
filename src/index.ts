@@ -99,6 +99,11 @@ import './interface/data-usage/body.css';
 import './interface/data-usage/graph.css';
 import './interface/data-usage/statistics.css';
 
+import './interface/storage/field.css';
+import './interface/storage/head.css';
+import './interface/storage/body.css';
+import './interface/storage/statistics.css';
+
 import './interface/prompt/index.css';
 
 let bus_initialized = false;
@@ -246,8 +251,9 @@ window.bus = {
     emptyInput,
     openSystemKeyboard
   },
-  test: {
-    getStoresSizeStatistics
+  storage: {
+    openDataUsage,
+    closeDataUsage
   },
   dataUsage: {
     openDataUsage,

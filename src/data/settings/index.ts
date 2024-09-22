@@ -231,7 +231,7 @@ var Settings: SettingsObject = {
     icon: 'database',
     status: '',
     type: 'page',
-    action: 'bus.storage.openStoragePage()',
+    action: 'bus.storage.openStorage()',
     description: ''
   },
   export: {
