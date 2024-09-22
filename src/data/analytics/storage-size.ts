@@ -20,6 +20,11 @@ export interface StoreSize {
 
 export type CategorizedSizes = { [key: string]: StoreSize };
 
+export interface StoreSizeStatistics {
+  categorizedSizes: CategorizedSizes;
+  totalSize: number;
+}
+
 function storeIndexToCategory(store: number): StoreCategory {
   const storeKey = getStoreKey(store);
   let name = '';
@@ -70,7 +75,7 @@ function storeIndexToCategory(store: number): StoreCategory {
   return result;
 }
 
-export async function getStoresSizeStatistics(): Promise<CategorizedSizes> {
+export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
   let totalSizeInBytes = 0;
   let categorizedSizesInBytes: CategorizedSizesInBytes = {};
   const storesLength = getStoresLength();
@@ -108,7 +113,7 @@ export async function getStoresSizeStatistics(): Promise<CategorizedSizes> {
     };
   }
 
-  const result: CategorizedSizes = {
+  const result: StoreSizeStatistics = {
     totalSize,
     categorizedSizes
   };

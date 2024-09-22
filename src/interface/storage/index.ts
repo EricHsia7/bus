@@ -16,7 +16,7 @@ function generateElementOfItem(item: StoreSize): GeneratedElement {
   };
 }
 
-async function initializeStorageStatistics() {
+async function initializeStorageStatistics(): void {
   const statistics = await getStoresSizeStatistics();
   StatisticsElement.innerHTML = '';
   for (const key in statistics.categorizedSizes) {
