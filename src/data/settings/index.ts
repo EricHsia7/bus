@@ -56,7 +56,7 @@ interface SettingWithOption {
   option: number;
 }
 
-export type SettingsWithOptions = Array<SettingWithOption>;
+export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
 const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'version', 'github'];
 
@@ -309,8 +309,8 @@ export function listSettings(): SettingsArray {
   return result;
 }
 
-export function listSettingsWithOptions(): SettingsWithOptions {
-  let result: SettingsWithOptions = [];
+export function listSettingsWithOptions(): SettingsWithOptionsArray {
+  let result: SettingsWithOptionsArray = [];
   for (const key in Settings) {
     if (SettingKeys.indexOf(key) > -1) {
       if (Settings.hasOwnProperty(key)) {
@@ -342,7 +342,7 @@ export async function changeSettingOption(key: string, option: number): Promise<
   return false;
 }
 
-export function getSetting(key: string): object | void {
+export function getSetting(key: string): Setting  {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       return Settings[key];

@@ -1,6 +1,6 @@
 import { ExportedData } from '../export/index';
 import { createFolder, FoldersWithContentArray, getFolder, saveToFolder, updateFolder } from '../folder/index';
-import { SettingsWithOptions } from '../settings/index';
+import { changeSettingOption, getSetting, SettingsWithOptionsArray } from '../settings/index';
 import { lfGetItem } from '../storage/index';
 
 export async function importFolders(data: FoldersWithContentArray): Promise<boolean> {
@@ -30,7 +30,15 @@ export async function importFolders(data: FoldersWithContentArray): Promise<bool
   }
 }
 
-export async function importSettings(settings: SettingsWithOptions) {}
+export async function importSettings(data: SettingsWithOptionsArray): Promise<boolean> {
+  for (const SettingWithOption of data) {
+    const existingSetting = getSetting(SettingWithOption.key);
+    if (existingSetting.type === 'select') {
+      await changeSettingOption(SettingWithOption.key, SettingWithOption.option);
+    }
+  }
+  return true;
+}
 
 export async function importData(data: string): Promise<boolean> {
   const parsedData: ExportedData = JSON.parse(data);
@@ -41,7 +49,7 @@ export async function importData(data: string): Promise<boolean> {
       break;
     case 2:
       await importFolders(parsedData.folders);
-      // parsedData.settings;
+      await importSettings(parsedData.settings);
       return true;
       break;
     default:

@@ -1,5 +1,5 @@
 import { FoldersWithContentArray, listFoldersWithContent } from '../folder/index';
-import { listSettingsWithOptions, SettingsWithOptions } from '../settings/index';
+import { listSettingsWithOptions, SettingsWithOptionsArray } from '../settings/index';
 
 export interface ExportedDataVersion1 {
   time: string;
@@ -11,7 +11,7 @@ export interface ExportedDataVersion2 {
   time: string;
   version: 2;
   folders: FoldersWithContentArray;
-  settings: SettingsWithOptions;
+  settings: SettingsWithOptionsArray;
 }
 
 export type ExportedData = ExportedDataVersion1 | ExportedDataVersion2;
