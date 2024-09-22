@@ -58,7 +58,7 @@ interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'version', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'import', 'version', 'github'];
 
 var Settings: SettingsObject = {
   time_formatting_mode: {

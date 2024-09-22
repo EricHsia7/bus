@@ -2,9 +2,9 @@ import { releaseFile, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { listSettings } from '../../data/settings/index';
 import { exportData } from '../../data/export/index';
+import { importData } from '../../data/import/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
-import { importData } from '../../data/import/index';
 import { promptMessage } from '../prompt/index';
 
 function generateElementOfItem(item: object): GeneratedElement {
