@@ -1,5 +1,3 @@
-import { convertBytes } from '../../tools/index';
-
 const localforage = require('localforage');
 
 var storage = {
@@ -25,15 +23,23 @@ async function dropInstance(store: number): Promise<any> {
   return operation;
 }
 
+export function getStoreKey(store: number): string {
+  return stores[store];
+}
+
+export function getStoresLength(): number {
+  return stores.length;
+}
+
 export async function lfSetItem(store: number, key: string, value: any): Promise<any> {
   try {
-    var store_key = stores[store];
-    if (storage[store_key] === false) {
-      storage[store_key] = await localforage.createInstance({
-        name: store_key
+    const storeKey = stores[store];
+    if (storage[storeKey] === false) {
+      storage[storeKey] = await localforage.createInstance({
+        name: storeKey
       });
     }
-    var operation = await storage[store_key].setItem(key, value);
+    const operation = await storage[storeKey].setItem(key, value);
     return operation;
   } catch (err) {
     console.error(err);
@@ -44,13 +50,13 @@ export async function lfSetItem(store: number, key: string, value: any): Promise
 
 export async function lfGetItem(store: number, key: string): Promise<any> {
   try {
-    var store_key = stores[store];
-    if (storage[store_key] === false) {
-      storage[store_key] = await localforage.createInstance({
-        name: store_key
+    const storeKey = stores[store];
+    if (storage[storeKey] === false) {
+      storage[storeKey] = await localforage.createInstance({
+        name: storeKey
       });
     }
-    var operation = await storage[store_key].getItem(key);
+    const operation = await storage[storeKey].getItem(key);
     return operation;
   } catch (err) {
     console.error(err);
@@ -90,21 +96,6 @@ export async function lfListItemKeys(store: number): Promise<Array<string>> {
     console.error(err);
     return [];
   }
-}
-
-export async function calculateStoresSize(): Promise<string> {
-  var total_size = 0;
-  var index = 0;
-  for (var store of stores) {
-    var keysInStore = await lfListItemKeys(index);
-    for (var itemKey of keysInStore) {
-      var item = await lfGetItem(index, itemKey);
-      var itemInString = String(item);
-      total_size += itemInString.length + itemKey.length;
-    }
-    index += 1;
-  }
-  return convertBytes(total_size);
 }
 
 export async function registerStore(id: string): Promise<number> {
