@@ -89,6 +89,13 @@ export function openFileToImportData(): void {
     },
     { once: true }
   );
+  fileInput.addEventListener(
+    'cancel',
+    function (event) {
+      documentQuerySelector(`body #${identifier}`).remove();
+    },
+    { once: true }
+  );
 
   document.body.append(fileInput);
   documentQuerySelector(`body #${identifier}`).click();
