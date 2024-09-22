@@ -60,33 +60,32 @@ export function openFileToImportData(): void {
     'change',
     function (event) {
       // Check if a file is selected
-      if (!event.target.files.length) {
+      if (event.target.files.length === 0) {
         documentQuerySelector(`body #${identifier}`).remove();
-        return;
+      } else {
+        // Get the first file selected by the user
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        // When the file is successfully read
+        reader.onload = function (e) {
+          // Get the file content as text
+          const fileTextContent = e.target.result;
+
+          // Import the data
+          importData(fileTextContent).then((f) => {
+            if (f) {
+              promptMessage('已匯入資料', 'check_circle');
+            } else {
+              promptMessage('無法匯入資料', 'error');
+            }
+            documentQuerySelector(`body #${identifier}`).remove();
+          });
+        };
+
+        // Read the file as text
+        reader.readAsText(file);
       }
-
-      // Get the first file selected by the user
-      const file = event.target.files[0];
-      const reader = new FileReader();
-
-      // When the file is successfully read
-      reader.onload = function (e) {
-        // Get the file content as text
-        const fileTextContent = e.target.result;
-
-        // Import the data
-        importData(fileTextContent).then((f) => {
-          if (f) {
-            promptMessage('已匯入資料', 'check_circle');
-          } else {
-            promptMessage('無法匯入資料', 'error');
-          }
-          documentQuerySelector(`body #${identifier}`).remove();
-        });
-      };
-
-      // Read the file as text
-      reader.readAsText(file);
     },
     { once: true }
   );
