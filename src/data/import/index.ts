@@ -6,8 +6,8 @@ import { lfGetItem } from '../storage/index';
 export async function importFolders(data: FoldersWithContentArray): Promise<boolean> {
   for (const FolderWithContent of data) {
     const folder = FolderWithContent.folder;
-    var update;
-    var creation;
+    var update = false;
+    var creation = false;
     if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
       const folderKey: string = `f_${folder.id}`;
       const existingFolder: string = await lfGetItem(4, folderKey);
