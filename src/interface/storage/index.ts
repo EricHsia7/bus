@@ -4,7 +4,7 @@ import { GeneratedElement } from '../index';
 
 const StorageField = documentQuerySelector('.css_storage_field');
 const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
-const statisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
+const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
 
 function generateElementOfItem(item: StoreSize): GeneratedElement {
   const element = document.createElement('div');
@@ -18,11 +18,11 @@ function generateElementOfItem(item: StoreSize): GeneratedElement {
 
 async function initializeStorageStatistics() {
   const statistics = await getStoresSizeStatistics();
-  statisticsElement.innerHTML = '';
+  StatisticsElement.innerHTML = '';
   for (const key in statistics) {
     const item = statistics[key];
     const itemElement = generateElementOfItem(item);
-    statisticsElement.appendChild(itemElement.element);
+    StatisticsElement.appendChild(itemElement.element);
   }
 }
 

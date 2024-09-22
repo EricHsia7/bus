@@ -24,7 +24,7 @@ import { loadFont } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
-import { getStoresSizeStatistics } from './data/analytics/storage-size';
+import { closeStorage, openStorage } from './interface/storage/index';
 
 import './interface/theme.css';
 
@@ -252,8 +252,8 @@ window.bus = {
     openSystemKeyboard
   },
   storage: {
-    openDataUsage,
-    closeDataUsage
+    openStorage,
+    closeStorage
   },
   dataUsage: {
     openDataUsage,
