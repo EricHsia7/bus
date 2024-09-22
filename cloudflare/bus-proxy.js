@@ -1,12 +1,22 @@
 export default {
   async fetch(request, env, ctx) {
-    const allowedDomain = 'https://erichsia7.github.io';
+    const allowedDomains = ['https://erichsia7.github.io', 'https://erichsia7-bus.netlify.app'];
 
     // Get the 'Referer' header from the incoming request
     const referer = request.headers.get('referer');
 
     // Check if the 'Referer' matches the allowed domain
-    if (referer && referer.startsWith(allowedDomain)) {
+    let admission = false;
+    if (referer) {
+      for (const allowedDomain of allowedDomains) {
+        if (referer.startsWith(allowedDomain)) {
+          admission = true;
+          break;
+        }
+      }
+    }
+
+    if (admission) {
       // Extract the URL of the request made to the worker
       const url = new URL(request.url);
 
