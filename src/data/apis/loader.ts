@@ -1,7 +1,7 @@
 import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
-const { inflate } = require('pako');
+const { inflate } = require('pako/lib/inflate');
 
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
