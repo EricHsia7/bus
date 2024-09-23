@@ -6,6 +6,7 @@ import { importData } from '../../data/import/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
+import { getSourceCodeURLOfCurrentVersion } from '../../data/settings/version';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -99,4 +100,9 @@ export function openFileToImportData(): void {
 
   document.body.append(fileInput);
   documentQuerySelector(`body #${identifier}`).click();
+}
+
+export function viewSourceCodeOfCurrentVersion() {
+  const url = getSourceCodeURLOfCurrentVersion();
+  window.open(url);
 }

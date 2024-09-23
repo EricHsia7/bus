@@ -75,7 +75,8 @@ module.exports = (env, argv) => {
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          VERSION: JSON.stringify(thisVersion.hash),
+          HASH: JSON.stringify(thisVersion.hash),
+          FULL_HASH: JSON.stringify(thisVersion.fullHash),
           BRANCH_NAME: JSON.stringify(thisVersion.branchName)
         }
       }),

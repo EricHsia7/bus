@@ -255,10 +255,10 @@ var Settings: SettingsObject = {
   version: {
     key: 'version',
     name: '版本',
-    icon: 'info',
+    icon: 'commit',
     status: '',
     type: 'info',
-    action: '',
+    action: 'bus.settings.viewSourceCodeOfCurrentVersion()',
     description: ''
   },
   github: {

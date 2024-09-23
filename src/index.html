@@ -15,7 +15,6 @@
     <link type="image/x-icon" href="./pwaicons/256x256_transparent.ico" rel="bookmark" />
     <link type="image/x-icon" href="./pwaicons/256x256_transparent.ico" rel="shortcut icon" />
     <meta name="twitter:image:src" content="./open-graph-image.png" />
-    <meta name="twitter:site" content="@github" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Bus" />
     <meta name="twitter:description" content="A reader for organized bus information." />
@@ -71,7 +70,8 @@
     <link rel="apple-touch-startup-image" href="./splash_screen/4__iphone_se_@2x.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
     <link rel="apple-touch-startup-image" href="./splash_screen/ipod_touch_5th_generation_and_later_@2x.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
     <!--apple touch startup images-->
-    <meta name="version-hash" content="<%= process.env.VERSION %>" />
+    <meta name="version-hash" content="<%= process.env.HASH %>" />
+    <meta name="version-full-hash" content="<%= process.env.FULL_HASH %>" />
     <meta name="version-branch-name" content="<%= process.env.BRANCH_NAME %>" />
   </head>
   <body>

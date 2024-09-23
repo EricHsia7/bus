@@ -40,8 +40,17 @@ export function getHTMLVersionHash(): string {
   return documentQuerySelector('head meta[name="version-hash"]').getAttribute('content');
 }
 
+export function getHTMLVersionFullHash(): string {
+  return documentQuerySelector('head meta[name="version-full-hash"]').getAttribute('content');
+}
+
 export function getHTMLVersionBranchName(): string {
   return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content');
+}
+
+export function getSourceCodeURLOfCurrentVersion(): string {
+  const currentFullHash = getHTMLVersionFullHash();
+  return `https://github.com/EricHsia7/bus/tree/${currentFullHash}`;
 }
 
 export async function checkAppVersion(): Promise<object> {
