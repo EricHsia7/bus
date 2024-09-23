@@ -48,9 +48,13 @@ export function getHTMLVersionBranchName(): string {
   return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content');
 }
 
-export function getSourceCodeURLOfCurrentVersion(): string {
+export function getCommitURLOfCurrentVersion(): string {
   const currentFullHash = getHTMLVersionFullHash();
-  return `https://github.com/EricHsia7/bus/tree/${currentFullHash}`;
+  return `https://github.com/EricHsia7/bus/commit/${currentFullHash}`;
+}
+
+export function getHTMLVersionTimeStamp(): string {
+  return documentQuerySelector('head meta[name="version-time-stamp"]').getAttribute('content');
 }
 
 export async function checkAppVersion(): Promise<object> {

@@ -1,6 +1,6 @@
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
-import { formatTime } from '../../tools/time';
-import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
+import { dateToRelativeTime, formatTime } from '../../tools/time';
+import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
@@ -55,7 +55,7 @@ interface SettingAction {
   description: string;
 }
 
-type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction
+type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction;
 
 type SettingsObject = { [key: string]: Setting };
 
@@ -68,7 +68,7 @@ interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'import', 'version', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 var Settings: SettingsObject = {
   time_formatting_mode: {
@@ -268,7 +268,25 @@ var Settings: SettingsObject = {
     icon: 'commit',
     status: '',
     type: 'info',
-    action: 'bus.settings.viewSourceCodeOfCurrentVersion()',
+    action: 'bus.settings.viewCommitOfCurrentVersion()',
+    description: ''
+  },
+  branch: {
+    key: 'branch',
+    name: '分支',
+    icon: 'folder_data',
+    status: '',
+    type: 'info',
+    action: '',
+    description: ''
+  },
+  last_update_date: {
+    key: 'last_update_date',
+    name: '更新時間',
+    icon: 'update',
+    status: '',
+    type: 'info',
+    action: '',
     description: ''
   },
   github: {
@@ -317,7 +335,14 @@ export function listSettings(): SettingsArray {
         break;
       case 'info':
         if (key === 'version') {
-          item.status = `${getHTMLVersionHash()}@${getHTMLVersionBranchName()}`;
+          item.status = getHTMLVersionHash();
+        }
+        if (key === 'branch') {
+          item.status = getHTMLVersionBranchName();
+        }
+        if (key === 'last_update_date') {
+          const date = new Date(getHTMLVersionTimeStamp());
+          item.status = dateToRelativeTime(date);
         }
         break;
       default:

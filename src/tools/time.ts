@@ -61,6 +61,32 @@ export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss
   return result;
 }
 
+export function dateToRelativeTime(date: Date): string {
+  const time = date.getTime();
+  const seconds = Math.floor((new Date().getTime() - time) / 1000);
+  let interval = Math.floor(seconds / 31536000); // seconds in a year
+  if (interval >= 1) {
+    return `${interval}年前`;
+  }
+  interval = Math.floor(seconds / 2592000); // seconds in a month
+  if (interval >= 1) {
+    return `${interval}個月前`;
+  }
+  interval = Math.floor(seconds / 86400); // seconds in a day
+  if (interval >= 1) {
+    return `${interval}天前`;
+  }
+  interval = Math.floor(seconds / 3600); // seconds in an hour
+  if (interval >= 1) {
+    return `${interval}小時前`;
+  }
+  interval = Math.floor(seconds / 60); // seconds in a minute
+  if (interval >= 1) {
+    return `${interval}分鐘前`;
+  }
+  return `${seconds}秒前`;
+}
+
 export function formatTime(time: number, mode: number): string {
   time = Math.round(time);
   switch (mode) {
@@ -143,6 +169,6 @@ export function dateValueToDayOfWeek(dateValue: string): object {
 }
 
 export interface TimeStampPeriod {
-  start: Date
-  end: Date
+  start: Date;
+  end: Date;
 }

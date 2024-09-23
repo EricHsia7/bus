@@ -49,7 +49,8 @@ const thisVersion = {
   build: workflowRunNumber,
   hash: commitHash.substring(0, 7),
   fullHash: commitHash,
-  branchName: branchName
+  branchName: branchName,
+  timeStamp: new Date().toISOString()
 };
 
 async function outputVersionJSON() {
@@ -77,7 +78,8 @@ module.exports = (env, argv) => {
         'process.env': {
           HASH: JSON.stringify(thisVersion.hash),
           FULL_HASH: JSON.stringify(thisVersion.fullHash),
-          BRANCH_NAME: JSON.stringify(thisVersion.branchName)
+          BRANCH_NAME: JSON.stringify(thisVersion.branchName),
+          TIME_STAMP: JSON.stringify(thisVersion.timeStamp),
         }
       }),
       new HtmlWebpackPlugin({
