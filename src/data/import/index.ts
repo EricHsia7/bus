@@ -16,6 +16,8 @@ export async function importFolders(data: FoldersWithContentArray): Promise<bool
       } else {
         creation = await createFolder(folder.name, folder.icon);
       }
+    } else {
+      update = true;
     }
     if (update) {
       for (const content of FolderWithContent.content) {
