@@ -195,7 +195,8 @@
   -webkit-user-select: none;
 }
 
-.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_arrow {
+.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_arrow,
+.css_settings_page_field .css_settings_page_settings .css_setting[type="action"] .css_setting_arrow {
   display: none;
 }
 

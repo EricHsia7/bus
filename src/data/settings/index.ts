@@ -3,7 +3,7 @@ import { formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
-type SettingType = 'select' | 'page' | 'info';
+type SettingType = 'select' | 'page' | 'info' | 'action';
 
 interface SettingSelectOption {
   name: string;
@@ -45,7 +45,17 @@ interface SettingInfo {
   description: string;
 }
 
-type Setting = SettingSelect | SettingPage | SettingInfo;
+interface SettingAction {
+  key: string;
+  name: string;
+  icon: MaterialSymbols;
+  status: string;
+  type: 'action';
+  action: string;
+  description: string;
+}
+
+type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction
 
 type SettingsObject = { [key: string]: Setting };
 
