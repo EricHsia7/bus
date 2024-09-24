@@ -274,7 +274,7 @@ var Settings: SettingsObject = {
   branch: {
     key: 'branch',
     name: '分支',
-    icon: 'folder_data',
+    icon: 'rebase',
     status: '',
     type: 'info',
     action: '',
