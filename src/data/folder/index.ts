@@ -14,29 +14,6 @@ import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
 const cloneDeep = require('lodash/cloneDeep');
 
-var Folders = {
-  f_saved_stop: {
-    name: '已收藏站牌',
-    icon: 'favorite',
-    default: true,
-    index: 0,
-    storeIndex: 5,
-    contentType: ['stop'],
-    id: 'saved_stop'
-  },
-  f_saved_route: {
-    name: '已收藏路線',
-    icon: 'route',
-    default: true,
-    index: 1,
-    storeIndex: 6,
-    contentType: ['route'],
-    id: 'saved_route'
-  }
-};
-
-const defaultFolderQuantity = 2;
-
 export type FolderContentType = 'stop' | 'route' | 'bus' | 'empty';
 
 interface FolderRouteEndPoints {
@@ -104,6 +81,29 @@ export interface FoldersWithContent {
 }
 
 export type FoldersWithContentArray = Array<FoldersWithContent>;
+
+var Folders: { [key: string]: Folder } = {
+  f_saved_stop: {
+    name: '已收藏站牌',
+    icon: 'location_on',
+    default: true,
+    index: 0,
+    storeIndex: 5,
+    contentType: ['stop'],
+    id: 'saved_stop'
+  },
+  f_saved_route: {
+    name: '已收藏路線',
+    icon: 'route',
+    default: true,
+    index: 1,
+    storeIndex: 6,
+    contentType: ['route'],
+    id: 'saved_route'
+  }
+};
+
+const defaultFolderQuantity = 2;
 
 export async function initializeFolderStores(): void {
   var folderKeys = await lfListItemKeys(4);
