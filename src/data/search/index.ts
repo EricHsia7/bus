@@ -95,11 +95,9 @@ export async function prepareForSearch() {
   }
   return new Fuse(index, {
     keys: [
-      { name: 'n', weight: 0.65 },
-      { name: 'dep', weight: 0.12 },
-      { name: 'des', weight: 0.12 },
-      { name: 'hash', weight: 0.055 },
-      { name: 'id', weight: 0.055 }
+      { name: 'n', weight: 0.7 },
+      { name: 'dep', weight: 0.15 },
+      { name: 'des', weight: 0.15 }
     ]
   });
 }
