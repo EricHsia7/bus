@@ -15,11 +15,9 @@ export function loadCSS(url: string, identifier: string): void {
   }
 }
 
-export async function loadFont(url: string, fontName: string, identifier: string): Promise<string> {
+export async function loadFont(url: string, fontName: string, identifier: string): Promise<boolean> {
   loadCSS(url, identifier);
-  if (typeof loadedCallback === 'function') {
-    var font = new FontFaceObserver(fontName);
-    await font.load();
-    return fontName;
-  }
+  const observer = new FontFaceObserver(fontName);
+  await observer.load();
+  return true;
 }
