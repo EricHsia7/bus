@@ -20,6 +20,17 @@ export async function recordRequest(requestID: string, data: object, incomplete:
   }
 }
 
+export async function discardExpiredDataUsageRecords(): void {
+  const keys = await lfListItemKeys(2);
+  for (const key of keys) {
+    const json = await lfGetItem(2, key);
+    const object: object = JSON.parse(json);
+    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 30 * 1000) {
+      await lfRemoveItem(2, key);
+    }
+  }
+}
+
 export async function getDataUsageRecordsPeriod(): Promise<TimeStampPeriod> {
   const keys = await lfListItemKeys(2);
   let startTimeArray = [];

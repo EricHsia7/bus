@@ -1,5 +1,6 @@
 import { updateSearchResult } from './interface/search/index';
 import { discardExpiredEstimateTimeRecords } from './data/analytics/update-rate';
+import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
@@ -119,27 +120,27 @@ window.bus = {
       checkAppVersion()
         .then((e) => {
           if (e.status === 'ok') {
-            initializeSettings().then((e) => {});
+            initializeSettings();
             initializeRouteSliding();
             initializeLocationSliding();
             ResizeRouteField();
             ResizeLocationField();
             ResizeSearchInputCanvasSize();
-            window.addEventListener('resize', (event) => {
+            window.addEventListener('resize', () => {
               ResizeRouteField();
               ResizeLocationField();
               ResizeSearchInputCanvasSize();
             });
             if (screen) {
               if (screen.orientation) {
-                screen.orientation.addEventListener('change', (event) => {
+                screen.orientation.addEventListener('change', () => {
                   ResizeRouteField();
                   ResizeLocationField();
                   ResizeSearchInputCanvasSize();
                 });
               }
             }
-            initializeFolderStores().then((e) => {
+            initializeFolderStores().then(() => {
               initializeFolders();
             });
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -147,7 +148,7 @@ window.bus = {
             mediaQuery.addEventListener('change', function () {
               updateSearchInput(searchInputElement.value);
             });
-            searchInputElement.addEventListener('paste', function (event) {
+            searchInputElement.addEventListener('paste', function () {
               updateSearchResult(searchInputElement.value);
               updateSearchInput(searchInputElement.value);
             });
@@ -207,6 +208,7 @@ window.bus = {
       loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
       downloadData();
       discardExpiredEstimateTimeRecords();
+      discardExpiredDataUsageRecords();
     }
   },
   route: {
