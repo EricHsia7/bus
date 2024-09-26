@@ -196,6 +196,15 @@ var Settings: SettingsObject = {
     ],
     description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
   },
+  personal_schedule: {
+    key: 'personal_schedule',
+    name: '個人化行程',
+    icon: 'calendar_view_day',
+    status: '',
+    action: ``,
+    type: 'page',
+    description: ''
+  },
   proxy: {
     key: 'proxy',
     name: '網路代理',
