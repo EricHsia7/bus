@@ -100,7 +100,7 @@ module.exports = (env, argv) => {
         clientsClaim: true,
         skipWaiting: true,
         exclude: [/\.map$/, /LICENSE\.txt$/],
-        include: [/\.js|css|png$/],
+        include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
           {
