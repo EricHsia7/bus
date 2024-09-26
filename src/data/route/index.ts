@@ -268,11 +268,13 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       isBufferZoneClosed = false;
     }
 
+    let isNearest = false;
     if (!(nearestPosition === null)) {
       if (nearestPosition.id === item.id) {
-        item.nearest = true;
+        isNearest = true;
       }
     }
+    item.nearest = isNearest;
 
     const groupKey = `g_${item.goBack}` || 'g_0';
 
