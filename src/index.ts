@@ -121,6 +121,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { closePersonalScheduleCreator, openPersonalScheduleCreator } from './interface/personal-schedule-creator/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -279,7 +280,9 @@ window.bus = {
   },
   personalSchedule: {
     openPersonalScheduleManager,
-    closePersonalScheduleManager
+    closePersonalScheduleManager,
+    openPersonalScheduleCreator,
+    closePersonalScheduleCreator
   },
   settings: {
     openSettings,
