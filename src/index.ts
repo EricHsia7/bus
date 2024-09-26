@@ -262,6 +262,9 @@ window.bus = {
     closeDataUsage,
     switchDataUsageGraphAggregationPeriod
   },
+  personalSchedule: {
+    openPersonalSchedule
+  },
   settings: {
     openSettings,
     closeSettings,
