@@ -26,6 +26,7 @@ import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from '.
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
 import { closeStorage, openStorage } from './interface/storage/index';
+import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 
 import './interface/theme.css';
 
@@ -94,6 +95,12 @@ import './interface/folder-icon-selector/head.css';
 import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
 
+import './interface/personal-schedule-manager/field.css';
+import './interface/personal-schedule-manager/head.css';
+import './interface/personal-schedule-manager/body.css';
+import './interface/personal-schedule-manager/list.css';
+import './interface/personal-schedule-manager/item.css';
+
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
 import './interface/data-usage/body.css';
@@ -106,7 +113,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
