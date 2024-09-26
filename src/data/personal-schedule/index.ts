@@ -1,5 +1,5 @@
 import { generateIdentifier } from '../../tools/index';
-import { lfSetItem } from '../storage/index';
+import { lfGetItem, lfSetItem } from '../storage/index';
 
 interface PersonalSchedulePeriodTime {
   hours: number;
@@ -21,7 +21,7 @@ interface PersonalSchedule {
   id: string;
 }
 
-async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
+export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
   const identifier = generateIdentifier('s');
   const object: PersonalSchedule = {
     name: name,
@@ -40,4 +40,19 @@ async function createPersonalSchedule(name: string, startHours: number, startMin
   };
   await lfSetItem(4, identifier, JSON.stringify(object));
   return true;
+}
+
+export async function getPersonalSchedule(personalScheduleID: string): Promise<PersonalSchedule> {
+  const existingPersonalSchedule = await lfGetItem(4, personalScheduleID);
+  if (existingPersonalSchedule) {
+    const object = JSON.parse(existingPersonalSchedule);
+    return object;
+  }
+}
+
+export async function updatePersonalSchedule(personalSchedule: PersonalSchedule): Promise<boolean> {
+  const thisPersonalSchedule = await getPersonalSchedule(personalSchedule.id);
+  if (thisPersonalSchedule) {
+    await lfSetItem(4, personalSchedule.id, JSON.stringify(personalSchedule));
+  }
 }
