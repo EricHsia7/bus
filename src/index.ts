@@ -106,6 +106,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -263,7 +264,8 @@ window.bus = {
     switchDataUsageGraphAggregationPeriod
   },
   personalSchedule: {
-    openPersonalSchedule
+    openPersonalScheduleManager,
+    closePersonalScheduleManager
   },
   settings: {
     openSettings,
