@@ -68,7 +68,7 @@ interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'data_usage', 'storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'data_usage', 'storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 var Settings: SettingsObject = {
   time_formatting_mode: {
@@ -224,6 +224,15 @@ var Settings: SettingsObject = {
     status: '',
     type: 'page',
     action: 'bus.folder.openFolderManager()',
+    description: ''
+  },
+  personal_schedule: {
+    key: 'personal_schedule',
+    name: '個人化行程',
+    icon: 'calendar_view_day',
+    status: '',
+    action: `bus.personalSchedule.openPersonalScheduleManager()`,
+    type: 'page',
     description: ''
   },
   data_usage: {

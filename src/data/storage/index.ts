@@ -5,12 +5,13 @@ var storage = {
   settingsStore: false,
   dataUsageRecordsStore: false,
   updateRateRecordsStore: false,
+  personalScheduleStore: false,
   folderListStore: false,
   savedStopFolderStore: false,
   savedRouteFolderStore: false
 };
 
-var stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
+var stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'personalScheduleStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
 
 async function dropInstance(store: number): Promise<any> {
   const storeKey = stores[store];

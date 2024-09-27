@@ -3,6 +3,8 @@ import { documentQuerySelector } from '../tools/query-selector';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
+import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
+import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 
@@ -11,7 +13,7 @@ const splashScreenTimer = {
   openTime: new Date().getTime()
 };
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -66,6 +68,16 @@ export function closePreviousPage(): void {
         break;
       case 'SettingsOptions':
         break;
+      case 'DataUsage':
+        break;
+      case 'PersonalScheduleManager':
+        closePersonalScheduleManager();
+        break;
+      case 'PersonalScheduleCreator':
+        break;
+      case 'PersonalScheduleEditor':
+        closePersonalScheduleEditor();
+        break;
       default:
         break;
     }
@@ -106,6 +118,16 @@ export function openPreviousPage(): void {
         openSettings();
         break;
       case 'SettingsOptions':
+        break;
+      case 'DataUsage':
+        break;
+      case 'PersonalScheduleManager':
+        openPersonalScheduleManager();
+        break;
+      case 'PersonalScheduleCreator':
+        break;
+      case 'PersonalScheduleEditor':
+        openPersonalScheduleEditor();
         break;
       default:
         break;

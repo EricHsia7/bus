@@ -80,6 +80,7 @@
     <meta name="version-time-stamp" content="<%= process.env.TIME_STAMP %>" />
   </head>
   <body>
+    <!-- home -->
     <div class="css_home_field">
       <div class="css_home_body">
         <div class="css_home_folders"></div>
@@ -104,6 +105,8 @@
         </div>
       </div>
     </div>
+
+    <!-- search -->
     <div class="css_search_field" displayed="false">
       <div class="css_search_body">
         <div class="css_search_results"></div>
@@ -119,6 +122,8 @@
         </div>
       </div>
     </div>
+
+    <!-- route, route details -->
     <div class="css_route_field" displayed="false">
       <div class="css_route_groups"></div>
       <div class="css_route_head">
@@ -140,6 +145,7 @@
         </div>
       </div>
     </div>
+
     <div class="css_route_details_field" displayed="false">
       <div class="css_route_details_body">
         <div class="css_route_details_groups">
@@ -184,6 +190,8 @@
         <div class="css_route_details_title">更多</div>
       </div>
     </div>
+
+    <!-- location -->
     <div class="css_location_field" displayed="false">
       <div class="css_location_groups"></div>
       <div class="css_location_head">
@@ -203,6 +211,8 @@
         </div>
       </div>
     </div>
+
+    <!-- save to folder -->
     <div class="css_save_to_folder_field">
       <div class="css_save_to_folder_body">
         <div class="css_save_to_folder_list"></div>
@@ -214,6 +224,8 @@
         <div class="css_save_to_folder_title">儲存至資料夾</div>
       </div>
     </div>
+
+    <!-- settings, settings options -->
     <div class="css_settings_page_field" displayed="false">
       <div class="css_settings_page_body">
         <div class="css_settings_page_settings"></div>
@@ -225,6 +237,7 @@
         <div class="css_settings_page_title">設定</div>
       </div>
     </div>
+
     <div class="css_settings_options_page_field" displayed="false">
       <div class="css_settings_options_page_body">
         <div class="css_settings_options_page_options"></div>
@@ -237,6 +250,8 @@
         <div class="css_settings_options_page_title"></div>
       </div>
     </div>
+
+    <!-- data usage -->
     <div class="css_data_usage_field" displayed="false">
       <div class="css_data_usage_body">
         <div class="css_data_usage_graph">
@@ -269,6 +284,8 @@
         <div class="css_data_usage_title">網路使用量</div>
       </div>
     </div>
+
+    <!-- storage -->
     <div class="css_storage_field" displayed="false">
       <div class="css_storage_body">
         <div class="css_storage_statistics"></div>
@@ -280,6 +297,8 @@
         <div class="css_storage_title">儲存空間</div>
       </div>
     </div>
+
+    <!-- folder manager, folder creator, folder editor, folder icon selector -->
     <div class="css_folder_manager_field" displayed="false">
       <div class="css_folder_manager_body">
         <div class="css_folder_manager_folder_list"></div>
@@ -294,6 +313,7 @@
         </div>
       </div>
     </div>
+
     <div class="css_folder_creator_field" displayed="false">
       <div class="css_folder_creator_body">
         <div class="css_folder_creator_groups">
@@ -336,6 +356,7 @@
         </div>
       </div>
     </div>
+
     <div class="css_folder_editor_field" displayed="false">
       <div class="css_folder_editor_body">
         <div class="css_folder_editor_groups">
@@ -384,6 +405,7 @@
         <div class="css_folder_editor_title">編輯資料夾</div>
       </div>
     </div>
+
     <div class="css_folder_icon_selector_field" displayed="false">
       <div class="css_folder_icon_selector_body">
         <div class="css_folder_icon_selector_material_symbols" displayed="true"></div>
@@ -398,6 +420,152 @@
         </div>
       </div>
     </div>
+
+    <!-- personal schedule manager, personal schedule creator, personal schedule editor -->
+    <div class="css_personal_schedule_manager_field" displayed="false">
+      <div class="css_personal_schedule_manager_body">
+        <div class="css_personal_schedule_manager_list"></div>
+      </div>
+      <div class="css_personal_schedule_manager_head">
+        <div class="css_personal_schedule_manager_button_left" onclick="bus.personalSchedule.closePersonalScheduleManager()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_personal_schedule_manager_title">個人化行程</div>
+        <div class="css_personal_schedule_manager_button_right" onclick="bus.personalSchedule.openPersonalScheduleCreator()">
+          <span class="css_material_symbols_rounded">ink_pen</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="css_personal_schedule_creator_field" displayed="false">
+      <div class="css_personal_schedule_creator_body">
+        <div class="css_personal_schedule_creator_groups">
+          <div class="css_personal_schedule_creator_group" group="schedule-name">
+            <div class="css_personal_schedule_creator_group_head">
+              <div class="css_personal_schedule_creator_group_icon">
+                <span class="css_material_symbols_rounded">match_case</span>
+              </div>
+              <div class="css_personal_schedule_creator_group_name">名稱</div>
+            </div>
+            <div class="css_personal_schedule_creator_group_body">
+              <input type="text" placeholder="名稱" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_creator_group" group="schedule-start-time">
+            <div class="css_personal_schedule_creator_group_head">
+              <div class="css_personal_schedule_creator_group_icon">
+                <span class="css_material_symbols_rounded">schedule</span>
+              </div>
+              <div class="css_personal_schedule_creator_group_name">開始時間</div>
+            </div>
+            <div class="css_personal_schedule_creator_group_body">
+              <input type="text" placeholder="hh:mm" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_creator_group" group="schedule-end-time">
+            <div class="css_personal_schedule_creator_group_head">
+              <div class="css_personal_schedule_creator_group_icon">
+                <span class="css_material_symbols_rounded">schedule</span>
+              </div>
+              <div class="css_personal_schedule_creator_group_name">結束時間</div>
+            </div>
+            <div class="css_personal_schedule_creator_group_body">
+              <input type="text" placeholder="hh:mm" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_creator_group" group="schedule-days">
+            <div class="css_personal_schedule_creator_group_head">
+              <div class="css_personal_schedule_creator_group_icon">
+                <span class="css_material_symbols_rounded">date_range</span>
+              </div>
+              <div class="css_personal_schedule_creator_group_name">重複</div>
+            </div>
+            <div class="css_personal_schedule_creator_group_body">
+              <div class="css_personal_schedule_creator_day" day="0" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(0)">星期日</div>
+              <div class="css_personal_schedule_creator_day" day="1" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(1)">星期一</div>
+              <div class="css_personal_schedule_creator_day" day="2" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(2)">星期二</div>
+              <div class="css_personal_schedule_creator_day" day="3" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(3)">星期三</div>
+              <div class="css_personal_schedule_creator_day" day="4" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(4)">星期四</div>
+              <div class="css_personal_schedule_creator_day" day="5" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(5)">星期五</div>
+              <div class="css_personal_schedule_creator_day" day="6" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleCreatorDay(6)">星期六</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="css_personal_schedule_creator_head">
+        <div class="css_personal_schedule_creator_button_left" onclick="bus.personalSchedule.closePersonalScheduleCreator()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_personal_schedule_creator_title">建立個人化行程</div>
+        <div class="css_personal_schedule_creator_button_right" onclick="bus.personalSchedule.createFormulatedPersonalSchedule()">
+          <span class="css_material_symbols_rounded">check</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="css_personal_schedule_editor_field" displayed="false">
+      <div class="css_personal_schedule_editor_body">
+        <div class="css_personal_schedule_editor_groups">
+          <div class="css_personal_schedule_editor_group" group="schedule-name">
+            <div class="css_personal_schedule_editor_group_head">
+              <div class="css_personal_schedule_editor_group_icon">
+                <span class="css_material_symbols_rounded">match_case</span>
+              </div>
+              <div class="css_personal_schedule_editor_group_name">名稱</div>
+            </div>
+            <div class="css_personal_schedule_editor_group_body">
+              <input type="text" placeholder="名稱" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_editor_group" group="schedule-start-time">
+            <div class="css_personal_schedule_editor_group_head">
+              <div class="css_personal_schedule_editor_group_icon">
+                <span class="css_material_symbols_rounded">schedule</span>
+              </div>
+              <div class="css_personal_schedule_editor_group_name">開始時間</div>
+            </div>
+            <div class="css_personal_schedule_editor_group_body">
+              <input type="text" placeholder="hh:mm" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_editor_group" group="schedule-end-time">
+            <div class="css_personal_schedule_editor_group_head">
+              <div class="css_personal_schedule_editor_group_icon">
+                <span class="css_material_symbols_rounded">schedule</span>
+              </div>
+              <div class="css_personal_schedule_editor_group_name">結束時間</div>
+            </div>
+            <div class="css_personal_schedule_editor_group_body">
+              <input type="text" placeholder="hh:mm" />
+            </div>
+          </div>
+          <div class="css_personal_schedule_editor_group" group="schedule-days">
+            <div class="css_personal_schedule_editor_group_head">
+              <div class="css_personal_schedule_editor_group_icon">
+                <span class="css_material_symbols_rounded">date_range</span>
+              </div>
+              <div class="css_personal_schedule_editor_group_name">重複</div>
+            </div>
+            <div class="css_personal_schedule_editor_group_body">
+              <div class="css_personal_schedule_editor_day" day="0" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(0)">星期日</div>
+              <div class="css_personal_schedule_editor_day" day="1" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(1)">星期一</div>
+              <div class="css_personal_schedule_editor_day" day="2" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(2)">星期二</div>
+              <div class="css_personal_schedule_editor_day" day="3" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(3)">星期三</div>
+              <div class="css_personal_schedule_editor_day" day="4" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(4)">星期四</div>
+              <div class="css_personal_schedule_editor_day" day="5" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(5)">星期五</div>
+              <div class="css_personal_schedule_editor_day" day="6" highlighted="false" onclick="bus.personalSchedule.switchPersonalScheduleEditorDay(6)">星期六</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="css_personal_schedule_editor_head">
+        <div class="css_personal_schedule_editor_button_left" onclick="bus.personalSchedule.saveEditedPersonalSchedule()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_personal_schedule_editor_title">編輯個人化行程</div>
+      </div>
+    </div>
+    <!-- splash screen -->
     <div class="css_splash_screen">
       <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="css_splash_screen_icon">
         <path d="M22.7188 11.4375C18.5066 11.4375 15.0938 14.8504 15.0938 19.0625C15.0938 19.6458 15.0937 41.8495 15.0938 42.0625C15.0938 45.3807 17.3025 48.2326 20.4063 49.25L20.4063 50.6875C20.4063 51.7241 21.2447 52.5625 22.2813 52.5625C23.3178 52.5625 24.1563 51.7241 24.1563 50.6875L24.1563 49.6875L39.8438 49.6875L39.8438 50.6875C39.8437 51.7241 40.6822 52.5625 41.7188 52.5625C42.7553 52.5625 43.5938 51.7241 43.5938 50.6875L43.5938 49.25C46.6975 48.2326 48.9062 45.3807 48.9063 42.0625L48.9063 19.0625C48.9063 14.8504 45.4934 11.4375 41.2813 11.4375C40.7007 11.4375 23.2993 11.4375 22.7188 11.4375ZM22.7188 14.3125L41.2813 14.3125C43.9088 14.3125 46.0312 16.435 46.0313 19.0625L46.0313 30.1563C46.0313 30.8296 45.4858 31.375 44.8125 31.375L19.1875 31.375C18.5142 31.375 17.9687 30.8296 17.9688 30.1563C17.9688 29.5719 17.9688 19.6458 17.9688 19.0625C17.9688 16.435 20.0912 14.3125 22.7188 14.3125ZM19.1875 34.25L44.8125 34.25C45.4858 34.25 46.0312 34.7954 46.0313 35.4688L46.0313 42.0625C46.0313 44.69 43.9088 46.8438 41.2813 46.8438L22.7188 46.8438C20.0912 46.8438 17.9687 44.69 17.9688 42.0625C17.9688 41.8495 17.9688 35.912 17.9688 35.4688C17.9688 34.7954 18.5142 34.25 19.1875 34.25ZM23.1563 37.75C21.6311 37.75 20.4063 38.9749 20.4063 40.5C20.4063 42.0251 21.6311 43.25 23.1563 43.25C24.6814 43.25 25.9063 42.0251 25.9063 40.5C25.9063 38.9749 24.6814 37.75 23.1563 37.75ZM40.8438 37.75C39.3186 37.75 38.0938 38.9749 38.0938 40.5C38.0938 42.0251 39.3186 43.25 40.8438 43.25C42.3689 43.25 43.5938 42.0251 43.5938 40.5C43.5938 38.9749 42.3689 37.75 40.8438 37.75Z" fill-rule="nonzero" opacity="1" stroke="none" />

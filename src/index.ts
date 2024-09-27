@@ -26,6 +26,9 @@ import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from '.
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
 import { closeStorage, openStorage } from './interface/storage/index';
+import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
+import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
+import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 
 import './interface/theme.css';
 
@@ -93,6 +96,30 @@ import './interface/folder-icon-selector/field.css';
 import './interface/folder-icon-selector/head.css';
 import './interface/folder-icon-selector/body.css';
 import './interface/folder-icon-selector/symbols.css';
+
+import './interface/personal-schedule-manager/field.css';
+import './interface/personal-schedule-manager/head.css';
+import './interface/personal-schedule-manager/body.css';
+import './interface/personal-schedule-manager/list.css';
+import './interface/personal-schedule-manager/item.css';
+
+import './interface/personal-schedule-creator/field.css';
+import './interface/personal-schedule-creator/head.css';
+import './interface/personal-schedule-creator/body.css';
+import './interface/personal-schedule-creator/groups.css';
+import './interface/personal-schedule-creator/schedule-name.css';
+import './interface/personal-schedule-creator/schedule-start-time.css';
+import './interface/personal-schedule-creator/schedule-end-time.css';
+import './interface/personal-schedule-creator/schedule-days.css';
+
+import './interface/personal-schedule-editor/field.css';
+import './interface/personal-schedule-editor/head.css';
+import './interface/personal-schedule-editor/body.css';
+import './interface/personal-schedule-editor/groups.css';
+import './interface/personal-schedule-editor/schedule-name.css';
+import './interface/personal-schedule-editor/schedule-start-time.css';
+import './interface/personal-schedule-editor/schedule-end-time.css';
+import './interface/personal-schedule-editor/schedule-days.css';
 
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
@@ -261,6 +288,18 @@ window.bus = {
     openDataUsage,
     closeDataUsage,
     switchDataUsageGraphAggregationPeriod
+  },
+  personalSchedule: {
+    openPersonalScheduleManager,
+    closePersonalScheduleManager,
+    openPersonalScheduleCreator,
+    closePersonalScheduleCreator,
+    createFormulatedPersonalSchedule,
+    switchPersonalScheduleCreatorDay,
+    openPersonalScheduleEditor,
+    closePersonalScheduleEditor,
+    switchPersonalScheduleEditorDay,
+    saveEditedPersonalSchedule
   },
   settings: {
     openSettings,
