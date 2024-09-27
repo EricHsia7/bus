@@ -1,0 +1,28 @@
+.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body .css_personal_schedule_editor_day {
+  position: relative;
+  top: 0px;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: calc(50px - 10px);
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  font-weight: 400;
+  background: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-none);
+  margin-top: 10px;
+  border-radius: var(--b-cssvar-border-radius-normal);
+  transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  box-sizing: border-box;
+}
+
+.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body .css_personal_schedule_editor_day:last-child {
+  margin-bottom: 10px;
+}
+
+.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body .css_personal_schedule_editor_day[highlighted="true"] {
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  color: var(--b-cssvar-main-color);
+}

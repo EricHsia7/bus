@@ -57,7 +57,7 @@ export function closePersonalScheduleCreator(): void {
   openPreviousPage();
 }
 
-export function switchPersonalScheduleDay(day: WeekDay): void {
+export function switchPersonalScheduleCreatorDay(day: WeekDay): void {
   const thisDayElement = elementQuerySelector(dayGroupBodyElement, `.css_personal_schedule_creator_day[day="${day}"]`);
   const highlighted = thisDayElement.getAttribute('highlighted');
   if (highlighted === 'true') {

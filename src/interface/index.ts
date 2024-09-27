@@ -3,7 +3,7 @@ import { documentQuerySelector } from '../tools/query-selector';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
-import { closePersonalScheduleCreator } from './personal-schedule-creator/index';
+import { closePersonalScheduleEditor } from './personal-schedule-editor/index';
 import { closePersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
@@ -13,7 +13,7 @@ const splashScreenTimer = {
   openTime: new Date().getTime()
 };
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -74,6 +74,9 @@ export function closePreviousPage(): void {
         closePersonalScheduleManager();
         break;
       case 'PersonalScheduleCreator':
+        break;
+      case 'PersonalScheduleEditor':
+        closePersonalScheduleEditor();
         break;
       default:
         break;

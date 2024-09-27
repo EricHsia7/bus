@@ -1,0 +1,18 @@
+.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-start-time"] .css_personal_schedule_editor_group_body input {
+  position: relative;
+  top: 0px;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: 50px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+  color: var(--b-cssvar-333333);
+  caret-color: var(--b-cssvar-main-color);
+  font-size: 20px;
+  font-weight: 400;
+  background: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-none);
+}
