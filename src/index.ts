@@ -27,7 +27,7 @@ import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/h
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
 import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
-import { closePersonalScheduleCreator, openPersonalScheduleCreator } from './interface/personal-schedule-creator/index';
+import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator } from './interface/personal-schedule-creator/index';
 
 import './interface/theme.css';
 
@@ -283,7 +283,8 @@ window.bus = {
     openPersonalScheduleManager,
     closePersonalScheduleManager,
     openPersonalScheduleCreator,
-    closePersonalScheduleCreator
+    closePersonalScheduleCreator,
+    createFormulatedPersonalSchedule
   },
   settings: {
     openSettings,

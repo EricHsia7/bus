@@ -1,14 +1,6 @@
-interface TimeObject {
-  hours: number;
-  minutes: number;
-}
+import { TimePeriod } from '../../../tools/time';
 
-interface RushHour {
-  start: TimeObject;
-  end: TimeObject;
-}
-
-export function getRushHour(period: number): RushHour {
+export function getRushHour(period: number): TimePeriod {
   var rushHours = [
     [
       {

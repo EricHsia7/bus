@@ -168,7 +168,22 @@ export function dateValueToDayOfWeek(dateValue: string): object {
   return indexToDay(index);
 }
 
+export interface TimeObject {
+  hours: number;
+  minutes: number;
+}
+
+export interface TimePeriod {
+  start: TimeObject;
+  end: TimeObject;
+}
+
 export interface TimeStampPeriod {
   start: Date;
   end: Date;
 }
+
+export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+// 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+
+export type WeekDayArray = Array<WeekDay>
