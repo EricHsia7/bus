@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add personal schedule [\#72](https://github.com/EricHsia7/bus/pull/72) ([EricHsia7](https://github.com/EricHsia7))
 - Add storage analytics [\#71](https://github.com/EricHsia7/bus/pull/71) ([EricHsia7](https://github.com/EricHsia7))
 - Add api proxy [\#70](https://github.com/EricHsia7/bus/pull/70) ([EricHsia7](https://github.com/EricHsia7))
 - Add data usage page [\#68](https://github.com/EricHsia7/bus/pull/68) ([EricHsia7](https://github.com/EricHsia7))
