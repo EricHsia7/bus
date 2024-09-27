@@ -6,7 +6,7 @@ import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { recordEstimateTime } from '../analytics/update-rate';
+import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
 import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -351,7 +351,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  await recordEstimateTime(EstimateTime);
+  await recordEstimateTimeForUpdateRate(EstimateTime);
   return result;
 }
 

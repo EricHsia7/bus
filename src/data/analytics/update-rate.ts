@@ -9,7 +9,7 @@ var trackingUpdateRate_tracking: boolean = false;
 var trackingUpdateRate_sampleQuantity: number = 64;
 var trackingUpdateRate_monitorTimes: number = 90;
 
-export async function recordEstimateTime(EstimateTime: EstimateTime): void {
+export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
   var needToReset = false;
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;

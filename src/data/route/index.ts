@@ -1,4 +1,4 @@
-import { recordEstimateTime } from '../analytics/update-rate';
+import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
@@ -309,6 +309,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  //await recordEstimateTime(EstimateTime);
+  //await recordEstimateTimeForUpdateRate(EstimateTime);
   return result2;
 }
