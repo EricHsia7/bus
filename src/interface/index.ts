@@ -3,8 +3,8 @@ import { documentQuerySelector } from '../tools/query-selector';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
-import { closePersonalScheduleEditor } from './personal-schedule-editor/index';
-import { closePersonalScheduleManager } from './personal-schedule-manager/index';
+import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
+import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 
@@ -118,6 +118,16 @@ export function openPreviousPage(): void {
         openSettings();
         break;
       case 'SettingsOptions':
+        break;
+      case 'DataUsage':
+        break;
+      case 'PersonalScheduleManager':
+        openPersonalScheduleManager();
+        break;
+      case 'PersonalScheduleCreator':
+        break;
+      case 'PersonalScheduleEditor':
+        openPersonalScheduleEditor();
         break;
       default:
         break;
