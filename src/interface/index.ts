@@ -3,6 +3,8 @@ import { documentQuerySelector } from '../tools/query-selector';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
+import { closePersonalScheduleCreator } from './personal-schedule-creator/index';
+import { closePersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 
@@ -65,6 +67,13 @@ export function closePreviousPage(): void {
         closeSettings();
         break;
       case 'SettingsOptions':
+        break;
+      case 'DataUsage':
+        break;
+      case 'PersonalScheduleManager':
+        closePersonalScheduleManager();
+        break;
+      case 'PersonalScheduleCreator':
         break;
       default:
         break;
