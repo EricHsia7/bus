@@ -1,6 +1,7 @@
 import { createPersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { openPreviousPage, pushPageHistory } from '../index';
+import { WeekDay } from '../../tools/time';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleCreatorField = documentQuerySelector('.css_personal_schedule_creator_field');
@@ -9,7 +10,8 @@ const PersonalScheduleCreatorGroups = elementQuerySelector(PersonalScheduleCreat
 const nameInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-name"] .css_personal_schedule_creator_group_body input');
 const startTimeInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-start-time"] .css_personal_schedule_creator_group_body input');
 const endTimeInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-end-time"] .css_personal_schedule_creator_group_body input');
-const dayElements = elementQuerySelectorAll(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body .css_personal_schedule_creator_day');
+const dayGroupBodyElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body');
+const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_creator_day');
 
 export function createFormulatedPersonalSchedule(): void {
   const name = nameInputElement.value;
@@ -46,10 +48,21 @@ export function createFormulatedPersonalSchedule(): void {
 export function openPersonalScheduleCreator(): void {
   pushPageHistory('PersonalScheduleCreator');
   PersonalScheduleCreatorField.setAttribute('displayed', 'true');
+  closePreviousPage();
 }
 
 export function closePersonalScheduleCreator(): void {
   // revokePageHistory('PersonalScheduleCreator');
   PersonalScheduleCreatorField.setAttribute('displayed', 'false');
   openPreviousPage();
+}
+
+export function switchPersonalScheduleDay(day: WeekDay): void {
+  const thisDayElement = elementQuerySelector(dayGroupBodyElement, `.css_personal_schedule_creator_day[day="${day}"]`);
+  const highlighted = thisDayElement.getAttribute('highlighted');
+  if (highlighted === 'true') {
+    thisDayElement.setAttribute('highlighted', 'false');
+  } else {
+    thisDayElement.setAttribute('highlighted', 'true');
+  }
 }
