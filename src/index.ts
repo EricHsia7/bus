@@ -28,7 +28,7 @@ import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } 
 import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
-import { closePersonalScheduleEditor, openPersonalScheduleEditor, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
+import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 
 import './interface/theme.css';
 
@@ -298,7 +298,8 @@ window.bus = {
     switchPersonalScheduleCreatorDay,
     openPersonalScheduleEditor,
     closePersonalScheduleEditor,
-    switchPersonalScheduleEditorDay
+    switchPersonalScheduleEditorDay,
+    saveEditedPersonalSchedule
   },
   settings: {
     openSettings,

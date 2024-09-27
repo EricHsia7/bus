@@ -49,13 +49,19 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string): vo
   closePersonalScheduleEditor();
 }
 
-function initializePersonalScheduleEditorField(personalScheduleID: string): void {
-  nameInputElement.value = '';
-  startTimeInputElement.value = '';
-  endTimeInputElement.value = '';
+async function initializePersonalScheduleEditorField(personalScheduleID: string): void {
+  const personalSchedule = await getPersonalSchedule(personalScheduleID);
+  nameInputElement.value = personalSchedule.name;
+  startTimeInputElement.value = `${personalSchedule.period.start.hours}:${personalSchedule.period.start.minutes}`;
+  endTimeInputElement.value = `${personalSchedule.period.end.hours}:${personalSchedule.period.end.minutes}`;
+  
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
-    thisDayElement.setAttribute('highlighted', 'false');
+    if (personalSchedule.days.indexOf(i) > -1) {
+      thisDayElement.setAttribute('highlighted', 'true');
+    } else {
+      thisDayElement.setAttribute('highlighted', 'false');
+    }
   }
   leftButtonElement.setAttribute('onclick', `bus.personalSchedule.saveEditedPersonalSchedule('${personalScheduleID}')`);
 }
