@@ -1,8 +1,7 @@
-import { createPersonalSchedule, getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
+import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { WeekDay } from '../../tools/time';
+import { timeObjectToString, WeekDay } from '../../tools/time';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
-import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleEditorField = documentQuerySelector('.css_personal_schedule_editor_field');
 const PersonalScheduleEditorBodyElement = elementQuerySelector(PersonalScheduleEditorField, '.css_personal_schedule_editor_body');
@@ -52,9 +51,9 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string): vo
 async function initializePersonalScheduleEditorField(personalScheduleID: string): void {
   const personalSchedule = await getPersonalSchedule(personalScheduleID);
   nameInputElement.value = personalSchedule.name;
-  startTimeInputElement.value = `${personalSchedule.period.start.hours}:${personalSchedule.period.start.minutes}`;
-  endTimeInputElement.value = `${personalSchedule.period.end.hours}:${personalSchedule.period.end.minutes}`;
-  
+  startTimeInputElement.value = timeObjectToString(personalSchedule.period.start);
+  endTimeInputElement.value = timeObjectToString(personalSchedule.period.end);
+
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
     if (personalSchedule.days.indexOf(i) > -1) {
