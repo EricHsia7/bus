@@ -104,7 +104,6 @@ export async function getBusArrivalTimes(): Promise<object> {
       return a.timeStamp - b.timeStamp;
     });
     const recordsOfThisStopLength = recordsOfThisStop.length;
-    let newPeriod = false;
     let EstimateTimeInThisPeriod = [];
     let busArrivalTimeInThisPeriod = [];
     for (let i = 0; i < recordsOfThisStopLength; i++) {
@@ -116,13 +115,12 @@ export async function getBusArrivalTimes(): Promise<object> {
       const currentRecordEstimateTime = currentRecord.EstimateTime;
       const nextRecordEstimateTime = nextRecord.EstimateTime;
 
-      const deltaA = currentRecordEstimateTime - previousRecordEstimateTime;
+      // const deltaA = currentRecordEstimateTime - previousRecordEstimateTime;
       const deltaB = nextRecordEstimateTime - currentRecordEstimateTime;
-      if (deltaA < 0 && deltaB > 0 && currentRecordEstimateTime >= 0) {
+      if (deltaB < 0 && currentRecordEstimateTime >= 0) {
         // decreasing estimate time value
         EstimateTimeInThisPeriod.push(currentRecord);
       } else {
-        newPeriod = true;
         EstimateTimeInThisPeriod.sort(function (a, b) {
           return a.EstimateTime - b.EstimateTime;
         });
