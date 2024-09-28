@@ -1,5 +1,5 @@
 import { generateIdentifier } from '../../tools/index';
-import { dateToString, TimeObject, timeObjectToString } from '../../tools/time';
+import { TimeObject, timeObjectToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
@@ -174,13 +174,15 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregationInterval = 11; // 11 minutes
+      const aggregationInterval = 6; // 6 minutes
+      const aggregationInterval2 = 5; // 5 minutes
+
       let aggregatedBusArrivalTimesObject = {};
       for (const busArrivalTime of busArrivalTimes) {
         const busArrivalTimeHours = busArrivalTime.getHours();
         const busArrivalTimeMinutes = busArrivalTime.getMinutes();
         const busArrivalTimeTotalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
-        const flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval;
+        const flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval2;
         const aggregationKey = `a_${flooredTotalMinutes}`;
         if (!aggregatedBusArrivalTimesObject.hasOwnProperty(aggregationKey)) {
           aggregatedBusArrivalTimesObject[aggregationKey] = {
