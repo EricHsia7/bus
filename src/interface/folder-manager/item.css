@@ -68,9 +68,10 @@
 }
 
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
+  font-size: 18px;
   user-select: none;
   -webkit-user-select: none;
-  color: var(--b-cssvar-333333);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
 }
