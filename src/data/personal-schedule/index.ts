@@ -11,6 +11,10 @@ export interface PersonalSchedule {
 
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
+export type FlattenPersonalScheduleTimelineObject = { [key: string]: Array<TimePeriod> };
+
+let flattenPersonalScheduleCache: FlattenPersonalScheduleTimelineObject = {};
+
 export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
   const identifier = generateIdentifier('s');
   if (startHours < 0 || startHours > 23 || startMinutes < 0 || startMinutes > 59 || endHours < 0 || endHours > 23 || endMinutes < 0 || endMinutes > 59) {
@@ -65,7 +69,7 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
 }
 
 export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
-  let result = [];
+  let result: PersonalScheduleArray = [];
   const keys = await lfListItemKeys(5);
   for (const key of keys) {
     const existingPersonalSchedule = await lfGetItem(5, key);
@@ -74,5 +78,55 @@ export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
       result.push(existingPersonalScheduleObject);
     }
   }
+
+  result.sort(function (a, b) {
+    return a.period.start.hours * 60 + a.period.start.minutes - (b.period.end.hours * 60 + b.period.end.minutes);
+  });
+
+  return result;
+}
+
+export async function flattenPersonalSchedule(): Promise<FlattenPersonalScheduleTimelineObject> {
+  const personalSchedules = await listPersonalSchedules();
+
+  let result: FlattenPersonalScheduleTimelineObject = {};
+
+  for (const personalSchedule of personalSchedules) {
+    for (const day of personalSchedule.days) {
+      const dayKey = `d_${day}`;
+      if (!result.hasOwnProperty(dayKey)) {
+        result[dayKey] = [];
+      }
+      const object = {
+        start: personalSchedule.period.start,
+        end: personalSchedule.period.end
+      };
+      result[dayKey].push(object);
+    }
+  }
+
+  for (const dayKey in result) {
+    const personalSchedulesOfThisDay = result[dayKey];
+    const personalSchedulesOfThisDayLength = personalSchedulesOfThisDay.length;
+    let mergedPersonalSchedulesOfThisDay = [];
+    for (let i = 0; i < personalSchedulesOfThisDayLength; i++) {
+      const previousPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i - 1] || personalSchedulesOfThisDay[i];
+      const currentPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i];
+      if (mergedPersonalSchedulesOfThisDay.length === 0) {
+        mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
+      } else {
+        // Check whether the current is after the previous
+        if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes > previousPersonalScheduleOfThisDay.start.hours * 60 + previousPersonalScheduleOfThisDay.start.minutes) {
+          // Check whether the current is before the previous's end
+          if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes < previousPersonalScheduleOfThisDay.end.hours * 60 + previousPersonalScheduleOfThisDay.end.minutes) {
+            mergedPersonalSchedulesOfThisDay[i - 1].end.hours = currentPersonalScheduleOfThisDay.end.hours;
+            mergedPersonalSchedulesOfThisDay[i - 1].end.minutes = currentPersonalScheduleOfThisDay.end.minutes;
+          }
+        }
+      }
+    }
+    result[dayKey] = mergedPersonalSchedulesOfThisDay;
+  }
+
   return result;
 }
