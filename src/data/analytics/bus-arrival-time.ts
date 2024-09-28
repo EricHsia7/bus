@@ -51,7 +51,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
     }
 
     for (var item of EstimateTime) {
-      if (trackingUpdateRate_trackedStops.indexOf(item.StopID) > -1) {
+      if (trackingBusArrivalTime_trackedStops.indexOf(item.StopID) > -1) {
         if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
           existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
         }
