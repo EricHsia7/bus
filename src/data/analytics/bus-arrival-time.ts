@@ -210,6 +210,7 @@ export async function getBusArrivalTimes(): Promise<object> {
         };
         aggregatedBusArrivalTimes.push({
           time: timeObjectToString(timeObject),
+          personalSchedule: personalSchedule,
           dataQuantity: dataQuantity
         });
       }

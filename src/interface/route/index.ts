@@ -128,7 +128,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_route_group_item');
   element.id = identifier;
   element.setAttribute('stretched', false);
-  element.innerHTML = `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div></div>`;
+  element.innerHTML = `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('schedule')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -182,6 +182,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         status: { code: 0, text: '' },
         buses: [],
         overlappingRoutes: [],
+        busArrivalTimes: [],
         sequence: j,
         location: {
           latitude: 0,
@@ -258,6 +259,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: object): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes').innerHTML = thisItem.overlappingRoutes.length === 0 ? '<div class="css_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_route_group_item_overlapping_route"><div class="css_overlapping_route_title"><div class="css_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_overlapping_route_name">${route.name}</div></div><div class="css_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_overlapping_route_actions"><div class="css_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_overlapping_route_action_button" onclick="bus.folder.openSaveToFolder('route', [${route.RouteID}])">收藏路線</div></div></div>`).join('');
     }
+    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: object): void {
+      elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_bus_arrival_time_title"><div class="css_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_bus_arrival_time_attributes"><div class="css_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_bus_arrival_time_data_quantity">資料數量：${busArrivalTime.dataQuantity}</div></div></div>`).join('');
+    }
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
       thisItemElement.setAttribute('nearest', thisItem.nearest);
       thisThreadBoxElement.setAttribute('nearest', thisItem.nearest);
@@ -305,6 +309,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
+      updateBusArrivalTimes(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       updateThread(thisThreadBoxElement, thisItem, previousItem);
@@ -323,6 +328,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       }
       if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
         updateOverlappingRoutes(thisItemElement, thisItem);
+      }
+      if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+        updateBusArrivalTimes(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.segmentBuffer, thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
@@ -546,12 +554,24 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
     t.setAttribute('highlighted', 'false');
   }
   elementQuerySelector(buttons, `.css_route_group_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
-  if (tabCode === 0) {
-    elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'true');
-    elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'flase');
-  }
-  if (tabCode === 1) {
-    elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
-    elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'true');
+  switch (tabCode) {
+    case 0:
+      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'flase');
+      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
+      break;
+    case 1:
+      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
+      break;
+    case 2:
+      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'true');
+      break;
+    default:
+      break;
   }
 }
