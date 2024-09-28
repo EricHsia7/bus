@@ -29,7 +29,7 @@ import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
-import { flattenPersonalSchedule } from './data/personal-schedule/index';
+import { getMergedPersonalScheduleTimeline } from './data/personal-schedule/index';
 
 import './interface/theme.css';
 
@@ -313,7 +313,7 @@ window.bus = {
     viewCommitOfCurrentVersion
   },
   test: {
-    flattenPersonalSchedule
+    getMergedPersonalScheduleTimeline
   }
 };
 

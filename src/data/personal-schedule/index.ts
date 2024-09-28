@@ -11,9 +11,7 @@ export interface PersonalSchedule {
 
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
-export type FlattenPersonalScheduleTimelineObject = { [key: string]: Array<TimePeriod> };
-
-let flattenPersonalScheduleCache: FlattenPersonalScheduleTimelineObject = {};
+export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
 
 export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
   const identifier = generateIdentifier('s');
@@ -86,10 +84,10 @@ export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
   return result;
 }
 
-export async function flattenPersonalSchedule(): Promise<FlattenPersonalScheduleTimelineObject> {
+export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersonalScheduleTimeline> {
   const personalSchedules = await listPersonalSchedules();
 
-  let result: FlattenPersonalScheduleTimelineObject = {};
+  let result: MergedPersonalScheduleTimeline = {};
 
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
