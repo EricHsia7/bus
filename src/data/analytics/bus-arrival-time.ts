@@ -1,8 +1,8 @@
 import { generateIdentifier } from '../../tools/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
-import { isInPersonalSchedule } from '../personal-schedule/index';
-import { lfSetItem } from '../storage/index';
+import { getPersonalSchedule, isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
+import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
 let trackingBusArrivalTime_trackingID: string = '';
 let trackingBusArrivalTime_tracking: boolean = false;
@@ -67,4 +67,98 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
       trackingBusArrivalTime_tracking = false;
     }
   }
+}
+
+export async function discardExpiredEstimateTimeRecordsForBusArrivalTime(): void {
+  const keys = await listRecordedEstimateTimeForBusArrivalTime();
+  for (const key of keys) {
+    const json = await lfGetItem(4, key);
+    const object: object = JSON.parse(json);
+    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 30 * 1000) {
+      await lfRemoveItem(4, key);
+    }
+  }
+}
+
+export async function getBusArrivalTimes(): Promise<object> {
+  // Merge data by stops
+  let recordsGroupedByStops = {};
+  const keys = await lfListItemKeys(4);
+  for (const key of keys) {
+    const existingRecord = await lfGetItem(key);
+    const existingRecordObject: EstimateTimeRecordForBusArrivalTimeObject = JSON.parse(existingRecord);
+    for (const stopKey1 in existingRecordObject.data) {
+      if (!recordsGroupedByStops.hasOwnProperty(stopKey1)) {
+        recordsGroupedByStops[stopKey1] = [];
+      }
+      recordsGroupedByStops[stopKey1] = recordsGroupedByStops[stopKey1].concat(existingRecordObject.data[stopKey1]);
+    }
+  }
+
+  // Extract Arrival Times
+  let busArrivalTimesGroupedByStops = {};
+  for (const stopKey2 in recordsGroupedByStops) {
+    let recordsOfThisStop = recordsGroupedByStops[stopKey2];
+    recordsOfThisStop.sort(function (a, b) {
+      return a.timeStamp - b.timeStamp;
+    });
+    const recordsOfThisStopLength = recordsOfThisStop.length;
+    let newPeriod = false;
+    let EstimateTimeInThisPeriod = [];
+    let busArrivalTimeInThisPeriod = [];
+    for (let i = 0; i < recordsOfThisStopLength; i++) {
+      const previousRecord = recordsOfThisStop[i - 1] || recordsOfThisStop[i];
+      const currentRecord = recordsOfThisStop[i];
+      const nextRecord = recordsOfThisStop[i + 1] || recordsOfThisStop[i];
+      const deltaA = currentRecord.EstimateTime - previousRecord.EstimateTime;
+      const deltaB = nextRecord.EstimateTime - currentRecord.EstimateTime;
+      if (deltaA < 0 && deltaB < 0) {
+        // decreasing estimate time value
+        EstimateTimeInThisPeriod.push(currentRecord);
+      } else {
+        newPeriod = true;
+        EstimateTimeInThisPeriod.sort(function (a, b) {
+          return a.EstimateTime - b.EstimateTime;
+        });
+        if (EstimateTimeInThisPeriod.length > 0) {
+          const closestRecord = EstimateTimeInThisPeriod[0];
+          busArrivalTimeInThisPeriod.push(new Date(closestRecord.timeStamp + closestRecord.EstimateTime * 1000));
+        }
+        EstimateTimeInThisPeriod = [];
+      }
+    }
+    busArrivalTimesGroupedByStops[stopKey2] = busArrivalTimeInThisPeriod;
+  }
+
+  // Group bus arrival times by personal schedule
+  const personalSchedules = await listPersonalSchedules();
+  let result = {};
+  for (const stopKey3 in busArrivalTimesGroupedByStops) {
+    for (const busArrivalTime of busArrivalTimesGroupedByStops) {
+      const busArrivalTimeDay = busArrivalTime.getDay();
+      const busArrivalTimeHours = busArrivalTime.getHours();
+      const busArrivalTimeMinutes = busArrivalTime.getMinutes();
+
+      for (const personalSchedule of personalSchedules) {
+        const personalScheduleID = personalSchedule.id;
+        const personalScheduleName = personalSchedule.name;
+        if (!result.hasOwnProperty(personalScheduleID)) {
+          result[personalScheduleID] = {
+            name: personalScheduleName,
+            id: personalScheduleID,
+            busArrivalTimes: {}
+          };
+        }
+        if (!result[personalScheduleID].busArrivalTimes.hasOwnProperty(stopKey3)) {
+          result[personalScheduleID].busArrivalTimes[stopKey3] = [];
+        }
+        if (personalSchedule.days.indexOf(busArrivalTimeDay)) {
+          if (busArrivalTimeHours * 60 + busArrivalTimeMinutes >= personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes && busArrivalTimeHours * 60 + busArrivalTimeMinutes <= personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes) {
+            result[personalSchedule.id].busArrivalTimes[stopKey3].push(busArrivalTime);
+          }
+        }
+      }
+    }
+  }
+  return result
 }
