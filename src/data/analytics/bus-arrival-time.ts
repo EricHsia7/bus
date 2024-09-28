@@ -177,14 +177,14 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregationInterval = 5; // 5 minutes
+      const aggregationInterval = 7; // 7 minutes
       let aggregatedBusArrivalTimesObject = {};
       for (const busArrivalTime of busArrivalTimes) {
         const busArrivalTimeHours = busArrivalTime.getHours();
         const busArrivalTimeMinutes = busArrivalTime.getMinutes();
         const busArrivalTimeTotalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
-        const roundedTotalMinutes = Math.round(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval;
-        const aggregationKey = `a_${roundedTotalMinutes}`;
+        const flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval;
+        const aggregationKey = `a_${flooredTotalMinutes}`;
         if (!aggregatedBusArrivalTimesObject.hasOwnProperty(aggregationKey)) {
           aggregatedBusArrivalTimesObject[aggregationKey] = {
             totalMinutes: 0,
