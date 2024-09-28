@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add bus arrival time analytics [\#73](https://github.com/EricHsia7/bus/pull/73) ([EricHsia7](https://github.com/EricHsia7))
 - Add personal schedule [\#72](https://github.com/EricHsia7/bus/pull/72) ([EricHsia7](https://github.com/EricHsia7))
 - Add storage analytics [\#71](https://github.com/EricHsia7/bus/pull/71) ([EricHsia7](https://github.com/EricHsia7))
 - Add api proxy [\#70](https://github.com/EricHsia7/bus/pull/70) ([EricHsia7](https://github.com/EricHsia7))
