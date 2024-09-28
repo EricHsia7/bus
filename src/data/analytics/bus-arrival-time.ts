@@ -164,7 +164,7 @@ export async function getBusArrivalTimes(): Promise<object> {
         const busArrivalTimeMinutes = busArrivalTime.getMinutes();
 
         // Check if the personal schedule covers this day
-        if (personalSchedule.days.indexOf(busArrivalTimeDay) !== -1) {
+        if (personalSchedule.days.indexOf(busArrivalTimeDay) > -1) {
           const totalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
           const scheduleTotalStartMinutes = personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes;
           const scheduleTotalEndMinutes = personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes;
