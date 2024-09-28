@@ -131,3 +131,21 @@ export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersona
 
   return result;
 }
+
+export async function isInPersonalSchedule(date: Date): boolean {
+  const timeline = await getMergedPersonalScheduleTimeline();
+  const day = date.getDay();
+  const dayKey = `d_${day}`;
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  if (timeline.hasOwnProperty(dayKey)) {
+    const personalSchedulesOfTheDay = timeline[dayKey];
+    for (const personalScheduleOfTheDay of personalSchedulesOfTheDay) {
+      if (hours * 60 + minutes >= personalScheduleOfTheDay.start.hours * 60 + personalScheduleOfTheDay.start.minutes && hours * 60 + minutes <= personalScheduleOfTheDay.end.hours * 60 + personalScheduleOfTheDay.end.minutes) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
