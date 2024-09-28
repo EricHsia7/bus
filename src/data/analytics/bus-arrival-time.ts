@@ -1,4 +1,5 @@
 import { generateIdentifier } from '../../tools/index';
+import { dateToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
@@ -117,7 +118,7 @@ export async function getBusArrivalTimes(): Promise<object> {
 
       const deltaA = currentRecordEstimateTime - previousRecordEstimateTime;
       const deltaB = nextRecordEstimateTime - currentRecordEstimateTime;
-      if (deltaA < 0 && deltaB < 0 && currentRecordEstimateTime >= 0) {
+      if (deltaA < 0 && deltaB > 0 && currentRecordEstimateTime >= 0) {
         // decreasing estimate time value
         EstimateTimeInThisPeriod.push(currentRecord);
       } else {
@@ -154,12 +155,14 @@ export async function getBusArrivalTimes(): Promise<object> {
             busArrivalTimes: {}
           };
         }
+
         if (!result[personalScheduleID].busArrivalTimes.hasOwnProperty(stopKey3)) {
           result[personalScheduleID].busArrivalTimes[stopKey3] = [];
         }
+
         if (personalSchedule.days.indexOf(busArrivalTimeDay)) {
           if (busArrivalTimeHours * 60 + busArrivalTimeMinutes >= personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes && busArrivalTimeHours * 60 + busArrivalTimeMinutes <= personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes) {
-            result[personalSchedule.id].busArrivalTimes[stopKey3].push(busArrivalTime);
+            result[personalSchedule.id].busArrivalTimes[stopKey3].push(dateToString(busArrivalTime));
           }
         }
       }
