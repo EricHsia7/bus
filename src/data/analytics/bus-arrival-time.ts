@@ -1,5 +1,5 @@
 import { generateIdentifier } from '../../tools/index';
-import { dateToString } from '../../tools/time';
+import { dateToString, TimeObject, timeObjectToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
@@ -136,7 +136,7 @@ export async function getBusArrivalTimes(): Promise<object> {
     busArrivalTimesGroupedByStops[stopKey2] = busArrivalTimeInThisPeriod;
   }
 
-  // Group bus arrival times by stop
+  // Group bus arrival times by stops and personal schedules
   const personalSchedules = await listPersonalSchedules();
   let result = {};
   for (const personalSchedule of personalSchedules) {
@@ -158,6 +158,7 @@ export async function getBusArrivalTimes(): Promise<object> {
         };
       }
 
+      let busArrivalTimes = [];
       for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
         const busArrivalTimeDay = busArrivalTime.getDay();
         const busArrivalTimeHours = busArrivalTime.getHours();
@@ -172,10 +173,48 @@ export async function getBusArrivalTimes(): Promise<object> {
           // Check if the bus time falls within the personal schedule's time period
           if (totalMinutes >= scheduleTotalStartMinutes && totalMinutes <= scheduleTotalEndMinutes) {
             // Add the bus arrival time to the result
-            result[stopKey3][personalScheduleID].busArrivalTimes.push(dateToString(busArrivalTime, 'hh:mm'));
+            busArrivalTimes.push(busArrivalTime);
           }
         }
       }
+
+      // Aggregate bus arrival times
+      const aggregationInterval = 5; // 5 minutes
+      let aggregatedBusArrivalTimesObject = {};
+      for (const busArrivalTime of busArrivalTimes) {
+        const busArrivalTimeHours = busArrivalTime.getHours();
+        const busArrivalTimeMinutes = busArrivalTime.getMinutes();
+        const busArrivalTimeTotalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
+        const roundedTotalMinutes = Math.round(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval;
+        const aggregationKey = `a_${roundedTotalMinutes}`;
+        if (!aggregatedBusArrivalTimesObject.hasOwnProperty(aggregationKey)) {
+          aggregatedBusArrivalTimesObject[aggregationKey] = {
+            totalMinutes: 0,
+            dataQuantity: 0
+          };
+        }
+        aggregatedBusArrivalTimesObject[aggregationKey].totalMinutes += busArrivalTimeTotalMinutes;
+        aggregatedBusArrivalTimesObject[aggregationKey].dataQuantity += 1;
+      }
+
+      let aggregatedBusArrivalTimes = [];
+      for (const aggregationKey in aggregatedBusArrivalTimesObject) {
+        const thisAggregation = aggregatedBusArrivalTimesObject[aggregationKey];
+        const dataQuantity = thisAggregation.dataQuantity;
+        const averageTotalMinutes = thisAggregation.totalMinutes / dataQuantity;
+        const averageMinutes = averageTotalMinutes % 60;
+        const averageHours = (averageTotalMinutes - averageMinutes) / 60;
+        const timeObject: TimeObject = {
+          hours: averageHours,
+          minutes: averageMinutes
+        };
+        aggregatedBusArrivalTimes.push({
+          time: timeObjectToString(timeObject),
+          dataQuantity: dataQuantity
+        });
+      }
+
+      result[stopKey3][personalScheduleID].busArrivalTimes = aggregatedBusArrivalTimes;
     }
   }
 
