@@ -107,17 +107,14 @@ export async function getBusArrivalTimes(): Promise<object> {
     let EstimateTimeInThisPeriod = [];
     let busArrivalTimeInThisPeriod = [];
     for (let i = 0; i < recordsOfThisStopLength; i++) {
-      const previousRecord = recordsOfThisStop[i - 1] || recordsOfThisStop[i];
       const currentRecord = recordsOfThisStop[i];
       const nextRecord = recordsOfThisStop[i + 1] || recordsOfThisStop[i];
 
-      const previousRecordEstimateTime = previousRecord.EstimateTime;
       const currentRecordEstimateTime = currentRecord.EstimateTime;
       const nextRecordEstimateTime = nextRecord.EstimateTime;
 
-      // const deltaA = currentRecordEstimateTime - previousRecordEstimateTime;
-      const deltaB = nextRecordEstimateTime - currentRecordEstimateTime;
-      if (deltaB < 0 && currentRecordEstimateTime >= 0) {
+      const delta = nextRecordEstimateTime - currentRecordEstimateTime;
+      if (delta < 0 && currentRecordEstimateTime >= 0) {
         // decreasing estimate time value
         EstimateTimeInThisPeriod.push(currentRecord);
       } else {
@@ -177,7 +174,7 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregationInterval = 10; // 10 minutes
+      const aggregationInterval = 11; // 11 minutes
       let aggregatedBusArrivalTimesObject = {};
       for (const busArrivalTime of busArrivalTimes) {
         const busArrivalTimeHours = busArrivalTime.getHours();
