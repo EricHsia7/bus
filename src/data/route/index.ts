@@ -167,14 +167,22 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         return a.index - b.index;
       });
 
-      // collect data from 'busArrivalTimes'
+      // collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = {};
       if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       let flattenBusArrivalTimes = [];
       for (const personalScheduleID in thisBusArrivalTimes) {
-        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
+        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(
+          thisBusArrivalTimes[personalScheduleID].busArrivalTimes.map((e) => {
+            return {
+              time: e.time,
+              dataQuantity: e.dataQuantity,
+              personalSchedule: thisBusArrivalTimes[personalScheduleID]
+            };
+          })
+        );
       }
       integratedStopItem.busArrivalTimes = flattenBusArrivalTimes;
 
