@@ -47,8 +47,7 @@ export async function importPersonalSchedules(data: PersonalScheduleArray): Prom
   for (const PersonalSchedule of data) {
     const existingPersonalSchedule = await getPersonalSchedule(PersonalSchedule.id);
     if (existingPersonalSchedule) {
-      const existingPersonalScheduleObject = JSON.parse(existingPersonalSchedule);
-      await updatePersonalSchedule(existingPersonalScheduleObject);
+      await updatePersonalSchedule(PersonalSchedule);
     } else {
       await createPersonalSchedule(PersonalSchedule.name, PersonalSchedule.period.start.hours, PersonalSchedule.period.start.minutes, PersonalSchedule.period.end.hours, PersonalSchedule.period.end.minutes, PersonalSchedule.days);
     }
