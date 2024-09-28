@@ -147,15 +147,15 @@ export async function getBusArrivalTimes(): Promise<object> {
     for (const stopKey3 in busArrivalTimesGroupedByStops) {
       // Initialize the structure for each stop in the result
       if (!result.hasOwnProperty(stopKey3)) {
-        result[stopKey3] = {
-          name: personalScheduleName,
-          id: personalScheduleID,
-          busArrivalTimes: {}
-        };
+        result[stopKey3] = {};
       }
 
-      if (!result[stopKey3].busArrivalTimes.hasOwnProperty(personalScheduleID)) {
-        result[stopKey3].busArrivalTimes[personalScheduleID] = [];
+      if (!result[stopKey3].hasOwnProperty(personalScheduleID)) {
+        result[stopKey3][personalScheduleID] = {
+          name: personalScheduleName,
+          id: personalScheduleID,
+          busArrivalTimes: []
+        };
       }
 
       for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
@@ -172,7 +172,7 @@ export async function getBusArrivalTimes(): Promise<object> {
           // Check if the bus time falls within the personal schedule's time period
           if (totalMinutes >= scheduleTotalStartMinutes && totalMinutes <= scheduleTotalEndMinutes) {
             // Add the bus arrival time to the result
-            result[stopKey3].busArrivalTimes[personalScheduleID].push(dateToString(busArrivalTime, 'hh:mm'));
+            result[stopKey3][personalScheduleID].busArrivalTimes.push(dateToString(busArrivalTime, 'hh:mm'));
           }
         }
       }
