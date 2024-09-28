@@ -1,4 +1,4 @@
-<h1><picture><source media="(prefers-color-scheme: dark)" srcset="./pwaicons/bus-icon-dark-mode.svg"><source media="(prefers-color-scheme: light)" srcset="./pwaicons/bus-icon-light-mode.svg"><img alt="Your image description" src="./pwaicons/bus-icon-light-mode.svg"></picture>Bus</h1>
+# Bus
 
 [![latest version](https://img.shields.io/badge/dynamic/json?label=latest+version&query=hash&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
 [![latest build](https://img.shields.io/badge/dynamic/json?label=latest+builld&query=build&url=https%3A%2F%2Ferichsia7.github.io%2Fbus%2Fversion.json&color=18B2FF)](https://erichsia7.github.io/bus)
@@ -8,18 +8,9 @@ Bus is a user-friendly web application designed to simplify your travel experien
 
 ## Getting Started
 
-- **Spring into it**: Open this application in your browser via the urls.
-
-  ```text
-  https://erichsia7.github.io/bus
-  ```
-
-  or
-
-  ```text
-  https://erichsia7-bus.netlify.app
-  ```
-
+- **Open The App**: Open this application in your browser via one of the urls.
+  - [https://erichsia7.github.io/bus](https://erichsia7.github.io/bus)
+  - [https://erichsia7-bus.netlify.app](https://erichsia7-bus.netlify.app)
 - **Without Sign Up**: You don't need to create your account to gain access to this application.
 - **Search**: Use the search bar to find routes and locations.
 - **Manage Stops**: Save important stops and destinations in folders for quick reference.
