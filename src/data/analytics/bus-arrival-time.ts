@@ -174,15 +174,25 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregationInterval = 6; // 6 minutes
-      const aggregationInterval2 = 5; // 5 minutes
+      const aggregationInterval = 10; // 10 minutes
 
       let aggregatedBusArrivalTimesObject = {};
       for (const busArrivalTime of busArrivalTimes) {
         const busArrivalTimeHours = busArrivalTime.getHours();
         const busArrivalTimeMinutes = busArrivalTime.getMinutes();
         const busArrivalTimeTotalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
-        const flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval) * aggregationInterval2;
+        const remainder = busArrivalTimeTotalMinutes % aggregationInterval;
+        let flooredTotalMinutes = 0;
+        if (Math.abs(remainder - 10) <= 2) {
+          flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes - aggregationInterval / 3) / aggregationInterval);
+        } else {
+          if (Math.abs(remainder - 2) <= 2) {
+            flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes + aggregationInterval / 3) / aggregationInterval);
+          } else {
+            flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval);
+          }
+        }
+
         const aggregationKey = `a_${flooredTotalMinutes}`;
         if (!aggregatedBusArrivalTimesObject.hasOwnProperty(aggregationKey)) {
           aggregatedBusArrivalTimesObject[aggregationKey] = {
