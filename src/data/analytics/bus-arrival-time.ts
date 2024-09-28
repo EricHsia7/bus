@@ -199,7 +199,7 @@ export async function getBusArrivalTimes(): Promise<object> {
       for (const aggregationKey in aggregatedBusArrivalTimesObject) {
         const thisAggregation = aggregatedBusArrivalTimesObject[aggregationKey];
         const dataQuantity = thisAggregation.dataQuantity;
-        const averageTotalMinutes = thisAggregation.totalMinutes / dataQuantity;
+        const averageTotalMinutes = Math.round(thisAggregation.totalMinutes / dataQuantity);
         const averageMinutes = averageTotalMinutes % 60;
         const averageHours = (averageTotalMinutes - averageMinutes) / 60;
         const timeObject: TimeObject = {
