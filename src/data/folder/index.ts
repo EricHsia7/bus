@@ -11,6 +11,7 @@ import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
 
 const cloneDeep = require('lodash/cloneDeep');
 
@@ -352,6 +353,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   await recordEstimateTimeForUpdateRate(EstimateTime);
+  await recordEstimateTimeForBusArrivalTime(EstimateTime);
   return result;
 }
 
