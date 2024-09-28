@@ -113,13 +113,12 @@ export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersona
       if (mergedPersonalSchedulesOfThisDay.length === 0) {
         mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
       } else {
-        // Check whether the current is after the previous
-        if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes > previousPersonalScheduleOfThisDay.start.hours * 60 + previousPersonalScheduleOfThisDay.start.minutes) {
-          // Check whether the current is before the previous's end
-          if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes < previousPersonalScheduleOfThisDay.end.hours * 60 + previousPersonalScheduleOfThisDay.end.minutes) {
-            mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.hours = currentPersonalScheduleOfThisDay.end.hours;
-            mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.minutes = currentPersonalScheduleOfThisDay.end.minutes;
-          }
+        // Check whether the current is after the previous and  the current is before the previous's end
+        if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes >= previousPersonalScheduleOfThisDay.start.hours * 60 + previousPersonalScheduleOfThisDay.start.minutes && currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes <= previousPersonalScheduleOfThisDay.end.hours * 60 + previousPersonalScheduleOfThisDay.end.minutes) {
+          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.hours = currentPersonalScheduleOfThisDay.end.hours;
+          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.minutes = currentPersonalScheduleOfThisDay.end.minutes;
+        } else {
+          mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
         }
       }
     }
