@@ -154,8 +154,8 @@ export async function getBusArrivalTimes(): Promise<object> {
         };
       }
 
-      if (!result[stopKey3].busArrivalTimes.hasOwnProperty(personalSchedule)) {
-        result[stopKey3].busArrivalTimes[personalSchedule] = [];
+      if (!result[stopKey3].busArrivalTimes.hasOwnProperty(personalScheduleID)) {
+        result[stopKey3].busArrivalTimes[personalScheduleID] = [];
       }
 
       for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
