@@ -78,6 +78,12 @@ export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
   }
 
   result.sort(function (a, b) {
+    const durationA = a.period.end.hours * 60 + a.period.end.minutes - (a.period.start.hours * 60 + a.period.start.minutes);
+    const durationB = b.period.end.hours * 60 + b.period.end.minutes - (b.period.start.hours * 60 + b.period.start.minutes);
+    return durationB - durationA;
+  });
+
+  result.sort(function (a, b) {
     return a.period.start.hours * 60 + a.period.start.minutes - (b.period.end.hours * 60 + b.period.end.minutes);
   });
 
