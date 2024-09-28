@@ -46,6 +46,10 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '分析';
       key = 'analytics';
       break;
+    case 'busArrivalTimeRecordsStore':
+      name = '分析';
+      key = 'analytics';
+      break;
     case 'personalScheduleStore':
       name = '個人化行程';
       key = 'personalSchedule';

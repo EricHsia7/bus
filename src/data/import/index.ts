@@ -11,7 +11,7 @@ export async function importFolders(data: FoldersWithContentArray): Promise<bool
     var creation = false;
     if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
       const folderKey: string = `f_${folder.id}`;
-      const existingFolder: string = await lfGetItem(5, folderKey);
+      const existingFolder: string = await lfGetItem(6, folderKey);
       if (existingFolder) {
         update = await updateFolder(folder);
       } else {

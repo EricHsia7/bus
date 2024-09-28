@@ -6,11 +6,12 @@ import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { recordEstimateTime } from '../analytics/update-rate';
+import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
 import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
 
 const cloneDeep = require('lodash/cloneDeep');
 
@@ -88,7 +89,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'location_on',
     default: true,
     index: 0,
-    storeIndex: 6,
+    storeIndex: 7,
     contentType: ['stop'],
     id: 'saved_stop'
   },
@@ -97,7 +98,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'route',
     default: true,
     index: 1,
-    storeIndex: 7,
+    storeIndex: 8,
     contentType: ['route'],
     id: 'saved_route'
   }
@@ -106,10 +107,10 @@ var Folders: { [key: string]: Folder } = {
 const defaultFolderQuantity = 2;
 
 export async function initializeFolderStores(): void {
-  var folderKeys = await lfListItemKeys(5);
+  var folderKeys = await lfListItemKeys(6);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
-    var thisFolder: string = await lfGetItem(5, folderKey);
+    var thisFolder: string = await lfGetItem(6, folderKey);
     if (thisFolder) {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
@@ -132,11 +133,11 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
     return false;
   }
 
-  var folderKeys = await lfListItemKeys(5);
+  var folderKeys = await lfListItemKeys(6);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
-    const existingFolder = await lfGetItem(5, `f_${identifier}`);
+    const existingFolder = await lfGetItem(6, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
       var object: Folder = {
@@ -150,7 +151,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
         time: new Date().toISOString()
       };
       Folders[`f_${identifier}`] = object;
-      await lfSetItem(5, `f_${identifier}`, JSON.stringify(object));
+      await lfSetItem(6, `f_${identifier}`, JSON.stringify(object));
       return identifier;
     } else {
       return false;
@@ -163,7 +164,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
 export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
-    const existingFolder: string = await lfGetItem(5, folderKey);
+    const existingFolder: string = await lfGetItem(6, folderKey);
     if (existingFolder) {
       const requestID = generateIdentifier('r');
       const materialSymbols = await getMaterialSymbols(requestID);
@@ -171,7 +172,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
         return false;
       } else {
         Folders[folderKey] = folder;
-        await lfSetItem(5, folderKey, JSON.stringify(folder));
+        await lfSetItem(6, folderKey, JSON.stringify(folder));
         return true;
       }
     } else {
@@ -351,7 +352,8 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  await recordEstimateTime(EstimateTime);
+  await recordEstimateTimeForUpdateRate(EstimateTime);
+  await recordEstimateTimeForBusArrivalTime(EstimateTime);
   return result;
 }
 

@@ -9,7 +9,7 @@ var trackingUpdateRate_tracking: boolean = false;
 var trackingUpdateRate_sampleQuantity: number = 64;
 var trackingUpdateRate_monitorTimes: number = 90;
 
-export async function recordEstimateTime(EstimateTime: EstimateTime): void {
+export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
   var needToReset = false;
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;
@@ -46,7 +46,7 @@ export async function recordEstimateTime(EstimateTime: EstimateTime): void {
   }
 }
 
-export async function listRecordedEstimateTime(): Promise<Array<[number, number]>> {
+ async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
   const keys = await lfListItemKeys(3);
   var result = [];
   for (const key of keys) {
@@ -61,8 +61,8 @@ export async function listRecordedEstimateTime(): Promise<Array<[number, number]
   return result;
 }
 
-export async function discardExpiredEstimateTimeRecords(): void {
-  const keys = await listRecordedEstimateTime();
+export async function discardExpiredEstimateTimeRecordsForUpdateRate(): void {
+  const keys = await listRecordedEstimateTimeForUpdateRate();
   for (const key of keys) {
     const json = await lfGetItem(3, key);
     const object: object = JSON.parse(json);
@@ -76,7 +76,7 @@ export async function getUpdateRate(): Promise<number> {
   var weighted_average: number = 0;
   var total_correlation: number = 0;
   var total_weight: number = 0;
-  var collection = await listRecordedEstimateTime();
+  var collection = await listRecordedEstimateTimeForUpdateRate();
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
     for (var group of groups) {
@@ -97,7 +97,7 @@ export async function getUpdateRateInTime(): Promise<string> {
   var total_weight: number = 0;
   var total_average_change: number = 0;
   var weighted_average_change: number = 0;
-  var collection = await listRecordedEstimateTime();
+  var collection = await listRecordedEstimateTimeForUpdateRate();
   for (var dataSet of collection) {
     var groups = splitDataByDelta(dataSet);
     for (var group of groups) {

@@ -398,3 +398,15 @@ export function smoothArray(array: Array<number>): Array<number> {
   }
   return result;
 }
+
+export function softmaxArray(array: Array<number>): Array<number> {
+  // Step 1: Exponentiate each element (for numerical stability, subtract the max value)
+  const max = Math.max(...array);
+  const expArr = array.map((value) => Math.exp(value - max));
+
+  // Step 2: Sum all the exponentiated values
+  const sumExp = expArr.reduce((accumulation, value) => accumulation + value, 0);
+
+  // Step 3: Normalize each value
+  return expArr.map((value) => value / sumExp);
+}

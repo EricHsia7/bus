@@ -1,5 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
-import { discardExpiredEstimateTimeRecords } from './data/analytics/update-rate';
+import { discardExpiredEstimateTimeRecordsForUpdateRate } from './data/analytics/update-rate';
 import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
@@ -29,6 +29,7 @@ import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
+import { getMergedPersonalScheduleTimeline } from './data/personal-schedule/index';
 
 import './interface/theme.css';
 
@@ -133,6 +134,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { getBusArrivalTimes } from './data/analytics/bus-arrival-time';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -234,7 +236,7 @@ window.bus = {
       loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'Noto Sans Traditional Chinese', 'noto_sans_tc');
       loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
       downloadData();
-      discardExpiredEstimateTimeRecords();
+      discardExpiredEstimateTimeRecordsForUpdateRate();
       discardExpiredDataUsageRecords();
     }
   },
@@ -310,6 +312,10 @@ window.bus = {
     downloadExportFile,
     openFileToImportData,
     viewCommitOfCurrentVersion
+  },
+  test: {
+    getMergedPersonalScheduleTimeline,
+    getBusArrivalTimes
   }
 };
 
