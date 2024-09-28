@@ -174,15 +174,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       }
       let flattenBusArrivalTimes = [];
       for (const personalScheduleID in thisBusArrivalTimes) {
-        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(
-          thisBusArrivalTimes[personalScheduleID].busArrivalTimes.map((e) => {
-            return {
-              time: e.time,
-              dataQuantity: e.dataQuantity,
-              personalSchedule: thisBusArrivalTimes[personalScheduleID]
-            };
-          })
-        );
+        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
       }
       integratedStopItem.busArrivalTimes = flattenBusArrivalTimes;
 
