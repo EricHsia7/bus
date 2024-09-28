@@ -139,7 +139,7 @@ export async function getBusArrivalTimes(): Promise<object> {
   const personalSchedules = await listPersonalSchedules();
   let result = {};
   for (const stopKey3 in busArrivalTimesGroupedByStops) {
-    for (const busArrivalTime of busArrivalTimesGroupedByStops) {
+    for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
       const busArrivalTimeDay = busArrivalTime.getDay();
       const busArrivalTimeHours = busArrivalTime.getHours();
       const busArrivalTimeMinutes = busArrivalTime.getMinutes();
