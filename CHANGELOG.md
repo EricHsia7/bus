@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add bus arrival time to route page [\#74](https://github.com/EricHsia7/bus/pull/74) ([EricHsia7](https://github.com/EricHsia7))
 - Add bus arrival time analytics [\#73](https://github.com/EricHsia7/bus/pull/73) ([EricHsia7](https://github.com/EricHsia7))
 - Add personal schedule [\#72](https://github.com/EricHsia7/bus/pull/72) ([EricHsia7](https://github.com/EricHsia7))
 - Add storage analytics [\#71](https://github.com/EricHsia7/bus/pull/71) ([EricHsia7](https://github.com/EricHsia7))
