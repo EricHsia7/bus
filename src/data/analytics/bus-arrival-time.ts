@@ -85,7 +85,7 @@ export async function getBusArrivalTimes(): Promise<object> {
   let recordsGroupedByStops = {};
   const keys = await lfListItemKeys(4);
   for (const key of keys) {
-    const existingRecord = await lfGetItem(key);
+    const existingRecord = await lfGetItem(4, key);
     const existingRecordObject: EstimateTimeRecordForBusArrivalTimeObject = JSON.parse(existingRecord);
     for (const stopKey1 in existingRecordObject.data) {
       if (!recordsGroupedByStops.hasOwnProperty(stopKey1)) {
@@ -110,9 +110,14 @@ export async function getBusArrivalTimes(): Promise<object> {
       const previousRecord = recordsOfThisStop[i - 1] || recordsOfThisStop[i];
       const currentRecord = recordsOfThisStop[i];
       const nextRecord = recordsOfThisStop[i + 1] || recordsOfThisStop[i];
-      const deltaA = currentRecord.EstimateTime - previousRecord.EstimateTime;
-      const deltaB = nextRecord.EstimateTime - currentRecord.EstimateTime;
-      if (deltaA < 0 && deltaB < 0) {
+
+      const previousRecordEstimateTime = previousRecord.EstimateTime;
+      const currentRecordEstimateTime = currentRecord.EstimateTime;
+      const nextRecordEstimateTime = nextRecord.EstimateTime;
+
+      const deltaA = currentRecordEstimateTime - previousRecordEstimateTime;
+      const deltaB = nextRecordEstimateTime - currentRecordEstimateTime;
+      if (deltaA < 0 && deltaB < 0 && currentRecordEstimateTime >= 0) {
         // decreasing estimate time value
         EstimateTimeInThisPeriod.push(currentRecord);
       } else {
@@ -160,5 +165,5 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
     }
   }
-  return result
+  return result;
 }
