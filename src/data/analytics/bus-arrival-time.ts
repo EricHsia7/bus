@@ -139,34 +139,45 @@ export async function getBusArrivalTimes(): Promise<object> {
   // Group bus arrival times by personal schedule
   const personalSchedules = await listPersonalSchedules();
   let result = {};
-  for (const stopKey3 in busArrivalTimesGroupedByStops) {
-    for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
-      const busArrivalTimeDay = busArrivalTime.getDay();
-      const busArrivalTimeHours = busArrivalTime.getHours();
-      const busArrivalTimeMinutes = busArrivalTime.getMinutes();
+  for (const personalSchedule of personalSchedules) {
+    const personalScheduleID = personalSchedule.id;
+    const personalScheduleName = personalSchedule.name;
 
-      for (const personalSchedule of personalSchedules) {
-        const personalScheduleID = personalSchedule.id;
-        const personalScheduleName = personalSchedule.name;
-        if (!result.hasOwnProperty(personalScheduleID)) {
-          result[personalScheduleID] = {
-            name: personalScheduleName,
-            id: personalScheduleID,
-            busArrivalTimes: {}
-          };
-        }
+    // Iterate over each stop in busArrivalTimesGroupedByStops
+    for (const stopKey3 in busArrivalTimesGroupedByStops) {
+      // Initialize the structure for each stop in the result
+      if (!result.hasOwnProperty(stopKey3)) {
+        result[stopKey3] = {
+          name: personalScheduleName,
+          id: personalScheduleID,
+          busArrivalTimes: {}
+        };
+      }
 
-        if (!result[personalScheduleID].busArrivalTimes.hasOwnProperty(stopKey3)) {
-          result[personalScheduleID].busArrivalTimes[stopKey3] = [];
-        }
+      if (!result[stopKey3].busArrivalTimes.hasOwnProperty(personalSchedule)) {
+        result[stopKey3].busArrivalTimes[personalSchedule] = [];
+      }
 
-        if (personalSchedule.days.indexOf(busArrivalTimeDay)) {
-          if (busArrivalTimeHours * 60 + busArrivalTimeMinutes >= personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes && busArrivalTimeHours * 60 + busArrivalTimeMinutes <= personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes) {
-            result[personalSchedule.id].busArrivalTimes[stopKey3].push(dateToString(busArrivalTime));
+      for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
+        const busArrivalTimeDay = busArrivalTime.getDay();
+        const busArrivalTimeHours = busArrivalTime.getHours();
+        const busArrivalTimeMinutes = busArrivalTime.getMinutes();
+
+        // Check if the personal schedule covers this day
+        if (personalSchedule.days.indexOf(busArrivalTimeDay) !== -1) {
+          const totalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
+          const scheduleTotalStartMinutes = personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes;
+          const scheduleTotalEndMinutes = personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes;
+
+          // Check if the bus time falls within the personal schedule's time period
+          if (totalMinutes >= scheduleTotalStartMinutes && totalMinutes <= scheduleTotalEndMinutes) {
+            // Add the bus arrival time to the result
+            result[stopKey3].busArrivalTimes[stopKey3].push(dateToString(busArrivalTime, 'hh:mm'));
           }
         }
       }
     }
   }
+
   return result;
 }
