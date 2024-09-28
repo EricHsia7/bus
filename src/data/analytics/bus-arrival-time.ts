@@ -184,10 +184,10 @@ export async function getBusArrivalTimes(): Promise<object> {
         const remainder = busArrivalTimeTotalMinutes % aggregationInterval;
         let flooredTotalMinutes = 0;
         if (Math.abs(remainder - 10) <= 2) {
-          flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes - aggregationInterval / 3) / aggregationInterval);
+          flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes - aggregationInterval) / aggregationInterval);
         } else {
           if (Math.abs(remainder - 2) <= 2) {
-            flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes + aggregationInterval / 3) / aggregationInterval);
+            flooredTotalMinutes = Math.floor((busArrivalTimeTotalMinutes + aggregationInterval) / aggregationInterval);
           } else {
             flooredTotalMinutes = Math.floor(busArrivalTimeTotalMinutes / aggregationInterval);
           }
