@@ -182,6 +182,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
         status: { code: 0, text: '' },
         buses: [],
         overlappingRoutes: [],
+        busArrivalTimes: [],
         sequence: j,
         location: {
           latitude: 0,
