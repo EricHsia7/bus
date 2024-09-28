@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../../tools/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
-import { getPersonalSchedule, isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
+import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
 let trackingBusArrivalTime_trackingID: string = '';
