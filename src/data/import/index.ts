@@ -45,7 +45,7 @@ export async function importSettings(data: SettingsWithOptionsArray): Promise<bo
 
 export async function importPersonalSchedules(data: PersonalScheduleArray): Promise<boolean> {
   for (const PersonalSchedule of data) {
-    const existingPersonalSchedule = getPersonalSchedule(PersonalSchedule.id);
+    const existingPersonalSchedule = await getPersonalSchedule(PersonalSchedule.id);
     if (existingPersonalSchedule) {
       const existingPersonalScheduleObject = JSON.parse(existingPersonalSchedule);
       await updatePersonalSchedule(existingPersonalScheduleObject);
