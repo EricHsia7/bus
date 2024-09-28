@@ -104,6 +104,7 @@ export async function getBusArrivalTimes(): Promise<object> {
       return a.timeStamp - b.timeStamp;
     });
     const recordsOfThisStopLength = recordsOfThisStop.length;
+    let newPeriod = false;
     let EstimateTimeInThisPeriod = [];
     let busArrivalTimeInThisPeriod = [];
     for (let i = 0; i < recordsOfThisStopLength; i++) {
