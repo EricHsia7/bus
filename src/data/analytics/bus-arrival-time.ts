@@ -136,7 +136,7 @@ export async function getBusArrivalTimes(): Promise<object> {
     busArrivalTimesGroupedByStops[stopKey2] = busArrivalTimeInThisPeriod;
   }
 
-  // Group bus arrival times by personal schedule
+  // Group bus arrival times by stop
   const personalSchedules = await listPersonalSchedules();
   let result = {};
   for (const personalSchedule of personalSchedules) {
@@ -172,7 +172,7 @@ export async function getBusArrivalTimes(): Promise<object> {
           // Check if the bus time falls within the personal schedule's time period
           if (totalMinutes >= scheduleTotalStartMinutes && totalMinutes <= scheduleTotalEndMinutes) {
             // Add the bus arrival time to the result
-            result[stopKey3].busArrivalTimes[stopKey3].push(dateToString(busArrivalTime, 'hh:mm'));
+            result[stopKey3].busArrivalTimes[personalScheduleID].push(dateToString(busArrivalTime, 'hh:mm'));
           }
         }
       }
