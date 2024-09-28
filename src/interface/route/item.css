@@ -612,8 +612,9 @@
   overflow: hidden;
 }
 
-/* body > buses > bus > car attributes */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes {
+/* body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time attributes */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_bus_arrival_time_attributes {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -623,7 +624,8 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes .css_car_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes .css_car_status,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes .css_car_type {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes .css_car_type,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_bus_arrival_time_attributes .css_bus_arrival_time_data_quantity {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -647,6 +649,10 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_bus .css_car_attributes .css_car_type {
   top: 50px;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_bus_arrival_time_attributes .css_bus_arrival_time_data_quantity {
+  top: 0px
 }
 
 /* body > overlapping routes > overlapping route > endpoints */

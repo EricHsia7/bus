@@ -1,3 +1,4 @@
+import { getBusArrivalTimes } from '../analytics/bus-arrival-time';
 import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
@@ -27,6 +28,7 @@ interface integratedStopItem {
   status: EstimateTimeStatus;
   buses: Array<object>;
   overlappingRoutes: Array<object>;
+  busArrivalTimes: Array<object>;
   sequence: number;
   position: integratedStopItemPosition;
   nearest: boolean;
@@ -71,6 +73,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
+  const BusArrivalTimes = await getBusArrivalTimes();
 
   const processedBuses = processBuses(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
@@ -163,6 +166,17 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       integratedStopItem.buses = buses.flat().sort(function (a, b) {
         return a.index - b.index;
       });
+
+      // collect data from 'busArrivalTimes'
+      let thisBusArrivalTimes = {};
+      if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
+        thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
+      }
+      let flattenBusArrivalTimes = [];
+      for (const personalScheduleID in thisBusArrivalTimes) {
+        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
+      }
+      integratedStopItem.busArrivalTimes = flattenBusArrivalTimes;
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
