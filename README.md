@@ -8,13 +8,10 @@ Bus is a user-friendly web application designed to simplify your travel experien
 
 ## Getting Started
 
-- **Open The App**: Open this application in your browser via one of the urls.
-  - [https://erichsia7.github.io/bus](https://erichsia7.github.io/bus)
-  - [https://erichsia7-bus.netlify.app](https://erichsia7-bus.netlify.app)
-- **Without Sign Up**: You don't need to create your account to gain access to this application.
-- **Search**: Use the search bar to find routes and locations.
-- **Manage Stops**: Save important stops and destinations in folders for quick reference.
-- **Customize Settings**: Personalize your experience by adjusting settings.
+Open this application in your browser via one of the urls.
+
+- [erichsia7.github.io/bus](https://erichsia7.github.io/bus/)
+- [erichsia7-bus.netlify.app](https://erichsia7-bus.netlify.app/)
 
 ## Key Features
 
@@ -30,15 +27,16 @@ Quickly find routes, locations, and places of interest within the app.
 ### Integration
 
 - **All-in-One Page**: Display stops of a route or location on a single page.
-- **Visualized Diagram**: Show scheduled departure time in a simplified and readable calendar.
+- **Visualized Diagram**: Show departure time scheduled by its provider in a simplified and readable calendar.
 - **Position**: Highlight the bus stop where you are currently present.
 
 ### Personalization
 
 - **Customizable Display**: You can customize time-formatting mode, location labels, folder icons, etc.
 - **Personal Schedule**: By entering your schedules and routines, Bus is allowed to save estimated time data in specified period and cater to bus arrival time.
+- **Folder**: Save important stops, locations, and routes in folders for quick reference.
 
-### Analysis
+### Analytics
 
 - **Bus Arrival Time**: This feature requires setting Personal Schedule. After set, it will work in route page.
 - **Data Usage**: See the transferred data quantity.
@@ -50,8 +48,13 @@ Your privacy and security are our top priorities. Your all data are stored local
 
 ## Dependencies
 
-- Packages: See them in [package.json](./package.json).
-- Data References: See them in [getAPIURL.ts](./src/data/apis/getAPIURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
+- **Packages**: See them in [package.json](./package.json).
+- **Data References**: See them in [getAPIURL.ts](./src/data/apis/getAPIURL.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
+
+## Related Repository
+
+- [EricHsia7/material-symbols-list](https://github.com/EricHsia7/material-symbols-list)
+- [EricHsia7/bus-alternative-static-apis](https://github.com/EricHsia7/bus-alternative-static-apis)
 
 ## Materials Used
 
