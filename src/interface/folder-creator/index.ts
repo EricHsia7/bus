@@ -3,13 +3,15 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
+const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
+const FolderCreatorBodyElement = elementQuerySelector(FolderCreatorField, '.css_folder_creator_body');
+const FolderCreatorGroupsElement = elementQuerySelector(FolderCreatorBodyElement, '.css_folder_creator_groups');
+const NameInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input');
+const IconInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
 
 export function createFormulatedFolder(): void {
-  const nameInputElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input');
-  const iconInputElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
-  var name = nameInputElement.value;
-  var icon = iconInputElement.value;
+  const name = NameInputElement.value;
+  const icon = IconInputElement.value;
   createFolder(name, icon).then((e) => {
     if (e) {
       closeFolderCreator();
@@ -22,14 +24,12 @@ export function createFormulatedFolder(): void {
 
 export function openFolderCreator(): void {
   pushPageHistory('FolderCreator');
-  const Field = documentQuerySelector('.css_folder_creator_field');
-  Field.setAttribute('displayed', 'true');
+  FolderCreatorField.setAttribute('displayed', 'true');
   closePreviousPage();
 }
 
 export function closeFolderCreator(): void {
   // revokePageHistory('FolderCreator');
-  const Field = documentQuerySelector('.css_folder_creator_field');
-  Field.setAttribute('displayed', 'false');
+  FolderCreatorField.setAttribute('displayed', 'false');
   openPreviousPage();
 }

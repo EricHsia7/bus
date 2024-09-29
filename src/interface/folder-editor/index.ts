@@ -4,17 +4,26 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/query-s
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
-import { closeFolderManager } from '../folder-manager/index';
+
+const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
+const FolderEditorHeadElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_head');
+const LeftButtonElement = elementQuerySelector(FolderEditorHeadElement, '.css_folder_editor_button_left');
+const FolderEditorBodyElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_body');
+const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups');
+const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
+const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
+const OpenFolderIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
+const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('i');
+  let element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_editor_folder_item');
   element.setAttribute('type', item.type);
-  var context = '';
-  var main = '';
-  var icon = '';
+  let context = '';
+  let main = '';
+  let icon = '';
   switch (item.type) {
     case 'stop':
       icon = 'location_on';
@@ -49,32 +58,25 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
 }
 
 function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
-  const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
-  const openFolderIconSelectorElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
-  const leftButtonElement = elementQuerySelector(Field, '.css_folder_editor_head .css_folder_editor_button_left');
-
-  nameInputElement.value = folder.name;
-  iconInputElement.value = folder.icon;
+  NameInputElement.value = folder.name;
+  IconInputElement.value = folder.icon;
 
   if (folder.default) {
-    nameInputElement.setAttribute('readonly', 'readonly');
-    iconInputElement.setAttribute('readonly', 'readonly');
-    openFolderIconSelectorElement.setAttribute('disabled', 'true');
+    NameInputElement.setAttribute('readonly', 'readonly');
+    IconInputElement.setAttribute('readonly', 'readonly');
+    OpenFolderIconSelectorElement.setAttribute('disabled', 'true');
   } else {
-    nameInputElement.removeAttribute('readonly');
-    iconInputElement.removeAttribute('readonly');
-    openFolderIconSelectorElement.setAttribute('disabled', 'false');
+    NameInputElement.removeAttribute('readonly');
+    IconInputElement.removeAttribute('readonly');
+    OpenFolderIconSelectorElement.setAttribute('disabled', 'false');
   }
 
-  leftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
+  LeftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
 
-  const folderContentElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
-  folderContentElement.innerHTML = '';
+  FolderContentElement.innerHTML = '';
   for (var item of content) {
     var thisItemElement = generateElementOfItem(folder, item);
-    folderContentElement.appendChild(thisItemElement.element);
+    FolderContentElement.appendChild(thisItemElement.element);
   }
 }
 
@@ -87,22 +89,19 @@ async function initializeFolderEditorField(folderID: string): void {
 
 export function openFolderEditor(folderID: string): void {
   pushPageHistory('FolderEditor');
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  Field.setAttribute('displayed', 'true');
+  FolderEditorField.setAttribute('displayed', 'true');
   initializeFolderEditorField(folderID);
   closePreviousPage();
 }
 
 export function closeFolderEditor(): void {
   // revokePageHistory('FolderEditor');
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  Field.setAttribute('displayed', 'false');
+  FolderEditorField.setAttribute('displayed', 'false');
   openPreviousPage();
 }
 
 export function removeItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  const itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
       itemElement.remove();
@@ -123,8 +122,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
 }
 
 export function moveItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): void {
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  const itemElement = elementQuerySelector(Field, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {
       switch (direction) {
@@ -152,12 +150,9 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
 }
 
 export function saveEditedFolder(folderID: string): void {
-  const Field = documentQuerySelector('.css_folder_editor_field');
-  const nameInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
-  const iconInputElement = elementQuerySelector(Field, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
   var thisFolder: Folder = getFolder(folderID);
-  thisFolder.name = nameInputElement.value;
-  thisFolder.icon = iconInputElement.value;
+  thisFolder.name = NameInputElement.value;
+  thisFolder.icon = IconInputElement.value;
   updateFolder(thisFolder);
   closeFolderEditor();
 }
