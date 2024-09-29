@@ -102,7 +102,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
         var averageWindow = (maxWindow + minWindow) / 2;
         var headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
 
-        for (var i = 0; i < headwayQuantity; i++) {
+        for (let i = 0; i < headwayQuantity; i++) {
           var violateRules = false;
           var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
           if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {

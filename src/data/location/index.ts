@@ -77,7 +77,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   let RouteIDs = [];
   const stopLocationQuantity = stopLocationIds.length;
 
-  for (var i = 0; i < stopLocationQuantity; i++) {
+  for (let i = 0; i < stopLocationQuantity; i++) {
     StopIDs = StopIDs.concat(thisLocation.s[i]);
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
@@ -100,7 +100,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       break;
   }
 
-  for (var i = 0; i < stopLocationQuantity; i++) {
+  for (let i = 0; i < stopLocationQuantity; i++) {
     const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;

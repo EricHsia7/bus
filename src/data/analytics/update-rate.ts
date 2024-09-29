@@ -16,7 +16,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
     trackingUpdateRate_trackedStops = [];
     trackingUpdateRate_trackingID = generateIdentifier('e');
     var EstimateTimeLength: number = EstimateTime.length - 1;
-    for (var i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
+    for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
       var randomItem: object = EstimateTime[randomIndex];
       trackingUpdateRate_trackedStops.push(randomItem.StopID);
@@ -105,7 +105,7 @@ export async function getUpdateRateInTime(): Promise<string> {
       const secondColumn: Array<number> = group.map((item) => item[1]);
       const rowCount: number = firstColumn.length;
       var timeStampUponChanges: Array = [];
-      for (var i = 1; i < rowCount; i++) {
+      for (let i = 1; i < rowCount; i++) {
         var change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
         if (change > 0) {
           timeStampUponChanges.push(secondColumn[i]);
@@ -114,7 +114,7 @@ export async function getUpdateRateInTime(): Promise<string> {
       var timeStampUponChangesLength: number = timeStampUponChanges.length;
       var total_change: number = 0;
       var average: number = 0;
-      for (var i = 1; i < timeStampUponChangesLength; i++) {
+      for (let i = 1; i < timeStampUponChangesLength; i++) {
         var change: number = Math.abs(timeStampUponChanges[i] - timeStampUponChanges[i - 1]); // measured in seconds
         total_change += change;
       }

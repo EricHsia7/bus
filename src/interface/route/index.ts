@@ -173,10 +173,10 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   var defaultGroupQuantity = 2;
   var groupedItems = {};
-  for (var i = 0; i < defaultGroupQuantity; i++) {
+  for (let i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
-    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
+    for (let j = 0; j < defaultItemQuantity[groupKey]; j++) {
       groupedItems[groupKey].push({
         name: '',
         status: { code: 0, text: '' },
@@ -366,7 +366,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   routeSliding_fieldHeight = FieldHeight;
 
   var cumulativeOffset = 0;
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
@@ -386,14 +386,14 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var thisGroupElement = generateElementOfGroup();
         elementQuerySelector(Field, `.css_route_groups`).appendChild(thisGroupElement.element);
         var thisTabElement = generateElementOfTab();
         elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`).appendChild(thisTabElement.element);
       }
     } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[groupIndex].remove();
         elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[groupIndex].remove();
@@ -401,20 +401,20 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     }
   }
 
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var thisThreadBoxElement = generateElementOfThreadBox();
           var thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track').appendChild(thisItemElement.element);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track').appendChild(thisThreadBoxElement.element);
         }
       } else {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[itemIndex].remove();
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[itemIndex].remove();
@@ -423,13 +423,13 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     }
   }
 
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i);
-    for (var j = 0; j < itemQuantity[groupKey]; j++) {
+    for (let j = 0; j < itemQuantity[groupKey]; j++) {
       var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
       var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
       var thisItem = groupedItems[groupKey][j];

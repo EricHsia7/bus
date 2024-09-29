@@ -157,10 +157,10 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5 };
   var defaultGroupQuantity = 1;
   var groupedItems = {};
-  for (var i = 0; i < defaultGroupQuantity; i++) {
+  for (let i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
-    for (var j = 0; j < defaultItemQuantity[groupKey]; j++) {
+    for (let j = 0; j < defaultItemQuantity[groupKey]; j++) {
       groupedItems[groupKey].push({
         route_name: '',
         route_direction: '',
@@ -294,7 +294,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   locationSliding_fieldHeight = FieldHeight;
 
   var cumulativeOffset = 0;
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans TC", sans-serif`, 100, 'normal', 'none', '1.2') + tabPadding;
     locationSliding_groupStyles[`g_${i}`] = {
       width: width,
@@ -313,14 +313,14 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var thisGroupElement = generateElementOfGroup();
         elementQuerySelector(Field, `.css_location_groups`).appendChild(thisGroupElement.element);
         var thisTabElement = generateElementOfTab();
         elementQuerySelector(Field, `.css_location_head .css_location_group_tabs_tray`).appendChild(thisTabElement.element);
       }
     } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var groupIndex = currentGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[groupIndex].remove();
         elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[groupIndex].remove();
@@ -328,18 +328,18 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
   }
 
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var thisItemElement = generateElementOfItem();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(thisItemElement.element);
         }
       } else {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[itemIndex].remove();
         }
@@ -351,13 +351,13 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
       var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
       if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           //var propertyIndex = currentGroupPropertySeatQuantity + o;
           var thisPropertyElement = generateElementOfGroupDetailsProperty();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body`).appendChild(thisPropertyElement.element);
         }
       } else {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[propertyIndex].remove();
         }
@@ -365,14 +365,14 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     }
   }
 
-  for (var i = 0; i < groupQuantity; i++) {
+  for (let i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i);
     var groupPropertyQuantity = groups[groupKey].properties.length;
-    for (var k = 0; k < groupPropertyQuantity; k++) {
+    for (let k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[k];
       if (previousIntegration.hasOwnProperty('groups')) {
@@ -391,7 +391,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       }
     }
 
-    for (var j = 0; j < itemQuantity[groupKey]; j++) {
+    for (let j = 0; j < itemQuantity[groupKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[j];
       var thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {

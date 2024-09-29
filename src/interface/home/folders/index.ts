@@ -76,7 +76,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   var defaultFolderQuantity = 3;
   var foldedContent = {};
   var folders = {};
-  for (var i = 0; i < defaultFolderQuantity; i++) {
+  for (let i = 0; i < defaultFolderQuantity; i++) {
     var folderKey = `f_${i}`;
     foldedContent[folderKey] = [];
     folders[folderKey] = {
@@ -84,7 +84,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       index: i,
       icon: ''
     };
-    for (var j = 0; j < defaultItemQuantity[folderKey]; j++) {
+    for (let j = 0; j < defaultItemQuantity[folderKey]; j++) {
       foldedContent[folderKey].push({
         type: 'stop',
         id: null,
@@ -304,30 +304,30 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
   if (!(folderQuantity === currentFolderSeatQuantity)) {
     var capacity = currentFolderSeatQuantity - folderQuantity;
     if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var thisFolderElement = generateElementOfFolder();
         Field.appendChild(thisFolderElement.element);
       }
     } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var folderIndex = currentFolderSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_home_folder`)[folderIndex].remove();
       }
     }
   }
 
-  for (var i = 0; i < folderQuantity; i++) {
+  for (let i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
     var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
       var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var thisItemElement = generateElementOfItem();
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content`).appendChild(thisItemElement.element);
         }
       } else {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[itemIndex].remove();
         }
@@ -335,14 +335,14 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     }
   }
 
-  for (var i = 0; i < folderQuantity; i++) {
+  for (let i = 0; i < folderQuantity; i++) {
     var folderKey = `f_${i}`;
     var thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
     thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
     var thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
     elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
-    for (var j = 0; j < itemQuantity[folderKey]; j++) {
+    for (let j = 0; j < itemQuantity[folderKey]; j++) {
       var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisItem = foldedContent[folderKey][j];

@@ -15,7 +15,7 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
   if (!cachedTextWidth.hasOwnProperty(configKey)) {
     cachedTextWidth[configKey] = {};
   }
-  for (var i = 0; i < textLength; i++) {
+  for (let i = 0; i < textLength; i++) {
     var char: string = text.substring(i, i + 1);
     var unicode_key: string = `u_${char.charCodeAt(0)}`;
     var charWidth: number = 0;
@@ -89,7 +89,7 @@ export function compareThings(a: any, b: any): boolean {
       var hash_a: string = md5(ax);
       var hash_b: string = md5(bx);
 
-      for (var i = 0; i < 8; i++) {
+      for (let i = 0; i < 8; i++) {
         var a_i: string = hash_a.charAt(i);
         var b_i: string = hash_b.charAt(i);
         var equal: boolean = true;
@@ -223,7 +223,7 @@ function numberToLetters(number: number): string {
 
 export function generateLetterLabels(quantity: number): Array<string> {
   var result = [];
-  for (var i = 0; i < quantity; i++) {
+  for (let i = 0; i < quantity; i++) {
     result.push(`地點${numberToLetters(i + 1)}`);
   }
   return result;
@@ -309,7 +309,7 @@ const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345
 export function generateIdentifier(prefix: string = ''): string {
   let result = `${prefix}_`;
   const length: number = 16;
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     var randomNumber = Math.round(Math.random() * characterSet.length);
     result += characterSet.substring(randomNumber, randomNumber + 1);
   }

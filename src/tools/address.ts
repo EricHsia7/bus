@@ -102,7 +102,7 @@ export function mergeAddressesIntoOne(addresses: Array<string>): object | string
         };
         var len = String(e).length;
         var numbers = [];
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
           var p = toNumber(String(e).charAt(i));
           if (p === 10) {
             if (numbers.length > 0) {

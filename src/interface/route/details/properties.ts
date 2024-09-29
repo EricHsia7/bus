@@ -28,7 +28,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   const FieldHeight = FieldSize.height;
   var defaultPropertyQuantity = 5;
   var properties = [];
-  for (var i = 0; i < defaultPropertyQuantity; i++) {
+  for (let i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
       key: i,
       icon: 'none',
@@ -76,20 +76,20 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
     var capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity + o;
         var thisPropertyElement = generateElementOfProperty(skeletonScreen);
         elementQuerySelector(Field, '.css_route_details_group_body').appendChild(thisPropertyElement.element);
       }
     } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var propertyIndex = currentPropertySeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[propertyIndex].remove();
       }
     }
   }
 
-  for (var i = 0; i < propertyQuantity; i++) {
+  for (let i = 0; i < propertyQuantity; i++) {
     var thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
     var thisProperty = properties[i];
     if (previousProperties === []) {

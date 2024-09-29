@@ -60,7 +60,7 @@ function generateElementOfEvent(): GeneratedElement {
 
 export function initializeCalendarGridlines(Field: HTMLElement): void {
   elementQuerySelector(Field, '.css_route_details_calendar_gridlines').innerHTML = '';
-  for (var hours = 0; hours < 24; hours++) {
+  for (let hours = 0; hours < 24; hours++) {
     var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
     elementQuerySelector(Field, '.css_route_details_calendar_gridlines').appendChild(thisGridlineElement.element);
   }
@@ -82,7 +82,7 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   var defaultEventGroupQuantity = 7;
   var groupedEvents = {};
   var eventGroups = {};
-  for (var i = 0; i < defaultEventGroupQuantity; i++) {
+  for (let i = 0; i < defaultEventGroupQuantity; i++) {
     var eventGroupKey = `d_${i}`;
     groupedEvents[eventGroupKey] = [];
     eventGroups[eventGroupKey] = {
@@ -90,7 +90,7 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
       code: `d_{i}`,
       name: ''
     };
-    for (var j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
+    for (let j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
       var date = new Date();
       date.setHours(0);
       date.setMinutes(j * 30);
@@ -166,7 +166,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
     var capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity + o;
         var thisEventGroupElement = generateElementOfEventGroup();
         elementQuerySelector(Field, '.css_route_details_calendar_events_groups').appendChild(thisEventGroupElement.element);
@@ -174,7 +174,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
         elementQuerySelector(Field, '.css_route_details_calendar_days').appendChild(thisDayElement.element);
       }
     } else {
-      for (var o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0; o < Math.abs(capacity); o++) {
         var eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[eventGroupIndex].remove();
         elementQuerySelectorAll(Field, `.css_route_details_calendar_days .css_route_details_calendar_day`)[eventGroupIndex].remove();
@@ -182,19 +182,19 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     }
   }
 
-  for (var i = 0; i < eventGroupQuantity; i++) {
+  for (let i = 0; i < eventGroupQuantity; i++) {
     var eventGroupKey = `d_${i}`;
     var thisEventGroupElement = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[i];
     var currentEventSeatQuantity = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`).length;
     if (!(eventQuantity[eventGroupKey] === currentEventSeatQuantity)) {
       var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var thisEventElement = generateElementOfEvent();
           thisEventGroupElement.appendChild(thisEventElement.element);
         }
       } else {
-        for (var o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0; o < Math.abs(capacity); o++) {
           var eventIndex = currentEventSeatQuantity - 1 - o;
           elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[eventIndex].remove();
         }
@@ -202,7 +202,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     }
   }
 
-  for (var i = 0; i < eventGroupQuantity; i++) {
+  for (let i = 0; i < eventGroupQuantity; i++) {
     var eventGroupKey = `d_${i}`;
     var thisDay = eventGroups[eventGroupKey];
     var thisEventGroupElement = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[i];
@@ -213,7 +213,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
-    for (var j = 0; j < eventQuantity[eventGroupKey]; j++) {
+    for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
       var thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
       var thisEvent = groupedEvents[eventGroupKey][j];
