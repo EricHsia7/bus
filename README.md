@@ -31,11 +31,18 @@ Quickly find routes, locations, and places of interest within the app.
 
 - **All-in-One Page**: Display stops of a route or location on a single page.
 - **Visualized Diagram**: Show scheduled departure time in a simplified and readable calendar.
+- **Position**: Highlight the bus stop where you are currently present.
 
 ### Personalization
 
-- Customize app settings to match your style and preferences.
-- Explore additional options for a tailored and enjoyable user experience.
+- **Customizable Display**: You can customize time-formatting mode, location labels, folder icons, etc.
+- **Personal Schedule**: By entering your schedules and routines, Bus is allowed to save estimated time data in specified period and cater to bus arrival time.
+
+### Analysis
+
+- **Bus Arrival Time**: This feature requires setting Personal Schedule. After set, it will work in route page.
+- **Data Usage**: See the transferred data quantity.
+- **Storage**: See the drive space used by Bus on your device.
 
 ## Privacy
 
