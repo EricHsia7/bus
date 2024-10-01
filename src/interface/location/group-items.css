@@ -395,7 +395,7 @@
 }
 
 /* items > item > body > buses > bus > title > car number */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_car_number {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_car_number {
   position: absolute;
   top: 0px;
   left: 25px;
