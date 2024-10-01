@@ -21,7 +21,7 @@ import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopIt
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
-import { loadFont } from './interface/lazy-font';
+import { loadCSS } from './interface/lazy-font';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
@@ -233,8 +233,8 @@ window.bus = {
   secondlyInitialize: function () {
     if (!bus_secondly_initialized) {
       bus_secondly_initialized = true;
-      loadFont('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'Noto Sans Traditional Chinese', 'noto_sans_tc');
-      loadFont('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'Material Symbols Rounded', 'material_symbols');
+      loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'noto_sans_tc');
+      loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'material_symbols');
       downloadData();
       discardExpiredEstimateTimeRecordsForUpdateRate();
       discardExpiredDataUsageRecords();
