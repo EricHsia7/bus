@@ -51,7 +51,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
       existingRecordObject = JSON.parse(existingRecord);
     }
 
-    for (var item of EstimateTime) {
+    for (const item of EstimateTime) {
       if (trackingBusArrivalTime_trackedStops.indexOf(item.StopID) > -1) {
         if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
           existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
