@@ -6,7 +6,7 @@ let lazyCSS = {
 };
 
 export function loadCSS(url: string, identifier: string): void {
-  if (!lazyCSS.hasOwnProperty(identifier)) {
+  if (!lazyCSS[identifier]) {
     const link = document.createElement('link');
     link.setAttribute('href', url);
     link.setAttribute('rel', 'stylesheet');
