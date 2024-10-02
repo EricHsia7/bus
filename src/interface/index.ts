@@ -8,10 +8,8 @@ import { closePersonalScheduleManager, openPersonalScheduleManager } from './per
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 
-const splashScreenTimer = {
-  minimalTimeOut: 1024,
-  openTime: new Date().getTime()
-};
+const splashScreenTimer_minimalTimeOut = 1024;
+const splashScreenTimer_openTime = new Date().getTime();
 
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor';
 
@@ -159,8 +157,8 @@ export function fadeOutSplashScreen(callback: Function): void {
     );
   }
   const cureentTime = new Date().getTime();
-  if (cureentTime - splashScreenTimer.openTime < splashScreenTimer.minimalTimeOut) {
-    setTimeout(fadeOut, Math.max(1, cureentTime - splashScreenTimer.openTime));
+  if (cureentTime - splashScreenTimer_openTime < splashScreenTimer_minimalTimeOut) {
+    setTimeout(fadeOut, Math.max(1, cureentTime - splashScreenTimer_openTime));
   } else {
     fadeOut();
   }
