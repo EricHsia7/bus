@@ -404,7 +404,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
 
   let result = [];
   const midIndex = Math.floor((arrLength - 1) / 2);
-  const maxExplorationDepth = arrLength / 2;
+  const maxExplorationDepth = 10;
   let explorationDepthLeft = 0;
   let explorationDepthRight = 0;
   const midItem = array[midIndex];
