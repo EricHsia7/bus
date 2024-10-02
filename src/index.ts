@@ -21,7 +21,7 @@ import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopIt
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
-import { loadCSS } from './interface/lazy-font';
+import { loadCSS } from './interface/lazy-css';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
@@ -70,7 +70,11 @@ import './interface/location/index.css';
 
 import './interface/settings/index.css';
 
-import './interface/save-to-folder/index.css';
+import './interface/save-to-folder/field.css';
+import './interface/save-to-folder/head.css';
+import './interface/save-to-folder/body.css';
+import './interface/save-to-folder/list.css';
+import './interface/save-to-folder/item.css';
 
 import './interface/folder-manager/field.css';
 import './interface/folder-manager/head.css';

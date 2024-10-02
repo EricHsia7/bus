@@ -1,0 +1,39 @@
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item {
+  position: relative;
+  width: 100%;
+  height: 55px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+  color: var(--b-cssvar-333333);
+}
+
+.css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_name {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px);
+  height: 55px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  font-weight: 400;
+  user-select: none;
+  -webkit-user-select: none;
+}
