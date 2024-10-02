@@ -180,8 +180,9 @@ export async function getBusArrivalTimes(): Promise<object> {
 
       let aggregatedBusArrivalTimeObjects = [];
       for (const aggregatedBusArrivalTime of aggregatedBusArrivalTimes) {
-        const minutes = aggregatedBusArrivalTime % 60;
-        const hours = (aggregatedBusArrivalTime - minutes) / 60;
+        const totalMinutes = Math.floor(aggregatedBusArrivalTime);
+        const minutes = totalMinutes % 60;
+        const hours = (totalMinutes - minutes) / 60;
         const timeObject: TimeObject = {
           hours: hours,
           minutes: minutes
