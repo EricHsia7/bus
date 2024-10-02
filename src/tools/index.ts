@@ -1,33 +1,10 @@
 export const md5 = require('md5');
 
-// var cachedTextWidth: object = {};
-
-export function getTextWidth(text: string, weight: number, size: string, fontFamily: string, wdth: number = 100, style: string = 'normal', variant: string = 'none', lineHeight: string = '1.2'): number {
+export function getTextWidth(text: string, weight: number, size: string, fontFamily: string): number {
   const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
   const font: string = `${weight} ${size} ${fontFamily}`;
-  // canvas.style.fontVariationSettings = `'wght' ${weight}, 'wdth' ${wdth}, 'ital' ${style === 'normal' ? 0 : 1}`;
   context.font = font;
-  /*
-  var configKey: string = `c_${md5(font)}`;
-  var totalWidth: number = 0;
-  var textLength: number = text.length;
-  if (!cachedTextWidth.hasOwnProperty(configKey)) {
-    cachedTextWidth[configKey] = {};
-  }
-  for (let i = 0; i < textLength; i++) {
-    var char: string = text.substring(i, i + 1);
-    var unicode_key: string = `u_${char.charCodeAt(0)}`;
-    var charWidth: number = 0;
-    if (!cachedTextWidth[configKey].hasOwnProperty(unicode_key)) {
-      charWidth = context.measureText(char).width;
-      cachedTextWidth[configKey][unicode_key] = charWidth;
-    } else {
-      charWidth = cachedTextWidth[configKey][unicode_key];
-    }
-    totalWidth += charWidth;
-  }
-  */
   return context.measureText(text).width;
 }
 
@@ -79,20 +56,20 @@ export function compareThings(a: any, b: any): boolean {
   function anyToString(any: any): string {
     return JSON.stringify({ e: any });
   }
-  var ax = anyToString(a);
-  var bx = anyToString(b);
+  const ax = anyToString(a);
+  const bx = anyToString(b);
   const length: number = 32;
   const axLength: number = ax.length;
   const bxLength: number = bx.length;
   if (axLength === bxLength) {
     if (axLength > length || bxLength > length) {
-      var hash_a: string = md5(ax);
-      var hash_b: string = md5(bx);
+      const hash_a: string = md5(ax);
+      const hash_b: string = md5(bx);
 
       for (let i = 0; i < 8; i++) {
-        var a_i: string = hash_a.charAt(i);
-        var b_i: string = hash_b.charAt(i);
-        var equal: boolean = true;
+        const a_i: string = hash_a.charAt(i);
+        const b_i: string = hash_b.charAt(i);
+        let equal: boolean = true;
         if (a_i === b_i) {
           continue;
         } else {
@@ -145,7 +122,7 @@ export function convertBytes(contentLength: number): string {
     i++;
   }
 
-  return contentLength.toFixed(2) + ' ' + units[i];
+  return `${contentLength.toFixed(2)} ${units[i]}`;
 }
 
 // Function to split data based on delta
@@ -360,15 +337,11 @@ export function isRunningStandalone(): boolean {
 }
 
 export function convertToUnitVector(vector: Array<number>): Array<number> {
-  let sum = 0;
-  for (var x of vector) {
-    sum += Math.pow(x, 2);
-  }
-  let length = Math.sqrt(sum);
+  let length = Math.hypot(vector);
   let newVector = [];
   if (length > 0) {
     let scale = 1 / length;
-    for (var x of vector) {
+    for (const x of vector) {
       newVector.push(x * scale);
     }
     return newVector;

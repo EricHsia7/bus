@@ -8,14 +8,14 @@ self.onmessage = function (e) {
 };
 
 function mergeLocationByName_worker(object: SimplifiedLocation): MergedLocation {
-  var result: MergedLocation = {};
-  for (var key in object) {
-    var hash = md5(
+  let result: MergedLocation = {};
+  for (const key in object) {
+    const hash = md5(
       String(object[key].n)
         .trim()
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
     );
-    var nameKey = `ml_${hash}`;
+    const nameKey = `ml_${hash}`;
     if (!result.hasOwnProperty(nameKey)) {
       result[nameKey] = {
         n: object[key].n,
