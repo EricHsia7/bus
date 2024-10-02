@@ -66,10 +66,10 @@ export function compareThings(a: any, b: any): boolean {
       const hash_a: string = md5(ax);
       const hash_b: string = md5(bx);
 
+      let equal: boolean = true;
       for (let i = 0; i < 8; i++) {
         const a_i: string = hash_a.charAt(i);
         const b_i: string = hash_b.charAt(i);
-        let equal: boolean = true;
         if (a_i === b_i) {
           continue;
         } else {
