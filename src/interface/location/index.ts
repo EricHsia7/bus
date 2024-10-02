@@ -154,8 +154,8 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5 };
-  var defaultGroupQuantity = 1;
+  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
+  var defaultGroupQuantity = 2;
   var groupedItems = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
@@ -176,6 +176,21 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupQuantity: defaultGroupQuantity,
       groups: {
         g_0: {
+          name: '載入中',
+          properties: [
+            {
+              key: '0',
+              icon: 'none',
+              value: ''
+            },
+            {
+              key: '1',
+              icon: 'none',
+              value: ''
+            }
+          ]
+        },
+        g_1: {
           name: '載入中',
           properties: [
             {
@@ -466,10 +481,7 @@ export function openLocation(hash: string): void {
   locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_location_groups').scrollTo({
-    left: 0,
-    behavior: 'smooth'
-  });
+  elementQuerySelector(Field, '.css_location_groups').scrollLeft = 0;
   setUpLocationFieldSkeletonScreen(Field);
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
