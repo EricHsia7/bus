@@ -79,7 +79,7 @@ module.exports = (env, argv) => {
           HASH: JSON.stringify(thisVersion.hash),
           FULL_HASH: JSON.stringify(thisVersion.fullHash),
           BRANCH_NAME: JSON.stringify(thisVersion.branchName),
-          TIME_STAMP: JSON.stringify(thisVersion.timeStamp),
+          TIME_STAMP: JSON.stringify(thisVersion.timeStamp)
         }
       }),
       new HtmlWebpackPlugin({
@@ -184,7 +184,7 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        minSize: 20000,
+        minSize: 32000,
         maxSize: 51200,
         cacheGroups: {
           // Define your cache groups here with specific rules
