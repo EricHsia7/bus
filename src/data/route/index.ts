@@ -1,5 +1,4 @@
 import { getBusArrivalTimes } from '../analytics/bus-arrival-time';
-import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';

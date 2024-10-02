@@ -1,7 +1,6 @@
 import { searchRouteByName, searchRouteByRouteID } from '../data/search/index';
 import { openRoute } from '../interface/route/index';
 import { openLocation } from '../interface/location/index';
-const PermalinkTypes = ['route', 'location'];
 
 export function openPermalink(): void {
   var current_url = new URL(location.href);

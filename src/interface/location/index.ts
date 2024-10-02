@@ -2,10 +2,10 @@ import { integrateLocation } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { compareThings, getTextWidth, calculateStandardDeviation, generateIdentifier } from '../../tools/index';
+import { compareThings, getTextWidth, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
-import { GeneratedElement, FieldSize, pushPageHistory, revokePageHistory, openPreviousPage, closePreviousPage } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 let previousIntegration: object = {};

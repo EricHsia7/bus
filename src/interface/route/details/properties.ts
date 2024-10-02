@@ -1,7 +1,7 @@
 import { GeneratedElement, FieldSize } from '../../index';
 import { compareThings } from '../../../tools/index';
 import { getIconHTML } from '../../icons/index';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 
 var previousProperties = [];
 
