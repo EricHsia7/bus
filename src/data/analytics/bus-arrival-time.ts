@@ -189,8 +189,7 @@ export async function getBusArrivalTimes(): Promise<object> {
         };
         aggregatedBusArrivalTimeObjects.push({
           time: timeObjectToString(timeObject),
-          personalSchedule: personalSchedule,
-          dataQuantity: '--'
+          personalSchedule: personalSchedule
         });
       }
 
