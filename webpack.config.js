@@ -118,7 +118,7 @@ module.exports = (env, argv) => {
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
-        reportFilename: 'dist/bundle-analysis-report.html' // Output file path and name
+        reportFilename: 'bundle-analysis-report/index.html' // Output file path and name
       })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
@@ -184,7 +184,7 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
-        minSize: 32000,
+        minSize: 25000,
         maxSize: 51200,
         cacheGroups: {
           // Define your cache groups here with specific rules
