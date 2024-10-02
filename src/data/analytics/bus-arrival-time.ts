@@ -137,8 +137,6 @@ export async function getBusArrivalTimes(): Promise<object> {
   for (const personalSchedule of personalSchedules) {
     const personalScheduleID = personalSchedule.id;
     const personalScheduleName = personalSchedule.name;
-    const personalSchedulePeriod = personalSchedule.period;
-    const personalScheduleDays = personalSchedule.days;
 
     // Iterate over each stop in busArrivalTimesGroupedByStops
     for (const stopKey3 in busArrivalTimesGroupedByStops) {
@@ -150,8 +148,6 @@ export async function getBusArrivalTimes(): Promise<object> {
       if (!result[stopKey3].hasOwnProperty(personalScheduleID)) {
         result[stopKey3][personalScheduleID] = {
           name: personalScheduleName,
-          period: personalSchedulePeriod,
-          days: personalScheduleDays,
           id: personalScheduleID,
           busArrivalTimes: []
         };
@@ -178,7 +174,6 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-
       const aggregationInterval = 10;
       const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, aggregationInterval / 2), aggregationInterval);
 
