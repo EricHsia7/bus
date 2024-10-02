@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-bus-arrival-time-on-route-page
+      - dev-number-aggregation-v2
 
 jobs:
   launch:
