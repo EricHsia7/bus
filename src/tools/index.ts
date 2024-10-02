@@ -383,3 +383,44 @@ export function softmaxArray(array: Array<number>): Array<number> {
   // Step 3: Normalize each value
   return expArr.map((value) => value / sumExp);
 }
+
+export function calculateAverage(array: Array<number>): number {
+  if (array.length === 0) {
+    return 0;
+  } else {
+    const sum = array.reduce((acc, curr) => acc + curr, 0);
+    return sum / array.length;
+  }
+}
+
+export function aggregateNumbers(array: Array<number>, interval: number): Array<number> {
+  const arrLength = array.length;
+
+  if (arrLength < 3) {
+    return array;
+  }
+
+  array.sort((a, b) => a - b);
+
+  let result = [];
+  const midIndex = Math.floor((arrLength - 1) / 2);
+  const maxExplorationDepth = 10;
+  let explorationDepthLeft = 0;
+  let explorationDepthRight = 0;
+  const midItem = array[midIndex];
+
+  while (Math.abs(midItem - array[Math.max(0, midIndex - explorationDepthLeft)]) <= interval && explorationDepthLeft <= maxExplorationDepth) {
+    explorationDepthLeft++;
+  }
+
+  while (Math.abs(midItem - array[Math.min(arrLength - 1, midIndex + explorationDepthRight)]) <= interval && explorationDepthRight <= maxExplorationDepth) {
+    explorationDepthRight++;
+  }
+
+  const aggregation = array.slice(midIndex - explorationDepthLeft, midIndex + explorationDepthRight);
+  const average = calculateAverage(aggregation);
+
+  result = result.concat(aggregateNumbers(array.slice(0, midIndex - explorationDepthLeft), interval), average, aggregateNumbers(array.slice(midIndex + explorationDepthRight), interval));
+
+  return result;
+}
