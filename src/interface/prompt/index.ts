@@ -7,7 +7,7 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
   const allPrompts = documentQuerySelectorAll('.css_prompt');
   if (!(allPrompts === null)) {
     for (prompt of allPrompts) {
-      prompt[e].remove();
+      prompt.remove();
     }
   }
 
