@@ -29,8 +29,7 @@ import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
-import { getMergedPersonalScheduleTimeline } from './data/personal-schedule/index';
-import { discardExpiredEstimateTimeRecordsForBusArrivalTime, getBusArrivalTimes } from './data/analytics/bus-arrival-time';
+import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
 
 import './interface/theme.css';
 
@@ -144,7 +143,7 @@ window.bus = {
     if (bus_initialized === false) {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
-      var FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
+      const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
         .then((e) => {
@@ -313,10 +312,6 @@ window.bus = {
     downloadExportFile,
     openFileToImportData,
     viewCommitOfCurrentVersion
-  },
-  test: {
-    getMergedPersonalScheduleTimeline,
-    getBusArrivalTimes
   }
 };
 

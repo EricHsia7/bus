@@ -1,13 +1,12 @@
-import { lfSetItem, lfGetItem } from '../storage/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 
 function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL
-  var searchParams = new URLSearchParams(window.location.search);
+  const searchParams = new URLSearchParams(window.location.search);
   // Set the 'timestamp' query parameter to the current timestamp
   searchParams.set('v', id);
   // Construct the new URL with updated query parameters
-  var newUrl = window.location.pathname + '?' + searchParams.toString();
+  const newUrl = window.location.pathname + '?' + searchParams.toString();
   if (enforce) {
     // Redirect to the new URL
     window.location.replace(newUrl);
