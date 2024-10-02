@@ -71,7 +71,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
 }
 
 export async function discardExpiredEstimateTimeRecordsForBusArrivalTime(): void {
-  const keys = await listRecordedEstimateTimeForBusArrivalTime();
+  const keys = await lfListItemKeys(4);
   for (const key of keys) {
     const json = await lfGetItem(4, key);
     const object: object = JSON.parse(json);
