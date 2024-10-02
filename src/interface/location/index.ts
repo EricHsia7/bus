@@ -466,7 +466,10 @@ export function openLocation(hash: string): void {
   locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');
   Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_location_groups').scrollLeft = 0;
+  elementQuerySelector(Field, '.css_location_groups').scrollTo({
+    left: 0,
+    behavior: 'smooth'
+  });
   setUpLocationFieldSkeletonScreen(Field);
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;

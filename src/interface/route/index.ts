@@ -507,7 +507,10 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   routeSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_route_field');
   Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_route_groups').scrollLeft = 0;
+  elementQuerySelector(Field, '.css_route_groups').scrollTo({
+    left: 0,
+    behavior: 'smooth'
+  });
   setUpRouteFieldSkeletonScreen(Field);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
