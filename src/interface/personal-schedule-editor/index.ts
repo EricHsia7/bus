@@ -1,6 +1,6 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { timeObjectToString, WeekDay } from '../../tools/time';
+import { timeObjectToString, WeekDayIndex } from '../../tools/time';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 
 const PersonalScheduleEditorField = documentQuerySelector('.css_personal_schedule_editor_field');
@@ -78,7 +78,7 @@ export function closePersonalScheduleEditor(): void {
   openPreviousPage();
 }
 
-export function switchPersonalScheduleEditorDay(day: WeekDay): void {
+export function switchPersonalScheduleEditorDay(day: WeekDayIndex): void {
   const thisDayElement = elementQuerySelector(dayGroupBodyElement, `.css_personal_schedule_editor_day[day="${day}"]`);
   const highlighted = thisDayElement.getAttribute('highlighted');
   if (highlighted === 'true') {

@@ -121,8 +121,21 @@ export function formatTime(time: number, mode: number): string {
   }
 }
 
-export function indexToDay(index: number): object {
-  var days = [
+export type WeekDayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+// 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+
+export type WeekDayIndexArray = Array<WeekDayIndex>;
+
+export type WeekDayName = '日' | '一' | '二' | '三' | '四' | '五' | '六';
+
+export interface WeekDay {
+  name: WeekDayName;
+  day: WeekDayIndex;
+  code: string;
+}
+
+export function indexToDay(index: WeekDayIndex): WeekDay {
+  const days = [
     {
       name: '日',
       day: 0,
@@ -162,7 +175,7 @@ export function indexToDay(index: number): object {
   return days[index];
 }
 
-export function dateValueToDayOfWeek(dateValue: string): object {
+export function dateValueToDayOfWeek(dateValue: string): WeekDay {
   var int = parseInt(dateValue);
   var index = int - 1;
   return indexToDay(index);
@@ -182,11 +195,6 @@ export interface TimeStampPeriod {
   start: Date;
   end: Date;
 }
-
-export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-// 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
-
-export type WeekDayArray = Array<WeekDay>;
 
 export function timeObjectToString(timeObject: TimeObject): string {
   return `${String(timeObject.hours).padStart(2, '0')}:${String(timeObject.minutes).padStart(2, '0')}`;

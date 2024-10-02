@@ -1,11 +1,11 @@
 import { generateIdentifier } from '../../tools/index';
-import { TimePeriod, WeekDayArray } from '../../tools/time';
+import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
 export interface PersonalSchedule {
   name: string;
   period: TimePeriod;
-  days: WeekDayArray;
+  days: WeekDayIndexArray;
   id: string;
 }
 
