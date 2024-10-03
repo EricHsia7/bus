@@ -30,11 +30,11 @@ jobs:
         run: |
           cp -r ./pwaicons/ ./dist/pwaicons/
           cp -r ./manifest.json ./dist/manifest.json
-          cp -r ./splash_screen/ ./dist/splash_screen/
+          cp -r ./splash-screen/ ./dist/splash-screen/
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
 
-      - name: Generate splash screen
-        run: node generate_splash_screen.js
+      #- name: Generate splash screen
+      #  run: node generate-splash-screen.js
 
       - name: Deploy with gh-pages
         run: |
