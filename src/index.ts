@@ -2,10 +2,10 @@ import { updateSearchResult } from './interface/search/index';
 import { discardExpiredEstimateTimeRecordsForUpdateRate } from './data/analytics/update-rate';
 import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab, updateRouteCSS } from './interface/route/index';
+import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody, updateLocationCSS } from './interface/location/index';
+import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
@@ -160,18 +160,14 @@ window.bus = {
             ResizeSearchInputCanvasSize();
             window.addEventListener('resize', () => {
               ResizeRouteField();
-              updateRouteCSS();
               ResizeLocationField();
-              updateLocationCSS();
               ResizeSearchInputCanvasSize();
             });
             if (screen) {
               if (screen.orientation) {
                 screen.orientation.addEventListener('change', () => {
                   ResizeRouteField();
-                  updateRouteCSS();
                   ResizeLocationField();
-                  updateLocationCSS();
                   ResizeSearchInputCanvasSize();
                 });
               }
