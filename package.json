@@ -37,7 +37,8 @@
     "webpack-bundle-analyzer": "^4.10.2",
     "canvas": "^2.11.2",
     "mangle-css-class-webpack-plugin": "^5.1.0",
-    "webpack-subresource-integrity": "^5.1.0"
+    "webpack-subresource-integrity": "^5.1.0",
+    "md5": "^2.3.0"
   },
   "dependencies": {
     "md5": "^2.3.0",
