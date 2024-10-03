@@ -83,7 +83,7 @@ export function ResizeRouteField(): void {
   Field.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
 
-function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
+export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   const Field = documentQuerySelector('.css_route_field');
   const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
   const groupTabLineElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
