@@ -156,9 +156,7 @@ window.bus = {
             initializeRouteSliding();
             initializeLocationSliding();
             ResizeRouteField();
-            updateRouteCSS();
             ResizeLocationField();
-            updateLocationCSS();
             ResizeSearchInputCanvasSize();
             window.addEventListener('resize', () => {
               ResizeRouteField();
