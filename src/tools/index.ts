@@ -418,7 +418,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
   let exponentialSum = 0;
   for (let k = 0; k < arrLength; k++) {
     simplifiedArray.push(array[k] / standardDeviation);
-    exponential = Math.exp(array[k] / standardDeviation);
+    const exponential = Math.exp(array[k] / standardDeviation);
     exponentialSum += exponential;
     exponentials.push(exponential);
   }
