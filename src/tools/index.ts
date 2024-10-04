@@ -423,11 +423,10 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     exponentials.push(exponential);
   }
 
-  let interval = 3;
-  let arrLength2 = Math.pow(arrLength, 2);
+  let P = Math.pow(arrLength, 1.4);
   let groupedNumbers = {};
   for (let l = 0; l < arrLength; l++) {
-    const key = `k_${Math.floor(((exponentials / exponentialSum) * arrLength2) / interval)}`;
+    const key = `k_${Math.floor((exponentials / exponentialSum) * P)}`;
     if (!groupedNumbers.hasOwnProperty(key)) {
       groupedNumbers[key] = {
         sum: 0,
