@@ -410,7 +410,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
 
   let SquaredDeviationSum: number = 0;
   for (let j = 0; j < arrLength; j++) {
-    SquaredDeviationSum += Math.pow(array[i] - average, 2);
+    SquaredDeviationSum += Math.pow(array[j] - average, 2);
   }
   standardDeviation = Math.sqrt(SquaredDeviationSum / arrLength);
 
@@ -426,7 +426,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
   let P = Math.pow(arrLength, 1.4);
   let groupedNumbers = {};
   for (let l = 0; l < arrLength; l++) {
-    const key = `k_${Math.floor((exponentials / exponentialSum) * P)}`;
+    const key = `k_${Math.floor((exponentials[l] / exponentialSum) * P)}`;
     if (!groupedNumbers.hasOwnProperty(key)) {
       groupedNumbers[key] = {
         sum: 0,
