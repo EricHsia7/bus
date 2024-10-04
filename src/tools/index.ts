@@ -410,7 +410,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
   for (let j = 0; j < arrLength; j++) {
     SquaredDeviationSum += Math.pow(array[j] - average, 2);
   }
-  standardDeviation = Math.sqrt(SquaredDeviationSum / arrLength);
+  const standardDeviation = Math.sqrt(SquaredDeviationSum / arrLength);
 
   let exponentials = [];
   let exponentialSum = 0;
