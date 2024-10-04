@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Improve number aggregation algorithm [\#75](https://github.com/EricHsia7/bus/pull/75) ([EricHsia7](https://github.com/EricHsia7))
 - Add bus arrival time to route page [\#74](https://github.com/EricHsia7/bus/pull/74) ([EricHsia7](https://github.com/EricHsia7))
 - Add bus arrival time analytics [\#73](https://github.com/EricHsia7/bus/pull/73) ([EricHsia7](https://github.com/EricHsia7))
 - Add personal schedule [\#72](https://github.com/EricHsia7/bus/pull/72) ([EricHsia7](https://github.com/EricHsia7))
@@ -64,6 +65,7 @@
 
 **Merged pull requests:**
 
+- Erichsia7 patch 1 [\#76](https://github.com/EricHsia7/bus/pull/76) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
