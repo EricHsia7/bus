@@ -420,7 +420,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     exponentials.push(exponential);
   }
 
-  let P = Math.pow(arrLength, 1.4);
+  let P = Math.pow(arrLength, 1.37);
   let groupedNumbers = {};
   for (let l = 0; l < arrLength; l++) {
     const key = `k_${Math.floor((exponentials[l] / exponentialSum) * P)}`;
