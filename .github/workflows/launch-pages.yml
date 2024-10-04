@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-number-aggregation-v2
+      - erichsia7-patch-1
 
 jobs:
   launch:

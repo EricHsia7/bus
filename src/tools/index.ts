@@ -400,27 +400,46 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     return array;
   }
 
-  array.sort((a, b) => a - b);
+  let sum: number = 0;
+  for (let i = 0; i < arrLength; i++) {
+    sum += array[i];
+  }
+  let average = sum / arrLength;
+
+  let SquaredDeviationSum: number = 0;
+  for (let j = 0; j < arrLength; j++) {
+    SquaredDeviationSum += Math.pow(array[j] - average, 2);
+  }
+  const standardDeviation = Math.sqrt(SquaredDeviationSum / arrLength);
+
+  let exponentials = [];
+  let exponentialSum = 0;
+  for (let k = 0; k < arrLength; k++) {
+    const exponential = Math.exp(array[k] / standardDeviation);
+    exponentialSum += exponential;
+    exponentials.push(exponential);
+  }
+
+  let P = Math.pow(arrLength, 1.37);
+  let groupedNumbers = {};
+  for (let l = 0; l < arrLength; l++) {
+    const key = `k_${Math.floor((exponentials[l] / exponentialSum) * P)}`;
+    if (!groupedNumbers.hasOwnProperty(key)) {
+      groupedNumbers[key] = {
+        sum: 0,
+        len: 0
+      };
+    }
+    groupedNumbers[key].sum += array[l];
+    groupedNumbers[key].len += 1;
+  }
 
   let result = [];
-  const midIndex = Math.floor((arrLength - 1) / 2);
-  const maxExplorationDepth = 10;
-  let explorationDepthLeft = 0;
-  let explorationDepthRight = 0;
-  const midItem = array[midIndex];
-
-  while (Math.abs(midItem - array[Math.max(0, midIndex - explorationDepthLeft)]) <= interval && explorationDepthLeft <= maxExplorationDepth) {
-    explorationDepthLeft++;
+  for (const key in groupedNumbers) {
+    const thisGroup = groupedNumbers[key];
+    result.push(Math.floor(thisGroup.sum / thisGroup.len));
   }
 
-  while (Math.abs(midItem - array[Math.min(arrLength - 1, midIndex + explorationDepthRight)]) <= interval && explorationDepthRight <= maxExplorationDepth) {
-    explorationDepthRight++;
-  }
-
-  const aggregation = array.slice(midIndex - explorationDepthLeft, midIndex + explorationDepthRight);
-  const average = calculateAverage(aggregation);
-
-  result = result.concat(aggregateNumbers(array.slice(0, midIndex - explorationDepthLeft), interval), average, aggregateNumbers(array.slice(midIndex + explorationDepthRight), interval));
-
+  result.sort((a, b) => a - b);
   return result;
 }
