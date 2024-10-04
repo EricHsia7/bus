@@ -400,8 +400,6 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     return array;
   }
 
-  array.sort((a, b) => a - b);
-
   let sum: number = 0;
   for (let i = 0; i < arrLength; i++) {
     sum += array[i];
@@ -417,7 +415,6 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
   let exponentials = [];
   let exponentialSum = 0;
   for (let k = 0; k < arrLength; k++) {
-    simplifiedArray.push(array[k] / standardDeviation);
     const exponential = Math.exp(array[k] / standardDeviation);
     exponentialSum += exponential;
     exponentials.push(exponential);
@@ -443,5 +440,6 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     result.push(Math.floor(thisGroup.sum / thisGroup.len));
   }
 
+  result.sort((a, b) => a - b);
   return result;
 }
