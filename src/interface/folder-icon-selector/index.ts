@@ -9,7 +9,6 @@ import { promptMessage } from '../prompt/index';
 
 type Target = 'editor' | 'creator' | '';
 
-var currentFuse: any = false;
 let currentTarget: Target = '';
 
 const folderEditorField = documentQuerySelector('.css_folder_editor_field');
