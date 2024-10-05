@@ -171,7 +171,7 @@ export function searchFor(query: string, limit: number): Array {
   let quantity = 0;
   for (const j of intersection) {
     let thisItem = searchList[j];
-    const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+    const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, true));
     if (quantity < limit) {
       result.push({
         item: thisItem,
