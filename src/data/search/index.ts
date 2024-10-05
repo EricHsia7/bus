@@ -82,7 +82,7 @@ export async function prepareForSearch(): void {
       type: 0
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(thisItem.n).concat(getUnicodes(thisItem.dep)).concat(getUnicodes(thisItem.des));
+    const unicodes = getUnicodes(`${thisItem.n}${thisItem.dep}${thisItem.des}`, true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
@@ -107,7 +107,7 @@ export async function prepareForSearch(): void {
       type: 1
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(thisItem.n);
+    const unicodes = getUnicodes(thisItem.n, true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
@@ -139,9 +139,10 @@ export function searchFor(query: string, limit: number): Array {
   if (!readyToSearch) {
     return [];
   }
-  const unicodes = getUnicodes(query);
+  const queryUnicodes = getUnicodes(query, true);
+  const asIsQueryUnicodes = getUnicodes(query, false);
   let unicodeGroups = [];
-  for (const unicode of unicodes) {
+  for (const unicode of queryUnicodes) {
     const key = `u_${unicode}`;
     if (searchIndex.hasOwnProperty(key)) {
       unicodeGroups.push(searchIndex[key]);
@@ -170,7 +171,7 @@ export function searchFor(query: string, limit: number): Array {
   let quantity = 0;
   for (const j of intersection) {
     let thisItem = searchList[j];
-    const score = calculateSearchResultScore(unicodes, getUnicodes(thisItem.n));
+    const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
     if (quantity < limit) {
       result.push({
         item: thisItem,
