@@ -35,7 +35,7 @@ function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>,
   let i = 0;
   for (const unicode of resultUnicodes) {
     const indexOfUnicode = queryUnicodes.indexOf(unicode, i);
-    score += indexOfUnicode - i;
+    score += indexOfUnicode - i + 1;
     if (previousMatched) {
       score *= 10;
     }
