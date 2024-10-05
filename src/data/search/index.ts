@@ -127,9 +127,7 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
   let i = 0;
   for (const unicode of resultUnicodes) {
     const indexOfUnicode = queryUnicodes.indexOf(unicode);
-    if (indexOfUnicode > -1) {
-      score += indexOfUnicode - i;
-    }
+    score += indexOfUnicode - i;
     i += 1;
   }
   return score;
