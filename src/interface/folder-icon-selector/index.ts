@@ -1,5 +1,5 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
-import { prepareForMaterialSymbolsSearch } from '../../data/search/searchMaterialSymbols';
+import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
 import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { dataDownloadCompleted } from '../home/index';
@@ -44,9 +44,9 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
   const materialSymbolsSearchResultsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results');
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsSearchResultsElement.innerHTML = '';
-  if (!containPhoneticSymbols(query) && currentFuse) {
-    var searchResults = currentFuse.search(query).slice(0, 30);
-    for (var result of searchResults) {
+  if (!containPhoneticSymbols(query)) {
+    const searchResults = searchForMaterialSymbols(query, 30);
+    for (const result of searchResults) {
       const symbolElement = generateElementOfSymbol(result.item, currentTarget);
       materialSymbolsSearchResultsElement.appendChild(symbolElement.element);
     }
@@ -90,9 +90,7 @@ export function openFolderIconSelector(target: Target): void {
     if (dataDownloadCompleted) {
       folderIconSelectorField.setAttribute('displayed', 'true');
       initializeFolderIconSelectorField(currentTarget);
-      prepareForMaterialSymbolsSearch().then((preparation) => {
-        currentFuse = preparation;
-      });
+      prepareForMaterialSymbolsSearch();
     } else {
       promptMessage('資料還在下載中', 'download_2');
     }
