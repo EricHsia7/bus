@@ -47,7 +47,7 @@ function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>,
     i += 1;
   }
   if (queryUnicodes === resultUnicodes) {
-    score = Math.abs(score) * 5;
+    score = Math.abs(score) * 10;
   }
   return score;
 }
