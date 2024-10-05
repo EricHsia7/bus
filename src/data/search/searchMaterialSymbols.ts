@@ -73,16 +73,21 @@ export function searchForMaterialSymbols(query: string, limit: number): Array<st
     }
   }
   let result = [];
+  let quantity = 0;
   for (const j of intersection) {
     let thisItem = searchList[j];
-    const score = calculateMaterialSymbolsSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
-    result.push({
-      item: thisItem,
-      score: score
-    });
+    if (quantity < limit) {
+      const score = calculateMaterialSymbolsSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+      result.push({
+        item: thisItem,
+        score: score
+      });
+    } else {
+      break;
+    }
   }
   result.sort(function (a, b) {
     return b.score - a.score;
   });
-  return result.slice(0, limit);
+  return result;
 }
