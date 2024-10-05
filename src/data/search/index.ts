@@ -142,13 +142,18 @@ export function searchFor(query: string): Array {
   });
   const unicodeGroupsLength1 = unicodeGroups.length - 1;
   let intersection = [];
-  for (let i = 0; i < unicodeGroupsLength1; i++) {
-    const currentGroup = unicodeGroups[i];
-    const nextGroup = unicodeGroups[i + 1];
-    if (i === 0) {
-      intersection = getIntersection(currentGroup, nextGroup);
-    } else {
-      intersection = getIntersection(intersection, nextGroup);
+  if (unicodeGroupsLength1 === 0) {
+    intersection = unicodeGroups;
+  }
+  if (unicodeGroupsLength1 > 0) {
+    for (let i = 0; i < unicodeGroupsLength1; i++) {
+      const currentGroup = unicodeGroups[i];
+      const nextGroup = unicodeGroups[i + 1];
+      if (i === 0) {
+        intersection = getIntersection(currentGroup, nextGroup);
+      } else {
+        intersection = getIntersection(intersection, nextGroup);
+      }
     }
   }
   let result = [];
