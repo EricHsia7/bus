@@ -44,7 +44,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsSearchResultsElement.innerHTML = '';
   if (!containPhoneticSymbols(query)) {
-    const searchResults = searchForMaterialSymbols(query, 30);
+    const searchResults = searchForMaterialSymbols(query, 40);
     for (const result of searchResults) {
       const symbolElement = generateElementOfSymbol(result.item, currentTarget);
       materialSymbolsSearchResultsElement.appendChild(symbolElement.element);
