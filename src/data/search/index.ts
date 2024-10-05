@@ -139,6 +139,9 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
     }
     i += 1;
   }
+  if (queryUnicodes === resultUnicodes) {
+    score = Math.abs(score) * 5;
+  }
   return score;
 }
 

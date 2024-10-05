@@ -37,7 +37,7 @@ function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>,
     const indexOfUnicode = queryUnicodes.indexOf(unicode, i);
     score += indexOfUnicode - i + 1;
     if (previousMatched) {
-      score *= 10;
+      score *= 2;
     }
     if (indexOfUnicode > -1) {
       previousMatched = true;
@@ -45,6 +45,9 @@ function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>,
       previousMatched = false;
     }
     i += 1;
+  }
+  if (queryUnicodes === resultUnicodes) {
+    score = Math.abs(score) * 5;
   }
   return score;
 }
