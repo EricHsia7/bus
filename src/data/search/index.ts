@@ -1,8 +1,12 @@
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, getIntersection, getUnicodes } from '../../tools/index';
 
-const Fuse = require('fuse.js/basic');
+// const Fuse = require('fuse.js/basic');
+
+let searchIndex = {};
+let searchList = [];
+let readyToSearch = false;
 
 export async function searchRouteByName(query: string): Promise<Array> {
   var requestID = generateIdentifier('r');
@@ -59,12 +63,15 @@ export async function searchRouteByPathAttributeId(PathAttributeId: Array<number
 }
 
 export async function prepareForSearch(): void {
+  readyToSearch = false;
   const requestID = generateIdentifier('r');
   const Route = await getRoute(requestID, true);
   const mergedLocation = await getLocation(requestID, true);
+  let index = {};
   let list = [];
+  let i = 0;
   for (const key in Route) {
-    list.push({
+    const thisItem = {
       id: parseInt(key.split('_')[1]),
       pid: Route[key].pid,
       dep: Route[key].dep,
@@ -76,10 +83,20 @@ export async function prepareForSearch(): void {
       r: '',
       s: '',
       type: 0
-    });
+    };
+    list.push(thisItem);
+    const unicodes = getUnicodes(thisItem.n).concat(getUnicodes(thisItem.dep)).concat(getUnicodes(thisItem.des));
+    for (const unicode of unicodes) {
+      const key = `u_${unicode}`;
+      if (!index.hasOwnProperty(key)) {
+        index[key] = [];
+      }
+      index[key].push(i);
+    }
+    i += 1;
   }
   for (const key in mergedLocation) {
-    list.push({
+    const thisItem = {
       id: mergedLocation[key].id,
       n: mergedLocation[key].n,
       lo: mergedLocation[key].lo,
@@ -91,15 +108,53 @@ export async function prepareForSearch(): void {
       des: '',
       pid: [],
       type: 1
-    });
+    };
+    list.push(thisItem);
+    const unicodes = getUnicodes(thisItem.n);
+    for (const unicode of unicodes) {
+      const key = `u_${unicode}`;
+      if (!index.hasOwnProperty(key)) {
+        index[key] = [];
+      }
+      index[key].push(i);
+    }
+    i += 1;
   }
-  console.log(list);
-  console.log(list.length);
-  return new Fuse(list, {
-    keys: [
-      { name: 'n', weight: 0.7 },
-      { name: 'dep', weight: 0.15 },
-      { name: 'des', weight: 0.15 }
-    ]
+  searchIndex = index;
+  searchList = list;
+  readyToSearch = true;
+}
+
+export function searchFor(query: string): Array {
+  if (!readyToSearch) {
+    return [];
+  }
+  const unicodes = getUnicodes(query);
+  let unicodeGroups = [];
+  for (const unicode of unicodes) {
+    const key = `u_${unicode}`;
+    if (searchIndex.hasOwnProperty(key)) {
+      unicodeGroups.push(searchIndex[key]);
+    }
+  }
+  unicodeGroups.sort(function (a, b) {
+    return a.length - b.length;
   });
+  const unicodeGroupsLength1 = unicodeGroups.length - 1;
+  let intersection = [];
+  for (let i = 0; i < unicodeGroupsLength1; i++) {
+    const currentGroup = unicodeGroups[i];
+    const nextGroup = unicodeGroups[i + 1];
+    if (i === 0) {
+      intersection = getIntersection(currentGroup, nextGroup);
+    } else {
+      intersection = getIntersection(intersection, nextGroup);
+    }
+  }
+  let result = [];
+  for (const j of intersection) {
+    const thisItem = searchList[j];
+    result.push(thisItem);
+  }
+  return result;
 }
