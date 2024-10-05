@@ -143,7 +143,7 @@ export function searchFor(query: string): Array {
   const unicodeGroupsLength1 = unicodeGroups.length - 1;
   let intersection = [];
   if (unicodeGroupsLength1 === 0) {
-    intersection = unicodeGroups[0]
+    intersection = unicodeGroups[0];
   }
   if (unicodeGroupsLength1 > 0) {
     for (let i = 0; i < unicodeGroupsLength1; i++) {
