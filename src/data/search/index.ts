@@ -59,12 +59,12 @@ export async function searchRouteByPathAttributeId(PathAttributeId: Array<number
 }
 
 export async function prepareForSearch(): void {
-  var requestID = generateIdentifier('r');
-  var Route = await getRoute(requestID, true);
-  var mergedLocation = await getLocation(requestID, true);
-  var index = [];
-  for (var key in Route) {
-    index.push({
+  const requestID = generateIdentifier('r');
+  const Route = await getRoute(requestID, true);
+  const mergedLocation = await getLocation(requestID, true);
+  let list = [];
+  for (const key in Route) {
+    list.push({
       id: parseInt(key.split('_')[1]),
       pid: Route[key].pid,
       dep: Route[key].dep,
@@ -78,8 +78,8 @@ export async function prepareForSearch(): void {
       type: 0
     });
   }
-  for (var key in mergedLocation) {
-    index.push({
+  for (const key in mergedLocation) {
+    list.push({
       id: mergedLocation[key].id,
       n: mergedLocation[key].n,
       lo: mergedLocation[key].lo,
@@ -93,7 +93,9 @@ export async function prepareForSearch(): void {
       type: 1
     });
   }
-  return new Fuse(index, {
+  console.log(list);
+  console.log(list.length);
+  return new Fuse(list, {
     keys: [
       { name: 'n', weight: 0.7 },
       { name: 'dep', weight: 0.15 },
