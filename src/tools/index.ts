@@ -443,3 +443,33 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
   result.sort((a, b) => a - b);
   return result;
 }
+
+export function getUnicodes(string: string, unique: boolean = true): Array<number> {
+  let result = [];
+  const stringLength = string.length;
+  for (let i = 0; i < stringLength; i++) {
+    const unicode = string.charCodeAt(i);
+    if (result.indexOf(unicode) < 0 || !unique) {
+      result.push(unicode);
+    }
+  }
+  return result;
+}
+
+export function getIntersection(arrayA: Array, arrayB: Array): Array {
+  let result = [];
+  if (arrayA.length <= arrayB.length) {
+    for (const item of arrayA) {
+      if (arrayB.indexOf(item) > -1) {
+        result.push(item);
+      }
+    }
+  } else {
+    for (const item of arrayB) {
+      if (arrayA.indexOf(item) > -1) {
+        result.push(item);
+      }
+    }
+  }
+  return result;
+}

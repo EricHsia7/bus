@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - erichsia7-patch-1
+      - dev-improve-search
 
 jobs:
   launch:
