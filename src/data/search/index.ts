@@ -63,7 +63,6 @@ export async function searchRouteByPathAttributeId(PathAttributeId: Array<number
 }
 
 export async function prepareForSearch(): void {
-  readyToSearch = false;
   const requestID = generateIdentifier('r');
   const Route = await getRoute(requestID, true);
   const mergedLocation = await getLocation(requestID, true);
