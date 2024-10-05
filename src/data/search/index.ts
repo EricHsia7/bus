@@ -125,7 +125,7 @@ export async function prepareForSearch(): void {
   readyToSearch = true;
 }
 
-export function searchFor(query: string): Array {
+export function searchFor(query: string, limit: number): Array {
   if (!readyToSearch) {
     return [];
   }
@@ -156,10 +156,19 @@ export function searchFor(query: string): Array {
       }
     }
   }
+  intersection.sort(function (a, b) {
+    return a - b;
+  });
   let result = [];
+  let quantity = 0;
   for (const j of intersection) {
     const thisItem = searchList[j];
-    result.push(thisItem);
+    if (quantity < limit) {
+      result.push(thisItem);
+    } else {
+      break;
+    }
+    quantity += 1;
   }
   return result;
 }

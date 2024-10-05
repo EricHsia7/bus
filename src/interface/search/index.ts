@@ -31,7 +31,7 @@ export function closeSearch(): void {
 export function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
     const typeToIcon = ['route', 'location_on'];
-    const searchResults = searchFor(query).slice(0, 30);
+    const searchResults = searchFor(query, 30);
     let html = [];
     for (const result of searchResults) {
       const name = result.n;
