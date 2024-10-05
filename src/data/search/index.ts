@@ -156,9 +156,6 @@ export function searchFor(query: string, limit: number): Array {
       }
     }
   }
-  intersection.sort(function (a, b) {
-    return a - b;
-  });
   let result = [];
   let quantity = 0;
   for (const j of intersection) {
@@ -170,5 +167,8 @@ export function searchFor(query: string, limit: number): Array {
     }
     quantity += 1;
   }
+  result.sort(function (a, b) {
+    return a.n.charCodeAt(0) - b.n.charCodeAt(0);
+  });
   return result;
 }
