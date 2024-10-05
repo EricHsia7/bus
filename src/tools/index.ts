@@ -446,7 +446,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
 
 export function getUnicodes(string: string, unique: boolean = true): Array<number> {
   let result = [];
-  print(string);
+  console.log(string);
   const stringLength = String(string).length;
   for (let i = 0; i < stringLength; i++) {
     const unicode = string.charCodeAt(i);
