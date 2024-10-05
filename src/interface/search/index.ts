@@ -34,15 +34,15 @@ export function updateSearchResult(query: string): void {
     const searchResults = searchFor(query, 30);
     let html = [];
     for (const result of searchResults) {
-      const name = result.n;
-      const typeIcon = getIconHTML(typeToIcon[result.type]);
+      const name = result.item.n;
+      const typeIcon = getIconHTML(typeToIcon[result.item.type]);
       let onclickScript = '';
-      switch (result.type) {
+      switch (result.item.type) {
         case 0:
-          onclickScript = `bus.route.openRoute(${result.id}, [${result.pid.join(',')}])`;
+          onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
           break;
         case 1:
-          onclickScript = `bus.location.openLocation('${result.hash}')`;
+          onclickScript = `bus.location.openLocation('${result.item.hash}')`;
           break;
         default:
           break;

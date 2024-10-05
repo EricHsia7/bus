@@ -2,8 +2,6 @@ import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
 import { generateIdentifier, getIntersection, getUnicodes } from '../../tools/index';
 
-// const Fuse = require('fuse.js/basic');
-
 let searchIndex = {};
 let searchList = [];
 let readyToSearch = false;
@@ -124,6 +122,19 @@ export async function prepareForSearch(): void {
   readyToSearch = true;
 }
 
+function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
+  let score = 0;
+  let i = 0;
+  for (const unicode of resultUnicodes) {
+    const indexOfUnicode = queryUnicodes.indexOf(unicode);
+    if (indexOfUnicode > -1) {
+      score += indexOfUnicode - i;
+    }
+    i += 1;
+  }
+  return score;
+}
+
 export function searchFor(query: string, limit: number): Array {
   if (!readyToSearch) {
     return [];
@@ -158,16 +169,20 @@ export function searchFor(query: string, limit: number): Array {
   let result = [];
   let quantity = 0;
   for (const j of intersection) {
-    const thisItem = searchList[j];
+    let thisItem = searchList[j];
+    const score = calculateSearchResultScore(unicodes, getUnicodes(thisItem.n));
     if (quantity < limit) {
-      result.push(thisItem);
+      result.push({
+        item: thisItem,
+        score: score
+      });
     } else {
       break;
     }
     quantity += 1;
   }
   result.sort(function (a, b) {
-    return a.n.charCodeAt(0) - b.n.charCodeAt(0);
+    return b.score - a.score;
   });
   return result;
 }
