@@ -8,7 +8,7 @@ import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 let trackingBusArrivalTime_trackingID: string = '';
 let trackingBusArrivalTime_tracking: boolean = false;
 let trackingBusArrivalTime_trackedStops: Array = [];
-const trackingBusArrivalTime_monitorTimes: number = 128;
+const trackingBusArrivalTime_monitorTimes: number = 64;
 
 interface EstimateTimeRecordForBusArrivalTime {
   EstimateTime: number;
