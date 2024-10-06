@@ -15,7 +15,7 @@ function simplifyRoute_worker(Route: Route): SimplifiedRoute {
     simplifiedItem.dep = item.departureZh;
     simplifiedItem.des = item.destinationZh;
     simplifiedItem.id = item.Id;
-    const routeKey = `r_${item.id}`;
+    const routeKey = `r_${item.Id}`;
     if (!result.hasOwnProperty(routeKey)) {
       result[routeKey] = simplifiedItem;
     } else {
