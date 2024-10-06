@@ -124,19 +124,10 @@ export async function prepareForSearch(): void {
 
 function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
   let score = 0;
-  let previousMatched = false;
   let i = 0;
   for (const unicode of resultUnicodes) {
     const indexOfUnicode = queryUnicodes.indexOf(unicode, i);
-    score += indexOfUnicode - i + 1;
-    if (previousMatched) {
-      score *= 2;
-    }
-    if (indexOfUnicode > -1) {
-      previousMatched = true;
-    } else {
-      previousMatched = false;
-    }
+    score += indexOfUnicode - i;
     i += 1;
   }
   if (queryUnicodes === resultUnicodes) {
