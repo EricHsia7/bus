@@ -45,12 +45,6 @@
   margin: 0px;
 }
 
-.css_search_keyboard .css_search_keyboard_key:hover {
-  animation-name: click;
-  animation-duration: var(--b-cssvar-transition-duration);
-  animation-direction: forwards;
-}
-
 .css_search_keyboard .css_search_keyboard_key span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;

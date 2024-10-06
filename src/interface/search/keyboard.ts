@@ -53,9 +53,9 @@ export function ResizeSearchInputCanvasSize(): void {
 }
 
 function initializeKeyboard(): void {
-  var result = [];
-  for (var row of keyboard_keys) {
-    for (var column of row) {
+  let result = [];
+  for (const row of keyboard_keys) {
+    for (const column of row) {
       let eventScript = '';
       let eventType = 'onmousedown';
       let html = '';
@@ -69,7 +69,7 @@ function initializeKeyboard(): void {
           html = column;
           break;
         case '鍵盤':
-          eventScript = 'bus.search.openSystemKeyboard()';
+          eventScript = 'bus.search.openSystemKeyboard(event)';
           html = getIconHTML('keyboard');
           break;
         default:
@@ -103,21 +103,22 @@ export function closeKeyboard() {
   playingCursorAnimation = false;
 }
 
-export function openSystemKeyboard() {
+export function openSystemKeyboard(event: Event) {
+  event.preventDefault();
   searchInputElement.focus();
 }
 
 export function typeTextIntoInput(value): void {
-  var currentValue = String(searchInputElement.value);
-  var newValue = `${currentValue}${value}`;
+  const currentValue = String(searchInputElement.value);
+  const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
   updateSearchInput(newValue);
 }
 
 export function deleteCharFromInout(): void {
-  var currentValue = String(searchInputElement.value);
-  var newValue = currentValue.substring(0, currentValue.length - 1);
+  const currentValue = String(searchInputElement.value);
+  const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
   updateSearchInput(newValue);
