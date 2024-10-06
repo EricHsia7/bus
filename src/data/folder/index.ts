@@ -188,22 +188,22 @@ export function getFolder(folderID: string): Folder {
 }
 
 export async function listFolders(): Promise<Array<Folder>> {
-  var result = [];
-  for (var folder in Folders) {
+  let result = [];
+  for (const folder in Folders) {
     result.push(Folders[folder]);
   }
   return result;
 }
 
 export async function listFolderContent(folderID: string): Promise<Array<FolderContent>> {
-  var result = [];
-  var thisFolder = Folders[`f_${folderID}`];
-  var itemKeys = await lfListItemKeys(thisFolder.storeIndex);
+  let result = [];
+  const thisFolder = Folders[`f_${folderID}`];
+  const itemKeys = await lfListItemKeys(thisFolder.storeIndex);
   if (itemKeys.length > 0) {
-    for (var itemKey of itemKeys) {
-      var item = await lfGetItem(thisFolder.storeIndex, itemKey);
+    for (const itemKey of itemKeys) {
+      const item = await lfGetItem(thisFolder.storeIndex, itemKey);
       if (item) {
-        var itemObject: object = JSON.parse(item);
+        const itemObject: object = JSON.parse(item);
         result.push(itemObject);
       }
     }
@@ -239,11 +239,11 @@ async function getFolderContentLength(folderID: string): Promise<number> {
 }
 
 export async function listFoldersWithContent(): Promise<FoldersWithContentArray> {
-  var Folders = await listFolders();
-  var result = [];
-  for (var folder of Folders) {
-    var folderContent = await listFolderContent(folder.id);
-    var folderContentLength = await getFolderContentLength(folder.id);
+  const Folders = await listFolders();
+  let result = [];
+  for (const folder of Folders) {
+    const folderContent = await listFolderContent(folder.id);
+    const folderContentLength = await getFolderContentLength(folder.id);
     result.push({
       folder: folder,
       content: folderContent,

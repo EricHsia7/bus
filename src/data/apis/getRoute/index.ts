@@ -85,13 +85,13 @@ async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
 
 export async function getRoute(requestID: string, simplify: boolean = true): Promise<SimplifiedRoute | Route> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 10],
       [1, 10]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = [];
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getRoute_${api.e[0]}`, 'json');
+    let result = [];
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getRoute_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -100,33 +100,33 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
   if (simplify === false) {
     return await getData();
   }
-  var cache_time = 60 * 60 * 24 * 1 * 1000;
-  var cache_key = 'bus_route_v2_cache';
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
-    var result = await getData();
-    var simplified_result = await simplifyRoute(result);
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
+  const cacheTime = 60 * 60 * 24 * 1 * 1000;
+  const cacheKey = 'bus_route_v2_cache';
+  const cachedTime = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cachedTime === null) {
+    const result = await getData();
+    const simplifiedResult = await simplifyRoute(result);
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
     if (!RouteAPIVariableCache_available) {
       RouteAPIVariableCache_available = true;
-      RouteAPIVariableCache_data = simplified_result;
+      RouteAPIVariableCache_data = simplifiedResult;
     }
-    return simplified_result;
+    return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      var result = await getData();
-      var simplified_result = await simplifyRoute(result);
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
+    if (new Date().getTime() - parseInt(cachedTime) > cacheTime) {
+      const result = await getData();
+      const simplifiedResult = await simplifyRoute(result);
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
       if (!RouteAPIVariableCache_available) {
         RouteAPIVariableCache_available = true;
-        RouteAPIVariableCache_data = simplified_result;
+        RouteAPIVariableCache_data = simplifiedResult;
       }
-      return simplified_result;
+      return simplifiedResult;
     } else {
       if (!RouteAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cacheKey}`);
         RouteAPIVariableCache_available = true;
         RouteAPIVariableCache_data = JSON.parse(cache);
       }

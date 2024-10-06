@@ -68,44 +68,44 @@ async function simplifySegmentBuffers(array: SegmentBuffers): Promise<Simplified
 
 export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSegmentBuffer> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 15],
       [1, 15]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = '';
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'xml');
+    let result = '';
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'xml');
       result += data;
       setDataUpdateTime(requestID, -1);
     }
     return result;
   }
 
-  var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = 'bus_segment_buffers_v6_cache';
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
-    var result = await getData();
-    var extractedResult = await extractSegmentBuffers(result);
-    var simplifiedResult = await simplifySegmentBuffers(extractedResult);
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(simplifiedResult));
+  const cacheTime = 60 * 60 * 24 * 30 * 1000;
+  const cacheKey = 'bus_segment_buffers_v6_cache';
+  const cachedTime = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cachedTime === null) {
+    const result = await getData();
+    const extractedResult = await extractSegmentBuffers(result);
+    const simplifiedResult = await simplifySegmentBuffers(extractedResult);
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
     if (!SegmentBuffersAPIVariableCache_available) {
       SegmentBuffersAPIVariableCache_available = true;
       SegmentBuffersAPIVariableCache_data = simplifiedResult;
     }
     return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      var result = await getData();
-      var extractedResult = await extractSegmentBuffers(result);
-      var simplifiedResult = await simplifySegmentBuffers(extractedResult);
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(simplifiedResult));
+    if (new Date().getTime() - parseInt(cachedTime) > cacheTime) {
+      const result = await getData();
+      const extractedResult = await extractSegmentBuffers(result);
+      const simplifiedResult = await simplifySegmentBuffers(extractedResult);
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
       return simplifiedResult;
     } else {
       if (!SegmentBuffersAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cacheKey}`);
         SegmentBuffersAPIVariableCache_available = true;
         SegmentBuffersAPIVariableCache_data = JSON.parse(cache);
       }

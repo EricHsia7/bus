@@ -104,8 +104,8 @@ export interface ProcessedBus {
 }
 
 export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): { [key: string]: Array<ProcessedBus> } {
-  var result = {};
-  var BusDataObj = {};
+  let result = {};
+  let BusDataObj = {};
   for (const BusDataItem of BusData) {
     var thisBusID = BusDataItem.BusID;
     BusDataObj[thisBusID] = BusDataItem;

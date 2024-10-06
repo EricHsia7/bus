@@ -47,7 +47,7 @@ export interface MergedLocationItem {
 
 export type MergedLocation = { [key: string]: MergedLocationItem };
 
-var LocationAPIVariableCache: object = {
+let LocationAPIVariableCache: object = {
   merged: {
     available: false,
     data: {}
@@ -102,70 +102,70 @@ async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLo
 
 export async function getLocation(requestID: string, merged: boolean = false): Promise<SimplifiedLocation | MergedLocation> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 11],
       [1, 11]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = [];
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getLocation_${api.e[0]}`, 'json');
+    let result = [];
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getLocation_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
   }
 
-  var cache_time: number = 60 * 60 * 24 * 30 * 1000;
-  var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v14_cache`;
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
-    var result = await getData();
-    var final_result = {};
-    var simplified_result = await simplifyLocation(result);
+  const cacheTime: number = 60 * 60 * 24 * 30 * 1000;
+  const cacheType = merged ? 'merged' : 'simplified';
+  const cacheKey = `bus_${cacheType}_location_v14_cache`;
+  const cachedTime = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cachedTime === null) {
+    const result = await getData();
+    let finalResult = {};
+    const simplifiedResult = await simplifyLocation(result);
     if (merged) {
-      var merged_result = await mergeLocationByName(simplified_result);
-      final_result = merged_result;
+      const mergedResult = await mergeLocationByName(simplifiedResult);
+      finalResult = mergedResult;
     } else {
-      final_result = simplified_result;
+      finalResult = simplifiedResult;
     }
 
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
-    if (!LocationAPIVariableCache[cache_type].available) {
-      LocationAPIVariableCache[cache_type].available = true;
-      LocationAPIVariableCache[cache_type].data = final_result;
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(finalResult));
+    if (!LocationAPIVariableCache[cacheType].available) {
+      LocationAPIVariableCache[cacheType].available = true;
+      LocationAPIVariableCache[cacheType].data = finalResult;
     }
-    return final_result;
+    return finalResult;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      var result = await getData();
-      var final_result = {};
-      var simplified_result = await simplifyLocation(result);
+    if (new Date().getTime() - parseInt(cachedTime) > cacheTime) {
+      const result = await getData();
+      let finalResult = {};
+      const simplifiedResult = await simplifyLocation(result);
       if (merged) {
-        var merged_result = await mergeLocationByName(simplified_result);
-        final_result = merged_result;
+        const mergedResult = await mergeLocationByName(simplifiedResult);
+        finalResult = mergedResult;
       } else {
-        final_result = simplified_result;
+        finalResult = simplifiedResult;
       }
 
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
-      if (!LocationAPIVariableCache[cache_type].available) {
-        LocationAPIVariableCache[cache_type].available = true;
-        LocationAPIVariableCache[cache_type].data = final_result;
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(finalResult));
+      if (!LocationAPIVariableCache[cacheType].available) {
+        LocationAPIVariableCache[cacheType].available = true;
+        LocationAPIVariableCache[cacheType].data = finalResult;
       }
-      return final_result;
+      return finalResult;
     } else {
-      if (!LocationAPIVariableCache[cache_type].available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
-        LocationAPIVariableCache[cache_type].available = true;
-        LocationAPIVariableCache[cache_type].data = JSON.parse(cache);
+      if (!LocationAPIVariableCache[cacheType].available) {
+        const cache = await lfGetItem(0, `${cacheKey}`);
+        LocationAPIVariableCache[cacheType].available = true;
+        LocationAPIVariableCache[cacheType].data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getLocation_0', 0, true);
       setDataReceivingProgress(requestID, 'getLocation_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return LocationAPIVariableCache[cache_type].data;
+      return LocationAPIVariableCache[cacheType].data;
     }
   }
 }

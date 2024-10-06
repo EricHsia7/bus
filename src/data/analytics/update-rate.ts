@@ -3,22 +3,22 @@ import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 
-var trackingUpdateRate_trackedStops: Array = [];
-var trackingUpdateRate_trackingID: string = '';
-var trackingUpdateRate_tracking: boolean = false;
-var trackingUpdateRate_sampleQuantity: number = 64;
-var trackingUpdateRate_monitorTimes: number = 90;
+let trackingUpdateRate_trackedStops: Array = [];
+let trackingUpdateRate_trackingID: string = '';
+let trackingUpdateRate_tracking: boolean = false;
+const trackingUpdateRate_sampleQuantity: number = 64;
+const trackingUpdateRate_monitorTimes: number = 90;
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
-  var needToReset = false;
+  let needToReset = false;
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;
     trackingUpdateRate_trackedStops = [];
     trackingUpdateRate_trackingID = generateIdentifier('e');
-    var EstimateTimeLength: number = EstimateTime.length - 1;
+    const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
-      var randomItem: object = EstimateTime[randomIndex];
+      const randomItem: object = EstimateTime[randomIndex];
       trackingUpdateRate_trackedStops.push(randomItem.StopID);
     }
   }
@@ -49,7 +49,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
 
 async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
   const keys = await lfListItemKeys(3);
-  var result = [];
+  let result = [];
   for (const key of keys) {
     const json = await lfGetItem(3, key);
     const object: object = JSON.parse(json);
