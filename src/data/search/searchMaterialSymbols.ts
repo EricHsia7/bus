@@ -37,7 +37,7 @@ function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>,
     if (indexOfUnicode > -1) {
       score += indexOfUnicode;
     } else {
-      score += -1 * i;
+      score -= i;
     }
     i += 1;
   }
@@ -51,8 +51,9 @@ export function searchForMaterialSymbols(query: string, limit: number): Array<st
   if (!readyToSearch) {
     return [];
   }
-  const queryUnicodes = getUnicodes(query, true);
-  const asIsQueryUnicodes = getUnicodes(query, false);
+  const caseInsensitiveQuery = String(query).toLowerCase();
+  const queryUnicodes = getUnicodes(caseInsensitiveQuery, true);
+  const asIsQueryUnicodes = getUnicodes(caseInsensitiveQuery, false);
   let unicodeGroups = [];
   for (const unicode of queryUnicodes) {
     const key = `u_${unicode}`;
