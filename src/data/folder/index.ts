@@ -83,7 +83,7 @@ export interface FoldersWithContent {
 
 export type FoldersWithContentArray = Array<FoldersWithContent>;
 
-var Folders: { [key: string]: Folder } = {
+let Folders: { [key: string]: Folder } = {
   f_saved_stop: {
     name: '已收藏站牌',
     icon: 'location_on',

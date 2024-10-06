@@ -97,15 +97,15 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 export function getDataReceivingProgress(requestID: string): number {
   if (dataReceivingProgress.hasOwnProperty(requestID)) {
     if (typeof dataReceivingProgress[requestID] === 'object') {
-      var total = 0;
-      var received = 0;
-      for (var key in dataReceivingProgress[requestID]) {
+      let total = 0;
+      let received = 0;
+      for (const key in dataReceivingProgress[requestID]) {
         if (!dataReceivingProgress[requestID][key].expel) {
           total += dataReceivingProgress[requestID][key].total;
           received += dataReceivingProgress[requestID][key].progress;
         }
       }
-      var progress = Math.min(Math.max(received / total, 0), 1);
+      const progress = Math.min(Math.max(received / total, 0), 1);
       return progress === Infinity || isNaN(progress) ? 1 : progress;
     }
   }
@@ -116,7 +116,7 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  var key = `u_${tag}`;
+  const key = `u_${tag}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;

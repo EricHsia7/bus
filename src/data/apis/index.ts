@@ -53,8 +53,8 @@ interface Range {
 
 export function parseTimeCode(code: string, mode: number): Moment | Range {
   if (mode === 0) {
-    var hours = 0;
-    var minutes = 0;
+    let hours = 0;
+    let minutes = 0;
     if (code.length === 4) {
       hours = parseInt(code.substring(0, 2));
       minutes = parseInt(code.substring(2, 4));
@@ -69,16 +69,16 @@ export function parseTimeCode(code: string, mode: number): Moment | Range {
     };
   } else {
     if (mode === 1) {
-      var min = 0;
-      var max = 0;
+      let min = 0;
+      let max = 0;
       if (code.length === 4) {
-        var number1 = parseInt(code.substring(0, 2));
-        var number2 = parseInt(code.substring(2, 4));
+        const number1 = parseInt(code.substring(0, 2));
+        const number2 = parseInt(code.substring(2, 4));
         min = Math.min(number1, number2);
         max = Math.max(number1, number2);
       }
       if (code.length === 2) {
-        var number = parseInt(code);
+        const number = parseInt(code);
         min = number;
         max = number;
       }
@@ -107,7 +107,7 @@ export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: Simpli
   let result = {};
   let BusDataObj = {};
   for (const BusDataItem of BusData) {
-    var thisBusID = BusDataItem.BusID;
+    const thisBusID = BusDataItem.BusID;
     BusDataObj[thisBusID] = BusDataItem;
   }
 
