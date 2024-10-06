@@ -1,9 +1,9 @@
-import { parseTimeCode } from "../apis/index";
-import { getProvider } from "../apis/getProvider/index";
-import { getRoute } from "../apis/getRoute/index";
-import { getSemiTimeTable } from "../apis/getSemiTimeTable/index";
-import { getTimeTable } from "../apis/getTimeTable/index";
-import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from "../../tools/time";
+import { parseTimeCode } from '../apis/index';
+import { getProvider } from '../apis/getProvider/index';
+import { getRoute } from '../apis/getRoute/index';
+import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
+import { getTimeTable } from '../apis/getTimeTable/index';
+import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from '../../tools/time';
 
 function findRoute(Route: Route, RouteID: number): RouteItem {
   var thisRoute: RouteItem = {};

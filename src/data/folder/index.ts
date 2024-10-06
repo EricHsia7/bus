@@ -107,14 +107,14 @@ let Folders: { [key: string]: Folder } = {
 const defaultFolderQuantity = 2;
 
 export async function initializeFolderStores(): void {
-  var folderKeys = await lfListItemKeys(6);
-  var index = defaultFolderQuantity; // avoid overwriting the default folders
-  for (var folderKey of folderKeys) {
-    var thisFolder: string = await lfGetItem(6, folderKey);
+  const folderKeys = await lfListItemKeys(6);
+  const index = defaultFolderQuantity; // avoid overwriting the default folders
+  for (const folderKey of folderKeys) {
+    const thisFolder: string = await lfGetItem(6, folderKey);
     if (thisFolder) {
       if (!thisFolder.default) {
-        var thisFolderObject: Folder = JSON.parse(thisFolder);
-        var storeIndex = await registerStore(thisFolderObject.id);
+        let thisFolderObject: Folder = JSON.parse(thisFolder);
+        const storeIndex = await registerStore(thisFolderObject.id);
         thisFolderObject.storeIndex = storeIndex; // assign a new store index
         thisFolderObject.index = index;
         if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
@@ -128,19 +128,19 @@ export async function initializeFolderStores(): void {
 
 export async function createFolder(name: string, icon: string): Promise<boolean | string> {
   const requestID = generateIdentifier('r');
-  var materialSymbols = await getMaterialSymbols(requestID);
+  const materialSymbols = await getMaterialSymbols(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }
 
-  var folderKeys = await lfListItemKeys(6);
+  const folderKeys = await lfListItemKeys(6);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
     const existingFolder = await lfGetItem(6, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
-      var object: Folder = {
+      const object: Folder = {
         name: name,
         icon: icon,
         default: false,
@@ -207,9 +207,9 @@ export async function listFolderContent(folderID: string): Promise<Array<FolderC
         result.push(itemObject);
       }
     }
-    result = result.sort(function (a, b) {
-      var c = a?.index || 0;
-      var d = b?.index || 0;
+    result.sort(function (a, b) {
+      const c = a?.index || 0;
+      const d = b?.index || 0;
       return c - d;
     });
   } else {
@@ -358,7 +358,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 }
 
 export async function saveToFolder(folderID: string, content: object): Promise<boolean> {
-  var thisFolder: Folder = Folders[`f_${folderID}`];
+  const thisFolder: Folder = Folders[`f_${folderID}`];
   if (thisFolder.contentType.indexOf(content.type) > -1) {
     await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
     return true;
@@ -367,11 +367,11 @@ export async function saveToFolder(folderID: string, content: object): Promise<b
 }
 
 export async function isSaved(type: FolderContentType, id: number | string): Promise<boolean> {
-  var folderList = await listFolders();
-  for (var folder of folderList) {
+  const folderList = await listFolders();
+  for (const folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
-      var itemKeys = await lfListItemKeys(folder.storeIndex);
-      for (var itemKey of itemKeys) {
+      const itemKeys = await lfListItemKeys(folder.storeIndex);
+      for (const itemKey of itemKeys) {
         if (itemKey.indexOf(`${type}_${id}`) > -1) {
           return true;
         }

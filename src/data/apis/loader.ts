@@ -139,7 +139,7 @@ export function setDataUpdateTime(requestID: string, timeStamp: string | number)
   if (!dataUpdateTime.hasOwnProperty(requestID)) {
     dataUpdateTime[requestID] = 0;
   }
-  var timeNumber = 0;
+  let timeNumber = 0;
   if (typeof timeStamp === 'string') {
     timeNumber = timeStampToNumber(timeStamp);
   }
