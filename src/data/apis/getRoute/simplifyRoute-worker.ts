@@ -19,7 +19,7 @@ function simplifyRoute_worker(Route: Route): SimplifiedRoute {
     if (!result.hasOwnProperty(routeKey)) {
       result[routeKey] = simplifiedItem;
     } else {
-      result[routeKey]['pid'].push(item.pid);
+      result[routeKey]['pid'].push(item.pathAttributeId);
     }
   }
   return result;
