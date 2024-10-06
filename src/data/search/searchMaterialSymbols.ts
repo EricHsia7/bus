@@ -84,7 +84,7 @@ export function searchForMaterialSymbols(query: string, limit: number): Array<st
   for (const j of intersection) {
     let thisItem = searchList[j];
     if (quantity < limit) {
-      const score = calculateMaterialSymbolsSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+      const score = calculateMaterialSymbolsSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem, false));
       result.push({
         item: thisItem,
         score: score
