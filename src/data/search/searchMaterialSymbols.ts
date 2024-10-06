@@ -31,18 +31,13 @@ export async function prepareForMaterialSymbolsSearch(): void {
 
 function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
   let score = 0;
-  let previousMatched = false;
   let i = 0;
   for (const unicode of resultUnicodes) {
     const indexOfUnicode = queryUnicodes.indexOf(unicode, i);
-    score += indexOfUnicode - i + 1;
-    if (previousMatched) {
-      score *= 2;
-    }
     if (indexOfUnicode > -1) {
-      previousMatched = true;
+      score += indexOfUnicode;
     } else {
-      previousMatched = false;
+      score += -1 * i;
     }
     i += 1;
   }
