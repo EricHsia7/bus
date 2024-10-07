@@ -9,6 +9,7 @@ let trackingUpdateRate_trackedStops: Array = [];
 let trackingUpdateRate_trackingID: string = '';
 let trackingUpdateRate_tracking: boolean = false;
 let trackingUpdateRate_incompleteRecords = {};
+let trackingUpdateRate_currentDataLength: number = 0;
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
   const now = new Date();
@@ -23,6 +24,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
       timeStamp: new Date().getTime(),
       data: {}
     };
+    trackingUpdateRate_currentDataLength = 0;
     const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
@@ -38,12 +40,13 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
         trackingUpdateRate_incompleteRecords.data[stopKey] = [];
       }
       trackingUpdateRate_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+      trackingUpdateRate_currentDataLength += 1;
       if (trackingUpdateRate_incompleteRecords.data[stopKey].length > trackingUpdateRate_monitorTimes) {
         needToReset = true;
       }
     }
   }
-  if (needToReset || trackingUpdateRate_incompleteRecords.data[stopKey].length % 15 === 0) {
+  if (needToReset || trackingUpdateRate_currentDataLength % 15 === 0) {
     await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(trackingUpdateRate_incompleteRecords));
   }
   if (needToReset) {

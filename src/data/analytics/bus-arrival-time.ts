@@ -10,6 +10,7 @@ let trackingBusArrivalTime_trackingID: string = '';
 let trackingBusArrivalTime_tracking: boolean = false;
 let trackingBusArrivalTime_trackedStops: Array = [];
 let trackingBusArrivalTime_incompleteRecords = {};
+let trackingBusArrivalTime_currentDataLength: number = 0;
 
 interface EstimateTimeRecordForBusArrivalTime {
   EstimateTime: number;
@@ -35,6 +36,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
       timeStamp: currentTimeStamp,
       data: {}
     };
+    trackingBusArrivalTime_currentDataLength = 0;
     const foldersWithContent = await listFoldersWithContent();
     for (const folderWithContent1 of foldersWithContent) {
       trackingBusArrivalTime_trackedStops = trackingBusArrivalTime_trackedStops.concat(
@@ -55,12 +57,13 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
           trackingBusArrivalTime_incompleteRecords.data[stopKey] = [];
         }
         trackingBusArrivalTime_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+        trackingBusArrivalTime_currentDataLength += 1;
         if (trackingBusArrivalTime_incompleteRecords.data[stopKey].length > trackingBusArrivalTime_monitorTimes) {
           needToReset = true;
         }
       }
     }
-    if (needToReset || trackingBusArrivalTime_incompleteRecords.data[stopKey].length % 8 === 0) {
+    if (needToReset || trackingBusArrivalTime_currentDataLength % 8 === 0) {
       await lfSetItem(4, trackingBusArrivalTime_trackingID, JSON.stringify(trackingBusArrivalTime_incompleteRecords));
     }
     if (needToReset) {
