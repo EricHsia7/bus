@@ -3,6 +3,7 @@ import { recordRequest } from '../analytics/data-usage';
 
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
+
 const pakoInflateWorker = new Worker(new URL('./loader-pako-inflate-worker.ts', import.meta.url)); // Reusable worker
 
 async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
