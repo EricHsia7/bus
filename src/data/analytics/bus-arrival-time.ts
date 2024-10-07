@@ -174,8 +174,7 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregationInterval = 10;
-      const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, aggregationInterval / 2), aggregationInterval);
+      const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, 1.37), 1.38);
 
       let aggregatedBusArrivalTimeObjects = [];
       for (const aggregatedBusArrivalTime of aggregatedBusArrivalTimes) {

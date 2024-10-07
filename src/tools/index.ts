@@ -393,7 +393,7 @@ export function calculateAverage(array: Array<number>): number {
   }
 }
 
-export function aggregateNumbers(array: Array<number>, interval: number): Array<number> {
+export function aggregateNumbers(array: Array<number>, exponent: number): Array<number> {
   const arrLength = array.length;
 
   if (arrLength < 3) {
@@ -420,7 +420,7 @@ export function aggregateNumbers(array: Array<number>, interval: number): Array<
     exponentials.push(exponential);
   }
 
-  let P = Math.pow(arrLength, 1.37);
+  let P = Math.pow(arrLength, exponent);
   let groupedNumbers = {};
   for (let l = 0; l < arrLength; l++) {
     const key = `k_${Math.floor((exponentials[l] / exponentialSum) * P)}`;
