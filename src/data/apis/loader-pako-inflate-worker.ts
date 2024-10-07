@@ -4,7 +4,7 @@ let taskQueue = []; // Queue to store tasks
 let processing = false; // Flag to check if a task is being processed
 
 self.onmessage = function (e) {
-  taskQueue.push(e.data); // Add new task to the queue
+  taskQueue.push(e.data);
   processNextTask(); // Try to process the next task
 };
 
@@ -19,10 +19,11 @@ function processNextTask() {
   }
 
   processing = true; // Set the flag to processing
-  const buffer = taskQueue.shift(); // Get the next task
-
+  const task = taskQueue.shift();
+  const buffer = task[0]; // Get the next task
+  const taskID = task[1];
   const result = pakoInflate_worker(buffer);
-  self.postMessage(result); // Send the result back to the main thread
+  self.postMessage([result, taskID]); // Send the result back to the main thread
 
   processing = false; // Reset processing flag
   processNextTask(); // Process the next task in the queue

@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../../tools/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
@@ -7,17 +8,20 @@ export let dataUpdateTime = {};
 const pakoInflateWorker = new Worker(new URL('./loader-pako-inflate-worker.ts', import.meta.url)); // Reusable worker
 
 async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
+  const taskID = generateIdentifier('t');
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
     pakoInflateWorker.onmessage = function (e) {
-      resolve(e.data); // Resolve the promise with the worker's result
+      if (e.data[1] === taskID) {
+        resolve(e.data[0]); // Resolve the promise with the worker's result
+      }
     };
 
     pakoInflateWorker.onerror = function (e) {
       reject(e.message); // Reject the promise on error
     };
 
-    pakoInflateWorker.postMessage(buffer); // Send data to the worker
+    pakoInflateWorker.postMessage([buffer, taskID]); // Send data to the worker
   });
 
   return result;
@@ -95,7 +99,8 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = await pakoInflate(buffer);
+  const taskID = generateIdentifier('t_');
+  const inflatedData = await pakoInflate(taskID, buffer);
 
   if (fileType === 'json') {
     if (/^\<\!doctype html\>/.test(inflatedData)) {
