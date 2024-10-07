@@ -8,6 +8,11 @@ self.onmessage = function (e) {
   processNextTask(); // Try to process the next task
 };
 
+function pakoInflate_worker(buffer: ArrayBuffer): string {
+  const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
+  return inflatedData;
+}
+
 function processNextTask() {
   if (processing || taskQueue.length === 0) {
     return; // If already processing or no tasks, exit
@@ -21,9 +26,4 @@ function processNextTask() {
 
   processing = false; // Reset processing flag
   processNextTask(); // Process the next task in the queue
-}
-
-function pakoInflate_worker(buffer: ArrayBuffer): string {
-  const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
-  return inflatedData;
 }

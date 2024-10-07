@@ -58,7 +58,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
         }
         trackingBusArrivalTime_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
         trackingBusArrivalTime_currentDataLength += 1;
-        if (trackingBusArrivalTime_incompleteRecords.data[stopKey].length > trackingBusArrivalTime_monitorTimes) {
+        if (trackingBusArrivalTime_currentDataLength > trackingBusArrivalTime_monitorTimes) {
           needToReset = true;
         }
       }

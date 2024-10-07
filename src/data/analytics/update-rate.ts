@@ -41,7 +41,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
       }
       trackingUpdateRate_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
       trackingUpdateRate_currentDataLength += 1;
-      if (trackingUpdateRate_incompleteRecords.data[stopKey].length > trackingUpdateRate_monitorTimes) {
+      if (trackingUpdateRate_currentDataLength > trackingUpdateRate_monitorTimes) {
         needToReset = true;
       }
     }
