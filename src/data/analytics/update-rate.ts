@@ -3,20 +3,26 @@ import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 
+const trackingUpdateRate_sampleQuantity: number = 64;
+const trackingUpdateRate_monitorTimes: number = 90;
 let trackingUpdateRate_trackedStops: Array = [];
 let trackingUpdateRate_trackingID: string = '';
 let trackingUpdateRate_tracking: boolean = false;
-const trackingUpdateRate_sampleQuantity: number = 64;
-const trackingUpdateRate_monitorTimes: number = 90;
 let trackingUpdateRate_incompleteRecords = {};
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
+  const now = new Date();
+  const currentTimeStamp: number = Math.floor(now.getTime() / 1000);
   let needToReset = false;
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;
     trackingUpdateRate_trackedStops = [];
     trackingUpdateRate_trackingID = generateIdentifier('e');
-    trackingUpdateRate_incompleteRecords = { trackingID: trackingUpdateRate_trackingID, timeStamp: new Date().getTime(), data: {} };
+    trackingUpdateRate_incompleteRecords = {
+      trackingID: trackingUpdateRate_trackingID,
+      timeStamp: new Date().getTime(),
+      data: {}
+    };
     const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
@@ -24,10 +30,10 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
       trackingUpdateRate_trackedStops.push(randomItem.StopID);
     }
   }
-  const currentTimeStamp: number = Math.floor(new Date().getTime() / 1000);
   for (const item of EstimateTime) {
-    const stopKey = `s_${item.StopID}`;
-    if (trackingUpdateRate_trackedStops.indexOf(item.StopID) > -1) {
+    const stopID = item.StopID;
+    const stopKey = `s_${stopID}`;
+    if (trackingUpdateRate_trackedStops.indexOf(stopID) > -1) {
       if (!trackingUpdateRate_trackedStops.data.hasOwnProperty(stopKey)) {
         trackingUpdateRate_trackedStops.data[stopKey] = [];
       }

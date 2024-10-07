@@ -5,10 +5,11 @@ import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
+const trackingBusArrivalTime_monitorTimes: number = 32;
 let trackingBusArrivalTime_trackingID: string = '';
 let trackingBusArrivalTime_tracking: boolean = false;
 let trackingBusArrivalTime_trackedStops: Array = [];
-const trackingBusArrivalTime_monitorTimes: number = 32;
+let trackingBusArrivalTime_incompleteRecords = {};
 
 interface EstimateTimeRecordForBusArrivalTime {
   EstimateTime: number;
@@ -22,11 +23,18 @@ interface EstimateTimeRecordForBusArrivalTimeObject {
 }
 
 export async function recordEstimateTimeForBusArrivalTime(EstimateTime: EstimateTime): void {
+  const now = new Date();
+  const currentTimeStamp: number = now.getTime();
   let needToReset = false;
   if (!trackingBusArrivalTime_tracking) {
     trackingBusArrivalTime_tracking = true;
     trackingBusArrivalTime_trackingID = generateIdentifier('b');
     trackingBusArrivalTime_trackedStops = [];
+    trackingBusArrivalTime_incompleteRecords = {
+      trackingID: trackingBusArrivalTime_trackingID,
+      timeStamp: currentTimeStamp,
+      data: {}
+    };
     const foldersWithContent = await listFoldersWithContent();
     for (const folderWithContent1 of foldersWithContent) {
       trackingBusArrivalTime_trackedStops = trackingBusArrivalTime_trackedStops.concat(
@@ -38,33 +46,22 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
       );
     }
   }
-  const now = new Date();
   if (isInPersonalSchedule(now)) {
-    const currentTimeStamp: number = now.getTime();
-
-    const existingRecord = await lfGetItem(4, trackingBusArrivalTime_trackingID);
-
-    let existingRecordObject = {};
-    if (!existingRecord) {
-      existingRecordObject = { trackingID: trackingBusArrivalTime_trackingID, timeStamp: currentTimeStamp, data: {} };
-    } else {
-      existingRecordObject = JSON.parse(existingRecord);
-    }
-
     for (const item of EstimateTime) {
-      if (trackingBusArrivalTime_trackedStops.indexOf(item.StopID) > -1) {
-        if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
-          existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
+      const stopID = item.StopID;
+      const stopKey = `s_${stopID}`;
+      if (trackingBusArrivalTime_trackedStops.indexOf(stopID) > -1) {
+        if (!trackingBusArrivalTime_incompleteRecords.data.hasOwnProperty(stopKey)) {
+          trackingBusArrivalTime_incompleteRecords.data[stopKey] = [];
         }
-        existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-
-        if (existingRecordObject.data[`s_${item.StopID}`].length > trackingBusArrivalTime_monitorTimes) {
+        trackingBusArrivalTime_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+        if (trackingBusArrivalTime_incompleteRecords.data[stopKey].length > trackingBusArrivalTime_monitorTimes) {
           needToReset = true;
         }
       }
     }
-    await lfSetItem(4, trackingBusArrivalTime_trackingID, JSON.stringify(existingRecordObject));
     if (needToReset) {
+      await lfSetItem(4, trackingBusArrivalTime_trackingID, JSON.stringify(trackingBusArrivalTime_incompleteRecords));
       trackingBusArrivalTime_tracking = false;
     }
   }
