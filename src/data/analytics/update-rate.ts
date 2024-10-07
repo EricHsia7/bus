@@ -3,19 +3,21 @@ import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 
-var trackingUpdateRate_trackedStops: Array = [];
-var trackingUpdateRate_trackingID: string = '';
-var trackingUpdateRate_tracking: boolean = false;
-var trackingUpdateRate_sampleQuantity: number = 64;
-var trackingUpdateRate_monitorTimes: number = 90;
+let trackingUpdateRate_trackedStops: Array = [];
+let trackingUpdateRate_trackingID: string = '';
+let trackingUpdateRate_tracking: boolean = false;
+const trackingUpdateRate_sampleQuantity: number = 64;
+const trackingUpdateRate_monitorTimes: number = 90;
+let trackingUpdateRate_incompleteRecords = {};
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
-  var needToReset = false;
+  let needToReset = false;
   if (!trackingUpdateRate_tracking) {
     trackingUpdateRate_tracking = true;
     trackingUpdateRate_trackedStops = [];
     trackingUpdateRate_trackingID = generateIdentifier('e');
-    var EstimateTimeLength: number = EstimateTime.length - 1;
+    trackingUpdateRate_incompleteRecords = { trackingID: trackingUpdateRate_trackingID, timeStamp: new Date().getTime(), data: {} };
+    const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
       var randomItem: object = EstimateTime[randomIndex];
@@ -23,26 +25,20 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
     }
   }
   const currentTimeStamp: number = Math.floor(new Date().getTime() / 1000);
-  const existingRecord = await lfGetItem(3, trackingUpdateRate_trackingID);
-  let existingRecordObject = {};
-  if (!existingRecord) {
-    existingRecordObject = { trackingID: trackingUpdateRate_trackingID, timeStamp: new Date().getTime(), data: {} };
-  } else {
-    existingRecordObject = JSON.parse(existingRecord);
-  }
   for (const item of EstimateTime) {
+    const stopKey = `s_${item.StopID}`;
     if (trackingUpdateRate_trackedStops.indexOf(item.StopID) > -1) {
-      if (!existingRecordObject.data.hasOwnProperty(`s_${item.StopID}`)) {
-        existingRecordObject.data[`s_${item.StopID}`] = [{ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp }];
+      if (!trackingUpdateRate_trackedStops.data.hasOwnProperty(stopKey)) {
+        trackingUpdateRate_trackedStops.data[stopKey] = [];
       }
-      existingRecordObject.data[`s_${item.StopID}`].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-      if (existingRecordObject.data[`s_${item.StopID}`].length > trackingUpdateRate_monitorTimes) {
+      trackingUpdateRate_trackedStops.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+      if (trackingUpdateRate_trackedStops.data[stopKey].length > trackingUpdateRate_monitorTimes) {
         needToReset = true;
       }
     }
   }
-  await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(existingRecordObject));
   if (needToReset) {
+    await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(trackingUpdateRate_incompleteRecords));
     trackingUpdateRate_tracking = false;
   }
 }
