@@ -1,10 +1,26 @@
 import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
-const { inflate } = require('pako/lib/inflate');
-
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
+const pakoInflateWorker = new Worker(new URL('./loader-pako-inflate-worker.ts', import.meta.url)); // Reusable worker
+
+async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    pakoInflateWorker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+    };
+
+    pakoInflateWorker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+    };
+
+    pakoInflateWorker.postMessage(buffer); // Send data to the worker
+  });
+
+  return result;
+}
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
   const startTimeStamp = new Date().getTime();
@@ -78,7 +94,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = inflate(buffer, { to: 'string' }); // Inflate and convert to string using pako
+  const inflatedData = await pakoInflate(buffer);
 
   if (fileType === 'json') {
     if (/^\<\!doctype html\>/.test(inflatedData)) {
