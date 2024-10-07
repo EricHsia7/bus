@@ -26,7 +26,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
     const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
-      var randomItem: object = EstimateTime[randomIndex];
+      const randomItem: object = EstimateTime[randomIndex];
       trackingUpdateRate_trackedStops.push(randomItem.StopID);
     }
   }
@@ -34,11 +34,11 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
     const stopID = item.StopID;
     const stopKey = `s_${stopID}`;
     if (trackingUpdateRate_trackedStops.indexOf(stopID) > -1) {
-      if (!trackingUpdateRate_trackedStops.data.hasOwnProperty(stopKey)) {
-        trackingUpdateRate_trackedStops.data[stopKey] = [];
+      if (!trackingUpdateRate_incompleteRecords.data.hasOwnProperty(stopKey)) {
+        trackingUpdateRate_incompleteRecords.data[stopKey] = [];
       }
-      trackingUpdateRate_trackedStops.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-      if (trackingUpdateRate_trackedStops.data[stopKey].length > trackingUpdateRate_monitorTimes) {
+      trackingUpdateRate_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
+      if (trackingUpdateRate_incompleteRecords.data[stopKey].length > trackingUpdateRate_monitorTimes) {
         needToReset = true;
       }
     }
