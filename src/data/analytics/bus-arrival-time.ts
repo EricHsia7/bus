@@ -60,8 +60,10 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
         }
       }
     }
-    if (needToReset) {
+    if (needToReset || trackingBusArrivalTime_incompleteRecords.data[stopKey].length % 8 === 0) {
       await lfSetItem(4, trackingBusArrivalTime_trackingID, JSON.stringify(trackingBusArrivalTime_incompleteRecords));
+    }
+    if (needToReset) {
       trackingBusArrivalTime_tracking = false;
     }
   }

@@ -43,8 +43,10 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
       }
     }
   }
-  if (needToReset) {
+  if (needToReset || trackingUpdateRate_incompleteRecords.data[stopKey].length % 15 === 0) {
     await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(trackingUpdateRate_incompleteRecords));
+  }
+  if (needToReset) {
     trackingUpdateRate_tracking = false;
   }
 }
