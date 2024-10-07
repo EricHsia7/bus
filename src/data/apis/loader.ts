@@ -99,8 +99,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const blob = new Blob([uint8Array]);
   const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
   const buffer = await gzip_blob.arrayBuffer();
-  const taskID = generateIdentifier('t_');
-  const inflatedData = await pakoInflate(taskID, buffer);
+  const inflatedData = await pakoInflate(buffer);
 
   if (fileType === 'json') {
     if (/^\<\!doctype html\>/.test(inflatedData)) {
