@@ -177,7 +177,7 @@ export async function getBusArrivalTimes(): Promise<object> {
       }
 
       // Aggregate bus arrival times
-      const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, 1.37), 1.37);
+      const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, 1.355), 1.65);
 
       let aggregatedBusArrivalTimeObjects = [];
       for (const aggregatedBusArrivalTime of aggregatedBusArrivalTimes) {

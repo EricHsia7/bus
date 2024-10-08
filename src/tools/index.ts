@@ -43,17 +43,17 @@ export function generateIdentifier(prefix: string = ''): string {
   let result = `${prefix}_`;
   const length: number = 16;
   for (let i = 0; i < length; i++) {
-    var randomNumber = Math.round(Math.random() * characterSet.length);
+    const randomNumber = Math.round(Math.random() * characterSet.length);
     result += characterSet.substring(randomNumber, randomNumber + 1);
   }
   return result;
 }
 
 export function getNoCacheParameter(interval: number): string {
-  var t = new Date().getTime();
-  var g = (t / interval).toFixed(0) * interval;
-  var str = g.toString(36);
-  return str;
+  const time = new Date().getTime();
+  const number = (time / interval).toFixed(0) * interval;
+  const string = number.toString(36);
+  return string;
 }
 
 export function releaseFile(content: string, type: string = 'application/json', fileName: string): void {
