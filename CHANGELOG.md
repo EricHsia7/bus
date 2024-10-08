@@ -67,6 +67,7 @@
 
 **Merged pull requests:**
 
+- Update loader.ts [\#79](https://github.com/EricHsia7/bus/pull/79) ([EricHsia7](https://github.com/EricHsia7))
 - Erichsia7 patch 1 [\#76](https://github.com/EricHsia7/bus/pull/76) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
