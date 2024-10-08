@@ -1,6 +1,7 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
 import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
-import { containPhoneticSymbols, generateIdentifier } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
+import { containPhoneticSymbols } from '../../tools/text';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';

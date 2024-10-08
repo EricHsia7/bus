@@ -1,4 +1,5 @@
-import { aggregateNumbers, generateIdentifier } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
+import { aggregateNumbers } from '../../tools/math';
 import { TimeObject, timeObjectToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';

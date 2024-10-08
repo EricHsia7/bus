@@ -1,5 +1,6 @@
 import { updateSearchResult } from './index';
-import { drawRoundedRect, supportTouch } from '../../tools/index';
+import { supportTouch } from '../../tools/index';
+import { drawRoundedRect } from '../../tools/graphic';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { FieldSize } from '../index';

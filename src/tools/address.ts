@@ -1,4 +1,5 @@
-import { areItemsDifferent, generateLetterLabels } from './index';
+import { generateLetterLabels } from './labels';
+import { areItemsDifferent } from './array';
 
 export function mergeAddressesIntoOne(addresses: Array<string>): object | string {
   const parts = [

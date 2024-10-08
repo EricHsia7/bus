@@ -1,5 +1,7 @@
-import { generateIdentifier, getIntersection, getUnicodes } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
+import { getIntersection } from '../../tools/array';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
+import { getUnicodes } from '../../tools/text';
 
 let searchIndex = {};
 let searchList = [];

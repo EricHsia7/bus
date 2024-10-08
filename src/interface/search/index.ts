@@ -4,7 +4,7 @@ import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
 import { promptMessage } from '../prompt/index';
 import { documentQuerySelector } from '../../tools/query-selector';
-import { containPhoneticSymbols } from '../../tools/index';
+import { containPhoneticSymbols } from '../../tools/text';
 import { pushPageHistory, revokePageHistory } from '../index';
 
 const searchField = documentQuerySelector('.css_search_field');

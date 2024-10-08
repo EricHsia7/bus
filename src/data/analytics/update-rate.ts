@@ -1,4 +1,6 @@
-import { splitDataByDelta, pearsonCorrelation, generateIdentifier } from '../../tools/index';
+import {generateIdentifier } from '../../tools/index';
+import { pearsonCorrelation } from '../../tools/math';
+import { splitDataByDelta } from '../../tools/array';
 import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';

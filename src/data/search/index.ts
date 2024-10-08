@@ -1,6 +1,8 @@
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
-import { generateIdentifier, getIntersection, getUnicodes } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
+import { getIntersection } from '../../tools/array';
+import { getUnicodes } from '../../tools/text';
 
 let searchIndex = {};
 let searchList = [];

@@ -1,4 +1,4 @@
-import { convertBytes } from '../../tools/index';
+import { convertBytes } from '../../tools/convert';
 import { getStoreKey, getStoresLength, lfGetItem, lfListItemKeys } from '../storage/index';
 
 interface StoreCategory {

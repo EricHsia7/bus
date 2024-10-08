@@ -1,4 +1,4 @@
-import { convertBytes } from '../../tools/index';
+import { convertBytes } from '../../tools/convert';
 import { segmentsToPath, simplifyPath } from '../../tools/path';
 import { dateToString, TimeStampPeriod } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';

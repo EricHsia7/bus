@@ -1,5 +1,5 @@
 import { getSettingOptionValue } from '../settings/index';
-import { getDistanceBetweenTwoPosition } from '../../tools/position';
+import { convertPositionsToDistance } from '../../tools/convert';
 
 interface position {
   latitude: number;
@@ -69,7 +69,7 @@ export function getUserPosition(): position {
 
 export function isNearUserPosition(latitude: number, longitude: number, radius: number = 450): boolean {
   var currentUserPosition: position = getUserPosition();
-  var distance: number = getDistanceBetweenTwoPosition(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
+  var distance: number = convertPositionsToDistance(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
   if (distance <= radius) {
     return true;
   } else {
@@ -81,7 +81,7 @@ export function getNearestPosition(positions: Array<position>, radius: number = 
   var currentUserPosition: position = getUserPosition();
   var result = [];
   for (var position of positions) {
-    var distance: number = getDistanceBetweenTwoPosition(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
+    var distance: number = convertPositionsToDistance(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
     if (distance <= radius) {
       result.push({ position, distance });
     }

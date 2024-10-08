@@ -7,7 +7,7 @@ import { getStop } from '../apis/getStop/index';
 import { getSettingOptionValue } from '../settings/index';
 import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
-import { generateDirectionLabels, generateLetterLabels } from '../../tools/index';
+import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { parseEstimateTime, formatBusEvent } from '../apis/index';
 
 async function processBusEvent2(BusEvent: Array, StopIDs: Array<number>): Promise<object> {
