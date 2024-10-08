@@ -1,6 +1,6 @@
 const { inflate } = require('pako/lib/inflate');
 
-const taskQueue = [];
+let taskQueue = [];
 let isProcessing = false;
 
 self.onconnect = function (e) {

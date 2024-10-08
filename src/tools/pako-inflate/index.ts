@@ -1,10 +1,13 @@
 import { generateIdentifier } from '../index';
 
 let pakoInflateSharedWorkerResponses = {};
+
 const pakoInflateSharedWorker = new SharedWorker(new URL('./worker.ts', import.meta.url)); // Reusable shared worker
 
 const port = pakoInflateSharedWorker.port; // Access the port for communication
+
 port.start(); // Start the port (required by some browsers)
+
 port.onmessage = function (e) {
   const [result, taskID] = e.data;
   if (pakoInflateSharedWorkerResponses[taskID]) {
