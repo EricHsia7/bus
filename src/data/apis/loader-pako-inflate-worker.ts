@@ -1,13 +1,16 @@
 const { inflate } = require('pako/lib/inflate');
 
-let taskQueue = []; // Queue to store tasks
-let processing = false; // Flag to check if a task is being processed
+self.onconnect = function (e) {
+  const port = e.ports[0]; // Access the port of the connected client
 
-self.onmessage = function (e) {
-  const task = e.data;
-  const [buffer, taskID] = task;
+  port.onmessage = function (event) {
+    const [buffer, taskID] = event.data;
+
+    // Perform the inflate operation (using Pako)
   const result = pakoInflate_worker(buffer);
-  this.self.postMessage([result, taskID]);
+    // Send the result back to the main thread
+    port.postMessage([result, taskID]);
+  };
 };
 
 function pakoInflate_worker(buffer: ArrayBuffer): string {
