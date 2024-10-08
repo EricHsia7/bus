@@ -5,30 +5,29 @@ import { recordRequest } from '../analytics/data-usage';
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
 
+let pakoInflateSharedWorkerResponses = {};
 const pakoInflateSharedWorker = new SharedWorker(new URL('./loader-pako-inflate-worker.ts', import.meta.url)); // Reusable shared worker
 const port = pakoInflateSharedWorker.port; // Access the port for communication
 port.start(); // Start the port (required by some browsers)
+port.onmessage = function (e) {
+  const [result, taskID] = e.data;
+  if (pakoInflateSharedWorkerResponses[taskID]) {
+    pakoInflateSharedWorkerResponses[taskID](result); // Resolve the correct promise
+    delete pakoInflateSharedWorkerResponses[taskID]; // Clean up the response handler
+  }
+};
 
-// Function to communicate with the shared worker
 async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
   const taskID = generateIdentifier('t');
-  
-  // Wrap worker communication in a promise
+
   const result = await new Promise((resolve, reject) => {
-    // Listen for messages from the worker
-    port.onmessage = function (e) {
-      if (e.data[1] === taskID) {
-        resolve(e.data[0]); // Resolve the promise with the worker's result
-      }
-    };
+    pakoInflateSharedWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
 
-    // Listen for errors
     port.onerror = function (e) {
-      reject(e.message); // Reject the promise on error
+      reject(e.message);
     };
 
-    // Send the data to the worker via the port
-    port.postMessage([buffer, taskID]);
+    port.postMessage([buffer, taskID]); // Send the task to the worker
   });
 
   return result;
