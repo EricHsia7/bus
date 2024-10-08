@@ -9,27 +9,22 @@ self.onconnect = function (e) {
   port.onmessage = function (event) {
     const [buffer, taskID] = event.data;
     taskQueue.push({ buffer, taskID, port });
-    processQueue();
+    pakoInflate_worker();
   };
 };
 
-function processQueue() {
+function pakoInflate_worker() {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
   const { buffer, taskID, port } = taskQueue.shift();
 
   // Perform the inflate operation (using Pako)
-  const result = pakoInflate_worker(buffer);
+  const result = inflate(buffer, { to: 'string' });
 
   // Send the result back to the main thread
   port.postMessage([result, taskID]);
 
   isProcessing = false;
-  processQueue(); // Process next task in queue, if any
-}
-
-function pakoInflate_worker(buffer: ArrayBuffer): string {
-  const inflatedData = inflate(buffer, { to: 'string' });
-  return inflatedData;
+  pakoInflate_worker(); // Process next task in queue, if any
 }

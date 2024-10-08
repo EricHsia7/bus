@@ -1,37 +1,9 @@
-import { generateIdentifier } from '../../tools/index';
+import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
 let dataReceivingProgress = {};
 export let dataUpdateTime = {};
-
-let pakoInflateSharedWorkerResponses = {};
-const pakoInflateSharedWorker = new SharedWorker(new URL('./loader-pako-inflate-worker.ts', import.meta.url)); // Reusable shared worker
-const port = pakoInflateSharedWorker.port; // Access the port for communication
-port.start(); // Start the port (required by some browsers)
-port.onmessage = function (e) {
-  const [result, taskID] = e.data;
-  if (pakoInflateSharedWorkerResponses[taskID]) {
-    pakoInflateSharedWorkerResponses[taskID](result); // Resolve the correct promise
-    delete pakoInflateSharedWorkerResponses[taskID]; // Clean up the response handler
-  }
-};
-
-async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
-  const taskID = generateIdentifier('t');
-
-  const result = await new Promise((resolve, reject) => {
-    pakoInflateSharedWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
-
-    port.onerror = function (e) {
-      reject(e.message);
-    };
-
-    port.postMessage([buffer, taskID]); // Send the task to the worker
-  });
-
-  return result;
-}
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
   const startTimeStamp = new Date().getTime();
