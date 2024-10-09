@@ -255,7 +255,7 @@ var Settings: SettingsObject = {
   },
   persistent_storage: {
     key: 'persistent_storage',
-    name: '永久儲存空間',
+    name: '永久儲存',
     icon: 'history_toggle_off',
     status: '',
     action: `bus.settings.showPromptToaskForPersistentStorage()`,

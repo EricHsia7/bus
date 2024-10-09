@@ -112,7 +112,7 @@ export function showPromptToaskForPersistentStorage(): void {
   askForPersistentStorage().then((e) => {
     switch (e) {
       case 'granted':
-        promptMessage('已開啟永久儲存空間', 'check_circle');
+        promptMessage('已開啟永久儲存', 'check_circle');
         break;
       case 'denied':
         promptMessage('永久儲存權限已被拒絕', 'cancel');
