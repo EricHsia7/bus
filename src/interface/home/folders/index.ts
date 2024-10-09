@@ -87,19 +87,19 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
     for (let j = 0; j < defaultItemQuantity[folderKey]; j++) {
       foldedContent[folderKey].push({
         type: 'stop',
-        id: null,
+        id: '',
         status: {
           code: 0,
-          text: null
+          text: ''
         },
-        name: null,
+        name: '',
         route: {
-          name: null,
+          name: '',
           endPoints: {
-            departure: null,
-            destination: null
+            departure: '',
+            destination: ''
           },
-          id: null,
+          id: '',
           pathAttributeId: []
         }
       });
