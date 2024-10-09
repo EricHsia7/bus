@@ -68,7 +68,7 @@ interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'persistent_storage', 'folder', 'personal_schedule', 'data_usage', 'storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 var Settings: SettingsObject = {
   time_formatting_mode: {
@@ -217,15 +217,6 @@ var Settings: SettingsObject = {
     ],
     description: '使用網路代理來擷取資料。'
   },
-  persistent_storage: {
-    key: 'persistent_storage',
-    name: '永久儲存空間',
-    icon: 'history_toggle_off',
-    status: '',
-    action: `bus.settings.showPromptToaskForPersistentStorage()`,
-    type: 'action',
-    description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
-  },
   folder: {
     key: 'folder',
     name: '資料夾',
@@ -261,6 +252,15 @@ var Settings: SettingsObject = {
     type: 'page',
     action: 'bus.storage.openStorage()',
     description: ''
+  },
+  persistent_storage: {
+    key: 'persistent_storage',
+    name: '永久儲存空間',
+    icon: 'history_toggle_off',
+    status: '',
+    action: `bus.settings.showPromptToaskForPersistentStorage()`,
+    type: 'action',
+    description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
   },
   export: {
     key: 'export',
