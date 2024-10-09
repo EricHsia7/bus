@@ -178,7 +178,8 @@
   word-break: keep-all;
 }
 
-.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_status {
+.css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_status,
+.css_settings_page_field .css_settings_page_settings .css_setting[type="action"] .css_setting_status {
   right: 17.5px;
 }
 
