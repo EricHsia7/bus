@@ -108,7 +108,7 @@ export function viewCommitOfCurrentVersion(): void {
   window.open(url);
 }
 
-export function showPromptToaskForPersistentStorage(): void {
+export function showPromptToAskForPersistentStorage(): void {
   askForPersistentStorage().then((e) => {
     switch (e) {
       case 'granted':
