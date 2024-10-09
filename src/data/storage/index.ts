@@ -112,3 +112,25 @@ export async function registerStore(id: string): Promise<number> {
     return stores.indexOf(storeKey);
   }
 }
+
+export async function isStoragePersistent(): Promise<boolean> {
+  // Check if site's storage has been marked as persistent
+  if (navigator.storage) {
+    if (navigator.storage.persist) {
+      const isPersisted = await navigator.storage.persisted();
+      return isPersisted;
+    }
+  }
+  return false;
+}
+
+export async function askForPersistentStorage(): Promise<'granted' | 'denied' | 'unsupported'> {
+  // Request persistent storage for site
+  if (navigator.storage) {
+    if (navigator.storage.persist) {
+      const isPersisted = await navigator.storage.persist();
+      return isPersisted ? 'granted' : 'denied';
+    }
+  }
+  return 'unsupported';
+}
