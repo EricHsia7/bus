@@ -217,6 +217,27 @@ var Settings: SettingsObject = {
     ],
     description: '使用網路代理來擷取資料。'
   },
+  persistent_storage: {
+    key: 'persistent_storage',
+    name: '永久儲存空間',
+    icon: 'history_toggle_off',
+    status: '',
+    action: `bus.settings.openSettingsOptions('persistent_storage')`,
+    type: 'select',
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '開啟',
+        value: true
+      },
+      {
+        name: '關閉',
+        value: false
+      }
+    ],
+    description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
+  },
   folder: {
     key: 'folder',
     name: '資料夾',
