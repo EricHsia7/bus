@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Add persistent storage option [\#80](https://github.com/EricHsia7/bus/pull/80) ([EricHsia7](https://github.com/EricHsia7))
 - Improve icon search [\#78](https://github.com/EricHsia7/bus/pull/78) ([EricHsia7](https://github.com/EricHsia7))
 - Improve search [\#77](https://github.com/EricHsia7/bus/pull/77) ([EricHsia7](https://github.com/EricHsia7))
 - Improve number aggregation algorithm [\#75](https://github.com/EricHsia7/bus/pull/75) ([EricHsia7](https://github.com/EricHsia7))
