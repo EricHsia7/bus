@@ -118,7 +118,7 @@ export function showPromptToAskForPersistentStorage(): void {
         promptMessage('永久儲存權限已被拒絕', 'cancel');
         break;
       case 'unsupported':
-        promptMessage('此瀏覽器不支援永久儲存', 'error');
+        promptMessage('此瀏覽器不支援永久儲存', 'warning');
         break;
       default:
         promptMessage('發生錯誤', 'error');
