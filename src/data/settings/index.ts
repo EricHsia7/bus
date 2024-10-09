@@ -222,7 +222,7 @@ var Settings: SettingsObject = {
     name: '永久儲存空間',
     icon: 'history_toggle_off',
     status: '',
-    action: `bus.settings.askPersistentStorage()`,
+    action: `bus.settings.showPromptToAskPersistentStorage()`,
     type: 'action',
     description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
   },
