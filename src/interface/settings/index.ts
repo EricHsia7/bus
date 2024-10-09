@@ -102,7 +102,11 @@ export function openFileToImportData(): void {
   documentQuerySelector(`body #${identifier}`).click();
 }
 
-export function viewCommitOfCurrentVersion() {
+export function viewCommitOfCurrentVersion(): void {
   const url = getCommitURLOfCurrentVersion();
   window.open(url);
+}
+
+export function showPromptToAskPersistentStorage(): void {
+askPersistentStorage();
 }
