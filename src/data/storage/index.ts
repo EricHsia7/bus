@@ -124,13 +124,13 @@ export async function isStoragePersistent(): Promise<boolean> {
   return false;
 }
 
-export async function askPersistentStorage(): Promise<boolean> {
+export async function askForPersistentStorage(): Promise<'granted' | 'denied' | 'unsupported'> {
   // Request persistent storage for site
   if (navigator.storage) {
     if (navigator.storage.persist) {
       const isPersisted = await navigator.storage.persist();
-      return isPersisted;
+      return isPersisted ? 'granted' : 'denied';
     }
   }
-  return false;
+  return 'unsupported';
 }

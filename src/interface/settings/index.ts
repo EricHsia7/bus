@@ -7,7 +7,7 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
-import { askPersistentStorage } from '../../data/storage/index';
+import { askForPersistentStorage } from '../../data/storage/index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -23,11 +23,11 @@ function generateElementOfItem(item: object): GeneratedElement {
   };
 }
 
-function initializeSettingsField(Field: HTMLElement) {
-  var list = listSettings();
+async function initializeSettingsField(Field: HTMLElement) {
+  const list = await listSettings();
   elementQuerySelector(Field, '.css_settings_page_body .css_settings_page_settings').innerHTML = '';
-  for (var item of list) {
-    var thisElement = generateElementOfItem(item);
+  for (const item of list) {
+    const thisElement = generateElementOfItem(item);
     elementQuerySelector(Field, '.css_settings_page_body .css_settings_page_settings').appendChild(thisElement.element);
   }
 }
@@ -108,6 +108,21 @@ export function viewCommitOfCurrentVersion(): void {
   window.open(url);
 }
 
-export function showPromptToAskPersistentStorage(): void {
-  askPersistentStorage();
+export function showPromptToaskForPersistentStorage(): void {
+  askForPersistentStorage().then((e) => {
+    switch (e) {
+      case 'granted':
+        promptMessage('已開啟永久儲存空間', 'check_circle');
+        break;
+      case 'denied':
+        promptMessage('永久儲存權限已被拒絕', 'cancel');
+        break;
+      case 'unsupported':
+        promptMessage('此瀏覽器不支援永久儲存', 'error');
+        break;
+      default:
+        promptMessage('發生錯誤', 'error');
+        break;
+    }
+  });
 }

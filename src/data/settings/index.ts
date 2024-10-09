@@ -1,4 +1,4 @@
-import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys, isStoragePersistent } from '../storage/index';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
@@ -222,7 +222,7 @@ var Settings: SettingsObject = {
     name: '永久儲存空間',
     icon: 'history_toggle_off',
     status: '',
-    action: `bus.settings.showPromptToAskPersistentStorage()`,
+    action: `bus.settings.showPromptToaskForPersistentStorage()`,
     type: 'action',
     description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
   },
@@ -337,7 +337,7 @@ export async function initializeSettings(): void {
   }
 }
 
-export function listSettings(): SettingsArray {
+export async function listSettings(): SettingsArray {
   let result: SettingsArray = [];
   for (const key in Settings) {
     let item = Settings[key];
@@ -350,6 +350,9 @@ export function listSettings(): SettingsArray {
         break;
       case 'action':
         item.status = '';
+        if (key === 'persistent_storage') {
+          item.status = (await isStoragePersistent()) ? '開啟' : '關閉';
+        }
         break;
       case 'info':
         if (key === 'version') {
