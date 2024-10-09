@@ -114,23 +114,23 @@ export async function registerStore(id: string): Promise<number> {
 }
 
 export async function isStoragePersistent(): Promise<boolean> {
-// Check if site's storage has been marked as persistent
-if (navigator.storage)
-if(navigator.storage.persist) {
-  const isPersisted = await navigator.storage.persisted();
-return true
-}
-}
-return false
+  // Check if site's storage has been marked as persistent
+  if (navigator.storage) {
+    if (navigator.storage.persist) {
+      const isPersisted = await navigator.storage.persisted();
+      return isPersisted;
+    }
+  }
+  return false;
 }
 
 export async function askPersistentStorage(): Promise<boolean> {
-// Request persistent storage for site
-if (navigator.storage)
-if(navigator.storage.persist) {
-  const isPersisted = await navigator.storage.persist();
-return true
-}
-}
-return false
+  // Request persistent storage for site
+  if (navigator.storage) {
+    if (navigator.storage.persist) {
+      const isPersisted = await navigator.storage.persist();
+      return isPersisted;
+    }
+  }
+  return false;
 }

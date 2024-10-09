@@ -7,6 +7,7 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
+import { askPersistentStorage } from '../../data/storage/index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');
@@ -108,5 +109,5 @@ export function viewCommitOfCurrentVersion(): void {
 }
 
 export function showPromptToAskPersistentStorage(): void {
-askPersistentStorage();
+  askPersistentStorage();
 }
