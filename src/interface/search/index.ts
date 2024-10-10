@@ -18,7 +18,7 @@ export function openSearch(): void {
     openKeyboard();
     prepareForSearch();
   } else {
-    promptMessage('資料還在下載中', 'download_2');
+    promptMessage('資料還在下載中', 'download_for_offline');
   }
 }
 
