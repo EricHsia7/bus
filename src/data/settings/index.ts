@@ -74,7 +74,7 @@ var Settings: SettingsObject = {
   time_formatting_mode: {
     key: 'time_formatting_mode',
     name: '預估時間格式',
-    icon: 'text_fields',
+    icon: 'glyphs',
     status: '',
     action: `bus.settings.openSettingsOptions('time_formatting_mode')`,
     type: 'select',
