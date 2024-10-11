@@ -101,7 +101,7 @@ export function calculateAverage(array: Array<number>): number {
 
 export function aggregateNumbers(array: Array<number>): Array<number> {
   let roundedArray = [];
-  for (let item of array) {
+  for (const item of array) {
     let roundedItem = Math.trunc(item);
     if (!roundedArray.includes(roundedItem)) {
       roundedArray.push(roundedItem);
@@ -109,8 +109,9 @@ export function aggregateNumbers(array: Array<number>): Array<number> {
   }
 
   let groupedNumbers = {};
-  for (let item2 of roundedArray) {
-    let groupKey = 'k_' + Math.trunc(Math.log(Math.max(item2, 1)));
+  const base = Math.log(1.2);
+  for (const item2 of roundedArray) {
+    let groupKey = `k_${Math.round(Math.log(Math.max(item2, 1)) / base)}`;
     if (!groupedNumbers.hasOwnProperty(groupKey)) {
       groupedNumbers[groupKey] = [];
     }
@@ -118,12 +119,12 @@ export function aggregateNumbers(array: Array<number>): Array<number> {
   }
 
   let result = [];
-  for (let key in groupedNumbers) {
+  for (const key in groupedNumbers) {
     let group = groupedNumbers[key];
     const groupLength = group.length;
     let average = 0;
     if (groupLength > 0) {
-      average = group.reduce((a, b) => a + b, 0) / group.length;
+      average = group.reduce((a, b) => a + b, 0) / groupLength;
     }
     result.push(Math.trunc(average));
   }
