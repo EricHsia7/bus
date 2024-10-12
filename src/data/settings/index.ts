@@ -238,7 +238,7 @@ var Settings: SettingsObject = {
   data_usage: {
     key: 'data_usage',
     name: '網路使用量',
-    icon: 'data_usage',
+    icon: 'bigtop_updates',
     status: '',
     type: 'page',
     action: 'bus.dataUsage.openDataUsage()',
@@ -256,7 +256,7 @@ var Settings: SettingsObject = {
   persistent_storage: {
     key: 'persistent_storage',
     name: '永久儲存',
-    icon: 'history_toggle_off',
+    icon: 'storage',
     status: '',
     action: `bus.settings.showPromptToAskForPersistentStorage()`,
     type: 'action',
