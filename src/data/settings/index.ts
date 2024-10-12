@@ -70,7 +70,7 @@ export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
 const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
-var Settings: SettingsObject = {
+let Settings: SettingsObject = {
   time_formatting_mode: {
     key: 'time_formatting_mode',
     name: '預估時間格式',
@@ -174,7 +174,7 @@ var Settings: SettingsObject = {
   location_labels: {
     key: 'location_labels',
     name: '站牌位置標籤',
-    icon: 'label',
+    icon: 'tag',
     status: '',
     action: `bus.settings.openSettingsOptions('location_labels')`,
     type: 'select',

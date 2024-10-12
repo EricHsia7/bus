@@ -130,7 +130,7 @@
   width: var(--b-cssvar-location-tab-width);
   height: 40px;
   position: relative;
-  font-weight: 400;
+  font-weight: 500;
   --b-cssvar-location-percentage: inherit;
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 1);
 }
