@@ -69,11 +69,15 @@
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* skeleton screen: false */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="false"] .css_route_group_item_head .css_route_group_item_name {
   mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) calc(100% - 20px),
-      rgba(0, 0, 0, 0.95) calc(100% - 20px),
-      rgba(0, 0, 0, 0.5) calc(100% - 10px),
+      rgba(0, 0, 0, 1) calc(100% - 25px),
+      rgba(0, 0, 0, 0.95) calc(100% - 25px),
+      rgba(0, 0, 0, 0.5) calc(100% - 12.5px),
       rgba(0, 0, 0, 0) 100%);
   mask-repeat: no-repeat;
 }
