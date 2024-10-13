@@ -3,15 +3,25 @@ const { inflate } = require('pako/lib/inflate');
 let taskQueue = [];
 let isProcessing = false;
 
-self.onconnect = function (e) {
-  const port = e.ports[0];
+if (typeof SharedWorker !== 'undefined') {
+  self.onconnect = function (e) {
+    const port = e.ports[0];
 
-  port.onmessage = function (event) {
+    port.onmessage = function (event) {
+      const [buffer, taskID] = event.data;
+      taskQueue.push({ buffer, taskID, port });
+      pakoInflate_worker();
+    };
+  };
+} else {
+  const port = self;
+
+  self.onmessage = function (event) {
     const [buffer, taskID] = event.data;
     taskQueue.push({ buffer, taskID, port });
     pakoInflate_worker();
   };
-};
+}
 
 function pakoInflate_worker() {
   if (isProcessing || taskQueue.length === 0) return;
