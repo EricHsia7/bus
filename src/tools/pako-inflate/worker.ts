@@ -3,7 +3,7 @@ const { inflate } = require('pako/lib/inflate');
 let taskQueue = [];
 let isProcessing = false;
 
-if (typeof SharedWorker !== 'undefined') {
+if ('onconnect' in self) {
   self.onconnect = function (e) {
     const port = e.ports[0];
 
