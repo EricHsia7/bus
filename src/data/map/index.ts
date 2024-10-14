@@ -142,9 +142,14 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   }
   result.objects = objects;
   result.chunks = chunks;
-  result.interval.x = intervalX;
-  result.interval.y = intervalY;
-  result.origin.x = 0;
-  result.origin.y = 0;
+
+  result.interval = {
+    x: intervalX,
+    y: intervalY
+  };
+  result.origin = {
+    x: 0,
+    y: 0
+  };
   return result;
 }
