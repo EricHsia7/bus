@@ -5,7 +5,7 @@ export function getAPIURL(city: number, api: number, alternative: boolean = fals
   const cities = ['blobbus', 'ntpcbus'];
   //blobbus → Taipei City
   //ntpcbus → New Taipei City
-  const buckets = ['BusData', 'BusEvent', 'CarInfo', 'CarUnusual', 'EstimateTime', 'IStop', 'IStopPath', 'OrgPathAttribute', 'PathDetail', 'Provider', 'Route', 'Stop', 'SemiTimeTable', 'StopLocation', 'TimeTable', 'BusRouteFareList'];
+  const buckets = ['BusData', 'BusEvent', 'CarInfo', 'CarUnusual', 'EstimateTime', 'IStop', 'IStopPath', 'OrgPathAttribute', 'PathDetail', 'Provider', 'Route', 'Stop', 'SemiTimeTable', 'StopLocation', 'TimeTable', 'BusRouteFareList', 'BusShape'];
   const proxy = getSettingOptionValue('proxy');
   if (alternative) {
     return `http://erichsia7.github.io/bus-alternative-static-apis/${cities[city]}/Get${buckets[api]}.gz?_=${getNoCacheParameter(interval)}`;

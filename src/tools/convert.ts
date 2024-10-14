@@ -30,3 +30,17 @@ export function convertNumberToLetters(number: number): string {
   }
   return result;
 }
+
+export function convertWKTToArray(wkt: string): Array<[number, number]> {
+  // Extract the part inside the parentheses and split by comma to get the coordinate pairs
+  const coordinates = wkt
+    .replace('LINESTRING (', '')
+    .replace(')', '')
+    .split(', ')
+    .map((coord) => {
+      // For each coordinate pair, split by space and parse as float
+      const [lon, lat] = coord.split(' ').map(parseFloat);
+      return [lat, lon]; // Return [lat, lon]
+    });
+  return coordinates;
+}
