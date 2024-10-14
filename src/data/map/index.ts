@@ -43,7 +43,7 @@ interface MapChunk {
 type MapChunks = { [key: string]: MapChunk };
 
 interface integratedMap {
-  objects: [];
+  objects: MapObjects;
   chunks: MapChunks;
 }
 

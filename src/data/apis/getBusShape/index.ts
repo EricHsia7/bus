@@ -54,8 +54,8 @@ export async function getBusShape(requestID: string): Promise<SimplifiedBusShape
     var result = [];
     for (var api of apis) {
       var data = await fetchData(api.url, requestID, `getBusShape_${api.e[0]}`, 'json');
-      result = result.concat(data.BusInfo);
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
+      result = result.concat(data);
+      setDataUpdateTime(requestID, -1);
     }
     return result;
   }
