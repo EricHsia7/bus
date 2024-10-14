@@ -47,8 +47,8 @@ interface integratedMap {
   chunks: MapChunks;
 }
 
-const intervalX = 0.2;
-const intervalY = 0.2;
+const intervalX = 0.01;
+const intervalY = 0.01;
 const resolution = 1;
 
 function getChunkCoordinate(latitude: number, longitude: number): [number, number] {
@@ -91,7 +91,7 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     }
 
     integratedMapRouteObject.name = thisRoute.n;
-    integratedMapRouteObject.routeID = thisRoute.r;
+    integratedMapRouteObject.routeID = thisRoute.id;
     integratedMapRouteObject.color = { r: 0, g: 0, b: 0 };
 
     // add to chunks
