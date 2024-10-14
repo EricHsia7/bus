@@ -32,13 +32,7 @@ type MapObject = MapLocationObject | MapRouteObject;
 
 type MapObjects = Array<MapObject>;
 
-type MapObjectIndexes = Array<number>;
-
-interface MapChunk {
-  latitude: number;
-  longitude: number;
-  objectIndexes: MapObjectIndexes;
-}
+type MapChunk = Array<number>;
 
 type MapChunks = { [key: string]: MapChunk };
 
@@ -140,9 +134,9 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     objects.push(integratedMapLocationObject);
     index += 1;
   }
+
   result.objects = objects;
   result.chunks = chunks;
-
   result.interval = {
     x: intervalX,
     y: intervalY

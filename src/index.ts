@@ -138,6 +138,11 @@ import './interface/storage/head.css';
 import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
+import './interface/map/field.css';
+import './interface/map/head.css';
+import './interface/map/body.css';
+import './interface/map/canvas.css';
+
 import './interface/prompt/index.css';
 
 let bus_initialized = false;
