@@ -45,15 +45,22 @@ type MapChunks = { [key: string]: MapChunk };
 interface integratedMap {
   objects: MapObjects;
   chunks: MapChunks;
+  interval: {
+    x: number;
+    y: number;
+  };
+  origin: {
+    x: number;
+    y: number;
+  };
 }
 
 const intervalX = 0.01;
 const intervalY = 0.01;
-const resolution = 1;
 
 function getChunkCoordinate(latitude: number, longitude: number): [number, number] {
-  const x = Math.floor((latitude / intervalX) * resolution);
-  const y = Math.floor((longitude / intervalY) * resolution);
+  const x = Math.floor(latitude / intervalX);
+  const y = Math.floor(longitude / intervalY);
   return [x, y];
 }
 
@@ -135,6 +142,9 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   }
   result.objects = objects;
   result.chunks = chunks;
-
+  result.interval.x = intervalX;
+  result.interval.y = intervalY;
+  result.origin.x = 0;
+  result.origin.y = 0;
   return result;
 }
