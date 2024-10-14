@@ -100,7 +100,9 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
       if (!chunks.hasOwnProperty(chunkKey)) {
         chunks[chunkKey] = [];
       }
-      chunks[chunkKey].push(index);
+      if (chunks[chunkKey].indexOf(index) < 0) {
+        chunks[chunkKey].push(index);
+      }
     }
 
     // push to objects
@@ -124,8 +126,9 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     if (!chunks.hasOwnProperty(chunkKey)) {
       chunks[chunkKey] = [];
     }
-    chunks[chunkKey].push(index);
-
+    if (chunks[chunkKey].indexOf(index) < 0) {
+      chunks[chunkKey].push(index);
+    }
     // push to objects
     objects.push(integratedMapLocationObject);
     index += 1;
