@@ -231,7 +231,7 @@ function updateMapCanvas(): void {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.save();
   ctx.translate(translation.x, translation.y);
-  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
+  ctx.scale(scale, scale);
 
   if (currentIntegration.hasOwnProperty('boundary')) {
     const integrationBoundary = currentIntegration.boundary;
