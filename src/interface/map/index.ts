@@ -16,7 +16,7 @@ let canvasHeight = window.innerHeight * devicePixelRatio;
 
 const chunkWidth = 300;
 const chunkHeight = 300;
-const resolution = 300 / 0.01;
+const resolution = 300;
 
 const lineWidth = 5;
 const pointRadius = 3;
@@ -260,7 +260,6 @@ function updateVisibleObjects(): void {
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
         const chunkKey = `c_${i + currentTopLeftChunkX}_${j + currentTopLeftChunkY}`;
-        console.log(chunkKey);
         if (currentIntegration.hasOwnProperty(chunkKey)) {
           objects = objects.concat(currentIntegration[chunkKey]);
         }
