@@ -101,8 +101,12 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     // add to chunks
     for (const point of integratedMapRouteObject.points) {
       const chunkCoordinate = getChunkCoordinate(point[0], point[1]);
-      chunkX.push(chunkCoordinate[0]);
-      chunkY.push(chunkCoordinate[1]);
+      if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
+        chunkX.push(chunkCoordinate[0]);
+      }
+      if (chunkY.indexOf(chunkCoordinate[1]) < 0) {
+        chunkY.push(chunkCoordinate[1]);
+      }
       const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
       if (!chunks.hasOwnProperty(chunkKey)) {
         chunks[chunkKey] = [];
@@ -130,8 +134,12 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     // add to chunks
     const thisPoint = integratedMapLocationObject.point;
     const chunkCoordinate = getChunkCoordinate(thisPoint[0], thisPoint[1]);
-    chunkX.push(chunkCoordinate[0]);
-    chunkY.push(chunkCoordinate[1]);
+    if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
+      chunkX.push(chunkCoordinate[0]);
+    }
+    if (chunkY.indexOf(chunkCoordinate[1]) < 0) {
+      chunkY.push(chunkCoordinate[1]);
+    }
     const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
     if (!chunks.hasOwnProperty(chunkKey)) {
       chunks[chunkKey] = [];
