@@ -222,35 +222,37 @@ function updateMapCanvas(): void {
   ctx.restore();
 }
 
-function updateVisibleObjects() {
-  const integrationBoundary = currentIntegration.boundary;
-  const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
-  const integrationTopLeftChunkY = integrationBoundary.topLeft.y;
-  const integrationBottomRightChunkX = integrationBoundary.bottomRight.x;
-  const integrationBottomRightChunkY = integrationBoundary.bottomRight.y;
+function updateVisibleObjects(): void {
+  if (currentIntegration.hasOwnProperty('boundary')) {
+    const integrationBoundary = currentIntegration.boundary;
+    const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
+    const integrationTopLeftChunkY = integrationBoundary.topLeft.y;
+    const integrationBottomRightChunkX = integrationBoundary.bottomRight.x;
+    const integrationBottomRightChunkY = integrationBoundary.bottomRight.y;
 
-  const currentViewportCorners = getViewportCorners();
-  const currentTopLeftX = currentViewportCorners.topLeft.x;
-  const currentTopLeftY = currentViewportCorners.topLeft.y;
-  const currentBottomRightX = currentViewportCorners.bottomRight.x;
-  const currentBottomRightY = currentViewportCorners.bottomRight.y;
+    const currentViewportCorners = getViewportCorners();
+    const currentTopLeftX = currentViewportCorners.topLeft.x;
+    const currentTopLeftY = currentViewportCorners.topLeft.y;
+    const currentBottomRightX = currentViewportCorners.bottomRight.x;
+    const currentBottomRightY = currentViewportCorners.bottomRight.y;
 
-  const currentTopLeftChunkX = Math.floor(currentTopLeftX / chunkWidth) + integrationTopLeftChunkX;
-  const currentTopLeftChunkY = Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
-  const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
-  const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
+    const currentTopLeftChunkX = Math.floor(currentTopLeftX / chunkWidth) + integrationTopLeftChunkX;
+    const currentTopLeftChunkY = Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
+    const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
+    const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
 
-  let objects = [];
-  for (let i = currentBottomRightChunkX; i < currentTopLeftChunkX; i++) {
-    for (let j = currentBottomRightChunkY; j < currentTopLeftChunkY; j++) {
-      const chunkKey = `c_${i}_${j}`;
-      if (currentIntegration.hasOwnProperty(chunkKey)) {
-        objects = objects.concat(currentIntegration[chunkKey]);
+    let objects = [];
+    for (let i = currentBottomRightChunkX; i < currentTopLeftChunkX; i++) {
+      for (let j = currentBottomRightChunkY; j < currentTopLeftChunkY; j++) {
+        const chunkKey = `c_${i}_${j}`;
+        if (currentIntegration.hasOwnProperty(chunkKey)) {
+          objects = objects.concat(currentIntegration[chunkKey]);
+        }
       }
     }
-  }
 
-  objectsInViewport = objects;
+    objectsInViewport = objects;
+  }
 }
 
 export async function initializeMapCanvas(): void {
