@@ -225,6 +225,7 @@ function updateMapCanvas(): void {
         break;
       case 'location':
         drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+        console.log((object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
         break;
       default:
         break;
