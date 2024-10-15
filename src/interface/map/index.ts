@@ -137,6 +137,7 @@ function onTouchMove(event: Event): void {
       updateMapCanvas();
     }
   }
+  console.log(translation, scale)
 }
 
 function onTouchEnd(event: Event): void {
