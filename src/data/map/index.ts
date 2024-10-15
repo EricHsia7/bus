@@ -135,7 +135,7 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     let thisLocation = Location[hashKey];
     integratedMapLocationObject.name = thisLocation.n;
     integratedMapLocationObject.hash = thisLocation.hash;
-    integratedMapLocationObject.point = [calculateAverage(thisLocation.la), calculateAverage(thisLocation.lo)];
+    integratedMapLocationObject.point = [calculateAverage(thisLocation.lo), calculateAverage(thisLocation.la)];
     integratedMapLocationObject.color = { r: 0, g: 0, b: 0 };
 
     // add to chunks

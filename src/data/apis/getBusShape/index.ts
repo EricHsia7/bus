@@ -60,7 +60,7 @@ export async function getBusShape(requestID: string): Promise<SimplifiedBusShape
     return result;
   }
   var cache_time = 60 * 60 * 24 * 60 * 1000;
-  var cache_key = 'bus_bus_shape_cache';
+  var cache_key = 'bus_bus_shape_v2_cache';
   var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     var result = await getData();

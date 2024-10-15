@@ -39,8 +39,7 @@ export function convertWKTToArray(wkt: string): Array<[number, number]> {
     .split(', ')
     .map((coord) => {
       // For each coordinate pair, split by space and parse as float
-      const [lon, lat] = coord.split(' ').map(parseFloat);
-      return [lat, lon]; // Return [lat, lon]
+      return coord.split(' ').map(parseFloat);
     });
   return coordinates;
 }
