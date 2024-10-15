@@ -16,7 +16,7 @@ let canvasHeight = window.innerHeight * devicePixelRatio;
 
 const chunkWidth = 300;
 const chunkHeight = 300;
-const resolution = 300;
+const resolution = 300 / 0.01;
 
 const lineWidth = 5;
 const pointRadius = 3;
@@ -225,7 +225,6 @@ function updateMapCanvas(): void {
         break;
       case 'location':
         drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
-        console.log((object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
         break;
       default:
         break;

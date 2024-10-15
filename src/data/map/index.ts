@@ -55,8 +55,8 @@ export interface integratedMap {
   };
 }
 
-const intervalX = 0.001;
-const intervalY = 0.001;
+const intervalX = 0.01;
+const intervalY = 0.01;
 
 function getChunkCoordinate(latitude: number, longitude: number): [number, number] {
   const x = Math.floor(latitude / intervalX);
