@@ -236,6 +236,11 @@ function renderChunk(chunkX: number, chunkY: number): void {
 }
 
 function updateMapCanvas(): void {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.save();
+  ctx.translate(translation.x, translation.y);
+  ctx.scale(scale, scale);
+
   if (currentIntegration.hasOwnProperty('boundary')) {
     const integrationBoundary = currentIntegration.boundary;
     const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
@@ -256,14 +261,15 @@ function updateMapCanvas(): void {
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
+    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', (6 / scale) * devicePixelRatio);
 
-    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', 6 / scale);
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
         renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
       }
     }
   }
+  ctx.restore();
 }
 
 export async function initializeMapCanvas(): void {
