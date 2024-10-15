@@ -212,25 +212,27 @@ function updateMapCanvas(): void {
     integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
   }
 
-  for (const object of currentIntegration.objects) {
-    // objectsInViewport
-    // const object: MapObject = currentIntegration.objects[objectIndex];
-    switch (object.type) {
-      case 'route':
-        drawLine(
-          ctx,
-          object.points.map((point) => {
-            return { x: (point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, y: (point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio };
-          }),
-          strokeStyle,
-          lineWidth / scale
-        );
-        break;
-      case 'location':
-        drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
-        break;
-      default:
-        break;
+  if (currentIntegration.hasOwnProperty('objects')) {
+    for (const object of currentIntegration.objects) {
+      // objectsInViewport
+      // const object: MapObject = currentIntegration.objects[objectIndex];
+      switch (object.type) {
+        case 'route':
+          drawLine(
+            ctx,
+            object.points.map((point) => {
+              return { x: (point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, y: (point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio };
+            }),
+            strokeStyle,
+            lineWidth / scale
+          );
+          break;
+        case 'location':
+          drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+          break;
+        default:
+          break;
+      }
     }
   }
 
