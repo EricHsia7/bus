@@ -212,8 +212,9 @@ function updateMapCanvas(): void {
     integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
   }
 
-  for (const objectIndex of objectsInViewport) {
-    const object: MapObject = currentIntegration.objects[objectIndex];
+  for (const object of currentIntegration.objects) {
+    // objectsInViewport
+    // const object: MapObject = currentIntegration.objects[objectIndex];
     switch (object.type) {
       case 'route':
         drawLine(
