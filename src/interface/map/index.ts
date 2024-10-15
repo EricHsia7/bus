@@ -264,6 +264,7 @@ function updateVisibleObjects(): void {
         const chunkKey = `c_${i + currentTopLeftChunkX}_${j + currentTopLeftChunkY}`;
         if (currentIntegration.hasOwnProperty(chunkKey)) {
           objects = objects.concat(currentIntegration[chunkKey]);
+          console.log(objects);
         }
       }
     }
