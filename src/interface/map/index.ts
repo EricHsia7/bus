@@ -16,7 +16,7 @@ let canvasHeight = window.innerHeight * devicePixelRatio;
 
 const chunkWidth = 300;
 const chunkHeight = 300;
-const resolution = 100000;
+let resolution = (1 / 0.01) * 300;
 
 const lineWidth = 5;
 const pointRadius = 3;

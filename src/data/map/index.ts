@@ -39,10 +39,7 @@ type MapChunks = { [key: string]: MapChunk };
 export interface integratedMap {
   objects: MapObjects;
   chunks: MapChunks;
-  interval: {
-    x: number;
-    y: number;
-  };
+  interval: number;
   boundary: {
     topLeft: {
       x: number;
@@ -55,12 +52,11 @@ export interface integratedMap {
   };
 }
 
-const intervalX = 0.01;
-const intervalY = 0.01;
+const interval = 0.01;
 
 function getChunkCoordinate(latitude: number, longitude: number): [number, number] {
-  const x = Math.floor(latitude / intervalX);
-  const y = Math.floor(longitude / intervalY);
+  const x = Math.floor(latitude / interval);
+  const y = Math.floor(longitude / interval);
   return [x, y];
 }
 
@@ -168,10 +164,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
 
   result.objects = objects;
   result.chunks = chunks;
-  result.interval = {
-    x: intervalX,
-    y: intervalY
-  };
+  result.interval = interval;
+
   result.boundary = {
     topLeft: {
       x: Math.min(...chunkX),
