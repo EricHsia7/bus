@@ -13,8 +13,10 @@ const ctx = mapCanvasElement.getContext('2d');
 const devicePixelRatio = window.devicePixelRatio;
 let canvasWidth = window.innerWidth * devicePixelRatio;
 let canvasHeight = window.innerHeight * devicePixelRatio;
-let chunkWidth = 200;
-let chunkHeight = 200;
+
+const chunkWidth = 300;
+const chunkHeight = 300;
+const resolution = 300;
 
 const lineWidth = 5;
 const pointRadius = 3;
@@ -207,14 +209,14 @@ function updateMapCanvas(): void {
         drawLine(
           ctx,
           object.points.map((point) => {
-            return { x: point[0] * devicePixelRatio, y: point[1] * devicePixelRatio };
+            return { x: point[0] * resolution * devicePixelRatio, y: point[1] * resolution * devicePixelRatio };
           }),
           strokeStyle,
           lineWidth / scale
         );
         break;
       case 'location':
-        drawPoint(ctx, object.point[0] * devicePixelRatio, object.point[1] * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+        drawPoint(ctx, object.point[0] * resolution * devicePixelRatio, object.point[1] * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
         break;
       default:
         break;
