@@ -36,16 +36,22 @@ type MapChunk = Array<number>;
 
 type MapChunks = { [key: string]: MapChunk };
 
-interface integratedMap {
+export interface integratedMap {
   objects: MapObjects;
   chunks: MapChunks;
   interval: {
     x: number;
     y: number;
   };
-  origin: {
-    x: number;
-    y: number;
+  boundary: {
+    topLeft: {
+      x: number;
+      y: number;
+    };
+    bottomRight: {
+      x: number;
+      y: number;
+    };
   };
 }
 
@@ -58,11 +64,6 @@ function getChunkCoordinate(latitude: number, longitude: number): [number, numbe
   return [x, y];
 }
 
-function getChunkKey(latitude: number, longitude: number): string {
-  const chunkCoordinate = getChunkCoordinate(latitude, longitude);
-  return `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
-}
-
 export async function integrateMap(requestID: string): Promise<integratedMap> {
   const BusShape = await getBusShape(requestID);
   const Location = await getLocation(requestID, true);
@@ -71,6 +72,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   let result = {};
 
   // process objects and generate chunks
+  let chunkX = [];
+  let chunkY = [];
   let chunks = {};
   let objects = [];
   let index = 0;
@@ -97,7 +100,10 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
 
     // add to chunks
     for (const point of integratedMapRouteObject.points) {
-      const chunkKey = getChunkKey(point[0], point[1]);
+      const chunkCoordinate = getChunkCoordinate(point[0], point[1]);
+      chunkX.push(chunkCoordinate[0]);
+      chunkY.push(chunkCoordinate[1]);
+      const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
       if (!chunks.hasOwnProperty(chunkKey)) {
         chunks[chunkKey] = [];
       }
@@ -123,7 +129,10 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
 
     // add to chunks
     const thisPoint = integratedMapLocationObject.point;
-    const chunkKey = getChunkKey(thisPoint[0], thisPoint[1]);
+    const chunkCoordinate = getChunkCoordinate(thisPoint[0], thisPoint[1]);
+    chunkX.push(chunkCoordinate[0]);
+    chunkY.push(chunkCoordinate[1]);
+    const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
     if (!chunks.hasOwnProperty(chunkKey)) {
       chunks[chunkKey] = [];
     }
@@ -141,9 +150,15 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     x: intervalX,
     y: intervalY
   };
-  result.origin = {
-    x: 0,
-    y: 0
+  result.boundary = {
+    topLeft: {
+      x: Math.min(...chunkX),
+      y: Math.min(...chunkY)
+    },
+    bottomRight: {
+      x: Math.max(...chunkX),
+      y: Math.max(...chunkY)
+    }
   };
   return result;
 }

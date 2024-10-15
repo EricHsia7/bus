@@ -123,12 +123,13 @@ export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: num
   ctx.fill(); // To fill the shape
 }
 
-export function drawPoint(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string, strokeStyle: string): void {
+export function drawPoint(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string, strokeStyle: string, lineWidth:number): void {
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = fill;
   ctx.fill();
   ctx.strokeStyle = strokeStyle;
+  ctx.lineWidth = lineWidth;
   ctx.stroke();
 }
 

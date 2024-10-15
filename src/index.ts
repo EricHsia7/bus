@@ -144,7 +144,7 @@ import './interface/map/body.css';
 import './interface/map/canvas.css';
 
 import './interface/prompt/index.css';
-import { initializeMapInteraction } from './interface/map/index';
+import { closeMap, initializeMapInteraction, openMap, ResizeMapCanvas, resizeMapField } from './interface/map/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -166,10 +166,12 @@ window.bus = {
             ResizeRouteField();
             ResizeLocationField();
             ResizeSearchInputCanvasSize();
+            ResizeMapCanvas();
             window.addEventListener('resize', () => {
               ResizeRouteField();
               ResizeLocationField();
               ResizeSearchInputCanvasSize();
+              ResizeMapCanvas();
             });
             if (screen) {
               if (screen.orientation) {
@@ -326,8 +328,9 @@ window.bus = {
     viewCommitOfCurrentVersion,
     showPromptToAskForPersistentStorage
   },
-  test: {
-    integrateMap
+  map: {
+    openMap,
+    closeMap
   }
 };
 

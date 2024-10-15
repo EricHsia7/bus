@@ -1,30 +1,35 @@
-import { MapObject } from '../../data/map/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { integrateMap, MapObject } from '../../data/map/index';
 import { drawLine, drawPoint } from '../../tools/graphic';
-import { supportTouch } from '../../tools/index';
-import { FieldSize } from '../index';
+import { generateIdentifier, supportTouch } from '../../tools/index';
 
-let previousIntegration = {};
+let currentIntegration = {};
 
-const mapCanvasElement = document.getElementById('map_canvas');
+const MapField = documentQuerySelector('.css_map_field');
+const mapCanvasElement = elementQuerySelector(MapField, '#map_canvas');
 const ctx = mapCanvasElement.getContext('2d');
 
-const maxScale = 5;
-const minScale = 0.001;
-let devicePixelRatio = window.devicePixelRatio;
+const devicePixelRatio = window.devicePixelRatio;
 let canvasWidth = window.innerWidth * devicePixelRatio;
 let canvasHeight = window.innerHeight * devicePixelRatio;
+let chunkWidth = 200;
+let chunkHeight = 200;
 
 const lineWidth = 5;
+const pointRadius = 3;
 const strokeStyle = 'red';
+const fill = 'blue';
+const maxScale = 5;
+const minScale = 0.001;
 
 let scale = 1;
 let translation = { x: 0, y: 0 };
-
-// Pan and zoom variables
 let isDragging = false;
 let startX, startY;
 let lastTouchDist = null; // Used for pinch zoom
 
+// Visible Objects
 let objectsInViewport = [];
 let objectsAtVisibleScale = [];
 
@@ -35,48 +40,18 @@ function queryMapFieldSize(): FieldSize {
   };
 }
 
-export function resizeMapField(): void {
+export function ResizeMapCanvas(): void {
   const size = queryMapFieldSize();
   canvasWidth = size.width;
   canvasHeight = size.height;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
+  updateVisibleObjects();
   updateMapCanvas();
 }
 
-// Function to draw the plane with points and paths
-function updateMapCanvas() {
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  ctx.save();
-  ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
-  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
-
-  // Draw points
-  for (const objectIndex of objectsInViewport) {
-    const object: MapObject = previousIntegration.objects[objectIndex];
-    switch (object.type) {
-      case 'route':
-        drawLine(
-          ctx,
-          object.points.map((point) => {
-            return { x: point.x * devicePixelRatio, y: point.y * devicePixelRatio };
-          }),
-          strokeStyle,
-          lineWidth / scale
-        );
-        break;
-      case 'location':
-        break;
-      default:
-        break;
-    }
-  }
-
-  ctx.restore();
-}
-
 // Handle zooming with mouse wheel
-function onWheel(event) {
+function onWheel(event: Event): void {
   event.preventDefault();
   const zoomFactor = 0.1;
   const delta = event.deltaY > 0 ? 1 : -1;
@@ -89,30 +64,36 @@ function onWheel(event) {
     translation.y -= mousePos.y * (zoomRatio - 1);
     scale = newScale;
   }
+  updateVisibleObjects();
   updateMapCanvas();
 }
 
-// Handle panning with mouse
-function onMouseDown(event) {
+function onMouseDown(event: Event): void {
   isDragging = true;
   startX = event.clientX - translation.x;
   startY = event.clientY - translation.y;
 }
 
-function onMouseMove(event) {
+function onMouseMove(event: Event): void {
   if (isDragging) {
     translation.x = event.clientX - startX;
     translation.y = event.clientY - startY;
+    updateVisibleObjects();
     updateMapCanvas();
   }
 }
 
-function onMouseUp() {
+function onMouseUp(): void {
   isDragging = false;
 }
 
-// Handle touch start for panning and zooming
-function onTouchStart(event) {
+function getTouchDistance(touches: TouchList): number {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function onTouchStart(event: Event): void {
   event.preventDefault();
   if (event.touches.length === 1) {
     isDragging = true;
@@ -125,11 +106,12 @@ function onTouchStart(event) {
   }
 }
 
-function onTouchMove(event) {
+function onTouchMove(event: Event): void {
   event.preventDefault();
   if (event.touches.length === 1 && isDragging) {
     translation.x = event.touches[0].clientX - startX;
     translation.y = event.touches[0].clientY - startY;
+    updateVisibleObjects();
     updateMapCanvas();
   } else if (event.touches.length === 2 && lastTouchDist) {
     // Handle pinch zoom
@@ -151,30 +133,46 @@ function onTouchMove(event) {
 
       scale = newScale;
       lastTouchDist = newDist;
+      updateVisibleObjects();
       updateMapCanvas();
     }
   }
 }
 
-function onTouchEnd(event) {
+function onTouchEnd(event: Event): void {
   event.preventDefault();
   isDragging = false;
   lastTouchDist = null;
 }
 
-// Calculate the distance between two touch points
-function getTouchDistance(touches) {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
+interface ViewportCorners {
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
 }
 
-// Add new points with a double-click (or tap)
-function addNewPoint(x, y) {
-  const worldX = (x - translation.x) / scale / devicePixelRatio;
-  const worldY = (y - translation.y) / scale / devicePixelRatio;
-  outsidePoints.push({ x: worldX, y: worldY });
-  updateMapCanvas();
+function getViewportCorners(): ViewportCorners {
+  const topLeftX = (-1 * translation.x) / scale;
+  const topLeftY = (-1 * translation.y) / scale;
+
+  const bottomRightX = (canvasWidth / devicePixelRatio - translation.x) / scale;
+  const bottomRightY = (canvasHeight / devicePixelRatio - translation.y) / scale;
+
+  return {
+    topLeft: {
+      x: topLeftX,
+      y: topLeftY
+    },
+    bottomRight: {
+      x: bottomRightX,
+      y: bottomRightY
+    }
+  };
 }
 
 export function initializeMapInteraction(): void {
@@ -192,5 +190,85 @@ export function initializeMapInteraction(): void {
     mapCanvasElement.addEventListener('mouseup', onMouseUp);
     mapCanvasElement.addEventListener('mouseleave', onMouseUp);
   }
-  updateMapCanvas();
+}
+
+function updateMapCanvas(): void {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.save();
+  ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
+  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
+
+  for (const objectIndex of objectsInViewport) {
+    const object: MapObject = currentIntegration.objects[objectIndex];
+    switch (object.type) {
+      case 'route':
+        drawLine(
+          ctx,
+          object.points.map((point) => {
+            return { x: point[0] * devicePixelRatio, y: point[1] * devicePixelRatio };
+          }),
+          strokeStyle,
+          lineWidth / scale
+        );
+        break;
+      case 'location':
+        drawPoint(ctx, object.point[0] * devicePixelRatio, object.point[1] * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+        break;
+      default:
+        break;
+    }
+  }
+
+  ctx.restore();
+}
+
+function updateVisibleObjects() {
+  const integrationBoundary = currentIntegration.boundary;
+  const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
+  const integrationTopLeftChunkY = integrationBoundary.topLeft.y;
+  const integrationBottomRightChunkX = integrationBoundary.bottomRight.x;
+  const integrationBottomRightChunkY = integrationBoundary.bottomRight.y;
+
+  const currentViewportCorners = getViewportCorners();
+  const currentTopLeftX = currentViewportCorners.topLeft.x;
+  const currentTopLeftY = currentViewportCorners.topLeft.y;
+  const currentBottomRightX = currentViewportCorners.bottomRight.x;
+  const currentBottomRightY = currentViewportCorners.bottomRight.y;
+
+  const currentTopLeftChunkX = Math.floor(currentTopLeftX / chunkWidth) + integrationTopLeftChunkX;
+  const currentTopLeftChunkY = Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
+  const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
+  const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
+
+  let objects = [];
+  for (let i = currentBottomRightChunkX; i < currentTopLeftChunkX; i++) {
+    for (let j = currentBottomRightChunkY; j < currentTopLeftChunkY; j++) {
+      const chunkKey = `c_${i}_${j}`;
+      if (currentIntegration.hasOwnProperty(chunkKey)) {
+        objects = objects.concat(currentIntegration[chunkKey]);
+      }
+    }
+  }
+
+  objectsInViewport = objects;
+}
+
+export async function initializeMapCanvas(): void {
+  const requestID = generateIdentifier('r');
+  const integration = await integrateMap(requestID);
+  currentIntegration = integration;
+  ResizeMapCanvas();
+}
+
+export function openMap(): void {
+  pushPageHistory('Map');
+  MapField.setAttribute('displayed', 'true');
+  initializeMapCanvas();
+  closePreviousPage();
+}
+
+export function closeMap(): void {
+  // revokePageHistory('Map');
+  MapField.setAttribute('displayed', 'false');
+  openPreviousPage();
 }
