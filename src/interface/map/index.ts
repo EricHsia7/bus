@@ -139,7 +139,6 @@ function onTouchMove(event: Event): void {
       updateMapCanvas();
     }
   }
-  console.log(translation, scale);
 }
 
 function onTouchEnd(event: Event): void {
@@ -147,6 +146,7 @@ function onTouchEnd(event: Event): void {
   updateVisibleObjects();
   isDragging = false;
   lastTouchDist = null;
+  console.log(translation, scale, currentIntegration);
 }
 
 interface ViewportCorners {
