@@ -146,8 +146,9 @@ function onTouchEnd(event: Event): void {
   updateVisibleObjects();
   isDragging = false;
   lastTouchDist = null;
-  const vp = getViewportCorners()
-  console.log(translation, scale, currentIntegration, vp.topLeft.x / chunkWidth, vp.topLeft.y / chunkHeight);
+  const vp = getViewportCorners();
+  console.log(currentIntegration.boundary.topLeft.x, currentIntegration.topLeft.y);
+  console.log(vp.topLeft.x / chunkWidth, vp.topLeft.y / chunkHeight);
 }
 
 interface ViewportCorners {
