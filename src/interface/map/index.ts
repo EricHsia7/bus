@@ -147,8 +147,8 @@ function onTouchEnd(event: Event): void {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  const x = (longitude / interval) * chunkWidth //* scale * devicePixelRatio;
-  const y = (latitude / interval) * chunkHeight //* scale * devicePixelRatio;
+  const x = (longitude / interval) * chunkWidth * devicePixelRatio // * scale
+  const y = (latitude / interval) * chunkHeight * devicePixelRatio // * scale
   return { x, y };
 }
 
