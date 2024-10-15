@@ -64,26 +64,28 @@ function onWheel(event: Event): void {
     translation.y -= mousePos.y * (zoomRatio - 1);
     scale = newScale;
   }
-  updateVisibleObjects();
   updateMapCanvas();
 }
 
 function onMouseDown(event: Event): void {
+  event.preventDefault();
   isDragging = true;
   startX = event.clientX - translation.x;
   startY = event.clientY - translation.y;
 }
 
 function onMouseMove(event: Event): void {
+  event.preventDefault();
   if (isDragging) {
     translation.x = event.clientX - startX;
     translation.y = event.clientY - startY;
-    updateVisibleObjects();
     updateMapCanvas();
   }
 }
 
-function onMouseUp(): void {
+function onMouseUp(event: Event): void {
+  event.preventDefault();
+  updateVisibleObjects();
   isDragging = false;
 }
 
@@ -111,7 +113,6 @@ function onTouchMove(event: Event): void {
   if (event.touches.length === 1 && isDragging) {
     translation.x = event.touches[0].clientX - startX;
     translation.y = event.touches[0].clientY - startY;
-    updateVisibleObjects();
     updateMapCanvas();
   } else if (event.touches.length === 2 && lastTouchDist) {
     // Handle pinch zoom
@@ -133,15 +134,15 @@ function onTouchMove(event: Event): void {
 
       scale = newScale;
       lastTouchDist = newDist;
-      updateVisibleObjects();
       updateMapCanvas();
     }
   }
-  console.log(translation, scale)
+  console.log(translation, scale);
 }
 
 function onTouchEnd(event: Event): void {
   event.preventDefault();
+  updateVisibleObjects();
   isDragging = false;
   lastTouchDist = null;
 }

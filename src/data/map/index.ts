@@ -74,6 +74,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   // process objects and generate chunks
   let chunkX = [];
   let chunkY = [];
+  let latitudes = [];
+  let longitudes = [];
   let chunks = {};
   let objects = [];
   let index = 0;
@@ -100,6 +102,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
 
     // add to chunks
     for (const point of integratedMapRouteObject.points) {
+      latitudes.push(point[0]);
+      longitudes.push(point[1]);
       const chunkCoordinate = getChunkCoordinate(point[0], point[1]);
       if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
         chunkX.push(chunkCoordinate[0]);
@@ -132,7 +136,10 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     integratedMapLocationObject.color = { r: 0, g: 0, b: 0 };
 
     // add to chunks
+
     const thisPoint = integratedMapLocationObject.point;
+    latitudes.push(thisPoint[0]);
+    longitudes.push(thisPoint[1]);
     const chunkCoordinate = getChunkCoordinate(thisPoint[0], thisPoint[1]);
     if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
       chunkX.push(chunkCoordinate[0]);
@@ -161,11 +168,15 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   result.boundary = {
     topLeft: {
       x: Math.min(...chunkX),
-      y: Math.min(...chunkY)
+      y: Math.min(...chunkY),
+      latitude: Math.min(...latitudes),
+      longitude: Math.min(...longitudes)
     },
     bottomRight: {
       x: Math.max(...chunkX),
-      y: Math.max(...chunkY)
+      y: Math.max(...chunkY),
+      latitude: Math.max(...latitudes),
+      longitude: Math.max(...longitudes)
     }
   };
   return result;
