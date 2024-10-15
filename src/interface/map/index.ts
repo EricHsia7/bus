@@ -225,7 +225,6 @@ function updateMapCanvas(): void {
         break;
       case 'location':
         drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
-        console.log((object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
         break;
       default:
         break;
@@ -261,6 +260,7 @@ function updateVisibleObjects(): void {
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
         const chunkKey = `c_${i + currentTopLeftChunkX}_${j + currentTopLeftChunkY}`;
+        console.log(chunkKey);
         if (currentIntegration.hasOwnProperty(chunkKey)) {
           objects = objects.concat(currentIntegration[chunkKey]);
         }
