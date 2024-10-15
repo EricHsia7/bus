@@ -1,5 +1,5 @@
 import { convertBytes } from '../../tools/convert';
-import { segmentsToPath, simplifyPath } from '../../tools/path';
+import { segmentsToPath, simplifyPath } from '../../tools/graphic';
 import { dateToString, TimeStampPeriod } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys } from '../storage/index';
 

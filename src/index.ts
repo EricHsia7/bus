@@ -144,6 +144,7 @@ import './interface/map/body.css';
 import './interface/map/canvas.css';
 
 import './interface/prompt/index.css';
+import { initializeMapInteraction } from './interface/map/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -161,6 +162,7 @@ window.bus = {
             initializeSettings();
             initializeRouteSliding();
             initializeLocationSliding();
+            initializeMapInteraction();
             ResizeRouteField();
             ResizeLocationField();
             ResizeSearchInputCanvasSize();

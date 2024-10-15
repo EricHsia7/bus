@@ -28,7 +28,7 @@ interface MapLocationObject {
   type: 'location';
 }
 
-type MapObject = MapLocationObject | MapRouteObject;
+export type MapObject = MapLocationObject | MapRouteObject;
 
 type MapObjects = Array<MapObject>;
 

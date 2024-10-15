@@ -1,3 +1,6 @@
+import { MapObject } from '../../data/map/index';
+import { drawLine, drawPoint } from '../../tools/graphic';
+import { supportTouch } from '../../tools/index';
 import { FieldSize } from '../index';
 
 let previousIntegration = {};
@@ -7,10 +10,12 @@ const ctx = mapCanvasElement.getContext('2d');
 
 const maxScale = 5;
 const minScale = 0.001;
-
 let devicePixelRatio = window.devicePixelRatio;
 let canvasWidth = window.innerWidth * devicePixelRatio;
 let canvasHeight = window.innerHeight * devicePixelRatio;
+
+const lineWidth = 5;
+const strokeStyle = 'red';
 
 let scale = 1;
 let translation = { x: 0, y: 0 };
@@ -36,60 +41,38 @@ export function resizeMapField(): void {
   canvasHeight = size.height;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
-  drawPlane();
+  updateMapCanvas();
 }
 
-let points = [
-  { x: 100, y: 100 },
-  { x: 200, y: 150 },
-  { x: 300, y: 80 },
-  { x: 400, y: 200 }
-];
-
-let outsidePoints = [
-  { x: 700, y: 500 },
-  { x: 800, y: 600 }
-];
-
 // Function to draw the plane with points and paths
-function drawPlane() {
+function updateMapCanvas() {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
   ctx.save();
   ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
   ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
 
-  // Draw path between points
-  ctx.beginPath();
-  ctx.moveTo(points[0].x * devicePixelRatio, points[0].y * devicePixelRatio);
-  for (let i = 1; i < points.length; i++) {
-    ctx.lineTo(points[i].x * devicePixelRatio, points[i].y * devicePixelRatio);
-  }
-  ctx.strokeStyle = 'blue';
-  ctx.lineWidth = 4 / scale;
-  ctx.stroke();
-
   // Draw points
-  points.forEach((point) => {
-    drawPoint(point);
-  });
-
-  // Draw outside points
-  outsidePoints.forEach((point) => {
-    drawPoint(point);
-  });
+  for (const objectIndex of objectsInViewport) {
+    const object: MapObject = previousIntegration.objects[objectIndex];
+    switch (object.type) {
+      case 'route':
+        drawLine(
+          ctx,
+          object.points.map((point) => {
+            return { x: point.x * devicePixelRatio, y: point.y * devicePixelRatio };
+          }),
+          strokeStyle,
+          lineWidth / scale
+        );
+        break;
+      case 'location':
+        break;
+      default:
+        break;
+    }
+  }
 
   ctx.restore();
-}
-
-// Function to draw an individual point
-function drawPoint(point) {
-  ctx.beginPath();
-  ctx.arc(point.x * devicePixelRatio, point.y * devicePixelRatio, 5 * devicePixelRatio, 0, Math.PI * 2);
-  ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
 }
 
 // Handle zooming with mouse wheel
@@ -106,7 +89,7 @@ function onWheel(event) {
     translation.y -= mousePos.y * (zoomRatio - 1);
     scale = newScale;
   }
-  drawPlane();
+  updateMapCanvas();
 }
 
 // Handle panning with mouse
@@ -120,7 +103,7 @@ function onMouseMove(event) {
   if (isDragging) {
     translation.x = event.clientX - startX;
     translation.y = event.clientY - startY;
-    drawPlane();
+    updateMapCanvas();
   }
 }
 
@@ -147,7 +130,7 @@ function onTouchMove(event) {
   if (event.touches.length === 1 && isDragging) {
     translation.x = event.touches[0].clientX - startX;
     translation.y = event.touches[0].clientY - startY;
-    drawPlane();
+    updateMapCanvas();
   } else if (event.touches.length === 2 && lastTouchDist) {
     // Handle pinch zoom
     const newDist = getTouchDistance(event.touches);
@@ -168,7 +151,7 @@ function onTouchMove(event) {
 
       scale = newScale;
       lastTouchDist = newDist;
-      drawPlane();
+      updateMapCanvas();
     }
   }
 }
@@ -191,12 +174,12 @@ function addNewPoint(x, y) {
   const worldX = (x - translation.x) / scale / devicePixelRatio;
   const worldY = (y - translation.y) / scale / devicePixelRatio;
   outsidePoints.push({ x: worldX, y: worldY });
-  drawPlane();
+  updateMapCanvas();
 }
 
-function initializeMap(): void {
+export function initializeMapInteraction(): void {
   // Automatically switch between touch and mouse event listeners based on device capabilities
-  if ('ontouchstart' in window) {
+  if (supportTouch()) {
     // Touch events for mobile
     mapCanvasElement.addEventListener('touchstart', onTouchStart, { passive: false });
     mapCanvasElement.addEventListener('touchmove', onTouchMove, { passive: false });
@@ -209,5 +192,5 @@ function initializeMap(): void {
     mapCanvasElement.addEventListener('mouseup', onMouseUp);
     mapCanvasElement.addEventListener('mouseleave', onMouseUp);
   }
-  drawPlane();
+  updateMapCanvas();
 }
