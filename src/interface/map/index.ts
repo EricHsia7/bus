@@ -146,7 +146,7 @@ function onTouchEnd(event: Event): void {
   updateVisibleObjects();
   isDragging = false;
   lastTouchDist = null;
-  console.log(translation, scale, currentIntegration);
+  console.log(translation, scale, currentIntegration, getViewportCorners());
 }
 
 interface ViewportCorners {
@@ -200,7 +200,13 @@ function updateMapCanvas(): void {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.save();
   ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
+
   ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
+  const integrationBoundary = currentIntegration.boundary;
+  const integrationTopLeftLatitude = integrationBoundary.topLeft.latitude;
+  const integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
+  // const integrationBottomRightLatitude = integrationBoundary.bottomRight.latitude;
+  // const integrationBottomRightLongitude = integrationBoundary.bottomRight.longitude;
 
   for (const objectIndex of objectsInViewport) {
     const object: MapObject = currentIntegration.objects[objectIndex];
@@ -209,14 +215,14 @@ function updateMapCanvas(): void {
         drawLine(
           ctx,
           object.points.map((point) => {
-            return { x: point[0] * resolution * devicePixelRatio, y: point[1] * resolution * devicePixelRatio };
+            return { x: (point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, y: (point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio };
           }),
           strokeStyle,
           lineWidth / scale
         );
         break;
       case 'location':
-        drawPoint(ctx, object.point[0] * resolution * devicePixelRatio, object.point[1] * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+        drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
         break;
       default:
         break;
