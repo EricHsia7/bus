@@ -1,5 +1,5 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 import { integrateMap, MapObject } from '../../data/map/index';
 import { drawLine, drawPoint } from '../../tools/graphic';
 import { generateIdentifier, supportTouch } from '../../tools/index';
@@ -44,8 +44,8 @@ function queryMapFieldSize(): FieldSize {
 
 export function ResizeMapCanvas(): void {
   const size = queryMapFieldSize();
-  canvasWidth = size.width;
-  canvasHeight = size.height;
+  canvasWidth = size.width * devicePixelRatio;
+  canvasHeight = size.height * devicePixelRatio;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
   updateVisibleObjects();
