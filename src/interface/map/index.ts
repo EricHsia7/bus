@@ -257,15 +257,7 @@ function updateMapCanvas(): void {
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
 
-    drawLine(
-      ctx,
-      [
-        { x: 0, y: 0 },
-        { x: 121, y: 24 }
-      ],
-      'green',
-      6 / scale
-    );
+    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', 6 / scale);
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
         renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
