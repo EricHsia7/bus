@@ -242,8 +242,8 @@ function updateVisibleObjects(): void {
     const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
 
     let objects = [];
-    for (let i = currentBottomRightChunkX; i < currentTopLeftChunkX; i++) {
-      for (let j = currentBottomRightChunkY; j < currentTopLeftChunkY; j++) {
+    for (let i = currentTopLeftChunkX; i < currentBottomRightChunkX; i++) {
+      for (let j = currentTopLeftChunkY; j < currentBottomRightChunkY; j++) {
         const chunkKey = `c_${i}_${j}`;
         if (currentIntegration.hasOwnProperty(chunkKey)) {
           objects = objects.concat(currentIntegration[chunkKey]);
