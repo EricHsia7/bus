@@ -226,14 +226,14 @@ function updateMapCanvas(): void {
           drawLine(
             ctx,
             object.points.map((point) => {
-              return { x: point[0] * resolution * devicePixelRatio, y: point[1] * resolution * devicePixelRatio };
+              return { x: (point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, y: (point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio };
             }),
             strokeStyle,
             lineWidth / scale
           );
           break;
         case 'location':
-          drawPoint(ctx, object.point[0] * resolution * devicePixelRatio, object.point[1] * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+          drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
           break;
         default:
           break;
