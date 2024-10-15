@@ -48,22 +48,26 @@ export function ResizeMapCanvas(): void {
   canvasHeight = size.height * devicePixelRatio;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
+  ctx.scale(devicePixelRatio, devicePixelRatio); // Ensure the context is scaled correctly.
   updateVisibleObjects();
   updateMapCanvas();
 }
 
-// Handle zooming with mouse wheel
-function onWheel(event: Event): void {
+function onWheel(event: WheelEvent): void {
   event.preventDefault();
   const zoomFactor = 0.1;
   const delta = event.deltaY > 0 ? 1 : -1;
   const newScale = scale - delta * zoomFactor;
 
   if (newScale >= minScale && newScale <= maxScale) {
-    const mousePos = { x: event.offsetX - translation.x, y: event.offsetY - translation.y };
+    // Adjust for devicePixelRatio in zoom calculations
+    const mousePos = {
+      x: (event.offsetX - translation.x) / devicePixelRatio,
+      y: (event.offsetY - translation.y) / devicePixelRatio
+    };
     const zoomRatio = newScale / scale;
-    translation.x -= mousePos.x * (zoomRatio - 1);
-    translation.y -= mousePos.y * (zoomRatio - 1);
+    translation.x -= mousePos.x * (zoomRatio - 1) * devicePixelRatio;
+    translation.y -= mousePos.y * (zoomRatio - 1) * devicePixelRatio;
     scale = newScale;
   }
   updateMapCanvas();
@@ -110,29 +114,30 @@ function onTouchStart(event: Event): void {
   }
 }
 
-function onTouchMove(event: Event): void {
+function onTouchMove(event: TouchEvent): void {
   event.preventDefault();
   if (event.touches.length === 1 && isDragging) {
-    translation.x = event.touches[0].clientX - startX;
-    translation.y = event.touches[0].clientY - startY;
+    translation.x = (event.touches[0].clientX - startX) * devicePixelRatio;
+    translation.y = (event.touches[0].clientY - startY) * devicePixelRatio;
     updateMapCanvas();
   } else if (event.touches.length === 2 && lastTouchDist) {
-    // Handle pinch zoom
     const newDist = getTouchDistance(event.touches);
     const zoomFactor = newDist / lastTouchDist;
     const newScale = scale * zoomFactor;
 
     if (newScale >= minScale && newScale <= maxScale) {
-      // Center zoom around midpoint between two touch points
       const midpoint = {
-        x: (event.touches[0].clientX + event.touches[1].clientX) / 2,
-        y: (event.touches[0].clientY + event.touches[1].clientY) / 2
+        x: (event.touches[0].clientX + event.touches[1].clientX) / 2 / devicePixelRatio,
+        y: (event.touches[0].clientY + event.touches[1].clientY) / 2 / devicePixelRatio
       };
 
-      const mousePos = { x: midpoint.x - translation.x, y: midpoint.y - translation.y };
+      const mousePos = {
+        x: midpoint.x - translation.x / devicePixelRatio,
+        y: midpoint.y - translation.y / devicePixelRatio
+      };
       const zoomRatio = newScale / scale;
-      translation.x -= mousePos.x * (zoomRatio - 1);
-      translation.y -= mousePos.y * (zoomRatio - 1);
+      translation.x -= mousePos.x * (zoomRatio - 1) * devicePixelRatio;
+      translation.y -= mousePos.y * (zoomRatio - 1) * devicePixelRatio;
 
       scale = newScale;
       lastTouchDist = newDist;
@@ -163,11 +168,11 @@ interface ViewportCorners {
 }
 
 function getViewportCorners(): ViewportCorners {
-  const topLeftX = (-1 * translation.x) / scale;
-  const topLeftY = (-1 * translation.y) / scale;
+  const topLeftX = (-1 * translation.x) / scale / devicePixelRatio;
+  const topLeftY = (-1 * translation.y) / scale / devicePixelRatio;
 
-  const bottomRightX = (canvasWidth / devicePixelRatio - translation.x) / scale;
-  const bottomRightY = (canvasHeight / devicePixelRatio - translation.y) / scale;
+  const bottomRightX = (canvasWidth - translation.x * devicePixelRatio) / scale / devicePixelRatio;
+  const bottomRightY = (canvasHeight - translation.y * devicePixelRatio) / scale / devicePixelRatio;
 
   return {
     topLeft: {
