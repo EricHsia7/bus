@@ -147,7 +147,7 @@ function onTouchEnd(event: Event): void {
   isDragging = false;
   lastTouchDist = null;
   const vp = getViewportCorners();
-  console.log(currentIntegration.boundary.topLeft.x, currentIntegration.topLeft.y);
+  console.log(currentIntegration.boundary.topLeft.x, currentIntegration.boundary.topLeft.y);
   console.log(vp.topLeft.x / chunkWidth, vp.topLeft.y / chunkHeight);
 }
 
