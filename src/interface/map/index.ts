@@ -1,5 +1,7 @@
 import { FieldSize } from '../index';
 
+let previousIntegration = {};
+
 const mapCanvasElement = document.getElementById('map_canvas');
 const ctx = mapCanvasElement.getContext('2d');
 
@@ -17,6 +19,9 @@ let translation = { x: 0, y: 0 };
 let isDragging = false;
 let startX, startY;
 let lastTouchDist = null; // Used for pinch zoom
+
+let objectsInViewport = [];
+let objectsAtVisibleScale = [];
 
 function queryMapFieldSize(): FieldSize {
   return {
