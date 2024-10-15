@@ -200,13 +200,15 @@ function updateMapCanvas(): void {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.save();
   ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
-
   ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
-  const integrationBoundary = currentIntegration.boundary;
-  const integrationTopLeftLatitude = integrationBoundary.topLeft.latitude;
-  const integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
-  // const integrationBottomRightLatitude = integrationBoundary.bottomRight.latitude;
-  // const integrationBottomRightLongitude = integrationBoundary.bottomRight.longitude;
+
+  let integrationTopLeftLatitude = 0;
+  let integrationTopLeftLongitude = 0;
+  if (currentIntegration.hasOwnProperty('boundary')) {
+    const integrationBoundary = currentIntegration.boundary;
+    integrationTopLeftLatitude = integrationBoundary.topLeft.latitude;
+    integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
+  }
 
   for (const objectIndex of objectsInViewport) {
     const object: MapObject = currentIntegration.objects[objectIndex];
