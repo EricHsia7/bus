@@ -16,7 +16,7 @@ let canvasHeight = window.innerHeight * devicePixelRatio;
 
 const chunkWidth = 300;
 const chunkHeight = 300;
-let resolution = (1 / 0.01) * 300;
+const interval = 0.01;
 
 const lineWidth = 5;
 const pointRadius = 3;
@@ -49,7 +49,6 @@ export function ResizeMapCanvas(): void {
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
   ctx.scale(devicePixelRatio, devicePixelRatio); // Ensure the context is scaled correctly.
-  updateVisibleObjects();
   updateMapCanvas();
 }
 
@@ -91,7 +90,6 @@ function onMouseMove(event: Event): void {
 
 function onMouseUp(event: Event): void {
   event.preventDefault();
-  updateVisibleObjects();
   isDragging = false;
 }
 
@@ -148,12 +146,17 @@ function onTouchMove(event: TouchEvent): void {
 
 function onTouchEnd(event: Event): void {
   event.preventDefault();
-  updateVisibleObjects();
   isDragging = false;
   lastTouchDist = null;
   const vp = getViewportCorners();
   console.log(currentIntegration.boundary.topLeft.x, currentIntegration.boundary.topLeft.y);
   console.log(vp.topLeft.x / chunkWidth, vp.topLeft.y / chunkHeight);
+}
+
+function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
+  const x = (longitude / interval) * chunkWidth * scale * devicePixelRatio;
+  const y = (latitude / interval) * chunkHeight * scale * devicePixelRatio;
+  return { x, y };
 }
 
 interface ViewportCorners {
@@ -203,48 +206,43 @@ export function initializeMapInteraction(): void {
   }
 }
 
-function updateMapCanvas(): void {
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+function renderChunk(chunkX: number, chunkY: number): void {
+  // Calculate the top-left corner of the chunk on the canvas
+  const startX = chunkX * chunkWidth * scale * devicePixelRatio;
+  const startY = chunkY * chunkHeight * scale * devicePixelRatio;
+
   ctx.save();
-  ctx.translate(translation.x * devicePixelRatio, translation.y * devicePixelRatio);
-  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
-
-  let integrationTopLeftLatitude = 0;
-  let integrationTopLeftLongitude = 0;
-  if (currentIntegration.hasOwnProperty('boundary')) {
-    const integrationBoundary = currentIntegration.boundary;
-    integrationTopLeftLatitude = integrationBoundary.topLeft.latitude;
-    integrationTopLeftLongitude = integrationBoundary.topLeft.longitude;
-  }
-
-  if (currentIntegration.hasOwnProperty('objects')) {
-    for (const object of currentIntegration.objects) {
-      // objectsInViewport
-      // const object: MapObject = currentIntegration.objects[objectIndex];
+  ctx.translate(startX, startY); // Translate to the chunk's position
+  ctx.scale(scale, scale); // Apply zoom scaling
+  const thisChunkKey = `c_${chunkX}_${chunkY}`;
+  if (currentIntegration.chunks.hasOwnProperty(thisChunkKey)) {
+    const thisChunk = currentIntegration.chunks[thisChunkKey];
+    for (const objectIndex of thisChunk) {
+      const object: MapObject = currentIntegration.objects[objectIndex];
       switch (object.type) {
         case 'route':
           drawLine(
             ctx,
             object.points.map((point) => {
-              return { x: (point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, y: (point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio };
+              return getPointInChunk(point[0], point[1]);
             }),
             strokeStyle,
             lineWidth / scale
           );
           break;
         case 'location':
-          drawPoint(ctx, (object.point[0] - integrationTopLeftLatitude) * resolution * devicePixelRatio, (object.point[1] - integrationTopLeftLongitude) * resolution * devicePixelRatio, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+          const pointInChunk = getPointInChunk(object.point[0], object.point[1]);
+          drawPoint(ctx, pointInChunk.x, pointInChunk.y, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
           break;
         default:
           break;
       }
     }
   }
-
   ctx.restore();
 }
 
-function updateVisibleObjects(): void {
+function updateMapCanvas(): void {
   if (currentIntegration.hasOwnProperty('boundary')) {
     const integrationBoundary = currentIntegration.boundary;
     const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
@@ -266,18 +264,11 @@ function updateVisibleObjects(): void {
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
 
-    let objects = [];
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
-        const chunkKey = `c_${i + currentTopLeftChunkX}_${j + currentTopLeftChunkY}`;
-        if (currentIntegration.hasOwnProperty(chunkKey)) {
-          objects = objects.concat(currentIntegration[chunkKey]);
-          console.log(objects);
-        }
+        renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
       }
     }
-
-    objectsInViewport = objects;
   }
 }
 

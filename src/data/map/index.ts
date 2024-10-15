@@ -54,10 +54,10 @@ export interface integratedMap {
 
 const interval = 0.01;
 
-function getChunkCoordinate(latitude: number, longitude: number): [number, number] {
-  const x = Math.floor(latitude / interval);
-  const y = Math.floor(longitude / interval);
-  return [x, y];
+export function getChunkCoordinates(longitude: number, latitude: number, interval: number): { chunkX: number; chunkY: number } {
+  const chunkX = Math.floor(longitude / interval);
+  const chunkY = Math.floor(latitude / interval);
+  return { chunkX, chunkY };
 }
 
 export async function integrateMap(requestID: string): Promise<integratedMap> {
@@ -102,14 +102,14 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     for (const point of integratedMapRouteObject.points) {
       thisLatitudes.push(point[0]);
       thisLongitudes.push(point[1]);
-      const chunkCoordinate = getChunkCoordinate(point[0], point[1]);
-      if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
-        chunkX.push(chunkCoordinate[0]);
+      const chunkCoordinate = getChunkCoordinates(point[0], point[1], interval);
+      if (chunkX.indexOf(chunkCoordinate.chunkX) < 0) {
+        chunkX.push(chunkCoordinate.chunkX);
       }
-      if (chunkY.indexOf(chunkCoordinate[1]) < 0) {
-        chunkY.push(chunkCoordinate[1]);
+      if (chunkY.indexOf(chunkCoordinate.chunkY) < 0) {
+        chunkY.push(chunkCoordinate.chunkY);
       }
-      const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
+      const chunkKey = `c_${chunkCoordinate.chunkX}_${chunkCoordinate.chunkY}`;
       if (!chunks.hasOwnProperty(chunkKey)) {
         chunks[chunkKey] = [];
       }
@@ -143,14 +143,14 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     const thisPoint = integratedMapLocationObject.point;
     latitudes.push(thisPoint[0]);
     longitudes.push(thisPoint[1]);
-    const chunkCoordinate = getChunkCoordinate(thisPoint[0], thisPoint[1]);
-    if (chunkX.indexOf(chunkCoordinate[0]) < 0) {
-      chunkX.push(chunkCoordinate[0]);
+    const chunkCoordinate = getChunkCoordinates(thisPoint[0], thisPoint[1], interval);
+    if (chunkX.indexOf(chunkCoordinate.chunkX) < 0) {
+      chunkX.push(chunkCoordinate.chunkX);
     }
-    if (chunkY.indexOf(chunkCoordinate[1]) < 0) {
-      chunkY.push(chunkCoordinate[1]);
+    if (chunkY.indexOf(chunkCoordinate.chunkY) < 0) {
+      chunkY.push(chunkCoordinate.chunkY);
     }
-    const chunkKey = `c_${chunkCoordinate[0]}_${chunkCoordinate[1]}`;
+    const chunkKey = `c_${chunkCoordinate.chunkX}_${chunkCoordinate.chunkY}`;
     if (!chunks.hasOwnProperty(chunkKey)) {
       chunks[chunkKey] = [];
     }
