@@ -44,7 +44,7 @@ export function ResizeMapCanvas(): void {
   canvasHeight = size.height * devicePixelRatio;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
-  ctx.scale(devicePixelRatio, devicePixelRatio); // Ensure the context is scaled correctly.
+  // ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio); // Ensure the context is scaled correctly.
   updateMapCanvas();
 }
 
@@ -200,13 +200,6 @@ export function initializeMapInteraction(): void {
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
-  // Calculate the top-left corner of the chunk on the canvas
-  const startX = chunkX * chunkWidth * scale * devicePixelRatio;
-  const startY = chunkY * chunkHeight * scale * devicePixelRatio;
-
-  ctx.save();
-  ctx.translate(startX, startY); // Translate to the chunk's position
-  ctx.scale(scale, scale); // Apply zoom scaling
   const thisChunkKey = `c_${chunkX}_${chunkY}`;
   if (currentIntegration.chunks.hasOwnProperty(thisChunkKey)) {
     const thisChunk = currentIntegration.chunks[thisChunkKey];
@@ -232,14 +225,13 @@ function renderChunk(chunkX: number, chunkY: number): void {
       }
     }
   }
-  ctx.restore();
 }
 
 function updateMapCanvas(): void {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.save();
   ctx.translate(translation.x, translation.y);
-  ctx.scale(scale, scale);
+  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
 
   if (currentIntegration.hasOwnProperty('boundary')) {
     const integrationBoundary = currentIntegration.boundary;
