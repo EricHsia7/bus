@@ -241,10 +241,13 @@ function updateVisibleObjects(): void {
     const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
     const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
 
+    const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
+    const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
+
     let objects = [];
-    for (let i = currentTopLeftChunkX; i < currentBottomRightChunkX; i++) {
-      for (let j = currentTopLeftChunkY; j < currentBottomRightChunkY; j++) {
-        const chunkKey = `c_${i}_${j}`;
+    for (let i = 0; i < chunkXRange; i++) {
+      for (let j = 0; j < chunkYRange; j++) {
+        const chunkKey = `c_${i + currentTopLeftChunkX}_${j + currentTopLeftChunkY}`;
         if (currentIntegration.hasOwnProperty(chunkKey)) {
           objects = objects.concat(currentIntegration[chunkKey]);
         }
