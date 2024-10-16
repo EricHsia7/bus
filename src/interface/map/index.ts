@@ -12,13 +12,13 @@ const MapSVGElement = elementQuerySelector(MapBodyElement, 'svg#map');
 const RouteLayerElement = elementQuerySelector(MapSVGElement, 'g#map-route-layer');
 const LocationLayerElement = elementQuerySelector(MapSVGElement, 'g#map-location-layer');
 
-const lineWidth = 5;
+const lineWidth = 0.001;
 const pointRadius = 0.1;
 const strokeStyle = 'red';
 const fill = 'blue';
 
-const chunkWidth = 35;
-const chunkHeight = 35;
+const chunkWidth = 60;
+const chunkHeight = 60;
 const interval = 0.01;
 const maxScale = 5;
 const minScale = 0.001;
