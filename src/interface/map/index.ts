@@ -88,6 +88,7 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
+  console.log(longitude, latitude, currentIntegration.boundary.topLeft);
   return { x: (longitude - currentIntegration.boundary.topLeft.longitude) * chunkWidth, y: -1 * (latitude - currentIntegration.boundary.topLeft.latitude) * chunkHeight };
 }
 
