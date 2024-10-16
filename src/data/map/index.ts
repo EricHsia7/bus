@@ -56,7 +56,7 @@ const interval = 0.01;
 
 export function getChunkCoordinates(longitude: number, latitude: number, interval: number): { chunkX: number; chunkY: number } {
   const chunkX = Math.floor(longitude / interval);
-  const chunkY = Math.floor(latitude / interval);
+  const chunkY = Math.floor(-1 * latitude / interval);
   return { chunkX, chunkY };
 }
 
