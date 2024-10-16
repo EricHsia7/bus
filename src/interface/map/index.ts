@@ -162,6 +162,7 @@ export async function initializeMapSVG(): void {
   const requestID = generateIdentifier('r');
   const integration = await integrateMap(requestID);
   currentIntegration = integration;
+  updateLayers();
   ResizeMapField();
 }
 
@@ -332,9 +333,6 @@ export function openMap(): void {
   pushPageHistory('Map');
   MapField.setAttribute('displayed', 'true');
   initializeMapSVG();
-
-  updateLayers();
-
   closePreviousPage();
 }
 
