@@ -1,35 +1,45 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 import { integrateMap, MapObject } from '../../data/map/index';
-import { drawLine, drawPoint } from '../../tools/graphic';
+import { generateSVGCircle } from '../../tools/graphic';
 import { generateIdentifier, supportTouch } from '../../tools/index';
 
 let currentIntegration = {};
 
 const MapField = documentQuerySelector('.css_map_field');
-const mapCanvasElement = elementQuerySelector(MapField, '#map_canvas');
-const ctx = mapCanvasElement.getContext('2d');
-
-const devicePixelRatio = window.devicePixelRatio || 1;
-let canvasWidth = window.innerWidth * devicePixelRatio;
-let canvasHeight = window.innerHeight * devicePixelRatio;
-
-const chunkWidth = 300;
-const chunkHeight = 300;
-const interval = 0.01;
+const MapBodyElement = elementQuerySelector(MapField, '.css_map_body');
+const MapSVGElement = elementQuerySelector(MapBodyElement, 'svg#map');
+const RouteLayerElement = elementQuerySelector(MapSVGElement, 'g#map-route-layer');
+const LocationLayerElement = elementQuerySelector(MapSVGElement, 'g#map-location-layer');
 
 const lineWidth = 5;
 const pointRadius = 3;
 const strokeStyle = 'red';
 const fill = 'blue';
+
+const chunkWidth = 100;
+const chunkHeight = 100;
+const interval = 0.01;
 const maxScale = 5;
 const minScale = 0.001;
 
+let fieldWidth = 0;
+let fieldHeight = 0;
+
+let translateX = 0;
+let translateY = 0;
 let scale = 1;
-let translation = { x: 0, y: 0 };
-let isDragging = false;
-let startX, startY;
-let lastTouchDist = null; // Used for pinch zoom
+
+let deltaTranslateX = 0;
+let deltaTranslateY = 0;
+let deltaScale = 1;
+
+let pointers = {};
+let initialPointers = {};
+
+const sameSessionTime = 300; // 300 ms
+let sessionStarted = false;
+let sessionTime = 0;
 
 function queryMapFieldSize(): FieldSize {
   return {
@@ -38,118 +48,13 @@ function queryMapFieldSize(): FieldSize {
   };
 }
 
-export function ResizeMapCanvas(): void {
+export function ResizeMapField(): void {
   const size = queryMapFieldSize();
-  canvasWidth = size.width * devicePixelRatio;
-  canvasHeight = size.height * devicePixelRatio;
-  mapCanvasElement.width = canvasWidth;
-  mapCanvasElement.height = canvasHeight;
-  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio); // Ensure the context is scaled correctly.
-  updateMapCanvas();
-}
-
-function onWheel(event: WheelEvent): void {
-  event.preventDefault();
-  const zoomFactor = 0.1;
-  const delta = event.deltaY > 0 ? 1 : -1;
-  const newScale = scale - delta * zoomFactor;
-
-  if (newScale >= minScale && newScale <= maxScale) {
-    // Adjust for devicePixelRatio in zoom calculations
-    const mousePos = {
-      x: (event.offsetX - translation.x) / devicePixelRatio,
-      y: (event.offsetY - translation.y) / devicePixelRatio
-    };
-    const zoomRatio = newScale / scale;
-    translation.x -= mousePos.x * (zoomRatio - 1) * devicePixelRatio;
-    translation.y -= mousePos.y * (zoomRatio - 1) * devicePixelRatio;
-    scale = newScale;
-  }
-  updateMapCanvas();
-}
-
-function onMouseDown(event: Event): void {
-  event.preventDefault();
-  isDragging = true;
-  startX = event.clientX - translation.x;
-  startY = event.clientY - translation.y;
-}
-
-function onMouseMove(event: Event): void {
-  event.preventDefault();
-  if (isDragging) {
-    translation.x = event.clientX - startX;
-    translation.y = event.clientY - startY;
-    updateMapCanvas();
-  }
-}
-
-function onMouseUp(event: Event): void {
-  event.preventDefault();
-  isDragging = false;
-}
-
-function getTouchDistance(touches: TouchList): number {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-function onTouchStart(event: Event): void {
-  event.preventDefault();
-  if (event.touches.length === 1) {
-    isDragging = true;
-    startX = event.touches[0].clientX - translation.x;
-    startY = event.touches[0].clientY - translation.y;
-    lastTouchDist = null; // Reset pinch distance when only one finger is used
-  } else if (event.touches.length === 2) {
-    // Pinch zoom
-    lastTouchDist = getTouchDistance(event.touches);
-  }
-}
-
-function onTouchMove(event: TouchEvent): void {
-  event.preventDefault();
-  if (event.touches.length === 1 && isDragging) {
-    translation.x = (event.touches[0].clientX - startX) * devicePixelRatio;
-    translation.y = (event.touches[0].clientY - startY) * devicePixelRatio;
-    updateMapCanvas();
-  } else if (event.touches.length === 2 && lastTouchDist) {
-    const newDist = getTouchDistance(event.touches);
-    const zoomFactor = newDist / lastTouchDist;
-    const newScale = scale * zoomFactor;
-
-    if (newScale >= minScale && newScale <= maxScale) {
-      const midpoint = {
-        x: (event.touches[0].clientX + event.touches[1].clientX) / 2 / devicePixelRatio,
-        y: (event.touches[0].clientY + event.touches[1].clientY) / 2 / devicePixelRatio
-      };
-
-      const mousePos = {
-        x: midpoint.x - translation.x / devicePixelRatio,
-        y: midpoint.y - translation.y / devicePixelRatio
-      };
-      const zoomRatio = newScale / scale;
-      translation.x -= mousePos.x * (zoomRatio - 1) * devicePixelRatio;
-      translation.y -= mousePos.y * (zoomRatio - 1) * devicePixelRatio;
-
-      scale = newScale;
-      lastTouchDist = newDist;
-      updateMapCanvas();
-    }
-  }
-}
-
-function onTouchEnd(event: Event): void {
-  event.preventDefault();
-  isDragging = false;
-  lastTouchDist = null;
-}
-
-function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  const x = ((longitude / interval) * chunkWidth - translation.x) / scale; // / devicePixelRatio // * scale
-  const y = ((latitude / interval) * chunkHeight - translation.y) / scale; // / devicePixelRatio // * scale
-  return { x, y };
+  fieldWidth = size.width;
+  fieldHeight = size.height;
+  MapSVGElement.setAttributeNS(null, 'width', `${fieldWidth}px`);
+  MapSVGElement.setAttributeNS(null, 'height', `${fieldHeight}px`);
+  MapSVGElement.setAttributeNS(null, 'viewbox', `0,0,${fieldWidth},${fieldHeight}`);
 }
 
 interface ViewportCorners {
@@ -164,11 +69,11 @@ interface ViewportCorners {
 }
 
 function getViewportCorners(): ViewportCorners {
-  const topLeftX = (-1 * translation.x) / scale / devicePixelRatio;
-  const topLeftY = (-1 * translation.y) / scale / devicePixelRatio;
+  const topLeftX = -1 * translateX;
+  const topLeftY = -1 * translateY;
 
-  const bottomRightX = (canvasWidth - translation.x * devicePixelRatio) / scale / devicePixelRatio;
-  const bottomRightY = (canvasHeight - translation.y * devicePixelRatio) / scale / devicePixelRatio;
+  const bottomRightX = topLeftX + fieldWidth;
+  const bottomRightY = topLeftY + fieldHeight;
 
   return {
     topLeft: {
@@ -182,21 +87,8 @@ function getViewportCorners(): ViewportCorners {
   };
 }
 
-export function initializeMapInteraction(): void {
-  // Automatically switch between touch and mouse event listeners based on device capabilities
-  if (supportTouch()) {
-    // Touch events for mobile
-    mapCanvasElement.addEventListener('touchstart', onTouchStart, { passive: false });
-    mapCanvasElement.addEventListener('touchmove', onTouchMove, { passive: false });
-    mapCanvasElement.addEventListener('touchend', onTouchEnd, { passive: false });
-  } else {
-    // Mouse events for desktop
-    mapCanvasElement.addEventListener('wheel', onWheel);
-    mapCanvasElement.addEventListener('mousedown', onMouseDown);
-    mapCanvasElement.addEventListener('mousemove', onMouseMove);
-    mapCanvasElement.addEventListener('mouseup', onMouseUp);
-    mapCanvasElement.addEventListener('mouseleave', onMouseUp);
-  }
+function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
+  return { x: (longitude / interval) * chunkWidth, y: (latitude / interval) * chunkHeight };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
@@ -207,18 +99,20 @@ function renderChunk(chunkX: number, chunkY: number): void {
       const object: MapObject = currentIntegration.objects[objectIndex];
       switch (object.type) {
         case 'route':
-          drawLine(
+          /*drawLine(
             ctx,
             object.points.map((point) => {
               return getPointInChunk(point[0], point[1]);
             }),
             strokeStyle,
             lineWidth / scale
-          );
+          );*/
+
           break;
         case 'location':
           const pointInChunk = getPointInChunk(object.point[0], object.point[1]);
-          drawPoint(ctx, pointInChunk.x, pointInChunk.y, pointRadius / scale, fill, strokeStyle, lineWidth / 2 / scale);
+          const circleElement = generateSVGCircle(pointInChunk.x, pointInChunk.y, pointRadius, strokeStyle, lineWidth / 2, fill);
+          LocationLayerElement.appendChild(circleElement);
           break;
         default:
           break;
@@ -227,12 +121,7 @@ function renderChunk(chunkX: number, chunkY: number): void {
   }
 }
 
-function updateMapCanvas(): void {
-  ctx.clearRect(0, 0, canvasWidth / devicePixelRatio, canvasHeight / devicePixelRatio);
-  ctx.save();
-  ctx.translate(translation.x, translation.y);
-  ctx.scale(scale, scale);
-
+function updateLayers(): void {
   if (currentIntegration.hasOwnProperty('boundary')) {
     const integrationBoundary = currentIntegration.boundary;
     const integrationTopLeftChunkX = integrationBoundary.topLeft.x;
@@ -253,7 +142,6 @@ function updateMapCanvas(): void {
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
-    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', 6 / scale / devicePixelRatio);
 
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
@@ -261,20 +149,189 @@ function updateMapCanvas(): void {
       }
     }
   }
-  ctx.restore();
 }
 
-export async function initializeMapCanvas(): void {
+function setLayersTransform(translateX: number, translateY: number, scale: number): void {
+  const transformString = `translate(${translateX} ${translateY}) scale(${scale})`;
+  // dilation (scaling) is done before translation
+  RouteLayerElement.setAttributeNS(null, 'transform', transformString);
+  LocationLayerElement.setAttributeNS(null, 'transform', transformString);
+}
+
+export async function initializeMapSVG(): void {
   const requestID = generateIdentifier('r');
   const integration = await integrateMap(requestID);
   currentIntegration = integration;
-  ResizeMapCanvas();
+  ResizeMapField();
+}
+
+export function initializeMapInteraction(): void {
+  if (supportTouch()) {
+    MapSVGElement.addEventListener('touchstart', handleStartEvent, { passive: false });
+    MapSVGElement.addEventListener('touchmove', handleMoveEvent, { passive: false });
+    MapSVGElement.addEventListener('touchend', handleEndEvent, { passive: false });
+  } else {
+    MapSVGElement.addEventListener('mousedown', handleStartEvent);
+    MapSVGElement.addEventListener('mousemove', handleMoveEvent);
+    MapSVGElement.addEventListener('mouseup', handleEndEvent);
+  }
+}
+
+function handleStartEvent(event: Event): void {
+  event.preventDefault();
+  const now = new Date().getTime();
+  if (!sessionStarted || now - sessionTime <= sameSessionTime) {
+    sessionStarted = true;
+    sessionTime = now;
+    // reset delta
+    deltaTranslateX = 0;
+    deltaTranslateY = 0;
+    deltaScale = 1;
+    // update pointers
+    pointers = {};
+    initialPointers = {};
+    if (event.touches) {
+      // touch event
+      for (const touch of event.touches) {
+        const pointerKey = `p_${touch.identifier}`;
+        pointers[pointerKey] = { x: touch.clientX, y: touch.clientY };
+        initialPointers[pointerKey] = { x: touch.clientX, y: touch.clientY };
+      }
+    } else {
+      // other event
+      const pointerKey = `p_0`;
+      pointers[pointerKey] = { x: event.clientX, y: event.clientY };
+      initialPointers[pointerKey] = { x: event.clientX, y: event.clientY };
+    }
+  }
+}
+
+function handleMoveEvent(event: Event): void {
+  event.preventDefault();
+  if (sessionStarted) {
+    // update pointers
+    pointers = {};
+    if (event.touches) {
+      // touch event
+      for (const touch of event.touches) {
+        const pointerKey = `p_${touch.identifier}`;
+        pointers[pointerKey] = { x: touch.clientX, y: touch.clientY };
+      }
+    } else {
+      // other event
+      const pointerKey = `p_0`;
+      pointers[pointerKey] = { x: event.clientX, y: event.clientY };
+    }
+
+    // match behavior
+    let behavior = 'none';
+    if (event.touches) {
+      // touch event
+      if (Object.keys(pointers).length === 1) {
+        behavior = 'move';
+      }
+      if (Object.keys(pointers).length >= 2) {
+        if ([...new Set(Object.keys(pointers))].every((value) => new Set(Object.keys(initialPointers)).has(value))) {
+          behavior = 'zoom';
+        } else {
+          behavior = 'move';
+        }
+      }
+    } else {
+      // other event
+      if (Object.keys(pointers).length === 1) {
+        behavior = 'move';
+      }
+    }
+
+    // do the behavior
+    switch (behavior) {
+      case 'move':
+        // calculate delta
+        for (const pointerKey in pointers) {
+          if (initialPointers.hasOwnProperty(pointerKey)) {
+            const pointer = pointers[pointerKey];
+            const initialPointer = initialPointers[pointerKey];
+            deltaTranslateX = pointer.x - initialPointer.x;
+            deltaTranslateY = pointer.y - initialPointer.y;
+          }
+        }
+        break;
+      case 'zoom':
+        // calculate center point
+        let totalX = 0;
+        let totalY = 0;
+        let pointerQuantity = 0;
+        for (const pointerKey in initialPointers) {
+          if (initialPointers.hasOwnProperty(pointerKey)) {
+            const pointer = initialPointers[pointerKey];
+            totalX += pointer.x;
+            totalY += pointer.y;
+            pointerQuantity += 1;
+          }
+        }
+        let centerX = totalX / pointerQuantity;
+        let centerY = totalY / pointerQuantity;
+
+        // calculate initial distance
+        let initialDistance = 0;
+        const thisInitialPointersValues = Object.values(initialPointers);
+        if (thisInitialPointersValues.length === 2) {
+          initialDistance = Math.hypot(thisInitialPointersValues[0].x - thisInitialPointersValues[1].x, thisInitialPointersValues[0].y - thisInitialPointersValues[1].y);
+        }
+        if (thisInitialPointersValues.length === 3) {
+          initialDistance = Math.hypot(thisInitialPointersValues[0].x - centerX, thisInitialPointersValues[0].y - centerY);
+        }
+
+        // calculate distance
+        let distance = 0;
+        const thisPointersValues = Object.values(pointers);
+        if (thisPointersValues.length === 2) {
+          distance = Math.hypot(thisPointersValues[0].x - thisPointersValues[1].x, thisPointersValues[0].y - thisPointersValues[1].y);
+        }
+        if (thisPointersValues.length === 3) {
+          distance = Math.hypot(thisPointersValues[0].x - centerX, thisPointersValues[0].y - centerY);
+        }
+
+        // calculate delta transform
+        deltaScale = initialDistance === 0 ? 1 : distance / initialDistance;
+        deltaTranslateX = (centerX - centerX * deltaScale) / 2;
+        deltaTranslateY = (centerY - centerY * deltaScale) / 2;
+        if (deltaScale === 0) {
+          deltaScale = 1;
+        }
+        break;
+      default:
+        break;
+    }
+
+    // preview transform
+    setLayersTransform(translateX + deltaTranslateX, translateY + deltaTranslateY, scale * deltaScale);
+  }
+}
+
+function handleEndEvent(event: Event): void {
+  event.preventDefault();
+  if (sessionStarted) {
+    // save transform
+    translateX += deltaTranslateX;
+    translateY += deltaTranslateY;
+    scale *= deltaScale;
+
+    // sync transform
+    setLayersTransform(translateX, translateY, scale);
+
+    // update layers
+    updateLayers();
+
+    sessionStarted = false;
+  }
 }
 
 export function openMap(): void {
   pushPageHistory('Map');
   MapField.setAttribute('displayed', 'true');
-  initializeMapCanvas();
+  initializeMapSVG();
   closePreviousPage();
 }
 

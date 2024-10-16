@@ -141,10 +141,10 @@ import './interface/storage/statistics.css';
 import './interface/map/field.css';
 import './interface/map/head.css';
 import './interface/map/body.css';
-import './interface/map/canvas.css';
+import './interface/map/svg.css';
 
 import './interface/prompt/index.css';
-import { closeMap, initializeMapInteraction, openMap, ResizeMapCanvas, resizeMapField } from './interface/map/index';
+import { closeMap, initializeMapInteraction, openMap, ResizeMapField } from './interface/map/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -166,12 +166,12 @@ window.bus = {
             ResizeRouteField();
             ResizeLocationField();
             ResizeSearchInputCanvasSize();
-            ResizeMapCanvas();
+            ResizeMapField();
             window.addEventListener('resize', () => {
               ResizeRouteField();
               ResizeLocationField();
               ResizeSearchInputCanvasSize();
-              ResizeMapCanvas();
+              ResizeMapField();
             });
             if (screen) {
               if (screen.orientation) {
@@ -179,6 +179,7 @@ window.bus = {
                   ResizeRouteField();
                   ResizeLocationField();
                   ResizeSearchInputCanvasSize();
+                  ResizeMapField();
                 });
               }
             }

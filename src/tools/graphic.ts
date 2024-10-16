@@ -123,7 +123,7 @@ export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: num
   ctx.fill(); // To fill the shape
 }
 
-export function drawPoint(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string, strokeStyle: string, lineWidth:number): void {
+export function drawPoint(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string, strokeStyle: string, lineWidth: number): void {
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = fill;
@@ -145,4 +145,15 @@ export function drawLine(ctx: CanvasRenderingContext2D, points: Segments, stroke
   ctx.lineWidth = lineWidth;
   ctx.stroke();
   ctx.closePath();
+}
+
+export function generateSVGCircle(centerX: number, centerY: number, radius: number, stroke: string, strokeWidth: number, fill: string): HTMLElement {
+  const circleElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circleElement.setAttributeNS(null, 'cx', centerX);
+  circleElement.setAttributeNS(null, 'cy', centerY);
+  circleElement.setAttributeNS(null, 'r', radius);
+  circleElement.setAttributeNS(null, 'fill', fill);
+  circleElement.setAttributeNS(null, 'stroke', stroke);
+  circleElement.setAttributeNS(null, 'stroke-width', strokeWidth);
+  return circleElement;
 }

@@ -634,7 +634,10 @@
     <!-- map -->
     <div class="css_map_field" displayed="false">
       <div class="css_map_body">
-        <canvas id="map_canvas"></canvas>
+        <svg id="map">
+          <g id="map-route-layer"></g>
+          <g id="map-location-layer"></g>
+        </svg>
       </div>
       <div class="css_map_head">
         <div class="css_map_button_left" onclick="bus.map.closeMap()">
