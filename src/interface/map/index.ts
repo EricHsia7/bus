@@ -10,7 +10,7 @@ const MapField = documentQuerySelector('.css_map_field');
 const mapCanvasElement = elementQuerySelector(MapField, '#map_canvas');
 const ctx = mapCanvasElement.getContext('2d');
 
-const devicePixelRatio = window.devicePixelRatio;
+const devicePixelRatio = window.devicePixelRatio || 1;
 let canvasWidth = window.innerWidth * devicePixelRatio;
 let canvasHeight = window.innerHeight * devicePixelRatio;
 
@@ -44,7 +44,7 @@ export function ResizeMapCanvas(): void {
   canvasHeight = size.height * devicePixelRatio;
   mapCanvasElement.width = canvasWidth;
   mapCanvasElement.height = canvasHeight;
-  // ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio); // Ensure the context is scaled correctly.
+  ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio); // Ensure the context is scaled correctly.
   updateMapCanvas();
 }
 
@@ -147,8 +147,8 @@ function onTouchEnd(event: Event): void {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  const x = (longitude / interval) * chunkWidth * devicePixelRatio // * scale
-  const y = (latitude / interval) * chunkHeight * devicePixelRatio // * scale
+  const x = ((longitude / interval) * chunkWidth - translation.x) / scale; // / devicePixelRatio // * scale
+  const y = ((latitude / interval) * chunkHeight - translation.y) / scale; // / devicePixelRatio // * scale
   return { x, y };
 }
 
@@ -228,7 +228,7 @@ function renderChunk(chunkX: number, chunkY: number): void {
 }
 
 function updateMapCanvas(): void {
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.clearRect(0, 0, canvasWidth / devicePixelRatio, canvasHeight / devicePixelRatio);
   ctx.save();
   ctx.translate(translation.x, translation.y);
   ctx.scale(scale, scale);
@@ -253,7 +253,7 @@ function updateMapCanvas(): void {
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
-    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', (6 / scale) * devicePixelRatio);
+    drawLine(ctx, [{ x: 0, y: 0 }, getPointInChunk(121, 24)], 'green', 6 / scale / devicePixelRatio);
 
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
