@@ -17,8 +17,8 @@ const pointRadius = 3;
 const strokeStyle = 'red';
 const fill = 'blue';
 
-const chunkWidth = 1;
-const chunkHeight = 1;
+const chunkWidth = 100;
+const chunkHeight = 100;
 const interval = 0.01;
 const maxScale = 5;
 const minScale = 0.001;
@@ -88,7 +88,7 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  return { x: ((longitude - currentIntegration.boundary.topLeft.longitude) / interval) * chunkWidth, y: -1 * ((latitude - currentIntegration.boundary.topLeft.latitude) / interval) * chunkHeight };
+  return { x: (longitude - currentIntegration.boundary.topLeft.longitude) * chunkWidth, y: -1 * (latitude - currentIntegration.boundary.topLeft.latitude) * chunkHeight };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
