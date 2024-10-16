@@ -30,7 +30,7 @@ import { closePersonalScheduleManager, openPersonalScheduleManager } from './int
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
-import { integrateMap } from './data/map/index';
+import { closeMap, initializeMapInteraction, openMap, ResizeMapField } from './interface/map/index';
 
 import './interface/theme.css';
 
@@ -144,7 +144,6 @@ import './interface/map/body.css';
 import './interface/map/svg.css';
 
 import './interface/prompt/index.css';
-import { closeMap, initializeMapInteraction, openMap, ResizeMapField } from './interface/map/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;

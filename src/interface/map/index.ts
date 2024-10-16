@@ -17,8 +17,8 @@ const pointRadius = 3;
 const strokeStyle = 'red';
 const fill = 'blue';
 
-const chunkWidth = 100;
-const chunkHeight = 100;
+const chunkWidth = 5;
+const chunkHeight = 5;
 const interval = 0.01;
 const maxScale = 5;
 const minScale = 0.001;
@@ -88,7 +88,7 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  return { x: (longitude / interval) * chunkWidth, y: (latitude / interval) * chunkHeight };
+  return { x: (longitude / interval) * chunkWidth, y: -1 * (latitude / interval) * chunkHeight };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
@@ -322,7 +322,7 @@ function handleEndEvent(event: Event): void {
     setLayersTransform(translateX, translateY, scale);
 
     // update layers
-    updateLayers();
+    // updateLayers();
 
     sessionStarted = false;
   }
@@ -332,6 +332,9 @@ export function openMap(): void {
   pushPageHistory('Map');
   MapField.setAttribute('displayed', 'true');
   initializeMapSVG();
+
+  updateLayers();
+
   closePreviousPage();
 }
 
