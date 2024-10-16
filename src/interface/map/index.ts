@@ -211,6 +211,10 @@ function handleStartEvent(event: Event): void {
 function handleMoveEvent(event: Event): void {
   event.preventDefault();
   if (sessionStarted) {
+    // reset delta
+    deltaTranslateX = 0;
+    deltaTranslateY = 0;
+    deltaScale = 1;
     // update pointers
     pointers = {};
     if (event.touches) {
