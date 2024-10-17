@@ -13,8 +13,8 @@ const MapSVGElement = elementQuerySelector(MapBodyElement, 'svg#map');
 const RouteLayerElement = elementQuerySelector(MapSVGElement, 'g#map-route-layer');
 const LocationLayerElement = elementQuerySelector(MapSVGElement, 'g#map-location-layer');
 
-const lineWidth = 0.001;
-const pointRadius = 0.1;
+const lineWidth = 1;
+const pointRadius = 2;
 const strokeStyle = 'red';
 const fill = 'blue';
 
