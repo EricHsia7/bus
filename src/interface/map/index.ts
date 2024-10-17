@@ -164,6 +164,7 @@ export async function initializeMapSVG(): void {
   const requestID = generateIdentifier('r');
   const integration = await integrateMap(requestID);
   currentIntegration = integration;
+  console.log(currentIntegration, getViewportCorners())
   updateLayers();
   ResizeMapField();
 }
