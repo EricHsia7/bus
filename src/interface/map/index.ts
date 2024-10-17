@@ -3,6 +3,7 @@ import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from 
 import { integrateMap, MapObject } from '../../data/map/index';
 import { generateSVGCircle } from '../../tools/graphic';
 import { generateIdentifier, supportTouch } from '../../tools/index';
+import { mercatorProjection } from '../../tools/convert';
 
 let currentIntegration = {};
 
@@ -87,9 +88,8 @@ function getViewportCorners(): ViewportCorners {
   };
 }
 
-function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  console.log(longitude, latitude, currentIntegration.boundary.topLeft);
-  return { x: (longitude - currentIntegration.boundary.topLeft.longitude) * chunkWidth, y: -1 * (latitude - currentIntegration.boundary.bottomRight.latitude) * chunkHeight };
+function getPointInChunk(longitude: number, latitude: number): { x: number; y: number }{
+ return  mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1)
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
