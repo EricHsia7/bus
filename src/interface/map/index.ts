@@ -89,7 +89,8 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  return mercatorProjection(-1 * (latitude - currentIntegration.boundary.topLeft.latitude), longitude - currentIntegration.boundary.topLeft.longitude, 1);
+  const projection = mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1);
+  return { x: projection.x, y: -1 * projection.y };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
