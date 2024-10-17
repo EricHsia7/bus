@@ -167,6 +167,7 @@ export async function initializeMapSVG(): void {
   currentIntegration = integration;
   console.log(currentIntegration, getViewportCorners());
   updateLayers();
+  teleportViewportToTopLeft();
   ResizeMapField();
 }
 
@@ -334,6 +335,16 @@ function handleEndEvent(event: Event): void {
     updateLayers();
 
     sessionStarted = false;
+  }
+}
+
+function teleportViewportToTopLeft(): void {
+  if (currentIntegration.hasOwnProperty('boundary')) {
+    const projection = mercatorProjection(currentIntegration.boundary.topLeft.longitude, currentIntegration.boundary.topLeft.latitude, 1);
+    translateX = -1 * projection.x;
+    translateY = -1 * projection.y;
+    scale = 1;
+    setLayersTransform(translateX, translateY, scale);
   }
 }
 
