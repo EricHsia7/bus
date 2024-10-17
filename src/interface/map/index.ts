@@ -55,7 +55,7 @@ export function ResizeMapField(): void {
   fieldHeight = size.height;
   MapSVGElement.setAttributeNS(null, 'width', `${fieldWidth}px`);
   MapSVGElement.setAttributeNS(null, 'height', `${fieldHeight}px`);
-  MapSVGElement.setAttributeNS(null, 'viewbox', `0,0,${fieldWidth},${fieldHeight}`);
+  MapSVGElement.setAttributeNS(null, 'viewBox', `0,0,${fieldWidth},${fieldHeight}`);
 }
 
 interface ViewportCorners {
