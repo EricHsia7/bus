@@ -330,7 +330,7 @@ function handleEndEvent(event: Event): void {
     setLayersTransform(translateX, translateY, scale);
 
     // update layers
-    // updateLayers();
+    updateLayers();
 
     sessionStarted = false;
   }
