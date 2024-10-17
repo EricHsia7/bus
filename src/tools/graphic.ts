@@ -157,3 +157,12 @@ export function generateSVGCircle(centerX: number, centerY: number, radius: numb
   circleElement.setAttributeNS(null, 'stroke-width', strokeWidth);
   return circleElement;
 }
+
+export function generateSVGPath(segments: Segments, stroke: string, strokeWidth: number): HTMLElement {
+  const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  pathElement.setAttributeNS(null, 'd', segmentsToPath(segments, 1));
+  pathElement.setAttributeNS(null, 'fill', 'none');
+  pathElement.setAttributeNS(null, 'stroke', stroke);
+  pathElement.setAttributeNS(null, 'stroke-width', strokeWidth);
+  return pathElement;
+}

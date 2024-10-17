@@ -9,16 +9,16 @@ export function convertPositionsToDistance(lat1: number, lon1: number, lat2: num
   return d; // measured in meters
 }
 
-export function mercatorProjection(lat: number, lon: number, scale = 1) {
-  const meterToPixelRatio = 100 / 100; // 100 meters = 100 pixels
+export function mercatorProjection(longitude: number, latitude: number, scale: number = 1) {
+  const meterToPixelRatio = 100 / 300; // 300 meters = 100 pixels → 1 meter = (100 / 300) pixels
 
   // Convert degrees to radians
-  const latRad = (lat * Math.PI) / 180;
-  const lonRad = (lon * Math.PI) / 180;
+  const longitudeRad = (longitude * Math.PI) / 180;
+  const latitudeRad = (latitude * Math.PI) / 180;
 
   // Mercator projection formulas
-  const x = ErathRadius * lonRad;
-  const y = ErathRadius * Math.log(Math.tan(Math.PI / 4 + latRad / 2));
+  const x = ErathRadius * longitudeRad;
+  const y = ErathRadius * Math.log(Math.tan(Math.PI / 4 + latitudeRad / 2));
 
   // Scale based on the ratio (meters to pixels)
   const xPixels = x * meterToPixelRatio * scale;

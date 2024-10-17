@@ -1,7 +1,7 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
 import { integrateMap, MapObject } from '../../data/map/index';
-import { generateSVGCircle } from '../../tools/graphic';
+import { generateSVGCircle, generateSVGPath } from '../../tools/graphic';
 import { generateIdentifier, supportTouch } from '../../tools/index';
 import { mercatorProjection } from '../../tools/convert';
 
@@ -89,8 +89,7 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  const projection = mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1);
-  console.log(longitude, latitude, projection.x, projection.y);
+  const projection = mercatorProjection(longitude - currentIntegration.boundary.topLeft.longitude, latitude - currentIntegration.boundary.bottomRight.latitude, 1);
   return { x: projection.x, y: projection.y };
 }
 
@@ -104,15 +103,14 @@ function renderChunk(chunkX: number, chunkY: number): void {
       console.log(object);
       switch (object.type) {
         case 'route':
-          /*drawLine(
-            ctx,
+          const pathElement = generateSVGPath(
             object.points.map((point) => {
               return getPointInChunk(point[0], point[1]);
             }),
             strokeStyle,
-            lineWidth / scale
-          );*/
-
+            lineWidth
+          );
+          RouteLayerElement.appendChild(pathElement);
           break;
         case 'location':
           const pointInChunk = getPointInChunk(object.point[0], object.point[1]);

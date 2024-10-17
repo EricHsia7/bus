@@ -61,7 +61,7 @@ const chunkHeight = 300; // 300 px
 const interval = 0.01;
 
 export function getChunkCoordinates(longitude: number, latitude: number): { chunkX: number; chunkY: number } {
-  const projection = mercatorProjection(latitude, longitude, 1);
+  const projection = mercatorProjection(longitude, latitude, 1);
   const chunkX = Math.floor(projection.x / chunkWidth);
   const chunkY = Math.floor(projection.y / chunkHeight);
   return { chunkX, chunkY };
