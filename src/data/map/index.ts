@@ -107,8 +107,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     let thisLatitudes = [];
     let thisLongitudes = [];
     for (const point of integratedMapRouteObject.points) {
-      thisLatitudes.push(point[0]);
-      thisLongitudes.push(point[1]);
+      thisLatitudes.push(point[1]);
+      thisLongitudes.push(point[0]);
       const chunkCoordinate = getChunkCoordinates(point[0], point[1], interval);
       if (chunkX.indexOf(chunkCoordinate.chunkX) < 0) {
         chunkX.push(chunkCoordinate.chunkX);
@@ -148,8 +148,8 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
     // add to chunks
 
     const thisPoint = integratedMapLocationObject.point;
-    latitudes.push(thisPoint[0]);
-    longitudes.push(thisPoint[1]);
+    latitudes.push(thisPoint[1]);
+    longitudes.push(thisPoint[0]);
     const chunkCoordinate = getChunkCoordinates(thisPoint[0], thisPoint[1], interval);
     if (chunkX.indexOf(chunkCoordinate.chunkX) < 0) {
       chunkX.push(chunkCoordinate.chunkX);
