@@ -174,13 +174,13 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   result.boundary = {
     topLeft: {
       x: Math.min(...chunkX),
-      y: Math.max(...chunkY),
+      y: Math.min(...chunkY),
       latitude: Math.max(...latitudes),
       longitude: Math.min(...longitudes)
     },
     bottomRight: {
       x: Math.max(...chunkX),
-      y: Math.min(...chunkY),
+      y: Math.max(...chunkY),
       latitude: Math.min(...latitudes),
       longitude: Math.max(...longitudes)
     }
