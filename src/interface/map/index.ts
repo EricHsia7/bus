@@ -147,7 +147,7 @@ function updateLayers(): void {
 
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
-        renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
+        renderChunk(i + currentTopLeftChunkX, -1 * (j + currentTopLeftChunkY));
       }
     }
   }
