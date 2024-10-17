@@ -55,7 +55,13 @@ export function ResizeMapField(): void {
   fieldHeight = size.height;
   MapSVGElement.setAttributeNS(null, 'width', `${fieldWidth}px`);
   MapSVGElement.setAttributeNS(null, 'height', `${fieldHeight}px`);
-  MapSVGElement.setAttributeNS(null, 'viewBox', `0 0 ${fieldWidth} ${fieldHeight}`);
+  if (currentIntegration.boundary) {
+    const projection = mercatorProjection(currentIntegration.boundary.bottomRight.longitude, currentIntegration.boundary.bottomRight.latitude, 1);
+
+    MapSVGElement.setAttributeNS(null, 'viewBox', `${projection.x} ${projection.y} ${fieldWidth} ${fieldHeight}`);
+  } else {
+    MapSVGElement.setAttributeNS(null, 'viewBox', `0 0 ${fieldWidth} ${fieldHeight}`);
+  }
 }
 
 interface ViewportCorners {
@@ -167,7 +173,6 @@ export async function initializeMapSVG(): void {
   currentIntegration = integration;
   console.log(currentIntegration, getViewportCorners());
   updateLayers();
-  teleportViewportToTopLeft();
   ResizeMapField();
 }
 
@@ -335,16 +340,6 @@ function handleEndEvent(event: Event): void {
     updateLayers();
 
     sessionStarted = false;
-  }
-}
-
-function teleportViewportToTopLeft(): void {
-  if (currentIntegration.hasOwnProperty('boundary')) {
-    const projection = mercatorProjection(currentIntegration.boundary.bottomRight.longitude, currentIntegration.boundary.bottomRight.latitude, 1);
-    translateX = -1 * projection.x;
-    translateY = -1 * projection.y;
-    scale = 1;
-    setLayersTransform(translateX, translateY, scale);
   }
 }
 
