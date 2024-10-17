@@ -1,3 +1,4 @@
+import { mercatorProjection } from '../../tools/convert';
 import { calculateAverage } from '../../tools/math';
 import { getBusShape } from '../apis/getBusShape/index';
 import { getLocation } from '../apis/getLocation/index';
@@ -59,9 +60,10 @@ const chunkHeight = 300; // 300 px
 
 const interval = 0.01;
 
-export function getChunkCoordinates(longitude: number, latitude: number, interval: number): { chunkX: number; chunkY: number } {
-  const chunkX = Math.floor(longitude / interval);
-  const chunkY = Math.floor((-1 * latitude) / interval);
+export function getChunkCoordinates(longitude: number, latitude: number): { chunkX: number; chunkY: number } {
+  const projection = mercatorProjection(latitude, longitude, 1);
+  const chunkX = Math.floor(projection.x / chunkWidth);
+  const chunkY = -1 * Math.floor(projection.y / chunkHeight);
   return { chunkX, chunkY };
 }
 
@@ -174,13 +176,13 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   result.boundary = {
     topLeft: {
       x: Math.min(...chunkX),
-      y: Math.min(...chunkY),
+      y: Math.max(...chunkY),
       latitude: Math.max(...latitudes),
       longitude: Math.min(...longitudes)
     },
     bottomRight: {
       x: Math.max(...chunkX),
-      y: Math.max(...chunkY),
+      y: Math.min(...chunkY),
       latitude: Math.min(...latitudes),
       longitude: Math.max(...longitudes)
     }
