@@ -90,12 +90,13 @@ function getViewportCorners(): ViewportCorners {
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
   const projection = mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1);
-  console.log(longitude, latitude, projection.x, projection.y)
+  console.log(longitude, latitude, projection.x, projection.y);
   return { x: projection.x, y: -1 * projection.y };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
   const thisChunkKey = `c_${chunkX}_${chunkY}`;
+  console.log(thisChunkKey, currentIntegration[thisChunkKey]);
   if (currentIntegration.chunks.hasOwnProperty(thisChunkKey)) {
     const thisChunk = currentIntegration.chunks[thisChunkKey];
     for (const objectIndex of thisChunk) {
