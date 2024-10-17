@@ -90,6 +90,7 @@ function getViewportCorners(): ViewportCorners {
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
   const projection = mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1);
+  console.log(longitude, latitude, projection.x, projection.y)
   return { x: projection.x, y: -1 * projection.y };
 }
 
