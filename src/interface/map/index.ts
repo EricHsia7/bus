@@ -14,7 +14,7 @@ const RouteLayerElement = elementQuerySelector(MapSVGElement, 'g#map-route-layer
 const LocationLayerElement = elementQuerySelector(MapSVGElement, 'g#map-location-layer');
 
 const lineWidth = 1;
-const pointRadius = 2;
+const pointRadius = 3;
 const strokeStyle = 'red';
 const fill = 'blue';
 
@@ -91,7 +91,7 @@ function getViewportCorners(): ViewportCorners {
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
   const projection = mercatorProjection(latitude - currentIntegration.boundary.bottomRight.latitude, longitude - currentIntegration.boundary.topLeft.longitude, 1);
   console.log(longitude, latitude, projection.x, projection.y);
-  return { x: projection.x, y: -1 * projection.y };
+  return { x: projection.x, y: projection.y };
 }
 
 function renderChunk(chunkX: number, chunkY: number): void {
@@ -140,9 +140,9 @@ function updateLayers(): void {
     const currentBottomRightY = currentViewportCorners.bottomRight.y;
 
     const currentTopLeftChunkX = Math.floor(currentTopLeftX / chunkWidth) + integrationTopLeftChunkX;
-    const currentTopLeftChunkY = -1 * Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
+    const currentTopLeftChunkY = Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
     const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
-    const currentBottomRightChunkY = -1 * Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
+    const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
