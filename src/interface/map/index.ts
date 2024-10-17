@@ -96,7 +96,7 @@ function getPointInChunk(longitude: number, latitude: number): { x: number; y: n
 
 function renderChunk(chunkX: number, chunkY: number): void {
   const thisChunkKey = `c_${chunkX}_${chunkY}`;
-  console.log(thisChunkKey, currentIntegration[thisChunkKey]);
+  console.log(thisChunkKey, currentIntegration.chunks[thisChunkKey]);
   if (currentIntegration.chunks.hasOwnProperty(thisChunkKey)) {
     const thisChunk = currentIntegration.chunks[thisChunkKey];
     for (const objectIndex of thisChunk) {
