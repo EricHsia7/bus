@@ -52,11 +52,16 @@ export interface integratedMap {
   };
 }
 
+const chunkWidthInMeters = 300; // 300 m
+const chunkHeightInMeters = 300; // 300 m
+const chunkWidth = 300; // 300 px
+const chunkHeight = 300; // 300 px
+
 const interval = 0.01;
 
 export function getChunkCoordinates(longitude: number, latitude: number, interval: number): { chunkX: number; chunkY: number } {
   const chunkX = Math.floor(longitude / interval);
-  const chunkY = Math.floor(-1 * latitude / interval);
+  const chunkY = Math.floor((-1 * latitude) / interval);
   return { chunkX, chunkY };
 }
 
@@ -169,14 +174,14 @@ export async function integrateMap(requestID: string): Promise<integratedMap> {
   result.boundary = {
     topLeft: {
       x: Math.min(...chunkX),
-      y: Math.min(...chunkY),
-      latitude: Math.min(...latitudes),
+      y: Math.max(...chunkY),
+      latitude: Math.max(...latitudes),
       longitude: Math.min(...longitudes)
     },
     bottomRight: {
       x: Math.max(...chunkX),
-      y: Math.max(...chunkY),
-      latitude: Math.max(...latitudes),
+      y: Math.min(...chunkY),
+      latitude: Math.min(...latitudes),
       longitude: Math.max(...longitudes)
     }
   };
