@@ -18,8 +18,8 @@ const pointRadius = 2;
 const strokeStyle = 'red';
 const fill = 'blue';
 
-const chunkWidth = 60;
-const chunkHeight = 60;
+const chunkWidth = 300;
+const chunkHeight = 300;
 const interval = 0.01;
 const maxScale = 5;
 const minScale = 0.001;
