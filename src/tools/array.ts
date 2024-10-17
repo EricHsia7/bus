@@ -46,3 +46,23 @@ export function getIntersection(arrayA: Array, arrayB: Array): Array {
   }
   return result;
 }
+
+export function getUnion(arrayA: Array, arrayB: Array): Array {
+  let result = [];
+  if (arrayA.length >= arrayB) {
+    result = arrayA;
+    for (const item of arrayB) {
+      if (result.indexOf(item) < 0) {
+        result.push(item);
+      }
+    }
+  } else {
+    result = arrayB;
+    for (const item of arrayA) {
+      if (result.indexOf(item) < 0) {
+        result.push(item);
+      }
+    }
+  }
+  return result;
+}
