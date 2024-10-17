@@ -96,11 +96,12 @@ function getPointInChunk(longitude: number, latitude: number): { x: number; y: n
 
 function renderChunk(chunkX: number, chunkY: number): void {
   const thisChunkKey = `c_${chunkX}_${chunkY}`;
-  console.log(thisChunkKey, currentIntegration.chunks[thisChunkKey]);
   if (currentIntegration.chunks.hasOwnProperty(thisChunkKey)) {
+    console.log(thisChunkKey, currentIntegration.chunks[thisChunkKey]);
     const thisChunk = currentIntegration.chunks[thisChunkKey];
     for (const objectIndex of thisChunk) {
       const object: MapObject = currentIntegration.objects[objectIndex];
+      console.log(object);
       switch (object.type) {
         case 'route':
           /*drawLine(
@@ -146,7 +147,7 @@ function updateLayers(): void {
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
-
+    console.log(chunkXRange, chunkYRange, chunkXRange * chunkYRange);
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
         renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
