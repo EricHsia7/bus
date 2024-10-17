@@ -13,9 +13,9 @@ const MapSVGElement = elementQuerySelector(MapBodyElement, 'svg#map');
 const RouteLayerElement = elementQuerySelector(MapSVGElement, 'g#map-route-layer');
 const LocationLayerElement = elementQuerySelector(MapSVGElement, 'g#map-location-layer');
 
-const lineWidth = 1;
+const strokeWidth = 2;
 const pointRadius = 3;
-const strokeStyle = 'red';
+const stroke = 'red';
 const fill = 'blue';
 
 const chunkWidth = 300;
@@ -56,7 +56,6 @@ export function ResizeMapField(): void {
   MapSVGElement.setAttributeNS(null, 'width', `${fieldWidth}px`);
   MapSVGElement.setAttributeNS(null, 'height', `${fieldHeight}px`);
   MapSVGElement.setAttributeNS(null, 'viewBox', `0 0 ${fieldWidth} ${fieldHeight}`);
- 
 }
 
 interface ViewportCorners {
@@ -90,7 +89,7 @@ function getViewportCorners(): ViewportCorners {
 }
 
 function getPointInChunk(longitude: number, latitude: number): { x: number; y: number } {
-  const projection = mercatorProjection(longitude - currentIntegration.boundary.topLeft.longitude, latitude - currentIntegration.boundary.bottomRight.latitude, 1);
+  const projection = mercatorProjection(longitude /*- currentIntegration.boundary.topLeft.longitude*/, latitude /*- currentIntegration.boundary.bottomRight.latitude*/, 1);
   return { x: projection.x, y: projection.y };
 }
 
@@ -108,14 +107,14 @@ function renderChunk(chunkX: number, chunkY: number): void {
             object.points.map((point) => {
               return getPointInChunk(point[0], point[1]);
             }),
-            strokeStyle,
-            lineWidth
+            stroke,
+            strokeWidth
           );
           RouteLayerElement.appendChild(pathElement);
           break;
         case 'location':
           const pointInChunk = getPointInChunk(object.point[0], object.point[1]);
-          const circleElement = generateSVGCircle(pointInChunk.x, pointInChunk.y, pointRadius, strokeStyle, lineWidth / 2, fill);
+          const circleElement = generateSVGCircle(pointInChunk.x, pointInChunk.y, pointRadius, stroke, strokeWidth / 2, fill);
           LocationLayerElement.appendChild(circleElement);
           break;
         default:
@@ -341,7 +340,7 @@ function handleEndEvent(event: Event): void {
 
 function teleportViewportToTopLeft(): void {
   if (currentIntegration.hasOwnProperty('boundary')) {
-    const projection = mercatorProjection(currentIntegration.boundary.topLeft.longitude, currentIntegration.boundary.topLeft.latitude, 1);
+    const projection = mercatorProjection(currentIntegration.boundary.topLeft.longitude, currentIntegration.boundary.bottomRight.latitude, 1);
     translateX = -1 * projection.x;
     translateY = -1 * projection.y;
     scale = 1;
