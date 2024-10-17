@@ -341,8 +341,8 @@ function handleEndEvent(event: Event): void {
 function teleportViewportToTopLeft(): void {
   if (currentIntegration.hasOwnProperty('boundary')) {
     const projection = mercatorProjection(currentIntegration.boundary.topLeft.longitude, currentIntegration.boundary.bottomRight.latitude, 1);
-    translateX = -1 * projection.x;
-    translateY = -1 * projection.y;
+    translateX = projection.x;
+    translateY = projection.y;
     scale = 1;
     setLayersTransform(translateX, translateY, scale);
   }
