@@ -138,16 +138,16 @@ function updateLayers(): void {
     const currentBottomRightY = currentViewportCorners.bottomRight.y;
 
     const currentTopLeftChunkX = Math.floor(currentTopLeftX / chunkWidth) + integrationTopLeftChunkX;
-    const currentTopLeftChunkY = Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
+    const currentTopLeftChunkY = -1 * Math.floor(currentTopLeftY / chunkHeight) + integrationTopLeftChunkY;
     const currentBottomRightChunkX = Math.floor(currentBottomRightX / chunkWidth) + integrationBottomRightChunkX;
-    const currentBottomRightChunkY = Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
+    const currentBottomRightChunkY = -1 * Math.floor(currentBottomRightY / chunkHeight) + integrationBottomRightChunkY;
 
     const chunkXRange = Math.abs(currentBottomRightChunkX - currentTopLeftChunkX);
     const chunkYRange = Math.abs(currentBottomRightChunkY - currentTopLeftChunkY);
 
     for (let i = 0; i < chunkXRange; i++) {
       for (let j = 0; j < chunkYRange; j++) {
-        renderChunk(i + currentTopLeftChunkX, -1 * (j + currentTopLeftChunkY));
+        renderChunk(i + currentTopLeftChunkX, j + currentTopLeftChunkY);
       }
     }
   }
@@ -164,7 +164,7 @@ export async function initializeMapSVG(): void {
   const requestID = generateIdentifier('r');
   const integration = await integrateMap(requestID);
   currentIntegration = integration;
-  console.log(currentIntegration, getViewportCorners())
+  console.log(currentIntegration, getViewportCorners());
   updateLayers();
   ResizeMapField();
 }
