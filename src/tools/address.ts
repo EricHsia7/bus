@@ -1,8 +1,34 @@
 import { generateLetterLabels } from './labels';
 import { areItemsDifferent } from './array';
 
-export function mergeAddressesIntoOne(addresses: Array<string>): object | string {
-  const parts = [
+interface AddressPart {
+  suffixes?: string;
+  key: keyof ParsedAddress;
+  process: (e: string[] | null) => string[] | number[] | null;
+  type: number;
+}
+
+interface ParsedAddress {
+  city: string[];
+  district: string[];
+  area: string[];
+  road: string[];
+  road_section: number[];
+  alley: number[];
+  alley_branch: number[];
+  doorplate: number[];
+  floornumber: string[];
+  exit: string[];
+  direction: string[];
+  [key: string]: string[] | number[] | null;
+}
+
+interface FeatureCounts {
+  [key: string]: { count: number; chars: string; index: number };
+}
+
+export function mergeAddressesIntoOne(addresses: Array<string>): ParsedAddress | string {
+  const parts: Array<AddressPart> = [
     {
       suffixes: '市',
       key: 'city',
@@ -251,7 +277,7 @@ export function mergeAddressesIntoOne(addresses: Array<string>): object | string
   return mergeAddresses(addresses);
 }
 
-export function addressToString(address: object): string {
+export function addressToString(address: ParsedAddress): string {
   return `${address.city.join('')}${address.district.join('')}${address.road.join('、')}${
     address.road_section.sort(function (a, b) {
       return a - b;
@@ -345,11 +371,11 @@ export function extractCommonFeaturesFromAddresses(addresses: Array<string>): st
   return commonFeatures.join('');
 }
 
-export function generateLabelFromAddresses(addresses: Array<object>): Array<string> {
-  var result = [];
-  var filledProperties = {};
-  for (var address of addresses) {
-    for (var key in address) {
+export function generateLabelFromAddresses(addresses: Array<ParsedAddress>): Array<string> {
+  let result = [];
+  let filledProperties = {};
+  for (const address of addresses) {
+    for (const key in address) {
       if (!filledProperties.hasOwnProperty(key)) {
         filledProperties[key] = 0;
       }
@@ -358,7 +384,7 @@ export function generateLabelFromAddresses(addresses: Array<object>): Array<stri
       }
     }
   }
-  var commonProperties = Object.entries(filledProperties)
+  let commonProperties = Object.entries(filledProperties)
     .map((property) => {
       return { key: property[0], value: property[1] };
     })
@@ -369,9 +395,9 @@ export function generateLabelFromAddresses(addresses: Array<object>): Array<stri
       return a.value - b.value;
     });
   if (commonProperties.length > 0) {
-    for (var commonProperty of commonProperties) {
-      var components = [];
-      for (var address of addresses) {
+    for (const commonProperty of commonProperties) {
+      let components = [];
+      for (const address of addresses) {
         components.push(address[commonProperty.key].join(''));
       }
       if (areItemsDifferent(components)) {
@@ -386,7 +412,7 @@ export function generateLabelFromAddresses(addresses: Array<object>): Array<stri
     });
     return result[0].components;
   } else {
-    var addressesLength = addresses.length;
+    const addressesLength = addresses.length;
     return generateLetterLabels(addressesLength);
   }
 }
