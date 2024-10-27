@@ -140,7 +140,7 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.js|ts|jsx|tsx$/, // Use babel-loader for TypeScript files
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /index\.html/],
           use: {
             loader: 'babel-loader',
             options: {
