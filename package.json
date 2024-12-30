@@ -35,7 +35,7 @@
     "html-webpack-plugin": "^5.6.0",
     "workbox-webpack-plugin": "^7.1.0",
     "webpack-bundle-analyzer": "^4.10.2",
-    "canvas": "^2.11.2",
+    "canvas": "^3.0.0",
     "mangle-css-class-webpack-plugin": "^5.1.0",
     "webpack-subresource-integrity": "^5.1.0",
     "md5": "^2.3.0"
