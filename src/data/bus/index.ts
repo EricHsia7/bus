@@ -48,8 +48,10 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const Stop = await getStop(requestID);
   const Location = await getLocation(requestID, false);
 
-  let result: integratedBus = {};
-  result.properties = [];
+  let result: integratedBus = {
+    properties: [],
+    LocationName: ''
+  };
 
   // Collect data from CarInfo
   let thisCar = {};
@@ -69,7 +71,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const type = parseCarType(thisCarType);
   result.properties.push({
     key: 'car_type',
-    icon: 'category',
+    icon: 'directions_bus',
     value: type
   });
 
