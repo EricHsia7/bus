@@ -71,8 +71,9 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   var propertyQuantity = properties.length;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
-
+  console.log(0);
   var currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
+  console.log(1, currentPropertySeatQuantity);
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
     var capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
