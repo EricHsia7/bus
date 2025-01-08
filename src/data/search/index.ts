@@ -164,28 +164,33 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
   }
   return score;
 }
-
 export function searchFor(query: string, limit: number): Array {
   if (!readyToSearch) {
     return [];
   }
+
   const queryUnicodes = getUnicodes(query, true);
   const asIsQueryUnicodes = getUnicodes(query, false);
   let unicodeGroups = [];
+
   for (const unicode of queryUnicodes) {
     const key = `u_${unicode}`;
     if (searchIndex.hasOwnProperty(key)) {
       unicodeGroups.push(searchIndex[key]);
     }
   }
+
   unicodeGroups.sort(function (a, b) {
     return a.length - b.length;
   });
+
   const unicodeGroupsLength1 = unicodeGroups.length - 1;
   let intersection = [];
+
   if (unicodeGroupsLength1 === 0) {
     intersection = unicodeGroups[0];
   }
+
   if (unicodeGroupsLength1 > 0) {
     for (let i = 0; i < unicodeGroupsLength1; i++) {
       const currentGroup = unicodeGroups[i];
@@ -197,23 +202,42 @@ export function searchFor(query: string, limit: number): Array {
       }
     }
   }
+
   let result = [];
   let quantity = 0;
-  for (const j of intersection) {
-    let thisItem = searchList[j];
-    const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
-    if (quantity < limit) {
-      result.push({
-        item: thisItem,
-        score: score
-      });
-    } else {
+
+  // Prioritize exact matches for buses
+  const exactMatches = searchList.filter((item) => item.n === query && item.type === 2);
+  for (const item of exactMatches) {
+    result.push({
+      item: item,
+      score: Infinity // Highest possible score for exact matches
+    });
+    quantity += 1;
+    if (quantity >= limit) {
       break;
     }
-    quantity += 1;
   }
+
+  if (quantity < limit) {
+    for (const j of intersection) {
+      let thisItem = searchList[j];
+      const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+      if (quantity < limit) {
+        result.push({
+          item: thisItem,
+          score: score
+        });
+      } else {
+        break;
+      }
+      quantity += 1;
+    }
+  }
+
   result.sort(function (a, b) {
     return b.score - a.score;
   });
+
   return result;
 }
