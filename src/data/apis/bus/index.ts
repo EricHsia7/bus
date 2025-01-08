@@ -14,6 +14,7 @@ export interface integratedBus {
     situation: string;
     text: string;
   };
+  LocationName: string;
   PathAttributeId: number;
   RouteName: string;
   RouteID: number;
@@ -116,6 +117,6 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const thisLocationItem = Location[LocationKey];
   const thisLocationItemName = thisLocationItem.n;
 
-  result.StopName = thisLocationItemName;
+  result.LocationName = thisLocationItemName;
   return result;
 }
