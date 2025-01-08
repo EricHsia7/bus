@@ -10,7 +10,7 @@ function simplifyCarInfo_worker(CarInfo: CarInfo): SimplifiedCarInfo {
   for (const item of CarInfo) {
     const simplifiedItem = {};
     simplifiedItem.BusId = item.BusId;
-    simplifiedItem.CarNum = item.nameZh;
+    simplifiedItem.CarNum = item.CarNum;
     simplifiedItem.PathAttributeId = item.PathAttributeId;
     const busKey = `b_${item.BusId}`;
     if (!result.hasOwnProperty(busKey)) {
