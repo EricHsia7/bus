@@ -16,10 +16,16 @@ export interface CarInfoItem {
 
 export type CarInfo = Array<CarInfoItem>;
 
+export interface SimplifiedCarInfoItem {
+  id: CarInfoItem['BusId'];
+  c: CarInfoItem['CarNum'];
+  pid: CarInfoItem['PathAttributeId'];
+}
+
 let CarInfoAPIVariableCache_available: boolean = false;
 let CarInfoAPIVariableCache_data: object = {};
 
-export async function getCarInfo(requestID: string): Promise<Provider> {
+export async function getCarInfo(requestID: string, simplified: boolean = false): Promise<Provider> {
   async function getData() {
     const apis = [
       [0, 2],

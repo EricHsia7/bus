@@ -68,6 +68,13 @@ import './interface/location/group-details.css';
 import './interface/location/group-items.css';
 import './interface/location/index.css';
 
+import './interface/bus/field.css';
+import './interface/bus/head.css';
+import './interface/bus/body.css';
+import './interface/bus/groups.css';
+import './interface/bus/properties.css';
+import './interface/bus/location.css';
+
 import './interface/settings/index.css';
 
 import './interface/save-to-folder/field.css';
@@ -138,6 +145,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { closeBus, openBus } from './interface/bus/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -317,6 +325,10 @@ window.bus = {
     openFileToImportData,
     viewCommitOfCurrentVersion,
     showPromptToAskForPersistentStorage
+  },
+  bus: {
+    openBus,
+    closeBus
   }
 };
 

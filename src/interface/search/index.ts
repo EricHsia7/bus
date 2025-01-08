@@ -45,7 +45,7 @@ export function updateSearchResult(query: string): void {
           onclickScript = `bus.location.openLocation('${result.item.hash}')`;
           break;
         case 2:
-          onclickScript = ``;
+          onclickScript = `bus.bus.openBus(${result.item.id})`;
           break;
         default:
           break;
