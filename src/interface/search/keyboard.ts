@@ -31,6 +31,7 @@ let textColor: string = getComputedStyle(document.documentElement).getPropertyVa
 let placeholderTextColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
 let cursorColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
 let textWidth: number = 0;
+let slicedTextWidth: number = 0;
 let cursorOffset: number = 0;
 let size = querySearchInputCanvasSize();
 let width = size.width * searchInputCanvasScale;
@@ -155,8 +156,9 @@ export function updateSearchInput(value: string = '', cursorIndex: number): void
   searchInputCanvasContext.textAlign = 'center';
   searchInputCanvasContext.textBaseline = 'middle';
 
-  textWidth = searchInputCanvasContext.measureText(value.substring(0, cursorIndex)).width;
-  cursorOffset = empty ? 1 : Math.max(1, textWidth);
+  textWidth = searchInputCanvasContext.measureText(value).width;
+  slicedTextWidth = searchInputCanvasContext.measureText(value.substring(0, cursorIndex)).width;
+  cursorOffset = empty ? 1 : Math.max(1, slicedTextWidth);
 
   searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
