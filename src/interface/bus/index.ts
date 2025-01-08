@@ -20,7 +20,7 @@ export function openBus(id: CarInfoItem['BusId']): void {
 
 export function closeBus(): void {
   revokePageHistory('Bus');
-  dataUsageField.setAttribute('displayed', 'false');
+  BusField.setAttribute('displayed', 'false');
 }
 
 async function initializeBusPage(id: CarInfoItem['BusId']): void {
@@ -29,4 +29,6 @@ async function initializeBusPage(id: CarInfoItem['BusId']): void {
   console.log(integration)
 }
 
-function updateBusPage(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {}
+function updateBusPage(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
+  
+}
