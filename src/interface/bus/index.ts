@@ -21,7 +21,10 @@ export function closeBus(): void {
   dataUsageField.setAttribute('displayed', 'false');
 }
 
-async function initializeBusPage(): void {
+async function initializeBusPage(id: CarInfoItem['BusId']): void {
   const requestID = generateIdentifier('r');
   const CarInfo = await getCarInfo(requestID, true);
+  const carKey = `b_${id}`;
+  const thisCar = CarInfo[carKey];
+  console.log(thisCar);
 }

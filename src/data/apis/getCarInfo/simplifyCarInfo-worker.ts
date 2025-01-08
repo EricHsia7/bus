@@ -1,25 +1,20 @@
-import { Route, SimplifiedRoute } from './index';
+import { CarInfo, SimplifiedCarInfo } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyRoute_worker(e.data);
+  const result = simplifyCarInfo_worker(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyRoute_worker(Route: Route): SimplifiedRoute {
+function simplifyCarInfo_worker(CarInfo: CarInfo): SimplifiedCarInfo {
   let result = {};
-  for (const item of Route) {
+  for (const item of CarInfo) {
     const simplifiedItem = {};
-    simplifiedItem.pd = item.providerId;
-    simplifiedItem.n = item.nameZh;
-    simplifiedItem.pid = [item.pathAttributeId];
-    simplifiedItem.dep = item.departureZh;
-    simplifiedItem.des = item.destinationZh;
-    simplifiedItem.id = item.Id;
-    const routeKey = `r_${item.Id}`;
-    if (!result.hasOwnProperty(routeKey)) {
-      result[routeKey] = simplifiedItem;
-    } else {
-      result[routeKey]['pid'].push(item.pathAttributeId);
+    simplifiedItem.BusId = item.BusId;
+    simplifiedItem.CarNum = item.nameZh;
+    simplifiedItem.PathAttributeId = item.PathAttributeId;
+    const busKey = `b_${item.BusId}`;
+    if (!result.hasOwnProperty(busKey)) {
+      result[busKey] = simplifiedItem;
     }
   }
   return result;
