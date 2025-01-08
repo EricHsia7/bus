@@ -28,7 +28,6 @@ async function initializeBusPage(id: number): void {
   setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
-  console.log(integration);
   updateBusPropertiesField(BusGroupProperties, integration.properties, false);
 }
 
