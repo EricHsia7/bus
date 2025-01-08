@@ -5,7 +5,9 @@ import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getStop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
+/*
 export interface integratedBus {
   carNumber: string;
   type: string;
@@ -25,6 +27,18 @@ export interface integratedBus {
   };
   RouteDirection: string;
 }
+*/
+
+export interface integratedBus {
+  properties: Array<{
+    key: string;
+    icon: MaterialSymbols;
+    value: string;
+  }>;
+  RouteID: number;
+  FullPathAttributeId: Array<number>;
+  LocationName: string;
+}
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
   const carKey = `b_${id}`;
@@ -35,6 +49,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const Location = await getLocation(requestID, false);
 
   let result: integratedBus = {};
+  result.properties = [];
 
   // Collect data from CarInfo
   let thisCar = {};
@@ -45,10 +60,18 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   }
 
   const thisCarNumber = thisCar.CarNum;
+  result.properties.push({
+    key: 'car_number',
+    icon: 'tag',
+    value: thisCarNumber
+  });
   const thisCarType = thisCar.CarType;
-  result.carNumber = thisCarNumber;
   const type = parseCarType(thisCarType);
-  result.type = type;
+  result.properties.push({
+    key: 'car_type',
+    icon: 'category',
+    value: type
+  });
 
   // Collect data from BusData
   let thisBusDataItem = {};
@@ -60,7 +83,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     }
   }
   const thisBusDataItemPathAttributeId = parseInt(thisBusDataItem.RouteID);
-  result.PathAttributeId = thisBusDataItemPathAttributeId;
+  // result.PathAttributeId = thisBusDataItemPathAttributeId;
   const thisBusDataItemBusStatus = thisBusDataItem.BusStatus;
   const situation = parseBusStatus(thisBusDataItemBusStatus);
   const thisBusDataItemGoBack = parseInt(thisBusDataItem.GoBack);
@@ -77,11 +100,11 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   const thisBusEventItemCarOnStop = thisBusEventItem.CarOnStop;
   const onStop = parseCarOnStop(thisBusEventItemCarOnStop);
-  result.status = {
-    onStop: onStop,
-    situation: situation,
-    text: `${onStop} | ${situation}`
-  };
+  result.properties.push({
+    key: 'status',
+    icon: 'vital_signs',
+    value: `${onStop} | ${situation}`
+  });
 
   const thisBusEventItemStopID = thisBusEventItem.StopID;
 
@@ -94,18 +117,20 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     return {};
   }
   const thisRouteID = searchedRoute.id;
+  const thisRouteFullPathAttributeId = searchedRoute.pid;
   const thisRouteName = searchedRoute.n;
   const thisRouteDeparture = searchedRoute.dep;
   const thisRouteDestination = searchedRoute.des;
-  const thisRouteFullPathAttributeId = searchedRoute.pid;
-  result.RouteName = thisRouteName;
+  const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisBusDataItemGoBack ? thisBusDataItemGoBack : 0];
+  result.properties.push({
+    key: 'route',
+    icon: 'route',
+    value: `${thisRouteName} - 往${thisRouteDirection}`
+  });
+
+  // result.RouteName = thisRouteName;
   result.RouteID = thisRouteID;
   result.FullPathAttributeId = thisRouteFullPathAttributeId;
-  result.RouteEndPoints = {
-    RouteDeparture: thisRouteDeparture,
-    RouteDestination: thisRouteDestination
-  };
-  result.RouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisBusDataItemGoBack ? thisBusDataItemGoBack : 0];
 
   // Collect data from Stop
   const StopKey = `s_${thisBusEventItemStopID}`;

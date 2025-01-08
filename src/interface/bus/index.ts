@@ -26,6 +26,7 @@ export function closeBus(): void {
 async function initializeBusPage(id: number): void {
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
+  
   console.log(integration);
 }
 
