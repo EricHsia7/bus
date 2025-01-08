@@ -107,28 +107,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     icon: 'vital_signs',
     value: `${onStop} | ${situation}`
   });
-
   const thisBusEventItemStopID = thisBusEventItem.StopID;
-
-  // Collect data from Stop
-  const StopKey = `s_${thisBusEventItemStopID}`;
-  let thisStopItem = {};
-  if (Stop.hasOwnProperty(StopKey)) {
-    thisStopItem = Stop[StopKey];
-  } else {
-    return result;
-  }
-  const thisStopItemStopLocationId = thisStopItem.stopLocationId;
-
-  // Collect data drom Location
-  const LocationKey = `l_${thisStopItemStopLocationId}`;
-  const thisLocationItem = Location[LocationKey];
-  const thisLocationItemName = thisLocationItem.n;
-  result.properties.push({
-    key: 'location_name',
-    icon: 'location_on',
-    value: thisLocationItemName
-  });
 
   // Search routes
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
@@ -152,6 +131,26 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   result.RouteID = thisRouteID;
   result.FullPathAttributeId = thisRouteFullPathAttributeId;
+
+  // Collect data from Stop
+  const StopKey = `s_${thisBusEventItemStopID}`;
+  let thisStopItem = {};
+  if (Stop.hasOwnProperty(StopKey)) {
+    thisStopItem = Stop[StopKey];
+  } else {
+    return result;
+  }
+  const thisStopItemStopLocationId = thisStopItem.stopLocationId;
+
+  // Collect data drom Location
+  const LocationKey = `l_${thisStopItemStopLocationId}`;
+  const thisLocationItem = Location[LocationKey];
+  const thisLocationItemName = thisLocationItem.n;
+  result.properties.push({
+    key: 'location_name',
+    icon: 'location_on',
+    value: thisLocationItemName
+  });
 
   return result;
 }
