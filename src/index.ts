@@ -30,6 +30,7 @@ import { closePersonalScheduleManager, openPersonalScheduleManager } from './int
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
+import { closeBus, openBus } from './interface/bus/index';
 
 import './interface/theme.css';
 
@@ -67,6 +68,12 @@ import './interface/location/groups.css';
 import './interface/location/group-details.css';
 import './interface/location/group-items.css';
 import './interface/location/index.css';
+
+import './interface/bus/field.css';
+import './interface/bus/head.css';
+import './interface/bus/body.css';
+import './interface/bus/groups.css';
+import './interface/bus/properties.css';
 
 import './interface/settings/index.css';
 
@@ -317,6 +324,10 @@ window.bus = {
     openFileToImportData,
     viewCommitOfCurrentVersion,
     showPromptToAskForPersistentStorage
+  },
+  bus: {
+    openBus,
+    closeBus
   }
 };
 

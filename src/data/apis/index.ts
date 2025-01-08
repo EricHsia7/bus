@@ -199,70 +199,84 @@ interface FormattedBus {
   position: FormattedBusPosition;
 }
 
-export function formatBus(object: ProcessedBus): FormattedBus {
-  let result: FormattedBus = {};
-
-  const CarType = parseInt(object.CarType);
+export function parseCarType(CarType: '0' | '1' | '2' | '3'): string {
   let type = '';
   switch (CarType) {
-    case 0:
+    case '0':
       type = '一般';
       break;
-    case 1:
+    case '1':
       type = '低底盤';
       break;
-    case 2:
+    case '2':
       type = '大復康巴士';
       break;
-    case 3:
+    case '3':
       type = '狗狗友善專車';
       break;
     default:
       type = '未知類型';
   }
+  return type;
+}
 
-  result.type = type;
-
-  const CarOnStop = parseInt(object.CarOnStop);
+export function parseCarOnStop(CarOnStop: '0' | '1'): string {
   let onStop = '';
   switch (CarOnStop) {
-    case 0:
+    case '0':
       onStop = '離站';
       break;
-    case 1:
+    case '1':
       onStop = '進站';
       break;
     default:
       onStop = '未知狀態'; // Handle unexpected values if necessary
   }
+  return onStop;
+}
 
-  const BusStatus = parseInt(object.BusStatus);
+export function parseBusStatus(BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99'): string {
   let situation = '';
   switch (BusStatus) {
-    case 0:
+    case '0':
       situation = '正常';
       break;
-    case 1:
+    case '1':
       situation = '車禍';
       break;
-    case 2:
+    case '2':
       situation = '故障';
       break;
-    case 3:
+    case '3':
       situation = '塞車';
       break;
-    case 4:
+    case '4':
       situation = '緊急求援';
       break;
-    case 5:
+    case '5':
       situation = '加油';
       break;
-    case 99:
+    case '99':
       situation = '非營運狀態';
       break;
     default:
       situation = '未知狀態'; // Handle unexpected values if necessary
   }
+  return situation;
+}
+
+export function formatBus(object: ProcessedBus): FormattedBus {
+  let result: FormattedBus = {};
+
+  const CarType = object.CarType;
+  const type = parseCarType(CarType);
+  result.type = type;
+
+  const CarOnStop = object.CarOnStop;
+  const onStop = parseCarOnStop(CarOnStop);
+
+  const BusStatus = object.BusStatus;
+  const situation = parseBusStatus(BusStatus);
 
   result.carNumber = object.BusID;
   result.status = {

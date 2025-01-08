@@ -6,7 +6,7 @@ export interface CarInfoItem {
   BusId: number; // BusId ≠ BusID
   BusNId: string;
   CarNum: string; // CarNumber = BusID = vehicle registration number
-  CarType: string;
+  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
   IboxId: number;
   StationId: number;
   PathAttributeId: number;
@@ -16,10 +16,47 @@ export interface CarInfoItem {
 
 export type CarInfo = Array<CarInfoItem>;
 
-let CarInfoAPIVariableCache_available: boolean = false;
-let CarInfoAPIVariableCache_data: object = {};
+export interface SimplifiedCarInfoItem {
+  id: CarInfoItem['BusId'];
+  c: CarInfoItem['CarNum'];
+  pid: CarInfoItem['PathAttributeId'];
+}
 
-export async function getCarInfo(requestID: string): Promise<Provider> {
+export type SimplifiedCarInfo = { [key: string]: simplifyCarInfo };
+
+let CarInfoAPIVariableCache: object = {
+  raw: {
+    data: [],
+    available: false
+  },
+  simplified: {
+    data: {},
+    available: false
+  }
+};
+
+async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
+  const worker = new Worker(new URL('./simplifyCarInfo-worker.ts', import.meta.url));
+
+  // Wrap worker communication in a promise
+  const result = await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(CarInfo); // Send data to the worker
+  });
+
+  return result;
+}
+
+export async function getCarInfo(requestID: string, simplified: boolean = false): Promise<Provider> {
   async function getData() {
     const apis = [
       [0, 2],
@@ -35,33 +72,46 @@ export async function getCarInfo(requestID: string): Promise<Provider> {
   }
 
   const cache_time = 60 * 60 * 24 * 30 * 1000;
-  const cache_key = 'bus_car_info_cache';
   const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
+  const cache_type = simplified ? 'simplified' : 'raw';
+  const cache_key = `bus_${cache_type}_car_info_v4_cache`;
   if (cached_time === null) {
-    var result = await getData();
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
-    if (!CarInfoAPIVariableCache_available) {
-      CarInfoAPIVariableCache_available = true;
-      CarInfoAPIVariableCache_data = result;
+    const result = await getData();
+    var final_result;
+    if (simplified) {
+      final_result = await simplifyCarInfo(result);
+    } else {
+      final_result = result;
     }
-    return result;
+    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
+    if (!CarInfoAPIVariableCache[cache_type].available) {
+      CarInfoAPIVariableCache[cache_type].available = true;
+      CarInfoAPIVariableCache[cache_type].data = final_result;
+    }
+    return final_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      var result = await getData();
+      const result = await getData();
+      var final_result;
+      if (simplified) {
+        final_result = await simplifyCarInfo(result);
+      } else {
+        final_result = result;
+      }
       await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
-      return result;
+      await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
+      return final_result;
     } else {
-      if (!CarInfoAPIVariableCache_available) {
+      if (!CarInfoAPIVariableCache[cache_type].available) {
         var cache = await lfGetItem(0, `${cache_key}`);
-        CarInfoAPIVariableCache_available = true;
-        CarInfoAPIVariableCache_data = JSON.parse(cache);
+        CarInfoAPIVariableCache[cache_type].available = true;
+        CarInfoAPIVariableCache[cache_type].data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getCarInfo_0', 0, true);
       setDataReceivingProgress(requestID, 'getCarInfo_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return CarInfoAPIVariableCache_data;
+      return CarInfoAPIVariableCache[cache_type].data;
     }
   }
 }
