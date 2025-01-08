@@ -63,9 +63,9 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
       break;
     }
   }
-  const thisBusDataItemPathAttributeId = parseInt(thisBusEventItem.RouteID);
+  const thisBusDataItemPathAttributeId = parseInt(thisBusDataItem.RouteID);
   result.PathAttributeId = thisBusDataItemPathAttributeId;
-  const thisBusDataItemBusStatus = thisBusEventItem.BusStatus;
+  const thisBusDataItemBusStatus = thisBusDataItem.BusStatus;
   const situation = parseBusStatus(thisBusDataItemBusStatus);
 
   // Collect data from BusEvent
