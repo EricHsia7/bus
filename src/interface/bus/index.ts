@@ -8,8 +8,8 @@ const BusField = documentQuerySelector('.css_bus_field');
 const BusHead = elementQuerySelector(BusField, '.css_bus_head');
 const BusBody = elementQuerySelector(BusField, '.css_bus_body');
 const BusGroups = elementQuerySelector(BusBody, '.css_bus_groups');
-const BusGroupProperties = elementQuerySelector(BusGroups, 'css_bus_group[group="properties"]');
-const BusGroupLocation = elementQuerySelector(BusGroups, 'css_bus_group[group="location"]');
+const BusGroupProperties = elementQuerySelector(BusGroups, '.css_bus_group[group="properties"]');
+const BusGroupLocation = elementQuerySelector(BusGroups, '.css_bus_group[group="location"]');
 
 export function openBus(id: number): void {
   pushPageHistory('Bus');
