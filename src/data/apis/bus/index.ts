@@ -31,7 +31,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   let result: integratedBus = {};
 
   // Collect data from CarInfo
-  console.log(0);
+  console.log(0, CarInfo);
   let thisCar = {};
   if (CarInfo.hasOwnProperty(carKey)) {
     console.log(1);
