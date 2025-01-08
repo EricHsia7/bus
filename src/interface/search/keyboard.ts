@@ -50,7 +50,7 @@ export function ResizeSearchInputCanvasSize(): void {
   height = size.height;
   searchInputCanvasElement.width = width * searchInputCanvasScale;
   searchInputCanvasElement.height = height * searchInputCanvasScale;
-  updateSearchInput(searchInputElement.value);
+  updateSearchInput(searchInputElement.value, -1);
 }
 
 function initializeKeyboard(): void {
@@ -96,7 +96,7 @@ export function openKeyboard() {
   animateCursor();
 
   const value = searchInputElement.value;
-  updateSearchInput(value);
+  updateSearchInput(value, -1);
 }
 
 export function closeKeyboard() {
@@ -114,7 +114,7 @@ export function typeTextIntoInput(value): void {
   const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  updateSearchInput(newValue);
+  updateSearchInput(newValue, -1);
 }
 
 export function deleteCharFromInout(): void {
@@ -122,21 +122,27 @@ export function deleteCharFromInout(): void {
   const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  updateSearchInput(newValue);
+  updateSearchInput(newValue, -1);
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult('');
-  updateSearchInput('');
+  updateSearchInput('', -1);
 }
 
-export function updateSearchInput(value: string = ''): void {
+export function updateSearchInput(value: string = '', cursorIndex: number): void {
   let empty = false;
   if (value.length === 0) {
     value = searchInputPlaceholder;
     empty = true;
+    cursorIndex = 0;
+  } else {
+    if (cursorIndex === -1) {
+      cursorIndex = value.length;
+    }
   }
+
   size = querySearchInputCanvasSize();
   width = size.width * searchInputCanvasScale;
   height = size.height * searchInputCanvasScale;
@@ -149,7 +155,7 @@ export function updateSearchInput(value: string = ''): void {
   searchInputCanvasContext.textAlign = 'center';
   searchInputCanvasContext.textBaseline = 'middle';
 
-  textWidth = searchInputCanvasContext.measureText(value).width;
+  textWidth = searchInputCanvasContext.measureText(value.substring(0, cursorIndex)).width;
   cursorOffset = empty ? 1 : Math.max(1, textWidth);
 
   searchInputCanvasContext.globalAlpha = 1;

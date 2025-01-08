@@ -185,27 +185,27 @@ window.bus = {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
             mediaQuery.addEventListener('change', function () {
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
             searchInputElement.addEventListener('paste', function () {
               updateSearchResult(searchInputElement.value);
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
             searchInputElement.addEventListener('cut', function () {
               updateSearchResult(searchInputElement.value);
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
             searchInputElement.addEventListener('selectionchange', function () {
               updateSearchResult(searchInputElement.value);
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
             document.addEventListener('selectionchange', function () {
               updateSearchResult(searchInputElement.value);
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
             searchInputElement.addEventListener('keyup', function () {
               updateSearchResult(searchInputElement.value);
-              updateSearchInput(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
             });
 
             const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
