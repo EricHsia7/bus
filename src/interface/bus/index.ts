@@ -28,8 +28,8 @@ async function initializeBusPage(id: number): void {
   setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
-  updateBusPropertiesField(BusGroupProperties, integration.properties, false);
   console.log(integration);
+  updateBusPropertiesField(BusGroupProperties, integration.properties, false);
 }
 
 function updateBusField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
