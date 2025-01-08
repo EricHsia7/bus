@@ -38,7 +38,7 @@ export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   updateBusPropertiesField(Field, properties, true);
 }
 
-export function updateBusPropertiesField(Field: HTMLElement, properties: Array<>, skeletonScreen: boolean): void {
+export function updateBusPropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_bus_property_icon').innerHTML = getIconHTML(thisProperty.icon);
@@ -67,7 +67,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array<>
   const FieldSize = queryBusPropertiesFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  
+
   console.log(properties);
   var propertyQuantity = properties.length;
 
