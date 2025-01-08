@@ -7,7 +7,7 @@ export interface CarInfoItem {
   BusId: number; // BusId ≠ BusID
   BusNId: string;
   CarNum: string; // CarNumber = BusID = vehicle registration number
-  CarType: string;
+  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
   IboxId: number;
   StationId: number;
   PathAttributeId: number;

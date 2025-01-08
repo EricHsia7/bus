@@ -30,6 +30,8 @@ import { closePersonalScheduleManager, openPersonalScheduleManager } from './int
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
+import { closeBus, openBus } from './interface/bus/index';
+import { integrateBus } from './data/apis/bus/index';
 
 import './interface/theme.css';
 
@@ -145,7 +147,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { closeBus, openBus } from './interface/bus/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -329,6 +330,9 @@ window.bus = {
   bus: {
     openBus,
     closeBus
+  },
+  test: {
+    integrateBus
   }
 };
 
