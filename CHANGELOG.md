@@ -68,6 +68,9 @@
 
 **Merged pull requests:**
 
+- Add bus search data \(car info\) [\#83](https://github.com/EricHsia7/bus/pull/83) ([EricHsia7](https://github.com/EricHsia7))
+- deps: bump canvas from 2.11.2 to 3.0.0 [\#82](https://github.com/EricHsia7/bus/pull/82) ([dependabot[bot]](https://github.com/apps/dependabot))
+- deps: bump webpack-cli from 5.1.4 to 6.0.1 [\#81](https://github.com/EricHsia7/bus/pull/81) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update loader.ts [\#79](https://github.com/EricHsia7/bus/pull/79) ([EricHsia7](https://github.com/EricHsia7))
 - Erichsia7 patch 1 [\#76](https://github.com/EricHsia7/bus/pull/76) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
