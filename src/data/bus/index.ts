@@ -110,6 +110,18 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   const thisBusEventItemStopID = thisBusEventItem.StopID;
 
+  // Collect data from Stop
+  const StopKey = `s_${thisBusEventItemStopID}`;
+  const thisStopItem = Stop[StopKey];
+  const thisStopItemStopLocationId = thisStopItem.stopLocationId;
+
+  // Collect data drom Location
+  const LocationKey = `l_${thisStopItemStopLocationId}`;
+  const thisLocationItem = Location[LocationKey];
+  const thisLocationItemName = thisLocationItem.n;
+
+  result.LocationName = thisLocationItemName;
+  
   // Search routes
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
   let searchedRoute = {};
@@ -134,16 +146,5 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   result.RouteID = thisRouteID;
   result.FullPathAttributeId = thisRouteFullPathAttributeId;
 
-  // Collect data from Stop
-  const StopKey = `s_${thisBusEventItemStopID}`;
-  const thisStopItem = Stop[StopKey];
-  const thisStopItemStopLocationId = thisStopItem.stopLocationId;
-
-  // Collect data drom Location
-  const LocationKey = `l_${thisStopItemStopLocationId}`;
-  const thisLocationItem = Location[LocationKey];
-  const thisLocationItemName = thisLocationItem.n;
-
-  result.LocationName = thisLocationItemName;
   return result;
 }
