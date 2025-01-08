@@ -30,7 +30,7 @@ export function closeSearch(): void {
 
 export function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
-    const typeToIcon = ['route', 'location_on'];
+    const typeToIcon = ['route', 'location_on', 'directions_bus'];
     const searchResults = searchFor(query, 30);
     let html = [];
     for (const result of searchResults) {
@@ -43,6 +43,9 @@ export function updateSearchResult(query: string): void {
           break;
         case 1:
           onclickScript = `bus.location.openLocation('${result.item.hash}')`;
+          break;
+        case 2:
+          onclickScript = ``;
           break;
         default:
           break;

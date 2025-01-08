@@ -3,6 +3,7 @@ import { getLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
 import { getUnicodes } from '../../tools/text';
+import { getCarInfo } from '../apis/getCarInfo/index';
 
 let searchIndex = {};
 let searchList = [];
@@ -66,6 +67,7 @@ export async function prepareForSearch(): void {
   const requestID = generateIdentifier('r');
   const Route = await getRoute(requestID, true);
   const mergedLocation = await getLocation(requestID, true);
+  const CarInfo = await getCarInfo(requestID);
   let index = {};
   let list = [];
   let i = 0;
@@ -107,6 +109,31 @@ export async function prepareForSearch(): void {
       des: '',
       pid: [],
       type: 1
+    };
+    list.push(thisItem);
+    const unicodes = getUnicodes(thisItem.n, true);
+    for (const unicode of unicodes) {
+      const key = `u_${unicode}`;
+      if (!index.hasOwnProperty(key)) {
+        index[key] = [];
+      }
+      index[key].push(i);
+    }
+    i += 1;
+  }
+  for (const item of CarInfo) {
+    const thisItem = {
+      id: item.BusId,
+      pid: [],
+      dep: '',
+      des: '',
+      n: item.CarNum,
+      hash: '',
+      lo: '',
+      la: '',
+      r: '',
+      s: '',
+      type: 2
     };
     list.push(thisItem);
     const unicodes = getUnicodes(thisItem.n, true);
