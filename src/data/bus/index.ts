@@ -56,7 +56,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   if (CarInfo.hasOwnProperty(carKey)) {
     thisCar = CarInfo[carKey];
   } else {
-    return {};
+    return result;
   }
 
   const thisCarNumber = thisCar.CarNum;
@@ -114,7 +114,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   if (searchedRoutes.length > 0) {
     searchedRoute = searchedRoutes[0];
   } else {
-    return {};
+    return result;
   }
   const thisRouteID = searchedRoute.id;
   const thisRouteFullPathAttributeId = searchedRoute.pid;
