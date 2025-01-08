@@ -1,10 +1,10 @@
-import { searchRouteByPathAttributeId } from '../../search/index';
-import { getBusData } from '../getBusData/index';
-import { getBusEvent } from '../getBusEvent/index';
-import { CarInfoItem, getCarInfo } from '../getCarInfo/index';
-import { getLocation } from '../getLocation/index';
-import { getStop } from '../getStop/index';
-import { parseBusStatus, parseCarOnStop, parseCarType } from '../index';
+import { searchRouteByPathAttributeId } from '../search/index';
+import { getBusData } from '../apis/getBusData/index';
+import { getBusEvent } from '../apis/getBusEvent/index';
+import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
+import { getLocation } from '../apis/getLocation/index';
+import { getStop } from '../apis/getStop/index';
+import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 
 export interface integratedBus {
   carNumber: string;

@@ -1,7 +1,7 @@
-import { integrateBus } from '../../data/apis/bus/index';
+import { integrateBus } from '../../data/bus/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { closePreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 
 const BusField = documentQuerySelector('.css_bus_field');
 const BusHead = elementQuerySelector(BusField, '.css_bus_head');
@@ -18,8 +18,9 @@ export function openBus(id: number): void {
 }
 
 export function closeBus(): void {
-  revokePageHistory('Bus');
+  // revokePageHistory('Bus');
   BusField.setAttribute('displayed', 'false');
+  openPreviousPage();
 }
 
 async function initializeBusPage(id: number): void {
