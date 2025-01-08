@@ -66,6 +66,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     icon: 'tag',
     value: thisCarNumber
   });
+
   const thisCarType = thisCar.CarType;
   const type = parseCarType(thisCarType);
   result.properties.push({
@@ -111,7 +112,12 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   // Collect data from Stop
   const StopKey = `s_${thisBusEventItemStopID}`;
-  const thisStopItem = Stop[StopKey];
+  let thisStopItem = {};
+  if (Stop.hasOwnProperty(StopKey)) {
+    thisStopItem = Stop[StopKey];
+  } else {
+    return result;
+  }
   const thisStopItemStopLocationId = thisStopItem.stopLocationId;
 
   // Collect data drom Location
