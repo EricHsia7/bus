@@ -136,7 +136,7 @@ export async function prepareForSearch(): void {
       type: 2
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(thisItem.CarNum, true);
+    const unicodes = getUnicodes(thisItem.n, true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
