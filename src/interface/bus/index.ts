@@ -2,6 +2,7 @@ import { integrateBus } from '../../data/bus/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { setUpBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 const BusField = documentQuerySelector('.css_bus_field');
 const BusHead = elementQuerySelector(BusField, '.css_bus_head');
@@ -24,9 +25,10 @@ export function closeBus(): void {
 }
 
 async function initializeBusPage(id: number): void {
+  setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
-  
+  updateBusPropertiesField(BusGroupProperties, integration.properties, false);
   console.log(integration);
 }
 
