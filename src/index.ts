@@ -74,7 +74,6 @@ import './interface/bus/head.css';
 import './interface/bus/body.css';
 import './interface/bus/groups.css';
 import './interface/bus/properties.css';
-import './interface/bus/location.css';
 
 import './interface/settings/index.css';
 
