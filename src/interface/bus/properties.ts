@@ -64,7 +64,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
     }
   }
 
-  const FieldSize = queryPropertiesFieldSize();
+  const FieldSize = queryBusPropertiesFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
