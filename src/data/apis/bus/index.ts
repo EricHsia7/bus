@@ -14,7 +14,6 @@ export interface integratedBus {
     situation: string;
     text: string;
   };
-  direction: string;
   PathAttributeId: number;
   RouteName: string;
   RouteID: number;
@@ -23,6 +22,7 @@ export interface integratedBus {
     RouteDeparture: string;
     RouteDestination: string;
   };
+  RouteDirection: string;
 }
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
@@ -36,35 +36,25 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   let result: integratedBus = {};
 
   // Collect data from CarInfo
-  console.log(0, CarInfo);
   let thisCar = {};
   if (CarInfo.hasOwnProperty(carKey)) {
-    console.log(1);
     thisCar = CarInfo[carKey];
-    console.log(2, thisCar, carKey);
   } else {
-    console.log(3);
-
     return {};
   }
-  console.log(4);
 
   const thisCarNumber = thisCar.CarNum;
   const thisCarType = thisCar.CarType;
   result.carNumber = thisCarNumber;
-  console.log(5, thisCarNumber, thisCarType);
   const type = parseCarType(thisCarType);
   result.type = type;
 
   // Collect data from BusData
-  console.log(6);
   let thisBusDataItem = {};
   for (const BusDataItem of BusData) {
-    console.log(7);
     const thisBusDataItemBusID = BusDataItem.BusID;
     if (thisBusDataItemBusID === thisCarNumber) {
       thisBusDataItem = BusDataItem;
-      console.log(8, BusDataItem);
       break;
     }
   }
@@ -75,13 +65,10 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const thisBusDataItemGoBack = parseInt(thisBusDataItem.GoBack);
 
   // Collect data from BusEvent
-  console.log(9);
   let thisBusEventItem = {};
   for (const BusEventItem of BusEvent) {
-    console.log(10);
     const thisBusEventItemBusID = BusEventItem.BusID;
     if (thisBusEventItemBusID === thisCarNumber) {
-      console.log(11, BusEventItem);
       thisBusEventItem = BusEventItem;
       break;
     }
@@ -98,12 +85,9 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const thisBusEventItemStopID = thisBusEventItem.StopID;
 
   // Search routes
-  console.log(12);
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
-  console.log(13, searchedRoute);
   let searchedRoute = {};
   if (searchedRoutes.length > 0) {
-    console.log(14, searchedRoutes[0]);
     searchedRoute = searchedRoutes[0];
   } else {
     return {};
@@ -120,7 +104,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     RouteDeparture: thisRouteDeparture,
     RouteDestination: thisRouteDestination
   };
-  result.direction = [thisRouteDestination, thisRouteDeparture, ''][thisBusDataItemGoBack ? thisBusDataItemGoBack : 0];
+  result.RouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisBusDataItemGoBack ? thisBusDataItemGoBack : 0];
 
   // Collect data from Stop
   const StopKey = `s_${thisBusEventItemStopID}`;
@@ -133,6 +117,5 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const thisLocationItemName = thisLocationItem.n;
 
   result.StopName = thisLocationItemName;
-  console.log(15, result);
   return result;
 }
