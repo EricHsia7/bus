@@ -1,3 +1,4 @@
+import { integrateBus } from '../../data/apis/bus/index';
 import { CarInfoItem } from '../../data/apis/getCarInfo/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -13,7 +14,7 @@ const BusGroupLocation = elementQuerySelector(BusGroups, 'css_bus_group[group="l
 export function openBus(id: CarInfoItem['BusId']): void {
   pushPageHistory('Bus');
   BusField.setAttribute('displayed', 'true');
-  initializeBusPage();
+  initializeBusPage(id);
   closePreviousPage();
 }
 
@@ -23,13 +24,9 @@ export function closeBus(): void {
 }
 
 async function initializeBusPage(id: CarInfoItem['BusId']): void {
-
+  const requestID = generateIdentifier('r');
+  const integration = await integrateBus(id, requestID);
+  console.log(integration)
 }
 
-function updateBusPage(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
-  /*
-  const carKey = `b_${id}`;
-  const thisCar = CarInfo[carKey];
-  console.log(thisCar);
-  */
-}
+function updateBusPage(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {}
