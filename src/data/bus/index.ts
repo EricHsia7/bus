@@ -37,7 +37,6 @@ export interface integratedBus {
   }>;
   RouteID: number;
   FullPathAttributeId: Array<number>;
-  LocationName: string;
 }
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
@@ -119,9 +118,12 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const LocationKey = `l_${thisStopItemStopLocationId}`;
   const thisLocationItem = Location[LocationKey];
   const thisLocationItemName = thisLocationItem.n;
+  result.properties.push({
+    key: 'location_name',
+    icon: 'location_on',
+    value: thisLocationItemName
+  });
 
-  result.LocationName = thisLocationItemName;
-  
   // Search routes
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
   let searchedRoute = {};
@@ -142,7 +144,6 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     value: `${thisRouteName} - 往${thisRouteDirection}`
   });
 
-  // result.RouteName = thisRouteName;
   result.RouteID = thisRouteID;
   result.FullPathAttributeId = thisRouteFullPathAttributeId;
 

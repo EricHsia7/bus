@@ -26,7 +26,7 @@ export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   const FieldSize = queryBusPropertiesFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultPropertyQuantity = 4;
+  var defaultPropertyQuantity = 5;
   var properties = [];
   for (let i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
