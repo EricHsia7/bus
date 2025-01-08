@@ -6,6 +6,8 @@
 
 **Implemented enhancements:**
 
+- Add bus page [\#84](https://github.com/EricHsia7/bus/pull/84) ([EricHsia7](https://github.com/EricHsia7))
+- Add bus search data \(car info\) [\#83](https://github.com/EricHsia7/bus/pull/83) ([EricHsia7](https://github.com/EricHsia7))
 - Add persistent storage option [\#80](https://github.com/EricHsia7/bus/pull/80) ([EricHsia7](https://github.com/EricHsia7))
 - Improve icon search [\#78](https://github.com/EricHsia7/bus/pull/78) ([EricHsia7](https://github.com/EricHsia7))
 - Improve search [\#77](https://github.com/EricHsia7/bus/pull/77) ([EricHsia7](https://github.com/EricHsia7))
@@ -68,7 +70,7 @@
 
 **Merged pull requests:**
 
-- Add bus search data \(car info\) [\#83](https://github.com/EricHsia7/bus/pull/83) ([EricHsia7](https://github.com/EricHsia7))
+- Improve quality of search results for buses [\#85](https://github.com/EricHsia7/bus/pull/85) ([EricHsia7](https://github.com/EricHsia7))
 - deps: bump canvas from 2.11.2 to 3.0.0 [\#82](https://github.com/EricHsia7/bus/pull/82) ([dependabot[bot]](https://github.com/apps/dependabot))
 - deps: bump webpack-cli from 5.1.4 to 6.0.1 [\#81](https://github.com/EricHsia7/bus/pull/81) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update loader.ts [\#79](https://github.com/EricHsia7/bus/pull/79) ([EricHsia7](https://github.com/EricHsia7))
