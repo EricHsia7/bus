@@ -67,7 +67,7 @@ export async function prepareForSearch(): void {
   const requestID = generateIdentifier('r');
   const Route = await getRoute(requestID, true);
   const mergedLocation = await getLocation(requestID, true);
-  const CarInfo = await getCarInfo(requestID, false);
+  const CarInfo = await getCarInfo(requestID, true);
   let index = {};
   let list = [];
   let i = 0;
@@ -121,13 +121,13 @@ export async function prepareForSearch(): void {
     }
     i += 1;
   }
-  for (const item of CarInfo) {
+  for (const key in CarInfo) {
     const thisItem = {
-      id: item.BusId,
+      id: CarInfo[key].id,
       pid: [],
       dep: '',
       des: '',
-      n: item.CarNum,
+      n: CarInfo[key].c,
       hash: '',
       lo: '',
       la: '',
