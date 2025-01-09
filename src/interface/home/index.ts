@@ -3,6 +3,7 @@ import { getLocation } from '../../data/apis/getLocation/index';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
+import { getCarInfo } from '../../data/apis/getCarInfo/index';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;
@@ -31,11 +32,14 @@ export async function downloadData(): void {
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbols', 0, false);
   updateDownloadProgress();
   progressElement.addEventListener('transitioncancel', setCompleteStatus);
   await getRoute(dataDownloadRequestID, true);
   await getLocation(dataDownloadRequestID, true);
+  await getCarInfo(dataDownloadRequestID, true);
   await getMaterialSymbols(dataDownloadRequestID);
   dataDownloadCompleted = true;
   setCompleteStatus();
