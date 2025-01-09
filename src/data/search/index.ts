@@ -224,16 +224,14 @@ export function searchFor(query: string, limit: number): Array {
       let thisItem = searchList[j];
       const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
       if (quantity < limit) {
-        if (thisItem.type !== 2) {
-          result.push({
-            item: thisItem,
-            score: score
-          });
-          quantity += 1;
-        }
+        result.push({
+          item: thisItem,
+          score: score
+        });
       } else {
         break;
       }
+      quantity += 1;
     }
   }
 
