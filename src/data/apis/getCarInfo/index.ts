@@ -17,9 +17,10 @@ export interface CarInfoItem {
 export type CarInfo = Array<CarInfoItem>;
 
 export interface SimplifiedCarInfoItem {
-  id: CarInfoItem['BusId'];
-  c: CarInfoItem['CarNum'];
-  pid: CarInfoItem['PathAttributeId'];
+  BusId: CarInfoItem['BusId'];
+  CarNum: CarInfoItem['CarNum'];
+  CarType: CarInfoItem['CarType'];
+  PathAttributeId: CarInfoItem['PathAttributeId'];
 }
 
 export type SimplifiedCarInfo = { [key: string]: simplifyCarInfo };

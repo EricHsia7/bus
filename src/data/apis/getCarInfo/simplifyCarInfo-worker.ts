@@ -6,7 +6,7 @@ self.onmessage = function (e) {
 };
 
 function simplifyCarInfo_worker(CarInfo: CarInfo): SimplifiedCarInfo {
-  let result = {};
+  let result: SimplifiedCarInfo = {};
   for (const item of CarInfo) {
     const simplifiedItem = {};
     simplifiedItem.BusId = item.BusId;
