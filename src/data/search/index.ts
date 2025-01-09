@@ -208,11 +208,13 @@ export function searchFor(query: string, limit: number): Array {
 
   // Prioritize exact matches for buses
   const exactMatches = searchList.filter((item) => item.n === query && item.type === 2);
+  const exactMatchIds = new Set(); // To track exact matches to avoid duplicates
   for (const item of exactMatches) {
     result.push({
       item: item,
       score: Infinity // Highest possible score for exact matches
     });
+    exactMatchIds.add(item.id);
     quantity += 1;
     if (quantity >= limit) {
       break;
@@ -222,16 +224,19 @@ export function searchFor(query: string, limit: number): Array {
   if (quantity < limit) {
     for (const j of intersection) {
       let thisItem = searchList[j];
-      const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
-      if (quantity < limit) {
-        result.push({
-          item: thisItem,
-          score: score
-        });
-      } else {
-        break;
+      if (!exactMatchIds.has(thisItem.id)) {
+        // Check if the item is not already an exact match
+        const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+        if (quantity < limit) {
+          result.push({
+            item: thisItem,
+            score: score
+          });
+        } else {
+          break;
+        }
+        quantity += 1;
       }
-      quantity += 1;
     }
   }
 
