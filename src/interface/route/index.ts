@@ -504,7 +504,7 @@ export function streamRoute(): void {
 
 export function openRoute(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('Route');
-  logRecentView('Route', RouteID);
+  logRecentView('route', RouteID);
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;

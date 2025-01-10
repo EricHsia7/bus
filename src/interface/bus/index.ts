@@ -14,7 +14,7 @@ const BusGroupLocation = elementQuerySelector(BusGroups, '.css_bus_group[group="
 
 export function openBus(id: number): void {
   pushPageHistory('Bus');
-  logRecentView('Bus', id);
+  logRecentView('bus', id);
   BusField.setAttribute('displayed', 'true');
   initializeBusPage(id);
   closePreviousPage();

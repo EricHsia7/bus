@@ -479,7 +479,7 @@ export function streamLocation(): void {
 
 export function openLocation(hash: string): void {
   pushPageHistory('Location');
-  logRecentView('Location', hash);
+  logRecentView('location', hash);
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');
