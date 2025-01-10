@@ -122,7 +122,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             if (!(previousItem.time === thisItem.time)) {
               updateTime(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.id, thisItem.id)) {
+            if (!compareThings(previousItem.id, thisItem.id) || !compareThings(previousItem.pid, thisItem.pid)) {
               updateButton(thisElement, thisItem);
             }
             break;
