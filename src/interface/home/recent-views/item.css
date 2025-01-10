@@ -11,6 +11,10 @@
   scroll-snap-align: center;
 }
 
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item:last-child {
+  margin-right: 0px;
+}
+
 /* recent-views > content > item > head */
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head {
   position: relative;
@@ -24,7 +28,7 @@
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon {
   position: absolute;
   top: 0px;
-  left: 0px;
+  left: 5px;
   width: 30px;
   height: 30px;
   display: flex;
@@ -45,9 +49,9 @@
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_title {
   position: absolute;
   top: 0px;
-  left: 30px;
+  left: 35px;
   height: 30px;
-  width: calc(100% - 30px - 70px);
+  width: calc(100% - 5px - 30px - 70px);
   font-size: 15px;
   color: var(--b-cssvar-333333);
   display: flex;

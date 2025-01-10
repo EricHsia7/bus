@@ -87,6 +87,10 @@
   word-break: keep-all;
 }
 
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content::-webkit-scrollbar {
+  display: none;
+}
+
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
   background: var(--b-cssvar-ededf2);
