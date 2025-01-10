@@ -89,7 +89,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'location_on',
     default: true,
     index: 0,
-    storeIndex: 7,
+    storeIndex: 8,
     contentType: ['stop'],
     id: 'saved_stop'
   },
@@ -98,7 +98,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'route',
     default: true,
     index: 1,
-    storeIndex: 8,
+    storeIndex: 9,
     contentType: ['route'],
     id: 'saved_route'
   }
@@ -107,7 +107,7 @@ var Folders: { [key: string]: Folder } = {
 const defaultFolderQuantity = 2;
 
 export async function initializeFolderStores(): void {
-  var folderKeys = await lfListItemKeys(6);
+  var folderKeys = await lfListItemKeys(7);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
     var thisFolder: string = await lfGetItem(7, folderKey);
@@ -133,7 +133,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
     return false;
   }
 
-  var folderKeys = await lfListItemKeys(6);
+  var folderKeys = await lfListItemKeys(7);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
