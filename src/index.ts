@@ -48,6 +48,9 @@ import './interface/home/body.css';
 import './interface/home/folders/folders.css';
 import './interface/home/folders/item.css';
 
+import './interface/home/recent-views/recent-views.css';
+import './interface/home/recent-views/item.css';
+
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
 
