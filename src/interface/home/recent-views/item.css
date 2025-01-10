@@ -3,7 +3,6 @@
   position: relative;
   width: 100%;
   height: 70px;
-  border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
 }
 
