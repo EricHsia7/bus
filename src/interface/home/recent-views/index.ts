@@ -83,11 +83,11 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       timeElement.innerText = thisItem.time.relative;
     }
     function updateName(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
+      const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_name');
       nameElement.innerText = thisItem.name;
     }
     function updateButton(thisElement: HTMLElement, thisItem: object): void {
-      const buttonElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_button');
+      const buttonElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_button');
     }
 
     if (previousItem === null) {
@@ -148,11 +148,12 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
   const FieldSize = queryRecentViewsFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-
+  
+  /*
   if (!previousIntegration.hasOwnProperty('items')) {
     previousIntegration = integration;
   }
-
+*/
   const itemQuantity = integration.itemQuantity;
 
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
