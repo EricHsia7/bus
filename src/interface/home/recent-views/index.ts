@@ -1,7 +1,8 @@
-import { integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
+import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { booleanToString, generateIdentifier } from '../../../tools/index';
+import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { getIconHTML } from '../../icons/index';
 import { FieldSize, GeneratedElement } from '../../index';
 
 const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
@@ -39,26 +40,53 @@ function generateElementOfRecentViewItem(): GeneratedElement {
 }
 
 function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean) {
-  function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
-    function updateIcon(thisElement: HTMLElement, thisItem: object): void {
+  function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
-      // Update icon based on thisItem properties
+      let icon = '';
+      switch (thisItem.type) {
+        case 'route':
+          icon = 'route';
+          break;
+        case 'location':
+          icon = 'location_on';
+          break;
+        case 'bus':
+          icon = 'directions_bus';
+          break;
+        default:
+          break;
+      }
+      iconElement.innerHTML = getIconHTML(icon);
     }
-    function updateTitle(thisElement: HTMLElement, thisItem: object): void {
+    function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const titleElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_title');
-      // Update title based on thisItem properties
+      let title = '';
+      switch (thisItem.type) {
+        case 'route':
+          title = '路線';
+          break;
+        case 'location':
+          title = '地點';
+          break;
+        case 'bus':
+          title = '公車';
+          break;
+        default:
+          break;
+      }
+      titleElement.innerText = title;
     }
-    function updateTime(thisElement: HTMLElement, thisItem: object): void {
+    function updateTime(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const timeElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_time');
-      // Update time based on thisItem properties
+      timeElement.innerText = thisItem.time.relative;
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
+    function updateName(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
-      // Update name based on thisItem properties
+      nameElement.innerText = thisItem.name;
     }
     function updateButton(thisElement: HTMLElement, thisItem: object): void {
       const buttonElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_button');
-      // Update button based on thisItem properties
     }
 
     if (previousItem === null) {
@@ -68,7 +96,51 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       updateName(thisElement, thisItem);
       updateButton(thisElement, thisItem);
     } else {
-      // Compare and update only changed properties
+      if (!(thisItem.type === previousItem.type)) {
+        updateIcon(thisElement, thisItem);
+        updateTitle(thisElement, thisItem);
+        updateTime(thisElement, thisItem);
+        updateName(thisElement, thisItem);
+        updateButton(thisElement, thisItem);
+      } else {
+        switch (thisItem.type) {
+          case 'location':
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateName(thisElement, thisItem);
+            }
+            if (!(previousItem.time === thisItem.time)) {
+              updateTime(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.hash, thisItem.hash)) {
+              updateButton(thisElement, thisItem);
+            }
+            break;
+          case 'route':
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateName(thisElement, thisItem);
+            }
+            if (!(previousItem.time === thisItem.time)) {
+              updateTime(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.id, thisItem.id)) {
+              updateButton(thisElement, thisItem);
+            }
+            break;
+          case 'bus':
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateName(thisElement, thisItem);
+            }
+            if (!(previousItem.time === thisItem.time)) {
+              updateTime(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.id, thisItem.id)) {
+              updateButton(thisElement, thisItem);
+            }
+            break;
+          default:
+            break;
+        }
+      }
     }
   }
 
