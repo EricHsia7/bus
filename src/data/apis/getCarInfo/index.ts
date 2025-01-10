@@ -57,7 +57,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
   return result;
 }
 
-export async function getCarInfo(requestID: string, simplified: boolean = false): Promise<Provider> {
+export async function getCarInfo(requestID: string, simplified: boolean = false): Promise<CarInfo | SimplifiedCarInfo> {
   async function getData() {
     const apis = [
       [0, 2],
@@ -75,7 +75,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
   const cache_time = 60 * 60 * 24 * 30 * 1000;
   const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   const cache_type = simplified ? 'simplified' : 'raw';
-  const cache_key = `bus_${cache_type}_car_info_v4_cache`;
+  const cache_key = `bus_${cache_type}_car_info_v5_cache`;
   if (cached_time === null) {
     const result = await getData();
     var final_result;

@@ -40,7 +40,7 @@ export interface integratedBus {
 }
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
-  const carKey = `b_${id}`;
+  const carKey = `c_${id}`;
   const CarInfo = await getCarInfo(requestID, true);
   const BusData = await getBusData(requestID);
   const BusEvent = await getBusEvent(requestID);
