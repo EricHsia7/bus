@@ -10,6 +10,7 @@ import { isSaved } from '../../data/folder/index';
 import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
+import { logRecentView } from '../../data/recent-view/index';
 
 let previousIntegration: object = {};
 
@@ -503,6 +504,7 @@ export function streamRoute(): void {
 
 export function openRoute(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('Route');
+  logRecentView('Route', RouteID);
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
