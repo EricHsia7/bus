@@ -163,7 +163,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const thisRecentViewItemElement = generateElementOfRecentViewItem();
-        Field.appendChild(thisRecentViewItemElement.element);
+        elementQuerySelectorAll(Field, `.css_home_recent_views_content`).appendChild(thisRecentViewItemElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
@@ -172,11 +172,15 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       }
     }
   }
-
+  console.log(0);
   for (let i = 0; i < itemQuantity; i++) {
+    console.log(1);
     const thisElement = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
+    console.log(2);
     thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    console.log(3);
     const thisItem = integration.items[i];
+    console.log(4, thisItem);
     if (previousIntegration.hasOwnProperty('items')) {
       if (previousIntegration.items[i]) {
         const previousItem = previousIntegration.items[i];
