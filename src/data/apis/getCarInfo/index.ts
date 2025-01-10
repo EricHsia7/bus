@@ -23,7 +23,7 @@ export interface SimplifiedCarInfoItem {
   PathAttributeId: CarInfoItem['PathAttributeId'];
 }
 
-export type SimplifiedCarInfo = { [key: string]: simplifyCarInfo };
+export type SimplifiedCarInfo = { [key: string]: SimplifiedCarInfoItem };
 
 let CarInfoAPIVariableCache: object = {
   raw: {

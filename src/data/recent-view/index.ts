@@ -1,21 +1,27 @@
 import { generateIdentifier } from '../../tools/index';
+import { getCarInfo } from '../apis/getCarInfo/index';
+import { getLocation } from '../apis/getLocation/index';
+import { searchRouteByRouteID } from '../search/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 interface RecentViewRoute {
   type: 'Route';
   time: string;
+  title: string;
   RouteID: number;
 }
 
 interface RecentViewLocation {
   type: 'Location';
   time: string;
+  title: string;
   hash: string;
 }
 
 interface RecentViewBus {
   type: 'Bus';
   time: string;
+  title: string;
   id: number;
 }
 
@@ -45,35 +51,57 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   switch (type) {
     case 'Route':
       const RecentViewRoutes = RecentViews.filter((r) => r.type === 'Route').map((r) => r.RouteID);
-      const RecentViewRouteObject: RecentViewRoute = {
-        type: 'Route',
-        time: time,
-        RouteID: param
-      };
       if (RecentViewRoutes.indexOf(param) < 0) {
-        await lfSetItem(6, key, JSON.stringify(RecentViewRouteObject));
+        const searchedRoutes = await searchRouteByRouteID(param);
+        if (searchedRoutes.length > 0) {
+          const thisRoute = searchedRoutes[0];
+          const title = thisRoute.n;
+          const RecentViewRouteObject: RecentViewRoute = {
+            type: 'Route',
+            time: time,
+            title: title,
+            RouteID: param
+          };
+          await lfSetItem(6, key, JSON.stringify(RecentViewRouteObject));
+        }
       }
       break;
     case 'Location':
       const RecentViewLocations = RecentViews.filter((l) => l.type === 'Location').map((l) => l.hash);
-      const RecentViewLocationObject: RecentViewLocation = {
-        type: 'Location',
-        time: time,
-        hash: param
-      };
       if (RecentViewLocations.indexOf(param) < 0) {
-        await lfSetItem(6, key, JSON.stringify(RecentViewLocationObject));
+        const LocationKey = `l_${param}`;
+        const requestID = generateIdentifier('r');
+        const Location = await getLocation(requestID, true);
+        if (Location.hasOwnProperty(LocationKey)) {
+          const thisLocation = Location[LocationKey];
+          const title = thisLocation.n;
+          const RecentViewLocationObject: RecentViewLocation = {
+            type: 'Location',
+            time: time,
+            title: title,
+            hash: param
+          };
+          await lfSetItem(6, key, JSON.stringify(RecentViewLocationObject));
+        }
       }
       break;
     case 'Bus':
       const RecentViewBuses = RecentViews.filter((b) => b.type === 'Bus').map((b) => b.id);
-      const RecentViewBusObject: RecentViewBus = {
-        type: 'Bus',
-        time: time,
-        id: param
-      };
       if (RecentViewBuses.indexOf(param) < 0) {
-        await lfSetItem(6, key, JSON.stringify(RecentViewBusObject));
+        const CarKey = `b_${param}`;
+        const requestID = generateIdentifier('r');
+        const CarInfo = await getCarInfo(requestID, true);
+        if (CarInfo.hasOwnProperty(CarKey)) {
+          const thisCar = CarInfo[CarKey];
+          const title = thisCar.CarNum;
+          const RecentViewBusObject: RecentViewBus = {
+            type: 'Bus',
+            time: time,
+            title: title,
+            id: param
+          };
+          await lfSetItem(6, key, JSON.stringify(RecentViewBusObject));
+        }
       }
       break;
     default:
