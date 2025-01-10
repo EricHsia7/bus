@@ -1,5 +1,5 @@
 import { integrateBus } from '../../data/bus/index';
-import { logRecentView } from '../../data/recent-view/index';
+import { logRecentView } from '../../data/recent-views/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';

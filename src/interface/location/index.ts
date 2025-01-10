@@ -8,7 +8,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
-import { logRecentView } from '../../data/recent-view/index';
+import { logRecentView } from '../../data/recent-views/index';
 
 let previousIntegration: object = {};
 

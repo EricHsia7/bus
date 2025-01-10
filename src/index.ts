@@ -31,7 +31,7 @@ import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPer
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { closeBus, openBus } from './interface/bus/index';
-import { integrateRecentViews } from './data/recent-view/index';
+import { integrateRecentViews } from './data/recent-views/index';
 
 import './interface/theme.css';
 

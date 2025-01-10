@@ -10,7 +10,7 @@ import { isSaved } from '../../data/folder/index';
 import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { logRecentView } from '../../data/recent-view/index';
+import { logRecentView } from '../../data/recent-views/index';
 
 let previousIntegration: object = {};
 
