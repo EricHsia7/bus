@@ -25,6 +25,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon span.css_material_symbols_rounded {
@@ -47,6 +49,8 @@
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* recent-views > content > item > head > time */
@@ -63,6 +67,8 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-cssvar-333333);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* recent-views > content > item > name */
@@ -70,10 +76,12 @@
   position: absolute;
   top: 35px;
   left: 10px;
-  height: 30px;
+  height: 25px;
   width: calc(100% - 10px - 10px);
-  font-size: 25px;
+  font-size: 23px;
   display: flex;
   align-items: center;
   color: var(--b-cssvar-333333);
+  user-select: none;
+  -webkit-user-select: none;
 }

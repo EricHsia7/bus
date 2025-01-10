@@ -69,6 +69,7 @@
   width: 50px;
   height: 15px;
   border-radius: var(--b-cssvar-border-radius-small);
+  color: rgba(0, 0, 0, 0);
 }
 
 /* recent-views > content */
