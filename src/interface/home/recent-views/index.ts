@@ -163,7 +163,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const thisRecentViewItemElement = generateElementOfRecentViewItem();
-        elementQuerySelectorAll(Field, `.css_home_recent_views_content`).appendChild(thisRecentViewItemElement.element);
+        elementQuerySelector(Field, `.css_home_recent_views_content`).appendChild(thisRecentViewItemElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
