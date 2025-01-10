@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-search-improvement-for-bus
+      - dev-recent-views
 
 jobs:
   launch:

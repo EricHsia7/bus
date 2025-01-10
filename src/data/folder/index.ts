@@ -110,7 +110,7 @@ export async function initializeFolderStores(): void {
   var folderKeys = await lfListItemKeys(6);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
-    var thisFolder: string = await lfGetItem(6, folderKey);
+    var thisFolder: string = await lfGetItem(7, folderKey);
     if (thisFolder) {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
@@ -137,7 +137,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
-    const existingFolder = await lfGetItem(6, `f_${identifier}`);
+    const existingFolder = await lfGetItem(7, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
       var object: Folder = {
@@ -151,7 +151,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
         time: new Date().toISOString()
       };
       Folders[`f_${identifier}`] = object;
-      await lfSetItem(6, `f_${identifier}`, JSON.stringify(object));
+      await lfSetItem(7, `f_${identifier}`, JSON.stringify(object));
       return identifier;
     } else {
       return false;
@@ -164,7 +164,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
 export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
-    const existingFolder: string = await lfGetItem(6, folderKey);
+    const existingFolder: string = await lfGetItem(7, folderKey);
     if (existingFolder) {
       const requestID = generateIdentifier('r');
       const materialSymbols = await getMaterialSymbols(requestID);
@@ -172,7 +172,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
         return false;
       } else {
         Folders[folderKey] = folder;
-        await lfSetItem(6, folderKey, JSON.stringify(folder));
+        await lfSetItem(7, folderKey, JSON.stringify(folder));
         return true;
       }
     } else {
