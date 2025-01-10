@@ -1,9 +1,18 @@
 /* recent-views > content > item */
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item {
   position: relative;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 70px;
   overflow: hidden;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: inline-flex;
+  margin-right: 20px;
+  scroll-snap-align: center;
+}
+
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item:first-child {
+  margin-left: 10px;
 }
 
 /* recent-views > content > item > head */

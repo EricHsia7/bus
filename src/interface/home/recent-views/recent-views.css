@@ -75,11 +75,16 @@
 /* recent-views > content */
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content {
   position: relative;
-  width: calc(100% - 20px);
   left: 10px;
-  display: inline-block;
-  background: var(--b-cssvar-ffffff-blocky);
-  border-radius: var(--b-cssvar-border-radius-normal);
+  width: calc(100% - 20px);
+  height: 70px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
