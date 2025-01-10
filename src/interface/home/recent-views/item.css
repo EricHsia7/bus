@@ -1,0 +1,7 @@
+/* recent-views > content > item */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}

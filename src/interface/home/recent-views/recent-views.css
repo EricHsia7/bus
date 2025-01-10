@@ -1,26 +1,14 @@
-/* folders */
-.css_home_field .css_home_body .css_home_folders {
+/* recent-views */
+.css_home_field .css_home_body .css_home_recent_views {
   position: relative;
   width: 100%;
   height: auto;
   display: inline-block;
-  /* margin-top: calc(10px + 55px); */
+  margin-top: calc(10px + 55px);
 }
 
-/* folders > folder */
-.css_home_field .css_home_body .css_home_folders .css_home_folder {
-  position: relative;
-  width: 100%;
-  height: auto;
-  display: inline-block;
-}
-
-.css_home_field .css_home_body .css_home_folders .css_home_folder:last-child {
-  margin-bottom: var(--b-cssvar-safe-area-bottom);
-}
-
-/* folders > folder > head */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head {
+/* recent-views > head */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_head {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -29,8 +17,8 @@
   align-items: center;
 }
 
-/* folders > folder > head > icon */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head .css_home_folder_icon {
+/* recent-views > head > icon */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_head .css_home_recent_views_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -43,7 +31,7 @@
   -webkit-user-select: none;
 }
 
-.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
   top: 5px;
   left: 5px;
   width: 15px;
@@ -51,15 +39,15 @@
   border-radius: var(--b-cssvar-border-radius-small);
 }
 
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head .css_home_folder_icon span.css_material_symbols_rounded {
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_head .css_home_recent_views_icon span.css_material_symbols_rounded {
   height: 15px;
   width: 15px;
   font-size: 18px;
   color: var(--b-cssvar-333333);
 }
 
-/* folders > folder > head > name */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head .css_home_folder_name {
+/* recent-views > head > name */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_head .css_home_folder_name {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -75,7 +63,7 @@
 }
 
 /* skeleton screen: true */
-.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name {
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_folder_name {
   top: 5px;
   left: 25px;
   width: 50px;
@@ -83,8 +71,8 @@
   border-radius: var(--b-cssvar-border-radius-small);
 }
 
-/* folders > folder > content */
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content {
+/* recent-views > content */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -93,8 +81,8 @@
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
-.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
-.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_folder_name,
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
