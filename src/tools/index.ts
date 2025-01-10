@@ -92,3 +92,13 @@ export function supportTouch(): boolean {
     return false;
   }
 }
+
+export function booleanToString(x: boolean): 'true' | 'false' {
+  if (typeof x === 'boolean') {
+    if (x) {
+      return 'true';
+    } else {
+      return 'false';
+    }
+  }
+}
