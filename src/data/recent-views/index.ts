@@ -190,7 +190,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         integratedRecentViewBus.id = thisBusID;
         const thisBusName = recentView.name;
         integratedRecentViewBus.name = thisBusName;
-        integratedRecentViewLocation.time = {
+        integratedRecentViewBus.time = {
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
