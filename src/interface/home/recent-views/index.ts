@@ -86,8 +86,22 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
       nameElement.innerText = thisItem.name;
     }
-    function updateButton(thisElement: HTMLElement, thisItem: object): void {
-      const buttonElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_button');
+    function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
+      let onclickScript = '';
+      switch (thisItem.type) {
+        case 'route':
+          onclickScript = `bus.route.openRoute(${thisItem.id}, [${thisItem.pid.join(',')}])`;
+          break;
+        case 'location':
+          onclickScript = `bus.location.openLocation('${thisItem.hash}')`;
+          break;
+        case 'bus':
+          onclickScript = `bus.bus.openBus(${thisItem.id})`;
+          break;
+        default:
+          break;
+      }
+      thisElement.setAttribute('onclick', onclickScript);
     }
 
     if (previousItem === null) {
@@ -95,14 +109,14 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       updateTitle(thisElement, thisItem);
       updateTime(thisElement, thisItem);
       updateName(thisElement, thisItem);
-      updateButton(thisElement, thisItem);
+      updateOnclick(thisElement, thisItem);
     } else {
       if (!(thisItem.type === previousItem.type)) {
         updateIcon(thisElement, thisItem);
         updateTitle(thisElement, thisItem);
         updateTime(thisElement, thisItem);
         updateName(thisElement, thisItem);
-        updateButton(thisElement, thisItem);
+        updateOnclick(thisElement, thisItem);
       } else {
         switch (thisItem.type) {
           case 'location':
@@ -113,7 +127,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.hash, thisItem.hash)) {
-              updateButton(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem);
             }
             break;
           case 'route':
@@ -124,7 +138,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.id, thisItem.id) || !compareThings(previousItem.pid, thisItem.pid)) {
-              updateButton(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem);
             }
             break;
           case 'bus':
@@ -135,7 +149,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.id, thisItem.id)) {
-              updateButton(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem);
             }
             break;
           default:
@@ -213,7 +227,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
     {
       items: items,
       itemQuantity: items.length,
-      dataUpdateTime: new Date().getTime()
+      dataUpdateTime: null
     },
     true
   );
