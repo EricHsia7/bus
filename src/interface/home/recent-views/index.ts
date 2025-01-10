@@ -173,7 +173,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       }
     }
   }
-  console.log(0);
+
   for (let i = 0; i < itemQuantity; i++) {
     const thisElement = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
     thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
@@ -195,7 +195,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryRecentViewsFieldSize();
   const defaultItemQuantity = Math.floor(FieldSize.height / 70 / 3) + 2;
-  const items = [];
+  const items: Array<integratedRecentView> = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({
       type: 'route',
@@ -208,7 +208,15 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
       name: ''
     });
   }
-  updateRecentViewsField(Field, items, true);
+  updateRecentViewsField(
+    Field,
+    {
+      items: items,
+      itemQuantity: items.length,
+      dataUpdateTime: new Date().getTime()
+    },
+    true
+  );
 }
 
 async function refreshRecentViews(): Promise<object> {
