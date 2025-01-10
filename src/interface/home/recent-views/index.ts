@@ -33,7 +33,7 @@ function queryRecentViewsFieldSize(): FieldSize {
 function generateElementOfRecentViewItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_home_recent_views_item');
-  element.innerHTML = `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div><div class="css_home_recent_views_item_button"></div>`;
+  element.innerHTML = `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
   return {
     element: element,
     id: null
