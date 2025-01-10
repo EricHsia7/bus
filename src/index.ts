@@ -330,7 +330,7 @@ window.bus = {
     openBus,
     closeBus
   },
-  test :{
+  test: {
     integrateRecentViews
   }
 };

@@ -196,5 +196,8 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         break;
     }
   }
+  result.sort(function (a, b) {
+    return b.time.absolute - a.time.absolute;
+  });
   return result;
 }
