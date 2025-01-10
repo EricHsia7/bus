@@ -4,7 +4,7 @@ import { TimeObject, timeObjectToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
-import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
+import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../storage/index';
 
 const trackingBusArrivalTime_monitorTimes: number = 32;
 let trackingBusArrivalTime_trackingID: string = '';
