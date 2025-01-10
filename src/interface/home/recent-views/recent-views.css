@@ -78,6 +78,7 @@
   left: 10px;
   width: calc(100% - 20px);
   height: 70px;
+  border-radius: var(--b-cssvar-border-radius-normal);
   overflow-x: scroll;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
