@@ -142,14 +142,19 @@ export type integratedRecentView = integratedRecentViewRoute | integratedRecentV
 export type integratedRecentViews = Array<integratedRecentView>;
 
 export async function integrateRecentViews(requestID: string): Promise<integratedRecentViews> {
+  console.log(0);
   const recentViewList = await listRecentViews();
+  console.log(1, recentViewList);
   const Route = await getRoute(requestID, true);
   let result: integratedRecentViews = [];
   for (const recentView of recentViewList) {
+    console.log(2, recentView);
     const recentViewType = recentView.type;
     const recentViewTime = new Date(recentView.time);
+    console.log(3, recentViewType, recentViewTime);
     switch (recentViewType) {
       case 'route':
+        console.log(4);
         let integratedRecentViewRoute: integratedRecentViewRoute = {};
         integratedRecentViewRoute.type = 'route';
         const thisRouteName = recentView.name;
@@ -157,6 +162,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         const thisRouteKey = `r_${thisRouteID}`;
         const thisRoute = Route[thisRouteKey];
         const thisRoutePathAttributeId = thisRoute.pid;
+        console.log(5, thisRouteName, thisRouteID, thisRouteKey);
         integratedRecentViewRoute.id = thisRouteID;
         integratedRecentViewRoute.name = thisRouteName;
         integratedRecentViewRoute.pid = thisRoutePathAttributeId;
