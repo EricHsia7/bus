@@ -149,6 +149,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -158,6 +159,8 @@ window.bus = {
     if (bus_initialized === false) {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
+      const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
+      setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
       const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
@@ -183,6 +186,7 @@ window.bus = {
                 });
               }
             }
+            initializeRecentViews();
             initializeFolderStores().then(() => {
               initializeFolders();
             });
