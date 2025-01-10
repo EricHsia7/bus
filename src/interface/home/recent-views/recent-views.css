@@ -46,6 +46,10 @@
   color: var(--b-cssvar-333333);
 }
 
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon span.css_material_symbols_rounded {
+  display: none;
+}
+
 /* recent-views > head > name */
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_head .css_home_recent_views_name {
   position: absolute;

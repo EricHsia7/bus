@@ -175,13 +175,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
   }
   console.log(0);
   for (let i = 0; i < itemQuantity; i++) {
-    console.log(1);
     const thisElement = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
-    console.log(2);
     thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    console.log(3);
     const thisItem = integration.items[i];
-    console.log(4, thisItem);
     if (previousIntegration.hasOwnProperty('items')) {
       if (previousIntegration.items[i]) {
         const previousItem = previousIntegration.items[i];
@@ -202,10 +198,13 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
   const items = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({
-      id: null,
-      title: '',
-      icon: '',
-      time: '',
+      type: 'route',
+      id: 0,
+      pid: [],
+      time: {
+        absolute: 0,
+        relative: ''
+      },
       name: ''
     });
   }
