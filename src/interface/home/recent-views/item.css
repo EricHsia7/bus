@@ -75,7 +75,8 @@
   justify-content: right;
   white-space: nowrap;
   word-break: keep-all;
-  color: var(--b-cssvar-aeaeb2);
+  color: var(--b-cssvar-333333);
+  opacity: var(--b-cssvar-333333-opacity-c);
   user-select: none;
   -webkit-user-select: none;
 }
