@@ -1,11 +1,14 @@
 import { openKeyboard, closeKeyboard } from './keyboard';
-import { prepareForSearch, searchFor } from '../../data/search/index';
+import { prepareForSearch, searchFor, searchRouteByRouteID } from '../../data/search/index';
 import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
 import { promptMessage } from '../prompt/index';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/text';
 import { pushPageHistory, revokePageHistory } from '../index';
+import { listRecentViews } from '../../data/recent-view/index';
+import { getRoute } from '../../data/apis/getRoute/index';
+import { generateIdentifier } from '../../tools/index';
 
 const searchField = documentQuerySelector('.css_search_field');
 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
@@ -28,29 +31,58 @@ export function closeSearch(): void {
   searchField.setAttribute('displayed', 'false');
 }
 
-export function updateSearchResult(query: string): void {
+export async function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
-    const typeToIcon = ['route', 'location_on', 'directions_bus'];
-    const searchResults = searchFor(query, 30);
+    const typeToIcon = ['route', 'location_on', 'directions_bus', 'schedule'];
     let html = [];
-    for (const result of searchResults) {
-      const name = result.item.n;
-      const typeIcon = getIconHTML(typeToIcon[result.item.type]);
-      let onclickScript = '';
-      switch (result.item.type) {
-        case 0:
-          onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
-          break;
-        case 1:
-          onclickScript = `bus.location.openLocation('${result.item.hash}')`;
-          break;
-        case 2:
-          onclickScript = `bus.bus.openBus(${result.item.id})`;
-          break;
-        default:
-          break;
+    if (query === '') {
+      const recentViews = await listRecentViews();
+      const requestID = generateIdentifier('r');
+      const Route = await getRoute(requestID, true);
+      const typeIcon = getIconHTML(typeToIcon[3]);
+      for (const view of recentViews) {
+        const name = view.title;
+        let onclickScript = '';
+        switch (view.type) {
+          case 'Route':
+            const thisRouteKey = `r_${view.RouteID}`;
+            if (Route.hasOwnProperty(thisRouteKey)) {
+              const thisRoute = Route[thisRouteKey];
+              onclickScript = `bus.route.openRoute(${view.RouteID}, [${thisRoute.pid.join(',')}])`;
+            }
+            break;
+          case 'Location':
+            onclickScript = `bus.location.openLocation('${view.hash}')`;
+            break;
+          case 'Bus':
+            onclickScript = `bus.bus.openBus(${view.id})`;
+            break;
+          default:
+            break;
+        }
+        html.push(`<div class="css_search_search_result" onclick="${onclickScript}"><div class="css_search_search_result_type">${typeIcon}</div><div class="css_search_search_result_route_name">${name}</div></div>`);
       }
-      html.push(`<div class="css_search_search_result" onclick="${onclickScript}"><div class="css_search_search_result_type">${typeIcon}</div><div class="css_search_search_result_route_name">${name}</div></div>`);
+    } else {
+      const searchResults = searchFor(query, 30);
+      for (const result of searchResults) {
+        const name = result.item.n;
+        const typeIcon = getIconHTML(typeToIcon[result.item.type]);
+        let onclickScript = '';
+        switch (result.item.type) {
+          case 0:
+            onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
+            break;
+          case 1:
+            onclickScript = `bus.location.openLocation('${result.item.hash}')`;
+            break;
+          case 2:
+            onclickScript = `bus.bus.openBus(${result.item.id})`;
+            break;
+          default:
+            break;
+        }
+        html.push(`<div class="css_search_search_result" onclick="${onclickScript}"><div class="css_search_search_result_type">${typeIcon}</div><div class="css_search_search_result_route_name">${name}</div></div>`);
+      }
     }
     searchResultsElement.innerHTML = html.join('');
   }
