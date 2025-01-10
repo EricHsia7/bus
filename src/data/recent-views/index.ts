@@ -139,12 +139,16 @@ export interface integratedRecentViewBus {
 
 export type integratedRecentView = integratedRecentViewRoute | integratedRecentViewLocation | integratedRecentViewBus;
 
-export type integratedRecentViews = Array<integratedRecentView>;
+export interface integratedRecentViews {
+  items: Array<integratedRecentView>;
+  itemQuantity: number;
+  dataUpdateTime: any;
+}
 
 export async function integrateRecentViews(requestID: string): Promise<integratedRecentViews> {
   const recentViewList = await listRecentViews();
   const Route = await getRoute(requestID, true);
-  let result: integratedRecentViews = [];
+  let items: Array<integratedRecentView> = [];
   for (const recentView of recentViewList) {
     const recentViewType = recentView.type;
     const recentViewTime = new Date(recentView.time);
@@ -164,7 +168,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
-        result.push(integratedRecentViewRoute);
+        items.push(integratedRecentViewRoute);
         break;
       case 'location':
         let integratedRecentViewLocation: integratedRecentViewLocation = {};
@@ -177,7 +181,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
-        result.push(integratedRecentViewLocation);
+        items.push(integratedRecentViewLocation);
         break;
       case 'bus':
         let integratedRecentViewBus: integratedRecentViewBus = {};
@@ -190,14 +194,20 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
-        result.push(integratedRecentViewLocation);
+        items.push(integratedRecentViewLocation);
         break;
       default:
         break;
     }
   }
-  result.sort(function (a, b) {
+  items.sort(function (a, b) {
     return b.time.absolute - a.time.absolute;
   });
+
+  const result: integratedRecentViews = {
+    items: items,
+    itemQuantity: items.length,
+    dataUpdateTime: new Date().getTime()
+  };
   return result;
 }
