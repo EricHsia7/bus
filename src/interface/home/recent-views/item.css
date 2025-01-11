@@ -133,6 +133,7 @@
   height: 25px;
   width: calc(100% - 10px - 10px);
   color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-small);
 }
 
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon,
