@@ -31,6 +31,7 @@ import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPer
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { closeBus, openBus } from './interface/bus/index';
+import { integrateRecentViews } from './data/recent-views/index';
 
 import './interface/theme.css';
 
@@ -46,6 +47,9 @@ import './interface/home/body.css';
 
 import './interface/home/folders/folders.css';
 import './interface/home/folders/item.css';
+
+import './interface/home/recent-views/recent-views.css';
+import './interface/home/recent-views/item.css';
 
 import './interface/search/index.css';
 import './interface/search/keyboard.css';
@@ -145,6 +149,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -154,6 +159,8 @@ window.bus = {
     if (bus_initialized === false) {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
+      const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
+      setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
       const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
       setUpFolderFieldSkeletonScreen(FolderField);
       checkAppVersion()
@@ -179,6 +186,7 @@ window.bus = {
                 });
               }
             }
+            initializeRecentViews();
             initializeFolderStores().then(() => {
               initializeFolders();
             });
@@ -328,6 +336,9 @@ window.bus = {
   bus: {
     openBus,
     closeBus
+  },
+  test: {
+    integrateRecentViews
   }
 };
 

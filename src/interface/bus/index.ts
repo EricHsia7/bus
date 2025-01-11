@@ -1,4 +1,5 @@
 import { integrateBus } from '../../data/bus/index';
+import { logRecentView } from '../../data/recent-views/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
@@ -13,6 +14,7 @@ const BusGroupLocation = elementQuerySelector(BusGroups, '.css_bus_group[group="
 
 export function openBus(id: number): void {
   pushPageHistory('Bus');
+  logRecentView('bus', id);
   BusField.setAttribute('displayed', 'true');
   initializeBusPage(id);
   closePreviousPage();

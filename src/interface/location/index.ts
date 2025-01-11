@@ -8,6 +8,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
+import { logRecentView } from '../../data/recent-views/index';
 
 let previousIntegration: object = {};
 
@@ -478,6 +479,7 @@ export function streamLocation(): void {
 
 export function openLocation(hash: string): void {
   pushPageHistory('Location');
+  logRecentView('location', hash);
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   var Field = documentQuerySelector('.css_location_field');

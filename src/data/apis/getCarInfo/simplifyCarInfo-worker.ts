@@ -1,4 +1,4 @@
-import { CarInfo, SimplifiedCarInfo } from './index';
+import { CarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from './index';
 
 self.onmessage = function (e) {
   const result = simplifyCarInfo_worker(e.data);
@@ -8,14 +8,14 @@ self.onmessage = function (e) {
 function simplifyCarInfo_worker(CarInfo: CarInfo): SimplifiedCarInfo {
   let result: SimplifiedCarInfo = {};
   for (const item of CarInfo) {
-    const simplifiedItem = {};
+    const simplifiedItem: SimplifiedCarInfoItem = {};
     simplifiedItem.BusId = item.BusId;
     simplifiedItem.CarNum = item.CarNum;
     simplifiedItem.CarType = item.CarType;
     simplifiedItem.PathAttributeId = item.PathAttributeId;
-    const busKey = `b_${item.BusId}`;
-    if (!result.hasOwnProperty(busKey)) {
-      result[busKey] = simplifiedItem;
+    const carKey = `c_${item.BusId}`;
+    if (!result.hasOwnProperty(carKey)) {
+      result[carKey] = simplifiedItem;
     }
   }
   return result;

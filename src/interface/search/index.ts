@@ -28,11 +28,11 @@ export function closeSearch(): void {
   searchField.setAttribute('displayed', 'false');
 }
 
-export function updateSearchResult(query: string): void {
+export async function updateSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
     const typeToIcon = ['route', 'location_on', 'directions_bus'];
-    const searchResults = searchFor(query, 30);
     let html = [];
+    const searchResults = searchFor(query, 30);
     for (const result of searchResults) {
       const name = result.item.n;
       const typeIcon = getIconHTML(typeToIcon[result.item.type]);

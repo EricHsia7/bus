@@ -27,7 +27,7 @@ export async function searchRouteByName(query: string): Promise<Array> {
   return result;
 }
 
-export async function searchRouteByRouteID(RouteID: number): Promise<Array> {
+export async function searchRouteByRouteID(RouteID: number): Promise<Array<SimplifiedRouteItem>> {
   var requestID = generateIdentifier('r');
   var Route = await getRoute(requestID, true);
   var result = [];

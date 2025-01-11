@@ -54,6 +54,10 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '個人化行程';
       key = 'personalSchedule';
       break;
+    case 'recentViewsStore':
+      name = '最近檢視';
+      key = 'recentViews';
+      break;
     case 'folderListStore':
       name = '資料夾';
       key = 'folders';

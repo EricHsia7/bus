@@ -1,0 +1,151 @@
+/* recent-views > content > item */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  overflow: hidden;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: inline-flex;
+  margin-right: 10px;
+  scroll-snap-align: center;
+}
+
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item:last-child {
+  margin-right: 0px;
+}
+
+/* recent-views > content > item > head */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head {
+  position: relative;
+  top: 5px;
+  left: 0px;
+  width: 100%;
+  height: 30px;
+}
+
+/* recent-views > content > item > head > icon */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon {
+  top: 5px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon span.css_material_symbols_rounded {
+  height: 15px;
+  width: 15px;
+  font-size: 18px;
+  color: var(--b-cssvar-333333);
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon span.css_material_symbols_rounded {
+  display: none;
+}
+
+/* recent-views > content > item > head > title */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_title {
+  position: absolute;
+  top: 0px;
+  left: 35px;
+  height: 30px;
+  width: calc(100% - 5px - 30px - 70px);
+  font-size: 15px;
+  color: var(--b-cssvar-333333);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  word-break: keep-all;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_title {
+  top: 5px;
+  left: 35px;
+  height: 20px;
+  width: 50px;
+  border-radius: var(--b-cssvar-border-radius-small);
+  color: rgba(0, 0, 0, 0);
+}
+
+/* recent-views > content > item > head > time */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_time {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  width: 60px;
+  height: 30px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  white-space: nowrap;
+  word-break: keep-all;
+  color: var(--b-cssvar-333333);
+  opacity: var(--b-cssvar-333333-opacity-c);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_time {
+  opacity: 1;
+  color: rgba(0, 0, 0, 0);
+  top: 5px;
+  right: 10px;
+  height: 20px;
+  width: 60px;
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+/* recent-views > content > item > name */
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_name {
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  height: 25px;
+  width: calc(100% - 10px - 10px);
+  font-size: 23px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_name {
+  top: 35px;
+  left: 10px;
+  height: 25px;
+  width: calc(100% - 10px - 10px);
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-small);
+}
+
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon,
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_title,
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_time,
+.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_name {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
