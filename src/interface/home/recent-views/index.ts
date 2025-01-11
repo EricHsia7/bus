@@ -43,7 +43,6 @@ function generateElementOfRecentViewItem(): GeneratedElement {
 function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      console.log(thisItem, thisItem.type)
       const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
       let icon = '';
       switch (thisItem.type) {

@@ -205,7 +205,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
-        items.push(integratedRecentViewLocation);
+        items.push(integratedRecentViewBus);
         break;
       default:
         break;
