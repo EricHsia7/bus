@@ -82,7 +82,7 @@ export function ResizeLocationField(): void {
 
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   documentQuerySelector('.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line').style.setProperty('--b-cssvar-location-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
-  documentQuerySelector('.css_location_field .css_location_groups').style.setProperty('--b-cssvar-location-group-quantity', groupQuantity);
+  documentQuerySelector('.css_location_field .css_location_groups').style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
   documentQuerySelector('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray').style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset.toFixed(5)}px`);
   documentQuerySelector('.css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray').style.setProperty('--b-cssvar-location-percentage', percentage.toFixed(5));
 }
@@ -96,7 +96,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', (percentage).toFixed(5));
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer_streaming) {
       updateUpdateTimer();

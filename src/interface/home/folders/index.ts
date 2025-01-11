@@ -60,7 +60,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();
