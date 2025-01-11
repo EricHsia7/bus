@@ -104,6 +104,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
         case 'bus':
           onclickScript = `bus.bus.openBus(${thisItem.id})`;
           break;
+        case 'empty':
+          onclickScript = '';
+          break;
         default:
           break;
       }
@@ -156,6 +159,11 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             }
             if (!compareThings(previousItem.id, thisItem.id)) {
               updateOnclick(thisElement, thisItem);
+            }
+            break;
+          case 'empty':
+            if (!(previousItem.time === thisItem.time)) {
+              updateTime(thisElement, thisItem);
             }
             break;
           default:
