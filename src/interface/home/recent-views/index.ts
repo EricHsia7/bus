@@ -14,7 +14,7 @@ let recentViewsRefreshTimer_retryInterval: number = 10 * 1000;
 let recentViewsRefreshTimer_baseInterval: number = 15 * 1000;
 let recentViewsRefreshTimer_minInterval: number = 5 * 1000;
 let recentViewsRefreshTimer_dynamicInterval: number = 15 * 1000;
-let recentViewsRefreshTimer_auto: boolean = true;
+let recentViewsRefreshTimer_dynamic: boolean = true;
 let recentViewsRefreshTimer_streaming: boolean = false;
 let recentViewsRefreshTimer_lastUpdate: number = 0;
 let recentViewsRefreshTimer_nextUpdate: number = 0;
@@ -249,7 +249,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
 
 async function refreshRecentViews(): Promise<object> {
   const refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  recentViewsRefreshTimer_auto = refresh_interval_setting.auto;
+  recentViewsRefreshTimer_dynamic = refresh_interval_setting.auto;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   recentViewsRefreshTimer_refreshing = true;
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
@@ -258,7 +258,7 @@ async function refreshRecentViews(): Promise<object> {
   updateRecentViewsField(RecentViewsField, integration, false);
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   const updateRate = await getUpdateRate();
-  if (recentViewsRefreshTimer_auto) {
+  if (recentViewsRefreshTimer_dynamic) {
     recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
   } else {
     recentViewsRefreshTimer_nextUpdate = new Date().getTime() + recentViewsRefreshTimer_baseInterval;

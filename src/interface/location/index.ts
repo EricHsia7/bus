@@ -24,7 +24,7 @@ let locationRefreshTimer_retryInterval: number = 10 * 1000;
 let locationRefreshTimer_baseInterval: number = 15 * 1000;
 let locationRefreshTimer_minInterval: number = 5 * 1000;
 let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
-let locationRefreshTimer_auto: boolean = true;
+let locationRefreshTimer_dynamic: boolean = true;
 let locationRefreshTimer_streaming: boolean = false;
 let locationRefreshTimer_lastUpdate: number = 0;
 let locationRefreshTimer_nextUpdate: number = 0;
@@ -432,7 +432,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 
 async function refreshLocation(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  locationRefreshTimer_auto = refresh_interval_setting.auto;
+  locationRefreshTimer_dynamic = refresh_interval_setting.auto;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
@@ -441,7 +441,7 @@ async function refreshLocation(): Promise<object> {
   var Field = documentQuerySelector('.css_location_field');
   updateLocationField(Field, integration, false);
   locationRefreshTimer_lastUpdate = new Date().getTime();
-  if (locationRefreshTimer_auto) {
+  if (locationRefreshTimer_dynamic) {
     var updateRate = await getUpdateRate();
     locationRefreshTimer_nextUpdate = Math.max(new Date().getTime() + locationRefreshTimer_minInterval, integration.dataUpdateTime + locationRefreshTimer_baseInterval / updateRate);
   } else {

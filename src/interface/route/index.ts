@@ -1,7 +1,7 @@
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
-import { getSettingOptionValue } from '../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -26,7 +26,7 @@ let routeRefreshTimer_retryInterval: number = 10 * 1000;
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
 let routeRefreshTimer_minInterval: number = 5 * 1000;
 let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
-let routeRefreshTimer_auto: boolean = true;
+let routeRefreshTimer_dynamic: boolean = true;
 let routeRefreshTimer_streaming: boolean = false;
 let routeRefreshTimer_lastUpdate: number = 0;
 let routeRefreshTimer_nextUpdate: number = 0;
@@ -462,8 +462,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute(): Promise<object> {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  routeRefreshTimer_auto = refresh_interval_setting.auto;
+  var refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  routeRefreshTimer_dynamic = refresh_interval_setting.dynamic
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
@@ -472,7 +472,7 @@ async function refreshRoute(): Promise<object> {
   var Field = documentQuerySelector('.css_route_field');
   updateRouteField(Field, integration, false);
   routeRefreshTimer_lastUpdate = new Date().getTime();
-  if (routeRefreshTimer_auto) {
+  if (routeRefreshTimer_dynamic) {
     var updateRate = await getUpdateRate();
     routeRefreshTimer_nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
   } else {
