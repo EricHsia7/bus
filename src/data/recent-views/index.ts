@@ -51,11 +51,11 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   const time = new Date().toISOString();
   switch (type) {
     case 'route':
-      const existingItem = await lfGetItem(6, key);
-      if (existingItem) {
-        const existingItemObject = JSON.parse(existingItem);
-        existingItemObject.time = time;
-        await lfSetItem(6, key, JSON.stringify(existingItemObject));
+      const existingRecentViewRoute = await lfGetItem(6, key);
+      if (existingRecentViewRoute) {
+        const existingRecentViewRouteObject = JSON.parse(existingRecentViewRoute);
+        existingRecentViewRouteObject.time = time;
+        await lfSetItem(6, key, JSON.stringify(existingRecentViewRouteObject));
       } else {
         const Route = await getRoute(requestID, true);
         const routeKey = `r_${param}`;
@@ -73,11 +73,11 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       }
       break;
     case 'location':
-      const existingItem = await lfGetItem(6, key);
-      if (existingItem) {
-        const existingItemObject = JSON.parse(existingItem);
-        existingItemObject.time = time;
-        await lfSetItem(6, key, JSON.stringify(existingItemObject));
+      const existingRecentViewLocation = await lfGetItem(6, key);
+      if (existingRecentViewLocation) {
+        const existingRecentViewLocationObject = JSON.parse(existingRecentViewLocation);
+        existingRecentViewLocationObject.time = time;
+        await lfSetItem(6, key, JSON.stringify(existingRecentViewLocationObject));
       } else {
         const Location = await getLocation(requestID, true);
         const LocationKey = `l_${param}`;
@@ -95,11 +95,11 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       }
       break;
     case 'bus':
-      const existingItem = await lfGetItem(6, key);
-      if (existingItem) {
-        const existingItemObject = JSON.parse(existingItem);
-        existingItemObject.time = time;
-        await lfSetItem(6, key, JSON.stringify(existingItemObject));
+      const existingRecentViewBus = await lfGetItem(6, key);
+      if (existingRecentViewBus) {
+        const existingRecentViewBusObject = JSON.parse(existingRecentViewBus);
+        existingRecentViewBusObject.time = time;
+        await lfSetItem(6, key, JSON.stringify(existingRecentViewBusObject));
       } else {
         const CarInfo = await getCarInfo(requestID, true);
         const CarKey = `c_${param}`;
