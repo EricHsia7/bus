@@ -1,7 +1,7 @@
 import { integrateLocation } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
-import { getSettingOptionValue } from '../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -431,12 +431,12 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
 }
 
 async function refreshLocation(): Promise<object> {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  locationRefreshTimer_dynamic = refresh_interval_setting.auto;
+  var refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
-  documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', true);
+  documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', 'true');
   var integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_location_field');
   updateLocationField(Field, integration, false);
@@ -449,7 +449,7 @@ async function refreshLocation(): Promise<object> {
   }
   locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime());
   locationRefreshTimer_refreshing = false;
-  documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', false);
+  documentQuerySelector('.css_location_update_timer').setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the location.' };
 }
 

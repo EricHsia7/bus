@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
-import { getSettingOptionValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getIconHTML } from '../../icons/index';
@@ -248,8 +248,8 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 async function refreshRecentViews(): Promise<object> {
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  recentViewsRefreshTimer_dynamic = refresh_interval_setting.auto;
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue
+  recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   recentViewsRefreshTimer_refreshing = true;
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
