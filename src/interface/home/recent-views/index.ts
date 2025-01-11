@@ -55,6 +55,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
         case 'bus':
           icon = 'directions_bus';
           break;
+        case 'empty':
+          icon = 'lightbulb';
+          break;
         default:
           break;
       }
@@ -72,6 +75,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
           break;
         case 'bus':
           title = '公車';
+          break;
+        case 'empty':
+          title = '提示';
           break;
         default:
           break;

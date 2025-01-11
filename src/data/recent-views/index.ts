@@ -182,7 +182,7 @@ export interface integratedRecentViewEmpty {
   id: number;
 }
 
-export type integratedRecentView = integratedRecentViewRoute | integratedRecentViewLocation | integratedRecentViewBus;
+export type integratedRecentView = integratedRecentViewRoute | integratedRecentViewLocation | integratedRecentViewBus | integratedRecentViewEmpty;
 
 export interface integratedRecentViews {
   items: Array<integratedRecentView>;
@@ -256,7 +256,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           absolute: recentViewTime.getTime(),
           relative: dateToRelativeTime(recentViewTime)
         };
-        items.push(recentView);
+        items.push(integratedRecentViewEmpty);
         itemQuantity = 1;
         break;
       default:
