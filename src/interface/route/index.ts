@@ -463,7 +463,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 
 async function refreshRoute(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  routeRefreshTimer_dynamic = refresh_interval_setting.dynamic
+  routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
