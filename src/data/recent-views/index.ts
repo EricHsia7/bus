@@ -80,7 +80,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
         await lfSetItem(6, key, JSON.stringify(existingRecentViewLocationObject));
       } else {
         const Location = await getLocation(requestID, true);
-        const LocationKey = `l_${param}`;
+        const LocationKey = `ml_${param}`;
         if (Location.hasOwnProperty(LocationKey)) {
           const thisLocation = Location[LocationKey];
           const name = thisLocation.n;
