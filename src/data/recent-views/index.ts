@@ -26,7 +26,14 @@ interface RecentViewBus {
   id: number;
 }
 
-export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus;
+interface RecentViewEmpty {
+  type: 'empty';
+  time: string;
+  name: string;
+  id: number;
+}
+
+export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus | RecentViewEmpty;
 
 export type RecentViewArray = Array<RecentView>;
 
@@ -43,6 +50,14 @@ export async function listRecentViews(): Promise<Array<RecentView>> {
     } else {
       result.push(itemObject);
     }
+  }
+  if (result.length === 0) {
+    result.push({
+      type: 'empty',
+      time: new Date().toISOString(),
+      name: '沒有內容',
+      id: 0
+    });
   }
   return result;
 }
@@ -160,6 +175,13 @@ export interface integratedRecentViewBus {
   id: number;
 }
 
+export interface integratedRecentViewEmpty {
+  type: 'empty';
+  time: integratedRecentViewTime;
+  name: string;
+  id: number;
+}
+
 export type integratedRecentView = integratedRecentViewRoute | integratedRecentViewLocation | integratedRecentViewBus;
 
 export interface integratedRecentViews {
@@ -172,6 +194,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
   const recentViewList = await listRecentViews();
   const Route = await getRoute(requestID, true);
   let items: Array<integratedRecentView> = [];
+  let itemQuantity: number = 0;
   for (const recentView of recentViewList) {
     const recentViewType = recentView.type;
     const recentViewTime = new Date(recentView.time);
@@ -192,6 +215,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           relative: dateToRelativeTime(recentViewTime)
         };
         items.push(integratedRecentViewRoute);
+        itemQuantity += 1;
         break;
       case 'location':
         let integratedRecentViewLocation: integratedRecentViewLocation = {};
@@ -205,6 +229,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           relative: dateToRelativeTime(recentViewTime)
         };
         items.push(integratedRecentViewLocation);
+        itemQuantity += 1;
         break;
       case 'bus':
         let integratedRecentViewBus: integratedRecentViewBus = {};
@@ -218,6 +243,21 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
           relative: dateToRelativeTime(recentViewTime)
         };
         items.push(integratedRecentViewBus);
+        itemQuantity += 1;
+        break;
+      case 'empty':
+        let integratedRecentViewEmpty: integratedRecentViewEmpty = {};
+        integratedRecentViewEmpty.type = 'empty';
+        const thisEmptyID = recentView.id;
+        integratedRecentViewEmpty.id = thisEmptyID;
+        const thisEmptyName = recentView.name;
+        integratedRecentViewEmpty.name = thisEmptyName;
+        integratedRecentViewEmpty.time = {
+          absolute: recentViewTime.getTime(),
+          relative: dateToRelativeTime(recentViewTime)
+        };
+        items.push(recentView);
+        itemQuantity = 1;
         break;
       default:
         break;
@@ -229,7 +269,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
 
   const result: integratedRecentViews = {
     items: items,
-    itemQuantity: items.length,
+    itemQuantity: itemQuantity,
     dataUpdateTime: new Date().getTime()
   };
   return result;
