@@ -259,7 +259,7 @@ async function refreshRecentViews(): Promise<object> {
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   const updateRate = await getUpdateRate();
   if (recentViewsRefreshTimer_dynamic) {
-    recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
+    recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
   } else {
     recentViewsRefreshTimer_nextUpdate = new Date().getTime() + recentViewsRefreshTimer_baseInterval;
   }
