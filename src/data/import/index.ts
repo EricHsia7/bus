@@ -1,6 +1,7 @@
 import { ExportedData } from '../export/index';
 import { createFolder, FoldersWithContentArray, saveToFolder, updateFolder } from '../folder/index';
 import { createPersonalSchedule, getPersonalSchedule, PersonalScheduleArray, updatePersonalSchedule } from '../personal-schedule/index';
+import { getRecentView, logRecentView, RecentViewArray } from '../recent-views/index';
 import { changeSettingOption, getSetting, SettingsWithOptionsArray } from '../settings/index';
 import { lfGetItem } from '../storage/index';
 
@@ -55,6 +56,34 @@ export async function importPersonalSchedules(data: PersonalScheduleArray): Prom
   return true;
 }
 
+export async function importRecentViews(data: RecentViewArray): Promise<boolean> {
+  for (const RecentView of data) {
+    switch (RecentView.type) {
+      case 'route':
+        const existingRecentViewRoute = await getRecentView('route', RecentView.id);
+        if (!existingRecentViewRoute) {
+          await logRecentView(RecentView.type, RecentView.id);
+        }
+        break;
+      case 'location':
+        const existingRecentViewLocation = await getRecentView('location', RecentView.hash);
+        if (!existingRecentViewLocation) {
+          await logRecentView(RecentView.type, RecentView.hash);
+        }
+        break;
+      case 'bus':
+        const existingRecentViewBus = await getRecentView('bus', RecentView.id);
+        if (!existingRecentViewBus) {
+          await logRecentView(RecentView.type, RecentView.id);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return true;
+}
+
 export async function importData(data: string): Promise<boolean> {
   const parsedData: ExportedData = JSON.parse(data);
   switch (parsedData.version) {
@@ -73,6 +102,14 @@ export async function importData(data: string): Promise<boolean> {
       await importPersonalSchedules(parsedData.personal_schedules);
       return true;
       break;
+    case 4:
+      await importFolders(parsedData.folders);
+      await importSettings(parsedData.settings);
+      await importPersonalSchedules(parsedData.personal_schedules);
+      await importRecentViews(parsedData.recent_views);
+      return true;
+      break;
+
     default:
       return false;
       break;

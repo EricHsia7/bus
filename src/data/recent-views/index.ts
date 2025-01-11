@@ -28,6 +28,8 @@ interface RecentViewBus {
 
 export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus;
 
+export type RecentViewArray = Array<RecentView>;
+
 export async function listRecentViews(): Promise<Array<RecentView>> {
   let result = [];
   const now = new Date().getTime();
@@ -118,6 +120,16 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       break;
     default:
       break;
+  }
+}
+
+export async function getRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']): Promise<RecentView | boolean> {
+  const key = `${type}_${param}`;
+  const existingRecentViewRoute = await lfGetItem(6, key);
+  if (existingRecentViewRoute) {
+    return JSON.parse(existingRecentViewRoute);
+  } else {
+    return false;
   }
 }
 
