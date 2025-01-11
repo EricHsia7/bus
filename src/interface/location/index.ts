@@ -96,7 +96,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', (percentage).toFixed(5));
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -109,7 +109,7 @@ function generateElementOfItem(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_location_group_item');
   element.id = identifier;
-  element.setAttribute('stretched', false);
+  element.setAttribute('stretched', 'false');
   element.innerHTML = `<div class="css_location_group_item_head"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_location_group_item_body"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">公車</div></div><div class="css_location_group_item_buses" displayed="true"></div></div>`;
   return {
     element: element,

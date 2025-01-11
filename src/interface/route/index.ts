@@ -1,23 +1,23 @@
-import { integrateRoute } from '../../data/route/index';
+import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { compareThings, generateIdentifier } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
 import { isSaved } from '../../data/folder/index';
-import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
 
-let previousIntegration: object = {};
+let previousIntegration = {} as IntegratedRoute;
 
 let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
 let routeSliding_groupQuantity: number = 0;
-let routeSliding_groupStyles: object = {};
+let routeSliding_groupStyles: GroupStyles = {};
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
@@ -36,7 +36,7 @@ let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 let currentRouteIDSet_RouteID: number = 0;
-let currentRouteIDSet_PathAttributeId: Array = [];
+let currentRouteIDSet_PathAttributeId: Array<number> = [];
 
 let tabPadding: number = 20;
 
@@ -47,9 +47,10 @@ export function initializeRouteSliding(): void {
     routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
   });
 
-  routeGroups.addEventListener('scroll', function (event) {
+  routeGroups.addEventListener('scroll', function (event: Event) {
     routeSliding_sliding = true;
-    var currentIndex = event.target.scrollLeft / routeSliding_fieldWidth;
+    const target = event.target as HTMLElement;
+    var currentIndex = target.scrollLeft / routeSliding_fieldWidth;
     if (currentIndex > routeSliding_initialIndex) {
       routeSliding_targetIndex = routeSliding_initialIndex + 1;
     } else {
@@ -104,7 +105,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toFixed(5));
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -117,7 +118,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_route_group_thread_box');
   element.id = identifier;
-  element.setAttribute('stretched', false);
+  element.setAttribute('stretched', 'false');
   element.innerHTML = `<div class="css_route_group_thread"></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
@@ -173,27 +174,32 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
-  var defaultGroupQuantity = 2;
-  var groupedItems = {};
+  const defaultItemQuantity: number = Math.floor(FieldHeight / 50) + 5;
+  const defaultGroupQuantity = 2;
+  let groupedItems: IntegratedRoute['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
-    var groupKey = `g_${i}`;
+    const groupKey: string = `g_${i}`;
     groupedItems[groupKey] = [];
-    for (let j = 0; j < defaultItemQuantity[groupKey]; j++) {
+    for (let j = 0; j < defaultItemQuantity; j++) {
       groupedItems[groupKey].push({
         name: '',
+        goBack: '0',
         status: { code: 0, text: '' },
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],
         sequence: j,
-        location: {
-          latitude: 0,
-          longitude: 0
+        position: {
+          longitude: 0,
+          latitude: 0
         },
         nearest: false,
         progress: 0,
-        segmentBuffer: false,
+        segmentBuffer: {
+          isSegmentBuffer: false,
+          isStartingPoint: false,
+          isEndingPoint: false
+        },
         id: 0
       });
     }
@@ -203,22 +209,26 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
     {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
-      itemQuantity: defaultItemQuantity,
+      itemQuantity: {
+        g_0: defaultItemQuantity,
+        g_1: defaultItemQuantity
+      },
       RouteName: '載入中',
       RouteEndPoints: {
         RouteDeparture: '載入中',
         RouteDestination: '載入中'
       },
-      RouteID: null,
-      PathAttributeId: []
+      RouteID: 0,
+      PathAttributeId: [],
+      dataUpdateTime: null
     },
     true
   );
 }
 
-function updateRouteField(Field: HTMLElement, integration: object, skeletonScreen: boolean) {
-  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
-    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
+function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
+  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_current_slide');
       var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_next_slide');
 
@@ -249,27 +259,27 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       currentThreadSlide.classList.add('css_slide_fade_out');
       currentItemSlide.classList.add('css_slide_fade_out');
     }
-    function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
-      thisItemElement.setAttribute('segment-buffer', thisItem.segmentBuffer.isSegmentBuffer);
-      thisThreadBoxElement.setAttribute('segment-buffer', thisItem.segmentBuffer.isSegmentBuffer);
+    function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
+      thisItemElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
+      thisThreadBoxElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
     }
-    function updateName(thisItemElement: HTMLElement, thisItem: object): void {
+    function updateName(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_name').innerText = thisItem.name;
     }
-    function updateBuses(thisItemElement: HTMLElement, thisItem: object): void {
+    function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_route_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_route_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_route_group_item_bus_title"><div class="css_route_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_route_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_route_group_item_bus_attributes"><div class="css_route_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_route_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_route_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
-    function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: object): void {
+    function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes').innerHTML = thisItem.overlappingRoutes.length === 0 ? '<div class="css_route_group_item_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_route_group_item_overlapping_route"><div class="css_route_group_item_overlapping_route_title"><div class="css_route_group_item_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_route_group_item_overlapping_route_name">${route.name}</div></div><div class="css_route_group_item_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_route_group_item_overlapping_route_actions"><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.folder.openSaveToFolder('route', [${route.RouteID}])">收藏路線</div></div></div>`).join('');
     }
-    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: object): void {
+    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_route_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_route_group_item_bus_arrival_time_attributes"><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
     }
-    function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: object): void {
-      thisItemElement.setAttribute('nearest', thisItem.nearest);
-      thisThreadBoxElement.setAttribute('nearest', thisItem.nearest);
+    function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
+      thisItemElement.setAttribute('nearest', booleanToString(thisItem.nearest));
+      thisThreadBoxElement.setAttribute('nearest', booleanToString(thisItem.nearest));
     }
-    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: object, previousItem: object): void {
+    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
@@ -291,19 +301,19 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     }
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
-        thisItemElement.setAttribute('stretched', false);
-        thisThreadBoxElement.setAttribute('stretched', false);
+        thisItemElement.setAttribute('stretched', 'false');
+        thisThreadBoxElement.setAttribute('stretched', 'false');
       }
     }
     function updateSkeletonScreen(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
-      thisItemElement.setAttribute('skeleton-screen', skeletonScreen);
-      thisThreadBoxElement.setAttribute('skeleton-screen', skeletonScreen);
+      thisItemElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+      thisThreadBoxElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
-    function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: object): void {
+    function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
       isSaved('stop', thisItem.id).then((e) => {
-        saveToFolderButtonElement.setAttribute('highlighted', e);
+        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
     }
 
@@ -318,7 +328,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
       updateThread(thisThreadBoxElement, thisItem, previousItem);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
-      updateSaveToFolderButton(thisItemElement, thisItem, integration);
+      updateSaveToFolderButton(thisItemElement, thisItem);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
@@ -345,7 +355,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
         updateThread(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
-        updateSaveToFolderButton(thisItemElement, thisItem, integration);
+        updateSaveToFolderButton(thisItemElement, thisItem);
       }
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
@@ -356,13 +366,9 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousIntegration === {}) {
-    previousIntegration = integration;
-  }
-
-  var groupQuantity = integration.groupQuantity;
-  var itemQuantity = integration.itemQuantity;
-  var groupedItems = integration.groupedItems;
+  const groupQuantity = integration.groupQuantity;
+  const itemQuantity = integration.itemQuantity;
+  const groupedItems = integration.groupedItems;
 
   routeSliding_groupQuantity = groupQuantity;
   routeSliding_fieldWidth = FieldWidth;
@@ -382,7 +388,7 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
   elementQuerySelector(Field, '.css_route_name').innerHTML = `<span>${integration.RouteName}</span>`;
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
@@ -390,14 +396,14 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
     var capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var thisGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_route_groups`).appendChild(thisGroupElement.element);
-        var thisTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`).appendChild(thisTabElement.element);
+        const newGroupElement = generateElementOfGroup();
+        elementQuerySelector(Field, `.css_route_groups`).appendChild(newGroupElement.element);
+        const newTabElement = generateElementOfTab();
+        elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`).appendChild(newTabElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity - 1 - o;
+        const groupIndex = currentGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[groupIndex].remove();
         elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[groupIndex].remove();
       }
@@ -405,20 +411,20 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
 
   for (let i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`).length;
+    const groupKey = `g_${i}`;
+    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+      const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisThreadBoxElement = generateElementOfThreadBox();
-          var thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
+          const thisThreadBoxElement = generateElementOfThreadBox();
+          const thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track').appendChild(thisItemElement.element);
           elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track').appendChild(thisThreadBoxElement.element);
         }
       } else {
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var itemIndex = currentItemSeatQuantity - 1 - o;
+          const itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[itemIndex].remove();
           elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[itemIndex].remove();
         }
@@ -427,15 +433,15 @@ function updateRouteField(Field: HTMLElement, integration: object, skeletonScree
   }
 
   for (let i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[i];
+    const groupKey = `g_${i}`;
+    const thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i);
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-index', `${i}`);
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      var thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
-      var thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
-      var thisItem = groupedItems[groupKey][j];
+      const thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
+      const thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
+      const thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {

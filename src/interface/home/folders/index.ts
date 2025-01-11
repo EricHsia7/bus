@@ -47,7 +47,7 @@ function generateElementOfFolder(): GeneratedElement {
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
-    id: null
+    id: ''
   };
 }
 

@@ -1,4 +1,4 @@
-import { getBusArrivalTimes } from '../analytics/bus-arrival-time';
+import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
@@ -11,33 +11,46 @@ import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setD
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';
 
-interface integratedStopItemPosition {
+interface formattedOverlappingRoute {
+  name: string;
+  RouteEndPoints: {
+    RouteDeparture: string;
+    RouteDestination: string;
+    text: string;
+    html: string;
+  };
+  RouteID: number;
+  PathAttributeId: Array<number>;
+}
+
+export interface integratedStopItemPosition {
   longitude: number;
   latitude: number;
 }
 
-interface integratedStopItemSegmentBuffer {
+export interface integratedStopItemSegmentBuffer {
   isSegmentBuffer: boolean;
   isStartingPoint: boolean;
   isEndingPoint: boolean;
 }
-interface integratedStopItem {
-  name: string | null;
+
+export interface integratedStopItem {
+  name: string;
   goBack: '0' | '1' | '2';
   status: EstimateTimeStatus;
-  buses: Array<object>;
-  overlappingRoutes: Array<object>;
-  busArrivalTimes: Array<object>;
+  buses: Array<FormattedBus>;
+  overlappingRoutes: Array<formattedOverlappingRoute>;
+  busArrivalTimes: Array<AggregatedBusArrivalTime>;
   sequence: number;
   position: integratedStopItemPosition;
   nearest: boolean;
   segmentBuffer: integratedStopItemSegmentBuffer;
   progress: number;
-  id: number | null;
+  id: number;
 }
 
-interface IntegratedRoute {
-  groupedItems: { [key: string]: integratedStopItem };
+export interface IntegratedRoute {
+  groupedItems: { [key: string]: Array<integratedStopItem> };
   groupQuantity: number;
   itemQuantity: { [key: string]: number };
   RouteName: string;
