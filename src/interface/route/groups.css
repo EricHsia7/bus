@@ -33,7 +33,8 @@
 .css_route_field .css_route_groups .css_route_group::-webkit-scrollbar,
 .css_route_field .css_route_groups::-webkit-scrollbar,
 .css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_buses::-webkit-scrollbar,
-.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes::-webkit-scrollbar {
+.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes::-webkit-scrollbar,
+.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times::-webkit-scrollbar {
   display: none;
 }
 
