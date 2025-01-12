@@ -29,6 +29,13 @@ export function areItemsDifferent(arr: Array): boolean {
   return true; // No duplicates found
 }
 
+/**
+ * Get common items from the two arrays
+ * @param arrayA - The first array
+ * @param arrayB - The second array
+ * @returns An array of the common items
+ */
+
 export function getIntersection(arrayA: Array, arrayB: Array): Array {
   let result = [];
   if (arrayA.length <= arrayB.length) {

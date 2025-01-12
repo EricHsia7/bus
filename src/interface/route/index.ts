@@ -548,11 +548,11 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
-    itemElement.setAttribute('stretched', false);
-    threadBoxElement.setAttribute('stretched', false);
+    itemElement.setAttribute('stretched', 'false');
+    threadBoxElement.setAttribute('stretched', 'false');
   } else {
-    itemElement.setAttribute('stretched', true);
-    threadBoxElement.setAttribute('stretched', true);
+    itemElement.setAttribute('stretched', 'true');
+    threadBoxElement.setAttribute('stretched', 'true');
   }
 }
 
