@@ -1,21 +1,21 @@
-import { integrateLocation } from '../../data/location/index';
+import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { compareThings, generateIdentifier } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate';
-import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage } from '../index';
+import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles } from '../index';
 import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
 
-let previousIntegration: object = {};
+let previousIntegration = {} as IntegratedLocation;
 
 let locationSliding_initialIndex: number = 0;
 let locationSliding_targetIndex: number = 0;
 let locationSliding_groupQuantity: number = 0;
-let locationSliding_groupStyles: object = {};
+let locationSliding_groupStyles: GroupStyles = {};
 let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
@@ -46,7 +46,8 @@ export function initializeLocationSliding(): void {
 
   element.addEventListener('scroll', function (event) {
     locationSliding_sliding = true;
-    var currentIndex = event.target.scrollLeft / locationSliding_fieldWidth;
+    const target = event.target as HTMLElement;
+    var currentIndex = target.scrollLeft / locationSliding_fieldWidth;
     if (currentIndex > locationSliding_initialIndex) {
       locationSliding_targetIndex = locationSliding_initialIndex + 1;
     } else {
@@ -156,9 +157,9 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
+  var defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   var defaultGroupQuantity = 2;
-  var groupedItems = {};
+  var groupedItems: IntegratedLocation['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
     var groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
@@ -166,6 +167,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       groupedItems[groupKey].push({
         route_name: '',
         route_direction: '',
+        routeId: 0,
         status: { code: -1, text: '' },
         buses: []
       });
@@ -182,12 +184,12 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
           properties: [
             {
               key: '0',
-              icon: 'none',
+              icon: '',
               value: ''
             },
             {
               key: '1',
-              icon: 'none',
+              icon: '',
               value: ''
             }
           ]
@@ -197,27 +199,28 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
           properties: [
             {
               key: '0',
-              icon: 'none',
+              icon: '',
               value: ''
             },
             {
               key: '1',
-              icon: 'none',
+              icon: '',
               value: ''
             }
           ]
         }
       },
       itemQuantity: defaultItemQuantity,
-      LocationName: '載入中'
+      LocationName: '載入中',
+      dataUpdateTime: null
     },
     true
   );
 }
 
-function updateLocationField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
-  function updateItem(thisElement: HTMLElement, thisItem: object, previousItem: object): void {
-    function updateStatus(thisElement: HTMLElement, thisItem: object): void {
+function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean): void {
+  function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
+    function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       var nextSlide = elementQuerySelector(thisElement, '.css_location_group_item_status .css_next_slide');
       var currentSlide = elementQuerySelector(thisElement, '.css_location_group_item_status .css_current_slide');
       nextSlide.setAttribute('code', thisItem.status.code);
@@ -233,20 +236,20 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       );
       currentSlide.classList.add('css_slide_fade_out');
     }
-    function updateName(thisElement: HTMLElement, thisItem: object): void {
+    function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
       elementQuerySelector(thisElement, '.css_location_group_item_route_direction').innerText = thisItem.route_direction;
     }
-    function updateBuses(thisElement: HTMLElement, thisItem: object): void {
+    function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
-        thisElement.setAttribute('stretched', false);
+        thisElement.setAttribute('stretched', 'false');
       }
     }
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
     if (previousItem === null) {
       updateStatus(thisElement, thisItem);
@@ -268,15 +271,15 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
       updateSkeletonScreen(thisElement, skeletonScreen);
     }
   }
-  function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
-    function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
+  function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
+    function updateIcon(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
-    function updateValue(thisElement: HTMLElement, thisProperty: object): void {
+    function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       elementQuerySelector(thisElement, '.css_location_details_property_value').innerHTML = thisProperty.value;
     }
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
@@ -297,22 +300,18 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousIntegration === {}) {
-    previousIntegration = integration;
-  }
-
-  var groupQuantity = integration.groupQuantity;
-  var itemQuantity = integration.itemQuantity;
-  var groupedItems = integration.groupedItems;
-  var groups = integration.groups;
+  const groupQuantity = integration.groupQuantity;
+  const itemQuantity = integration.itemQuantity;
+  const groupedItems = integration.groupedItems;
+  const groups = integration.groups;
 
   locationSliding_groupQuantity = groupQuantity;
   locationSliding_fieldWidth = FieldWidth;
   locationSliding_fieldHeight = FieldHeight;
 
-  var cumulativeOffset = 0;
+  let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    const width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
     locationSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
@@ -324,21 +323,21 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
   elementQuerySelector(Field, '.css_location_name').innerHTML = `<span>${integration.LocationName}</span>`;
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
-  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
-    var capacity = currentGroupSeatQuantity - groupQuantity;
+    const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var thisGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_location_groups`).appendChild(thisGroupElement.element);
-        var thisTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_location_head .css_location_group_tabs_tray`).appendChild(thisTabElement.element);
+        const newGroupElement = generateElementOfGroup();
+        elementQuerySelector(Field, `.css_location_groups`).appendChild(newGroupElement.element);
+        const newTabElement = generateElementOfTab();
+        elementQuerySelector(Field, `.css_location_head .css_location_group_tabs_tray`).appendChild(newTabElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var groupIndex = currentGroupSeatQuantity - 1 - o;
+        const groupIndex = currentGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[groupIndex].remove();
         elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[groupIndex].remove();
       }
@@ -387,7 +386,7 @@ function updateLocationField(Field: HTMLElement, integration: object, skeletonSc
     var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
     thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
-    thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i);
+    thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
     var groupPropertyQuantity = groups[groupKey].properties.length;
     for (let k = 0; k < groupPropertyQuantity; k++) {
       var thisProperty = groups[groupKey].properties[k];
