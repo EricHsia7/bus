@@ -173,10 +173,17 @@ export function fadeOutSplashScreen(callback: Function): void {
 
 export interface GeneratedElement {
   element: HTMLElement;
-  id: string | null;
+  id: string;
 }
 
 export interface FieldSize {
   width: number;
   height: number;
 }
+
+export type GroupStyles = {
+  [key: string]: {
+    width: number;
+    offset: number;
+  };
+};

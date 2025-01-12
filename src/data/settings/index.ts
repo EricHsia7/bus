@@ -5,14 +5,37 @@ import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 
-interface SettingSelectOption {
-  name: string;
-  value: any;
+export interface SettingSelectOptionStringValue {
+  type: 0;
+  string: string;
 }
 
-type SettingSelectOptions = Array<SettingSelectOption>;
+export interface SettingSelectOptionNumberValue {
+  type: 1;
+  number: number;
+}
 
-interface SettingSelect {
+export interface SettingSelectOptionBooleanValue {
+  type: 2;
+  boolean: boolean;
+}
+
+export interface SettingSelectOptionRefreshIntervalValue {
+  type: 3;
+  baseInterval: number;
+  dynamic: boolean;
+}
+
+export type SettingSelectOptionValue = SettingSelectOptionStringValue | SettingSelectOptionNumberValue | SettingSelectOptionBooleanValue | SettingSelectOptionRefreshIntervalValue;
+
+export interface SettingSelectOption {
+  name: string;
+  value: SettingSelectOptionValue;
+}
+
+export type SettingSelectOptions = Array<SettingSelectOption>;
+
+export interface SettingSelect {
   key: string;
   name: string;
   icon: MaterialSymbols;
@@ -25,7 +48,7 @@ interface SettingSelect {
   description: string;
 }
 
-interface SettingPage {
+export interface SettingPage {
   key: string;
   name: string;
   icon: MaterialSymbols;
@@ -35,7 +58,7 @@ interface SettingPage {
   description: string;
 }
 
-interface SettingInfo {
+export interface SettingInfo {
   key: string;
   name: string;
   icon: MaterialSymbols;
@@ -45,7 +68,7 @@ interface SettingInfo {
   description: string;
 }
 
-interface SettingAction {
+export interface SettingAction {
   key: string;
   name: string;
   icon: MaterialSymbols;
@@ -55,13 +78,13 @@ interface SettingAction {
   description: string;
 }
 
-type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction;
+export type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction;
 
-type SettingsObject = { [key: string]: Setting };
+export type SettingsObject = { [key: string]: Setting };
 
-type SettingsArray = Array<Setting>;
+export type SettingsArray = Array<Setting>;
 
-interface SettingWithOption {
+export interface SettingWithOption {
   key: string;
   option: number;
 }
@@ -81,10 +104,34 @@ let Settings: SettingsObject = {
     default_option: 0,
     option: 0,
     options: [
-      { name: formatTime(61, 3), value: 3 },
-      { name: formatTime(61, 2), value: 2 },
-      { name: formatTime(61, 1), value: 1 },
-      { name: formatTime(61, 0), value: 0 }
+      {
+        name: formatTime(61, 3),
+        value: {
+          type: 1,
+          number: 3
+        }
+      },
+      {
+        name: formatTime(61, 2),
+        value: {
+          type: 1,
+          number: 2
+        }
+      },
+      {
+        name: formatTime(61, 1),
+        value: {
+          type: 1,
+          number: 1
+        }
+      },
+      {
+        name: formatTime(61, 0),
+        value: {
+          type: 1,
+          number: 0
+        }
+      }
     ],
     description: '在首頁、路線頁面、地點頁面上的預估公車到站時間的顯示格式。'
   },
@@ -102,49 +149,56 @@ let Settings: SettingsObject = {
         name: '自動',
         value: {
           baseInterval: 15 * 1000,
-          dynamic: true
+          dynamic: true,
+          type: 3
         }
       },
       {
         name: '10秒',
         value: {
           baseInterval: 10 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       },
       {
         name: '20秒',
         value: {
           baseInterval: 20 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       },
       {
         name: '30秒',
         value: {
           baseInterval: 30 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       },
       {
         name: '40秒',
         value: {
           baseInterval: 40 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       },
       {
         name: '50秒',
         value: {
           baseInterval: 50 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       },
       {
         name: '60秒',
         value: {
           baseInterval: 60 * 1000,
-          dynamic: false
+          dynamic: false,
+          type: 3
         }
       }
     ],
@@ -162,11 +216,17 @@ let Settings: SettingsObject = {
     options: [
       {
         name: '開啟',
-        value: true
+        value: {
+          type: 2,
+          boolean: true
+        }
       },
       {
         name: '關閉',
-        value: false
+        value: {
+          type: 2,
+          boolean: false
+        }
       }
     ],
     description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
@@ -183,15 +243,24 @@ let Settings: SettingsObject = {
     options: [
       {
         name: '行徑方向',
-        value: 'directions'
+        value: {
+          type: 0,
+          string: 'directions'
+        }
       },
       {
         name: '地址特徵',
-        value: 'address'
+        value: {
+          type: 0,
+          string: 'address'
+        }
       },
       {
         name: '英文字母',
-        value: 'letters'
+        value: {
+          type: 0,
+          string: 'letters'
+        }
       }
     ],
     description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
@@ -208,11 +277,17 @@ let Settings: SettingsObject = {
     options: [
       {
         name: '開啟',
-        value: true
+        value: {
+          type: 2,
+          boolean: true
+        }
       },
       {
         name: '關閉',
-        value: false
+        value: {
+          type: 2,
+          boolean: false
+        }
       }
     ],
     description: '使用網路代理來擷取資料。'
@@ -407,7 +482,7 @@ export async function changeSettingOption(key: string, option: number): Promise<
   return false;
 }
 
-export function getSetting(key: string): Setting {
+export function getSetting(key: string): Setting | undefined {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       return Settings[key];
@@ -415,10 +490,29 @@ export function getSetting(key: string): Setting {
   }
 }
 
-export function getSettingOptionValue(key: string): object | void {
+export function getSettingOptionValue(key: string): SettingSelectOptionStringValue['string'] | SettingSelectOptionNumberValue['number'] | SettingSelectOptionBooleanValue['boolean'] | SettingSelectOptionRefreshIntervalValue {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
-      return Settings[key].options[Settings[key].option].value;
+      const thisSetting = Settings[key] as SettingSelect;
+      const value = thisSetting.options[thisSetting.option].value;
+      switch (value.type) {
+        case 0:
+          return value.string as string;
+          break;
+        case 1:
+          return value.number as number;
+          break;
+        case 2:
+          return value.boolean as boolean;
+          break;
+        case 3:
+          return value as SettingSelectOptionRefreshIntervalValue;
+          break;
+        default:
+          return '' as string;
+          break;
+      }
     }
   }
+  return '';
 }

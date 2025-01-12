@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
-import { getSettingOptionValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getIconHTML } from '../../icons/index';
@@ -14,7 +14,7 @@ let recentViewsRefreshTimer_retryInterval: number = 10 * 1000;
 let recentViewsRefreshTimer_baseInterval: number = 15 * 1000;
 let recentViewsRefreshTimer_minInterval: number = 5 * 1000;
 let recentViewsRefreshTimer_dynamicInterval: number = 15 * 1000;
-let recentViewsRefreshTimer_auto: boolean = true;
+let recentViewsRefreshTimer_dynamic: boolean = true;
 let recentViewsRefreshTimer_streaming: boolean = false;
 let recentViewsRefreshTimer_lastUpdate: number = 0;
 let recentViewsRefreshTimer_nextUpdate: number = 0;
@@ -36,7 +36,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   element.innerHTML = `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
   return {
     element: element,
-    id: null
+    id: ''
   };
 }
 
@@ -248,8 +248,8 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 async function refreshRecentViews(): Promise<object> {
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  recentViewsRefreshTimer_auto = refresh_interval_setting.auto;
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue
+  recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   recentViewsRefreshTimer_refreshing = true;
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
@@ -258,8 +258,8 @@ async function refreshRecentViews(): Promise<object> {
   updateRecentViewsField(RecentViewsField, integration, false);
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   const updateRate = await getUpdateRate();
-  if (recentViewsRefreshTimer_auto) {
-    recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
+  if (recentViewsRefreshTimer_dynamic) {
+    recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
   } else {
     recentViewsRefreshTimer_nextUpdate = new Date().getTime() + recentViewsRefreshTimer_baseInterval;
   }

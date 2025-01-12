@@ -189,7 +189,7 @@ interface FormattedBusPosition {
   latitude: number;
 }
 
-interface FormattedBus {
+export interface FormattedBus {
   type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
   carNumber: string;
   status: FormattedBusStatus;

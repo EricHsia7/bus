@@ -12,7 +12,7 @@ function generateElementOfItem(item: StoreSize): GeneratedElement {
   element.innerHTML = `<div class="css_storage_statistics_item_name">${item.category.name}</div><div class="css_storage_statistics_item_value">${item.size}</div>`;
   return {
     element: element,
-    id: null
+    id: ''
   };
 }
 

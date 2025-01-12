@@ -37,8 +37,10 @@ export async function importFolders(data: FoldersWithContentArray): Promise<bool
 export async function importSettings(data: SettingsWithOptionsArray): Promise<boolean> {
   for (const SettingWithOption of data) {
     const existingSetting = getSetting(SettingWithOption.key);
-    if (existingSetting.type === 'select') {
-      await changeSettingOption(SettingWithOption.key, SettingWithOption.option);
+    if (existingSetting) {
+      if (existingSetting.type === 'select') {
+        await changeSettingOption(SettingWithOption.key, SettingWithOption.option);
+      }
     }
   }
   return true;

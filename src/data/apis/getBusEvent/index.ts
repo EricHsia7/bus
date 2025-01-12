@@ -1,7 +1,7 @@
 import { getAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataUpdateTime } from '../loader';
 
-interface BusEventItem {
+export interface BusEventItem {
   StationID: number;
   CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
   BusID: string; // vehicle registration number

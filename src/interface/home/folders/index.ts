@@ -14,7 +14,7 @@ let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 15 * 1000;
 let foldersRefreshTimer_minInterval: number = 5 * 1000;
 let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
-let foldersRefreshTimer_auto: number = true;
+let foldersRefreshTimer_dynamic: boolean = true;
 let foldersRefreshTimer_streaming: boolean = false;
 let foldersRefreshTimer_lastUpdate: number = 0;
 let foldersRefreshTimer_nextUpdate: number = 0;
@@ -47,7 +47,7 @@ function generateElementOfFolder(): GeneratedElement {
   element.innerHTML = `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
   return {
     element: element,
-    id: null
+    id: ''
   };
 }
 
@@ -60,7 +60,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage);
+  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -367,7 +367,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
 
 async function refreshFolders(): Promise<object> {
   var refresh_interval_setting = getSettingOptionValue('refresh_interval');
-  foldersRefreshTimer_auto = refresh_interval_setting.auto;
+  foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer_refreshing = true;
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
@@ -377,7 +377,7 @@ async function refreshFolders(): Promise<object> {
   updateFolderField(Field, integration, false);
   foldersRefreshTimer_lastUpdate = new Date().getTime();
   var updateRate = await getUpdateRate();
-  if (foldersRefreshTimer_auto) {
+  if (foldersRefreshTimer_dynamic) {
     foldersRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
   } else {
     foldersRefreshTimer_nextUpdate = new Date().getTime() + foldersRefreshTimer_baseInterval;

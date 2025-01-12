@@ -1,6 +1,6 @@
 import { generateIdentifier } from '../../tools/index';
 import { aggregateNumbers } from '../../tools/math';
-import { TimeObject, timeObjectToString } from '../../tools/time';
+import { TimeObject, timeObjectToString, WeekDayIndex } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 import { listFoldersWithContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../personal-schedule/index';
@@ -22,6 +22,29 @@ interface EstimateTimeRecordForBusArrivalTimeObject {
   trackingID: string;
   timeStamp: number;
   data: { [key: string]: Array<EstimateTimeRecordForBusArrivalTime> };
+}
+
+export interface AggregatedBusArrivalTime {
+  time: string;
+  personalSchedule: {
+    id: string;
+    name: string;
+    days: Array<WeekDayIndex>;
+    period: {
+      start: TimeObject;
+      end: TimeObject;
+    };
+  };
+}
+
+export interface BusArrivalTimes {
+  [stopKey: string]: {
+    [personalScheduleID: string]: {
+      name: string;
+      id: string;
+      busArrivalTimes: Array<AggregatedBusArrivalTime>;
+    };
+  };
 }
 
 export async function recordEstimateTimeForBusArrivalTime(EstimateTime: EstimateTime): void {
@@ -84,7 +107,7 @@ export async function discardExpiredEstimateTimeRecordsForBusArrivalTime(): void
   }
 }
 
-export async function getBusArrivalTimes(): Promise<object> {
+export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   // Merge data by stops
   let recordsGroupedByStops = {};
   const keys = await lfListItemKeys(4);
