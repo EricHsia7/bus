@@ -105,28 +105,28 @@ let Settings: SettingsObject = {
     option: 0,
     options: [
       {
-        name: formatTime(61, 3),
+        name: `${formatTime(11, 3)}/${formatTime(61, 3)}/${formatTime(60 * 60 + 1, 3)}`,
         value: {
           type: 1,
           number: 3
         }
       },
       {
-        name: formatTime(61, 2),
+        name: `${formatTime(11, 2)}/${formatTime(61, 2)}/${formatTime(60 * 60 + 1, 2)}`,
         value: {
           type: 1,
           number: 2
         }
       },
       {
-        name: formatTime(61, 1),
+        name: `${formatTime(11, 1)}/${formatTime(61, 1)}/${formatTime(60 * 60 + 1, 1)}`,
         value: {
           type: 1,
           number: 1
         }
       },
       {
-        name: formatTime(61, 0),
+        name: `${formatTime(11, 0)}/${formatTime(61, 0)}/${formatTime(60 * 60 + 1, 0)}`,
         value: {
           type: 1,
           number: 0
