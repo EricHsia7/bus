@@ -46,6 +46,12 @@ Quickly find routes, locations, and places of interest within the app.
 
 Your privacy and security are our top priorities. Your all data are stored locally, only used for improving your using experience, and not for advertising.
 
+## Concepts
+
+### Locations & Stops
+
+Locations and stops are different in some aspects. Stops are route-position pair, which means a stop can be only on a route, at single geolocation, and towards one direction. On the other hand, a location is a collection of such stops sharing the approximately same geolocation.
+
 ## Dependencies
 
 - **Packages**: See them in [package.json](./package.json).
