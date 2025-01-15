@@ -1,7 +1,16 @@
 // Function to split data based on delta
-export function splitDataByDelta(data: Array): Array {
-  const result = [];
-  let currentGroup = [];
+
+/**
+ * Splits data into groups based on delta between consecutive elements.
+ *
+ * @param {Array<[number, number]>} data - Array of tuples where each tuple contains two numbers.
+ * @returns {Array<Array<[number, number]>>} - Array of groups, each containing arrays of tuples.
+ */
+
+export function splitDataByDelta(data: Array<[number, number]>): Array<Array<[number, number]>> {
+  const result: Array<Array<[number, number]>> = [];
+  let currentGroup: Array<[number, number]> = [];
+
   for (let i = 0; i < data.length; i++) {
     if (i === 0 || data[i][0] - data[i - 1][0] > 0) {
       if (currentGroup.length > 0) {
@@ -12,9 +21,11 @@ export function splitDataByDelta(data: Array): Array {
       currentGroup.push(data[i]);
     }
   }
+
   if (currentGroup.length > 0) {
     result.push(currentGroup);
   }
+
   return result;
 }
 
