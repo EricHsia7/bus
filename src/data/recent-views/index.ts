@@ -37,7 +37,7 @@ export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus | 
 
 export type RecentViewArray = Array<RecentView>;
 
-export async function listRecentViews(): Promise<Array<RecentView>> {
+export async function listRecentViews(): Promise<RecentViewArray> {
   let result = [];
   const now = new Date().getTime();
   const keys = await lfListItemKeys(6);
@@ -45,9 +45,7 @@ export async function listRecentViews(): Promise<Array<RecentView>> {
     const item = await lfGetItem(6, key);
     const itemObject = JSON.parse(item);
     const itemObjectTime = new Date(itemObject).getTime();
-    if (now - itemObjectTime > 24 * 60 * 60 * 14 * 1000) {
-      await lfRemoveItem(6, key);
-    } else {
+    if (now - itemObjectTime <= 24 * 60 * 60 * 14 * 1000) {
       result.push(itemObject);
     }
   }
@@ -60,6 +58,19 @@ export async function listRecentViews(): Promise<Array<RecentView>> {
     });
   }
   return result;
+}
+
+export async function discardExpiredRecentViews(): void {
+  const now = new Date().getTime();
+  const keys = await lfListItemKeys(6);
+  for (const key of keys) {
+    const item = await lfGetItem(6, key);
+    const itemObject = JSON.parse(item);
+    const itemObjectTime = new Date(itemObject).getTime();
+    if (now - itemObjectTime > 24 * 60 * 60 * 14 * 1000) {
+      await lfRemoveItem(6, key);
+    }
+  }
 }
 
 export async function logRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']): void {

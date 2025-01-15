@@ -31,7 +31,8 @@ import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPer
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { closeBus, openBus } from './interface/bus/index';
-import { integrateRecentViews } from './data/recent-views/index';
+import { discardExpiredRecentViews } from './data/recent-views/index';
+import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 
 import './interface/theme.css';
 
@@ -149,7 +150,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -257,6 +257,7 @@ window.bus = {
       discardExpiredEstimateTimeRecordsForUpdateRate();
       discardExpiredDataUsageRecords();
       discardExpiredEstimateTimeRecordsForBusArrivalTime();
+      discardExpiredRecentViews();
     }
   },
   route: {
@@ -336,9 +337,6 @@ window.bus = {
   bus: {
     openBus,
     closeBus
-  },
-  test: {
-    integrateRecentViews
   }
 };
 
