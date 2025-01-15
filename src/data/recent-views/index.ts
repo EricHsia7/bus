@@ -46,7 +46,7 @@ export async function listRecentViews(): Promise<RecentViewArray> {
     const itemObject = JSON.parse(item);
     const itemObjectTime = new Date(itemObject).getTime();
     if (!(now - itemObjectTime > 24 * 60 * 60 * 14 * 1000)) {
-      console.log(now, itemObject);
+      console.log(now, itemObjectTime);
       result.push(itemObject);
     }
   }
