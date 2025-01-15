@@ -1,4 +1,4 @@
-export function calculateStandardDeviation(arr: Array<number>) {
+export function calculateStandardDeviation(arr: Array<number>): number {
   // Step 1: Calculate the mean
   const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
   // Step 2: Calculate the squared difference between each element and the mean
@@ -10,7 +10,7 @@ export function calculateStandardDeviation(arr: Array<number>) {
   return standardDeviation;
 }
 
-export function standardizeArray(array: Array<number>) {
+export function standardizeArray(array: Array<number>): Array<number> {
   // Calculate the mean of the array
   const mean = array.reduce((acc, val) => acc + val, 0) / array.length;
 
