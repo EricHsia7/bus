@@ -14,7 +14,7 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
   element.classList.add('css_personal_schedule_manager_item');
   element.id = identifier;
   element.setAttribute('onclick', `bus.personalSchedule.openPersonalScheduleEditor('${item.id}')`);
-  element.innerHTML = `<div class="css_personal_schedule_manager_item_name">${item.name}</div><div class="css_personal_schedule_manager_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
+  element.innerHTML = /*html*/ `<div class="css_personal_schedule_manager_item_name">${item.name}</div><div class="css_personal_schedule_manager_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
   return {
     element: element,
     id: identifier

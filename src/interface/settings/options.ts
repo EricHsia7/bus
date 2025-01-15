@@ -8,7 +8,7 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
   var element = document.createElement('div');
   element.classList.add('css_option');
   element.id = identifier;
-  element.innerHTML = `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settings.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
+  element.innerHTML = /*html*/ `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settings.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,
     id: identifier

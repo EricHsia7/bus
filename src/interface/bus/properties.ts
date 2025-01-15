@@ -15,7 +15,8 @@ function queryBusPropertiesFieldSize(): FieldSize {
 function generateElementOfBusProperty(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_bus_property');
-  element.innerHTML = `<div class="css_bus_property_icon"></div><div class="css_bus_property_value"></div>`;
+
+  element.innerHTML = /*html*/ `<div class="css_bus_property_icon"></div><div class="css_bus_property_value"></div>`;
   return {
     element: element,
     id: ''

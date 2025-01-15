@@ -15,7 +15,7 @@ function queryPropertiesFieldSize(): FieldSize {
 function generateElementOfProperty(): GeneratedElement {
   var element = document.createElement('div');
   element.classList.add('css_route_details_property');
-  element.innerHTML = `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
   return {
     element: element,
     id: ''

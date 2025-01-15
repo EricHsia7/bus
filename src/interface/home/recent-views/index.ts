@@ -33,7 +33,7 @@ function queryRecentViewsFieldSize(): FieldSize {
 function generateElementOfRecentViewItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_home_recent_views_item');
-  element.innerHTML = `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
+  element.innerHTML = /*html*/ `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
   return {
     element: element,
     id: ''
@@ -248,7 +248,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 async function refreshRecentViews(): Promise<object> {
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   recentViewsRefreshTimer_refreshing = true;

@@ -9,7 +9,7 @@ const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage
 function generateElementOfItem(item: StoreSize): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_storage_statistics_item');
-  element.innerHTML = `<div class="css_storage_statistics_item_name">${item.category.name}</div><div class="css_storage_statistics_item_value">${item.size}</div>`;
+  element.innerHTML = /*html*/ `<div class="css_storage_statistics_item_name">${item.category.name}</div><div class="css_storage_statistics_item_value">${item.size}</div>`;
   return {
     element: element,
     id: ''

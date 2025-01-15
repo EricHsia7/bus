@@ -111,7 +111,7 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = `<div class="css_location_group_item_head"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_location_group_item_body"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">公車</div></div><div class="css_location_group_item_buses" displayed="true"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_location_group_item_body"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">公車</div></div><div class="css_location_group_item_buses" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -123,7 +123,7 @@ function generateElementOfGroup(): GeneratedElement {
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group');
-  element.innerHTML = `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
   return {
     element: element,
     id: identifier
@@ -146,7 +146,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   var element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_details_property');
-  element.innerHTML = `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
   return {
     element: element,
     id: identifier
@@ -322,7 +322,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   if (!locationSliding_sliding) {
     updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
-  elementQuerySelector(Field, '.css_location_name').innerHTML = `<span>${integration.LocationName}</span>`;
+  elementQuerySelector(Field, '.css_location_name').innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
@@ -384,7 +384,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   for (let i = 0; i < groupQuantity; i++) {
     var groupKey = `g_${i}`;
     var thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
-    thisTabElement.innerHTML = `<span>${groups[groupKey].name}</span>`;
+    thisTabElement.innerHTML = /*html*/ `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
     var groupPropertyQuantity = groups[groupKey].properties.length;
