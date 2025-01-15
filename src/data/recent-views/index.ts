@@ -38,22 +38,19 @@ export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus | 
 export type RecentViewArray = Array<RecentView>;
 
 export async function listRecentViews(): Promise<RecentViewArray> {
-  console.log(0);
   let result = [];
   const now = new Date().getTime();
   const keys = await lfListItemKeys(6);
   for (const key of keys) {
-    console.log(1);
     const item = await lfGetItem(6, key);
     const itemObject = JSON.parse(item);
     const itemObjectTime = new Date(itemObject).getTime();
     if (!(now - itemObjectTime > 24 * 60 * 60 * 14 * 1000)) {
-      console.log(2);
+      console.log(now, itemObject);
       result.push(itemObject);
     }
   }
   if (result.length === 0) {
-    console.log(3);
     result.push({
       type: 'empty',
       time: new Date().toISOString(),
