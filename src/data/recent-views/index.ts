@@ -43,10 +43,9 @@ export async function listRecentViews(): Promise<RecentViewArray> {
   const keys = await lfListItemKeys(6);
   for (const key of keys) {
     const item = await lfGetItem(6, key);
-    const itemObject = JSON.parse(item);
-    const itemObjectTime = new Date(itemObject).getTime();
-    if (!(now - itemObjectTime > 24 * 60 * 60 * 14 * 1000)) {
-      console.log(now, itemObjectTime);
+    const itemObject = JSON.parse(item) as RecentView;
+    const itemObjectTime = new Date(itemObject.time).getTime();
+    if (now - itemObjectTime <= 24 * 60 * 60 * 14 * 1000) {
       result.push(itemObject);
     }
   }
@@ -66,8 +65,8 @@ export async function discardExpiredRecentViews(): void {
   const keys = await lfListItemKeys(6);
   for (const key of keys) {
     const item = await lfGetItem(6, key);
-    const itemObject = JSON.parse(item);
-    const itemObjectTime = new Date(itemObject).getTime();
+    const itemObject = JSON.parse(item) as RecentView;
+    const itemObjectTime = new Date(itemObject.time).getTime();
     if (now - itemObjectTime > 24 * 60 * 60 * 14 * 1000) {
       await lfRemoveItem(6, key);
     }
