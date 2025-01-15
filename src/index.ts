@@ -31,7 +31,7 @@ import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPer
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { closeBus, openBus } from './interface/bus/index';
-import { discardExpiredRecentViews } from './data/recent-views/index';
+import { discardExpiredRecentViews, listRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 
 import './interface/theme.css';
@@ -337,6 +337,9 @@ window.bus = {
   bus: {
     openBus,
     closeBus
+  },
+  test: {
+    listRecentViews
   }
 };
 
