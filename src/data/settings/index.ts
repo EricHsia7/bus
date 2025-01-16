@@ -394,10 +394,10 @@ let Settings: SettingsObject = {
 };
 
 export async function initializeSettings(): void {
-  var userSettings = await lfListItemKeys(1);
-  for (var key of userSettings) {
+  const userSettings = await lfListItemKeys(1);
+  for (const key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
-      var userSetting = await lfGetItem(1, key);
+      const userSetting = await lfGetItem(1, key);
       if (!(userSetting === null)) {
         if (Settings[key].type === 'select') {
           var userSettingOption = parseInt(userSetting);
@@ -412,7 +412,7 @@ export async function initializeSettings(): void {
   }
 }
 
-export async function listSettings(): SettingsArray {
+export async function listSettings(): Promise<SettingsArray> {
   let result: SettingsArray = [];
   for (const key in Settings) {
     let item = Settings[key];
