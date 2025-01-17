@@ -446,9 +446,12 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', `${i}`);
+
+    const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
+    const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
-      const thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
+      const thisItemElement = RouteGroupItemElements[j];
+      const thisThreadBoxElement = RouteGroupThreadElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
