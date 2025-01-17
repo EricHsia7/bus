@@ -124,7 +124,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-async function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
+function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateType(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('type', thisItem.type);
@@ -153,21 +153,36 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     }
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       if (thisItem.type === 'stop') {
+        const thisElementRect = thisElement.getBoundingClientRect();
+        const top = thisElementRect.top;
+        const left = thisElementRect.left;
+        const bottom = thisElementRect.bottom;
+        const right = thisElementRect.right;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
         const thisItemStatusElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status');
         const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
         const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+
         nextSlideElement.setAttribute('code', thisItem.status.code);
         nextSlideElement.innerText = thisItem.status.text;
-        currentSlideElement.addEventListener(
-          'animationend',
-          function () {
-            currentSlideElement.setAttribute('code', thisItem.status.code);
-            currentSlideElement.innerText = thisItem.status.text;
-            currentSlideElement.classList.remove('css_slide_fade_out');
-          },
-          { once: true }
-        );
-        currentSlideElement.classList.add('css_slide_fade_out');
+
+        if (top >= 0 && left >= 0 && bottom <= windowHeight && right <= windowWidth) {
+          currentSlideElement.addEventListener(
+            'animationend',
+            function () {
+              currentSlideElement.setAttribute('code', thisItem.status.code);
+              currentSlideElement.innerText = thisItem.status.text;
+              currentSlideElement.classList.remove('css_slide_fade_out');
+            },
+            { once: true }
+          );
+          currentSlideElement.classList.add('css_slide_fade_out');
+        } else {
+          currentSlideElement.setAttribute('code', thisItem.status.code);
+          currentSlideElement.innerText = thisItem.status.text;
+        }
       }
     }
     function updateMain(thisElement: HTMLElement, thisItem: object): void {
