@@ -1,16 +1,28 @@
-import {generateIdentifier } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
 import { pearsonCorrelation } from '../../tools/math';
 import { splitDataByDelta } from '../../tools/array';
 import { formatTime } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { EstimateTime } from '../apis/getEstimateTime/index';
 
+interface IncompleteRecords {
+  trackingID: string;
+  timeStamp: number;
+  data: {
+    [key: string]: { EstimateTime: number; timeStamp: number }[];
+  };
+}
+
 const trackingUpdateRate_sampleQuantity: number = 64;
 const trackingUpdateRate_monitorTimes: number = 90;
-let trackingUpdateRate_trackedStops: Array = [];
+let trackingUpdateRate_trackedStops: Array<number> = [];
 let trackingUpdateRate_trackingID: string = '';
 let trackingUpdateRate_tracking: boolean = false;
-let trackingUpdateRate_incompleteRecords = {};
+let trackingUpdateRate_incompleteRecords: IncompleteRecords = {
+  trackingID: '',
+  timeStamp: 0,
+  data: {}
+};
 let trackingUpdateRate_currentDataLength: number = 0;
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
@@ -30,7 +42,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
     const EstimateTimeLength: number = EstimateTime.length - 1;
     for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
       const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
-      const randomItem: object = EstimateTime[randomIndex];
+      const randomItem = EstimateTime[randomIndex];
       trackingUpdateRate_trackedStops.push(randomItem.StopID);
     }
   }
@@ -58,13 +70,13 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
 
 async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
   const keys = await lfListItemKeys(3);
-  var result = [];
+  let result: Array<[number, number]> = [];
   for (const key of keys) {
     const json = await lfGetItem(3, key);
-    const object: object = JSON.parse(json);
+    const object: IncompleteRecords = JSON.parse(json);
     if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000)) {
       for (const key2 in object.data) {
-        result.push(object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
+        result.push(...object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
       }
     }
   }
@@ -72,10 +84,10 @@ async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, n
 }
 
 export async function discardExpiredEstimateTimeRecordsForUpdateRate(): void {
-  const keys = await listRecordedEstimateTimeForUpdateRate();
+  const keys = await lfListItemKeys(3);
   for (const key of keys) {
     const json = await lfGetItem(3, key);
-    const object: object = JSON.parse(json);
+    const object = JSON.parse(json) as IncompleteRecords;
     if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000) {
       await lfRemoveItem(3, key);
     }
@@ -114,7 +126,7 @@ export async function getUpdateRateInTime(): Promise<string> {
       const firstColumn: Array<number> = group.map((item) => item[0]);
       const secondColumn: Array<number> = group.map((item) => item[1]);
       const rowCount: number = firstColumn.length;
-      let timeStampUponChanges: Array = [];
+      let timeStampUponChanges: Array<number> = [];
       for (let i = 1; i < rowCount; i++) {
         const change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
         if (change > 0) {

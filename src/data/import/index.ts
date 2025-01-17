@@ -111,7 +111,6 @@ export async function importData(data: string): Promise<boolean> {
       await importRecentViews(parsedData.recent_views);
       return true;
       break;
-
     default:
       return false;
       break;
