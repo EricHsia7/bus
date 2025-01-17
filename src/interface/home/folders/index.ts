@@ -11,7 +11,7 @@ import { promptMessage } from '../../prompt/index';
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
-const FoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders');
+const HomeFoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
 let previousIntegration = {} as integratedFolders;
@@ -388,7 +388,7 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFolderField(FoldersField, integration, false);
+  updateFolderField(HomeFoldersField, integration, false);
   foldersRefreshTimer_lastUpdate = time;
   const updateRate = await getUpdateRate();
   if (foldersRefreshTimer_dynamic) {
@@ -427,8 +427,7 @@ async function streamFolders(): void {
 }
 
 export function initializeFolders(): void {
-  var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-  setUpFolderFieldSkeletonScreen(Field);
+  setUpFolderFieldSkeletonScreen(HomeFoldersField);
   if (!foldersRefreshTimer_streaming) {
     foldersRefreshTimer_streaming = true;
     if (!foldersRefreshTimer_streamStarted) {
