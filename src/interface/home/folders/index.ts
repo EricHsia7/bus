@@ -1,7 +1,7 @@
 import { integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { FieldSize, GeneratedElement } from '../../index';
 import { getIconHTML } from '../../icons/index';
-import { getSettingOptionValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
@@ -380,7 +380,8 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
 }
 
 async function refreshFolders(): Promise<object> {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval');
+  const time = new Date().getTime();
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer_refreshing = true;
@@ -388,14 +389,14 @@ async function refreshFolders(): Promise<object> {
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   updateFolderField(FoldersField, integration, false);
-  foldersRefreshTimer_lastUpdate = new Date().getTime();
+  foldersRefreshTimer_lastUpdate = time;
   const updateRate = await getUpdateRate();
   if (foldersRefreshTimer_dynamic) {
-    foldersRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
+    foldersRefreshTimer_nextUpdate = Math.max(time + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
   } else {
-    foldersRefreshTimer_nextUpdate = new Date().getTime() + foldersRefreshTimer_baseInterval;
+    foldersRefreshTimer_nextUpdate = time + foldersRefreshTimer_baseInterval;
   }
-  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime());
+  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - time);
   foldersRefreshTimer_refreshing = false;
   HomeUpdateTimerElement.setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the folders.' };
