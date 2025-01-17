@@ -1,9 +1,8 @@
-import { generateIdentifier } from '../../tools/index';
-import { pearsonCorrelation } from '../../tools/math';
-import { splitDataByDelta } from '../../tools/array';
-import { formatTime } from '../../tools/time';
-import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
-import { EstimateTime } from '../apis/getEstimateTime/index';
+import { generateIdentifier } from '../../../tools/index';
+import { splitDataByDelta } from '../../../tools/array';
+import { formatTime } from '../../../tools/time';
+import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
+import { EstimateTime } from '../../apis/getEstimateTime/index';
 
 interface IncompleteRecords {
   trackingID: string;
@@ -94,25 +93,48 @@ export async function discardExpiredEstimateTimeRecordsForUpdateRate(): void {
   }
 }
 
-export async function getUpdateRate(): Promise<number> {
-  let weightedAverage: number = 0;
-  let totalCorrelation: number = 0;
-  let totalWeight: number = 0;
-  const collection = await listRecordedEstimateTimeForUpdateRate();
-  for (const dataSet of collection) {
-    const groups = splitDataByDelta(dataSet);
-    for (const group of groups) {
-      const firstColumn: Array<number> = group.map((item) => item[0]);
-      const secondColumn: Array<number> = group.map((item) => item[1]);
-      const correlation: number = pearsonCorrelation(firstColumn, secondColumn);
-      if (!(correlation === 0) && Math.abs(correlation) > 0.2 && !isNaN(correlation)) {
-        totalCorrelation += correlation * firstColumn.length;
-        totalWeight += firstColumn.length;
-      }
-    }
+let getUpdateRateWorkerResponses = {};
+let port;
+
+// Check if SharedWorker is supported, and fall back to Worker if not
+if (typeof SharedWorker !== 'undefined') {
+  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getUpdateRate_worker.ts', import.meta.url)); // Reusable shared worker
+  port = getUpdateRateSharedWorker.port; // Access the port for communication
+  port.start(); // Start the port (required by some browsers)
+} else {
+  const getUpdateRateWorker = new Worker(new URL('./getUpdateRate_worker.ts', import.meta.url)); // Fallback to standard worker
+  port = getUpdateRateWorker; // Use Worker directly for communication
+}
+
+// Handle messages from the worker
+port.onmessage = function (e) {
+  const [result, taskID] = e.data;
+  if (getUpdateRateWorkerResponses[taskID]) {
+    getUpdateRateWorkerResponses[taskID](result); // Resolve the correct promise
+    delete getUpdateRateWorkerResponses[taskID]; // Clean up the response handler
   }
-  weightedAverage = totalCorrelation / totalWeight;
-  return isNaN(weightedAverage) ? 0.8 : Math.abs(weightedAverage);
+};
+
+// Handle errors
+port.onerror = function (e) {
+  console.error(e.message);
+};
+
+export async function getUpdateRate(): Promise<number> {
+  const collection = await listRecordedEstimateTimeForUpdateRate();
+  const taskID = generateIdentifier('t');
+
+  const result = await new Promise((resolve, reject) => {
+    getUpdateRateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+
+    port.onerror = function (e) {
+      reject(e.message);
+    };
+
+    port.postMessage([collection, taskID]); // Send the task to the worker
+  });
+
+  return result;
 }
 
 export async function getUpdateRateInTime(): Promise<string> {

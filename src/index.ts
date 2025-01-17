@@ -1,5 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
-import { discardExpiredEstimateTimeRecordsForUpdateRate } from './data/analytics/update-rate';
+import { discardExpiredEstimateTimeRecordsForUpdateRate } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';

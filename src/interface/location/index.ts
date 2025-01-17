@@ -5,7 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { getUpdateRate } from '../../data/analytics/update-rate';
+import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { GeneratedElement, FieldSize, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles } from '../index';
 import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
