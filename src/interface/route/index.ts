@@ -491,7 +491,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute(): Promise<object> {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
@@ -501,7 +501,7 @@ async function refreshRoute(): Promise<object> {
   updateRouteField(RouteField, integration, false);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
-    var updateRate = await getUpdateRate();
+    const updateRate = await getUpdateRate();
     routeRefreshTimer_nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
   } else {
     routeRefreshTimer_nextUpdate = new Date().getTime() + routeRefreshTimer_baseInterval;

@@ -405,8 +405,8 @@ async function refreshFolders(): Promise<object> {
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   updateFolderField(HomeFoldersField, integration, false);
   foldersRefreshTimer_lastUpdate = time;
-  const updateRate = await getUpdateRate();
   if (foldersRefreshTimer_dynamic) {
+    const updateRate = await getUpdateRate();
     foldersRefreshTimer_nextUpdate = Math.max(time + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
   } else {
     foldersRefreshTimer_nextUpdate = time + foldersRefreshTimer_baseInterval;
