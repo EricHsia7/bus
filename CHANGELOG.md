@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/EricHsia7/bus/tree/HEAD)
 
-[Full Changelog](https://github.com/EricHsia7/bus/compare/aa2bb3389aac54ec34a240979a0f96f2f797da80...HEAD)
+[Full Changelog](https://github.com/EricHsia7/bus/compare/v2.0.1...HEAD)
+
+**Merged pull requests:**
+
+- Improve document manipulation [\#88](https://github.com/EricHsia7/bus/pull/88) ([EricHsia7](https://github.com/EricHsia7))
+
+## [v2.0.1](https://github.com/EricHsia7/bus/tree/v2.0.1) (2025-01-16)
+
+[Full Changelog](https://github.com/EricHsia7/bus/compare/v2.0.0...v2.0.1)
 
 **Implemented enhancements:**
 
@@ -13,6 +21,21 @@
 - Add persistent storage option [\#80](https://github.com/EricHsia7/bus/pull/80) ([EricHsia7](https://github.com/EricHsia7))
 - Improve icon search [\#78](https://github.com/EricHsia7/bus/pull/78) ([EricHsia7](https://github.com/EricHsia7))
 - Improve search [\#77](https://github.com/EricHsia7/bus/pull/77) ([EricHsia7](https://github.com/EricHsia7))
+
+**Merged pull requests:**
+
+- Add typescript definitions and references & bug fixes for dynamic update intervals [\#87](https://github.com/EricHsia7/bus/pull/87) ([EricHsia7](https://github.com/EricHsia7))
+- deps: bump canvas from 2.11.2 to 3.0.0 [\#82](https://github.com/EricHsia7/bus/pull/82) ([dependabot[bot]](https://github.com/apps/dependabot))
+- deps: bump webpack-cli from 5.1.4 to 6.0.1 [\#81](https://github.com/EricHsia7/bus/pull/81) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update loader.ts [\#79](https://github.com/EricHsia7/bus/pull/79) ([EricHsia7](https://github.com/EricHsia7))
+- Erichsia7 patch 1 [\#76](https://github.com/EricHsia7/bus/pull/76) ([EricHsia7](https://github.com/EricHsia7))
+
+## [v2.0.0](https://github.com/EricHsia7/bus/tree/v2.0.0) (2024-10-02)
+
+[Full Changelog](https://github.com/EricHsia7/bus/compare/v1.0.0...v2.0.0)
+
+**Implemented enhancements:**
+
 - Improve number aggregation algorithm [\#75](https://github.com/EricHsia7/bus/pull/75) ([EricHsia7](https://github.com/EricHsia7))
 - Add bus arrival time to route page [\#74](https://github.com/EricHsia7/bus/pull/74) ([EricHsia7](https://github.com/EricHsia7))
 - Add bus arrival time analytics [\#73](https://github.com/EricHsia7/bus/pull/73) ([EricHsia7](https://github.com/EricHsia7))
@@ -63,20 +86,9 @@
 - Add search page [\#14](https://github.com/EricHsia7/bus/pull/14) ([EricHsia7](https://github.com/EricHsia7))
 - Add home page [\#13](https://github.com/EricHsia7/bus/pull/13) ([EricHsia7](https://github.com/EricHsia7))
 - Optimize integration performance for bus stops data [\#11](https://github.com/EricHsia7/bus/pull/11) ([EricHsia7](https://github.com/EricHsia7))
-- Dynamic color [\#10](https://github.com/EricHsia7/bus/pull/10) ([EricHsia7](https://github.com/EricHsia7))
-- Path buffer group [\#9](https://github.com/EricHsia7/bus/pull/9) ([EricHsia7](https://github.com/EricHsia7))
-- Path buffer [\#8](https://github.com/EricHsia7/bus/pull/8) ([EricHsia7](https://github.com/EricHsia7))
-- Dynamic api update time interval [\#7](https://github.com/EricHsia7/bus/pull/7) ([EricHsia7](https://github.com/EricHsia7))
-- Slide to switch direction [\#6](https://github.com/EricHsia7/bus/pull/6) ([EricHsia7](https://github.com/EricHsia7))
-- User position [\#5](https://github.com/EricHsia7/bus/pull/5) ([EricHsia7](https://github.com/EricHsia7))
 
 **Merged pull requests:**
 
-- Add typescript definitions and references & bug fixes for dynamic update intervals [\#87](https://github.com/EricHsia7/bus/pull/87) ([EricHsia7](https://github.com/EricHsia7))
-- deps: bump canvas from 2.11.2 to 3.0.0 [\#82](https://github.com/EricHsia7/bus/pull/82) ([dependabot[bot]](https://github.com/apps/dependabot))
-- deps: bump webpack-cli from 5.1.4 to 6.0.1 [\#81](https://github.com/EricHsia7/bus/pull/81) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Update loader.ts [\#79](https://github.com/EricHsia7/bus/pull/79) ([EricHsia7](https://github.com/EricHsia7))
-- Erichsia7 patch 1 [\#76](https://github.com/EricHsia7/bus/pull/76) ([EricHsia7](https://github.com/EricHsia7))
 - Handle endless pending status [\#69](https://github.com/EricHsia7/bus/pull/69) ([EricHsia7](https://github.com/EricHsia7))
 - Rename css classes [\#64](https://github.com/EricHsia7/bus/pull/64) ([EricHsia7](https://github.com/EricHsia7))
 - Add changelog automation [\#61](https://github.com/EricHsia7/bus/pull/61) ([EricHsia7](https://github.com/EricHsia7))
@@ -90,6 +102,22 @@
 - Add GitHub info to settings [\#26](https://github.com/EricHsia7/bus/pull/26) ([EricHsia7](https://github.com/EricHsia7))
 - Format directory structure [\#23](https://github.com/EricHsia7/bus/pull/23) ([EricHsia7](https://github.com/EricHsia7))
 - Reset storage upon irreversible error [\#12](https://github.com/EricHsia7/bus/pull/12) ([EricHsia7](https://github.com/EricHsia7))
+
+## [v1.0.0](https://github.com/EricHsia7/bus/tree/v1.0.0) (2023-08-20)
+
+[Full Changelog](https://github.com/EricHsia7/bus/compare/aa2bb3389aac54ec34a240979a0f96f2f797da80...v1.0.0)
+
+**Implemented enhancements:**
+
+- Dynamic color [\#10](https://github.com/EricHsia7/bus/pull/10) ([EricHsia7](https://github.com/EricHsia7))
+- Path buffer group [\#9](https://github.com/EricHsia7/bus/pull/9) ([EricHsia7](https://github.com/EricHsia7))
+- Path buffer [\#8](https://github.com/EricHsia7/bus/pull/8) ([EricHsia7](https://github.com/EricHsia7))
+- Dynamic api update time interval [\#7](https://github.com/EricHsia7/bus/pull/7) ([EricHsia7](https://github.com/EricHsia7))
+- Slide to switch direction [\#6](https://github.com/EricHsia7/bus/pull/6) ([EricHsia7](https://github.com/EricHsia7))
+- User position [\#5](https://github.com/EricHsia7/bus/pull/5) ([EricHsia7](https://github.com/EricHsia7))
+
+**Merged pull requests:**
+
 - Combine page [\#4](https://github.com/EricHsia7/bus/pull/4) ([EricHsia7](https://github.com/EricHsia7))
 - Test 933p9ffh6zpa9d48 [\#3](https://github.com/EricHsia7/bus/pull/3) ([EricHsia7](https://github.com/EricHsia7))
 - Search g92q39tqv9722bbn [\#2](https://github.com/EricHsia7/bus/pull/2) ([EricHsia7](https://github.com/EricHsia7))
