@@ -22,6 +22,7 @@ const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_ro
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
 let previousIntegration = {} as IntegratedRoute;
+let previousSkeletonScreen: boolean = false;
 
 let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
@@ -231,35 +232,37 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
-      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_current_slide');
-      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_next_slide');
+      const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
+      const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
+      const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
 
-      var currentItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_current_slide');
-      var nextItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_next_slide');
+      const thisItemStatusElement = elementQuerySelector(thisItemElement, '.css_route_group_item_status');
+      const currentItemSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+      const nextItemSlideElememt = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
 
-      nextThreadSlide.setAttribute('code', thisItem.status.code);
+      nextThreadSlideElement.setAttribute('code', thisItem.status.code);
 
-      nextItemSlide.setAttribute('code', thisItem.status.code);
-      nextItemSlide.innerText = thisItem.status.text;
-      currentThreadSlide.addEventListener(
+      nextItemSlideElememt.setAttribute('code', thisItem.status.code);
+      nextItemSlideElememt.innerText = thisItem.status.text;
+      currentThreadSlideElement.addEventListener(
         'animationend',
         function () {
-          currentThreadSlide.setAttribute('code', thisItem.status.code);
-          currentThreadSlide.classList.remove('css_slide_fade_out');
+          currentThreadSlideElement.setAttribute('code', thisItem.status.code);
+          currentThreadSlideElement.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentItemSlide.addEventListener(
+      currentItemSlideElement.addEventListener(
         'animationend',
         function () {
-          currentItemSlide.setAttribute('code', thisItem.status.code);
-          currentItemSlide.innerText = thisItem.status.text;
-          currentItemSlide.classList.remove('css_slide_fade_out');
+          currentItemSlideElement.setAttribute('code', thisItem.status.code);
+          currentItemSlideElement.innerText = thisItem.status.text;
+          currentItemSlideElement.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentThreadSlide.classList.add('css_slide_fade_out');
-      currentItemSlide.classList.add('css_slide_fade_out');
+      currentThreadSlideElement.classList.add('css_slide_fade_out');
+      currentItemSlideElement.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       thisItemElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
@@ -359,8 +362,10 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       if (!(previousItem.id === thisItem.id)) {
         updateSaveToFolderButton(thisItemElement, thisItem);
       }
-      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
-      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+        updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      }
     }
   }
 
@@ -471,6 +476,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
   previousIntegration = integration;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshRoute(): Promise<object> {
@@ -480,9 +486,8 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
-  var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
-  var Field = documentQuerySelector('.css_route_field');
-  updateRouteField(Field, integration, false);
+  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
+  updateRouteField(RouteField, integration, false);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
     var updateRate = await getUpdateRate();

@@ -15,7 +15,7 @@ const HomeFoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folder
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
 let previousIntegration = {} as integratedFolders;
-let previousSkeleton: boolean = false;
+let previousSkeletonScreen: boolean = false;
 
 let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 15 * 1000;
@@ -293,7 +293,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
           default:
             break;
         }
-        if (!(skeletonScreen === previousSkeleton)) {
+        if (!(skeletonScreen === previousSkeletonScreen)) {
           updateSkeletonScreen(thisElement, skeletonScreen);
         }
       }
@@ -376,7 +376,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     }
   }
   previousIntegration = integration;
-  previousSkeleton = skeletonScreen;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshFolders(): Promise<object> {
