@@ -225,21 +225,35 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
 function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
     function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisElementRect = thisElement.getBoundingClientRect();
+      const top = thisElementRect.top;
+      const left = thisElementRect.left;
+      const bottom = thisElementRect.bottom;
+      const right = thisElementRect.right;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
       const thisItemStatusElement = elementQuerySelector(thisElement, '.css_location_group_item_status');
       const nextSlide = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
       const currentSlide = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
-      currentSlide.addEventListener(
-        'animationend',
-        function () {
-          currentSlide.setAttribute('code', thisItem.status.code);
-          currentSlide.innerText = thisItem.status.text;
-          currentSlide.classList.remove('css_slide_fade_out');
-        },
-        { once: true }
-      );
-      currentSlide.classList.add('css_slide_fade_out');
+      if (top >= 0 && left >= 0 && bottom <= windowHeight && right <= windowWidth) {
+        currentSlide.addEventListener(
+          'animationend',
+          function () {
+            currentSlide.setAttribute('code', thisItem.status.code);
+            currentSlide.innerText = thisItem.status.text;
+            currentSlide.classList.remove('css_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentSlide.classList.add('css_slide_fade_out');
+      } else {
+        currentSlide.setAttribute('code', thisItem.status.code);
+        currentSlide.innerText = thisItem.status.text;
+      }
     }
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
