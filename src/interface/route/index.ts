@@ -12,6 +12,14 @@ import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
 
+const RouteField = documentQuerySelector('.css_route_field');
+const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
+const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
+const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
+const RouteGroupTabsTrayElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs .css_route_group_tabs_tray');
+const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track .css_route_group_tab_line');
+const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
+
 let previousIntegration = {} as IntegratedRoute;
 
 let routeSliding_initialIndex: number = 0;
@@ -41,30 +49,28 @@ let currentRouteIDSet_PathAttributeId: Array<number> = [];
 let tabPadding: number = 20;
 
 export function initializeRouteSliding(): void {
-  const routeGroups = documentQuerySelector('.css_route_field .css_route_groups');
-
-  routeGroups.addEventListener('touchstart', function (event) {
-    routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
+  RouteGroupsElement.addEventListener('touchstart', function () {
+    routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
   });
 
-  routeGroups.addEventListener('scroll', function (event: Event) {
+  RouteGroupsElement.addEventListener('scroll', function (event: Event) {
     routeSliding_sliding = true;
     const target = event.target as HTMLElement;
-    var currentIndex = target.scrollLeft / routeSliding_fieldWidth;
+    const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
     if (currentIndex > routeSliding_initialIndex) {
       routeSliding_targetIndex = routeSliding_initialIndex + 1;
     } else {
       routeSliding_targetIndex = routeSliding_initialIndex - 1;
     }
-    var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
-    var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
-    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+    const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
+    const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
+    const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
     updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
-      routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
     }
   });
@@ -81,17 +87,13 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const Field = documentQuerySelector('.css_route_field');
-  Field.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
-  Field.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
+  RouteField.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
+  RouteField.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
 
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
-  const Field = documentQuerySelector('.css_route_field');
-  const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
-  const groupTabLineElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
-  Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
-  groupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
+  RouteField.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
+  RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
   groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
@@ -374,29 +376,28 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   routeSliding_fieldWidth = FieldWidth;
   routeSliding_fieldHeight = FieldHeight;
 
-  var cumulativeOffset = 0;
+  let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    const width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  var offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
+  const offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
-  elementQuerySelector(Field, '.css_route_name').innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
+  RouteNameElement.innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
+  RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
+  console.log(currentGroupSeatQuantity);
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
-      const RouteGroupsElement = elementQuerySelector(Field, `.css_route_groups`);
-      const RouteGroupTabsTrayElement = elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
         RouteGroupsElement.appendChild(newGroupElement.element);
@@ -423,10 +424,10 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         const RouteGroupItemsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track');
         const RouteGroupThreadsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          const thisThreadBoxElement = generateElementOfThreadBox();
-          const thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
-          RouteGroupItemsTrackElement.appendChild(thisItemElement.element);
-          RouteGroupThreadsTrackElement.appendChild(thisThreadBoxElement.element);
+          const newThreadBoxElement = generateElementOfThreadBox();
+          const newItemElement = generateElementOfItem(newThreadBoxElement.id);
+          RouteGroupItemsTrackElement.appendChild(newItemElement.element);
+          RouteGroupThreadsTrackElement.appendChild(newThreadBoxElement.element);
         }
       } else {
         const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
@@ -456,7 +457,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
-            var previousItem = previousIntegration.groupedItems[groupKey][j];
+            const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
           } else {
             updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
@@ -525,10 +526,9 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
-  var Field = documentQuerySelector('.css_route_field');
-  Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_route_groups').scrollLeft = 0;
-  setUpRouteFieldSkeletonScreen(Field);
+  RouteField.setAttribute('displayed', 'true');
+  elementQuerySelector(RouteField, '.css_route_groups').scrollLeft = 0;
+  setUpRouteFieldSkeletonScreen(RouteField);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {
@@ -544,8 +544,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
 
 export function closeRoute(): void {
   // revokePageHistory('Route');
-  var Field = documentQuerySelector('.css_route_field');
-  Field.setAttribute('displayed', 'false');
+  RouteField.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
   openPreviousPage();
 }
@@ -568,7 +567,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
 }
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group_item#${itemID}`);
+  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group_item#${itemID}`);
   const buttons = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
   const button = elementQuerySelectorAll(buttons, '.css_route_group_item_button[highlighted="true"][type="tab"]');
   for (const t of button) {
