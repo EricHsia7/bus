@@ -391,21 +391,25 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
-    var capacity = currentGroupSeatQuantity - groupQuantity;
+    const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
+      const RouteGroupsElement = elementQuerySelector(Field, `.css_route_groups`);
+      const RouteGroupTabsTrayElement = elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_route_groups`).appendChild(newGroupElement.element);
+        RouteGroupsElement.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`).appendChild(newTabElement.element);
+        RouteGroupTabsTrayElement.appendChild(newTabElement.element);
       }
     } else {
+      const GroupElements = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`);
+      const TabElements = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[groupIndex].remove();
+        GroupElements[groupIndex].remove();
+        TabElements[groupIndex].remove();
       }
     }
   }
@@ -416,17 +420,21 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
+        const RouteGroupItemsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track');
+        const RouteGroupThreadsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const thisThreadBoxElement = generateElementOfThreadBox();
           const thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track').appendChild(thisItemElement.element);
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track').appendChild(thisThreadBoxElement.element);
+          RouteGroupItemsTrackElement.appendChild(thisItemElement.element);
+          RouteGroupThreadsTrackElement.appendChild(thisThreadBoxElement.element);
         }
       } else {
+        const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
+        const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[itemIndex].remove();
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[itemIndex].remove();
+          RouteGroupItemElements[itemIndex].remove();
+          RouteGroupThreadElements[itemIndex].remove();
         }
       }
     }
