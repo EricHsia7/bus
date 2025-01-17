@@ -8,6 +8,12 @@ import { booleanToString, compareThings, generateIdentifier } from '../../../too
 import { getDataReceivingProgress } from '../../../data/apis/loader';
 import { promptMessage } from '../../prompt/index';
 
+const HomeField = documentQuerySelector('.css_home_field');
+const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
+const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
+const FoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders');
+const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
+
 let previousIntegration = {} as integratedFolders;
 let previousSkeleton: boolean = false;
 
@@ -53,15 +59,14 @@ function generateElementOfFolder(): GeneratedElement {
 }
 
 function updateUpdateTimer(): void {
-  const updateTimerElement = documentQuerySelector('.css_home_update_timer');
-  var time = new Date().getTime();
-  var percentage = 0;
+  const time = new Date().getTime();
+  let percentage = 0;
   if (foldersRefreshTimer_refreshing) {
     percentage = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -380,12 +385,11 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer_refreshing = true;
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
-  documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
-  var integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  var Field = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-  updateFolderField(Field, integration, false);
+  HomeUpdateTimerElement.setAttribute('refreshing', 'true');
+  const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
+  updateFolderField(FoldersField, integration, false);
   foldersRefreshTimer_lastUpdate = new Date().getTime();
-  var updateRate = await getUpdateRate();
+  const updateRate = await getUpdateRate();
   if (foldersRefreshTimer_dynamic) {
     foldersRefreshTimer_nextUpdate = Math.max(new Date().getTime() + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
   } else {
@@ -393,7 +397,7 @@ async function refreshFolders(): Promise<object> {
   }
   foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime());
   foldersRefreshTimer_refreshing = false;
-  documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
+  HomeUpdateTimerElement.setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the folders.' };
 }
 
