@@ -3,7 +3,7 @@ import { BusData } from './getBusData/index';
 import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
 
-interface EstimateTimeStatus {
+export interface EstimateTimeStatus {
   code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   text: string;
 }

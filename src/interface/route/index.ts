@@ -12,7 +12,17 @@ import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
 
+const RouteField = documentQuerySelector('.css_route_field');
+const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
+const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
+const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
+const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
+const RouteGroupTabsTrayElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs .css_route_group_tabs_tray');
+const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track .css_route_group_tab_line');
+const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
+
 let previousIntegration = {} as IntegratedRoute;
+let previousSkeletonScreen: boolean = false;
 
 let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
@@ -41,30 +51,28 @@ let currentRouteIDSet_PathAttributeId: Array<number> = [];
 let tabPadding: number = 20;
 
 export function initializeRouteSliding(): void {
-  const routeGroups = documentQuerySelector('.css_route_field .css_route_groups');
-
-  routeGroups.addEventListener('touchstart', function (event) {
-    routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
+  RouteGroupsElement.addEventListener('touchstart', function () {
+    routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
   });
 
-  routeGroups.addEventListener('scroll', function (event: Event) {
+  RouteGroupsElement.addEventListener('scroll', function (event: Event) {
     routeSliding_sliding = true;
     const target = event.target as HTMLElement;
-    var currentIndex = target.scrollLeft / routeSliding_fieldWidth;
+    const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
     if (currentIndex > routeSliding_initialIndex) {
       routeSliding_targetIndex = routeSliding_initialIndex + 1;
     } else {
       routeSliding_targetIndex = routeSliding_initialIndex - 1;
     }
-    var initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
-    var targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
-    var tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-    var offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+    const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
+    const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
+    const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+    const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
     updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
 
     if (currentIndex === routeSliding_targetIndex) {
-      routeSliding_initialIndex = Math.round(routeGroups.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
     }
   });
@@ -81,31 +89,26 @@ export function ResizeRouteField(): void {
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const Field = documentQuerySelector('.css_route_field');
-  Field.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
-  Field.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
+  RouteField.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
+  RouteField.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
 
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
-  const Field = documentQuerySelector('.css_route_field');
-  const groupsTabsTrayElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tabs .css_route_group_tabs_tray');
-  const groupTabLineElement = elementQuerySelector(Field, '.css_route_head .css_route_group_tab_line_track .css_route_group_tab_line');
-  Field.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity);
-  groupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
+  RouteField.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
+  RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
 
 function updateUpdateTimer(): void {
-  const updateTimerElement = documentQuerySelector('.css_route_update_timer');
-  var time = new Date().getTime();
-  var percentage = 0;
+  const time = new Date().getTime();
+  let percentage = 0;
   if (routeRefreshTimer_refreshing) {
     percentage = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -229,35 +232,37 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
-      var currentThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_current_slide');
-      var nextThreadSlide = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status .css_next_slide');
+      const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
+      const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
+      const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
 
-      var currentItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_current_slide');
-      var nextItemSlide = elementQuerySelector(thisItemElement, '.css_route_group_item_status .css_next_slide');
+      const thisItemStatusElement = elementQuerySelector(thisItemElement, '.css_route_group_item_status');
+      const currentItemSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+      const nextItemSlideElememt = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
 
-      nextThreadSlide.setAttribute('code', thisItem.status.code);
+      nextThreadSlideElement.setAttribute('code', thisItem.status.code);
 
-      nextItemSlide.setAttribute('code', thisItem.status.code);
-      nextItemSlide.innerText = thisItem.status.text;
-      currentThreadSlide.addEventListener(
+      nextItemSlideElememt.setAttribute('code', thisItem.status.code);
+      nextItemSlideElememt.innerText = thisItem.status.text;
+      currentThreadSlideElement.addEventListener(
         'animationend',
         function () {
-          currentThreadSlide.setAttribute('code', thisItem.status.code);
-          currentThreadSlide.classList.remove('css_slide_fade_out');
+          currentThreadSlideElement.setAttribute('code', thisItem.status.code);
+          currentThreadSlideElement.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentItemSlide.addEventListener(
+      currentItemSlideElement.addEventListener(
         'animationend',
         function () {
-          currentItemSlide.setAttribute('code', thisItem.status.code);
-          currentItemSlide.innerText = thisItem.status.text;
-          currentItemSlide.classList.remove('css_slide_fade_out');
+          currentItemSlideElement.setAttribute('code', thisItem.status.code);
+          currentItemSlideElement.innerText = thisItem.status.text;
+          currentItemSlideElement.classList.remove('css_slide_fade_out');
         },
         { once: true }
       );
-      currentThreadSlide.classList.add('css_slide_fade_out');
-      currentItemSlide.classList.add('css_slide_fade_out');
+      currentThreadSlideElement.classList.add('css_slide_fade_out');
+      currentItemSlideElement.classList.add('css_slide_fade_out');
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       thisItemElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
@@ -333,14 +338,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
       }
-      if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisItemElement, thisItem);
-      }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
-      }
-      if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
-        updateOverlappingRoutes(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
@@ -355,10 +354,14 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateThread(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
+        updateName(thisItemElement, thisItem);
+        updateOverlappingRoutes(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
       }
-      updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
-      updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+        updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      }
     }
   }
 
@@ -374,38 +377,40 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   routeSliding_fieldWidth = FieldWidth;
   routeSliding_fieldHeight = FieldHeight;
 
-  var cumulativeOffset = 0;
+  let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
-    var width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    const width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
     routeSliding_groupStyles[`g_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  var offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
+  const offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
-  elementQuerySelector(Field, '.css_route_name').innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
+  RouteNameElement.innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  elementQuerySelector(Field, '.css_route_button_right').setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
+  RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  var currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_field .css_route_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
-    var capacity = currentGroupSeatQuantity - groupQuantity;
+    const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_route_groups`).appendChild(newGroupElement.element);
+        RouteGroupsElement.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray`).appendChild(newTabElement.element);
+        RouteGroupTabsTrayElement.appendChild(newTabElement.element);
       }
     } else {
+      const GroupElements = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`);
+      const TabElements = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[groupIndex].remove();
+        GroupElements[groupIndex].remove();
+        TabElements[groupIndex].remove();
       }
     }
   }
@@ -416,17 +421,21 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
+        const RouteGroupItemsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track');
+        const RouteGroupThreadsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          const thisThreadBoxElement = generateElementOfThreadBox();
-          const thisItemElement = generateElementOfItem(thisThreadBoxElement.id);
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track').appendChild(thisItemElement.element);
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track').appendChild(thisThreadBoxElement.element);
+          const newThreadBoxElement = generateElementOfThreadBox();
+          const newItemElement = generateElementOfItem(newThreadBoxElement.id);
+          RouteGroupItemsTrackElement.appendChild(newItemElement.element);
+          RouteGroupThreadsTrackElement.appendChild(newThreadBoxElement.element);
         }
       } else {
+        const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
+        const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[itemIndex].remove();
-          elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[itemIndex].remove();
+          RouteGroupItemElements[itemIndex].remove();
+          RouteGroupThreadElements[itemIndex].remove();
         }
       }
     }
@@ -438,14 +447,17 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', `${i}`);
+
+    const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
+    const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`)[j];
-      const thisThreadBoxElement = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`)[j];
+      const thisItemElement = RouteGroupItemElements[j];
+      const thisThreadBoxElement = RouteGroupThreadElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
-            var previousItem = previousIntegration.groupedItems[groupKey][j];
+            const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
           } else {
             updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
@@ -459,6 +471,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
   previousIntegration = integration;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshRoute(): Promise<object> {
@@ -467,10 +480,9 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'true');
-  var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
-  var Field = documentQuerySelector('.css_route_field');
-  updateRouteField(Field, integration, false);
+  RouteUpdateTimerElement.setAttribute('refreshing', 'true');
+  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
+  updateRouteField(RouteField, integration, false);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
     var updateRate = await getUpdateRate();
@@ -480,7 +492,7 @@ async function refreshRoute(): Promise<object> {
   }
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime());
   routeRefreshTimer_refreshing = false;
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'false');
+  RouteUpdateTimerElement.setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the route.' };
 }
 
@@ -514,10 +526,9 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
-  var Field = documentQuerySelector('.css_route_field');
-  Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_route_groups').scrollLeft = 0;
-  setUpRouteFieldSkeletonScreen(Field);
+  RouteField.setAttribute('displayed', 'true');
+  elementQuerySelector(RouteField, '.css_route_groups').scrollLeft = 0;
+  setUpRouteFieldSkeletonScreen(RouteField);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {
@@ -533,8 +544,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
 
 export function closeRoute(): void {
   // revokePageHistory('Route');
-  var Field = documentQuerySelector('.css_route_field');
-  Field.setAttribute('displayed', 'false');
+  RouteField.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
   openPreviousPage();
 }
@@ -557,7 +567,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
 }
 
 export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group_item#${itemID}`);
+  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group_item#${itemID}`);
   const buttons = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
   const button = elementQuerySelectorAll(buttons, '.css_route_group_item_button[highlighted="true"][type="tab"]');
   for (const t of button) {

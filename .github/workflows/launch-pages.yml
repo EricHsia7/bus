@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-typify
+      - dev-improve-document-manipulation
 
 jobs:
   launch:

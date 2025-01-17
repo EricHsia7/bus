@@ -253,7 +253,7 @@ export async function listFoldersWithContent(): Promise<FoldersWithContentArray>
   return result;
 }
 
-interface integratedFolders {
+export interface integratedFolders {
   foldedContent: { [key: string]: Array<FolderContent> }; // TODO: integratedFolderContent
   folders: { [key: string]: Folder };
   folderQuantity: number;
