@@ -16,6 +16,7 @@ const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
 const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
 const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
+const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
 const RouteGroupTabsTrayElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs .css_route_group_tabs_tray');
 const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track .css_route_group_tab_line');
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
@@ -94,20 +95,19 @@ export function ResizeRouteField(): void {
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   RouteField.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
   RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 30).toFixed(5));
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
-  groupsTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
 
 function updateUpdateTimer(): void {
-  const updateTimerElement = documentQuerySelector('.css_route_update_timer');
-  var time = new Date().getTime();
-  var percentage = 0;
+  const time = new Date().getTime();
+  let percentage = 0;
   if (routeRefreshTimer_refreshing) {
     percentage = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
   }
-  updateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming) {
       updateUpdateTimer();
@@ -479,7 +479,7 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'true');
+  RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   var integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   var Field = documentQuerySelector('.css_route_field');
   updateRouteField(Field, integration, false);
@@ -492,7 +492,7 @@ async function refreshRoute(): Promise<object> {
   }
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime());
   routeRefreshTimer_refreshing = false;
-  documentQuerySelector('.css_route_update_timer').setAttribute('refreshing', 'false');
+  RouteUpdateTimerElement.setAttribute('refreshing', 'false');
   return { status: 'Successfully refreshed the route.' };
 }
 
