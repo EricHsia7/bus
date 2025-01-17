@@ -1,14 +1,15 @@
-import { integrateFolders } from '../../../data/folder/index';
+import { integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { FieldSize, GeneratedElement } from '../../index';
 import { getIconHTML } from '../../icons/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { compareThings, generateIdentifier } from '../../../tools/index';
+import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { getDataReceivingProgress } from '../../../data/apis/loader';
 import { promptMessage } from '../../prompt/index';
 
-let previousIntegration = {};
+let previousIntegration = {} as integratedFolders;
+let previousSkeleton: boolean = false;
 
 let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 15 * 1000;
@@ -147,20 +148,21 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     }
     function updateStatus(thisElement: HTMLElement, thisItem: object): void {
       if (thisItem.type === 'stop') {
-        var nextSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide');
-        var currentSlide = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide');
-        nextSlide.setAttribute('code', thisItem.status.code);
-        nextSlide.innerText = thisItem.status.text;
-        currentSlide.addEventListener(
+        const thisItemStatusElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status');
+        const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
+        const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+        nextSlideElement.setAttribute('code', thisItem.status.code);
+        nextSlideElement.innerText = thisItem.status.text;
+        currentSlideElement.addEventListener(
           'animationend',
           function () {
-            currentSlide.setAttribute('code', thisItem.status.code);
-            currentSlide.innerText = thisItem.status.text;
-            currentSlide.classList.remove('css_slide_fade_out');
+            currentSlideElement.setAttribute('code', thisItem.status.code);
+            currentSlideElement.innerText = thisItem.status.text;
+            currentSlideElement.classList.remove('css_slide_fade_out');
           },
           { once: true }
         );
-        currentSlide.classList.add('css_slide_fade_out');
+        currentSlideElement.classList.add('css_slide_fade_out');
       }
     }
     function updateMain(thisElement: HTMLElement, thisItem: object): void {
@@ -224,6 +226,9 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
       }
       buttonElement.setAttribute('onclick', onclick);
     }
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
     if (previousItem === null) {
       updateType(thisElement, thisItem);
       updateIcon(thisElement, thisItem);
@@ -231,6 +236,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
       updateMain(thisElement, thisItem);
       updateContext(thisElement, thisItem);
       updateButton(thisElement, thisItem);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.type === previousItem.type)) {
         updateType(thisElement, thisItem);
@@ -239,6 +245,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
         updateMain(thisElement, thisItem);
         updateContext(thisElement, thisItem);
         updateButton(thisElement, thisItem);
+        updateSkeletonScreen(thisElement, skeletonScreen);
       } else {
         switch (thisItem.type) {
           case 'stop':
@@ -281,6 +288,9 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
           default:
             break;
         }
+        if (!(skeletonScreen === previousSkeleton)) {
+          updateSkeletonScreen(thisElement, skeletonScreen);
+        }
       }
     }
   }
@@ -289,67 +299,65 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  if (previousIntegration === {}) {
-    previousIntegration = integration;
-  }
-
-  var folderQuantity = integration.folderQuantity;
-  var itemQuantity = integration.itemQuantity;
-  var foldedContent = integration.foldedContent;
-  var folders = integration.folders;
+  const folderQuantity = integration.folderQuantity;
+  const itemQuantity = integration.itemQuantity;
+  const foldedContent = integration.foldedContent;
+  const folders = integration.folders;
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
+  const currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
   if (!(folderQuantity === currentFolderSeatQuantity)) {
-    var capacity = currentFolderSeatQuantity - folderQuantity;
+    const capacity = currentFolderSeatQuantity - folderQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var thisFolderElement = generateElementOfFolder();
-        Field.appendChild(thisFolderElement.element);
+        const newFolderElement = generateElementOfFolder();
+        Field.appendChild(newFolderElement.element);
       }
     } else {
+      const FolderElements = elementQuerySelectorAll(Field, `.css_home_folder`);
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var folderIndex = currentFolderSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_home_folder`)[folderIndex].remove();
+        const folderIndex = currentFolderSeatQuantity - 1 - o;
+        FolderElements[folderIndex].remove();
       }
     }
   }
 
   for (let i = 0; i < folderQuantity; i++) {
-    var folderKey = `f_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
+    const folderKey = `f_${i}`;
+    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
     if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[folderKey];
+      const capacity = currentItemSeatQuantity - itemQuantity[folderKey];
       if (capacity < 0) {
+        const FolderContentElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content`);
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisItemElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content`).appendChild(thisItemElement.element);
+          const newItemElement = generateElementOfItem();
+          FolderContentElement.appendChild(newItemElement.element);
         }
       } else {
+        const FolderContentItemElements = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`);
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[itemIndex].remove();
+          const itemIndex = currentItemSeatQuantity - 1 - o;
+          FolderContentItemElements[itemIndex].remove();
         }
       }
     }
   }
 
   for (let i = 0; i < folderQuantity; i++) {
-    var folderKey = `f_${i}`;
-    var thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
+    const folderKey = `f_${i}`;
+    const thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
     thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
-    var thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
+    const thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
     elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
     elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
     for (let j = 0; j < itemQuantity[folderKey]; j++) {
-      var thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisItem = foldedContent[folderKey][j];
+      const thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
+      const thisItem = foldedContent[folderKey][j];
       if (previousIntegration.hasOwnProperty('foldedContent')) {
         if (previousIntegration.foldedContent.hasOwnProperty(folderKey)) {
           if (previousIntegration.foldedContent[folderKey][j]) {
-            var previousItem = previousIntegration.foldedContent[folderKey][j];
+            const previousItem = previousIntegration.foldedContent[folderKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -363,6 +371,7 @@ async function updateFolderField(Field: HTMLElement, integration: object, skelet
     }
   }
   previousIntegration = integration;
+  previousSkeleton = skeletonScreen;
 }
 
 async function refreshFolders(): Promise<object> {
