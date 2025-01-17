@@ -5,7 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { getUpdateRate } from '../../data/analytics/update-rate';
+import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isSaved } from '../../data/folder/index';
 import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -232,6 +232,14 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
+      const thisItemElementRect = thisItemElement.getBoundingClientRect();
+      const top = thisItemElementRect.top;
+      const left = thisItemElementRect.left;
+      const bottom = thisItemElementRect.bottom;
+      const right = thisItemElementRect.right;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
       const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
       const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
       const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
@@ -240,29 +248,37 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       const currentItemSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
       const nextItemSlideElememt = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
 
-      nextThreadSlideElement.setAttribute('code', thisItem.status.code);
+      nextThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
 
-      nextItemSlideElememt.setAttribute('code', thisItem.status.code);
+      nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
-      currentThreadSlideElement.addEventListener(
-        'animationend',
-        function () {
-          currentThreadSlideElement.setAttribute('code', thisItem.status.code);
-          currentThreadSlideElement.classList.remove('css_slide_fade_out');
-        },
-        { once: true }
-      );
-      currentItemSlideElement.addEventListener(
-        'animationend',
-        function () {
-          currentItemSlideElement.setAttribute('code', thisItem.status.code);
-          currentItemSlideElement.innerText = thisItem.status.text;
-          currentItemSlideElement.classList.remove('css_slide_fade_out');
-        },
-        { once: true }
-      );
-      currentThreadSlideElement.classList.add('css_slide_fade_out');
-      currentItemSlideElement.classList.add('css_slide_fade_out');
+
+      if (top >= 0 && left >= 0 && bottom <= windowHeight && right <= windowWidth) {
+        currentThreadSlideElement.addEventListener(
+          'animationend',
+          function () {
+            currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+            currentThreadSlideElement.classList.remove('css_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentItemSlideElement.addEventListener(
+          'animationend',
+          function () {
+            currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+            currentItemSlideElement.innerText = thisItem.status.text;
+            currentItemSlideElement.classList.remove('css_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentThreadSlideElement.classList.add('css_slide_fade_out');
+        currentItemSlideElement.classList.add('css_slide_fade_out');
+      } else {
+        currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+
+        currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+        currentItemSlideElement.innerText = thisItem.status.text;
+      }
     }
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       thisItemElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
@@ -475,7 +491,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute(): Promise<object> {
-  var refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
@@ -485,7 +501,7 @@ async function refreshRoute(): Promise<object> {
   updateRouteField(RouteField, integration, false);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
-    var updateRate = await getUpdateRate();
+    const updateRate = await getUpdateRate();
     routeRefreshTimer_nextUpdate = Math.max(new Date().getTime() + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
   } else {
     routeRefreshTimer_nextUpdate = new Date().getTime() + routeRefreshTimer_baseInterval;

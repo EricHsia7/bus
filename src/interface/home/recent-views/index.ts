@@ -1,4 +1,4 @@
-import { getUpdateRate } from '../../../data/analytics/update-rate';
+import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
@@ -257,8 +257,8 @@ async function refreshRecentViews(): Promise<object> {
   const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
   updateRecentViewsField(RecentViewsField, integration, false);
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
-  const updateRate = await getUpdateRate();
   if (recentViewsRefreshTimer_dynamic) {
+    const updateRate = await getUpdateRate();
     recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
   } else {
     recentViewsRefreshTimer_nextUpdate = new Date().getTime() + recentViewsRefreshTimer_baseInterval;

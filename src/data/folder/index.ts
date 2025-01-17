@@ -6,7 +6,7 @@ import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate';
+import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
 import { getStop } from '../apis/getStop/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
