@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/EricHsia7/bus/compare/v2.0.1...HEAD)
 
+**Implemented enhancements:**
+
+- Improve performance [\#89](https://github.com/EricHsia7/bus/pull/89) ([EricHsia7](https://github.com/EricHsia7))
+
 **Merged pull requests:**
 
 - Improve document manipulation [\#88](https://github.com/EricHsia7/bus/pull/88) ([EricHsia7](https://github.com/EricHsia7))
