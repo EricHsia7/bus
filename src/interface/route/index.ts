@@ -338,14 +338,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
       }
-      if (!compareThings(previousItem.name, thisItem.name)) {
-        updateName(thisItemElement, thisItem);
-      }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
-      }
-      if (!compareThings(previousItem.overlappingRoutes, thisItem.overlappingRoutes)) {
-        updateOverlappingRoutes(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
@@ -360,6 +354,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateThread(thisThreadBoxElement, thisItem, previousItem);
       }
       if (!(previousItem.id === thisItem.id)) {
+        updateName(thisItemElement, thisItem);
+        updateOverlappingRoutes(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
       }
       if (!(skeletonScreen === previousSkeletonScreen)) {
@@ -399,7 +395,6 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
-  console.log(currentGroupSeatQuantity);
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
