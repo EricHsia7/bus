@@ -18,6 +18,7 @@ const LocationGroupTabLineElement = elementQuerySelector(LocationHeadElement, '.
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
 
 let previousIntegration = {} as IntegratedLocation;
+let previousSkeletonScreen: boolean = false;
 
 let locationSliding_initialIndex: number = 0;
 let locationSliding_targetIndex: number = 0;
@@ -109,8 +110,8 @@ function updateUpdateTimer(): void {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
@@ -122,8 +123,8 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = generateIdentifier('g');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('g');
+  const element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group');
   element.innerHTML = /*html*/ `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
@@ -134,8 +135,8 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = generateIdentifier('t');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('t');
+  const element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_tab');
   return {
@@ -145,8 +146,8 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  var identifier = generateIdentifier('p');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('p');
+  const element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_location_group_details_property');
   element.innerHTML = /*html*/ `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
@@ -160,11 +161,11 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
-  var defaultGroupQuantity = 2;
-  var groupedItems: IntegratedLocation['groupedItems'] = {};
+  const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
+  const defaultGroupQuantity = 2;
+  let groupedItems: IntegratedLocation['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
-    var groupKey = `g_${i}`;
+    const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     for (let j = 0; j < defaultItemQuantity[groupKey]; j++) {
       groupedItems[groupKey].push({
@@ -271,8 +272,10 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
-      updateStretch(thisElement, skeletonScreen);
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateStretch(thisElement, skeletonScreen);
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
     }
   }
   function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
@@ -296,7 +299,9 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (!compareThings(previousProperty.value, thisProperty.value)) {
         updateValue(thisElement, thisProperty);
       }
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
     }
   }
 
@@ -433,6 +438,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
   }
   previousIntegration = integration;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshLocation(): Promise<object> {
