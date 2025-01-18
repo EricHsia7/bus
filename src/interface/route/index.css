@@ -14,3 +14,11 @@
   animation-timing-function: ease-in-out;
 }
 
+.css_route_field[animation="false"][skeleton-screen="true"] .css_route_head .css_route_name span,
+.css_route_field[animation="false"][skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab span,
+.css_route_field[animation="false"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name,
+.css_route_field[animation="false"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule,
+.css_route_field[animation="false"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread,
+.css_route_field[animation="false"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status {
+  background: var(--b-cssvar-ededf2);
+}
