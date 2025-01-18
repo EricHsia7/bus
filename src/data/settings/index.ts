@@ -502,7 +502,7 @@ let Settings: SettingsObject = {
   }
 };
 
-export async function initializeSettings(): void {
+export async function initializeSettings() {
   const userSettings = await lfListItemKeys(1);
   for (const key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
@@ -611,6 +611,9 @@ export function getSettingOptionValue(key: string): SettingSelectOptionStringVal
       if (powerSavingSettingValueString === 'on' || powerSavingSettingValueString === 'on_until_next_launch') {
         if (thisSettingOption.resourceIntensive) {
           thisSettingOption = thisSetting.options[thisSettingOption.powerSavingAlternative];
+          thisSettingValue = thisSettingOption.value;
+        }
+        else {
           thisSettingValue = thisSettingOption.value;
         }
       } else {
