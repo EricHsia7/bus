@@ -413,7 +413,7 @@
   margin-right: 0px;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button {
+.css_route_field[animation="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="false"][stretched="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button {
   transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
 }
 
