@@ -75,7 +75,6 @@ function updateUpdateTimer(): void {
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
-  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -122,7 +121,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       dataUpdateTime: null
     },
     true,
-    playing_animation_setting
+    false
   );
 }
 

@@ -158,7 +158,6 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
 }
 
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
-  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -220,7 +219,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       dataUpdateTime: null
     },
     true,
-    playing_animation_setting
+    false
   );
 }
 
