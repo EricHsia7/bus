@@ -168,7 +168,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         nextSlideElement.setAttribute('code', thisItem.status.code);
         nextSlideElement.innerText = thisItem.status.text;
 
-        if (top >= 0 && left >= 0 && bottom <= windowHeight && right <= windowWidth) {
+        if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
           currentSlideElement.addEventListener(
             'animationend',
             function () {
