@@ -305,7 +305,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
-      if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+      if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0 && animation) {
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
         thisThreadElement.addEventListener(
