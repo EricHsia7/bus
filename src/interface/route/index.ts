@@ -174,6 +174,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -226,7 +227,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       dataUpdateTime: null
     },
     true,
-    false
+    playing_animation_setting
   );
 }
 

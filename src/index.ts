@@ -159,14 +159,15 @@ window.bus = {
     if (bus_initialized === false) {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
-      const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-      setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-      const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-      setUpFolderFieldSkeletonScreen(FolderField);
+      initializeSettings().then(function () {
+        const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
+        const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
+        setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
+        setUpFolderFieldSkeletonScreen(FolderField);
+      });
       checkAppVersion()
         .then((e) => {
           if (e.status === 'ok') {
-            initializeSettings();
             initializeRouteSliding();
             initializeLocationSliding();
             ResizeRouteField();
