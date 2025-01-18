@@ -1,5 +1,5 @@
 import { GeneratedElement, FieldSize } from '../../index';
-import { compareThings } from '../../../tools/index';
+import { booleanToString, compareThings } from '../../../tools/index';
 import { getIconHTML } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 
@@ -70,7 +70,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
 
   var propertyQuantity = properties.length;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   var currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {

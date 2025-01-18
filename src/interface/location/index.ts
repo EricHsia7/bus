@@ -349,6 +349,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   }
   elementQuerySelector(Field, '.css_location_name').innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  Field.setAttribute('animation', booleanToString(animation));
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {

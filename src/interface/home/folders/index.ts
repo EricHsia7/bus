@@ -325,7 +325,8 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
   const foldedContent = integration.foldedContent;
   const folders = integration.folders;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  Field.setAttribute('animation', booleanToString(animation));
 
   const currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
   if (!(folderQuantity === currentFolderSeatQuantity)) {

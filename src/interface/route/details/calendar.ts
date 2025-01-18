@@ -1,5 +1,5 @@
 import { GeneratedElement, FieldSize } from '../../index';
-import { generateIdentifier, compareThings } from '../../../tools/index';
+import { generateIdentifier, compareThings, booleanToString } from '../../../tools/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 
 const calendar_ratio = 100;
@@ -160,7 +160,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   var groupedEvents = calendar.groupedEvents;
   var eventGroups = calendar.eventGroups;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   var currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {

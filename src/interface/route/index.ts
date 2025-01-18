@@ -409,6 +409,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   }
   RouteNameElement.innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  Field.setAttribute('animation', booleanToString(animation));
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;

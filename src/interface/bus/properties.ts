@@ -1,5 +1,5 @@
 import { GeneratedElement, FieldSize } from '../index';
-import { compareThings } from '../../tools/index';
+import { booleanToString, compareThings } from '../../tools/index';
 import { getIconHTML } from '../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 
@@ -71,7 +71,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
 
   var propertyQuantity = properties.length;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   var currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
