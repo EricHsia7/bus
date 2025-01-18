@@ -1,7 +1,7 @@
 import { integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { FieldSize, GeneratedElement } from '../../index';
 import { getIconHTML } from '../../icons/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
@@ -75,6 +75,7 @@ function updateUpdateTimer(): void {
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -120,11 +121,12 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       itemQuantity: defaultItemQuantity,
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation_setting
   );
 }
 
-function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
+function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateType(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('type', thisItem.type);
@@ -168,7 +170,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         nextSlideElement.setAttribute('code', thisItem.status.code);
         nextSlideElement.innerText = thisItem.status.text;
 
-        if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
+        if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth && animation) {
           currentSlideElement.addEventListener(
             'animationend',
             function () {
@@ -396,6 +398,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
 
 async function refreshFolders(): Promise<object> {
   const time = new Date().getTime();
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -403,7 +406,7 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFolderField(HomeFoldersField, integration, false);
+  updateFolderField(HomeFoldersField, integration, false, playing_animation_setting);
   foldersRefreshTimer_lastUpdate = time;
   if (foldersRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();

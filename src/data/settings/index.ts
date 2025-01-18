@@ -409,7 +409,7 @@ let Settings: SettingsObject = {
         powerSavingAlternative: -1
       },
       {
-        name: '開啟直到下次啟動應用程式',
+        name: '開啟直到下次使用',
         value: {
           type: 0,
           string: 'on_until_next_launch'

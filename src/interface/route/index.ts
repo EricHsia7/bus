@@ -1,7 +1,7 @@
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -174,6 +174,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -225,11 +226,12 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       PathAttributeId: [],
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation_setting
   );
 }
 
-function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
+function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisItemElementRect = thisItemElement.getBoundingClientRect();
@@ -253,7 +255,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
 
-      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
+      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth && animation) {
         currentThreadSlideElement.addEventListener(
           'animationend',
           function () {
@@ -491,6 +493,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute(): Promise<object> {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -498,7 +501,7 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
-  updateRouteField(RouteField, integration, false);
+  updateRouteField(RouteField, integration, false, playing_animation_setting);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();

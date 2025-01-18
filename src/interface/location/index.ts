@@ -1,7 +1,7 @@
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -158,6 +158,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
 }
 
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -218,11 +219,12 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       LocationName: '載入中',
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation_setting
   );
 }
 
-function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean): void {
+function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
     function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisElementRect = thisElement.getBoundingClientRect();
@@ -240,7 +242,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
 
-      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
+      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth && animation) {
         currentSlide.addEventListener(
           'animationend',
           function () {
@@ -458,6 +460,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
 async function refreshLocation(): Promise<object> {
   const time = new Date().getTime();
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -465,7 +468,7 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
-  updateLocationField(LocationField, integration, false);
+  updateLocationField(LocationField, integration, false, playing_animation_setting);
   locationRefreshTimer_lastUpdate = time;
   if (locationRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
