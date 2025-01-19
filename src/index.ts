@@ -159,7 +159,7 @@ window.bus = {
     if (bus_initialized === false) {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
-      initializeSettings().then(function () {
+      initializeSettings().then(() => {
         const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
         const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
         setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
