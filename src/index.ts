@@ -161,9 +161,9 @@ window.bus = {
       setSplashScreenIconOffsetY();
       initializeSettings().then(() => {
         const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-        const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
+        const FoldersField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
         setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-        setUpFolderFieldSkeletonScreen(FolderField);
+        setUpFolderFieldSkeletonScreen(FoldersField);
         checkAppVersion()
           .then((e) => {
             if (e.status === 'ok') {
