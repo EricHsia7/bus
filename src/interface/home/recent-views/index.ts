@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getIconHTML } from '../../icons/index';
@@ -40,7 +40,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   };
 }
 
-function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean) {
+function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
@@ -177,14 +177,10 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
 
-  /*
-  if (!previousIntegration.hasOwnProperty('items')) {
-    previousIntegration = integration;
-  }
-*/
   const itemQuantity = integration.itemQuantity;
 
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  Field.setAttribute('animation', booleanToString(animation));
 
   const currentItemSeatQuantity = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`).length;
   if (!(itemQuantity === currentItemSeatQuantity)) {
@@ -221,6 +217,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 }
 
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryRecentViewsFieldSize();
   const defaultItemQuantity = Math.floor(FieldSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
@@ -243,11 +240,13 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
       itemQuantity: items.length,
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation_setting
   );
 }
 
 async function refreshRecentViews(): Promise<object> {
+  const playing_animation_setting = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -255,7 +254,7 @@ async function refreshRecentViews(): Promise<object> {
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
-  updateRecentViewsField(RecentViewsField, integration, false);
+  updateRecentViewsField(RecentViewsField, integration, false, playing_animation_setting);
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   if (recentViewsRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();

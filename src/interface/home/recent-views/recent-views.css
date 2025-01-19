@@ -96,8 +96,8 @@
   display: none;
 }
 
-.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
-.css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
+.css_home_field .css_home_body .css_home_recent_views[animation="true"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
+.css_home_field .css_home_body .css_home_recent_views[animation="true"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
@@ -106,4 +106,9 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
+}
+
+.css_home_field .css_home_body .css_home_recent_views[animation="false"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
+.css_home_field .css_home_body .css_home_recent_views[animation="false"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
+  background: var(--b-cssvar-ededf2);
 }
