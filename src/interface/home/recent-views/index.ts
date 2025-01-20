@@ -6,7 +6,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getIconHTML } from '../../icons/index';
 import { FieldSize, GeneratedElement } from '../../index';
 
-const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_field');
+const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_component');
 
 let previousIntegration = {};
 
