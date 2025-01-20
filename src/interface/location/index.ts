@@ -12,10 +12,12 @@ import { logRecentView } from '../../data/recent-views/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
-const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
-const LocationGroupTabsTrayElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs .css_location_group_tabs_tray');
+const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
+const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
+const LocationGroupTabsTrayElement = elementQuerySelector(LocationGroupTabsElement, '.css_location_group_tabs_tray');
 const LocationGroupTabLineElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tab_line_track .css_location_group_tab_line');
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
+const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
 
 let previousIntegration = {} as IntegratedLocation;
 let previousSkeletonScreen: boolean = false;
@@ -344,12 +346,12 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     };
     cumulativeOffset += width;
   }
-  var offset = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width * 0.5;
+  const offset = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width * 0.5;
   if (!locationSliding_sliding) {
     updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
-  elementQuerySelector(Field, '.css_location_name').innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
-  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
+  LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   Field.setAttribute('animation', booleanToString(animation));
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
