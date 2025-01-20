@@ -160,10 +160,10 @@ window.bus = {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
       initializeSettings().then(() => {
-        const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-        const FoldersField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-        setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-        setUpFolderFieldSkeletonScreen(FoldersField);
+        const HomeRecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_field');
+        const HomeFoldersField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders_field');
+        setUpRecentViewsFieldSkeletonScreen(HomeRecentViewsField);
+        setUpFolderFieldSkeletonScreen(HomeFoldersField);
         checkAppVersion()
           .then((e) => {
             if (e.status === 'ok') {

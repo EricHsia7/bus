@@ -11,7 +11,7 @@ import { promptMessage } from '../../prompt/index';
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
-const HomeFoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders');
+const HomeFoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders_field');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
 let previousIntegration = {} as integratedFolders;
