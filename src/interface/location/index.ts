@@ -15,7 +15,8 @@ const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_h
 const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
 const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
 const LocationGroupTabsTrayElement = elementQuerySelector(LocationGroupTabsElement, '.css_location_group_tabs_tray');
-const LocationGroupTabLineElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tab_line_track .css_location_group_tab_line');
+const LocationGroupTabLineTrackElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tab_line_track');
+const LocationGroupTabLineElement = elementQuerySelector(LocationGroupTabLineTrackElement, '.css_location_group_tab_line');
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
 const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
 
@@ -350,8 +351,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   if (!locationSliding_sliding) {
     updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
+
   LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
   LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+
   Field.setAttribute('animation', booleanToString(animation));
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
