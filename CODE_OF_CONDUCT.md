@@ -39,3 +39,18 @@
 ### Element
 
 1. An Element can contain Elements.
+
+## CSS Naming Rules
+
+1. **Prefix**: Use `css_` to denote CSS classes.
+2. **Context or Component**: Follow the prefix with a context or component name, such as `storage`, `home`, or `folder_manager`.
+3. **Element**: Append the specific element or function within the component, such as `field`, `head`, `title`, or `button_left`.
+4. **Modifiers**: Optionally, use additional descriptors for state or subcomponents, such as `span.css_material_symbols_rounded`.
+
+### Example Pattern
+
+- `.css_<context>_<element>_<modifier>`
+- `.css_storage_field`
+- `.css_storage_head`
+- `.css_storage_button_left`
+- `.css_material_symbols_rounded`
