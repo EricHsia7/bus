@@ -353,6 +353,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   }
 
   LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
+  LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
