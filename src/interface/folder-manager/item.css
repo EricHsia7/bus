@@ -1,10 +1,10 @@
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item {
   position: relative;
   width: 100%;
   height: 55px;
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_icon {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -15,7 +15,7 @@
   align-items: center;
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_icon span.css_material_symbols_rounded {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   user-select: none;
@@ -23,7 +23,7 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_name {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_name {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -38,7 +38,7 @@
   -webkit-user-select: none;
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_status {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_status {
   position: absolute;
   top: 0px;
   right: 45px;
@@ -54,7 +54,7 @@
   word-break: keep-all;
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow {
   position: absolute;
   top: 0px;
   right: 17.5px;
@@ -67,7 +67,7 @@
   -webkit-user-select: none;
 }
 
-.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow span.css_material_symbols_rounded {
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folders_component .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   font-size: 18px;

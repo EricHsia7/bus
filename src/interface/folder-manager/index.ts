@@ -19,7 +19,7 @@ function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
 
 async function initializeFolderManagerField(): void {
   var Field = documentQuerySelector('.css_folder_manager_field');
-  var ListElement = elementQuerySelector(Field, '.css_folder_manager_body .css_folder_manager_folder_list');
+  var ListElement = elementQuerySelector(Field, '.css_folder_manager_body .css_folder_manager_folders_component');
   ListElement.innerHTML = '';
   var foldersWithContent = await listFoldersWithContent();
   for (var item of foldersWithContent) {

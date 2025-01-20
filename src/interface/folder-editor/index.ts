@@ -9,7 +9,7 @@ const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
 const FolderEditorHeadElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_head');
 const LeftButtonElement = elementQuerySelector(FolderEditorHeadElement, '.css_folder_editor_button_left');
 const FolderEditorBodyElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_body');
-const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups');
+const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups_component');
 const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
 const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
 const OpenFolderIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
@@ -101,7 +101,7 @@ export function closeFolderEditor(): void {
 }
 
 export function removeItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
-  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups_component .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
       itemElement.remove();
@@ -122,7 +122,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
 }
 
 export function moveItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): void {
-  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups_component .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {
       switch (direction) {
