@@ -65,7 +65,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: isProduction ? '[contenthash].min.css' : 'index.css'
+        filename: isProduction ? '[contenthash].css' : 'index.css'
         // Output CSS filename
       }),
       new MangleCssClassPlugin({

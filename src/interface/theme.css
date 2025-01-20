@@ -96,6 +96,7 @@
   --b-cssvar-border-radius-none: 0px;
 
   --b-cssvar-transition-duration: 0.32s;
+  --b-cssvar-skeleton-loading-duration: 1.2s;
 }
 
 @media (prefers-color-scheme: dark) {
