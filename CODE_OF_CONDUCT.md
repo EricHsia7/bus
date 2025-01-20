@@ -25,9 +25,14 @@
 3. A Component can contain [Elements](#element) or [Items](#item).
 4. A Component may have an "animation" attribute.
 
+### Group
+
+1. A Group must be inside a [Component](#component).
+2. A Group can contain [Items](#item).
+
 ### Item
 
-1. An Item must be inside a [Component](#component).
+1. An Item must be inside a [Component](#component) or [Group](#group).
 2. An Item usually comes in listing context.
 3. An Item may have a "skeleton-screen" attribute.
 
