@@ -6,7 +6,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getIconHTML } from '../../icons/index';
 import { FieldSize, GeneratedElement } from '../../index';
 
-const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_component');
+const RecentViewsComponent = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_component');
 
 let previousIntegration = {};
 
@@ -40,7 +40,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   };
 }
 
-function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
+function updateRecentViewsComponent(Component: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
@@ -63,6 +63,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       }
       iconElement.innerHTML = getIconHTML(icon);
     }
+
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const titleElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_title');
       let title = '';
@@ -84,14 +85,17 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       }
       titleElement.innerText = title;
     }
+
     function updateTime(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const timeElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_time');
       timeElement.innerText = thisItem.time.relative;
     }
+
     function updateName(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
       nameElement.innerText = thisItem.name;
     }
+
     function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       let onclickScript = '';
       switch (thisItem.type) {
@@ -179,27 +183,27 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 
   const itemQuantity = integration.itemQuantity;
 
-  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  Field.setAttribute('animation', booleanToString(animation));
+  Component.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  Component.setAttribute('animation', booleanToString(animation));
 
-  const currentItemSeatQuantity = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`).length;
+  const currentItemSeatQuantity = elementQuerySelectorAll(Component, `.css_home_recent_views_content .css_home_recent_views_item`).length;
   if (!(itemQuantity === currentItemSeatQuantity)) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const thisRecentViewItemElement = generateElementOfRecentViewItem();
-        elementQuerySelector(Field, `.css_home_recent_views_content`).appendChild(thisRecentViewItemElement.element);
+        elementQuerySelector(Component, `.css_home_recent_views_content`).appendChild(thisRecentViewItemElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const recentViewItemIndex = currentItemSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[recentViewItemIndex].remove();
+        elementQuerySelectorAll(Component, `.css_home_recent_views_content .css_home_recent_views_item`)[recentViewItemIndex].remove();
       }
     }
   }
 
   for (let i = 0; i < itemQuantity; i++) {
-    const thisElement = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
+    const thisElement = elementQuerySelectorAll(Component, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
     thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     const thisItem = integration.items[i];
     if (previousIntegration.hasOwnProperty('items')) {
@@ -233,7 +237,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
       name: ''
     });
   }
-  updateRecentViewsField(
+  updateRecentViewsComponent(
     Field,
     {
       items: items,
@@ -254,7 +258,7 @@ async function refreshRecentViews(): Promise<object> {
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
-  updateRecentViewsField(RecentViewsField, integration, false, playing_animation_setting);
+  updateRecentViewsComponent(RecentViewsComponent, integration, false, playing_animation_setting);
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   if (recentViewsRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
@@ -292,7 +296,7 @@ async function streamRecentViews(): void {
 }
 
 export function initializeRecentViews(): void {
-  setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
+  setUpRecentViewsFieldSkeletonScreen(RecentViewsComponent);
   if (!recentViewsRefreshTimer_streaming) {
     recentViewsRefreshTimer_streaming = true;
     if (!recentViewsRefreshTimer_streamStarted) {
