@@ -9,6 +9,7 @@ import { FieldSize, GeneratedElement } from '../../index';
 const RecentViewsComponent = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views_component');
 
 let previousIntegration = {};
+let previousSkeletonScreen: boolean = false;
 
 let recentViewsRefreshTimer_retryInterval: number = 10 * 1000;
 let recentViewsRefreshTimer_baseInterval: number = 15 * 1000;
@@ -117,12 +118,17 @@ function updateRecentViewsComponent(Component: HTMLElement, integration: integra
       thisElement.setAttribute('onclick', onclickScript);
     }
 
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
+
     if (previousItem === null) {
       updateIcon(thisElement, thisItem);
       updateTitle(thisElement, thisItem);
       updateTime(thisElement, thisItem);
       updateName(thisElement, thisItem);
       updateOnclick(thisElement, thisItem);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.type === previousItem.type)) {
         updateIcon(thisElement, thisItem);
@@ -130,6 +136,7 @@ function updateRecentViewsComponent(Component: HTMLElement, integration: integra
         updateTime(thisElement, thisItem);
         updateName(thisElement, thisItem);
         updateOnclick(thisElement, thisItem);
+        updateSkeletonScreen(thisElement, skeletonScreen);
       } else {
         switch (thisItem.type) {
           case 'location':
@@ -172,6 +179,9 @@ function updateRecentViewsComponent(Component: HTMLElement, integration: integra
             break;
           default:
             break;
+        }
+        if (!(previousSkeletonScreen === skeletonScreen)) {
+          updateSkeletonScreen(thisElement, skeletonScreen);
         }
       }
     }
@@ -218,6 +228,7 @@ function updateRecentViewsComponent(Component: HTMLElement, integration: integra
     }
   }
   previousIntegration = integration;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
