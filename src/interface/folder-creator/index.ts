@@ -4,8 +4,8 @@ import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
-const FolderCreatorBodyElement = elementQuerySelector(FolderCreatorField, '.css_folder_creator_body');
-const FolderCreatorGroupsElement = elementQuerySelector(FolderCreatorBodyElement, '.css_folder_creator_groups');
+const FolderCreatorBodyElement = elementQuerySelector(FolderCreatorField, '.css_folder_creator_field_body');
+const FolderCreatorGroupsElement = elementQuerySelector(FolderCreatorBodyElement, '.css_folder_creator_groups_component');
 const NameInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input');
 const IconInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
 

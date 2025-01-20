@@ -6,18 +6,18 @@
   margin-top: calc(10px + 55px);
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item {
   position: relative;
   width: 100%;
   height: auto;
   display: inline-block;
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group:last-child {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item:last-child {
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group .css_bus_group_head {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item .css_bus_group_head {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;
@@ -28,7 +28,7 @@
   -webkit-user-select: none;
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group .css_bus_group_head .css_bus_group_icon {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item .css_bus_group_head .css_bus_group_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -41,7 +41,7 @@
   -webkit-user-select: none;
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group .css_bus_group_head .css_bus_group_icon span.css_material_symbols_rounded {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item .css_bus_group_head .css_bus_group_icon span.css_material_symbols_rounded {
   height: 15px;
   width: 15px;
   user-select: none;
@@ -50,7 +50,7 @@
   font-size: 18px;
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group .css_bus_group_head .css_bus_group_name {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item .css_bus_group_head .css_bus_group_name {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -65,7 +65,7 @@
   -webkit-user-select: none;
 }
 
-.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_group .css_bus_group_body {
+.css_bus_field .css_bus_body .css_bus_groups_component .css_bus_groups_component_item .css_bus_group_body {
   position: relative;
   width: calc(100% - 20px);
   left: 10px;

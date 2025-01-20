@@ -62,7 +62,7 @@ export function selectFolderIcon(symbol: string): void {
       iconInputElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
       break;
     case 'creator':
-      iconInputElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
+      iconInputElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_field_body .css_folder_creator_groups_component .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
       break;
     default:
       break;
@@ -81,7 +81,7 @@ export function openFolderIconSelector(target: Target): void {
       break;
     case 'creator':
       currentTarget = 'creator';
-      openFolderIconSelectorElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector');
+      openFolderIconSelectorElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_field_body .css_folder_creator_groups_component .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector');
       break;
     default:
       break;

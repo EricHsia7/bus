@@ -28,7 +28,7 @@
 ### Group
 
 1. A Group must be inside a [Component](#component).
-2. A Group can contain [Items](#item).
+2. A Group can contain Groups or [Items](#item).
 
 ### Item
 

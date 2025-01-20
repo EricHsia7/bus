@@ -1,4 +1,4 @@
-.css_folder_creator_field .css_folder_creator_body {
+.css_folder_creator_field .css_folder_creator_field_body {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -10,6 +10,6 @@
   overscroll-behavior: contain;
 }
 
-.css_folder_creator_field .css_folder_creator_body::-webkit-scrollbar {
+.css_folder_creator_field .css_folder_creator_field_body::-webkit-scrollbar {
   display: none;
 }

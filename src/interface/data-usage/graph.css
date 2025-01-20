@@ -1,5 +1,5 @@
 /* body > graph */
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component {
   position: relative;
   left: 10px;
   width: calc(100% - 20px);
@@ -13,7 +13,7 @@
 }
 
 /* body > graph > svg */
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_svg {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component .css_data_usage_graph_component_content {
   position: relative;
   display: inline-flex;
   justify-content: center;
@@ -22,14 +22,14 @@
   min-height: 55px;
 }
 
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_svg svg {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component .css_data_usage_graph_component_content svg {
   position: relative;
   user-select: none;
   -webkit-user-select: none;
 }
 
 /* body > graph > aggregation periods */
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component .css_data_usage_graph_component_aggregation_periods_component {
   position: relative;
   left: 10px;
   width: calc(100% - 20px);
@@ -43,7 +43,7 @@
 }
 
 /* body > graph > aggregation periods > aggregation period */
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods .css_data_usage_graph_aggregation_period {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component .css_data_usage_graph_component_aggregation_periods_component .css_data_usage_graph_aggregation_period {
   background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   font-size: 15px;
@@ -58,7 +58,7 @@
 }
 
 /* highlighted: true */
-.css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods .css_data_usage_graph_aggregation_period[highlighted="true"] {
+.css_data_usage_field .css_data_usage_field_body .css_data_usage_graph_component .css_data_usage_graph_component_aggregation_periods_component .css_data_usage_graph_aggregation_period[highlighted="true"] {
   background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
   color: var(--b-cssvar-main-color);
 }
