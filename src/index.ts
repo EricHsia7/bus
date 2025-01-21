@@ -340,4 +340,5 @@ window.bus = {
     closeBus
   }
 };
+
 export default window.bus;
