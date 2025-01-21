@@ -83,34 +83,43 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldHeight = FieldSize.height;
   const defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
   const defaultFolderQuantity = 3;
-  let foldedContent = {};
-  let folders = {};
+  let foldedContent = {} as integratedFolders['foldedContent'];
+  let folders = {} as integratedFolders['folders'];
   for (let i = 0; i < defaultFolderQuantity; i++) {
-    const folderKey = `f_${i}`;
+    const folderKey: string = `f_${i}`;
     foldedContent[folderKey] = [];
     folders[folderKey] = {
       name: '',
       index: i,
-      icon: ''
+      icon: '',
+      default: false,
+      storeIndex: null,
+      contentType: [],
+      id: '',
+      time: '',
+      timeNumber: 0
     };
     for (let j = 0; j < defaultItemQuantity[folderKey]; j++) {
       foldedContent[folderKey].push({
         type: 'stop',
-        id: null,
+        id: 0,
+        time: '',
+        name: '',
         status: {
           code: 0,
-          text: null
+          text: ''
         },
-        name: null,
+        direction: 0,
         route: {
-          name: null,
+          name: '',
           endPoints: {
-            departure: null,
-            destination: null
+            departure: '',
+            destination: ''
           },
-          id: null,
+          id: 0,
           pathAttributeId: []
-        }
+        },
+        index: j
       });
     }
   }
@@ -368,10 +377,10 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
       if (!(thisFolder.icon === previousFolder.icon)) {
         updateIcon(thisElement, thisFolder);
       }
-      if (!(previousAnimation === animation)) {
+      if (!(animation === previousAnimation)) {
         updateAnimation(thisElement, animation);
       }
-      if (!(previousSkeletonScreen === skeletonScreen)) {
+      if (!(skeletonScreen === previousSkeletonScreen)) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
