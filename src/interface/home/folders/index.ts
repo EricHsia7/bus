@@ -1,7 +1,7 @@
 import { integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { FieldSize, GeneratedElement } from '../../index';
 import { getIconHTML } from '../../icons/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
@@ -16,6 +16,7 @@ const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_
 
 let previousIntegration = {} as integratedFolders;
 let previousSkeletonScreen: boolean = false;
+let previousAnimation: boolean = true;
 
 let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 15 * 1000;
@@ -75,6 +76,7 @@ function updateUpdateTimer(): void {
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -120,15 +122,17 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       itemQuantity: defaultItemQuantity,
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation
   );
 }
 
-function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
+function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement, thisItem, previousItem) {
     function updateType(thisElement: HTMLElement, thisItem: object): void {
       thisElement.setAttribute('type', thisItem.type);
     }
+
     function updateIcon(thisElement: HTMLElement, thisItem: object): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
       let icon = '';
@@ -151,7 +155,8 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       }
       iconElement.innerHTML = getIconHTML(icon);
     }
-    function updateStatus(thisElement: HTMLElement, thisItem: object): void {
+
+    function updateStatus(thisElement: HTMLElement, thisItem: object, animation: boolean): void {
       if (thisItem.type === 'stop') {
         const thisElementRect = thisElement.getBoundingClientRect();
         const top = thisElementRect.top;
@@ -168,7 +173,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         nextSlideElement.setAttribute('code', thisItem.status.code);
         nextSlideElement.innerText = thisItem.status.text;
 
-        if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+        if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
           currentSlideElement.addEventListener(
             'animationend',
             function () {
@@ -185,6 +190,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         }
       }
     }
+
     function updateMain(thisElement: HTMLElement, thisItem: object): void {
       let main: string = '';
       switch (thisItem.type) {
@@ -206,6 +212,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       }
       elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = main;
     }
+
     function updateContext(thisElement: HTMLElement, thisItem: object): void {
       let context: string = '';
       switch (thisItem.type) {
@@ -227,6 +234,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       }
       elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
+
     function updateButton(thisElement: HTMLElement, thisItem: object): void {
       const buttonElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_button');
       let onclick = '';
@@ -246,25 +254,33 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       }
       buttonElement.setAttribute('onclick', onclick);
     }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
+
     if (previousItem === null) {
       updateType(thisElement, thisItem);
       updateIcon(thisElement, thisItem);
-      updateStatus(thisElement, thisItem);
+      updateStatus(thisElement, thisItem, animation);
       updateMain(thisElement, thisItem);
       updateContext(thisElement, thisItem);
       updateButton(thisElement, thisItem);
+      updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.type === previousItem.type)) {
         updateType(thisElement, thisItem);
         updateIcon(thisElement, thisItem);
-        updateStatus(thisElement, thisItem);
+        updateStatus(thisElement, thisItem, animation);
         updateMain(thisElement, thisItem);
         updateContext(thisElement, thisItem);
         updateButton(thisElement, thisItem);
+        updateAnimation(thisElement, animation);
         updateSkeletonScreen(thisElement, skeletonScreen);
       } else {
         switch (thisItem.type) {
@@ -277,7 +293,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
               updateMain(thisElement, thisItem);
             }
             if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-              updateStatus(thisElement, thisItem);
+              updateStatus(thisElement, thisItem, animation);
             }
             break;
           case 'route':
@@ -310,6 +326,9 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         }
         if (!(skeletonScreen === previousSkeletonScreen)) {
           updateSkeletonScreen(thisElement, skeletonScreen);
+        }
+        if (!(animation === previousAnimation)) {
+          updateAnimation(thisElement, animation);
         }
       }
     }
@@ -392,10 +411,12 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
   }
   previousIntegration = integration;
   previousSkeletonScreen = skeletonScreen;
+  previousAnimation = animation;
 }
 
 async function refreshFolders(): Promise<object> {
   const time = new Date().getTime();
+  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -403,7 +424,7 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFolderField(HomeFoldersField, integration, false);
+  updateFolderField(HomeFoldersField, integration, false, playing_animation);
   foldersRefreshTimer_lastUpdate = time;
   if (foldersRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();

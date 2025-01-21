@@ -5,6 +5,8 @@ import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query
 import { getSettingOptionValue, SettingSelectOptionBooleanValue } from '../../data/settings/index';
 
 let previousProperties = [];
+let previousSkeletonScreen: boolean = false;
+let previousAnimation: boolean = true;
 
 function queryBusPropertiesFieldSize(): FieldSize {
   return {
@@ -67,8 +69,12 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
-      updateSkeletonScreen(thisElement, skeletonScreen);
-      updateAnimation(thisElement, animation);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisElement, animation);
+      }
     }
   }
 
@@ -104,4 +110,6 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   }
 
   previousProperties = properties;
+  previousSkeletonScreen = skeletonScreen;
+  previousAnimation = animation;
 }
