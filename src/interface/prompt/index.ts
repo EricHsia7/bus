@@ -12,13 +12,13 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
     }
   }
 
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  //const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const promptID: string = generateIdentifier();
 
   const promptElement = document.createElement('div');
   promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
-  promptElement.setAttribute('animation', booleanToString(playing_animation));
+  //promptElement.setAttribute('animation', booleanToString(playing_animation));
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
