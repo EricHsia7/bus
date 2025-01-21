@@ -248,7 +248,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 }
 
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryRecentViewsFieldSize();
   const defaultItemQuantity = Math.floor(FieldSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
@@ -277,7 +277,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
 }
 
 async function refreshRecentViews(): Promise<object> {
-  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;

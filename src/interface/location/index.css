@@ -1,10 +1,10 @@
-.css_location_field[skeleton-screen="true"] .css_location_head .css_location_name span,
-.css_location_field[skeleton-screen="true"] .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab span,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch,
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon,
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
+.css_location_field .css_location_head .css_location_name[animation="true"][skeleton-screen="true"] span,
+.css_location_field .css_location_head .css_location_group_tabs[animation="true"][skeleton-screen="true"] .css_location_group_tabs_tray .css_location_group_tab span,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_icon,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_value {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
@@ -13,4 +13,14 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
+}
+
+.css_location_field .css_location_head .css_location_name[animation="false"][skeleton-screen="true"] span,
+.css_location_field .css_location_head .css_location_group_tabs[animation="false"][skeleton-screen="true"] .css_location_group_tabs_tray .css_location_group_tab span,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="false"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="false"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="false"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="false"][skeleton-screen="true"] .css_location_details_property_icon,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="false"][skeleton-screen="true"] .css_location_details_property_value {
+  background: var(--b-cssvar-ededf2);
 }

@@ -29,7 +29,7 @@ export function closeBus(): void {
 
 async function initializeBusPage(id: number): void {
   setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
-  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
   updateBusPropertiesField(BusGroupProperties, integration.properties, false, playing_animation);

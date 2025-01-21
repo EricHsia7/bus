@@ -77,7 +77,7 @@ function updateUpdateTimer(): void {
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -480,7 +480,7 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
 
 async function refreshFolders(): Promise<object> {
   const time = new Date().getTime();
-  const playing_animation = getSettingOptionValue('playing_animation') as SettingSelectOptionBooleanValue;
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;

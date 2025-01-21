@@ -12,12 +12,15 @@ import { logRecentView } from '../../data/recent-views/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
+const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
 const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
-const LocationGroupTabsTrayElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs .css_location_group_tabs_tray');
+const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
+const LocationGroupTabsTrayElement = elementQuerySelector(LocationGroupTabsElement, '.css_location_group_tabs_tray');
 const LocationGroupTabLineElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tab_line_track .css_location_group_tab_line');
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
 
 let previousIntegration = {} as IntegratedLocation;
+let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
 let locationSliding_initialIndex: number = 0;
@@ -158,6 +161,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
 }
 
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryLocationFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -218,13 +222,14 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       LocationName: '載入中',
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation
   );
 }
 
-function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean): void {
+function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
-    function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+    function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisElementRect = thisElement.getBoundingClientRect();
       const top = thisElementRect.top;
       const left = thisElementRect.left;
@@ -240,7 +245,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
 
-      if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentSlide.addEventListener(
           'animationend',
           function () {
@@ -256,30 +261,40 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
         currentSlide.innerText = thisItem.status.text;
       }
     }
+
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
       elementQuerySelector(thisElement, '.css_location_group_item_route_direction').innerText = thisItem.route_direction;
     }
+
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
+
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
         thisElement.setAttribute('stretched', 'false');
       }
     }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
+
     if (previousItem === null) {
-      updateStatus(thisElement, thisItem);
+      updateStatus(thisElement, thisItem, animation);
       updateName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
+      updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisElement, thisItem);
+        updateStatus(thisElement, thisItem, animation);
       }
       if (!compareThings(previousItem.route_name, thisItem.route_name) || !compareThings(previousItem.route_direction, thisItem.route_direction)) {
         updateName(thisElement, thisItem);
@@ -287,25 +302,37 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisElement, animation);
+      }
       if (!(skeletonScreen === previousSkeletonScreen)) {
         updateStretch(thisElement, skeletonScreen);
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
   }
+
   function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
+
     function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       elementQuerySelector(thisElement, '.css_location_details_property_value').innerHTML = thisProperty.value;
     }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
+
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
+      updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!compareThings(previousProperty.icon, thisProperty.icon)) {
@@ -313,6 +340,9 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       }
       if (!compareThings(previousProperty.value, thisProperty.value)) {
         updateValue(thisElement, thisProperty);
+      }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisElement, animation);
       }
       if (!(skeletonScreen === previousSkeletonScreen)) {
         updateSkeletonScreen(thisElement, skeletonScreen);
@@ -346,8 +376,13 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   if (!locationSliding_sliding) {
     updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
   }
-  elementQuerySelector(Field, '.css_location_name').innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
-  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+
+  LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
+  LocationNameElement.setAttribute('animation', booleanToString(animation));
+  LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  LocationGroupTabsElement.setAttribute('animation', booleanToString(animation));
+  LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  // TODO: updateTab
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
