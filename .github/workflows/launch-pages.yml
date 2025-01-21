@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-visible-animation
+      - dev-power-saving-option-v2
 
 jobs:
   launch:
