@@ -7,9 +7,6 @@
 **Implemented enhancements:**
 
 - Improve performance [\#89](https://github.com/EricHsia7/bus/pull/89) ([EricHsia7](https://github.com/EricHsia7))
-
-**Merged pull requests:**
-
 - Improve document manipulation [\#88](https://github.com/EricHsia7/bus/pull/88) ([EricHsia7](https://github.com/EricHsia7))
 
 ## [v2.0.1](https://github.com/EricHsia7/bus/tree/v2.0.1) (2025-01-16)
