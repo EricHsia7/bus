@@ -2,6 +2,7 @@ import { GeneratedElement, FieldSize } from '../../index';
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getIconHTML } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { getSettingOptionValue } from '../../../data/settings/index';
 
 let previousProperties = [];
 let previousAnimation: boolean = true;
@@ -24,7 +25,8 @@ function generateElementOfProperty(): GeneratedElement {
   };
 }
 
-export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
+export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryPropertiesFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -37,7 +39,7 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
       value: ''
     });
   }
-  updatePropertiesField(Field, properties, true);
+  updatePropertiesField(Field, properties, true, playing_animation);
 }
 
 export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {

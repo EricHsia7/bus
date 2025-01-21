@@ -5,6 +5,7 @@ import { generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
 import { isSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
+import { getSettingOptionValue } from '../../../data/settings/index';
 
 async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: Array<number>): void {
   const actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
@@ -21,10 +22,11 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier('r');
-  var integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
-  updatePropertiesField(propertiesField, integration.properties, false);
-  updateCalendarField(calendarField, integration.calendar, false);
+  const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
+  updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
+  updateCalendarField(calendarField, integration.calendar, false, playing_animation);
 }
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
