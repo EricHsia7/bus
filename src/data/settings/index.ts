@@ -598,7 +598,7 @@ export function getSettingOptionValue(key: string): SettingSelectOptionStringVal
       const powerSavingSettingValueString = powerSavingSettingValue.string;
       const thisSetting = Settings[key] as SettingSelect;
       let thisSettingOption = thisSetting.options[thisSetting.option];
-      if (powerSavingSettingValueString === 'on' || powerSavingSettingValueString === 'on_until_next_launch') {
+      if (powerSavingSettingValueString === 'on') {
         if (thisSettingOption.resourceIntensive) {
           thisSettingOption = thisSetting.options[thisSettingOption.powerSavingAlternative];
         }
