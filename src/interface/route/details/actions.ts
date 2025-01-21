@@ -2,6 +2,7 @@ import { searchRouteByRouteID } from '../../../data/search/index';
 import { getPermalink } from '../../../tools/permalink';
 import { promptMessage } from '../../prompt/index';
 
+
 export async function shareRoutePermalink(RouteID: number): void {
   var search = await searchRouteByRouteID(RouteID);
   if (search.length > 0) {

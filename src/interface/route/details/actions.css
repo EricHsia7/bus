@@ -35,6 +35,9 @@
   -webkit-user-select: none;
   color: var(--b-cssvar-333333);
   font-size: 29px;
+}
+
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[animation="true"] span.css_material_symbols_rounded {
   transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
 }
 
