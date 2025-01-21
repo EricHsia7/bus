@@ -111,7 +111,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   for (let i = 0; i < propertyQuantity; i++) {
     const thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
     const thisProperty = properties[i];
-    if (previousProperties === []) {
+    if (previousProperties.length === 0) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
       updateProperty(thisPropertyElement, thisProperty, previousProperties[i]);
