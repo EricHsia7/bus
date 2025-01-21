@@ -82,7 +82,7 @@
 }
 
 /* skeleton screen: true */
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
+.css_route_field .css_route_head .css_route_name[skeleton-screen="true"] span {
   color: rgba(0, 0, 0, 0);
   border-radius: var(--b-cssvar-border-radius-large);
 }
