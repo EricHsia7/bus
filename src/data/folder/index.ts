@@ -1,4 +1,4 @@
-import { parseEstimateTime } from '../apis/index';
+import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
 import { getSettingOptionValue } from '../settings/index';
@@ -253,8 +253,23 @@ export async function listFoldersWithContent(): Promise<FoldersWithContentArray>
   return result;
 }
 
+interface integratedFolderStopRoute extends FolderStopRoute {
+  pathAttributeId: Array<number>;
+}
+
+export interface integratedFolderStop extends FolderStop {
+  status: EstimateTimeStatus;
+  route: integratedFolderStopRoute;
+}
+
+export interface integratedFolderRoute extends FolderRoute {
+  pathAttributeId: Array<number>;
+}
+
+export type integratedFolderContent = integratedFolderStop | integratedFolderRoute | FolderBus | FolderEmpty;
+
 export interface integratedFolders {
-  foldedContent: { [key: string]: Array<FolderContent> }; // TODO: integratedFolderContent
+  foldedContent: { [key: string]: Array<integratedFolderContent> };
   folders: { [key: string]: Folder };
   folderQuantity: number;
   itemQuantity: { [key: string]: number };

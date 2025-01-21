@@ -1,4 +1,4 @@
-import { integratedFolders, integrateFolders } from '../../../data/folder/index';
+import { Folder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { FieldSize, GeneratedElement } from '../../index';
 import { getIconHTML } from '../../icons/index';
 import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
@@ -7,6 +7,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { getDataReceivingProgress } from '../../../data/apis/loader';
 import { promptMessage } from '../../prompt/index';
+import { MaterialSymbols } from '../../icons/material-symbols-type';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
@@ -80,12 +81,12 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  var defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
-  var defaultFolderQuantity = 3;
-  var foldedContent = {};
-  var folders = {};
+  const defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
+  const defaultFolderQuantity = 3;
+  let foldedContent = {};
+  let folders = {};
   for (let i = 0; i < defaultFolderQuantity; i++) {
-    var folderKey = `f_${i}`;
+    const folderKey = `f_${i}`;
     foldedContent[folderKey] = [];
     folders[folderKey] = {
       name: '',
@@ -127,15 +128,15 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateFolderField(Field: HTMLElement, integration: object, skeletonScreen: boolean, animation: boolean): void {
-  function updateItem(thisElement, thisItem, previousItem) {
-    function updateType(thisElement: HTMLElement, thisItem: object): void {
+function updateFolderField(Field: HTMLElement, integration: integratedFolders, skeletonScreen: boolean, animation: boolean): void {
+  function updateItem(thisElement: HTMLElement, thisItem: integratedFolderContent, previousItem: integratedFolderContent | null) {
+    function updateType(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       thisElement.setAttribute('type', thisItem.type);
     }
 
-    function updateIcon(thisElement: HTMLElement, thisItem: object): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
-      let icon = '';
+      let icon = '' as MaterialSymbols;
       switch (thisItem.type) {
         case 'stop':
           icon = 'location_on';
@@ -156,7 +157,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       iconElement.innerHTML = getIconHTML(icon);
     }
 
-    function updateStatus(thisElement: HTMLElement, thisItem: object, animation: boolean): void {
+    function updateStatus(thisElement: HTMLElement, thisItem: integratedFolderContent, animation: boolean): void {
       if (thisItem.type === 'stop') {
         const thisElementRect = thisElement.getBoundingClientRect();
         const top = thisElementRect.top;
@@ -170,14 +171,14 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
         const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
         const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
-        nextSlideElement.setAttribute('code', thisItem.status.code);
+        nextSlideElement.setAttribute('code', thisItem.status.code.toString());
         nextSlideElement.innerText = thisItem.status.text;
 
         if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
           currentSlideElement.addEventListener(
             'animationend',
             function () {
-              currentSlideElement.setAttribute('code', thisItem.status.code);
+              currentSlideElement.setAttribute('code', thisItem.status.code.toString());
               currentSlideElement.innerText = thisItem.status.text;
               currentSlideElement.classList.remove('css_slide_fade_out');
             },
@@ -185,13 +186,13 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
           );
           currentSlideElement.classList.add('css_slide_fade_out');
         } else {
-          currentSlideElement.setAttribute('code', thisItem.status.code);
+          currentSlideElement.setAttribute('code', thisItem.status.code.toString());
           currentSlideElement.innerText = thisItem.status.text;
         }
       }
     }
 
-    function updateMain(thisElement: HTMLElement, thisItem: object): void {
+    function updateMain(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       let main: string = '';
       switch (thisItem.type) {
         case 'stop':
@@ -213,7 +214,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = main;
     }
 
-    function updateContext(thisElement: HTMLElement, thisItem: object): void {
+    function updateContext(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       let context: string = '';
       switch (thisItem.type) {
         case 'stop':
@@ -223,7 +224,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
           context = `${thisItem.endPoints.departure} \u2194 ${thisItem.endPoints.destination}`;
           break;
         case 'bus':
-          context = thisItem.currentRoute.name; // TODO: integration
+          // context = thisItem.currentRoute.name; // TODO: integration
           break;
         case 'empty':
           context = '提示';
@@ -235,7 +236,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
       elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
     }
 
-    function updateButton(thisElement: HTMLElement, thisItem: object): void {
+    function updateButton(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       const buttonElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_button');
       let onclick = '';
       switch (thisItem.type) {
@@ -334,6 +335,48 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
     }
   }
 
+  function updateFolder(thisElement: HTMLElement, thisFolder: Folder, previousFolder: Folder | null): void {
+    function updateName(thisElement: HTMLElement, thisFolder: Folder): void {
+      const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
+      const thisNameElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
+      thisNameElememt.innerText = thisFolder.name;
+    }
+
+    function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
+      const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
+      const thisIconElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
+      thisIconElememt.innerHTML = getIconHTML(thisFolder.icon);
+    }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
+
+    if (previousFolder === null) {
+      updateName(thisElement, thisFolder);
+      updateIcon(thisElement, thisFolder);
+      updateAnimation(thisElement, animation);
+      updateSkeletonScreen(thisElement, skeletonScreen);
+    } else {
+      if (!(thisFolder.name === previousFolder.name)) {
+        updateName(thisElement, thisFolder);
+      }
+      if (!(thisFolder.icon === previousFolder.icon)) {
+        updateIcon(thisElement, thisFolder);
+      }
+      if (!(previousAnimation === animation)) {
+        updateAnimation(thisElement, animation);
+      }
+      if (!(previousSkeletonScreen === skeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
+    }
+  }
+
   const FieldSize = queryFolderFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -343,7 +386,7 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
   const foldedContent = integration.foldedContent;
   const folders = integration.folders;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  // Field.setAttribute('skeleton-screen', skeletonScreen);
 
   const currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
   if (!(folderQuantity === currentFolderSeatQuantity)) {
@@ -386,10 +429,22 @@ function updateFolderField(Field: HTMLElement, integration: object, skeletonScre
   for (let i = 0; i < folderQuantity; i++) {
     const folderKey = `f_${i}`;
     const thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
-    thisFolderElement.setAttribute('skeleton-screen', skeletonScreen);
-    const thisHeadElement = elementQuerySelector(thisFolderElement, `.css_home_folder_head`);
-    elementQuerySelector(thisHeadElement, '.css_home_folder_name').innerText = folders[folderKey].name;
-    elementQuerySelector(thisHeadElement, '.css_home_folder_icon').innerHTML = getIconHTML(folders[folderKey].icon);
+    const thisFolder = folders[folderKey];
+    if (previousIntegration.hasOwnProperty('folders')) {
+      if (previousIntegration.folders.hasOwnProperty(folderKey)) {
+        if (previousIntegration.folders[folderKey]) {
+          const previousFolder = previousIntegration.folders[folderKey];
+          updateFolder(thisFolderElement, thisFolder, previousFolder);
+        } else {
+          updateFolder(thisFolderElement, thisFolder, null);
+        }
+      } else {
+        updateFolder(thisFolderElement, thisFolder, null);
+      }
+    } else {
+      updateFolder(thisFolderElement, thisFolder, null);
+    }
+
     for (let j = 0; j < itemQuantity[folderKey]; j++) {
       const thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
       const thisItem = foldedContent[folderKey][j];
