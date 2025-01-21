@@ -53,10 +53,12 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      console.log(0, animation);
       thisElement.setAttribute('animation', booleanToString(animation));
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      console.log(1, skeletonScreen);
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
@@ -107,8 +109,8 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   }
 
   for (let i = 0; i < propertyQuantity; i++) {
-    var thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
-    var thisProperty = properties[i];
+    const thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
+    const thisProperty = properties[i];
     if (previousProperties === []) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
