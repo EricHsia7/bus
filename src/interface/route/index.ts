@@ -253,7 +253,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
 
-      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
+      if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentThreadSlideElement.addEventListener(
           'animationend',
           function () {

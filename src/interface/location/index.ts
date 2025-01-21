@@ -240,7 +240,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       nextSlide.setAttribute('code', thisItem.status.code);
       nextSlide.innerText = thisItem.status.text;
 
-      if (bottom >= 0 && top <= windowHeight && right >= 0 && left <= windowWidth) {
+      if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentSlide.addEventListener(
           'animationend',
           function () {
