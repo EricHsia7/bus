@@ -65,8 +65,8 @@
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
-.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[skeleton-screen="true"] .css_bus_property_icon,
-.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[skeleton-screen="true"] .css_bus_property_value {
+.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[animation="true"][skeleton-screen="true"] .css_bus_property_icon,
+.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[animation="true"][skeleton-screen="true"] .css_bus_property_value {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
@@ -75,4 +75,9 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
+}
+
+.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[animation="false"][skeleton-screen="true"] .css_bus_property_icon,
+.css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[animation="false"][skeleton-screen="true"] .css_bus_property_value {
+  background: var(--b-cssvar-ededf2);
 }
