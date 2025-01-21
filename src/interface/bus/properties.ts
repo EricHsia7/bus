@@ -110,6 +110,6 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   }
 
   previousProperties = properties;
-  previousSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }

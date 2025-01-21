@@ -474,8 +474,8 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
   previousIntegration = integration;
-  previousSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshFolders(): Promise<object> {

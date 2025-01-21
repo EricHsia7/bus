@@ -22,6 +22,7 @@ const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_ro
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
 let previousIntegration = {} as IntegratedRoute;
+let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
 let routeSliding_initialIndex: number = 0;
@@ -229,7 +230,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean) {
+function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisItemElementRect = thisItemElement.getBoundingClientRect();
@@ -280,26 +281,33 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         currentItemSlideElement.innerText = thisItem.status.text;
       }
     }
+
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       thisItemElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
       thisThreadBoxElement.setAttribute('segment-buffer', booleanToString(thisItem.segmentBuffer.isSegmentBuffer));
     }
+
     function updateName(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_name').innerText = thisItem.name;
     }
+
     function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_route_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_route_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_route_group_item_bus_title"><div class="css_route_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_route_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_route_group_item_bus_attributes"><div class="css_route_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_route_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_route_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
+
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes').innerHTML = thisItem.overlappingRoutes.length === 0 ? '<div class="css_route_group_item_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_route_group_item_overlapping_route"><div class="css_route_group_item_overlapping_route_title"><div class="css_route_group_item_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_route_group_item_overlapping_route_name">${route.name}</div></div><div class="css_route_group_item_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_route_group_item_overlapping_route_actions"><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.folder.openSaveToFolder('route', [${route.RouteID}])">收藏路線</div></div></div>`).join('');
     }
+
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_route_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_route_group_item_bus_arrival_time_attributes"><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
     }
+
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
       thisItemElement.setAttribute('nearest', booleanToString(thisItem.nearest));
       thisThreadBoxElement.setAttribute('nearest', booleanToString(thisItem.nearest));
     }
+
     function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
       var previousProgress = previousItem?.progress || 0;
       var thisProgress = thisItem?.progress || 0;
@@ -320,16 +328,24 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
       }
     }
+
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
         thisItemElement.setAttribute('stretched', 'false');
         thisThreadBoxElement.setAttribute('stretched', 'false');
       }
     }
+
+    function updateAnimation(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, animation: boolean): void {
+      thisItemElement.setAttribute('animation', booleanToString(animation));
+      thisThreadBoxElement.setAttribute('animation', booleanToString(animation));
+    }
+
     function updateSkeletonScreen(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
       thisItemElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
       thisThreadBoxElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
+
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
@@ -348,6 +364,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       updateThread(thisThreadBoxElement, thisItem, previousItem);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
+      updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSaveToFolderButton(thisItemElement, thisItem);
     } else {
@@ -373,6 +390,9 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateName(thisItemElement, thisItem);
         updateOverlappingRoutes(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
+      }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       }
       if (!(skeletonScreen === previousSkeletonScreen)) {
         updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
@@ -487,6 +507,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
   previousIntegration = integration;
+  previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
 }
 
