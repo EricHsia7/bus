@@ -387,18 +387,9 @@ let Settings: SettingsObject = {
     status: '',
     type: 'select',
     action: `bus.settings.openSettingsOptions('power_saving')`,
-    default_option: 0,
-    option: 0,
+    default_option: 1,
+    option: 1,
     options: [
-      {
-        name: '關閉',
-        value: {
-          type: 0,
-          string: 'off'
-        },
-        resourceIntensive: false,
-        powerSavingAlternative: -1
-      },
       {
         name: '開啟',
         value: {
@@ -409,10 +400,10 @@ let Settings: SettingsObject = {
         powerSavingAlternative: -1
       },
       {
-        name: '開啟直到下次使用',
+        name: '關閉',
         value: {
           type: 0,
-          string: 'on_until_next_launch'
+          string: 'off'
         },
         resourceIntensive: false,
         powerSavingAlternative: -1
