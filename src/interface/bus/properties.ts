@@ -47,7 +47,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
       elementQuerySelector(thisElement, '.css_bus_property_value').innerText = thisProperty.value;
     }
 
-    function updateAnimation(thisElement, animation: boolean): void {
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
       thisElement.setAttribute('animation', animation);
     }
 
