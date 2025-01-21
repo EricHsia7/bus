@@ -17,8 +17,10 @@ const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
 const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
 const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
 const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
-const RouteGroupTabsTrayElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs .css_route_group_tabs_tray');
-const RouteGroupTabLineElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track .css_route_group_tab_line');
+const RouteGroupTabsElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs');
+const RouteGroupTabsTrayElement = elementQuerySelector(RouteGroupTabsElement, '.css_route_group_tabs_tray');
+const RouteGroupTabLineTrackElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track');
+const RouteGroupTabLineElement = elementQuerySelector(RouteGroupTabLineTrackElement, '.css_route_group_tab_line');
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
 let previousIntegration = {} as IntegratedRoute;
@@ -175,6 +177,7 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryRouteFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -226,7 +229,8 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       PathAttributeId: [],
       dataUpdateTime: null
     },
-    true
+    true,
+    playing_animation
   );
 }
 
@@ -426,8 +430,15 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   if (!routeSliding_sliding) {
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
+
   RouteNameElement.innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
-  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  RouteNameElement.setAttribute('animation', booleanToString(animation));
+  RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  RouteGroupTabsElement.setAttribute('animation', booleanToString(animation));
+  RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
+  RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
@@ -506,12 +517,14 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       }
     }
   }
+
   previousIntegration = integration;
   previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
 }
 
 async function refreshRoute(): Promise<object> {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -519,7 +532,7 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
-  updateRouteField(RouteField, integration, false);
+  updateRouteField(RouteField, integration, false, playing_animation);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
