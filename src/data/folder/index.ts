@@ -288,7 +288,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   const foldersWithContent = await listFoldersWithContent();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  // const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
   let StopIDs = [];
   for (const folderWithContent1 of foldersWithContent) {
@@ -368,9 +368,9 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  if (refresh_interval_setting.dynamic) {
+  // if (refresh_interval_setting.dynamic) {
     await recordEstimateTimeForUpdateRate(EstimateTime);
-  }
+ // }
   await recordEstimateTimeForBusArrivalTime(EstimateTime);
   return result;
 }
