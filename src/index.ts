@@ -151,194 +151,197 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 
-let bus_initialized = false;
-let bus_secondly_initialized = false;
+try {
+  let bus_initialized = false;
+  let bus_secondly_initialized = false;
 
-window.bus = {
-  initialize: function () {
-    if (bus_initialized === false) {
-      bus_initialized = true;
-      setSplashScreenIconOffsetY();
-      initializeSettings().then(function () {
-        const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-        setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-        const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-        setUpFolderFieldSkeletonScreen(FolderField);
-        checkAppVersion()
-          .then((e) => {
-            if (e.status === 'ok') {
-              initializeRouteSliding();
-              initializeLocationSliding();
-              ResizeRouteField();
-              ResizeLocationField();
-              ResizeSearchInputCanvasSize();
-              window.addEventListener('resize', () => {
+  window.bus = {
+    initialize: function () {
+      if (bus_initialized === false) {
+        bus_initialized = true;
+        setSplashScreenIconOffsetY();
+        initializeSettings().then(function () {
+          const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
+          setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
+          const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
+          setUpFolderFieldSkeletonScreen(FolderField);
+          checkAppVersion()
+            .then((e) => {
+              if (e.status === 'ok') {
+                initializeRouteSliding();
+                initializeLocationSliding();
                 ResizeRouteField();
                 ResizeLocationField();
                 ResizeSearchInputCanvasSize();
-              });
-              if (screen) {
-                if (screen.orientation) {
-                  screen.orientation.addEventListener('change', () => {
-                    ResizeRouteField();
-                    ResizeLocationField();
-                    ResizeSearchInputCanvasSize();
-                  });
+                window.addEventListener('resize', () => {
+                  ResizeRouteField();
+                  ResizeLocationField();
+                  ResizeSearchInputCanvasSize();
+                });
+                if (screen) {
+                  if (screen.orientation) {
+                    screen.orientation.addEventListener('change', () => {
+                      ResizeRouteField();
+                      ResizeLocationField();
+                      ResizeSearchInputCanvasSize();
+                    });
+                  }
                 }
+                initializeRecentViews();
+                initializeFolderStores().then(() => {
+                  initializeFolders();
+                });
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
+                mediaQuery.addEventListener('change', function () {
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+                searchInputElement.addEventListener('paste', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+                searchInputElement.addEventListener('cut', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+                searchInputElement.addEventListener('selectionchange', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+                document.addEventListener('selectionchange', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+                searchInputElement.addEventListener('keyup', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+                });
+
+                const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+                searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                document.addEventListener('selectionchange', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                openPermalink();
+                fadeOutSplashScreen(function () {
+                  askForPositioningPermission();
+                });
               }
-              initializeRecentViews();
-              initializeFolderStores().then(() => {
-                initializeFolders();
-              });
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
-              mediaQuery.addEventListener('change', function () {
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('paste', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('cut', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('keyup', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-
-              const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
-              searchMaterialSymbolsInputElement.addEventListener('paste', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('cut', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              openPermalink();
-              fadeOutSplashScreen(function () {
-                askForPositioningPermission();
-              });
-            }
-            if (e.status === 'fetchError' || e.status === 'unknownError') {
+              if (e.status === 'fetchError' || e.status === 'unknownError') {
+                fadeOutSplashScreen();
+                alert(e.status);
+              }
+            })
+            .catch((e) => {
               fadeOutSplashScreen();
-              alert(e.status);
-            }
-          })
-          .catch((e) => {
-            fadeOutSplashScreen();
-            alert(e);
-          });
-      });
+              alert(e);
+            });
+        });
+      }
+    },
+    secondlyInitialize: function () {
+      if (!bus_secondly_initialized) {
+        bus_secondly_initialized = true;
+        loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'noto_sans_tc');
+        loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'material_symbols');
+        downloadData();
+        discardExpiredEstimateTimeRecordsForUpdateRate();
+        discardExpiredDataUsageRecords();
+        discardExpiredEstimateTimeRecordsForBusArrivalTime();
+        discardExpiredRecentViews();
+      }
+    },
+    route: {
+      stretchRouteItemBody,
+      openRoute,
+      closeRoute,
+      switchRoute,
+      switchRouteBodyTab,
+      openRouteDetails,
+      closeRouteDetails,
+      shareRoutePermalink
+    },
+    location: {
+      openLocation,
+      closeLocation,
+      stretchLocationItemBody
+    },
+    folder: {
+      openSaveToFolder,
+      closeSaveToFolder,
+      openFolderManager,
+      closeFolderManager,
+      openFolderEditor,
+      closeFolderEditor,
+      openFolderIconSelector,
+      closeFolderIconSelector,
+      openFolderCreator,
+      closeFolderCreator,
+      createFormulatedFolder,
+      saveEditedFolder,
+      selectFolderIcon,
+      saveStopItemOnRoute,
+      saveRouteOnDetailsPage,
+      removeItemOnFolderEditor,
+      moveItemOnFolderEditor
+    },
+    search: {
+      openSearch,
+      closeSearch,
+      typeTextIntoInput,
+      deleteCharFromInout,
+      emptyInput,
+      openSystemKeyboard
+    },
+    storage: {
+      openStorage,
+      closeStorage
+    },
+    dataUsage: {
+      openDataUsage,
+      closeDataUsage,
+      switchDataUsageGraphAggregationPeriod
+    },
+    personalSchedule: {
+      openPersonalScheduleManager,
+      closePersonalScheduleManager,
+      openPersonalScheduleCreator,
+      closePersonalScheduleCreator,
+      createFormulatedPersonalSchedule,
+      switchPersonalScheduleCreatorDay,
+      openPersonalScheduleEditor,
+      closePersonalScheduleEditor,
+      switchPersonalScheduleEditorDay,
+      saveEditedPersonalSchedule
+    },
+    settings: {
+      openSettings,
+      closeSettings,
+      openSettingsOptions,
+      closeSettingsOptions,
+      settingsOptionsHandler,
+      downloadExportFile,
+      openFileToImportData,
+      viewCommitOfCurrentVersion,
+      showPromptToAskForPersistentStorage
+    },
+    bus: {
+      openBus,
+      closeBus
     }
-  },
-  secondlyInitialize: function () {
-    if (!bus_secondly_initialized) {
-      bus_secondly_initialized = true;
-      loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'noto_sans_tc');
-      loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'material_symbols');
-      downloadData();
-      discardExpiredEstimateTimeRecordsForUpdateRate();
-      discardExpiredDataUsageRecords();
-      discardExpiredEstimateTimeRecordsForBusArrivalTime();
-      discardExpiredRecentViews();
-    }
-  },
-  route: {
-    stretchRouteItemBody,
-    openRoute,
-    closeRoute,
-    switchRoute,
-    switchRouteBodyTab,
-    openRouteDetails,
-    closeRouteDetails,
-    shareRoutePermalink
-  },
-  location: {
-    openLocation,
-    closeLocation,
-    stretchLocationItemBody
-  },
-  folder: {
-    openSaveToFolder,
-    closeSaveToFolder,
-    openFolderManager,
-    closeFolderManager,
-    openFolderEditor,
-    closeFolderEditor,
-    openFolderIconSelector,
-    closeFolderIconSelector,
-    openFolderCreator,
-    closeFolderCreator,
-    createFormulatedFolder,
-    saveEditedFolder,
-    selectFolderIcon,
-    saveStopItemOnRoute,
-    saveRouteOnDetailsPage,
-    removeItemOnFolderEditor,
-    moveItemOnFolderEditor
-  },
-  search: {
-    openSearch,
-    closeSearch,
-    typeTextIntoInput,
-    deleteCharFromInout,
-    emptyInput,
-    openSystemKeyboard
-  },
-  storage: {
-    openStorage,
-    closeStorage
-  },
-  dataUsage: {
-    openDataUsage,
-    closeDataUsage,
-    switchDataUsageGraphAggregationPeriod
-  },
-  personalSchedule: {
-    openPersonalScheduleManager,
-    closePersonalScheduleManager,
-    openPersonalScheduleCreator,
-    closePersonalScheduleCreator,
-    createFormulatedPersonalSchedule,
-    switchPersonalScheduleCreatorDay,
-    openPersonalScheduleEditor,
-    closePersonalScheduleEditor,
-    switchPersonalScheduleEditorDay,
-    saveEditedPersonalSchedule
-  },
-  settings: {
-    openSettings,
-    closeSettings,
-    openSettingsOptions,
-    closeSettingsOptions,
-    settingsOptionsHandler,
-    downloadExportFile,
-    openFileToImportData,
-    viewCommitOfCurrentVersion,
-    showPromptToAskForPersistentStorage
-  },
-  bus: {
-    openBus,
-    closeBus
-  }
-};
-
+  };
+} catch (e) {
+  console.log(e);
+}
 export default window.bus;
