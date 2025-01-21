@@ -70,7 +70,7 @@ export function initializeCalendarGridlines(Field: HTMLElement): void {
 }
 
 export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryCalendarFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -183,7 +183,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   var groupedEvents = calendar.groupedEvents;
   var eventGroups = calendar.eventGroups;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  // Field.setAttribute('skeleton-screen', skeletonScreen);
 
   var currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
@@ -238,9 +238,8 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
     for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisEvent = groupedEvents[eventGroupKey][j];
+      const thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];
+      const thisEvent = groupedEvents[eventGroupKey][j];
       if (previousCalendar.hasOwnProperty('groupedEvents')) {
         if (previousCalendar.groupedEvents.hasOwnProperty(eventGroupKey)) {
           if (previousCalendar.groupedEvents[eventGroupKey][j]) {
@@ -258,4 +257,6 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     }
   }
   previousCalendar = calendar;
+  previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }
