@@ -1,9 +1,12 @@
 import { GeneratedElement, FieldSize } from '../../index';
-import { compareThings } from '../../../tools/index';
+import { booleanToString, compareThings } from '../../../tools/index';
 import { getIconHTML } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { getSettingOptionValue } from '../../../data/settings/index';
 
-var previousProperties = [];
+let previousProperties = [];
+let previousAnimation: boolean = true;
+let previousSkeletonScreen: boolean = false;
 
 function queryPropertiesFieldSize(): FieldSize {
   return {
@@ -22,7 +25,8 @@ function generateElementOfProperty(): GeneratedElement {
   };
 }
 
-export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
+export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryPropertiesFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -35,23 +39,33 @@ export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement) {
       value: ''
     });
   }
-  updatePropertiesField(Field, properties, true);
+  updatePropertiesField(Field, properties, true, playing_animation);
 }
 
-export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean): void {
+export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
+
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_route_details_property_value').innerText = thisProperty.value;
     }
-    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      console.log(0, animation);
+      thisElement.setAttribute('animation', booleanToString(animation));
     }
+
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      console.log(1, skeletonScreen);
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
+
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
+      updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!compareThings(previousProperty, thisProperty)) {
@@ -60,7 +74,12 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      if (!(previousAnimation === animation)) {
+        updateAnimation(thisElement, animation);
+      }
+      if (!(previousSkeletonScreen === skeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
     }
   }
 
@@ -90,9 +109,9 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   }
 
   for (let i = 0; i < propertyQuantity; i++) {
-    var thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
-    var thisProperty = properties[i];
-    if (previousProperties === []) {
+    const thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
+    const thisProperty = properties[i];
+    if (previousProperties.length === 0) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
       updateProperty(thisPropertyElement, thisProperty, previousProperties[i]);
@@ -100,4 +119,6 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   }
 
   previousProperties = properties;
+  previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }

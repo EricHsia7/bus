@@ -82,7 +82,7 @@
 }
 
 /* skeleton screen: true */
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_name span {
+.css_route_field .css_route_head .css_route_name[skeleton-screen="true"] span {
   color: rgba(0, 0, 0, 0);
   border-radius: var(--b-cssvar-border-radius-large);
 }
@@ -148,7 +148,7 @@
 }
 
 /* skeleton screen: true */
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab span {
+.css_route_field .css_route_head .css_route_group_tabs[skeleton-screen="true"] .css_route_group_tabs_tray .css_route_group_tab span {
   color: rgba(0, 0, 0, 0);
   border-radius: var(--b-cssvar-border-radius-large);
 }
@@ -173,7 +173,7 @@
 }
 
 /* skeleton screen: true */
-.css_route_field[skeleton-screen="true"] .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
+.css_route_field .css_route_head .css_route_group_tab_line_track[skeleton-screen="true"] .css_route_group_tab_line {
   display: none;
 }
 
