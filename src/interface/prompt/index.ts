@@ -1,4 +1,5 @@
-import { generateIdentifier } from '../../tools/index';
+import { getSettingOptionValue } from '../../data/settings/index';
+import { booleanToString, generateIdentifier } from '../../tools/index';
 import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
@@ -11,11 +12,13 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
     }
   }
 
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const promptID: string = generateIdentifier();
 
   const promptElement = document.createElement('div');
   promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
+  promptElement.setAttribute('animation', booleanToString(playing_animation));
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');

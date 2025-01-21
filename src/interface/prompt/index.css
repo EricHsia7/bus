@@ -27,8 +27,6 @@
   position: fixed;
   left: 50%;
   bottom: calc(20px + var(--b-cssvar-safe-area-bottom));
-  opacity: 0;
-  transform: translateX(-50%) scale(0.98);
   background: rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.8);
   -webkit-user-select: none;
   user-select: none;
@@ -37,11 +35,20 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
+}
+
+.css_prompt[animation="true"] {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.98);
   animation-name: css_show_prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
   will-change: transform, opacity;
+}
+
+.css_prompt[animation="false"] {
+  transform: translateX(-50%);
 }
 
 .css_prompt .css_prompt_icon {
@@ -75,11 +82,19 @@
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
+}
+
+.css_prompt[animation="true"] .css_prompt_icon span.css_material_symbols_rounded {
+  --b-cssvar-font-variation-settings-fill: 0;
   animation-name: css_fill_prompt_icon;
   animation-duration: 2800ms;
   /* avoid css_show_prompt from synchronizing with this shorter timeline */
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
+}
+
+.css_prompt[animation="false"] .css_prompt_icon span.css_material_symbols_rounded {
+  --b-cssvar-font-variation-settings-fill: 1;
 }
 
 .css_prompt .css_prompt_message {
