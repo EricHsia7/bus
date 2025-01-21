@@ -416,12 +416,12 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   const Location = await getLocation(requestID, false);
   const Route = await getRoute(requestID);
 
-  const thisStop: object = Stop[`s_${StopID}`];
+  const thisStop = Stop[`s_${StopID}`];
   const thisStopDirection: number = parseInt(thisStop.goBack);
-  const thisLocation: object = Location[`l_${thisStop.stopLocationId}`];
+  const thisLocation = Location[`l_${thisStop.stopLocationId}`];
   const thisStopName: string = thisLocation.n;
 
-  const thisRoute: object = Route[`r_${RouteID}`];
+  const thisRoute = Route[`r_${RouteID}`];
   const thisRouteName: string = thisRoute.n;
   const thisRouteDeparture: string = thisRoute.dep;
   const thisRouteDestination: string = thisRoute.des;
