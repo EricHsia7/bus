@@ -22,8 +22,8 @@
   transition: none;
 }
 
-/* skeleton screen: false */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="false"] {
+/* animation: true && skeleton screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"] {
   transition: height var(--b-cssvar-transition-duration);
 }
 
@@ -214,13 +214,17 @@
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
-  transition: transform var(--b-cssvar-transition-duration);
   color: var(--b-cssvar-333333);
 }
 
 /* skeleton screen: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
   display: none;
+}
+
+/* animation: true && skeleton screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
+  transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
@@ -236,12 +240,16 @@
   width: 100%;
   height: 171px;
   opacity: 0;
-  transition: opacity var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_body {
   opacity: 1;
+}
+
+/* animation: true && skeleton-screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"] .css_location_group_item_body {
+  transition: opacity var(--b-cssvar-transition-duration);
 }
 
 /* items > item > body > buttons */
@@ -281,8 +289,8 @@
   vertical-align: top;
 }
 
-/* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button {
+/* animation:true && stretched: true && skeleton-screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button {
   transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
 }
 
@@ -307,8 +315,8 @@
   color: var(--b-cssvar-333333);
 }
 
-/* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
+/* animation: true && stretched: true && skeleton-screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
   transition: --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
 }
 
