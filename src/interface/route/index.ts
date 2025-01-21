@@ -236,7 +236,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
-    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, animation: boolean): void {
       const thisItemElementRect = thisItemElement.getBoundingClientRect();
       const top = thisItemElementRect.top;
       const left = thisItemElementRect.left;
@@ -258,7 +258,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
 
-      if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentThreadSlideElement.addEventListener(
           'animationend',
           function () {
@@ -312,11 +312,11 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       thisThreadBoxElement.setAttribute('nearest', booleanToString(thisItem.nearest));
     }
 
-    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
-      var previousProgress = previousItem?.progress || 0;
-      var thisProgress = thisItem?.progress || 0;
+    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, animation: boolean): void {
+      const previousProgress = previousItem?.progress || 0;
+      const thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
-      if (!(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+      if (animation && !(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
         thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
         thisThreadElement.addEventListener(
@@ -359,21 +359,21 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     if (previousItem === null) {
-      updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
       updateBusArrivalTimes(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
-      updateThread(thisThreadBoxElement, thisItem, previousItem);
+      updateThread(thisThreadBoxElement, thisItem, previousItem, animation);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSaveToFolderButton(thisItemElement, thisItem);
     } else {
       if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
-        updateStatus(thisItemElement, thisThreadBoxElement, thisItem);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
@@ -388,7 +388,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateThread(thisThreadBoxElement, thisItem, previousItem);
+        updateThread(thisThreadBoxElement, thisItem, previousItem, animation);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateName(thisItemElement, thisItem);
