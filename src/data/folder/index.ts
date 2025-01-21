@@ -1,7 +1,7 @@
 import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
+import { getSettingOptionValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
@@ -288,7 +288,6 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   const foldersWithContent = await listFoldersWithContent();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  // const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
   let StopIDs = [];
   for (const folderWithContent1 of foldersWithContent) {
@@ -368,9 +367,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  // if (refresh_interval_setting.dynamic) {
-    await recordEstimateTimeForUpdateRate(EstimateTime);
- // }
+  await recordEstimateTimeForUpdateRate(EstimateTime);
   await recordEstimateTimeForBusArrivalTime(EstimateTime);
   return result;
 }
