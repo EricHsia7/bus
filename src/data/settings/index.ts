@@ -393,8 +393,8 @@ let Settings: SettingsObject = {
       {
         name: '開啟',
         value: {
-          type: 0,
-          string: 'on'
+          type: 2,
+          boolean: true
         },
         resourceIntensive: false,
         powerSavingAlternative: -1
@@ -402,8 +402,8 @@ let Settings: SettingsObject = {
       {
         name: '關閉',
         value: {
-          type: 0,
-          string: 'off'
+          type: 2,
+          boolean: false
         },
         resourceIntensive: false,
         powerSavingAlternative: -1
@@ -595,11 +595,11 @@ export function getSettingOptionValue(key: string): SettingSelectOptionStringVal
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       const powerSavingSetting = Settings['power_saving'] as SettingSelect;
-      const powerSavingSettingValue = powerSavingSetting.options[powerSavingSetting.option].value as SettingSelectOptionStringValue;
-      const powerSavingSettingValueString = powerSavingSettingValue.string;
+      const powerSavingSettingValue = powerSavingSetting.options[powerSavingSetting.option].value as SettingSelectOptionBooleanValue;
+      const powerSavingSettingValueBoolean = powerSavingSettingValue.boolean;
       const thisSetting = Settings[key] as SettingSelect;
       let thisSettingOption = thisSetting.options[thisSetting.option];
-      if (powerSavingSettingValueString === 'on' || powerSavingSettingValueString === 'on_until_next_launch') {
+      if (powerSavingSettingValueBoolean) {
         if (thisSettingOption.resourceIntensive) {
           thisSettingOption = thisSetting.options[thisSettingOption.powerSavingAlternative];
         }
