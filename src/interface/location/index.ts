@@ -76,9 +76,9 @@ export function initializeLocationSliding(): void {
 }
 
 export function ResizeLocationField(): void {
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
   LocationField.style.setProperty('--b-cssvar-location-field-width', `${FieldWidth}px`);
   LocationField.style.setProperty('--b-cssvar-location-field-height', `${FieldHeight}px`);
 }
@@ -156,9 +156,9 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
 
 function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
   const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   const defaultGroupQuantity = 2;
   let groupedItems: IntegratedLocation['groupedItems'] = {};
@@ -344,9 +344,9 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
   }
 
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
 
   const groupQuantity = integration.groupQuantity;
   const itemQuantity = integration.itemQuantity;

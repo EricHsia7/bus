@@ -17,9 +17,9 @@ const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usag
 const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
 
 async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod) {
-  const windowSize = querySize('window');
-  const graphWidth = windowSize.width;
-  const graphHeight = Math.min((5 / 18) * graphWidth, windowSize.height * 0.33);
+  const WindowSize = querySize('window');
+  const graphWidth = WindowSize.width;
+  const graphHeight = Math.min((5 / 18) * graphWidth, WindowSize.height * 0.33);
   const graph = await generateDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20);
   if (typeof graph === 'string') {
     graphSVGElement.innerHTML = graph;

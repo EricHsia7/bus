@@ -192,9 +192,11 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
     }
   }
 
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  /*
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
+  */
 
   const itemQuantity = integration.itemQuantity;
 
@@ -242,8 +244,8 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const windowSize = querySize('window');
-  const defaultItemQuantity = Math.floor(windowSize.height / 70 / 3) + 2;
+  const WindowSize = querySize('window');
+  const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({

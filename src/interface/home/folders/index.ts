@@ -71,9 +71,9 @@ function updateUpdateTimer(): void {
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
   const defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
   const defaultFolderQuantity = 3;
   let foldedContent = {} as integratedFolders['foldedContent'];
@@ -379,9 +379,9 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
-  const windowSize = querySize('window');
-  const FieldWidth = windowSize.width;
-  const FieldHeight = windowSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
 
   const folderQuantity = integration.folderQuantity;
   const itemQuantity = integration.itemQuantity;

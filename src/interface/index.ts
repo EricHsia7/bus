@@ -176,11 +176,6 @@ export interface GeneratedElement {
   id: string;
 }
 
-export interface FieldSize {
-  width: number;
-  height: number;
-}
-
 export type GroupStyles = {
   [key: string]: {
     width: number;
