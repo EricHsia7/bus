@@ -7,7 +7,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isSaved } from '../../data/folder/index';
-import { GeneratedElement, FieldSize, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles } from '../index';
+import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
@@ -81,17 +81,10 @@ export function initializeRouteSliding(): void {
   });
 }
 
-function queryRouteFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
-
 export function ResizeRouteField(): void {
-  const FieldSize = queryRouteFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
   RouteField.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
   RouteField.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
 }
@@ -178,9 +171,9 @@ function generateElementOfTab(): GeneratedElement {
 
 function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = queryRouteFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
   const defaultItemQuantity: number = Math.floor(FieldHeight / 50) + 5;
   const defaultGroupQuantity = 2;
   let groupedItems: IntegratedRoute['groupedItems'] = {};
@@ -405,9 +398,9 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
 
-  const FieldSize = queryRouteFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const WindowSize = querySize('window');
+  const FieldWidth = WindowSize.width;
+  const FieldHeight = WindowSize.height;
 
   const groupQuantity = integration.groupQuantity;
   const itemQuantity = integration.itemQuantity;

@@ -187,3 +187,43 @@ export type GroupStyles = {
     offset: number;
   };
 };
+
+export interface Size {
+  width: number;
+  height: number;
+}
+
+type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button';
+
+export function querySize(type: SizeType): Size {
+  let width: number = 0;
+  let height: number = 0;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  switch (type) {
+    case 'window':
+      width = windowWidth;
+      height = windowHeight;
+      break;
+    case 'head':
+      width = windowWidth;
+      height = 55;
+      break;
+    case 'head-one-button':
+      width = windowWidth - 55;
+      height = 55;
+      break;
+    case 'head-two-button':
+      width = windowWidth - 55 * 2;
+      height = 55;
+      break;
+    default:
+      width = 0;
+      height = 0;
+      break;
+  }
+  return {
+    width,
+    height
+  };
+}

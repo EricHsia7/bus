@@ -3,7 +3,7 @@ import { supportTouch } from '../../tools/index';
 import { drawRoundedRect } from '../../tools/graphic';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
-import { FieldSize } from '../index';
+import { querySize } from '../index';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -33,20 +33,13 @@ let cursorColor: string = getComputedStyle(document.documentElement).getProperty
 let textWidth: number = 0;
 let slicedTextWidth: number = 0;
 let cursorOffset: number = 0;
-let size = querySearchInputCanvasSize();
+let size = querySize('head-one-button');
 let width = size.width * searchInputCanvasScale;
 let height = size.height * searchInputCanvasScale;
 let playingCursorAnimation: boolean = false;
 
-function querySearchInputCanvasSize(): FieldSize {
-  return {
-    width: window.innerWidth - 55,
-    height: 55
-  };
-}
-
 export function ResizeSearchInputCanvasSize(): void {
-  size = querySearchInputCanvasSize();
+  size = querySize('head-one-button');
   width = size.width;
   height = size.height;
   searchInputCanvasElement.width = width * searchInputCanvasScale;
@@ -144,7 +137,7 @@ export function updateSearchInput(value: string = '', cursorIndex: number): void
     }
   }
 
-  size = querySearchInputCanvasSize();
+  size = querySize('head-one-button');
   width = size.width * searchInputCanvasScale;
   height = size.height * searchInputCanvasScale;
   textColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');

@@ -1,4 +1,4 @@
-import { GeneratedElement, FieldSize } from '../../index';
+import { GeneratedElement } from '../../index';
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getIconHTML } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
@@ -7,13 +7,6 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 let previousProperties = [];
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
-
-function queryPropertiesFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
 
 function generateElementOfProperty(): GeneratedElement {
   var element = document.createElement('div');
@@ -27,9 +20,6 @@ function generateElementOfProperty(): GeneratedElement {
 
 export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = queryPropertiesFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
   var defaultPropertyQuantity = 5;
   var properties = [];
   for (let i = 0; i < defaultPropertyQuantity; i++) {
@@ -80,10 +70,6 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
       }
     }
   }
-
-  const FieldSize = queryPropertiesFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
 
   var propertyQuantity = properties.length;
 

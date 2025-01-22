@@ -1,7 +1,7 @@
 import { AggregationPeriod, calculateTotalDataUsage, generateDataUsageGraph, getDataUsageRecordsPeriod } from '../../data/analytics/data-usage';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { dateToString } from '../../tools/time';
-import { closePreviousPage, FieldSize, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 
@@ -16,17 +16,10 @@ const totalDataUsageElement = elementQuerySelector(statisticsElement, '.css_data
 const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="start-time"] .css_data_usage_statistics_item_value');
 const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
 
-function queryDataUsageFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
-
 async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod) {
-  const size = queryDataUsageFieldSize();
-  const graphWidth = size.width;
-  const graphHeight = Math.min((5 / 18) * graphWidth, size.height * 0.33);
+  const windowSize = querySize('window');
+  const graphWidth = windowSize.width;
+  const graphHeight = Math.min((5 / 18) * graphWidth, windowSize.height * 0.33);
   const graph = await generateDataUsageGraph(aggregationPeriod, graphWidth, graphHeight, 20);
   if (typeof graph === 'string') {
     graphSVGElement.innerHTML = graph;

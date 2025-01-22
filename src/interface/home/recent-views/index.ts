@@ -1,10 +1,10 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
-import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getIconHTML } from '../../icons/index';
-import { FieldSize, GeneratedElement } from '../../index';
+import { GeneratedElement, querySize } from '../../index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
@@ -26,13 +26,6 @@ let recentViewsRefreshTimer_refreshing: boolean = false;
 let recentViewsRefreshTimer_currentRequestID: string = '';
 let recentViewsRefreshTimer_streamStarted: boolean = false;
 let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
-
-function queryRecentViewsFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
 
 function generateElementOfRecentViewItem(): GeneratedElement {
   const element = document.createElement('div');
@@ -199,9 +192,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
     }
   }
 
-  const FieldSize = queryRecentViewsFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const windowSize = querySize('window');
+  const FieldWidth = windowSize.width;
+  const FieldHeight = windowSize.height;
 
   const itemQuantity = integration.itemQuantity;
 
@@ -249,8 +242,8 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 
 export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = queryRecentViewsFieldSize();
-  const defaultItemQuantity = Math.floor(FieldSize.height / 70 / 3) + 2;
+  const windowSize = querySize('window');
+  const defaultItemQuantity = Math.floor(windowSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({

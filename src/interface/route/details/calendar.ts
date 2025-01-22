@@ -1,4 +1,4 @@
-import { GeneratedElement, FieldSize } from '../../index';
+import { GeneratedElement } from '../../index';
 import { generateIdentifier, compareThings, booleanToString } from '../../../tools/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
@@ -7,13 +7,6 @@ const calendar_ratio = 100;
 let previousCalendar = {};
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
-
-function queryCalendarFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
 
 function generateElementOfGridline(hours: number): GeneratedElement {
   var identifier = generateIdentifier('l');
@@ -71,9 +64,6 @@ export function initializeCalendarGridlines(Field: HTMLElement): void {
 
 export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = queryCalendarFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
   var defaultEventQuantity = {
     d_0: 47,
     d_1: 47,
@@ -169,10 +159,6 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       }
     }
   }
-
-  const FieldSize = queryCalendarFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
 
   if (previousCalendar === {}) {
     previousCalendar = calendar;

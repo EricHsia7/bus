@@ -1,5 +1,5 @@
 import { Folder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
-import { FieldSize, GeneratedElement } from '../../index';
+import { GeneratedElement, querySize } from '../../index';
 import { getIconHTML } from '../../icons/index';
 import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
@@ -31,13 +31,6 @@ let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
 let foldersRefreshTimer_streamStarted: boolean = false;
 let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
-
-function queryFolderFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
 
 function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
@@ -78,9 +71,9 @@ function updateUpdateTimer(): void {
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = queryFolderFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const windowSize = querySize('window');
+  const FieldWidth = windowSize.width;
+  const FieldHeight = windowSize.height;
   const defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
   const defaultFolderQuantity = 3;
   let foldedContent = {} as integratedFolders['foldedContent'];
@@ -386,9 +379,9 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
-  const FieldSize = queryFolderFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const windowSize = querySize('window');
+  const FieldWidth = windowSize.width;
+  const FieldHeight = windowSize.height;
 
   const folderQuantity = integration.folderQuantity;
   const itemQuantity = integration.itemQuantity;

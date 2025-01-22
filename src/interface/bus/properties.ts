@@ -1,4 +1,4 @@
-import { GeneratedElement, FieldSize } from '../index';
+import { GeneratedElement } from '../index';
 import { compareThings } from '../../tools/index';
 import { getIconHTML } from '../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -7,13 +7,6 @@ import { getSettingOptionValue } from '../../data/settings/index';
 let previousProperties = [];
 let previousSkeletonScreen: boolean = false;
 let previousAnimation: boolean = true;
-
-function queryBusPropertiesFieldSize(): FieldSize {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
-}
 
 function generateElementOfBusProperty(): GeneratedElement {
   const element = document.createElement('div');
