@@ -4,10 +4,10 @@ import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
 export function promptMessage(message: string, icon: MaterialSymbols): void {
-  const allPrompts = documentQuerySelectorAll('.css_prompt');
-  if (!(allPrompts === null)) {
-    for (const prompt of allPrompts) {
-      prompt.remove();
+  const allPromptElements = documentQuerySelectorAll('.css_prompt');
+  if (!(allPromptElements === null)) {
+    for (const promptElement of allPromptElements) {
+      promptElement.remove();
     }
   }
 
