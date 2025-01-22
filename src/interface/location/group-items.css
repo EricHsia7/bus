@@ -5,6 +5,7 @@
   height: auto;
   display: inline-block;
   margin-bottom: var(--b-cssvar-safe-area-bottom);
+  contain: layout;
 }
 
 /* items > item */
@@ -20,6 +21,7 @@
   user-select: none;
   overflow: hidden;
   transition: none;
+  contain: layout;
 }
 
 /* animation: true && skeleton screen: false */

@@ -32,6 +32,7 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   scroll-snap-align: center;
+  contain: layout;
 }
 
 .css_location_field .css_location_groups .css_location_group::-webkit-scrollbar {

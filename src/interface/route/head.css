@@ -96,6 +96,7 @@
   height: 40px;
   display: grid;
   grid-template-columns: repeat(var(--b-cssvar-route-group-quantity), 1fr);
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_group_tabs {
@@ -125,6 +126,7 @@
   height: 40px;
   display: inline-block;
   transform: translateX(var(--b-cssvar-route-tabs-tray-offset));
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab {
