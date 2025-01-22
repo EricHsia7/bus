@@ -6,7 +6,7 @@ import { MaterialSymbols } from '../icons/material-symbols-type';
 export function promptMessage(message: string, icon: MaterialSymbols): void {
   const allPrompts = documentQuerySelectorAll('.css_prompt');
   if (!(allPrompts === null)) {
-    for (prompt of allPrompts) {
+    for (const prompt of allPrompts) {
       prompt.remove();
     }
   }
