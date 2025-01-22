@@ -176,6 +176,7 @@
   height: 1px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer {
@@ -187,6 +188,7 @@
   width: 100%;
   transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
   transition: none;
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer[refreshing="true"] {

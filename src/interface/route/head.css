@@ -194,6 +194,7 @@
   background: var(--b-cssvar-ededf2);
   -webkit-user-select: none;
   user-select: none;
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer {
@@ -207,6 +208,7 @@
   transition: none;
   -webkit-user-select: none;
   user-select: none;
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {

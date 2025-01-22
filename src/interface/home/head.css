@@ -127,6 +127,7 @@
   background: var(--b-cssvar-ededf2);
   -webkit-user-select: none;
   user-select: none;
+  contain: layout;
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer {
@@ -140,6 +141,7 @@
   transition: none;
   -webkit-user-select: none;
   user-select: none;
+  contain: layout;
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"] {

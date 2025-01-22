@@ -4,6 +4,7 @@
   width: 100%;
   height: 50px;
   overflow: hidden;
+  contain: layout;
 }
 
 /* folders > folder > content > item > icon */

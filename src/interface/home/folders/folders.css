@@ -5,6 +5,7 @@
   height: auto;
   display: inline-block;
   /* margin-top: calc(10px + 55px); */
+  contain: layout;
 }
 
 /* folders > folder */
@@ -13,6 +14,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
+  contain: layout;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder:last-child {
@@ -27,6 +29,7 @@
   height: 25px;
   display: flex;
   align-items: center;
+  contain: layout;
 }
 
 /* folders > folder > head > icon */
@@ -41,6 +44,7 @@
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
+  contain: layout;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
@@ -72,6 +76,7 @@
   line-height: 20px;
   user-select: none;
   -webkit-user-select: none;
+  contain: layout;
 }
 
 /* skeleton screen: true */
@@ -91,6 +96,7 @@
   display: inline-block;
   background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
+  contain: layout;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder[animation="true"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
