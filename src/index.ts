@@ -165,97 +165,96 @@ window.bus = {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
       console.log(4);
-      initializeSettings().then(function () {
-        console.log(5);
-        const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-        setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-        const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-        setUpFolderFieldSkeletonScreen(FolderField);
-        checkAppVersion()
-          .then((e) => {
-            console.log(6);
-            if (e.status === 'ok') {
-              console.log(7);
-              initializeRouteSliding();
-              initializeLocationSliding();
+      initializeSettings();
+      console.log(5);
+      const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
+      setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
+      const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
+      setUpFolderFieldSkeletonScreen(FolderField);
+      checkAppVersion()
+        .then((e) => {
+          console.log(6);
+          if (e.status === 'ok') {
+            console.log(7);
+            initializeRouteSliding();
+            initializeLocationSliding();
+            ResizeRouteField();
+            ResizeLocationField();
+            ResizeSearchInputCanvasSize();
+            window.addEventListener('resize', () => {
               ResizeRouteField();
               ResizeLocationField();
               ResizeSearchInputCanvasSize();
-              window.addEventListener('resize', () => {
-                ResizeRouteField();
-                ResizeLocationField();
-                ResizeSearchInputCanvasSize();
-              });
-              if (screen) {
-                if (screen.orientation) {
-                  screen.orientation.addEventListener('change', () => {
-                    ResizeRouteField();
-                    ResizeLocationField();
-                    ResizeSearchInputCanvasSize();
-                  });
-                }
+            });
+            if (screen) {
+              if (screen.orientation) {
+                screen.orientation.addEventListener('change', () => {
+                  ResizeRouteField();
+                  ResizeLocationField();
+                  ResizeSearchInputCanvasSize();
+                });
               }
-              initializeRecentViews();
-              initializeFolderStores().then(() => {
-                initializeFolders();
-              });
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
-              mediaQuery.addEventListener('change', function () {
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('paste', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('cut', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
-              searchInputElement.addEventListener('keyup', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
-              });
+            }
+            initializeRecentViews();
+            initializeFolderStores().then(() => {
+              initializeFolders();
+            });
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const searchInputElement: HTMLElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
+            mediaQuery.addEventListener('change', function () {
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
+            searchInputElement.addEventListener('paste', function () {
+              updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
+            searchInputElement.addEventListener('cut', function () {
+              updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
+            searchInputElement.addEventListener('selectionchange', function () {
+              updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
+            document.addEventListener('selectionchange', function () {
+              updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
+            searchInputElement.addEventListener('keyup', function () {
+              updateSearchResult(searchInputElement.value);
+              updateSearchInput(searchInputElement.value, searchInputElement.selectionStart);
+            });
 
-              const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
-              searchMaterialSymbolsInputElement.addEventListener('paste', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('cut', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              openPermalink();
-              fadeOutSplashScreen(function () {
-                askForPositioningPermission();
-              });
-            }
-            if (e.status === 'fetchError' || e.status === 'unknownError') {
-              fadeOutSplashScreen();
-              alert(e.status);
-            }
-          })
-          .catch((e) => {
+            const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+            searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            document.addEventListener('selectionchange', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+              updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+            });
+            openPermalink();
+            fadeOutSplashScreen(function () {
+              askForPositioningPermission();
+            });
+          }
+          if (e.status === 'fetchError' || e.status === 'unknownError') {
             fadeOutSplashScreen();
-            alert(e);
-          });
-      });
+            alert(e.status);
+          }
+        })
+        .catch((e) => {
+          fadeOutSplashScreen();
+          alert(e);
+        });
     }
   },
   secondlyInitialize: function () {
