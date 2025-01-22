@@ -606,6 +606,15 @@ export function switchToNextRouteGroup(): void {
   }
 }
 
+export function switchToPreviousRouteGroup(): void {
+  if (routeSliding_initialIndex > 0) {
+    RouteGroupsElement.scrollTo({
+      left: routeSliding_fieldWidth * (routeSliding_initialIndex - 1),
+      behavior: 'smooth'
+    });
+  }
+}
+
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);

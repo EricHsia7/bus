@@ -562,6 +562,24 @@ export function closeLocation(): void {
   openPreviousPage();
 }
 
+export function switchToNextLocationGroup(): void {
+  if (locationSliding_initialIndex < locationSliding_groupQuantity - 1) {
+    LocationGroupsElement.scrollTo({
+      left: locationSliding_fieldWidth * (locationSliding_initialIndex + 1),
+      behavior: 'smooth'
+    });
+  }
+}
+
+export function switchToPreviousLocationGroup(): void {
+  if (locationSliding_initialIndex > 0) {
+    LocationGroupsElement.scrollTo({
+      left: locationSliding_fieldWidth * (locationSliding_initialIndex - 1),
+      behavior: 'smooth'
+    });
+  }
+}
+
 export function stretchLocationItemBody(itemID: string): void {
   const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
