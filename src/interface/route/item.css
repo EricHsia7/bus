@@ -11,6 +11,7 @@
   display: block;
   background: var(--b-cssvar-ffffff-normal);
   overflow: hidden;
+  contain: layout;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item:first-child {
