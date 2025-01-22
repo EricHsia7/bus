@@ -87,6 +87,7 @@
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
+/*
 .css_route_field .css_route_head .css_route_group_tabs {
   --b-cssvar-route-group-quantity: inherit;
   position: absolute;
@@ -97,7 +98,7 @@
   display: grid;
   grid-template-columns: repeat(var(--b-cssvar-route-group-quantity), 1fr);
   contain: layout;
-}
+}*/
 
 .css_route_field .css_route_head .css_route_group_tabs {
   position: absolute;
@@ -114,6 +115,7 @@
       rgba(0, 0, 0, 0.7) 85%,
       rgba(0, 0, 0, 0.3) 100%);
   mask-repeat: no-repeat;
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray {
@@ -147,6 +149,7 @@
   font-weight: 500;
   --b-cssvar-route-percentage: inherit;
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-route-percentage) - var(--b-cssvar-route-tab-index))), 1);
+  contain: layout;
 }
 
 /* skeleton screen: true */
@@ -164,6 +167,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
@@ -172,6 +176,7 @@
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-route-tab-line-width-scale));
+  contain: layout;
 }
 
 /* skeleton screen: true */

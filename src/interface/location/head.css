@@ -101,6 +101,7 @@
       rgba(0, 0, 0, 0.7) 85%,
       rgba(0, 0, 0, 0.3) 100%);
   mask-repeat: no-repeat;
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray {
@@ -113,6 +114,7 @@
   height: 40px;
   display: inline-block;
   transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab {
@@ -133,6 +135,7 @@
   font-weight: 500;
   --b-cssvar-location-percentage: inherit;
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 1);
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_group_tabs[skeleton-screen="true"] .css_location_group_tabs_tray .css_location_group_tab span {
@@ -149,6 +152,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
@@ -157,6 +161,7 @@
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-location-tab-line-width-scale));
+  contain: layout;
 }
 
 .css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line {

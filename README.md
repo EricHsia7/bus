@@ -57,7 +57,7 @@ Locations and stops are different in some aspects. Stops are route-position pair
 - **Packages**: See them in [package.json](./package.json).
 - **Data References**: See them in [getAPIURL.ts](./src/data/apis/getAPIURL/index.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
 
-## Related Repository
+## Related Repositories
 
 - [EricHsia7/material-symbols-list](https://github.com/EricHsia7/material-symbols-list)
 - [EricHsia7/bus-alternative-static-apis](https://github.com/EricHsia7/bus-alternative-static-apis)
