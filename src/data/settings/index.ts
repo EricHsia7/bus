@@ -31,6 +31,8 @@ export type SettingSelectOptionValue = SettingSelectOptionStringValue | SettingS
 export interface SettingSelectOption {
   name: string;
   value: SettingSelectOptionValue;
+  resourceIntensive: boolean;
+  powerSavingAlternative: -1 | number; // index of an option
 }
 
 export type SettingSelectOptions = Array<SettingSelectOption>;
@@ -91,7 +93,7 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
   time_formatting_mode: {
@@ -109,28 +111,36 @@ let Settings: SettingsObject = {
         value: {
           type: 1,
           number: 3
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: `${formatTime(11, 2)}/${formatTime(61, 2)}/${formatTime(60 * 61 + 1, 2)}`,
         value: {
           type: 1,
           number: 2
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: `${formatTime(11, 1)}/${formatTime(61, 1)}/${formatTime(60 * 61 + 1, 1)}`,
         value: {
           type: 1,
           number: 1
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: `${formatTime(11, 0)}/${formatTime(61, 0)}/${formatTime(60 * 61 + 1, 0)}`,
         value: {
           type: 1,
           number: 0
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       }
     ],
     description: '在首頁、路線頁面、地點頁面上的預估公車到站時間的顯示格式。'
@@ -151,7 +161,9 @@ let Settings: SettingsObject = {
           baseInterval: 15 * 1000,
           dynamic: true,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 2
       },
       {
         name: '10秒',
@@ -159,7 +171,9 @@ let Settings: SettingsObject = {
           baseInterval: 10 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 2
       },
       {
         name: '20秒',
@@ -167,7 +181,9 @@ let Settings: SettingsObject = {
           baseInterval: 20 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 3
       },
       {
         name: '30秒',
@@ -175,7 +191,9 @@ let Settings: SettingsObject = {
           baseInterval: 30 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 4
       },
       {
         name: '40秒',
@@ -183,7 +201,9 @@ let Settings: SettingsObject = {
           baseInterval: 40 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 5
       },
       {
         name: '50秒',
@@ -191,7 +211,9 @@ let Settings: SettingsObject = {
           baseInterval: 50 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 6
       },
       {
         name: '60秒',
@@ -199,7 +221,9 @@ let Settings: SettingsObject = {
           baseInterval: 60 * 1000,
           dynamic: false,
           type: 3
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 6
       }
     ],
     description: '在首頁、路線頁面、地點頁面上的預估公車到站時間、公車等即時資料更新的頻率。'
@@ -219,14 +243,18 @@ let Settings: SettingsObject = {
         value: {
           type: 2,
           boolean: true
-        }
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 1
       },
       {
         name: '關閉',
         value: {
           type: 2,
           boolean: false
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       }
     ],
     description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
@@ -246,21 +274,27 @@ let Settings: SettingsObject = {
         value: {
           type: 0,
           string: 'directions'
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: '地址特徵',
         value: {
           type: 0,
           string: 'address'
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: '英文字母',
         value: {
           type: 0,
           string: 'letters'
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       }
     ],
     description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
@@ -280,14 +314,18 @@ let Settings: SettingsObject = {
         value: {
           type: 2,
           boolean: true
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       },
       {
         name: '關閉',
         value: {
           type: 2,
           boolean: false
-        }
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
       }
     ],
     description: '使用網路代理來擷取資料。'
@@ -309,6 +347,68 @@ let Settings: SettingsObject = {
     action: `bus.personalSchedule.openPersonalScheduleManager()`,
     type: 'page',
     description: ''
+  },
+  playing_animation: {
+    key: 'playing_animation',
+    name: '動畫',
+    icon: 'animation',
+    description: '是否在介面中播放動畫。',
+    status: '',
+    type: 'select',
+    action: `bus.settings.openSettingsOptions('playing_animation')`,
+    default_option: 0,
+    option: 0,
+    options: [
+      {
+        name: '開啟',
+        value: {
+          type: 2,
+          boolean: true
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 1
+      },
+      {
+        name: '關閉',
+        value: {
+          type: 2,
+          boolean: false
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
+      }
+    ]
+  },
+  power_saving: {
+    key: 'power_saving',
+    name: '省電模式',
+    icon: 'battery_low',
+    description: '暫停使用耗電功能來節省電力。',
+    status: '',
+    type: 'select',
+    action: `bus.settings.openSettingsOptions('power_saving')`,
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '開啟',
+        value: {
+          type: 2,
+          boolean: true
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
+      },
+      {
+        name: '關閉',
+        value: {
+          type: 2,
+          boolean: false
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
+      }
+    ]
   },
   data_usage: {
     key: 'data_usage',
@@ -393,7 +493,7 @@ let Settings: SettingsObject = {
   }
 };
 
-export async function initializeSettings(): void {
+export async function initializeSettings(): Promise<boolean> {
   const userSettings = await lfListItemKeys(1);
   for (const key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
@@ -410,6 +510,7 @@ export async function initializeSettings(): void {
       }
     }
   }
+  return true;
 }
 
 export async function listSettings(): Promise<SettingsArray> {
@@ -493,20 +594,29 @@ export function getSetting(key: string): Setting | undefined {
 export function getSettingOptionValue(key: string): SettingSelectOptionStringValue['string'] | SettingSelectOptionNumberValue['number'] | SettingSelectOptionBooleanValue['boolean'] | SettingSelectOptionRefreshIntervalValue {
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
+      const powerSavingSetting = Settings['power_saving'] as SettingSelect;
+      const powerSavingSettingValue = powerSavingSetting.options[powerSavingSetting.option].value as SettingSelectOptionBooleanValue;
+      const powerSavingSettingValueBoolean = powerSavingSettingValue.boolean;
       const thisSetting = Settings[key] as SettingSelect;
-      const value = thisSetting.options[thisSetting.option].value;
-      switch (value.type) {
+      let thisSettingOption = thisSetting.options[thisSetting.option];
+      if (powerSavingSettingValueBoolean) {
+        if (thisSettingOption.resourceIntensive) {
+          thisSettingOption = thisSetting.options[thisSettingOption.powerSavingAlternative];
+        }
+      }
+      const thisSettingValue = thisSettingOption.value;
+      switch (thisSettingValue.type) {
         case 0:
-          return value.string as string;
+          return thisSettingValue.string as string;
           break;
         case 1:
-          return value.number as number;
+          return thisSettingValue.number as number;
           break;
         case 2:
-          return value.boolean as boolean;
+          return thisSettingValue.boolean as boolean;
           break;
         case 3:
-          return value as SettingSelectOptionRefreshIntervalValue;
+          return thisSettingValue as SettingSelectOptionRefreshIntervalValue;
           break;
         default:
           return '' as string;

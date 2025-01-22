@@ -4,10 +4,10 @@ import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
 export function promptMessage(message: string, icon: MaterialSymbols): void {
-  const allPrompts = documentQuerySelectorAll('.css_prompt');
-  if (!(allPrompts === null)) {
-    for (prompt of allPrompts) {
-      prompt.remove();
+  const allPromptElements = documentQuerySelectorAll('.css_prompt');
+  if (!(allPromptElements === null)) {
+    for (const promptElement of allPromptElements) {
+      promptElement.remove();
     }
   }
 
@@ -29,13 +29,14 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
 
   document.body.appendChild(promptElement);
 
-  document.getElementById(promptID).addEventListener(
-    'animationend',
-    function () {
-      if (!(document.getElementById(promptID) === null)) {
-        document.getElementById(promptID).remove();
-      }
-    },
-    { once: true }
-  );
+  const promptElementInstance = document.getElementById(promptID);
+  if (!(promptElementInstance === null)) {
+    promptElementInstance.addEventListener(
+      'animationend',
+      function () {
+        promptElementInstance.remove();
+      },
+      { once: true }
+    );
+  }
 }

@@ -2,8 +2,11 @@ import { GeneratedElement, FieldSize } from '../index';
 import { compareThings } from '../../tools/index';
 import { getIconHTML } from '../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { getSettingOptionValue } from '../../data/settings/index';
 
 let previousProperties = [];
+let previousSkeletonScreen: boolean = false;
+let previousAnimation: boolean = true;
 
 function queryBusPropertiesFieldSize(): FieldSize {
   return {
@@ -15,7 +18,6 @@ function queryBusPropertiesFieldSize(): FieldSize {
 function generateElementOfBusProperty(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_bus_property');
-
   element.innerHTML = /*html*/ `<div class="css_bus_property_icon"></div><div class="css_bus_property_value"></div>`;
   return {
     element: element,
@@ -24,11 +26,9 @@ function generateElementOfBusProperty(): GeneratedElement {
 }
 
 export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
-  const FieldSize = queryBusPropertiesFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
-  var defaultPropertyQuantity = 5;
-  var properties = [];
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const defaultPropertyQuantity = 5;
+  let properties = [];
   for (let i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
       key: i,
@@ -36,24 +36,32 @@ export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
       value: ''
     });
   }
-  updateBusPropertiesField(Field, properties, true);
+  updateBusPropertiesField(Field, properties, true, playing_animation);
 }
 
-export function updateBusPropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean): void {
+export function updateBusPropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_bus_property_icon').innerHTML = getIconHTML(thisProperty.icon);
     }
+
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
       elementQuerySelector(thisElement, '.css_bus_property_value').innerText = thisProperty.value;
     }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', animation);
+    }
+
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
     }
+
     if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateSkeletonScreen(thisElement, skeletonScreen);
+      updateAnimation(thisElement, animation);
     } else {
       if (!compareThings(previousProperty, thisProperty)) {
         updateIcon(thisElement, thisProperty);
@@ -61,38 +69,40 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
-      updateSkeletonScreen(thisElement, skeletonScreen);
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
+      }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisElement, animation);
+      }
     }
   }
 
-  const FieldSize = queryBusPropertiesFieldSize();
-  const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
+  const propertyQuantity = properties.length;
 
-  var propertyQuantity = properties.length;
+  // Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
-
-  var currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
+  const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
-    var capacity = currentPropertySeatQuantity - propertyQuantity;
+    const capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var propertyIndex = currentPropertySeatQuantity + o;
-        var thisPropertyElement = generateElementOfBusProperty(skeletonScreen);
-        elementQuerySelector(Field, '.css_bus_group_body').appendChild(thisPropertyElement.element);
+        // const propertyIndex = currentPropertySeatQuantity + o;
+        const newPropertyElement = generateElementOfBusProperty(skeletonScreen);
+        elementQuerySelector(Field, '.css_bus_group_body').appendChild(newPropertyElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var propertyIndex = currentPropertySeatQuantity - 1 - o;
+        const propertyIndex = currentPropertySeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`)[propertyIndex].remove();
       }
     }
   }
 
+  const propertyElements = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`);
   for (let i = 0; i < propertyQuantity; i++) {
-    var thisPropertyElement = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`)[i];
-    var thisProperty = properties[i];
+    const thisPropertyElement = propertyElements[i];
+    const thisProperty = properties[i];
     if (previousProperties === []) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
@@ -101,4 +111,6 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   }
 
   previousProperties = properties;
+  previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }

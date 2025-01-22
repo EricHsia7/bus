@@ -1,9 +1,12 @@
 import { GeneratedElement, FieldSize } from '../../index';
-import { generateIdentifier, compareThings } from '../../../tools/index';
+import { generateIdentifier, compareThings, booleanToString } from '../../../tools/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { getSettingOptionValue } from '../../../data/settings/index';
 
 const calendar_ratio = 100;
-var previousCalendar = {};
+let previousCalendar = {};
+let previousAnimation: boolean = true;
+let previousSkeletonScreen: boolean = false;
 
 function queryCalendarFieldSize(): FieldSize {
   return {
@@ -67,6 +70,7 @@ export function initializeCalendarGridlines(Field: HTMLElement): void {
 }
 
 export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = queryCalendarFieldSize();
   const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
@@ -111,15 +115,17 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
       eventGroupQuantity: defaultEventGroupQuantity,
       eventQuantity: defaultEventQuantity
     },
-    true
+    true,
+    playing_animation
   );
 }
 
-export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean): void {
+export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean, animation: boolean): void {
   function updateEvent(thisElement, thisEvent, previousEvent) {
     function updateText(thisElement: HTMLElement, thisEvent: object): void {
       thisElement.innerText = thisEvent.dateString;
     }
+
     function updatePosition(thisElement: HTMLElement, thisEvent: object): void {
       var thisDayStart = new Date();
       thisDayStart.setDate(1);
@@ -134,15 +140,32 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       thisElement.style.setProperty('--b-cssvar-calendar-event-top', `${((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
       thisElement.style.setProperty('--b-cssvar-calendar-event-height', `${((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
     }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
+
     if (previousEvent === null) {
       updateText(thisElement, thisEvent);
       updatePosition(thisElement, thisEvent);
+      updateAnimation(thisElement, animation);
+      updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
       if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
         updateText(thisElement, thisEvent);
       }
       if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
         updatePosition(thisElement, thisEvent);
+      }
+      if (!(animation === previousAnimation)) {
+        updateAnimation(thisElement, animation);
+      }
+      if (!(skeletonScreen === previousSkeletonScreen)) {
+        updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
   }
@@ -160,7 +183,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
   var groupedEvents = calendar.groupedEvents;
   var eventGroups = calendar.eventGroups;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  // Field.setAttribute('skeleton-screen', skeletonScreen);
 
   var currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
@@ -211,12 +234,12 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
     thisDayElement.innerText = thisDay.name;
     thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
+    thisDayElement.setAttribute('animation', animation);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
     for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
-      var thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];
-      thisElement.setAttribute('skeleton-screen', skeletonScreen);
-      var thisEvent = groupedEvents[eventGroupKey][j];
+      const thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];
+      const thisEvent = groupedEvents[eventGroupKey][j];
       if (previousCalendar.hasOwnProperty('groupedEvents')) {
         if (previousCalendar.groupedEvents.hasOwnProperty(eventGroupKey)) {
           if (previousCalendar.groupedEvents[eventGroupKey][j]) {
@@ -234,4 +257,6 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     }
   }
   previousCalendar = calendar;
+  previousAnimation = animation;
+  previousSkeletonScreen = skeletonScreen;
 }

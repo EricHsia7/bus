@@ -1,5 +1,6 @@
 import { integrateBus } from '../../data/bus/index';
 import { logRecentView } from '../../data/recent-views/index';
+import { getSettingOptionValue, SettingSelectOptionBooleanValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
@@ -26,11 +27,12 @@ export function closeBus(): void {
   openPreviousPage();
 }
 
-async function initializeBusPage(id: number): void {
+async function initializeBusPage(id: number) {
   setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier('r');
   const integration = await integrateBus(id, requestID);
-  updateBusPropertiesField(BusGroupProperties, integration.properties, false);
+  updateBusPropertiesField(BusGroupProperties, integration.properties, false, playing_animation);
 }
 
 function updateBusField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {

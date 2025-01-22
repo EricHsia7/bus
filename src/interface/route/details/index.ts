@@ -1,10 +1,11 @@
 import { integrateRouteDetails } from '../../../data/route/details';
 import { initializeCalendarGridlines, setUpCalendarFieldSkeletonScreen, updateCalendarField } from './calendar';
 import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './properties';
-import { generateIdentifier } from '../../../tools/index';
+import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
 import { isSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
+import { getSettingOptionValue } from '../../../data/settings/index';
 
 async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: Array<number>): void {
   const actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
@@ -14,17 +15,20 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   const svaeToFolderActionButtonElement = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   const getPermalinkActionButton = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
 
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const existence = await isSaved('route', RouteID);
+  svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));
   svaeToFolderActionButtonElement.setAttribute('highlighted', existence);
   svaeToFolderActionButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);
+  getPermalinkActionButton.setAttribute('animation', booleanToString(playing_animation));
   getPermalinkActionButton.setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUpPropertiesFieldSkeletonScreen(propertiesField);
   initializeCalendarGridlines(calendarField);
   setUpCalendarFieldSkeletonScreen(calendarField);
   const requestID = generateIdentifier('r');
-  var integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
-  updatePropertiesField(propertiesField, integration.properties, false);
-  updateCalendarField(calendarField, integration.calendar, false);
+  const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
+  updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
+  updateCalendarField(calendarField, integration.calendar, false, playing_animation);
 }
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
