@@ -30,7 +30,6 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
   updateCalendarField(calendarField, integration.calendar, false, playing_animation);
 }
-thisElement.setAttribute('animation', booleanToString(animation));
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('RouteDetails');
