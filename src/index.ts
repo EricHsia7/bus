@@ -33,7 +33,7 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { checkHotKey } from './data/hotkey/index';
+import { checkHotKeys } from './data/hotkeys/index';
 
 import './interface/theme.css';
 
@@ -151,6 +151,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { closeHotKeyList, openHotKeyList } from './interface/hotkey-list/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -236,7 +237,7 @@ window.bus = {
 
               document.addEventListener('keydown', function (event: KeyboardEvent) {
                 const currentPage = getCurrentPage();
-                checkHotKey(event, currentPage);
+                checkHotKeys(event, currentPage);
               });
 
               openPermalink();
@@ -345,6 +346,10 @@ window.bus = {
   bus: {
     openBus,
     closeBus
+  },
+  hotkeys: {
+    openHotKeyList,
+    closeHotKeyList
   }
 };
 

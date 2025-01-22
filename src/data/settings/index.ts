@@ -93,7 +93,7 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'hotkeys', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
   time_formatting_mode: {
@@ -453,6 +453,15 @@ let Settings: SettingsObject = {
     status: '',
     type: 'action',
     action: 'bus.settings.openFileToImportData()',
+    description: ''
+  },
+  hotkeys: {
+    key: 'hotkeys',
+    name: '鍵盤快速鍵',
+    icon: 'keyboard',
+    status: '',
+    type: 'page',
+    action: 'bus.hotkeys.openHotKeyList()',
     description: ''
   },
   version: {

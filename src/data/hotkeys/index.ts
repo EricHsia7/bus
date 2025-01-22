@@ -48,7 +48,7 @@ const HotKeyList: HotKeyList = [
   }
 ];
 
-export function checkHotKey(event: KeyboardEvent, currentPage: Page): void {
+export function checkHotKeys(event: KeyboardEvent, currentPage: Page): void {
   const ctrl = event.ctrlKey ? 1 : -1;
   const meta = event.metaKey ? 1 : -1;
   const shift = event.shiftKey ? 1 : -1;
@@ -89,3 +89,4 @@ export function checkHotKey(event: KeyboardEvent, currentPage: Page): void {
     }
   }
 }
+
