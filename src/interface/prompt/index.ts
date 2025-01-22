@@ -29,13 +29,14 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
 
   document.body.appendChild(promptElement);
 
-  document.getElementById(promptID).addEventListener(
-    'animationend',
-    function () {
-      if (!(document.getElementById(promptID) === null)) {
-        document.getElementById(promptID).remove();
-      }
-    },
-    { once: true }
-  );
+  const promptElementInstance = document.getElementById(promptID);
+  if (!(promptElementInstance === null)) {
+    promptElementInstance.addEventListener(
+      'animationend',
+      function () {
+        promptElementInstance.remove();
+      },
+      { once: true }
+    );
+  }
 }

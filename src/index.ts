@@ -151,31 +151,22 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 
-console.log(0);
-
 let bus_initialized = false;
 let bus_secondly_initialized = false;
-console.log(1);
 
 window.bus = {
   initialize: function () {
-    console.log(2);
     if (bus_initialized === false) {
-      console.log(3);
       bus_initialized = true;
       setSplashScreenIconOffsetY();
-      console.log(4);
       initializeSettings().then(function () {
-        console.log(5);
         const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
         setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
         const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
         setUpFolderFieldSkeletonScreen(FolderField);
         checkAppVersion()
           .then((e) => {
-            console.log(6);
             if (e.status === 'ok') {
-              console.log(7);
               initializeRouteSliding();
               initializeLocationSliding();
               ResizeRouteField();
