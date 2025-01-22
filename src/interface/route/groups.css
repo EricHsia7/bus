@@ -44,10 +44,12 @@
   width: 100%;
   display: grid;
   grid-template-columns: 45px calc(100% - 45px);
+  contain: layout;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track {
   position: relative;
   display: inline-block;
+  contain: layout;
 }
