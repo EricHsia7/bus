@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-power-saving-option-v3
+      - dev-power-saving-option-v3-fix-1
 
 jobs:
   launch:

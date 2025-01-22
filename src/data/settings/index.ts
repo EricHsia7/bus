@@ -493,7 +493,7 @@ let Settings: SettingsObject = {
   }
 };
 
-export async function initializeSettings() {
+export async function initializeSettings(): Promise<boolean> {
   const userSettings = await lfListItemKeys(1);
   for (const key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
@@ -510,6 +510,7 @@ export async function initializeSettings() {
       }
     }
   }
+  return true;
 }
 
 export async function listSettings(): Promise<SettingsArray> {
