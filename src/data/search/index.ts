@@ -164,6 +164,7 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
   }
   return score;
 }
+
 export function searchFor(query: string, limit: number): Array {
   if (!readyToSearch) {
     return [];
