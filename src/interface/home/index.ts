@@ -22,12 +22,12 @@ function updateDownloadProgress() {
 function setCompleteStatus() {
   if (dataDownloadCompleted) {
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
-    documentQuerySelector('.css_home_button_right').setAttribute('complete', true);
+    documentQuerySelector('.css_home_button_right').setAttribute('complete', 'true');
     progressElement.removeEventListener('transitioncancel', setCompleteStatus);
   }
 }
 
-export async function downloadData(): void {
+export async function downloadData() {
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);

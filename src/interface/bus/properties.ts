@@ -2,7 +2,7 @@ import { GeneratedElement, FieldSize } from '../index';
 import { compareThings } from '../../tools/index';
 import { getIconHTML } from '../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { getSettingOptionValue, SettingSelectOptionBooleanValue } from '../../data/settings/index';
+import { getSettingOptionValue } from '../../data/settings/index';
 
 let previousProperties = [];
 let previousSkeletonScreen: boolean = false;
@@ -99,8 +99,9 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
     }
   }
 
+  const propertyElements = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`);
   for (let i = 0; i < propertyQuantity; i++) {
-    const thisPropertyElement = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`)[i];
+    const thisPropertyElement = propertyElements[i];
     const thisProperty = properties[i];
     if (previousProperties === []) {
       updateProperty(thisPropertyElement, thisProperty, null);

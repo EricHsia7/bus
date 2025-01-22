@@ -160,6 +160,7 @@ module.exports = (env, argv) => {
       mainFields: ['browser', 'module', 'main']
     },
     optimization: {
+      usedExports: false,
       minimize: isProduction,
       minimizer: [
         new TerserPlugin({

@@ -23,7 +23,7 @@ function queryDataUsageFieldSize(): FieldSize {
   };
 }
 
-async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void {
+async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod) {
   const size = queryDataUsageFieldSize();
   const graphWidth = size.width;
   const graphHeight = Math.min((5 / 18) * graphWidth, size.height * 0.33);
@@ -37,7 +37,7 @@ async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod): void 
   }
 }
 
-async function updateDataUsageStatistics(): void {
+async function updateDataUsageStatistics() {
   const totalDataUsage = await calculateTotalDataUsage();
   const recordsPeriod = await getDataUsageRecordsPeriod();
   totalDataUsageElement.innerText = totalDataUsage;

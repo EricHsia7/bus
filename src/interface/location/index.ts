@@ -495,6 +495,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
 async function refreshLocation(): Promise<object> {
   const time = new Date().getTime();
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
@@ -502,7 +503,7 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
-  updateLocationField(LocationField, integration, false);
+  updateLocationField(LocationField, integration, false, playing_animation);
   locationRefreshTimer_lastUpdate = time;
   if (locationRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();

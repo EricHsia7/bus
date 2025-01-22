@@ -53,12 +53,10 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
-      console.log(0, animation);
       thisElement.setAttribute('animation', booleanToString(animation));
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      console.log(1, skeletonScreen);
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
@@ -91,18 +89,18 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
 
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  var currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
+  const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
   if (!(propertyQuantity === currentPropertySeatQuantity)) {
-    var capacity = currentPropertySeatQuantity - propertyQuantity;
+    const capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var propertyIndex = currentPropertySeatQuantity + o;
-        var thisPropertyElement = generateElementOfProperty(skeletonScreen);
-        elementQuerySelector(Field, '.css_route_details_group_body').appendChild(thisPropertyElement.element);
+        // const propertyIndex = currentPropertySeatQuantity + o;
+        const newPropertyElement = generateElementOfProperty(skeletonScreen);
+        elementQuerySelector(Field, '.css_route_details_group_body').appendChild(newPropertyElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var propertyIndex = currentPropertySeatQuantity - 1 - o;
+        const propertyIndex = currentPropertySeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[propertyIndex].remove();
       }
     }

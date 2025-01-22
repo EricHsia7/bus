@@ -7,14 +7,14 @@ import { isSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { getSettingOptionValue } from '../../../data/settings/index';
 
-const actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
-const propertiesField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
-const calendarField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"]');
-
-const svaeToFolderActionButtonElement = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
-const getPermalinkActionButton = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
-
 async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, PathAttributeId: Array<number>): void {
+  const actionsField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
+  const propertiesField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
+  const calendarField: HTMLElement = elementQuerySelector(Field, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"]');
+
+  const svaeToFolderActionButtonElement = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
+  const getPermalinkActionButton = elementQuerySelector(actionsField, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
+
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const existence = await isSaved('route', RouteID);
   svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));
@@ -30,7 +30,6 @@ async function initializeRouteDetailsField(Field: HTMLElement, RouteID: number, 
   updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
   updateCalendarField(calendarField, integration.calendar, false, playing_animation);
 }
-thisElement.setAttribute('animation', booleanToString(animation));
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('RouteDetails');

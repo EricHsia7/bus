@@ -27,7 +27,7 @@ export function closeBus(): void {
   openPreviousPage();
 }
 
-async function initializeBusPage(id: number): void {
+async function initializeBusPage(id: number) {
   setUpBusPropertiesFieldSkeletonScreen(BusGroupProperties);
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier('r');
