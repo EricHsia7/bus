@@ -4,7 +4,7 @@
   left: 0px;
   height: 50px;
   width: 45px;
-  background: var(--b-cssvar-ffffff-normal);
+  /* background: var(--b-cssvar-ffffff-normal); */
   user-select: none;
   -webkit-user-select: none;
   overflow: visible;
