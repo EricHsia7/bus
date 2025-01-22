@@ -15,7 +15,7 @@ import { checkAppVersion } from './data/settings/version';
 import { openSettings, closeSettings, downloadExportFile, openFileToImportData, viewCommitOfCurrentVersion, showPromptToAskForPersistentStorage } from './interface/settings/index';
 import { openSettingsOptions, closeSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
 import { initializeSettings } from './data/settings/index';
-import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
+import { fadeOutSplashScreen, getCurrentPage, setSplashScreenIconOffsetY } from './interface/index';
 import { documentQuerySelector } from './tools/query-selector';
 import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopItemOnRoute } from './interface/save-to-folder/index';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
@@ -33,6 +33,7 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
+import { checkHotKey } from './data/hotkey/index';
 
 import './interface/theme.css';
 
@@ -232,6 +233,12 @@ window.bus = {
               searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
                 updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
               });
+
+              document.addEventListener('keydown', function (event: KeyboardEvent) {
+                const currentPage = getCurrentPage();
+                checkHotKey(event, currentPage);
+              });
+
               openPermalink();
               fadeOutSplashScreen(function () {
                 askForPositioningPermission();

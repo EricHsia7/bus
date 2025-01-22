@@ -33,6 +33,13 @@ export function revokePageHistory(page: Page): void {
   }
 }
 
+export function getCurrentPage(): Page {
+  const pageHistoryLength = pageHistory.length;
+  if (pageHistoryLength > 0) {
+    return pageHistory[pageHistoryLength - 1];
+  }
+}
+
 export function closePreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
   if (pageHistoryLength > 1) {

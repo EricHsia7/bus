@@ -29,10 +29,18 @@ const HotKeyList: HotKeyList = [
     },
     name: 'Previous Page',
     page: 'Route'
+  },
+  {
+    keys: ['T'],
+    function: function () {
+      console.log('test');
+    },
+    name: 'Test',
+    page: 'Home'
   }
 ];
 
-export function handleHotKey(event: KeyboardEvent): void {
+export function checkHotKey(event: KeyboardEvent, currentPage: Page): void {
   const ctrl = event.ctrlKey ? 1 : -1;
   const meta = event.metaKey ? 1 : -1;
   const shift = event.shiftKey ? 1 : -1;
@@ -40,35 +48,32 @@ export function handleHotKey(event: KeyboardEvent): void {
   for (const HotKeyItem of HotKeyList) {
     let meetCriteria = 1;
     const isCtrl = HotKeyItem.keys.indexOf('ctrl') > -1 ? 1 : -1;
-    if (ctrl * isCtrl > 0) {
-      meetCriteria *= 1;
-    } else {
+    if (ctrl * isCtrl < 0) {
       meetCriteria *= 0;
     }
 
     const isMeta = HotKeyItem.keys.indexOf('meta') > -1 ? 1 : -1;
-    if (meta * isMeta > 0) {
-      meetCriteria *= 1;
-    } else {
+    if (meta * isMeta < 0) {
       meetCriteria *= 0;
     }
 
     const isShift = HotKeyItem.keys.indexOf('shift') > -1 ? 1 : -1;
-    if (meta * isShift > 0) {
-      meetCriteria *= 1;
-    } else {
+    if (shift * isShift < 0) {
       meetCriteria *= 0;
     }
-    
+
     for (const key of HotKeyItem.keys) {
       if (['shift', 'ctrl', 'meta'].indexOf(key) < 0) {
-        if (eventKey === key) {
-          meetCriteria *= 1;
-        } else {
+        if (!(eventKey === key)) {
           meetCriteria *= 0;
         }
       }
     }
+
+    if (!(currentPage === HotKeyItem.page)) {
+      meetCriteria *= 0;
+    }
+
     if (meetCriteria === 1) {
       if (typeof HotKeyItem.function === 'function') {
         HotKeyItem.function();
