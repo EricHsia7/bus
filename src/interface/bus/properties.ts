@@ -96,7 +96,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   for (let i = 0; i < propertyQuantity; i++) {
     const thisPropertyElement = propertyElements[i];
     const thisProperty = properties[i];
-    if (previousProperties === []) {
+    if (previousProperties.length === 0) {
       updateProperty(thisPropertyElement, thisProperty, null);
     } else {
       updateProperty(thisPropertyElement, thisProperty, previousProperties[i]);
