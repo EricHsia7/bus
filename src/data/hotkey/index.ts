@@ -1,4 +1,6 @@
 import { Page } from '../../interface/index';
+import { switchToNextRouteGroup } from '../../interface/route/index';
+import { openSearch } from '../../interface/search/index';
 
 export type HotKey = 'ctrl' | 'meta' | 'shift' | string;
 
@@ -13,29 +15,28 @@ export type HotKeyList = Array<HotKeyItem>;
 
 const HotKeyList: HotKeyList = [
   {
-    keys: ['ctrl', 'N'],
+    keys: ['shift', 'N'],
     function: function () {
-      console.log(0);
-      // next page
+      switchToNextRouteGroup();
     },
-    name: 'Next Page',
+    name: '下一頁',
     page: 'Route'
   },
   {
-    keys: ['ctrl', 'P'],
+    keys: ['shift', 'P'],
     function: function () {
       console.log(1);
       // previous page
     },
-    name: 'Previous Page',
+    name: '上一頁',
     page: 'Route'
   },
   {
-    keys: ['T'],
+    keys: ['shift', 'S'],
     function: function () {
-      console.log('test');
+      openSearch();
     },
-    name: 'Test',
+    name: '搜尋',
     page: 'Home'
   }
 ];

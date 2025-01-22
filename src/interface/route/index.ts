@@ -592,9 +592,18 @@ export function closeRoute(): void {
   openPreviousPage();
 }
 
-export function switchRoute(RouteID: number, PathAttributeId: Array<number>) {
+export function switchRoute(RouteID: number, PathAttributeId: Array<number>): void {
   routeRefreshTimer_streaming = false;
   openRoute(RouteID, PathAttributeId);
+}
+
+export function switchToNextRouteGroup(): void {
+  if (routeSliding_initialIndex < routeSliding_groupQuantity - 1) {
+    RouteGroupsElement.scrollTo({
+      left: routeSliding_fieldWidth * (routeSliding_initialIndex + 1),
+      behavior: 'smooth'
+    });
+  }
 }
 
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
