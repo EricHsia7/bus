@@ -9,6 +9,11 @@
 - Improve performance [\#89](https://github.com/EricHsia7/bus/pull/89) ([EricHsia7](https://github.com/EricHsia7))
 - Improve document manipulation [\#88](https://github.com/EricHsia7/bus/pull/88) ([EricHsia7](https://github.com/EricHsia7))
 
+**Merged pull requests:**
+
+- Add power-saving option [\#92](https://github.com/EricHsia7/bus/pull/92) ([EricHsia7](https://github.com/EricHsia7))
+- Fix codes on dev-power-saving-option-v3 [\#91](https://github.com/EricHsia7/bus/pull/91) ([EricHsia7](https://github.com/EricHsia7))
+
 ## [v2.0.1](https://github.com/EricHsia7/bus/tree/v2.0.1) (2025-01-16)
 
 [Full Changelog](https://github.com/EricHsia7/bus/compare/v2.0.0...v2.0.1)
