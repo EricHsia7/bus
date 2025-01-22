@@ -44,7 +44,7 @@ Quickly find routes, locations, and places of interest within the app.
 
 ## Privacy
 
-Your privacy and security are our top priorities. Your all data are stored locally, only used for improving your using experience, and not for advertising.
+Your privacy and security are our top priorities. Your all data are stored locally, only used for improving your using experience, and not for advertising. You can see them in [./src/data](./src/data/).
 
 ## Concepts
 
