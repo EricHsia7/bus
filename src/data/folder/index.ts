@@ -89,7 +89,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'location_on',
     default: true,
     index: 0,
-    storeIndex: 8,
+    storeIndex: 9,
     contentType: ['stop'],
     id: 'saved_stop'
   },
@@ -98,7 +98,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'route',
     default: true,
     index: 1,
-    storeIndex: 9,
+    storeIndex: 10,
     contentType: ['route'],
     id: 'saved_route'
   }

@@ -353,7 +353,7 @@ let Settings: SettingsObject = {
     name: '通知',
     icon: 'notifications',
     status: '',
-    action: `bus.notification.openNotificationDashboard()`,
+    action: `bus.notification.openNotification()`,
     type: 'page',
     description: ''
   },
