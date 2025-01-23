@@ -5,36 +5,36 @@ export function getNotificationAPIURL(provider: string, method: NotificationResp
   const url = new URL(provider);
   switch (method) {
     case 'cancel':
-      const [clientID, secret, scheduleID] = parameters;
-      const cancelToken = generateTOTPToken(clientID, secret);
+      const [cnacel_clientID, cancel_secret, cancel_scheduleID] = parameters;
+      const cancelToken = generateTOTPToken(cnacel_clientID, cancel_secret);
       url.searchParams.set('method', 'schedule');
-      url.searchParams.set('client_id', clientID);
+      url.searchParams.set('client_id', cnacel_clientID);
       url.searchParams.set('totp_token', cancelToken);
-      url.searchParams.set('schedule_id', scheduleID);
+      url.searchParams.set('schedule_id', cancel_scheduleID);
       break;
     case 'register':
-      const [telegramBotToken, telegramChatID] = parameters;
+      const [register_telegramBotToken, register_telegramChatID] = parameters;
       url.searchParams.set('method', 'register');
-      url.searchParams.set('token', telegramBotToken);
-      url.searchParams.set('chat_id', telegramChatID);
+      url.searchParams.set('token', register_telegramBotToken);
+      url.searchParams.set('chat_id', register_telegramChatID);
       break;
     case 'schedule':
-      const [clientID, secret, message, scheduled_time] = parameters;
-      const scheduleToken = generateTOTPToken(clientID, secret);
+      const [schedule_clientID, schedule_secret, schedule_message, schedule_scheduledTime] = parameters;
+      const scheduleToken = generateTOTPToken(schedule_clientID, schedule_secret);
       url.searchParams.set('method', 'schedule');
-      url.searchParams.set('client_id', clientID);
+      url.searchParams.set('client_id', schedule_clientID);
       url.searchParams.set('totp_token', scheduleToken);
-      url.searchParams.set('message', message);
-      url.searchParams.set('scheduled_time', scheduled_time.toISOString());
+      url.searchParams.set('message', schedule_message);
+      url.searchParams.set('scheduled_time', schedule_scheduledTime.toISOString());
       break;
     case 'update':
-      const [clientID, secret, telegramBotToken, telegramChatID] = parameters;
-      const updateToken = generateTOTPToken(clientID, secret);
+      const [update_clientID, update_secret, update_telegramBotToken, update_telegramChatID] = parameters;
+      const updateToken = generateTOTPToken(update_clientID, update_secret);
       url.searchParams.set('method', 'update');
-      url.searchParams.set('client_id', clientID);
+      url.searchParams.set('client_id', update_clientID);
       url.searchParams.set('totp_token', updateToken);
-      url.searchParams.set('token', telegramBotToken);
-      url.searchParams.set('chat_id', telegramChatID);
+      url.searchParams.set('token', update_telegramBotToken);
+      url.searchParams.set('chat_id', update_telegramChatID);
       break;
     default:
       break;
