@@ -675,10 +675,44 @@
       </div>
     </div>
 
-     <!-- notification, schedule notification  -->
-     <div class="css_notification_field" displayed="false">
+    <!-- notification, schedule notification  -->
+    <div class="css_notification_field" displayed="false">
       <div class="css_notification_body">
-      
+        <div class="css_notification_groups">
+          <div class="css_notification_group" group="provider">
+            <div class="css_notification_group_head">
+              <div class="css_notification_group_icon">
+                <span class="css_material_symbols_rounded">host</span>
+              </div>
+              <div class="css_notification_group_name">提供者</div>
+            </div>
+            <div class="css_notification_group_body">
+              <input type="text" placeholder="https://example.com/" />
+            </div>
+          </div>
+          <div class="css_notification_group" group="token">
+            <div class="css_notification_group_head">
+              <div class="css_notification_group_icon">
+                <span class="css_material_symbols_rounded">key</span>
+              </div>
+              <div class="css_notification_group_name">Telegram Bot Token</div>
+            </div>
+            <div class="css_notification_group_body">
+              <input type="text" placeholder="0123456789:ABCDEFG" />
+            </div>
+          </div>
+          <div class="css_notification_group" group="chat-id">
+            <div class="css_notification_group_head">
+              <div class="css_notification_group_icon">
+                <span class="css_material_symbols_rounded">account_circle</span>
+              </div>
+              <div class="css_notification_group_name">Telegram Chat ID</div>
+            </div>
+            <div class="css_notification_group_body">
+              <input type="text" placeholder="1234" />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="css_notification_head">
         <div class="css_notification_button_left" onclick="bus.notification.closeNotification()">
@@ -690,7 +724,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- splash screen -->
     <div class="css_splash_screen">

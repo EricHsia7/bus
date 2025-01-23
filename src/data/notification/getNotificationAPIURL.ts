@@ -1,6 +1,8 @@
 import { generateTOTPToken } from '../../tools/totp';
 import { NotificationResponseObject } from './index';
 
+const notificationProviderKey = 'n_provider';
+
 export function getNotificationAPIURL(provider: string, method: NotificationResponseObject['method'], parameters: Array<any>): string {
   const url = new URL(provider);
   switch (method) {
@@ -40,4 +42,26 @@ export function getNotificationAPIURL(provider: string, method: NotificationResp
       break;
   }
   return url.toString();
+}
+
+export function setNotificationAPIProvider(provider: string): Promise<boolean> {
+  await lfSetItem(7, notificationProviderKey, provider);
+  return true;
+}
+
+export function getNotificationAPIProvider(): Promise<string | false> {
+  const existingNotificationProvider = await lfGetItem(7, notificationProviderKey);
+  if (existingNotificationProvider) {
+    return existingNotificationProvider;
+  }
+  return false;
+}
+
+export function hasNotificationAPIProvider(): Promise<boolean> {
+  const existingNotificationProvider = await lfGetItem(7, notificationProviderKey);
+  if (existingNotificationProvider) {
+    return true;
+  } else {
+    return false;
+  }
 }
