@@ -66,7 +66,7 @@ export async function saveFormulatedNotification() {
           if (update.code === 200) {
             await setNotificationToken(token);
             await setNotificationChatID(chatID);
-            promptMessage('更新成功', 'check');
+            promptMessage('更新成功', 'check_circle');
           } else {
             promptMessage(update.result, 'error');
           }
@@ -81,7 +81,7 @@ export async function saveFormulatedNotification() {
             await setNotificationToken(token);
             await setNotificationChatID(chatID);
             await setNotificationRegister(newRegister);
-            promptMessage('註冊成功', 'check');
+            promptMessage('註冊成功', 'check_circle');
           } else {
             promptMessage(newRegister.result, 'error');
           }
@@ -98,7 +98,7 @@ export async function saveFormulatedNotification() {
         await setNotificationToken(token);
         await setNotificationChatID(chatID);
         await setNotificationRegister(newRegister);
-        promptMessage('註冊成功', 'check');
+        promptMessage('註冊成功', 'check_circle');
       }
     }
   }
