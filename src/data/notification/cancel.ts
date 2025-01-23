@@ -2,8 +2,8 @@ import { getNotificationAPIURL } from './getNotificationAPIURL';
 import { NotificationResponseObjectCancel } from './index';
 import { requestNotificationAPI } from './loader';
 
-export async function cancelNotificationSchedule(clientID: string, secret: string, scheduleID: string): Promise<NotificationResponseObjectCancel | false> {
-  const url = await getNotificationAPIURL('cancel', [clientID, secret, scheduleID]);
+export async function cancelNotificationSchedule(scheduleID: string): Promise<NotificationResponseObjectCancel | false> {
+  const url = await getNotificationAPIURL('cancel', [scheduleID]);
   if (url === false) {
     return false;
   } else {
