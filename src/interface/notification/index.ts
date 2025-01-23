@@ -1,4 +1,4 @@
-import { getNotificationAPIProvider, hasNotificationAPIProvider, setNotificationAPIProvider } from '../../data/notification/getNotificationAPIURL';
+import { getNotificationProvider, hasNotificationProvider, hasNotificationToken, setNotificationProvider } from '../../data/notification/index';
 import { getNotificationRegister, hasNotificationRegister, registerNotification, setNotificationRegister } from '../../data/notification/register';
 import { updateNotification } from '../../data/notification/update';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -13,9 +13,17 @@ const ProviderInputElement = elementQuerySelector(NotificationGroupsElement, '.c
 const TokenInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="token"] .css_notification_group_body input');
 const ChatIDInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="chat-id"] .css_notification_group_body input');
 
+async function initializeNotificationField() {
+  const existenceOfRegister = await hasNotificationRegister();
+  const existenceOfProvider = await hasNotificationProvider();
+  if (existenceOfRegister && existenceOfProvider) {
+  }
+}
+
 export function openNotification(): void {
   pushPageHistory('Notification');
   NotificationField.setAttribute('displayed', 'true');
+  initializeNotificationField();
 }
 
 export function closeNotification(): void {
@@ -24,17 +32,20 @@ export function closeNotification(): void {
 }
 
 export async function saveFormulatedNotification() {
+  promptMessage('處理中', 'manufacturing');
   const provider = ProviderInputElement.value;
   const token = TokenInputElement.value;
   const chatID = ChatIDInputElement.value;
+
+  
   const existenceOfRegister = await hasNotificationRegister();
-  const existenceOfProvider = await hasNotificationAPIProvider();
+  const existenceOfProvider = await hasNotificationProvider();
   if (existenceOfRegister && existenceOfProvider) {
     const existingRegister = await getNotificationRegister();
-    const existingProvider = await getNotificationAPIProvider();
+    const existingProvider = await getNotificationProvider();
     if (!(existingRegister === false) && !(existingProvider === false)) {
       if (provider === existingProvider) {
-        const update = await updateNotification(provider, existingRegister.client_id, existingRegister.secret, token, chatID);
+        const update = await updateNotification(existingRegister.client_id, existingRegister.secret, token, chatID);
         if (update === false) {
           promptMessage('發生未知錯誤', 'error');
         } else {
@@ -45,8 +56,8 @@ export async function saveFormulatedNotification() {
           }
         }
       } else {
-        const newProvider = await setNotificationAPIProvider(provider);
-        const newRegister = await registerNotification(provider, token, chatID);
+        const newProvider = await setNotificationProvider(provider);
+        const newRegister = await registerNotification(token, chatID);
         if (newRegister === false || newProvider === false) {
           promptMessage('發生未知錯誤', 'error');
         } else {
@@ -60,8 +71,8 @@ export async function saveFormulatedNotification() {
       }
     }
   } else {
-    const newProvider = await setNotificationAPIProvider(provider);
-    const newRegister = await registerNotification(provider, token, chatID);
+    const newProvider = await setNotificationProvider(provider);
+    const newRegister = await registerNotification(token, chatID);
     if (newRegister === false || newProvider === false) {
       promptMessage('發生未知錯誤', 'error');
     } else {

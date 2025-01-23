@@ -5,13 +5,17 @@ import { requestNotificationAPI } from './loader';
 
 const notificationRegisterKey = 'n_register';
 
-export async function registerNotification(provider: string, telegramBotToken: string, telegramChatID: number): Promise<NotificationResponseObjectRegister | false> {
-  const url = getNotificationAPIURL(provider, 'register', [telegramBotToken, telegramChatID]);
-  const result = await requestNotificationAPI(url);
-  if (result === false) {
-    return result as false;
+export async function registerNotification(telegramBotToken: string, telegramChatID: number): Promise<NotificationResponseObjectRegister | false> {
+  const url = await getNotificationAPIURL('register', [telegramBotToken, telegramChatID]);
+  if (url === false) {
+    return false;
   } else {
-    return result as NotificationResponseObjectRegister;
+    const result = await requestNotificationAPI(url);
+    if (result === false) {
+      return result as false;
+    } else {
+      return result as NotificationResponseObjectRegister;
+    }
   }
 }
 
@@ -29,8 +33,7 @@ export async function setNotificationRegister(register: NotificationResponseObje
   if (register.code === '200') {
     await lfSetItem(7, notificationRegisterKey, JSON.stringify(register));
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
