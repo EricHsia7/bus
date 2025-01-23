@@ -1,4 +1,4 @@
-import { getNotificationProvider, hasNotificationProvider, hasNotificationToken, setNotificationProvider } from '../../data/notification/index';
+import { getNotificationChatID, getNotificationProvider, getNotificationToken, hasNotificationProvider, hasNotificationToken, setNotificationChatID, setNotificationProvider, setNotificationToken } from '../../data/notification/index';
 import { getNotificationRegister, hasNotificationRegister, registerNotification, setNotificationRegister } from '../../data/notification/register';
 import { updateNotification } from '../../data/notification/update';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -14,9 +14,25 @@ const TokenInputElement = elementQuerySelector(NotificationGroupsElement, '.css_
 const ChatIDInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="chat-id"] .css_notification_group_body input');
 
 async function initializeNotificationField() {
-  const existenceOfRegister = await hasNotificationRegister();
-  const existenceOfProvider = await hasNotificationProvider();
-  if (existenceOfRegister && existenceOfProvider) {
+  const existingNotificationProvider = await getNotificationProvider();
+  if (existingNotificationProvider === false) {
+    ProviderInputElement.value = '';
+  } else {
+    ProviderInputElement.value = existingNotificationProvider;
+  }
+
+  const existingNotificationToken = await getNotificationToken();
+  if (existingNotificationToken === false) {
+    TokenInputElement.value = '';
+  } else {
+    TokenInputElement.value = existingNotificationToken;
+  }
+
+  const existingNotificationChatID = await getNotificationChatID();
+  if (existingNotificationChatID === false) {
+    ChatIDInputElement.value = '';
+  } else {
+    ChatIDInputElement.value = existingNotificationChatID;
   }
 }
 
@@ -36,8 +52,6 @@ export async function saveFormulatedNotification() {
   const provider = ProviderInputElement.value;
   const token = TokenInputElement.value;
   const chatID = ChatIDInputElement.value;
-
-  
   const existenceOfRegister = await hasNotificationRegister();
   const existenceOfProvider = await hasNotificationProvider();
   if (existenceOfRegister && existenceOfProvider) {
@@ -50,6 +64,8 @@ export async function saveFormulatedNotification() {
           promptMessage('發生未知錯誤', 'error');
         } else {
           if (update.code === 200) {
+            await setNotificationToken(token);
+            await setNotificationChatID(chatID);
             promptMessage('更新成功', 'check');
           } else {
             promptMessage(update.result, 'error');
@@ -62,8 +78,10 @@ export async function saveFormulatedNotification() {
           promptMessage('發生未知錯誤', 'error');
         } else {
           if (newRegister.code === 200) {
-            promptMessage('註冊成功', 'check');
+            await setNotificationToken(token);
+            await setNotificationChatID(chatID);
             await setNotificationRegister(newRegister);
+            promptMessage('註冊成功', 'check');
           } else {
             promptMessage(newRegister.result, 'error');
           }
@@ -77,8 +95,10 @@ export async function saveFormulatedNotification() {
       promptMessage('發生未知錯誤', 'error');
     } else {
       if (newRegister.code === 200) {
-        promptMessage('註冊成功');
+        await setNotificationToken(token);
+        await setNotificationChatID(chatID);
         await setNotificationRegister(newRegister);
+        promptMessage('註冊成功');
       }
     }
   }
