@@ -33,10 +33,7 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { registerNotification } from './data/notification/register';
-import { scheduleNotificationMessage } from './data/notification/schedule';
-import { updateNotification } from './data/notification/update';
-import { cancelNotificationSchedule } from './data/notification/cancel';
+import { closeNotification, openNotification } from './interface/notification/index';
 
 import './interface/theme.css';
 
@@ -141,6 +138,14 @@ import './interface/personal-schedule-editor/schedule-name.css';
 import './interface/personal-schedule-editor/schedule-start-time.css';
 import './interface/personal-schedule-editor/schedule-end-time.css';
 import './interface/personal-schedule-editor/schedule-days.css';
+
+import './interface/notification/field.css';
+import './interface/notification/head.css';
+import './interface/notification/body.css';
+import './interface/notification/groups.css';
+import './interface/notification/provider.css';
+import './interface/notification/token.css';
+import './interface/notification/chat-id.css';
 
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
@@ -343,11 +348,9 @@ window.bus = {
     openBus,
     closeBus
   },
-  test: {
-    registerNotification,
-    scheduleNotificationMessage,
-    updateNotification,
-    cancelNotificationSchedule
+  notification: {
+    openNotification,
+    closeNotification
   }
 };
 

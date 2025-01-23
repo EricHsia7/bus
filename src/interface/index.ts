@@ -4,6 +4,7 @@ import { closeBus, openBus } from './bus/index';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
+import { closeNotification, openNotification } from './notification/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
@@ -12,7 +13,7 @@ import { closeSettings, openSettings } from './settings/index';
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'Notification' | 'ScheduleNotification';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -80,6 +81,11 @@ export function closePreviousPage(): void {
       case 'Bus':
         closeBus();
         break;
+      case 'Notification':
+        closeNotification();
+        break;
+      case 'ScheduleNotification':
+        break;
       default:
         break;
     }
@@ -133,6 +139,11 @@ export function openPreviousPage(): void {
         break;
       case 'Bus':
         openBus();
+        break;
+      case 'Notification':
+        openNotification();
+        break;
+      case 'ScheduleNotification':
         break;
       default:
         break;
