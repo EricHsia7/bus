@@ -71,7 +71,9 @@ export async function scheduleMessage(notificationAPI: string, clientID: string,
 
     // Attempt to parse the JSON response
     try {
-      const json = (await response.json()) as NotificationScheduleResponse;
+      const text = await response.text();
+      console.log(response.status, text);
+      const json = JSON.parse(text) as NotificationScheduleResponse;
       return json;
     } catch (jsonError) {
       console.error('Failed to parse JSON response', jsonError);
