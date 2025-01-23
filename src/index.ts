@@ -34,6 +34,7 @@ import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
+import { scheduleNotificationMessage } from './data/notification/schedule';
 
 import './interface/theme.css';
 
@@ -352,6 +353,9 @@ window.bus = {
     openNotification,
     closeNotification,
     saveFormulatedNotification
+  },
+  test: {
+    scheduleNotificationMessage
   }
 };
 
