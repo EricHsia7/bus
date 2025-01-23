@@ -1,6 +1,5 @@
-import { getProvider } from '../apis/getProvider/index';
 import { getNotificationAPIURL } from './getNotificationAPIURL';
-import { NotificationResponseObjectSchedule } from './index';
+import { getNotificationProvider, NotificationResponseObjectSchedule } from './index';
 import { requestNotificationAPI } from './loader';
 import { getNotificationRegister } from './register';
 
@@ -20,7 +19,7 @@ export async function scheduleNotificationMessage(provider: string, client_id: s
 
 export async function scheduleNotificationMessageForRegisteredClient(message: string, scheduled_time: string): Promise<NotificationResponseObjectSchedule | false> {
   const existingNotificationRegister = await getNotificationRegister();
-  const existingProvider = await getProvider();
+  const existingProvider = await getNotificationProvider();
   if (existingNotificationRegister === false || existingProvider === false) {
     return false;
   } else {
