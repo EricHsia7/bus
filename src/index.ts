@@ -33,7 +33,7 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { registerNotificationClient, scheduleMessage } from './data/notification/index';
+import { registerNotificationClient, scheduleNotificationMessage } from './data/notification/index';
 
 import './interface/theme.css';
 
@@ -342,7 +342,7 @@ window.bus = {
   },
   test: {
     registerNotificationClient,
-    scheduleMessage
+    scheduleMessage: scheduleNotificationMessage
   }
 };
 
