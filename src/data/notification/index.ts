@@ -25,12 +25,14 @@ export interface NotificationScheduleResponse {
   schedule_id: string;
 }
 
-export async function scheduleMessage(notificationAPI: string, clientID: string, secret: string): Promise<NotificationScheduleResponse | false> {
+export async function scheduleMessage(notificationAPI: string, clientID: string, secret: string, message: string, scheduled_time: Date): Promise<NotificationScheduleResponse | false> {
   const url = new URL(notificationAPI);
   url.searchParams.set('method', 'schedule');
   url.searchParams.set('client_id', clientID);
   const token = generateTOTPToken(clientID, secret);
   url.searchParams.set('totp_token', token);
+  url.searchParams.set('message', message);
+  url.searchParams.set('scheduled_time', scheduled_time.toISOString());
   const response = await fetch(url.toString(), { method: 'POST' });
   if (response.ok) {
     const json = (await response.json()) as NotificationScheduleResponse;
