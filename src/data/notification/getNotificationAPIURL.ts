@@ -1,22 +1,19 @@
 import { getNoCacheParameter } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
-import { getNotificationProvider, NotificationResponseObject } from './index';
-import { getNotificationRegister } from './register';
+import { NotificationResponseObject } from './index';
 
-export async function getNotificationAPIURL(method: NotificationResponseObject['method'], parameters: Array<any>): Promise<string | false> {
-  const provider = await getNotificationProvider();
-  const existingNotificationRegister = await getNotificationRegister();
-  if (provider === false || existingNotificationRegister === false) {
+export async function getNotificationAPIURL(provider: string, method: NotificationResponseObject['method'], parameters: Array<any>): Promise<string | false> {
+  if (provider === false) {
     return false;
   } else {
     const url = new URL(provider);
     url.searchParams.set('_', getNoCacheParameter(30000));
     switch (method) {
       case 'cancel':
-        const [cancel_scheduleID] = parameters;
-        const cancelToken = generateTOTPToken(existingNotificationRegister.client_id, existingNotificationRegister.secret);
+        const [cancel_clientID, cancel_secret, cancel_scheduleID] = parameters;
+        const cancelToken = generateTOTPToken(cancel_clientID, cancel_secret);
         url.searchParams.set('method', 'schedule');
-        url.searchParams.set('client_id', existingNotificationRegister.client_id);
+        url.searchParams.set('client_id', cancel_clientID);
         url.searchParams.set('totp_token', cancelToken);
         url.searchParams.set('schedule_id', cancel_scheduleID);
         break;
@@ -27,19 +24,19 @@ export async function getNotificationAPIURL(method: NotificationResponseObject['
         url.searchParams.set('chat_id', register_telegramChatID);
         break;
       case 'schedule':
-        const [schedule_message, schedule_scheduledTime] = parameters;
-        const scheduleToken = generateTOTPToken(existingNotificationRegister.client_id, existingNotificationRegister.secret);
+        const [schedule_clientID, schedule_secret, schedule_message, schedule_scheduledTime] = parameters;
+        const scheduleToken = generateTOTPToken(schedule_clientID, schedule_secret);
         url.searchParams.set('method', 'schedule');
-        url.searchParams.set('client_id', existingNotificationRegister.client_id);
+        url.searchParams.set('client_id', schedule_clientID);
         url.searchParams.set('totp_token', scheduleToken);
         url.searchParams.set('message', schedule_message);
-        url.searchParams.set('scheduled_time', schedule_scheduledTime.toISOString());
+        url.searchParams.set('scheduled_time', new Date(schedule_scheduledTime).toISOString());
         break;
       case 'update':
-        const [update_telegramBotToken, update_telegramChatID] = parameters;
-        const updateToken = generateTOTPToken(existingNotificationRegister.client_id, existingNotificationRegister.secret);
+        const [update_clientID, update_secret, update_telegramBotToken, update_telegramChatID] = parameters;
+        const updateToken = generateTOTPToken(update_clientID, update_secret);
         url.searchParams.set('method', 'update');
-        url.searchParams.set('client_id', existingNotificationRegister.client_id);
+        url.searchParams.set('client_id', update_clientID);
         url.searchParams.set('totp_token', updateToken);
         url.searchParams.set('token', update_telegramBotToken);
         url.searchParams.set('chat_id', update_telegramChatID);

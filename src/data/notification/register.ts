@@ -5,8 +5,8 @@ import { requestNotificationAPI } from './loader';
 
 const notificationRegisterKey = 'n_register';
 
-export async function registerNotification(telegramBotToken: string, telegramChatID: number): Promise<NotificationResponseObjectRegister | false> {
-  const url = await getNotificationAPIURL('register', [telegramBotToken, telegramChatID]);
+export async function registerNotification(provider: string, telegramBotToken: string, telegramChatID: number): Promise<NotificationResponseObjectRegister | false> {
+  const url = await getNotificationAPIURL(provider, 'register', [telegramBotToken, telegramChatID]);
   if (url === false) {
     return false;
   } else {
