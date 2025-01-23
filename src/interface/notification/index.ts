@@ -98,7 +98,7 @@ export async function saveFormulatedNotification() {
         await setNotificationToken(token);
         await setNotificationChatID(chatID);
         await setNotificationRegister(newRegister);
-        promptMessage('註冊成功');
+        promptMessage('註冊成功', 'check');
       }
     }
   }
