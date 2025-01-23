@@ -59,7 +59,7 @@ export async function saveFormulatedNotification() {
     const existingProvider = await getNotificationProvider();
     if (!(existingRegister === false) && !(existingProvider === false)) {
       if (provider === existingProvider) {
-        const update = await updateNotification(existingRegister.client_id, existingRegister.secret, token, chatID);
+        const update = await updateNotification(provider, existingRegister.client_id, existingRegister.secret, token, chatID);
         if (update === false) {
           promptMessage('發生未知錯誤', 'error');
         } else {
@@ -72,12 +72,12 @@ export async function saveFormulatedNotification() {
           }
         }
       } else {
-        const newProvider = await setNotificationProvider(provider);
-        const newRegister = await registerNotification(token, chatID);
+        const newRegister = await registerNotification(provider, token, chatID);
         if (newRegister === false || newProvider === false) {
           promptMessage('發生未知錯誤', 'error');
         } else {
           if (newRegister.code === 200) {
+            await setNotificationProvider(provider);
             await setNotificationToken(token);
             await setNotificationChatID(chatID);
             await setNotificationRegister(newRegister);
@@ -89,12 +89,12 @@ export async function saveFormulatedNotification() {
       }
     }
   } else {
-    const newProvider = await setNotificationProvider(provider);
-    const newRegister = await registerNotification(token, chatID);
+    const newRegister = await registerNotification(provider, token, chatID);
     if (newRegister === false || newProvider === false) {
       promptMessage('發生未知錯誤', 'error');
     } else {
       if (newRegister.code === 200) {
+        await setNotificationProvider(provider);
         await setNotificationToken(token);
         await setNotificationChatID(chatID);
         await setNotificationRegister(newRegister);
