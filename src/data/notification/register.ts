@@ -30,7 +30,7 @@ export async function hasNotificationRegister(): Promise<boolean> {
 }
 
 export async function setNotificationRegister(register: NotificationResponseObjectRegister): Promise<boolean> {
-  if (register.code === '200') {
+  if (register.code === 200) {
     await lfSetItem(7, notificationRegisterKey, JSON.stringify(register));
     return true;
   } else {
