@@ -73,7 +73,7 @@ export async function saveFormulatedNotification() {
         }
       } else {
         const newRegister = await registerNotification(provider, token, chatID);
-        if (newRegister === false || newProvider === false) {
+        if (newRegister === false) {
           promptMessage('發生未知錯誤', 'error');
         } else {
           if (newRegister.code === 200) {
@@ -90,7 +90,7 @@ export async function saveFormulatedNotification() {
     }
   } else {
     const newRegister = await registerNotification(provider, token, chatID);
-    if (newRegister === false || newProvider === false) {
+    if (newRegister === false) {
       promptMessage('發生未知錯誤', 'error');
     } else {
       if (newRegister.code === 200) {
