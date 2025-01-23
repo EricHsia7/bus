@@ -22,15 +22,13 @@ export async function registerNotification(provider: string, telegramBotToken: s
 export async function hasNotificationRegister(): Promise<boolean> {
   const existingNotificationRegister = await lfGetItem(7, notificationRegisterKey);
   if (existingNotificationRegister) {
-    if (register.code === '200') {
-      return true;
-    }
+    return true;
   }
   return false;
 }
 
 export async function setNotificationRegister(register: NotificationResponseObjectRegister): Promise<boolean> {
-  if (register.code === 200) {
+  if (register.code === 200 && register.method === 'register') {
     await lfSetItem(7, notificationRegisterKey, JSON.stringify(register));
     return true;
   } else {
