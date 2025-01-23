@@ -11,7 +11,12 @@ export async function registerNotificationClient(notificationAPI: string, telegr
   url.searchParams.set('method', 'register');
   url.searchParams.set('token', telegramBotToken);
   url.searchParams.set('chat_id', telegramChatID);
-  const response = await fetch(url.toString(), { method: 'POST' });
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
   if (response.ok) {
     const json = (await response.json()) as NotificationRegistryResponse;
     return json;
@@ -46,7 +51,12 @@ export async function scheduleMessage(notificationAPI: string, clientID: string,
     url.searchParams.set('scheduled_time', scheduled_time.toISOString());
 
     // Send the request
-    const response = await fetch(url.toString(), { method: 'POST' });
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
     if (!response.ok) {
       // Log additional details for debugging
