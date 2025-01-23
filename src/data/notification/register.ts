@@ -40,7 +40,7 @@ export async function getNotificationRegister(): Promise<NotificationResponseObj
   const existingNotificationRegister = await lfGetItem(7, notificationRegisterKey);
   if (existingNotificationRegister) {
     const existingNotificationRegisterObject = JSON.parse(existingNotificationRegister) as NotificationResponseObjectRegister;
-    if (existingNotificationRegisterObject.code === '200') {
+    if (existingNotificationRegisterObject.code === 200) {
       return existingNotificationRegisterObject;
     }
   }
