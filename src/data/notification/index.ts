@@ -12,7 +12,7 @@ export async function registerNotificationClient(notificationAPI: string, telegr
   url.searchParams.set('token', telegramBotToken);
   url.searchParams.set('chat_id', telegramChatID);
   const response = await fetch(url.toString(), {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     }
@@ -52,7 +52,7 @@ export async function scheduleMessage(notificationAPI: string, clientID: string,
 
     // Send the request
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -72,7 +72,6 @@ export async function scheduleMessage(notificationAPI: string, clientID: string,
     // Attempt to parse the JSON response
     try {
       const text = await response.text();
-      console.log(response.status, text);
       const json = JSON.parse(text) as NotificationScheduleResponse;
       return json;
     } catch (jsonError) {
