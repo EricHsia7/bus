@@ -1,8 +1,8 @@
 import { getNoCacheParameter } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
-import { NotificationResponseObject } from './index';
+import { NResponseObject } from './index';
 
-export async function getNotificationAPIURL(provider: string, method: NotificationResponseObject['method'], parameters: Array<any>): Promise<string | false> {
+export async function getNotificationAPIURL(provider: string, method: NResponseObject['method'], parameters: Array<any>): Promise<string | false> {
   const url = new URL(provider);
   url.searchParams.set('_', getNoCacheParameter(30000));
   switch (method) {

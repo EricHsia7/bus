@@ -102,3 +102,12 @@ export function booleanToString(x: boolean): 'true' | 'false' {
     }
   }
 }
+
+export function isValidURL(string: string): boolean {
+  try {
+    new URL(string);
+    return true; // If no error is thrown, it's a valid URL
+  } catch (_) {
+    return false; // Invalid URL
+  }
+}

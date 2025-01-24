@@ -1,8 +1,8 @@
 import { getNotificationAPIURL } from './getNotificationAPIURL';
-import { NotificationResponseObjectUpdate } from './index';
+import { NResponseUpdate } from './index';
 import { requestNotificationAPI } from './loader';
 
-export async function updateNotification(provider: string, client_id: string, secret: string, telegramBotToken: string, telegramChatID: number): Promise<NotificationResponseObjectUpdate | false> {
+export async function updateNotification(provider: string, client_id: string, secret: string, telegramBotToken: string, telegramChatID: number): Promise<NResponseUpdate | false> {
   const url = await getNotificationAPIURL(provider, 'update', [client_id, secret, telegramBotToken, telegramChatID]);
   if (url === false) {
     return false;
@@ -11,7 +11,7 @@ export async function updateNotification(provider: string, client_id: string, se
     if (result === false) {
       return result as false;
     } else {
-      return result as NotificationResponseObjectUpdate;
+      return result as NResponseUpdate;
     }
   }
 }
