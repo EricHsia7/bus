@@ -35,7 +35,7 @@ import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
 import { currentNotificationAPI } from './data/notification/index';
-import { openScheduleNotification } from './interface/schedule-notification/index';
+import { closeScheduleNotification, openScheduleNotification } from './interface/schedule-notification/index';
 
 import './interface/theme.css';
 
@@ -148,6 +148,12 @@ import './interface/notification/groups.css';
 import './interface/notification/provider.css';
 import './interface/notification/token.css';
 import './interface/notification/chat-id.css';
+
+import './interface/schedule-notification/field.css';
+import './interface/schedule-notification/head.css';
+import './interface/schedule-notification/body.css';
+import './interface/schedule-notification/list.css';
+import './interface/schedule-notification/item.css';
 
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
@@ -354,10 +360,9 @@ window.bus = {
   notification: {
     openNotification,
     closeNotification,
-    saveFormulatedNotification
-  },
-  scheduleNotification: {
-    openScheduleNotification
+    saveFormulatedNotification,
+    openScheduleNotification,
+    closeScheduleNotification
   }
 };
 
