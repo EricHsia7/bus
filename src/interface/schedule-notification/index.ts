@@ -1,6 +1,6 @@
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../data/apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
-import { getStop, SimplifiedStop, SimplifiedStopItem, StopItem } from '../../data/apis/getStop/index';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
 import { currentNotificationAPI, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -59,7 +59,6 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     promptMessage('處理中', 'manufacturing');
     actionButtonElement.setAttribute('enable', 'false');
     closeScheduleNotification();
-    const thisOption = scheduleNotificationOptions[index];
     const requestID = generateIdentifier('r');
     const Stop = (await getStop(requestID)) as SimplifiedStop;
     const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
