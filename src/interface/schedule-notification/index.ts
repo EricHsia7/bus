@@ -115,6 +115,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     }
   } else {
     promptMessage('在設定中註冊後才可設定到站通知', 'warning');
+    closeScheduleNotification();
     return;
   }
 }
