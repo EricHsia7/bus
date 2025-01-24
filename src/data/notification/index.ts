@@ -34,16 +34,16 @@ interface NResponseUpdate {
 
 type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseUpdate;
 
-interface NClient {
+interface NClientFrontend {
   provider: string;
   client_id: string;
   secret: string;
 }
 
 export class NotificationAPI {
-  private provider: NClient['provider'] = ''; // base url
-  private client_id: NClient['client_id'] = '';
-  private secret: NClient['secret'] = '';
+  private provider: NClientFrontend['provider'] = ''; // base url
+  private client_id: NClientFrontend['client_id'] = '';
+  private secret: NClientFrontend['secret'] = '';
 
   constructor() {}
 
@@ -154,7 +154,7 @@ export class NotificationAPI {
   }
 
   private async saveClient() {
-    const currentClient: NClient = {
+    const currentClient: NClientFrontend = {
       provider: this.provider,
       client_id: this.client_id,
       secret: this.secret,
@@ -165,7 +165,7 @@ export class NotificationAPI {
   private async loadClient() {
     const existingClient = await lfGetItem(7, 'n_client');
     if (existingClient) {
-      const existingClientObject = JSON.parse(existingClient) as NClient;
+      const existingClientObject = JSON.parse(existingClient) as NClientFrontend;
       this.provider = existingClientObject.provider;
       this.client_id = existingClientObject.client_id;
       this.secret = existingClientObject.secret;
@@ -180,7 +180,7 @@ export class NotificationAPI {
     }
   }
 
-  public setProvider(provider: NClient['provider']): void {
+  public setProvider(provider: NClientFrontend['provider']): void {
     if (isValidURL(provider)) {
       this.provider = provider;
     } else {
@@ -188,7 +188,7 @@ export class NotificationAPI {
     }
   }
 
-  public getProvider(): NClient['provider'] {
+  public getProvider(): NClientFrontend['provider'] {
     return this.provider;
   }
 
@@ -212,7 +212,7 @@ export class NotificationAPI {
     }
   }
 
-  public async login(client_id: NClient['client_id'], secret: NClient['secret']) {
+  public async login(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
     if (!client_id || !secret) {
       await this.loadClient();
     } else {
