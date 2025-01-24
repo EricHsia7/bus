@@ -1,7 +1,7 @@
 import { currentNotificationAPI } from '../../data/notification/index';
 import { isValidURL } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationField = documentQuerySelector('.css_notification_field');
@@ -22,11 +22,13 @@ export function openNotification(): void {
   pushPageHistory('Notification');
   NotificationField.setAttribute('displayed', 'true');
   initializeNotificationField();
+  closePreviousPage();
 }
 
 export function closeNotification(): void {
-  revokePageHistory('Notification');
+  // revokePageHistory('Notification');
   NotificationField.setAttribute('displayed', 'false');
+  openPreviousPage();
 }
 
 export async function saveFormulatedNotification() {
