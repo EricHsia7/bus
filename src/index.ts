@@ -354,6 +354,9 @@ window.bus = {
     openNotification,
     closeNotification,
     saveFormulatedNotification
+  },
+  test: {
+    currentNotificationAPI
   }
 };
 
