@@ -131,7 +131,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_route_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop', ['${identifier}', null, null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -351,6 +351,14 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       });
     }
 
+    function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
+      const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
+      saveToFolderButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
+      isSaved('stop', thisItem.id).then((e) => {
+        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+      });
+    }
+
     if (previousItem === null) {
       updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
       updateName(thisItemElement, thisItem);
@@ -364,9 +372,11 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateSaveToFolderButton(thisItemElement, thisItem);
+      updateScheduleNotificationButton(thisItemElement, thisItem)
     } else {
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+      if (!(thisItem.status.time === previousItem.status.time)) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
+        updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
@@ -387,6 +397,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateName(thisItemElement, thisItem);
         updateOverlappingRoutes(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
+        updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (!(animation === previousAnimation)) {
         updateAnimation(thisItemElement, thisThreadBoxElement, animation);

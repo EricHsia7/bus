@@ -6,37 +6,38 @@ import { formatTime } from '../../tools/time';
 export interface EstimateTimeStatus {
   code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   text: string;
+  time: number;
 }
 
 export function parseEstimateTime(EstimateTime: string, mode: number): EstimateTimeStatus {
   if (typeof EstimateTime === 'string') {
     const time = parseInt(EstimateTime);
     if (time === -3) {
-      return { code: 6, text: '末班駛離' };
+      return { code: 6, text: '末班駛離', time };
     }
     if (time === -4) {
-      return { code: 5, text: '今日停駛' };
+      return { code: 5, text: '今日停駛', time };
     }
     if (time === -2) {
-      return { code: 4, text: '交通管制' };
+      return { code: 4, text: '交通管制', time };
     }
     if (time === -1) {
-      return { code: 3, text: '未發車' };
+      return { code: 3, text: '未發車', time };
     }
     if (0 <= time && time <= 10) {
-      return { code: 2, text: '進站中' };
+      return { code: 2, text: '進站中', time };
     }
     if (10 < time && time <= 180) {
-      return { code: 1, text: formatTime(time, mode) };
+      return { code: 1, text: formatTime(time, mode), time };
     }
     if (180 < time && time <= 250) {
-      return { code: 0.5, text: formatTime(time, mode) };
+      return { code: 0.5, text: formatTime(time, mode), time };
     }
     if (250 < time) {
-      return { code: 0, text: formatTime(time, mode) };
+      return { code: 0, text: formatTime(time, mode), time };
     }
   }
-  return { code: 7, text: '發生錯誤' };
+  return { code: 7, text: '發生錯誤', time: -5 };
 }
 
 interface Moment {

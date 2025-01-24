@@ -302,3 +302,51 @@ export class NotificationAPI {
 }
 
 export let currentNotificationAPI = new NotificationAPI();
+
+export interface ScheduleNotificationOption {
+  name: string;
+  status: string
+  timeOffset: number;
+  index: number
+}
+
+export type ScheduleNotificationOptions = Array<ScheduleNotificationOption>;
+
+export const scheduleNotificationOptions: ScheduleNotificationOptions = [
+  {
+    name: '到站前5分鐘',
+    status: '公車將在10分鐘內進站',
+    timeOffset: -5,
+    index: 0
+  },
+  {
+    name: '到站前10分鐘',
+    status:'公車將在10分鐘內進站',
+    timeOffset: -10,
+    index: 1
+  },
+  {
+    name: '到站前15分鐘',
+    status:'公車將在15分鐘內進站',
+    timeOffset: -15,
+    index: 2
+  },
+  {
+    name: '到站前20分鐘',
+    status:'公車將在20分鐘內進站',
+    timeOffset: -20,
+    index: 3
+  },
+  {
+    name: '到站前25分鐘',
+    status:'公車將在25分鐘內進站',
+    timeOffset: -25,
+    index: 4
+  },
+  {
+    name: '到站前30分鐘',
+    status:'公車將在30分鐘內進站',
+    timeOffset: -30,
+    index: 5
+  }
+];
