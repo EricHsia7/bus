@@ -1,6 +1,4 @@
 import { currentNotificationAPI } from '../../data/notification/index';
-import { getNotificationRegister, hasNotificationRegister, registerNotification, setNotificationRegister } from '../../data/notification/register';
-import { updateNotification } from '../../data/notification/update';
 import { isValidURL } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { pushPageHistory, revokePageHistory } from '../index';
