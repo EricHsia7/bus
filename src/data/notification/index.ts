@@ -1,3 +1,4 @@
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { isValidURL } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
 import { lfGetItem, lfSetItem } from '../storage/index';
@@ -305,9 +306,10 @@ export let currentNotificationAPI = new NotificationAPI();
 
 export interface ScheduleNotificationOption {
   name: string;
-  status: string
+  status: string;
   timeOffset: number;
-  index: number
+  icon: MaterialSymbols;
+  index: number;
 }
 
 export type ScheduleNotificationOptions = Array<ScheduleNotificationOption>;
@@ -317,36 +319,42 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
     name: '到站前5分鐘',
     status: '公車將在10分鐘內進站',
     timeOffset: -5,
+    icon: 'clock_loader_10',
     index: 0
   },
   {
     name: '到站前10分鐘',
-    status:'公車將在10分鐘內進站',
+    status: '公車將在10分鐘內進站',
     timeOffset: -10,
+    icon: 'clock_loader_20',
     index: 1
   },
   {
     name: '到站前15分鐘',
-    status:'公車將在15分鐘內進站',
+    status: '公車將在15分鐘內進站',
     timeOffset: -15,
+    icon: 'clock_loader_40',
     index: 2
   },
   {
     name: '到站前20分鐘',
-    status:'公車將在20分鐘內進站',
+    status: '公車將在20分鐘內進站',
     timeOffset: -20,
+    icon: 'clock_loader_60',
     index: 3
   },
   {
     name: '到站前25分鐘',
-    status:'公車將在25分鐘內進站',
+    status: '公車將在25分鐘內進站',
     timeOffset: -25,
+    icon: 'clock_loader_80',
     index: 4
   },
   {
     name: '到站前30分鐘',
-    status:'公車將在30分鐘內進站',
+    status: '公車將在30分鐘內進站',
     timeOffset: -30,
+    icon: 'clock_loader_90',
     index: 5
   }
 ];

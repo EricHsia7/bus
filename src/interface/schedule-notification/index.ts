@@ -5,6 +5,7 @@ import { currentNotificationAPI, ScheduleNotificationOption, scheduleNotificatio
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { offsetDate } from '../../tools/time';
+import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -24,7 +25,7 @@ function generateElementOfItem(item: ScheduleNotificationOption, type: 'stop', p
     default:
       break;
   }
-  element.innerHTML = /*html*/ `<div class="css_save_to_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
+  element.innerHTML = /*html*/ `<div class="css_schedule_notification_item_icon">${getIconHTML(item.icon)}</div><div class="css_schedule_notification_item_name">${item.name}</div>`;
   return {
     element: element,
     id: identifier
