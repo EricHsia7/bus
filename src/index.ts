@@ -34,7 +34,6 @@ import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
-import { scheduleNotificationMessageForRegisteredClient } from './data/notification/schedule';
 
 import './interface/theme.css';
 
@@ -160,6 +159,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { currentNotificationAPI } from './data/notification/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -244,6 +244,7 @@ window.bus = {
               });
               openPermalink();
               fadeOutSplashScreen(function () {
+                currentNotificationAPI.login();
                 askForPositioningPermission();
               });
             }
@@ -353,9 +354,6 @@ window.bus = {
     openNotification,
     closeNotification,
     saveFormulatedNotification
-  },
-  test: {
-    scheduleNotificationMessageForRegisteredClient
   }
 };
 

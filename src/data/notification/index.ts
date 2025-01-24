@@ -48,13 +48,7 @@ export class NotificationAPI {
   private telegramBotToken: NClient['token'] = '';
   private telegramChatID: NClient['chat_id'] = 0;
 
-  constructor(provider: string) {
-    if (isValidURL(provider)) {
-      this.provider = provider;
-    } else {
-      throw new Error('The provider is not valid.');
-    }
-  }
+  constructor() {}
 
   private getURL(method: NResponse['method'], parameters: Array<any>): string | false {
     if (this.provider === '') {
@@ -106,8 +100,11 @@ export class NotificationAPI {
     return url.toString();
   }
 
-  private async makeRequest(method: NResponse['method'], url: string): Promise<NResponse | false> {
+  private async makeRequest(method: NResponse['method'], url: string | false): Promise<NResponse | false> {
     try {
+      if (url === false) {
+        return false;
+      }
       // Send the request
       const response = await fetch(url, {
         method: 'POST',
@@ -180,6 +177,26 @@ export class NotificationAPI {
       this.telegramBotToken = existingClientObject.token;
       this.telegramChatID = existingClientObject.chat_id;
     }
+  }
+
+  public getStatus(): boolean {
+    if (this.client_id === '' || this.secret === '') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public setProvider(provider: NClient['provider']): void {
+    if (isValidURL(provider)) {
+      this.provider = provider;
+    } else {
+      throw new Error('The provider is not valid.');
+    }
+  }
+
+  public getProvider(): NClient['provider'] {
+    return this.provider;
   }
 
   public async register(telegramBotToken: NClient['token'], telegramChatID: NClient['chat_id']): Promise<boolean> {
@@ -273,6 +290,9 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'update') {
+        this.telegramBotToken = telegramBotToken;
+        this.telegramChatID = telegramChatID;
+        await this.saveClient();
         return true;
       } else {
         return false;
@@ -280,3 +300,5 @@ export class NotificationAPI {
     }
   }
 }
+
+export let currentNotificationAPI = new NotificationAPI();
