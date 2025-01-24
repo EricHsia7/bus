@@ -2,15 +2,15 @@ import { isValidURL } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
 import { lfGetItem, lfSetItem } from '../storage/index';
 
-export type NResponseCode = 200 | 400 | 401 | 404 | 500;
+type NResponseCode = 200 | 400 | 401 | 404 | 500;
 
-export interface NResponseCancel {
+interface NResponseCancel {
   result: string;
   code: NResponseCode;
   method: 'cancel';
 }
 
-export interface NResponseRegister {
+interface NResponseRegister {
   result: string;
   code: NResponseCode;
   method: 'register';
@@ -18,99 +18,27 @@ export interface NResponseRegister {
   secret: string | 'null';
 }
 
-export interface NResponseSchedule {
+interface NResponseSchedule {
   result: string;
   code: NResponseCode;
   method: 'schedule';
   schedule_id: string | 'null';
 }
 
-export interface NResponseUpdate {
+interface NResponseUpdate {
   result: string;
   code: NResponseCode;
   method: 'update';
 }
 
-export type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseUpdate;
+type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseUpdate;
 
-export interface NClient {
+interface NClient {
   provider: string;
   client_id: string;
   secret: string;
   token: string;
   chat_id: number;
-}
-
-const notificationProviderKey = 'n_provider';
-
-export async function setNotificationProvider(provider: string): Promise<boolean> {
-  await lfSetItem(7, notificationProviderKey, provider);
-  return true;
-}
-
-export async function getNotificationProvider(): Promise<string | false> {
-  const existingNotificationProvider = await lfGetItem(7, notificationProviderKey);
-  if (existingNotificationProvider) {
-    return existingNotificationProvider;
-  }
-  return false;
-}
-
-export async function hasNotificationProvider(): Promise<boolean> {
-  const existingNotificationProvider = await lfGetItem(7, notificationProviderKey);
-  if (existingNotificationProvider) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-const notificationTokenKey = 'n_token';
-
-export async function setNotificationToken(token: string): Promise<boolean> {
-  await lfSetItem(7, notificationTokenKey, token);
-  return true;
-}
-
-export async function getNotificationToken(): Promise<string | false> {
-  const existingNotificationToken = await lfGetItem(7, notificationTokenKey);
-  if (existingNotificationToken) {
-    return existingNotificationToken;
-  }
-  return false;
-}
-
-export async function hasNotificationToken(): Promise<boolean> {
-  const existingNotificationToken = await lfGetItem(7, notificationTokenKey);
-  if (existingNotificationToken) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-const notificationChatIDKey = 'n_chat_id';
-
-export async function setNotificationChatID(chatID: string): Promise<boolean> {
-  await lfSetItem(7, notificationChatIDKey, chatID);
-  return true;
-}
-
-export async function getNotificationChatID(): Promise<string | false> {
-  const existingNotificationChatID = await lfGetItem(7, notificationChatIDKey);
-  if (existingNotificationChatID) {
-    return existingNotificationChatID;
-  }
-  return false;
-}
-
-export async function hasNotificationChatID(): Promise<boolean> {
-  const existingNotificationChatID = await lfGetItem(7, notificationChatIDKey);
-  if (existingNotificationChatID) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 export class NotificationAPI {
@@ -232,23 +160,25 @@ export class NotificationAPI {
   }
 
   private async saveClient() {
-    await lfSetItem(
-      7,
-      'n_client',
-      JSON.stringify({
-        provider: this.provider,
-        client_id: this.client_id,
-        secret: this.secret,
-        token: this.telegramBotToken,
-        chat_id: this.telegramChatID
-      })
-    );
+    const currentClient: NClient = {
+      provider: this.provider,
+      client_id: this.client_id,
+      secret: this.secret,
+      token: this.telegramBotToken,
+      chat_id: this.telegramChatID
+    };
+    await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
   }
 
   private async loadClient() {
     const existingClient = await lfGetItem(7, 'n_client');
     if (existingClient) {
-      const existingClientObject = JSON.parse(existingClient);
+      const existingClientObject = JSON.parse(existingClient) as NClient;
+      this.provider = existingClientObject.provider;
+      this.client_id = existingClientObject.client_id;
+      this.secret = existingClientObject.secret;
+      this.telegramBotToken = existingClientObject.token;
+      this.telegramChatID = existingClientObject.chat_id;
     }
   }
 
@@ -276,7 +206,7 @@ export class NotificationAPI {
 
   public async login(client_id: NClient['client_id'], secret: NClient['secret']) {
     if (!client_id || !secret) {
-      loadClient();
+      await this.loadClient();
     } else {
       this.client_id = client_id;
       this.secret = secret;
