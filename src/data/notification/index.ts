@@ -157,7 +157,7 @@ export class NotificationAPI {
     const currentClient: NClientFrontend = {
       provider: this.provider,
       client_id: this.client_id,
-      secret: this.secret,
+      secret: this.secret
     };
     await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
   }
