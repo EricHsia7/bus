@@ -6,7 +6,7 @@ export function generateTOTPToken(clientID: string, secret: string): string {
     label: clientID,
     algorithm: 'SHA256',
     digits: 8,
-    period: 15,
+    period: 10,
     secret: secret
   });
   const token = totp.generate();
