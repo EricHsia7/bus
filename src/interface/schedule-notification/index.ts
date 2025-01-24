@@ -1,1 +1,1 @@
-function openScheduleNotification() {}
+export function openScheduleNotification() {}
