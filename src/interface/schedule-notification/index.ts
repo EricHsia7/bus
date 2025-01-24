@@ -58,7 +58,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
   const actionButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
   if (currentNotificationAPI.getStatus()) {
     promptMessage('處理中', 'manufacturing');
-    actionButtonElement.setAttribute('enable', 'false');
+    actionButtonElement.setAttribute('enabled', 'false');
     closeScheduleNotification();
     const requestID = generateIdentifier('r');
     const Stop = (await getStop(requestID)) as SimplifiedStop;
@@ -109,7 +109,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
       return;
     } else {
       promptMessage('設定成功', 'check_circle');
-      actionButtonElement.setAttribute('enable', 'true');
+      actionButtonElement.setAttribute('enabled', 'true');
       actionButtonElement.setAttribute('highlighted', 'true');
       return;
     }

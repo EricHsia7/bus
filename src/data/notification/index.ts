@@ -38,16 +38,12 @@ interface NClient {
   provider: string;
   client_id: string;
   secret: string;
-  token: string;
-  chat_id: number;
 }
 
 export class NotificationAPI {
   private provider: NClient['provider'] = ''; // base url
   private client_id: NClient['client_id'] = '';
   private secret: NClient['secret'] = '';
-  private telegramBotToken: NClient['token'] = '';
-  private telegramChatID: NClient['chat_id'] = 0;
 
   constructor() {}
 
@@ -162,8 +158,6 @@ export class NotificationAPI {
       provider: this.provider,
       client_id: this.client_id,
       secret: this.secret,
-      token: this.telegramBotToken,
-      chat_id: this.telegramChatID
     };
     await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
   }
@@ -175,8 +169,6 @@ export class NotificationAPI {
       this.provider = existingClientObject.provider;
       this.client_id = existingClientObject.client_id;
       this.secret = existingClientObject.secret;
-      this.telegramBotToken = existingClientObject.token;
-      this.telegramChatID = existingClientObject.chat_id;
     }
   }
 
@@ -200,7 +192,7 @@ export class NotificationAPI {
     return this.provider;
   }
 
-  public async register(telegramBotToken: NClient['token'], telegramChatID: NClient['chat_id']): Promise<boolean> {
+  public async register(telegramBotToken: string, telegramChatID: number): Promise<boolean> {
     if (!telegramBotToken || !telegramChatID) {
       return false;
     }
@@ -210,10 +202,8 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'register') {
-        this.telegramBotToken = telegramBotToken;
-        this.telegramChatID = telegramChatID;
-        this.secret = response.secret;
         this.client_id = response.client_id;
+        this.secret = response.secret;
         await this.saveClient();
         return true;
       } else {
@@ -281,7 +271,7 @@ export class NotificationAPI {
     }
   }
 
-  public async update(telegramBotToken: NClient['token'], telegramChatID: NClient['chat_id']): Promise<boolean> {
+  public async update(telegramBotToken: string, telegramChatID: number): Promise<boolean> {
     if (this.client_id === '' || this.secret === '' || !telegramBotToken || !telegramChatID) {
       return false;
     }
@@ -291,9 +281,6 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'update') {
-        this.telegramBotToken = telegramBotToken;
-        this.telegramChatID = telegramChatID;
-        await this.saveClient();
         return true;
       } else {
         return false;
