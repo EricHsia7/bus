@@ -317,7 +317,7 @@ export type ScheduleNotificationOptions = Array<ScheduleNotificationOption>;
 export const scheduleNotificationOptions: ScheduleNotificationOptions = [
   {
     name: '到站前5分鐘',
-    status: '公車將在10分鐘內進站',
+    status: '公車將在5分鐘內進站',
     timeOffset: -5,
     icon: 'clock_loader_10',
     index: 0
