@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-notification
+      - dev-notification-api-2
 
 jobs:
   launch:
