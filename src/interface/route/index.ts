@@ -352,11 +352,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-      saveToFolderButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
-      isSaved('stop', thisItem.id).then((e) => {
-        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-      });
+      const scheduleNotificationButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
+      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
     }
 
     if (previousItem === null) {
