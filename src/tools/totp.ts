@@ -5,8 +5,8 @@ export function generateTOTPToken(clientID: string, secret: string): string {
     issuer: 'BusNotification',
     label: clientID,
     algorithm: 'SHA256',
-    digits: 6,
-    period: 30,
+    digits: 8,
+    period: 15,
     secret: secret
   });
   const token = totp.generate();
