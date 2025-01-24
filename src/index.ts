@@ -35,7 +35,7 @@ import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
 import { currentNotificationAPI } from './data/notification/index';
-import { closeScheduleNotification, openScheduleNotification } from './interface/schedule-notification/index';
+import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 
 import './interface/theme.css';
 
@@ -362,7 +362,8 @@ window.bus = {
     closeNotification,
     saveFormulatedNotification,
     openScheduleNotification,
-    closeScheduleNotification
+    closeScheduleNotification,
+    scheduleNotificationForStopItemOnRoute
   }
 };
 
