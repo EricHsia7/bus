@@ -1,7 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { isValidURL, sha256 } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
-import { lfGetItem, lfSetItem } from '../storage/index';
+import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
 type NResponseCode = 200 | 400 | 401 | 404 | 500;
 
@@ -43,10 +43,8 @@ interface NClientFrontend {
 
 interface NScheduleFrontend {
   schedule_id: string;
-  client_id: NClientFrontend['client_id'];
   message: string;
   scheduled_time: number;
-  time_stamp: number;
 }
 
 export class NotificationAPI {
@@ -181,11 +179,46 @@ export class NotificationAPI {
     }
   }
 
+  private async saveSchedule(schedule_id: NScheduleFrontend['schedule_id'], message: NScheduleFrontend['message'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+    const thisSchedule: NScheduleFrontend = {
+      schedule_id: schedule_id,
+      message: message,
+      scheduled_time: scheduled_time
+    };
+    await lfSetItem(7, schedule_id, JSON.stringify(thisSchedule));
+  }
+
+  public async listSchedules(): Promise<Array<NScheduleFrontend>> {
+    const now = new Date().getTime();
+    const keys = await lfListItemKeys(7);
+    let result = [];
+    for (const key of keys) {
+      if (!(key === 'n_client') && /^(schedule_)([A-Za-z0-9\_\-]{32,32})$/m.test(key)) {
+        const thisScheduleJSON = await lfGetItem(7, key);
+        const thisSchedule = JSON.parse(thisScheduleJSON) as NScheduleFrontend;
+        const thisScheduledTime = thisSchedule.scheduled_time;
+        if (thisScheduledTime > now) {
+          result.push(thisSchedule);
+        }
+      }
+    }
+    return result;
+  }
+
   public getStatus(): boolean {
     if (this.client_id === '' || this.secret === '') {
       return false;
     } else {
       return true;
+    }
+  }
+
+  public async login(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
+    if (!client_id || !secret) {
+      await this.loadClient();
+    } else {
+      this.client_id = client_id;
+      this.secret = secret;
     }
   }
 
@@ -221,36 +254,27 @@ export class NotificationAPI {
     }
   }
 
-  public async login(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
-    if (!client_id || !secret) {
-      await this.loadClient();
-    } else {
-      this.client_id = client_id;
-      this.secret = secret;
-    }
-  }
-
   public async schedule(message: string, scheduled_time: string | number | Date): Promise<string | false> {
     if (this.client_id === '' || this.secret === '' || !message || !scheduled_time) {
       return false;
     }
-    let processed_schedule_time = '';
+    let processed_schedule_time = new Date();
     switch (typeof scheduled_time) {
       case 'string':
-        processed_schedule_time = scheduled_time;
+        processed_schedule_time = new Date(scheduled_time);
         break;
       case 'number':
-        processed_schedule_time = new Date(scheduled_time).toISOString();
+        processed_schedule_time = new Date(scheduled_time);
         break;
       default:
         if (scheduled_time instanceof Date) {
-          processed_schedule_time = scheduled_time.toISOString();
+          processed_schedule_time = scheduled_time;
         } else {
           return false;
         }
         break;
     }
-    const url = this.getURL('schedule', [message, processed_schedule_time]);
+    const url = this.getURL('schedule', [message, processed_schedule_time.toISOString()]);
     const response = await this.makeRequest('schedule', url);
     if (response === false) {
       return false;
@@ -259,6 +283,7 @@ export class NotificationAPI {
         if (Math.random() > 0.7) {
           await this.rotate();
         }
+        this.saveSchedule(response.schedule_id, message, processed_schedule_time.getTime());
         return response.schedule_id;
       } else {
         return false;
