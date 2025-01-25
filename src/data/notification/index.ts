@@ -248,9 +248,7 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'schedule') {
-        if (Math.random() > 0.7) {
-          await this.rotate();
-        }
+        await this.rotate();
         return response.schedule_id;
       } else {
         return false;
