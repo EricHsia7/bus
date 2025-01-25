@@ -274,7 +274,7 @@ export class NotificationAPI {
   }
 
   public async schedule(stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], photo: NScheduleFrontend['photo'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: string | number | Date): Promise<string | false> {
-    if (this.client_id === '' || this.secret === '' || !stop_id || !location_name || !route_id || !route_name || !direction || !estimate_time || !photo || !time_formatting_mode || !scheduled_time) {
+    if (this.client_id === '' || this.secret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || !(typeof photo === 'boolean') || !(typeof time_formatting_mode === 'number') || scheduled_time === undefined) {
       return false;
     }
     let processed_schedule_time = new Date();
