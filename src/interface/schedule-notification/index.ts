@@ -2,6 +2,7 @@ import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../d
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
 import { currentNotificationAPI, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
+import { getSettingOptionValue, SettingSelectOptionNumberValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
@@ -59,6 +60,8 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     promptMessage('處理中', 'manufacturing');
     actionButtonElement.setAttribute('enabled', 'false');
     closeScheduleNotification();
+
+    const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
     const requestID = generateIdentifier('r');
     const Stop = (await getStop(requestID)) as SimplifiedStop;
     const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
@@ -101,7 +104,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
 
     const now = new Date().getTime();
     const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
-    const scheduling = await currentNotificationAPI.schedule(StopID, thisLocationName, RouteID, thisRouteName, '方向', EstimateTime, false, scheduled_time);
+    const scheduling = await currentNotificationAPI.schedule(StopID, thisLocationName, RouteID, thisRouteName, '方向', EstimateTime, false, time_formatting_mode, scheduled_time);
     // TODO: direction, photo
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
