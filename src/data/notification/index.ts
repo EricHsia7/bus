@@ -149,7 +149,7 @@ export class NotificationAPI {
       }
     } catch (error) {
       // Catch and log errors
-      console.error('Error scheduling message:', error);
+      console.error('Error making request:', error);
       return false;
     }
   }
@@ -248,7 +248,9 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'schedule') {
-        await this.rotate();
+        if (Math.random() > 0.7) {
+          await this.rotate();
+        }
         return response.schedule_id;
       } else {
         return false;
