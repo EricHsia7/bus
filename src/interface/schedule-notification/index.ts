@@ -101,8 +101,8 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
 
     const now = new Date().getTime();
     const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
-    const message = `[到站通知] ${status} | 路線：${thisRouteName} | 車站：${thisLocationName}`;
-    const scheduling = await currentNotificationAPI.schedule(message, scheduled_time);
+    const scheduling = await currentNotificationAPI.schedule(StopID, thisLocationName, RouteID, thisRouteName, '方向', EstimateTime, false, scheduled_time);
+    // TODO: direction, photo
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
       return;
