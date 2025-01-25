@@ -34,46 +34,18 @@ export async function saveFormulatedNotification() {
   promptMessage('處理中', 'manufacturing');
   const provider = ProviderInputElement.value;
   const registrationKey = RgistrationKeyInputElement.value;
-
-  const status = currentNotificationAPI.getStatus();
-
-  if (status) {
-    // registered
-    if (!isValidURL(provider)) {
-      promptMessage('無效的提供者', 'error');
-      return;
-    }
-    if (new URL(currentNotificationAPI.getProvider()).hostname === new URL(provider).hostname) {
-      // same provider > use update method
-      const updating = await currentNotificationAPI.update(token, chatID);
-      if (updating) {
-        promptMessage('更新成功', 'check_circle');
-        return;
-      } else {
-        promptMessage('更新失敗', 'error');
-        return;
-      }
-    } else {
-      // different provider > use register method
-      const registering = await currentNotificationAPI.register(registrationKey);
-      if (registering) {
-        promptMessage('註冊成功', 'check_circle');
-        return;
-      } else {
-        promptMessage('註冊失敗', 'error');
-        return;
-      }
-    }
+  if (!isValidURL(provider)) {
+    promptMessage('無效的提供者', 'error');
+    return;
+  }
+  // register
+  currentNotificationAPI.setProvider(provider);
+  const registering = await currentNotificationAPI.register(registrationKey);
+  if (registering) {
+    promptMessage('註冊成功', 'check_circle');
+    return;
   } else {
-    // new client
-    currentNotificationAPI.setProvider(provider);
-    const registering = await currentNotificationAPI.register(registrationKey);
-    if (registering) {
-      promptMessage('註冊成功', 'check_circle');
-      return;
-    } else {
-      promptMessage('註冊失敗', 'error');
-      return;
-    }
+    promptMessage('註冊失敗', 'error');
+    return;
   }
 }

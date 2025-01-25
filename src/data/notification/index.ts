@@ -26,13 +26,7 @@ interface NResponseSchedule {
   schedule_id: string | 'null';
 }
 
-interface NResponseUpdate {
-  result: string;
-  code: NResponseCode;
-  method: 'update';
-}
-
-type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseUpdate;
+type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule;
 
 interface NClientFrontend {
   provider: string;
@@ -82,16 +76,6 @@ export class NotificationAPI {
         url.searchParams.set('message', parameters[0]);
         url.searchParams.set('scheduled_time', parameters[1]);
         break;
-      case 'update':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 2)) {
-          return false;
-        }
-        url.searchParams.set('method', 'update');
-        url.searchParams.set('client_id', this.client_id);
-        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
-        url.searchParams.set('token', parameters[0]);
-        url.searchParams.set('chat_id', parameters[1]);
-        break;
       default:
         return false;
         break;
@@ -136,9 +120,6 @@ export class NotificationAPI {
             break;
           case 'schedule':
             return json as NResponseSchedule;
-            break;
-          case 'update':
-            return json as NResponseUpdate;
             break;
             return false;
           default:
@@ -266,23 +247,6 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'cancel') {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  public async update(telegramBotToken: string, telegramChatID: number): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '' || !telegramBotToken || !telegramChatID) {
-      return false;
-    }
-    const url = this.getURL('update', [telegramBotToken, telegramChatID]);
-    const response = await this.makeRequest('update', url);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'update') {
         return true;
       } else {
         return false;
