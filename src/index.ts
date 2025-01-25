@@ -363,9 +363,6 @@ window.bus = {
     openScheduleNotification,
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute
-  },
-  test: {
-    rotate: currentNotificationAPI.rotate
   }
 };
 

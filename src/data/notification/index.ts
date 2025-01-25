@@ -41,6 +41,14 @@ interface NClientFrontend {
   secret: string;
 }
 
+interface NScheduleFrontend {
+  schedule_id: string;
+  client_id: NClientFrontend['client_id'];
+  message: string;
+  scheduled_time: number;
+  time_stamp: number;
+}
+
 export class NotificationAPI {
   private provider: NClientFrontend['provider'] = ''; // base url
   private client_id: NClientFrontend['client_id'] = '';
