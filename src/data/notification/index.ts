@@ -26,7 +26,14 @@ interface NResponseSchedule {
   schedule_id: string | 'null';
 }
 
-type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule;
+interface NResponseRotate {
+  result: string;
+  code: NResponseCode;
+  method: 'rotate';
+  secret: string | 'null';
+}
+
+type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate;
 
 interface NClientFrontend {
   provider: string;
@@ -76,6 +83,14 @@ export class NotificationAPI {
         url.searchParams.set('message', parameters[0]);
         url.searchParams.set('scheduled_time', parameters[1]);
         break;
+      case 'rotate':
+        if (this.client_id === '' || this.secret === '' || !(parameters.length === 0)) {
+          return false;
+        }
+        url.searchParams.set('method', 'rotate');
+        url.searchParams.set('client_id', this.client_id);
+        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
+        break;
       default:
         return false;
         break;
@@ -121,8 +136,11 @@ export class NotificationAPI {
           case 'schedule':
             return json as NResponseSchedule;
             break;
-            return false;
+          case 'rotate':
+            return json as NResponseRotate;
+            break;
           default:
+            return false;
             break;
         }
       } catch (jsonError) {
@@ -230,6 +248,9 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'schedule') {
+        if (Math.random() > 0.7) {
+          await this.rotate();
+        }
         return response.schedule_id;
       } else {
         return false;
@@ -247,6 +268,25 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'cancel') {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  public async rotate(): Promise<boolean> {
+    if (this.client_id === '' || this.secret === '') {
+      return false;
+    }
+    const url = this.getURL('rotate', []);
+    const response = await this.makeRequest('rotate', url);
+    if (response === false) {
+      return false;
+    } else {
+      if (response.code === 200 && response.method === 'rotate') {
+        this.secret = response.secret;
+        await this.saveClient();
         return true;
       } else {
         return false;
