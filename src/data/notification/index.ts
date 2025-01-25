@@ -43,8 +43,15 @@ interface NClientFrontend {
 
 interface NScheduleFrontend {
   schedule_id: string;
-  message: string;
+  stop_id: number;
+  location_name: string;
+  route_id: number;
+  route_name: string;
+  direction: string;
+  estimate_time: number;
+  photo: boolean;
   scheduled_time: number;
+  time_stamp: number;
 }
 
 export class NotificationAPI {
@@ -179,10 +186,16 @@ export class NotificationAPI {
     }
   }
 
-  private async saveSchedule(schedule_id: NScheduleFrontend['schedule_id'], message: NScheduleFrontend['message'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+  private async saveSchedule(schedule_id: NScheduleFrontend['ScheduleID'], stop_id: NScheduleFrontend['StopID'], location_name: NScheduleFrontend['LocationName'], route_id: NScheduleFrontend['RouteID'], route_name: NScheduleFrontend['RouteName'], direction: NScheduleFrontend['Direction'], estimate_time: NScheduleFrontend['EstimateTime'], photo: NScheduleFrontend['Photo'], scheduled_time: NScheduleFrontend['ScheduledTime']) {
     const thisSchedule: NScheduleFrontend = {
       schedule_id: schedule_id,
-      message: message,
+      stop_id: stop_id,
+      location_name: location_name,
+      route_id: route_id,
+      route_name: route_name,
+      direction: direction,
+      estimate_time: estimate_time,
+      photo: photo,
       scheduled_time: scheduled_time
     };
     await lfSetItem(7, schedule_id, JSON.stringify(thisSchedule));

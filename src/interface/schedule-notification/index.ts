@@ -4,7 +4,6 @@ import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/get
 import { currentNotificationAPI, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { offsetDate } from '../../tools/time';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
