@@ -13,8 +13,7 @@ const RgistrationKeyInputElement = elementQuerySelector(NotificationGroupsElemen
 
 function initializeNotificationField() {
   ProviderInputElement.value = currentNotificationAPI.getProvider();
-  TokenInputElement.value = '';
-  ChatIDInputElement.value = '';
+  RgistrationKeyInputElement.value = '';
 }
 
 export function openNotification(): void {
