@@ -1,4 +1,6 @@
 export const md5 = require('md5');
+export const sha256 = require('sha256');
+
 
 export function compareThings(a: any, b: any): boolean {
   function anyToString(any: any): string {

@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { isValidURL } from '../../tools/index';
+import { isValidURL, sha256 } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
 import { lfGetItem, lfSetItem } from '../storage/index';
 
@@ -63,12 +63,14 @@ export class NotificationAPI {
         url.searchParams.set('schedule_id', parameters[0]);
         break;
       case 'register':
-        if (!(parameters.length === 2)) {
+        if (!(parameters.length === 1)) {
           return false;
         }
+        const currentDate = new Date();
+        currentDate.setMilliseconds(0);
+        currentDate.setSeconds(0);
         url.searchParams.set('method', 'register');
-        url.searchParams.set('token', parameters[0]);
-        url.searchParams.set('chat_id', parameters[1]);
+        url.searchParams.set('hash', sha256(`${parameters[0]}${currentDate.getTime()}`));
         break;
       case 'schedule':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 2)) {
@@ -192,11 +194,11 @@ export class NotificationAPI {
     return this.provider;
   }
 
-  public async register(telegramBotToken: string, telegramChatID: number): Promise<boolean> {
-    if (!telegramBotToken || !telegramChatID) {
+  public async register(registrationKey: string): Promise<boolean> {
+    if (!registrationKey) {
       return false;
     }
-    const url = this.getURL('register', [telegramBotToken, telegramChatID]);
+    const url = this.getURL('register', [registrationKey]);
     const response = await this.makeRequest('register', url);
     if (response === false) {
       return false;

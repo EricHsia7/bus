@@ -146,8 +146,7 @@ import './interface/notification/head.css';
 import './interface/notification/body.css';
 import './interface/notification/groups.css';
 import './interface/notification/provider.css';
-import './interface/notification/token.css';
-import './interface/notification/chat-id.css';
+import './interface/notification/registration-key.css';
 
 import './interface/schedule-notification/field.css';
 import './interface/schedule-notification/head.css';

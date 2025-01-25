@@ -9,8 +9,7 @@ const NotificationBodyElement = elementQuerySelector(NotificationField, '.css_no
 const NotificationGroupsElement = elementQuerySelector(NotificationBodyElement, '.css_notification_groups');
 
 const ProviderInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="provider"] .css_notification_group_body input');
-const TokenInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="token"] .css_notification_group_body input');
-const ChatIDInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="chat-id"] .css_notification_group_body input');
+const RgistrationKeyInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="registration-key"] .css_notification_group_body input');
 
 function initializeNotificationField() {
   ProviderInputElement.value = currentNotificationAPI.getProvider();
@@ -34,8 +33,7 @@ export function closeNotification(): void {
 export async function saveFormulatedNotification() {
   promptMessage('處理中', 'manufacturing');
   const provider = ProviderInputElement.value;
-  const token = TokenInputElement.value;
-  const chatID = parseInt(String(ChatIDInputElement.value));
+  const registrationKey = RgistrationKeyInputElement.value;
 
   const status = currentNotificationAPI.getStatus();
 
@@ -57,7 +55,7 @@ export async function saveFormulatedNotification() {
       }
     } else {
       // different provider > use register method
-      const registering = await currentNotificationAPI.register(token, chatID);
+      const registering = await currentNotificationAPI.register(registrationKey);
       if (registering) {
         promptMessage('註冊成功', 'check_circle');
         return;
@@ -69,7 +67,7 @@ export async function saveFormulatedNotification() {
   } else {
     // new client
     currentNotificationAPI.setProvider(provider);
-    const registering = await currentNotificationAPI.register(token, chatID);
+    const registering = await currentNotificationAPI.register(registrationKey);
     if (registering) {
       promptMessage('註冊成功', 'check_circle');
       return;
