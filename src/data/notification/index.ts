@@ -49,7 +49,6 @@ interface NScheduleFrontend {
   route_name: string;
   direction: string;
   estimate_time: number;
-  photo: boolean;
   time_formatting_mode: number;
   scheduled_time: number;
 }
@@ -99,9 +98,8 @@ export class NotificationAPI {
         url.searchParams.set('route_name', parameters[3]);
         url.searchParams.set('direction', parameters[4]);
         url.searchParams.set('estimate_time', parameters[5]);
-        url.searchParams.set('photo', parameters[6]);
-        url.searchParams.set('time_formatting_mode', parameters[7]);
-        url.searchParams.set('scheduled_time', parameters[8]);
+        url.searchParams.set('time_formatting_mode', parameters[6]);
+        url.searchParams.set('scheduled_time', parameters[7]);
         break;
       case 'rotate':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 0)) {
@@ -193,7 +191,7 @@ export class NotificationAPI {
     }
   }
 
-  private async saveSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], photo: NScheduleFrontend['photo'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+  private async saveSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: NScheduleFrontend['scheduled_time']) {
     const thisSchedule: NScheduleFrontend = {
       schedule_id: schedule_id,
       stop_id: stop_id,
@@ -202,7 +200,6 @@ export class NotificationAPI {
       route_name: route_name,
       direction: direction,
       estimate_time: estimate_time,
-      photo: photo,
       time_formatting_mode: time_formatting_mode,
       scheduled_time: scheduled_time
     };
@@ -273,8 +270,8 @@ export class NotificationAPI {
     }
   }
 
-  public async schedule(stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], photo: NScheduleFrontend['photo'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: string | number | Date): Promise<string | false> {
-    if (this.client_id === '' || this.secret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || !(typeof photo === 'boolean') || !(typeof time_formatting_mode === 'number') || scheduled_time === undefined) {
+  public async schedule(stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: string | number | Date): Promise<string | false> {
+    if (this.client_id === '' || this.secret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || !(typeof time_formatting_mode === 'number') || scheduled_time === undefined) {
       return false;
     }
     let processed_schedule_time = new Date();
@@ -293,7 +290,7 @@ export class NotificationAPI {
         }
         break;
     }
-    const url = this.getURL('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, booleanToString(photo), time_formatting_mode, processed_schedule_time.toISOString()]);
+    const url = this.getURL('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, processed_schedule_time.toISOString()]);
     const response = await this.makeRequest('schedule', url);
     if (response === false) {
       return false;
@@ -302,7 +299,7 @@ export class NotificationAPI {
         if (Math.random() > 0.7) {
           await this.rotate();
         }
-        this.saveSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, photo, processed_schedule_time.getTime());
+        this.saveSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, processed_schedule_time.getTime());
         return response.schedule_id;
       } else {
         return false;
