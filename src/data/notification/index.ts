@@ -92,7 +92,7 @@ export class NotificationAPI {
         url.searchParams.set('hash', sha256(`${parameters[0]}${currentDate.getTime()}`));
         break;
       case 'schedule':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 9)) {
+        if (this.client_id === '' || this.secret === '' || !(parameters.length === 8)) {
           return false;
         }
         url.searchParams.set('method', 'schedule');
