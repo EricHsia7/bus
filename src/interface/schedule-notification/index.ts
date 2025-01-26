@@ -76,6 +76,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
       return;
     }
     const thisStopLocationId = thisStop.stopLocationId;
+    const thisStopGoBack = thisStop.goBack;
 
     // Collect data from Location
     const thisLocationKey = `l_${thisStopLocationId}`;
@@ -96,16 +97,18 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
       return;
     }
     const thisRouteName = thisRoute.n;
+    const thisRouteDeparture = thisRoute.dep;
+    const thisRouteDestination = thisRoute.des;
+    const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisStopGoBack ? parseInt(thisStopGoBack) : 0];
 
     // Collect data from scheduleNotificationOptions
     const thisOption = scheduleNotificationOptions[index];
-    const status = thisOption.status;
     const timeOffset = thisOption.timeOffset;
 
     const now = new Date().getTime();
     const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
-    const scheduling = await currentNotificationAPI.schedule(StopID, thisLocationName, RouteID, thisRouteName, '方向', EstimateTime, time_formatting_mode, scheduled_time);
-    // TODO: direction
+
+    const scheduling = await currentNotificationAPI.schedule(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, scheduled_time);
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
       return;
