@@ -347,7 +347,7 @@ export class NotificationAPI {
   }
 
   public async cancel(schedule_id: NScheduleFrontend['schedule_id']): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '' || !schedule_id) {
+    if (this.client_id === '' || this.secret === '' || schedule_id === undefined) {
       return false;
     }
     const url = this.getURL('cancel', [schedule_id]);
@@ -383,7 +383,7 @@ export class NotificationAPI {
   }
 
   public async reschedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: string | number | Date): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '' || !schedule_id) {
+    if (this.client_id === '' || this.secret === '' || schedule_id === undefined || estimate_time === undefined || scheduled_time === undefined) {
       return false;
     }
     let processed_schedule_time = new Date();
