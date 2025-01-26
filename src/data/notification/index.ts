@@ -66,85 +66,107 @@ export class NotificationAPI {
 
   constructor() {}
 
-  private getURL(method: NResponse['method'], parameters: Array<any>): string | false {
+  private getURL(method: NResponse['method']): string | false {
     if (this.provider === '') {
       return false;
     }
     const url = new URL(this.provider);
+    if (['cancel', 'register', 'schedule', 'rotate', 'reschedule'].indexOf(method) > -1) {
+      url.searchParams.set('method', method);
+      return url.toString();
+    } else {
+      return false;
+    }
+  }
+
+  private getRequestBody(method: NResponse['method'], parameters: Array<any>): object | false {
     switch (method) {
       case 'cancel':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 1)) {
           return false;
+        } else {
+          return {
+            client_id: this.client_id,
+            totp_token: generateTOTPToken(this.client_id, this.secret),
+            schedule_id: parameters[0]
+          };
         }
-        url.searchParams.set('method', 'schedule');
-        url.searchParams.set('client_id', this.client_id);
-        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
-        url.searchParams.set('schedule_id', parameters[0]);
         break;
       case 'register':
         if (!(parameters.length === 1)) {
           return false;
+        } else {
+          const currentDate = new Date();
+          currentDate.setMilliseconds(0);
+          currentDate.setSeconds(0);
+          return {
+            hash: sha256(`${parameters[0]}${currentDate.getTime()}`)
+          };
         }
-        const currentDate = new Date();
-        currentDate.setMilliseconds(0);
-        currentDate.setSeconds(0);
-        url.searchParams.set('method', 'register');
-        url.searchParams.set('hash', sha256(`${parameters[0]}${currentDate.getTime()}`));
         break;
       case 'schedule':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 8)) {
           return false;
+        } else {
+          return {
+            client_id: this.client_id,
+            totp_token: generateTOTPToken(this.client_id, this.secret),
+            stop_id: parameters[0],
+            location_name: parameters[1],
+            route_id: parameters[2],
+            route_name: parameters[3],
+            direction: parameters[4],
+            estimate_time: parameters[5],
+            time_formatting_mode: parameters[6],
+            scheduled_time: parameters[7]
+          };
         }
-        url.searchParams.set('method', 'schedule');
-        url.searchParams.set('client_id', this.client_id);
-        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
-        url.searchParams.set('stop_id', parameters[0]);
-        url.searchParams.set('location_name', parameters[1]);
-        url.searchParams.set('route_id', parameters[2]);
-        url.searchParams.set('route_name', parameters[3]);
-        url.searchParams.set('direction', parameters[4]);
-        url.searchParams.set('estimate_time', parameters[5]);
-        url.searchParams.set('time_formatting_mode', parameters[6]);
-        url.searchParams.set('scheduled_time', parameters[7]);
         break;
       case 'rotate':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 0)) {
           return false;
+        } else {
+          return {
+            client_id: this.client_id,
+            totp_token: generateTOTPToken(this.client_id, this.secret)
+          };
         }
-        url.searchParams.set('method', 'rotate');
-        url.searchParams.set('client_id', this.client_id);
-        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
         break;
       case 'reschedule':
         if (this.client_id === '' || this.secret === '' || !(parameters.length === 3)) {
           return false;
+        } else {
+          return {
+            client_id: this.client_id,
+            totp_token: generateTOTPToken(this.client_id, this.secret),
+            schedule_id: parameters[0],
+            estimate_time: parameters[1],
+            scheduled_time: parameters[2]
+          };
         }
-        url.searchParams.set('method', 'reschedule');
-        url.searchParams.set('client_id', this.client_id);
-        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
-        url.searchParams.set('schedule_id', parameters[0]);
-        url.searchParams.set('estimate_time', parameters[1]);
-        url.searchParams.set('scheduled_time', parameters[2]);
         break;
       default:
         return false;
         break;
     }
-    return url.toString();
   }
 
-  private async makeRequest(method: NResponse['method'], url: string | false): Promise<NResponse | false> {
+  private async makeRequest(method: NResponse['method'], url: string | false, body: object | false): Promise<NResponse | false> {
     try {
-      if (url === false) {
+      if (url === false || body === false) {
         return false;
       }
-      // Send the request
-      const response = await fetch(url, {
+
+      const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
-      });
+        },
+        body: JSON.stringify(body)
+      };
+
+      // Send the request
+      const response = await fetch(url, requestOptions);
 
       if (!response.ok) {
         // Log additional details for debugging
@@ -293,8 +315,9 @@ export class NotificationAPI {
     if (!registrationKey) {
       return false;
     }
-    const url = this.getURL('register', [registrationKey]);
-    const response = await this.makeRequest('register', url);
+    const url = this.getURL('register');
+    const requestBody = this.getRequestBody('register', [registrationKey]);
+    const response = await this.makeRequest('register', url, requestBody);
     if (response === false) {
       return false;
     } else {
@@ -329,8 +352,9 @@ export class NotificationAPI {
         }
         break;
     }
-    const url = this.getURL('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, processed_schedule_time.toISOString()]);
-    const response = await this.makeRequest('schedule', url);
+    const url = this.getURL('schedule');
+    const requestBody = this.getRequestBody('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, processed_schedule_time.toISOString()]);
+    const response = await this.makeRequest('schedule', url, requestBody);
     if (response === false) {
       return false;
     } else {
@@ -351,7 +375,8 @@ export class NotificationAPI {
       return false;
     }
     const url = this.getURL('cancel', [schedule_id]);
-    const response = await this.makeRequest('cancel', url);
+    const requestBody = this.getRequestBody('cancel', [schedule_id]);
+    const response = await this.makeRequest('cancel', url, requestBody);
     if (response === false) {
       return false;
     } else {
@@ -367,8 +392,9 @@ export class NotificationAPI {
     if (this.client_id === '' || this.secret === '') {
       return false;
     }
-    const url = this.getURL('rotate', []);
-    const response = await this.makeRequest('rotate', url);
+    const url = this.getURL('rotate');
+    const requestBody = this.getRequestBody('rotate', []);
+    const response = await this.makeRequest('rotate', url, requestBody);
     if (response === false) {
       return false;
     } else {
@@ -402,8 +428,9 @@ export class NotificationAPI {
         }
         break;
     }
-    const url = this.getURL('reschedule', [schedule_id, estimate_time, processed_schedule_time.toISOString()]);
-    const response = await this.makeRequest('reschedule', url);
+    const url = this.getURL('reschedule');
+    const requestBody = this.getRequestBody('reschedule', [schedule_id, estimate_time, processed_schedule_time.toISOString()]);
+    const response = await this.makeRequest('reschedule', url, requestBody);
     if (response === false) {
       return false;
     } else {
