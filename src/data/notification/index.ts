@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { booleanToString, isValidURL, sha256 } from '../../tools/index';
+import { isValidURL, sha256 } from '../../tools/index';
 import { generateTOTPToken } from '../../tools/totp';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
@@ -33,7 +33,13 @@ interface NResponseRotate {
   secret: string | 'null';
 }
 
-type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate;
+interface NResponseReschedule {
+  result: string;
+  code: NResponseCode;
+  method: 'reschedule';
+}
+
+type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
 
 interface NClientFrontend {
   provider: string;
@@ -109,6 +115,17 @@ export class NotificationAPI {
         url.searchParams.set('client_id', this.client_id);
         url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
         break;
+      case 'reschedule':
+        if (this.client_id === '' || this.secret === '' || !(parameters.length === 3)) {
+          return false;
+        }
+        url.searchParams.set('method', 'reschedule');
+        url.searchParams.set('client_id', this.client_id);
+        url.searchParams.set('totp_token', generateTOTPToken(this.client_id, this.secret));
+        url.searchParams.set('schedule_id', parameters[0]);
+        url.searchParams.set('estimate_time', parameters[1]);
+        url.searchParams.set('scheduled_time', parameters[2]);
+        break;
       default:
         return false;
         break;
@@ -157,6 +174,9 @@ export class NotificationAPI {
           case 'rotate':
             return json as NResponseRotate;
             break;
+          case 'reschedule':
+            return json as NResponseReschedule;
+            break;
           default:
             return false;
             break;
@@ -204,6 +224,25 @@ export class NotificationAPI {
       scheduled_time: scheduled_time
     };
     await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
+  }
+
+  private async modifySchedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+    const existingSchedule = await lfGetItem(8, schedule_id);
+    if (existingSchedule) {
+      const existingScheduleObject = JSON.parse(existingSchedule);
+      const thisSchedule: NScheduleFrontend = {
+        schedule_id: schedule_id,
+        stop_id: existingScheduleObject.stop_id,
+        location_name: existingScheduleObject.location_name,
+        route_id: existingScheduleObject.route_id,
+        route_name: existingScheduleObject.route_name,
+        direction: existingScheduleObject.direction,
+        estimate_time: estimate_time,
+        time_formatting_mode: existingScheduleObject.time_formatting_mode,
+        scheduled_time: scheduled_time
+      };
+      await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
+    }
   }
 
   public async listSchedules(): Promise<Array<NScheduleFrontend>> {
@@ -296,7 +335,7 @@ export class NotificationAPI {
       return false;
     } else {
       if (response.code === 200 && response.method === 'schedule') {
-        if (Math.random() > 0.7) {
+        if (Math.random() > 0.8) {
           await this.rotate();
         }
         this.saveSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, processed_schedule_time.getTime());
@@ -307,7 +346,7 @@ export class NotificationAPI {
     }
   }
 
-  public async cancel(schedule_id: string): Promise<boolean> {
+  public async cancel(schedule_id: NScheduleFrontend['schedule_id']): Promise<boolean> {
     if (this.client_id === '' || this.secret === '' || !schedule_id) {
       return false;
     }
@@ -324,7 +363,7 @@ export class NotificationAPI {
     }
   }
 
-  public async rotate(): Promise<boolean> {
+  private async rotate(): Promise<boolean> {
     if (this.client_id === '' || this.secret === '') {
       return false;
     }
@@ -336,6 +375,40 @@ export class NotificationAPI {
       if (response.code === 200 && response.method === 'rotate') {
         this.secret = response.secret;
         await this.saveClient();
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  public async reschedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: string | number | Date): Promise<boolean> {
+    if (this.client_id === '' || this.secret === '' || !schedule_id) {
+      return false;
+    }
+    let processed_schedule_time = new Date();
+    switch (typeof scheduled_time) {
+      case 'string':
+        processed_schedule_time = new Date(scheduled_time);
+        break;
+      case 'number':
+        processed_schedule_time = new Date(scheduled_time);
+        break;
+      default:
+        if (scheduled_time instanceof Date) {
+          processed_schedule_time = scheduled_time;
+        } else {
+          return false;
+        }
+        break;
+    }
+    const url = this.getURL('reschedule', [schedule_id, estimate_time, processed_schedule_time.toISOString()]);
+    const response = await this.makeRequest('reschedule', url);
+    if (response === false) {
+      return false;
+    } else {
+      if (response.code === 200 && response.method === 'reschedule') {
+        await this.modifySchedule(schedule_id, estimate_time, processed_schedule_time.getTime());
         return true;
       } else {
         return false;
