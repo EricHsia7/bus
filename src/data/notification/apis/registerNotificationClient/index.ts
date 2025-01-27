@@ -1,4 +1,4 @@
-import { setNotificationClientID, setNotificationSecret } from '../..';
+import { saveNotificationClient, setNotificationClientID, setNotificationSecret } from '../..';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';
