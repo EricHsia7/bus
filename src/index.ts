@@ -141,6 +141,8 @@ import './interface/personal-schedule-editor/schedule-start-time.css';
 import './interface/personal-schedule-editor/schedule-end-time.css';
 import './interface/personal-schedule-editor/schedule-days.css';
 
+import './interface/notification-schedule-manager/field.css';
+
 import './interface/register-notification/field.css';
 import './interface/register-notification/head.css';
 import './interface/register-notification/body.css';

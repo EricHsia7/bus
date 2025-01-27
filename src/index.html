@@ -675,7 +675,19 @@
       </div>
     </div>
 
-    <!-- register notification, notification schedule manager, schedule notification  -->
+    <!-- notification schedule manager, register notification, schedule notification  -->
+    <div class="css_notification_schedule_manager_field" displayed="false">
+      <div class="css_notification_schedule_manager_body">
+        <div class="css_notification_schedule_manager_list"></div>
+      </div>
+      <div class="css_notification_schedule_manager_head">
+        <div class="css_notification_schedule_manager_button_left" onclick="bus.notification.closeNotificationScheduleManager()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_notification_schedule_manager_title">通知</div>
+      </div>
+    </div>
+
     <div class="css_register_notification_field" displayed="false">
       <div class="css_register_notification_body">
         <div class="css_register_notification_groups">
@@ -707,7 +719,7 @@
         <div class="css_register_notification_button_left" onclick="bus.notification.closeRegisterNotification()">
           <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
         </div>
-        <div class="css_register_notification_title">通知</div>
+        <div class="css_register_notification_title">註冊通知</div>
         <div class="css_register_notification_button_right" onclick="bus.notification.saveFormulatedRegisterNotification()">
           <span class="css_material_symbols_rounded">check</span>
         </div>
