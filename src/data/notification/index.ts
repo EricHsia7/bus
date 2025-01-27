@@ -97,7 +97,7 @@ export async function initializeNotificationSchedules() {
 }
 
 export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], time_offset: NScheduleFrontend['time_offset'], scheduled_time: NScheduleFrontend['scheduled_time']) {
-  const thisNotificationSchedule: NScheduleFrontend = {
+  const thisSchedule: NScheduleFrontend = {
     schedule_id: schedule_id,
     stop_id: stop_id,
     location_name: location_name,
@@ -109,7 +109,15 @@ export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['s
     time_offset: time_offset,
     scheduled_time: scheduled_time
   };
-  await lfSetItem(8, schedule_id, JSON.stringify(thisNotificationSchedule));
+  const thisScheduleStopKey = `s_${stop_id}`;
+  const thisScheduleIndex = NotifcationSchedules.length;
+  NotifcationSchedules.push(thisSchedule);
+  NotifcationSchedulesIndex[schedule_id] = thisScheduleIndex;
+  if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisScheduleStopKey)) {
+    NotifcationSchedulesStopIDIndex[thisScheduleStopKey] = [];
+  }
+  NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(thisScheduleIndex);
+  await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
 }
 
 export function getNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id']): NScheduleFrontend | false {
