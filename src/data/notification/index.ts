@@ -28,6 +28,9 @@ let NotifcationSchedules: Array<NScheduleFrontend> = [];
 let NotifcationSchedulesIndex: {
   [key: NScheduleFrontend['schedule_id']]: number;
 } = {};
+let NotifcationSchedulesStopIDIndex: {
+  [key: string]: Array<number>;
+} = {};
 
 export async function saveNotificationClient() {
   const currentClient: NClientFrontend = {
@@ -79,8 +82,14 @@ export async function initializeNotificationSchedules() {
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
       const thisScheduleID = thisSchedule.schedule_id;
+      const thisScheduleStopID = thisSchedule.stop_id;
+      const thisScheduleStopKey = `s_${thisScheduleStopID}`;
       NotifcationSchedules.push(thisSchedule);
       NotifcationSchedulesIndex[thisScheduleID] = index;
+      if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisScheduleStopKey)) {
+        NotifcationSchedulesStopIDIndex[thisScheduleStopKey] = [];
+      }
+      NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(index);
       index += 1;
     }
   }
@@ -122,7 +131,6 @@ export async function updateNotificationSchedule(schedule_id: NScheduleFrontend[
     const existingScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const existingSchedule = NotifcationSchedules[existingScheduleIndex];
     const updatedSchedule: NScheduleFrontend = Object.assign(existingSchedule, {
-      schedule_id: schedule_id,
       estimate_time: estimate_time,
       scheduled_time: scheduled_time
     });
@@ -133,11 +141,27 @@ export async function updateNotificationSchedule(schedule_id: NScheduleFrontend[
 
 export function listNotifcationSchedules(): Array<NScheduleFrontend> {
   const now = new Date().getTime();
-  let result = [];
+  let result: Array<NScheduleFrontend> = [];
   for (const thisSchedule of NotifcationSchedules) {
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
       result.push(thisSchedule);
+    }
+  }
+  return result;
+}
+
+export function listNotifcationSchedulesOfStop(StopID: NScheduleFrontend['stop_id']): Array<NScheduleFrontend> {
+  let result: Array<NScheduleFrontend> = [];
+  const now = new Date().getTime();
+  const thisStopKey = `s_${StopID}`;
+  if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
+    const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
+    for (const index of indexes) {
+      const thisSchedule = NotifcationSchedules[index];
+      if (thisSchedule.scheduled_time > now) {
+        result.push(thisSchedule);
+      }
     }
   }
   return result;
@@ -150,7 +174,10 @@ export async function discardExpiredNotificationSchedules() {
     const existingSchedule = NotifcationSchedules[existingScheduleIndex];
     const thisScheduledTime = existingSchedule.scheduled_time;
     if (thisScheduledTime <= now) {
+      const thisScheduleStopID = existingSchedule.stop_id;
+      const thisScheduleStopKey = `s_${thisScheduleStopID}`;
       NotifcationSchedules.splice(existingScheduleIndex, 1, null);
+      NotifcationSchedulesStopIDIndex[thisScheduleStopKey].splice(NotifcationSchedulesStopIDIndex[thisScheduleStopKey].indexOf(existingScheduleIndex), 1);
       delete NotifcationSchedulesIndex[schedule_id];
       await lfRemoveItem(8, schedule_id);
     }
