@@ -1,10 +1,11 @@
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../data/apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
-import { currentNotificationAPI, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
+import { scheduleNotification } from '../../data/notification/apis/scheduleNotification/index';
+import { getNotificationStatus, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
+import { getSettingOptionValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { offsetDate } from '../../tools/time';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -56,10 +57,12 @@ export function closeScheduleNotification(): void {
 export async function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const actionButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-  if (currentNotificationAPI.getStatus()) {
+  if (getNotificationStatus()) {
     promptMessage('處理中', 'manufacturing');
     actionButtonElement.setAttribute('enabled', 'false');
     closeScheduleNotification();
+
+    const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
     const requestID = generateIdentifier('r');
     const Stop = (await getStop(requestID)) as SimplifiedStop;
     const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
@@ -74,6 +77,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
       return;
     }
     const thisStopLocationId = thisStop.stopLocationId;
+    const thisStopGoBack = thisStop.goBack;
 
     // Collect data from Location
     const thisLocationKey = `l_${thisStopLocationId}`;
@@ -94,16 +98,18 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
       return;
     }
     const thisRouteName = thisRoute.n;
+    const thisRouteDeparture = thisRoute.dep;
+    const thisRouteDestination = thisRoute.des;
+    const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisStopGoBack ? parseInt(thisStopGoBack) : 0];
 
     // Collect data from scheduleNotificationOptions
     const thisOption = scheduleNotificationOptions[index];
-    const status = thisOption.status;
     const timeOffset = thisOption.timeOffset;
 
     const now = new Date().getTime();
     const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
-    const message = `[到站通知] ${status} | 路線：${thisRouteName} | 車站：${thisLocationName}`;
-    const scheduling = await currentNotificationAPI.schedule(message, scheduled_time);
+
+    const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, scheduled_time);
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
       return;

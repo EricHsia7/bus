@@ -1,4 +1,5 @@
-import { currentNotificationAPI } from '../../data/notification/index';
+import { registerNotificationClient } from '../../data/notification/apis/registerNotificationClient/index';
+import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
 import { isValidURL } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
@@ -12,7 +13,7 @@ const ProviderInputElement = elementQuerySelector(NotificationGroupsElement, '.c
 const RgistrationKeyInputElement = elementQuerySelector(NotificationGroupsElement, '.css_notification_group[group="registration-key"] .css_notification_group_body input');
 
 function initializeNotificationField() {
-  ProviderInputElement.value = currentNotificationAPI.getProvider();
+  ProviderInputElement.value = getNotificationProvider();
   RgistrationKeyInputElement.value = '';
 }
 
@@ -38,8 +39,8 @@ export async function saveFormulatedNotification() {
     return;
   }
   // register
-  currentNotificationAPI.setProvider(provider);
-  const registering = await currentNotificationAPI.register(registrationKey);
+  setNotificationProvider(provider);
+  const registering = await registerNotificationClient(registrationKey);
   if (registering) {
     promptMessage('註冊成功', 'check_circle');
     return;

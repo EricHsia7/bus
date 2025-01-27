@@ -34,7 +34,7 @@ import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
-import { currentNotificationAPI } from './data/notification/index';
+import { loginNotification } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 
 import './interface/theme.css';
@@ -250,7 +250,7 @@ window.bus = {
               });
               openPermalink();
               fadeOutSplashScreen(function () {
-                currentNotificationAPI.login();
+                loginNotification();
                 askForPositioningPermission();
               });
             }
