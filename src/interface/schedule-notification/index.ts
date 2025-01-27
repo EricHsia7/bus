@@ -2,7 +2,7 @@ import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../d
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
 import { scheduleNotification } from '../../data/notification/apis/scheduleNotification/index';
-import { getNotificationStatus, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
+import { getNotificationClientStatus, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -57,7 +57,7 @@ export function closeScheduleNotification(): void {
 export async function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const actionButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-  if (getNotificationStatus()) {
+  if (getNotificationClientStatus()) {
     promptMessage('處理中', 'manufacturing');
     actionButtonElement.setAttribute('enabled', 'false');
     closeScheduleNotification();

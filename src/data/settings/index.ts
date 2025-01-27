@@ -2,7 +2,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys, isStoragePersistent } from '../st
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { getNotificationStatus } from '../notification/index';
+import { getNotificationClientStatus } from '../notification/index';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 
@@ -534,7 +534,7 @@ export async function listSettings(): Promise<SettingsArray> {
       case 'page':
         switch (key) {
           case 'notification':
-            item.status = getNotificationStatus() ? '已註冊' : '未註冊';
+            item.status = getNotificationClientStatus() ? '已註冊' : '未註冊';
             break;
           default:
             item.status = '';
