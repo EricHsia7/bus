@@ -354,7 +354,7 @@ let Settings: SettingsObject = {
     name: '通知',
     icon: 'notifications',
     status: '',
-    action: `bus.notification.openNotificationScheduleManager()`,
+    action: `bus.notification.openRegisterNotification()`,
     type: 'page',
     description: ''
   },
