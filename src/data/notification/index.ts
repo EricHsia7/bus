@@ -5,13 +5,13 @@ import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
 type NResponseCode = 200 | 400 | 401 | 404 | 500;
 
-interface NResponseCancel {
+export interface NResponseCancel {
   result: string;
   code: NResponseCode;
   method: 'cancel';
 }
 
-interface NResponseRegister {
+export interface NResponseRegister {
   result: string;
   code: NResponseCode;
   method: 'register';
@@ -19,35 +19,35 @@ interface NResponseRegister {
   secret: string | 'null';
 }
 
-interface NResponseSchedule {
+export interface NResponseSchedule {
   result: string;
   code: NResponseCode;
   method: 'schedule';
   schedule_id: string | 'null';
 }
 
-interface NResponseRotate {
+export interface NResponseRotate {
   result: string;
   code: NResponseCode;
   method: 'rotate';
   secret: string | 'null';
 }
 
-interface NResponseReschedule {
+export interface NResponseReschedule {
   result: string;
   code: NResponseCode;
   method: 'reschedule';
 }
 
-type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
+export type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
 
-interface NClientFrontend {
+export interface NClientFrontend {
   provider: string;
   client_id: string;
   secret: string;
 }
 
-interface NScheduleFrontend {
+export interface NScheduleFrontend {
   schedule_id: string;
   stop_id: number;
   location_name: string;
@@ -59,392 +59,107 @@ interface NScheduleFrontend {
   scheduled_time: number;
 }
 
-export class NotificationAPI {
-  private provider: NClientFrontend['provider'] = ''; // base url
-  private client_id: NClientFrontend['client_id'] = '';
-  private secret: NClientFrontend['secret'] = '';
+export let NotificationProvider: NClientFrontend['provider'] = ''; // base url
+export let NotificationClientID: NClientFrontend['client_id'] = '';
+export let NotificationSecret: NClientFrontend['secret'] = '';
 
-  constructor() {}
+export async function saveNotificationClient() {
+  const currentClient: NClientFrontend = {
+    provider: NotificationProvider,
+    client_id: NotificationClientID,
+    secret: NotificationSecret
+  };
+  await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
+}
 
-  private getURL(method: NResponse['method']): string | false {
-    if (this.provider === '') {
-      return false;
-    }
-    const url = new URL(this.provider);
-    if (['cancel', 'register', 'schedule', 'rotate', 'reschedule'].indexOf(method) > -1) {
-      url.searchParams.set('method', method);
-      return url.toString();
-    } else {
-      return false;
-    }
+export async function loadNotificationClient() {
+  const existingClient = await lfGetItem(7, 'n_client');
+  if (existingClient) {
+    const existingClientObject = JSON.parse(existingClient) as NClientFrontend;
+    NotificationProvider = existingClientObject.provider;
+    NotificationClientID = existingClientObject.client_id;
+    NotificationSecret = existingClientObject.secret;
   }
+}
 
-  private getRequestBody(method: NResponse['method'], parameters: Array<any>): object | false {
-    switch (method) {
-      case 'cancel':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 1)) {
-          return false;
-        } else {
-          return {
-            client_id: this.client_id,
-            totp_token: generateTOTPToken(this.client_id, this.secret),
-            schedule_id: parameters[0]
-          };
-        }
-        break;
-      case 'register':
-        if (!(parameters.length === 1)) {
-          return false;
-        } else {
-          const currentDate = new Date();
-          currentDate.setMilliseconds(0);
-          currentDate.setSeconds(0);
-          return {
-            hash: sha256(`${parameters[0]}${currentDate.getTime()}`)
-          };
-        }
-        break;
-      case 'schedule':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 8)) {
-          return false;
-        } else {
-          return {
-            client_id: this.client_id,
-            totp_token: generateTOTPToken(this.client_id, this.secret),
-            stop_id: parameters[0],
-            location_name: parameters[1],
-            route_id: parameters[2],
-            route_name: parameters[3],
-            direction: parameters[4],
-            estimate_time: parameters[5],
-            time_formatting_mode: parameters[6],
-            scheduled_time: parameters[7]
-          };
-        }
-        break;
-      case 'rotate':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 0)) {
-          return false;
-        } else {
-          return {
-            client_id: this.client_id,
-            totp_token: generateTOTPToken(this.client_id, this.secret)
-          };
-        }
-        break;
-      case 'reschedule':
-        if (this.client_id === '' || this.secret === '' || !(parameters.length === 3)) {
-          return false;
-        } else {
-          return {
-            client_id: this.client_id,
-            totp_token: generateTOTPToken(this.client_id, this.secret),
-            schedule_id: parameters[0],
-            estimate_time: parameters[1],
-            scheduled_time: parameters[2]
-          };
-        }
-        break;
-      default:
-        return false;
-        break;
-    }
-  }
+export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+  const thisSchedule: NScheduleFrontend = {
+    schedule_id: schedule_id,
+    stop_id: stop_id,
+    location_name: location_name,
+    route_id: route_id,
+    route_name: route_name,
+    direction: direction,
+    estimate_time: estimate_time,
+    time_formatting_mode: time_formatting_mode,
+    scheduled_time: scheduled_time
+  };
+  await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
+}
 
-  private async makeRequest(method: NResponse['method'], url: string | false, body: object | false): Promise<NResponse | false> {
-    try {
-      if (url === false || body === false) {
-        return false;
-      }
-
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      };
-
-      // Send the request
-      const response = await fetch(url, requestOptions);
-
-      if (!response.ok) {
-        // Log additional details for debugging
-        const errorText = await response.text();
-        console.error('API request failed', {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText
-        });
-        return false;
-      }
-
-      // Attempt to parse the JSON response
-      try {
-        const text = await response.text();
-        const json = JSON.parse(text);
-        switch (method) {
-          case 'cancel':
-            return json as NResponseCancel;
-            break;
-          case 'register':
-            return json as NResponseRegister;
-            break;
-          case 'schedule':
-            return json as NResponseSchedule;
-            break;
-          case 'rotate':
-            return json as NResponseRotate;
-            break;
-          case 'reschedule':
-            return json as NResponseReschedule;
-            break;
-          default:
-            return false;
-            break;
-        }
-      } catch (jsonError) {
-        console.error('Failed to parse JSON response', jsonError);
-        throw new Error('Invalid JSON response from server');
-      }
-    } catch (error) {
-      // Catch and log errors
-      console.error('Error making request:', error);
-      return false;
-    }
-  }
-
-  private async saveClient() {
-    const currentClient: NClientFrontend = {
-      provider: this.provider,
-      client_id: this.client_id,
-      secret: this.secret
-    };
-    await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
-  }
-
-  private async loadClient() {
-    const existingClient = await lfGetItem(7, 'n_client');
-    if (existingClient) {
-      const existingClientObject = JSON.parse(existingClient) as NClientFrontend;
-      this.provider = existingClientObject.provider;
-      this.client_id = existingClientObject.client_id;
-      this.secret = existingClientObject.secret;
-    }
-  }
-
-  private async saveSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+export async function modifyNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+  const existingSchedule = await lfGetItem(8, schedule_id);
+  if (existingSchedule) {
+    const existingScheduleObject = JSON.parse(existingSchedule);
     const thisSchedule: NScheduleFrontend = {
       schedule_id: schedule_id,
-      stop_id: stop_id,
-      location_name: location_name,
-      route_id: route_id,
-      route_name: route_name,
-      direction: direction,
+      stop_id: existingScheduleObject.stop_id,
+      location_name: existingScheduleObject.location_name,
+      route_id: existingScheduleObject.route_id,
+      route_name: existingScheduleObject.route_name,
+      direction: existingScheduleObject.direction,
       estimate_time: estimate_time,
-      time_formatting_mode: time_formatting_mode,
+      time_formatting_mode: existingScheduleObject.time_formatting_mode,
       scheduled_time: scheduled_time
     };
     await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
   }
+}
 
-  private async modifySchedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: NScheduleFrontend['scheduled_time']) {
-    const existingSchedule = await lfGetItem(8, schedule_id);
-    if (existingSchedule) {
-      const existingScheduleObject = JSON.parse(existingSchedule);
-      const thisSchedule: NScheduleFrontend = {
-        schedule_id: schedule_id,
-        stop_id: existingScheduleObject.stop_id,
-        location_name: existingScheduleObject.location_name,
-        route_id: existingScheduleObject.route_id,
-        route_name: existingScheduleObject.route_name,
-        direction: existingScheduleObject.direction,
-        estimate_time: estimate_time,
-        time_formatting_mode: existingScheduleObject.time_formatting_mode,
-        scheduled_time: scheduled_time
-      };
-      await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
+export async function listNotifcationSchedules(): Promise<Array<NScheduleFrontend>> {
+  const now = new Date().getTime();
+  const keys = await lfListItemKeys(8);
+  let result = [];
+  for (const key of keys) {
+    const thisScheduleJSON = await lfGetItem(8, key);
+    const thisSchedule = JSON.parse(thisScheduleJSON) as NScheduleFrontend;
+    const thisScheduledTime = thisSchedule.scheduled_time;
+    if (thisScheduledTime > now) {
+      result.push(thisSchedule);
     }
   }
+  return result;
+}
 
-  public async listSchedules(): Promise<Array<NScheduleFrontend>> {
-    const now = new Date().getTime();
-    const keys = await lfListItemKeys(8);
-    let result = [];
-    for (const key of keys) {
-      const thisScheduleJSON = await lfGetItem(8, key);
-      const thisSchedule = JSON.parse(thisScheduleJSON) as NScheduleFrontend;
-      const thisScheduledTime = thisSchedule.scheduled_time;
-      if (thisScheduledTime > now) {
-        result.push(thisSchedule);
-      }
-    }
-    return result;
-  }
-
-  public getStatus(): boolean {
-    if (this.client_id === '' || this.secret === '') {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  public async login(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
-    if (!client_id || !secret) {
-      await this.loadClient();
-    } else {
-      this.client_id = client_id;
-      this.secret = secret;
-    }
-  }
-
-  public setProvider(provider: NClientFrontend['provider']): void {
-    if (isValidURL(provider)) {
-      this.provider = provider;
-    } else {
-      throw new Error('The provider is not valid.');
-    }
-  }
-
-  public getProvider(): NClientFrontend['provider'] {
-    return this.provider;
-  }
-
-  public async register(registrationKey: string): Promise<boolean> {
-    if (!registrationKey) {
-      return false;
-    }
-    const url = this.getURL('register');
-    const requestBody = this.getRequestBody('register', [registrationKey]);
-    const response = await this.makeRequest('register', url, requestBody);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'register') {
-        this.client_id = response.client_id;
-        this.secret = response.secret;
-        await this.saveClient();
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  public async schedule(stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: string | number | Date): Promise<string | false> {
-    if (this.client_id === '' || this.secret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || !(typeof time_formatting_mode === 'number') || scheduled_time === undefined) {
-      return false;
-    }
-    let processed_schedule_time = new Date();
-    switch (typeof scheduled_time) {
-      case 'string':
-        processed_schedule_time = new Date(scheduled_time);
-        break;
-      case 'number':
-        processed_schedule_time = new Date(scheduled_time);
-        break;
-      default:
-        if (scheduled_time instanceof Date) {
-          processed_schedule_time = scheduled_time;
-        } else {
-          return false;
-        }
-        break;
-    }
-    const url = this.getURL('schedule');
-    const requestBody = this.getRequestBody('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, processed_schedule_time.toISOString()]);
-    const response = await this.makeRequest('schedule', url, requestBody);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'schedule') {
-        if (Math.random() > 0.8) {
-          await this.rotate();
-        }
-        this.saveSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, processed_schedule_time.getTime());
-        return response.schedule_id;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  public async cancel(schedule_id: NScheduleFrontend['schedule_id']): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '' || schedule_id === undefined) {
-      return false;
-    }
-    const url = this.getURL('cancel', [schedule_id]);
-    const requestBody = this.getRequestBody('cancel', [schedule_id]);
-    const response = await this.makeRequest('cancel', url, requestBody);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'cancel') {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  private async rotate(): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '') {
-      return false;
-    }
-    const url = this.getURL('rotate');
-    const requestBody = this.getRequestBody('rotate', []);
-    const response = await this.makeRequest('rotate', url, requestBody);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'rotate') {
-        this.secret = response.secret;
-        await this.saveClient();
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  public async reschedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: string | number | Date): Promise<boolean> {
-    if (this.client_id === '' || this.secret === '' || schedule_id === undefined || estimate_time === undefined || scheduled_time === undefined) {
-      return false;
-    }
-    let processed_schedule_time = new Date();
-    switch (typeof scheduled_time) {
-      case 'string':
-        processed_schedule_time = new Date(scheduled_time);
-        break;
-      case 'number':
-        processed_schedule_time = new Date(scheduled_time);
-        break;
-      default:
-        if (scheduled_time instanceof Date) {
-          processed_schedule_time = scheduled_time;
-        } else {
-          return false;
-        }
-        break;
-    }
-    const url = this.getURL('reschedule');
-    const requestBody = this.getRequestBody('reschedule', [schedule_id, estimate_time, processed_schedule_time.toISOString()]);
-    const response = await this.makeRequest('reschedule', url, requestBody);
-    if (response === false) {
-      return false;
-    } else {
-      if (response.code === 200 && response.method === 'reschedule') {
-        await this.modifySchedule(schedule_id, estimate_time, processed_schedule_time.getTime());
-        return true;
-      } else {
-        return false;
-      }
-    }
+export function getNotificationStatus(): boolean {
+  if (NotificationClientID === '' || NotificationSecret === '') {
+    return false;
+  } else {
+    return true;
   }
 }
 
-export let currentNotificationAPI = new NotificationAPI();
+export async function loginNotification(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
+  if (!client_id || !secret) {
+    await loadNotificationClient();
+  } else {
+    client_id = client_id;
+    secret = secret;
+  }
+}
+
+export function setNotificationProvider(provider: NClientFrontend['provider']): void {
+  if (isValidURL(provider)) {
+    provider = provider;
+  } else {
+    throw new Error('The provider is not valid.');
+  }
+}
+
+export function getNotificationProvider(): NClientFrontend['provider'] {
+  const url = new URL(NotificationProvider);
+  return `${url.protocol}//${url.hostname}`;
+}
 
 export interface ScheduleNotificationOption {
   name: string;
