@@ -169,6 +169,21 @@ export function listNotifcationSchedulesOfStop(StopID: NScheduleFrontend['stop_i
   return result;
 }
 
+export function stopHasNotifcationSchedules(StopID: NScheduleFrontend['stop_id']): boolean {
+  const now = new Date().getTime();
+  const thisStopKey = `s_${StopID}`;
+  if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
+    const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
+    for (const index of indexes) {
+      const thisSchedule = NotifcationSchedules[index];
+      if (thisSchedule.scheduled_time > now) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 export async function discardExpiredNotificationSchedules() {
   const now = new Date().getTime();
   for (const schedule_id in NotifcationSchedulesIndex) {

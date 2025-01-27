@@ -11,6 +11,7 @@ import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage,
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
+import { stopHasNotifcationSchedules } from '../../data/notification/index';
 
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
@@ -354,6 +355,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
       scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
+      const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
+      scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }
 
     if (previousItem === null) {
