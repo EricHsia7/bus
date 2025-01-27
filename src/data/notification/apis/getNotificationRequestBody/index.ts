@@ -28,7 +28,7 @@ export function getNotificationRequestBody(method: NResponse['method'], paramete
       }
       break;
     case 'schedule':
-      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 8)) {
+      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 9)) {
         return false;
       } else {
         return {
@@ -41,7 +41,8 @@ export function getNotificationRequestBody(method: NResponse['method'], paramete
           direction: parameters[4],
           estimate_time: parameters[5],
           time_formatting_mode: parameters[6],
-          scheduled_time: parameters[7]
+          time_offset: parameters[7],
+          scheduled_time: parameters[8]
         };
       }
       break;

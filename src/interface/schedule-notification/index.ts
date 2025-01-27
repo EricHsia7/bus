@@ -104,12 +104,12 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
 
     // Collect data from scheduleNotificationOptions
     const thisOption = scheduleNotificationOptions[index];
-    const timeOffset = thisOption.timeOffset;
+    const timeOffset = thisOption.time_offset;
 
     const now = new Date().getTime();
     const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
 
-    const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, scheduled_time);
+    const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
       return;

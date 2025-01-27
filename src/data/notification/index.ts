@@ -17,6 +17,7 @@ export interface NScheduleFrontend {
   direction: string;
   estimate_time: number;
   time_formatting_mode: number;
+  time_offset: number;
   scheduled_time: number;
 }
 
@@ -95,7 +96,7 @@ export async function initializeNotificationSchedules() {
   }
 }
 
-export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], time_offset: NScheduleFrontend['time_offset'], scheduled_time: NScheduleFrontend['scheduled_time']) {
   const thisNotificationSchedule: NScheduleFrontend = {
     schedule_id: schedule_id,
     stop_id: stop_id,
@@ -105,6 +106,7 @@ export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['s
     direction: direction,
     estimate_time: estimate_time,
     time_formatting_mode: time_formatting_mode,
+    time_offset: time_offset,
     scheduled_time: scheduled_time
   };
   await lfSetItem(8, schedule_id, JSON.stringify(thisNotificationSchedule));
@@ -186,7 +188,7 @@ export async function discardExpiredNotificationSchedules() {
 
 export interface ScheduleNotificationOption {
   name: string;
-  timeOffset: number;
+  time_offset: number;
   icon: MaterialSymbols;
   index: number;
 }
@@ -196,37 +198,37 @@ export type ScheduleNotificationOptions = Array<ScheduleNotificationOption>;
 export const scheduleNotificationOptions: ScheduleNotificationOptions = [
   {
     name: '到站前5分鐘',
-    timeOffset: -5,
+    time_offset: -5,
     icon: 'clock_loader_10',
     index: 0
   },
   {
     name: '到站前10分鐘',
-    timeOffset: -10,
+    time_offset: -10,
     icon: 'clock_loader_20',
     index: 1
   },
   {
     name: '到站前15分鐘',
-    timeOffset: -15,
+    time_offset: -15,
     icon: 'clock_loader_40',
     index: 2
   },
   {
     name: '到站前20分鐘',
-    timeOffset: -20,
+    time_offset: -20,
     icon: 'clock_loader_60',
     index: 3
   },
   {
     name: '到站前25分鐘',
-    timeOffset: -25,
+    time_offset: -25,
     icon: 'clock_loader_80',
     index: 4
   },
   {
     name: '到站前30分鐘',
-    timeOffset: -30,
+    time_offset: -30,
     icon: 'clock_loader_90',
     index: 5
   }
