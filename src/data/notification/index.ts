@@ -33,7 +33,7 @@ export async function saveNotificationClient() {
   await lfSetItem(7, 'n_client', JSON.stringify(currentClient));
 }
 
-export async function loadNotificationClient() {
+export async function loginNotification() {
   const existingClient = await lfGetItem(7, 'n_client');
   if (existingClient) {
     const existingClientObject = JSON.parse(existingClient) as NClientFrontend;
@@ -100,26 +100,17 @@ export function getNotificationStatus(): boolean {
   }
 }
 
-export async function loginNotification(client_id: NClientFrontend['client_id'], secret: NClientFrontend['secret']) {
-  if (!client_id || !secret) {
-    await loadNotificationClient();
-  } else {
-    client_id = client_id;
-    secret = secret;
-  }
-}
-
 export function setNotificationProvider(provider: NClientFrontend['provider']): void {
   if (isValidURL(provider)) {
-    provider = provider;
+    const url = new URL(provider);
+    NotificationProvider = `${url.protocol}//${url.hostname}`;
   } else {
     throw new Error('The provider is not valid.');
   }
 }
 
 export function getNotificationProvider(): NClientFrontend['provider'] {
-  const url = new URL(NotificationProvider);
-  return `${url.protocol}//${url.hostname}`;
+  return String(NotificationProvider);
 }
 
 export interface ScheduleNotificationOption {
