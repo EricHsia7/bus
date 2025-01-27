@@ -112,6 +112,7 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
     if (scheduling === false) {
       promptMessage('設定失敗', 'error');
+      actionButtonElement.setAttribute('enabled', 'true');
       return;
     } else {
       promptMessage('設定成功', 'check_circle');
