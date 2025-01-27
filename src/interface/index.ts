@@ -13,7 +13,7 @@ import { closeSettings, openSettings } from './settings/index';
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'Notification' | 'ScheduleNotification';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -81,10 +81,12 @@ export function closePreviousPage(): void {
       case 'Bus':
         closeBus();
         break;
-      case 'Notification':
+      case 'RegisterNotification':
         closeNotification();
         break;
       case 'ScheduleNotification':
+        break;
+      case 'NotificationScheduleManager':
         break;
       default:
         break;
@@ -140,10 +142,12 @@ export function openPreviousPage(): void {
       case 'Bus':
         openBus();
         break;
-      case 'Notification':
+      case 'RegisterNotification':
         openNotification();
         break;
       case 'ScheduleNotification':
+        break;
+      case 'NotificationScheduleManager':
         break;
       default:
         break;

@@ -1,4 +1,4 @@
-.css_notification_field .css_notification_head {
+.css_register_notification_field .css_register_notification_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -11,8 +11,8 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.css_notification_field .css_notification_head .css_notification_button_left,
-.css_notification_field .css_notification_head .css_notification_button_right {
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_left,
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_right {
   width: 55px;
   height: 55px;
   display: flex;
@@ -20,26 +20,26 @@
   align-items: center;
 }
 
-.css_notification_field .css_notification_head .css_notification_button_left {
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_left {
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-.css_notification_field .css_notification_head .css_notification_button_right {
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_right {
   position: absolute;
   top: 0px;
   right: 0px;
 }
 
-.css_notification_field .css_notification_head .css_notification_button_left span.css_material_symbols_rounded,
-.css_notification_field .css_notification_head .css_notification_button_right span.css_material_symbols_rounded {
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_left span.css_material_symbols_rounded,
+.css_register_notification_field .css_register_notification_head .css_register_notification_button_right span.css_material_symbols_rounded {
   height: 20px;
   width: 20px;
   color: var(--b-cssvar-333333);
 }
 
-.css_notification_field .css_notification_head .css_notification_title {
+.css_register_notification_field .css_register_notification_head .css_register_notification_title {
   position: absolute;
   top: 0px;
   left: 55px;

@@ -33,7 +33,7 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { closeNotification, openNotification, saveFormulatedNotification } from './interface/notification/index';
+import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 
@@ -141,12 +141,12 @@ import './interface/personal-schedule-editor/schedule-start-time.css';
 import './interface/personal-schedule-editor/schedule-end-time.css';
 import './interface/personal-schedule-editor/schedule-days.css';
 
-import './interface/notification/field.css';
-import './interface/notification/head.css';
-import './interface/notification/body.css';
-import './interface/notification/groups.css';
-import './interface/notification/provider.css';
-import './interface/notification/registration-key.css';
+import './interface/register-notification/field.css';
+import './interface/register-notification/head.css';
+import './interface/register-notification/body.css';
+import './interface/register-notification/groups.css';
+import './interface/register-notification/provider.css';
+import './interface/register-notification/registration-key.css';
 
 import './interface/schedule-notification/field.css';
 import './interface/schedule-notification/head.css';
@@ -166,6 +166,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -360,9 +361,10 @@ window.bus = {
     closeBus
   },
   notification: {
-    openNotification,
-    closeNotification,
-    saveFormulatedNotification,
+    openNotificationScheduleManager,
+    openRegisterNotification,
+    closeRegisterNotification,
+    saveFormulatedRegisterNotification,
     openScheduleNotification,
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute

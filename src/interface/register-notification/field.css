@@ -1,4 +1,4 @@
-.css_notification_field {
+.css_register_notification_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -8,6 +8,6 @@
   display: none;
 }
 
-.css_notification_field[displayed="true"] {
+.css_register_notification_field[displayed="true"] {
   display: block;
 }
