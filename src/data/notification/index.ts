@@ -73,6 +73,18 @@ export function getNotificationProvider(): NClientFrontend['provider'] {
   return String(NotificationProvider);
 }
 
+export function setNotificationClientID(client_id: NClientFrontend['client_id']): void {
+  if (!(client_id === undefined)) {
+    NotificationClientID = String(client_id);
+  }
+}
+
+export function setNotificationSecret(secret: NClientFrontend['secret']): void {
+  if (!(secret === undefined)) {
+    NotificationSecret = String(secret);
+  }
+}
+
 export async function initializeNotificationSchedules() {
   const now = new Date().getTime();
   const keys = await lfListItemKeys(8);
