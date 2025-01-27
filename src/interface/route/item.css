@@ -450,6 +450,11 @@
   color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
+/* enabled: false */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[enabled="false"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
+  opacity: var(--b-cssvar-disabled-opacity);
+}
+
 /* body > buttons > button > button icon */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button .css_route_group_item_button_icon {
   position: relative;
