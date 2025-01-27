@@ -451,7 +451,7 @@
 }
 
 /* enabled: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[enabled="false"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[enabled="false"] {
   opacity: var(--b-cssvar-disabled-opacity);
 }
 
