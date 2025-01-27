@@ -1,45 +1,6 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { isValidURL, sha256 } from '../../tools/index';
-import { generateTOTPToken } from '../../tools/totp';
+import { isValidURL } from '../../tools/index';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
-
-type NResponseCode = 200 | 400 | 401 | 404 | 500;
-
-export interface NResponseCancel {
-  result: string;
-  code: NResponseCode;
-  method: 'cancel';
-}
-
-export interface NResponseRegister {
-  result: string;
-  code: NResponseCode;
-  method: 'register';
-  client_id: string | 'null';
-  secret: string | 'null';
-}
-
-export interface NResponseSchedule {
-  result: string;
-  code: NResponseCode;
-  method: 'schedule';
-  schedule_id: string | 'null';
-}
-
-export interface NResponseRotate {
-  result: string;
-  code: NResponseCode;
-  method: 'rotate';
-  secret: string | 'null';
-}
-
-export interface NResponseReschedule {
-  result: string;
-  code: NResponseCode;
-  method: 'reschedule';
-}
-
-export type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
 
 export interface NClientFrontend {
   provider: string;

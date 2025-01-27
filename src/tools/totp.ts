@@ -1,10 +1,9 @@
 import * as OTPAuth from 'otpauth';
-import { NClientFrontend } from '../data/notification/index';
 
-export function generateTOTPToken(secret: NClientFrontend['secret']): string {
+export function generateTOTPToken(secret: string): string {
   let totp = new OTPAuth.TOTP({
-    issuer: 'BusNotification',
-    label: 'BusNotification',
+    issuer: 'Bus',
+    label: 'Bus',
     algorithm: 'SHA256',
     digits: 8,
     period: 10,

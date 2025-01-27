@@ -1,4 +1,40 @@
-import { NResponse, NResponseCancel, NResponseRegister, NResponseReschedule, NResponseRotate, NResponseSchedule } from '../index';
+type NResponseCode = 200 | 400 | 401 | 404 | 500;
+
+interface NResponseCancel {
+  result: string;
+  code: NResponseCode;
+  method: 'cancel';
+}
+
+interface NResponseRegister {
+  result: string;
+  code: NResponseCode;
+  method: 'register';
+  client_id: string | 'null';
+  secret: string | 'null';
+}
+
+interface NResponseSchedule {
+  result: string;
+  code: NResponseCode;
+  method: 'schedule';
+  schedule_id: string | 'null';
+}
+
+interface NResponseRotate {
+  result: string;
+  code: NResponseCode;
+  method: 'rotate';
+  secret: string | 'null';
+}
+
+interface NResponseReschedule {
+  result: string;
+  code: NResponseCode;
+  method: 'reschedule';
+}
+
+export type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
 
 export async function makeNotificationRequest(method: NResponse['method'], url: string | false, body: object | false): Promise<NResponse | false> {
   try {
