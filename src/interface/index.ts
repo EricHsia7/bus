@@ -4,7 +4,7 @@ import { closeBus, openBus } from './bus/index';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
-import { closeNotification, openNotification } from './notification/index';
+import { openRegisterNotification, closeRegisterNotification } from './register-notification/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeSearch, openSearch } from './search/index';
@@ -82,7 +82,7 @@ export function closePreviousPage(): void {
         closeBus();
         break;
       case 'RegisterNotification':
-        closeNotification();
+        closeRegisterNotification();
         break;
       case 'ScheduleNotification':
         break;
@@ -143,7 +143,7 @@ export function openPreviousPage(): void {
         openBus();
         break;
       case 'RegisterNotification':
-        openNotification();
+        openRegisterNotification();
         break;
       case 'ScheduleNotification':
         break;
