@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { generateIdentifier, isValidURL } from '../../tools/index';
+import { isValidURL } from '../../tools/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 

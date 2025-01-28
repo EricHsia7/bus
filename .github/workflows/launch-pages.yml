@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-notification
-      - dev-notification-api-2
-      - dev-notification-schedule-v2
 
 jobs:
   launch:
