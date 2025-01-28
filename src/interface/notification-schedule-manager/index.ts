@@ -54,6 +54,8 @@ export function closeNotificationScheduleManager(): void {
 export async function cancelNotificationOnNotificationManager(identifier: string, schedule_id: NotificationSchedule['schedule_id']) {
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
+    const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_notification_schedule_item#${identifier}`);
+    itemElement.remove();
     promptMessage('已取消通知', 'check_circle');
   } else {
     promptMessage('取消失敗', 'error');
