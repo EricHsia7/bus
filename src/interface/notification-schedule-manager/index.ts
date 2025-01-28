@@ -37,6 +37,7 @@ function initializeNotificationScheduleManagerField(): void {
 export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'true');
+  initializeNotificationScheduleManagerField();
   closePreviousPage();
 }
 
