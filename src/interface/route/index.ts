@@ -59,27 +59,31 @@ export function initializeRouteSliding(): void {
     routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
   });
 
-  RouteGroupsElement.addEventListener('scroll', function (event: Event) {
-    routeSliding_sliding = true;
-    const target = event.target as HTMLElement;
-    const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
-    if (currentIndex > routeSliding_initialIndex) {
-      routeSliding_targetIndex = routeSliding_initialIndex + 1;
-    } else {
-      routeSliding_targetIndex = routeSliding_initialIndex - 1;
-    }
-    const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
-    const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
-    const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-    const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+  RouteGroupsElement.addEventListener(
+    'scroll',
+    function (event: Event) {
+      routeSliding_sliding = true;
+      const target = event.target as HTMLElement;
+      const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
+      if (currentIndex > routeSliding_initialIndex) {
+        routeSliding_targetIndex = routeSliding_initialIndex + 1;
+      } else {
+        routeSliding_targetIndex = routeSliding_initialIndex - 1;
+      }
+      const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
+      const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
+      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
 
-    updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+      updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
 
-    if (currentIndex === routeSliding_targetIndex) {
-      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
-      routeSliding_sliding = false;
-    }
-  });
+      if (currentIndex === routeSliding_targetIndex) {
+        routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
+        routeSliding_sliding = false;
+      }
+    },
+    { passive: true }
+  );
 }
 
 export function ResizeRouteField(): void {

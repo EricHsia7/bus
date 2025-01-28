@@ -54,25 +54,29 @@ export function initializeLocationSliding(): void {
     locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
   });
 
-  LocationGroupsElement.addEventListener('scroll', function (event: Event) {
-    locationSliding_sliding = true;
-    const target = event.target as HTMLElement;
-    const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
-    if (currentIndex > locationSliding_initialIndex) {
-      locationSliding_targetIndex = locationSliding_initialIndex + 1;
-    } else {
-      locationSliding_targetIndex = locationSliding_initialIndex - 1;
-    }
-    const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
-    const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
-    const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - locationSliding_initialIndex);
-    const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
-    updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
-    if (currentIndex === locationSliding_targetIndex) {
-      locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
-      locationSliding_sliding = false;
-    }
-  });
+  LocationGroupsElement.addEventListener(
+    'scroll',
+    function (event: Event) {
+      locationSliding_sliding = true;
+      const target = event.target as HTMLElement;
+      const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
+      if (currentIndex > locationSliding_initialIndex) {
+        locationSliding_targetIndex = locationSliding_initialIndex + 1;
+      } else {
+        locationSliding_targetIndex = locationSliding_initialIndex - 1;
+      }
+      const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
+      const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
+      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - locationSliding_initialIndex);
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+      updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+      if (currentIndex === locationSliding_targetIndex) {
+        locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
+        locationSliding_sliding = false;
+      }
+    },
+    { passive: true }
+  );
 }
 
 export function ResizeLocationField(): void {
