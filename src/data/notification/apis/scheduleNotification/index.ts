@@ -34,7 +34,7 @@ export async function scheduleNotification(stop_id: NotificationSchedule['stop_i
       if (Math.random() > 0.8) {
         await rotateNotificationSecret();
       }
-      saveNotificationSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.getTime());
+      await saveNotificationSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.getTime());
       return response.schedule_id;
     } else {
       return false;

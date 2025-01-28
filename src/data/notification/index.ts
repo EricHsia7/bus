@@ -162,6 +162,19 @@ export async function updateNotificationSchedule(schedule_id: NotificationSchedu
   }
 }
 
+export async function removeNotificationSchedule(schedule_id: NotificationSchedule['schedule_id']) {
+  if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
+    const existingScheduleIndex = NotifcationSchedulesIndex[schedule_id];
+    const existingSchedule = NotifcationSchedules[existingScheduleIndex];
+    const thisScheduleStopID = existingSchedule.stop_id;
+    const thisScheduleStopKey = `s_${thisScheduleStopID}`;
+    NotifcationSchedules.splice(existingScheduleIndex, 1, null);
+    NotifcationSchedulesStopIDIndex[thisScheduleStopKey].splice(NotifcationSchedulesStopIDIndex[thisScheduleStopKey].indexOf(existingScheduleIndex), 1);
+    delete NotifcationSchedulesIndex[schedule_id];
+    await lfRemoveItem(8, schedule_id);
+  }
+}
+
 export function listNotifcationSchedules(): Array<NotificationSchedule> {
   const now = new Date().getTime();
   let result: Array<NotificationSchedule> = [];

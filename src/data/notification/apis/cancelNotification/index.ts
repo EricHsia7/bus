@@ -1,4 +1,4 @@
-import { NotificationClientID, NotificationSecret, NotificationSchedule } from '../../index';
+import { NotificationClientID, NotificationSecret, NotificationSchedule, removeNotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';
@@ -14,6 +14,7 @@ export async function cancelNotification(schedule_id: NotificationSchedule['sche
     return false;
   } else {
     if (response.code === 200 && response.method === 'cancel') {
+      await removeNotificationSchedule(schedule_id);
       return true;
     } else {
       return false;
