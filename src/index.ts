@@ -36,6 +36,7 @@ import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './in
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
+import { openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 
 import './interface/theme.css';
 
@@ -142,6 +143,10 @@ import './interface/personal-schedule-editor/schedule-end-time.css';
 import './interface/personal-schedule-editor/schedule-days.css';
 
 import './interface/notification-schedule-manager/field.css';
+import './interface/notification-schedule-manager/head.css';
+import './interface/notification-schedule-manager/body.css';
+import './interface/notification-schedule-manager/list.css';
+import './interface/notification-schedule-manager/item.css';
 
 import './interface/register-notification/field.css';
 import './interface/register-notification/head.css';
@@ -168,7 +173,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
