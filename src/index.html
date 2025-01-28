@@ -674,6 +674,73 @@
         <div class="css_personal_schedule_editor_title">編輯個人化行程</div>
       </div>
     </div>
+
+    <!-- notification schedule manager, register notification, schedule notification  -->
+    <div class="css_notification_schedule_manager_field" displayed="false">
+      <div class="css_notification_schedule_manager_body">
+        <div class="css_notification_schedule_manager_notification_schedule_list"></div>
+      </div>
+      <div class="css_notification_schedule_manager_head">
+        <div class="css_notification_schedule_manager_button_left" onclick="bus.notification.closeNotificationScheduleManager()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_notification_schedule_manager_title">通知</div>
+        <div class="css_notification_schedule_manager_button_right" onclick="bus.notification.openRegisterNotification()">
+          <span class="css_material_symbols_rounded">account_circle</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="css_register_notification_field" displayed="false">
+      <div class="css_register_notification_body">
+        <div class="css_register_notification_groups">
+          <div class="css_register_notification_group" group="provider">
+            <div class="css_register_notification_group_head">
+              <div class="css_register_notification_group_icon">
+                <span class="css_material_symbols_rounded">host</span>
+              </div>
+              <div class="css_register_notification_group_name">提供者</div>
+            </div>
+            <div class="css_register_notification_group_body">
+              <input type="text" placeholder="https://example.com/" />
+            </div>
+          </div>
+          <div class="css_register_notification_group" group="registration-key">
+            <div class="css_register_notification_group_head">
+              <div class="css_register_notification_group_icon">
+                <span class="css_material_symbols_rounded">key</span>
+              </div>
+              <div class="css_register_notification_group_name">註冊鑰匙</div>
+            </div>
+            <div class="css_register_notification_group_body">
+              <input type="text" placeholder="ABCDEFG123456" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="css_register_notification_head">
+        <div class="css_register_notification_button_left" onclick="bus.notification.closeRegisterNotification()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_register_notification_title">註冊通知</div>
+        <div class="css_register_notification_button_right" onclick="bus.notification.saveFormulatedRegisterNotification()">
+          <span class="css_material_symbols_rounded">check</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="css_schedule_notification_field" displayed="false">
+      <div class="css_schedule_notification_body">
+        <div class="css_schedule_notification_list"></div>
+      </div>
+      <div class="css_schedule_notification_head">
+        <div class="css_schedule_notification_button_left" onclick="bus.notification.closeScheduleNotification()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_schedule_notification_title">設定到站通知</div>
+      </div>
+    </div>
+
     <!-- splash screen -->
     <div class="css_splash_screen">
       <svg stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="css_splash_screen_icon">

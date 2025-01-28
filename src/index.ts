@@ -33,6 +33,10 @@ import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analy
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
+import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
+import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
+import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
+import { cancelNotificationOnNotificationManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 
 import './interface/theme.css';
 
@@ -138,6 +142,25 @@ import './interface/personal-schedule-editor/schedule-start-time.css';
 import './interface/personal-schedule-editor/schedule-end-time.css';
 import './interface/personal-schedule-editor/schedule-days.css';
 
+import './interface/notification-schedule-manager/field.css';
+import './interface/notification-schedule-manager/head.css';
+import './interface/notification-schedule-manager/body.css';
+import './interface/notification-schedule-manager/list.css';
+import './interface/notification-schedule-manager/item.css';
+
+import './interface/register-notification/field.css';
+import './interface/register-notification/head.css';
+import './interface/register-notification/body.css';
+import './interface/register-notification/groups.css';
+import './interface/register-notification/provider.css';
+import './interface/register-notification/registration-key.css';
+
+import './interface/schedule-notification/field.css';
+import './interface/schedule-notification/head.css';
+import './interface/schedule-notification/body.css';
+import './interface/schedule-notification/list.css';
+import './interface/schedule-notification/item.css';
+
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
 import './interface/data-usage/body.css';
@@ -234,6 +257,10 @@ window.bus = {
               });
               openPermalink();
               fadeOutSplashScreen(function () {
+                loadNotificationClient();
+                initializeNotificationSchedules().then(function () {
+                  discardExpiredNotificationSchedules();
+                });
                 askForPositioningPermission();
               });
             }
@@ -338,6 +365,17 @@ window.bus = {
   bus: {
     openBus,
     closeBus
+  },
+  notification: {
+    openNotificationScheduleManager,
+    closeNotificationScheduleManager,
+    openRegisterNotification,
+    closeRegisterNotification,
+    saveFormulatedRegisterNotification,
+    openScheduleNotification,
+    closeScheduleNotification,
+    scheduleNotificationForStopItemOnRoute,
+    cancelNotificationOnNotificationManager
   }
 };
 

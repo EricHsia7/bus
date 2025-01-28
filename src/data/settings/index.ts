@@ -2,6 +2,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys, isStoragePersistent } from '../st
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { getNotificationClientStatus } from '../notification/index';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 
@@ -93,7 +94,7 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
   time_formatting_mode: {
@@ -348,6 +349,15 @@ let Settings: SettingsObject = {
     type: 'page',
     description: ''
   },
+  notification: {
+    key: 'notification',
+    name: '通知',
+    icon: 'notifications',
+    status: '',
+    action: `bus.notification.openNotificationScheduleManager()`,
+    type: 'page',
+    description: ''
+  },
   playing_animation: {
     key: 'playing_animation',
     name: '動畫',
@@ -522,7 +532,14 @@ export async function listSettings(): Promise<SettingsArray> {
         item.status = item.options[item.option].name;
         break;
       case 'page':
-        item.status = '';
+        switch (key) {
+          case 'notification':
+            item.status = getNotificationClientStatus() ? '已註冊' : '未註冊';
+            break;
+          default:
+            item.status = '';
+            break;
+        }
         break;
       case 'action':
         item.status = '';

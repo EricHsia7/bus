@@ -1,0 +1,13 @@
+.css_schedule_notification_field .css_schedule_notification_body .css_schedule_notification_list {
+  position: relative;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: auto;
+  display: inline-block;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  margin-top: calc(10px + 55px);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+  user-select: none;
+  -webkit-user-select: none;
+}

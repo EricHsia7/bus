@@ -42,9 +42,17 @@ Quickly find routes, locations, and places of interest within the app.
 - **Data Usage**: See the transferred data quantity.
 - **Storage**: See the drive space used by Bus on your device.
 
+### Notification
+
+- **Schedule Notifications**: You can set up notifications to remind you about bus arrivals based on their estimated times.
+- **Backend Requirements**: When you close Bus, operating systems typically restrict its access to system resources. This makes it difficult to handle notifications using frontend technologies alone. To use the notification feature, you'll need to set up backend infrastructure—though you can use free services like Cloudflare Worker for this purpose.
+- **Bus Notification Worker**: You can set up a worker using [@EricHsia7/bus-notification-worker](https://github.com/EricHsia7/bus-notification-worker).
+
 ## Privacy
 
-Your privacy and security are our top priorities. Your all data are stored locally, only used for improving your using experience, and not for advertising. You can see them in [./src/data](./src/data/).
+Your privacy and security are our top priorities. Your all data are stored locally except for the notification feature[^1]. The data is only used for improving your using experience, and not for advertising. You can see them in [./src/data](./src/data/).
+
+[^1]: There's an exception that your data may be sent to and stored on providers you choose, if you're using the notification feature.
 
 ## Concepts
 
@@ -57,10 +65,11 @@ Locations and stops are different in some aspects. Stops are route-position pair
 - **Packages**: See them in [package.json](./package.json).
 - **Data References**: See them in [getAPIURL.ts](./src/data/apis/getAPIURL/index.ts) and learn more on the website [pto.gov.taipei](https://pto.gov.taipei/News_Content.aspx?n=A1DF07A86105B6BB&s=55E8ADD164E4F579&sms=2479B630A6BD8079).
 
-## Related Repositories
+## Affiliated Repositories
 
-- [EricHsia7/material-symbols-list](https://github.com/EricHsia7/material-symbols-list)
-- [EricHsia7/bus-alternative-static-apis](https://github.com/EricHsia7/bus-alternative-static-apis)
+- [@EricHsia7/material-symbols-list](https://github.com/EricHsia7/material-symbols-list)
+- [@EricHsia7/bus-alternative-static-apis](https://github.com/EricHsia7/bus-alternative-static-apis)
+- [@EricHsia7/bus-notification-worker](https://github.com/EricHsia7/bus-notification-worker)
 
 ## Materials Used
 

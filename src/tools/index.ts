@@ -1,4 +1,6 @@
 export const md5 = require('md5');
+export const sha256 = require('sha256');
+
 
 export function compareThings(a: any, b: any): boolean {
   function anyToString(any: any): string {
@@ -100,5 +102,14 @@ export function booleanToString(x: boolean): 'true' | 'false' {
     } else {
       return 'false';
     }
+  }
+}
+
+export function isValidURL(string: string): boolean {
+  try {
+    new URL(string);
+    return true; // If no error is thrown, it's a valid URL
+  } catch (_) {
+    return false; // Invalid URL
   }
 }

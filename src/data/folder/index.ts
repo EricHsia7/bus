@@ -89,7 +89,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'location_on',
     default: true,
     index: 0,
-    storeIndex: 8,
+    storeIndex: 10,
     contentType: ['stop'],
     id: 'saved_stop'
   },
@@ -98,7 +98,7 @@ var Folders: { [key: string]: Folder } = {
     icon: 'route',
     default: true,
     index: 1,
-    storeIndex: 9,
+    storeIndex: 11,
     contentType: ['route'],
     id: 'saved_route'
   }
@@ -107,10 +107,10 @@ var Folders: { [key: string]: Folder } = {
 const defaultFolderQuantity = 2;
 
 export async function initializeFolderStores(): void {
-  var folderKeys = await lfListItemKeys(7);
+  var folderKeys = await lfListItemKeys(9);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {
-    var thisFolder: string = await lfGetItem(7, folderKey);
+    var thisFolder: string = await lfGetItem(9, folderKey);
     if (thisFolder) {
       if (!thisFolder.default) {
         var thisFolderObject: Folder = JSON.parse(thisFolder);
@@ -133,11 +133,11 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
     return false;
   }
 
-  var folderKeys = await lfListItemKeys(7);
+  var folderKeys = await lfListItemKeys(9);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
-    const existingFolder = await lfGetItem(7, `f_${identifier}`);
+    const existingFolder = await lfGetItem(9, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
       var object: Folder = {
@@ -151,7 +151,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
         time: new Date().toISOString()
       };
       Folders[`f_${identifier}`] = object;
-      await lfSetItem(7, `f_${identifier}`, JSON.stringify(object));
+      await lfSetItem(9, `f_${identifier}`, JSON.stringify(object));
       return identifier;
     } else {
       return false;
@@ -164,7 +164,7 @@ export async function createFolder(name: string, icon: string): Promise<boolean 
 export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
-    const existingFolder: string = await lfGetItem(7, folderKey);
+    const existingFolder: string = await lfGetItem(9, folderKey);
     if (existingFolder) {
       const requestID = generateIdentifier('r');
       const materialSymbols = await getMaterialSymbols(requestID);
@@ -172,7 +172,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
         return false;
       } else {
         Folders[folderKey] = folder;
-        await lfSetItem(7, folderKey, JSON.stringify(folder));
+        await lfSetItem(9, folderKey, JSON.stringify(folder));
         return true;
       }
     } else {
