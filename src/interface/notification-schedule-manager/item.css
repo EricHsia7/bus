@@ -20,7 +20,7 @@
   align-items: center;
   color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: var(--b-cssvar-border-radius-medium);
   font-size: 20px;
   font-weight: 500;
   display: flex;
