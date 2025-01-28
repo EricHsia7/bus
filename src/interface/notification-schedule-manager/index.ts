@@ -32,7 +32,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
   NotificationScheduleList.append(fragment);
 }
 
-function initializeNotificationScheduleManagerField(): void {
+async function initializeNotificationScheduleManagerField() {
   const requestID = generateIdentifier('r');
   const integration = await integrateNotifcationSchedules(requestID);
   updateNotificationScheduleManagerField(integration);
