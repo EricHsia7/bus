@@ -1,42 +1,42 @@
-type NResponseCode = 200 | 400 | 401 | 404 | 500;
+type NotificationResponseCode = 200 | 400 | 401 | 404 | 500;
 
-interface NResponseCancel {
+interface NotificationResponseCancel {
   result: string;
-  code: NResponseCode;
+  code: NotificationResponseCode;
   method: 'cancel';
 }
 
-interface NResponseRegister {
+interface NotificationResponseRegister {
   result: string;
-  code: NResponseCode;
+  code: NotificationResponseCode;
   method: 'register';
   client_id: string | 'null';
   secret: string | 'null';
 }
 
-interface NResponseSchedule {
+interface NotificationResponseSchedule {
   result: string;
-  code: NResponseCode;
+  code: NotificationResponseCode;
   method: 'schedule';
   schedule_id: string | 'null';
 }
 
-interface NResponseRotate {
+interface NotificationResponseRotate {
   result: string;
-  code: NResponseCode;
+  code: NotificationResponseCode;
   method: 'rotate';
   secret: string | 'null';
 }
 
-interface NResponseReschedule {
+interface NotificationResponseReschedule {
   result: string;
-  code: NResponseCode;
+  code: NotificationResponseCode;
   method: 'reschedule';
 }
 
-export type NResponse = NResponseCancel | NResponseRegister | NResponseSchedule | NResponseRotate | NResponseReschedule;
+export type NotificationResponse = NotificationResponseCancel | NotificationResponseRegister | NotificationResponseSchedule | NotificationResponseRotate | NotificationResponseReschedule;
 
-export async function makeNotificationRequest(method: NResponse['method'], url: string | false, body: object | false): Promise<NResponse | false> {
+export async function makeNotificationRequest(method: NotificationResponse['method'], url: string | false, body: object | false): Promise<NotificationResponse | false> {
   try {
     if (url === false || body === false) {
       return false;
@@ -70,19 +70,19 @@ export async function makeNotificationRequest(method: NResponse['method'], url: 
       const json = JSON.parse(text);
       switch (method) {
         case 'cancel':
-          return json as NResponseCancel;
+          return json as NotificationResponseCancel;
           break;
         case 'register':
-          return json as NResponseRegister;
+          return json as NotificationResponseRegister;
           break;
         case 'schedule':
-          return json as NResponseSchedule;
+          return json as NotificationResponseSchedule;
           break;
         case 'rotate':
-          return json as NResponseRotate;
+          return json as NotificationResponseRotate;
           break;
         case 'reschedule':
-          return json as NResponseReschedule;
+          return json as NotificationResponseReschedule;
           break;
         default:
           return false;

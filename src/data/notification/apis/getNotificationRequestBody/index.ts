@@ -1,8 +1,8 @@
 import { sha256 } from '../../../../tools/index';
 import { generateTOTPToken } from '../../../../tools/totp';
-import { NotificationClientID, NotificationSecret, NResponse } from '../../index';
+import { NotificationClientID, NotificationSecret, NotificationResponse } from '../../index';
 
-export function getNotificationRequestBody(method: NResponse['method'], parameters: Array<any>): object | false {
+export function getNotificationRequestBody(method: NotificationResponse['method'], parameters: Array<any>): object | false {
   switch (method) {
     case 'cancel':
       if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 1)) {

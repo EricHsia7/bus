@@ -1,9 +1,9 @@
-import { NotificationClientID, NotificationSecret, NScheduleFrontend } from '../../index';
+import { NotificationClientID, NotificationSecret, NotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';
 
-export async function cancelNotification(schedule_id: NScheduleFrontend['schedule_id']): Promise<boolean> {
+export async function cancelNotification(schedule_id: NotificationSchedule['schedule_id']): Promise<boolean> {
   if (NotificationClientID === '' || NotificationSecret === '' || schedule_id === undefined) {
     return false;
   }

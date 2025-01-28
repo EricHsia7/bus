@@ -36,7 +36,7 @@ import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './in
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
-import { closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { cancelNotificationOnNotificationManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 
 import './interface/theme.css';
 
@@ -374,7 +374,8 @@ window.bus = {
     saveFormulatedRegisterNotification,
     openScheduleNotification,
     closeScheduleNotification,
-    scheduleNotificationForStopItemOnRoute
+    scheduleNotificationForStopItemOnRoute,
+    cancelNotificationOnNotificationManager
   }
 };
 

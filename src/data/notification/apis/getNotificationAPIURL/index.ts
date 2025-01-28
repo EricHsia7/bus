@@ -1,6 +1,6 @@
-import { NotificationProvider, NResponse } from '../../index';
+import { NotificationProvider, NotificationResponse } from '../../index';
 
-export function getNotificationAPIURL(method: NResponse['method']): string | false {
+export function getNotificationAPIURL(method: NotificationResponse['method']): string | false {
   if (NotificationProvider === '') {
     return false;
   }

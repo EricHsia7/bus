@@ -1,9 +1,9 @@
-import { updateNotificationSchedule, NotificationClientID, NotificationSecret, NScheduleFrontend } from '../../index';
+import { updateNotificationSchedule, NotificationClientID, NotificationSecret, NotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';
 
-export async function rescheduleNotification(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: string | number | Date): Promise<boolean> {
+export async function rescheduleNotification(schedule_id: NotificationSchedule['schedule_id'], estimate_time: NotificationSchedule['estimate_time'], scheduled_time: string | number | Date): Promise<boolean> {
   if (NotificationClientID === '' || NotificationSecret === '' || schedule_id === undefined || estimate_time === undefined || scheduled_time === undefined) {
     return false;
   }

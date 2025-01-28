@@ -1,10 +1,10 @@
-import { NotificationClientID, NotificationSecret, NScheduleFrontend, saveNotificationSchedule } from '../../index';
+import { NotificationClientID, NotificationSecret, NotificationSchedule, saveNotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';
 import { rotateNotificationSecret } from '../rotateNotificationSecret/index';
 
-export async function scheduleNotification(stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], time_offset: NScheduleFrontend['time_offset'], scheduled_time: string | number | Date): Promise<string | false> {
+export async function scheduleNotification(stop_id: NotificationSchedule['stop_id'], location_name: NotificationSchedule['location_name'], route_id: NotificationSchedule['route_id'], route_name: NotificationSchedule['route_name'], direction: NotificationSchedule['direction'], estimate_time: NotificationSchedule['estimate_time'], time_formatting_mode: NotificationSchedule['time_formatting_mode'], time_offset: NotificationSchedule['time_offset'], scheduled_time: string | number | Date): Promise<string | false> {
   if (NotificationClientID === '' || NotificationSecret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || !(typeof time_formatting_mode === 'number') || scheduled_time === undefined) {
     return false;
   }

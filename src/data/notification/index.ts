@@ -1,14 +1,15 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { isValidURL } from '../../tools/index';
+import { generateIdentifier, isValidURL } from '../../tools/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
-export interface NClientFrontend {
+export interface NotificationClient {
   provider: string;
   client_id: string;
   secret: string;
 }
 
-export interface NScheduleFrontend {
+export interface NotificationSchedule {
   schedule_id: string;
   stop_id: number;
   location_name: string;
@@ -21,20 +22,20 @@ export interface NScheduleFrontend {
   scheduled_time: number;
 }
 
-export let NotificationProvider: NClientFrontend['provider'] = ''; // base url
-export let NotificationClientID: NClientFrontend['client_id'] = '';
-export let NotificationSecret: NClientFrontend['secret'] = '';
+export let NotificationProvider: NotificationClient['provider'] = ''; // base url
+export let NotificationClientID: NotificationClient['client_id'] = '';
+export let NotificationSecret: NotificationClient['secret'] = '';
 
-let NotifcationSchedules: Array<NScheduleFrontend> = [];
+let NotifcationSchedules: Array<NotificationSchedule> = [];
 let NotifcationSchedulesIndex: {
-  [key: NScheduleFrontend['schedule_id']]: number;
+  [key: NotificationSchedule['schedule_id']]: number;
 } = {};
 let NotifcationSchedulesStopIDIndex: {
   [key: string]: Array<number>;
 } = {};
 
 export async function saveNotificationClient() {
-  const currentClient: NClientFrontend = {
+  const currentClient: NotificationClient = {
     provider: NotificationProvider,
     client_id: NotificationClientID,
     secret: NotificationSecret
@@ -45,7 +46,7 @@ export async function saveNotificationClient() {
 export async function loadNotificationClient() {
   const existingClient = await lfGetItem(7, 'n_client');
   if (existingClient) {
-    const existingClientObject = JSON.parse(existingClient) as NClientFrontend;
+    const existingClientObject = JSON.parse(existingClient) as NotificationClient;
     NotificationProvider = existingClientObject.provider;
     NotificationClientID = existingClientObject.client_id;
     NotificationSecret = existingClientObject.secret;
@@ -60,7 +61,7 @@ export function getNotificationClientStatus(): boolean {
   }
 }
 
-export function setNotificationProvider(provider: NClientFrontend['provider']): void {
+export function setNotificationProvider(provider: NotificationClient['provider']): void {
   if (isValidURL(provider)) {
     const url = new URL(provider);
     NotificationProvider = `${url.protocol}//${url.hostname}`;
@@ -69,17 +70,17 @@ export function setNotificationProvider(provider: NClientFrontend['provider']): 
   }
 }
 
-export function getNotificationProvider(): NClientFrontend['provider'] {
+export function getNotificationProvider(): NotificationClient['provider'] {
   return String(NotificationProvider);
 }
 
-export function setNotificationClientID(client_id: NClientFrontend['client_id']): void {
+export function setNotificationClientID(client_id: NotificationClient['client_id']): void {
   if (!(client_id === undefined)) {
     NotificationClientID = String(client_id);
   }
 }
 
-export function setNotificationSecret(secret: NClientFrontend['secret']): void {
+export function setNotificationSecret(secret: NotificationClient['secret']): void {
   if (!(secret === undefined)) {
     NotificationSecret = String(secret);
   }
@@ -91,7 +92,7 @@ export async function initializeNotificationSchedules() {
   let index: number = 0;
   for (const key of keys) {
     const thisScheduleJSON = await lfGetItem(8, key);
-    const thisSchedule = JSON.parse(thisScheduleJSON) as NScheduleFrontend;
+    const thisSchedule = JSON.parse(thisScheduleJSON) as NotificationSchedule;
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
       const thisScheduleID = thisSchedule.schedule_id;
@@ -108,8 +109,8 @@ export async function initializeNotificationSchedules() {
   }
 }
 
-export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], stop_id: NScheduleFrontend['stop_id'], location_name: NScheduleFrontend['location_name'], route_id: NScheduleFrontend['route_id'], route_name: NScheduleFrontend['route_name'], direction: NScheduleFrontend['direction'], estimate_time: NScheduleFrontend['estimate_time'], time_formatting_mode: NScheduleFrontend['time_formatting_mode'], time_offset: NScheduleFrontend['time_offset'], scheduled_time: NScheduleFrontend['scheduled_time']) {
-  const thisSchedule: NScheduleFrontend = {
+export async function saveNotificationSchedule(schedule_id: NotificationSchedule['schedule_id'], stop_id: NotificationSchedule['stop_id'], location_name: NotificationSchedule['location_name'], route_id: NotificationSchedule['route_id'], route_name: NotificationSchedule['route_name'], direction: NotificationSchedule['direction'], estimate_time: NotificationSchedule['estimate_time'], time_formatting_mode: NotificationSchedule['time_formatting_mode'], time_offset: NotificationSchedule['time_offset'], scheduled_time: NotificationSchedule['scheduled_time']) {
+  const thisNotificationSchedule: NotificationSchedule = {
     schedule_id: schedule_id,
     stop_id: stop_id,
     location_name: location_name,
@@ -121,18 +122,18 @@ export async function saveNotificationSchedule(schedule_id: NScheduleFrontend['s
     time_offset: time_offset,
     scheduled_time: scheduled_time
   };
-  const thisScheduleStopKey = `s_${stop_id}`;
-  const thisScheduleIndex = NotifcationSchedules.length;
-  NotifcationSchedules.push(thisSchedule);
-  NotifcationSchedulesIndex[schedule_id] = thisScheduleIndex;
-  if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisScheduleStopKey)) {
-    NotifcationSchedulesStopIDIndex[thisScheduleStopKey] = [];
+  const thisNotificationScheduleStopKey = `s_${stop_id}`;
+  const thisNotificationScheduleIndex = NotifcationSchedules.length; // length - 1 + 1
+  NotifcationSchedules.push(thisNotificationSchedule);
+  NotifcationSchedulesIndex[schedule_id] = thisNotificationScheduleIndex;
+  if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisNotificationScheduleStopKey)) {
+    NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey] = [];
   }
-  NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(thisScheduleIndex);
-  await lfSetItem(8, schedule_id, JSON.stringify(thisSchedule));
+  NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey].push(thisNotificationScheduleIndex);
+  await lfSetItem(8, schedule_id, JSON.stringify(thisNotificationSchedule));
 }
 
-export function getNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id']): NScheduleFrontend | false {
+export function getNotificationSchedule(schedule_id: NotificationSchedule['schedule_id']): NotificationSchedule | false {
   if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
     const thisScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const thisSchedule = NotifcationSchedules[thisScheduleIndex];
@@ -148,11 +149,11 @@ export function getNotificationSchedule(schedule_id: NScheduleFrontend['schedule
   }
 }
 
-export async function updateNotificationSchedule(schedule_id: NScheduleFrontend['schedule_id'], estimate_time: NScheduleFrontend['estimate_time'], scheduled_time: NScheduleFrontend['scheduled_time']) {
+export async function updateNotificationSchedule(schedule_id: NotificationSchedule['schedule_id'], estimate_time: NotificationSchedule['estimate_time'], scheduled_time: NotificationSchedule['scheduled_time']) {
   if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
     const existingScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const existingSchedule = NotifcationSchedules[existingScheduleIndex];
-    const updatedSchedule: NScheduleFrontend = Object.assign(existingSchedule, {
+    const updatedSchedule: NotificationSchedule = Object.assign(existingSchedule, {
       estimate_time: estimate_time,
       scheduled_time: scheduled_time
     });
@@ -161,9 +162,9 @@ export async function updateNotificationSchedule(schedule_id: NScheduleFrontend[
   }
 }
 
-export function listNotifcationSchedules(): Array<NScheduleFrontend> {
+export function listNotifcationSchedules(): Array<NotificationSchedule> {
   const now = new Date().getTime();
-  let result: Array<NScheduleFrontend> = [];
+  let result: Array<NotificationSchedule> = [];
   for (const thisSchedule of NotifcationSchedules) {
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
@@ -173,8 +174,8 @@ export function listNotifcationSchedules(): Array<NScheduleFrontend> {
   return result;
 }
 
-export function listNotifcationSchedulesOfStop(StopID: NScheduleFrontend['stop_id']): Array<NScheduleFrontend> {
-  let result: Array<NScheduleFrontend> = [];
+export function listNotifcationSchedulesOfStop(StopID: NotificationSchedule['stop_id']): Array<NotificationSchedule> {
+  let result: Array<NotificationSchedule> = [];
   const now = new Date().getTime();
   const thisStopKey = `s_${StopID}`;
   if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
@@ -189,7 +190,7 @@ export function listNotifcationSchedulesOfStop(StopID: NScheduleFrontend['stop_i
   return result;
 }
 
-export function stopHasNotifcationSchedules(StopID: NScheduleFrontend['stop_id']): boolean {
+export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_id']): boolean {
   const now = new Date().getTime();
   const thisStopKey = `s_${StopID}`;
   if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
@@ -219,6 +220,44 @@ export async function discardExpiredNotificationSchedules() {
       await lfRemoveItem(8, schedule_id);
     }
   }
+}
+
+export interface IntegratedNotififcationSchedule extends NotificationSchedule {
+  route_pid: SimplifiedRouteItem['pid'];
+}
+
+export type IntegratedNotififcationSchedules = Array<IntegratedNotififcationSchedule>;
+
+export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotififcationSchedules> {
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const notificationSchedules = listNotifcationSchedules();
+  let result: IntegratedNotififcationSchedules = [];
+  for (const notificationSchedule of notificationSchedules) {
+    const thisNotificationScheduleRouteID = notificationSchedule.route_id;
+    const thisNotificationScheduleRouteKey = `r_${thisNotificationScheduleRouteID}`;
+    let thisNotificationScheduleRoute = {} as SimplifiedRouteItem;
+    if (Route.hasOwnProperty(thisNotificationScheduleRouteKey)) {
+      thisNotificationScheduleRoute = Route[thisNotificationScheduleRouteKey];
+    } else {
+      continue;
+    }
+    const thisNotificationScheduleRoutePathAttributeId = thisNotificationScheduleRoute.pid;
+    let integratedNotififcationSchedule: IntegratedNotififcationSchedule = {
+      schedule_id: notificationSchedule.schedule_id,
+      direction: notificationSchedule.direction,
+      estimate_time: notificationSchedule.estimate_time,
+      stop_id: notificationSchedule.stop_id,
+      location_name: notificationSchedule.location_name,
+      route_id: notificationSchedule.route_id,
+      route_pid: thisNotificationScheduleRoutePathAttributeId,
+      route_name: notificationSchedule.route_name,
+      time_formatting_mode: notificationSchedule.time_formatting_mode,
+      time_offset: notificationSchedule.time_offset,
+      scheduled_time: notificationSchedule.scheduled_time
+    };
+    result.push(integratedNotififcationSchedule);
+  }
+  return result;
 }
 
 export interface ScheduleNotificationOption {
