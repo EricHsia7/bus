@@ -50,9 +50,9 @@ Quickly find routes, locations, and places of interest within the app.
 
 ## Privacy
 
-Your privacy and security are our top priorities. Your all data are stored locally except for notification features[^1]. The data is only used for improving your using experience, and not for advertising. You can see them in [./src/data](./src/data/).
+Your privacy and security are our top priorities. Your all data are stored locally except for the notification feature[^1]. The data is only used for improving your using experience, and not for advertising. You can see them in [./src/data](./src/data/).
 
-[^1]: There's an exception that your data may be sent to and stored on providers you choose, if you're using the notification features.
+[^1]: There's an exception that your data may be sent to and stored on providers you choose, if you're using the notification feature.
 
 ## Concepts
 
