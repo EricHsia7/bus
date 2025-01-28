@@ -1,0 +1,56 @@
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right {
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left span.css_material_symbols_rounded,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right span.css_material_symbols_rounded {
+  height: 20px;
+  width: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_title {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 110px);
+  height: 55px;
+  color: var(--b-cssvar-333333);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+}
