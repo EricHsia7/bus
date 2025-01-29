@@ -37,7 +37,7 @@
   top: 7.5px;
   left: 50px;
   width: calc(100% - 50px - 60px - 10px);
-  /* time-offset: 50px + capsule: 60px + padding: 10px */
+  /* time-offset: 50px + capsule: 30px + padding: 10px */
   font-size: 14px;
   height: 14px;
   line-height: 14px;
@@ -58,7 +58,7 @@
   top: 21.5px;
   left: 50px;
   width: calc(100% - 50px - 60px - 10px);
-  /* time-offset: 50px + capsule: 60px + padding: 10px */
+  /* time-offset: 50px + capsule: 30px + padding: 10px */
   font-size: 17px;
   height: 23px;
   line-height: 17px;
@@ -78,7 +78,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 60px;
+  width: 30px;
   height: 30px;
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
@@ -88,10 +88,11 @@
   -webkit-user-select: none;
 }
 
-/* item > capsule > cancel, open route */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel,
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_open_route {
+/* item > capsule > cancel */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel {
   position: absolute;
+  top: 0px;
+  left: 0px;
   width: 30px;
   height: 30px;
   display: flex;
@@ -102,33 +103,9 @@
   -webkit-user-select: none;
 }
 
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel {
-  top: 0px;
-  left: 0px;
-}
-
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_open_route {
-  top: 0px;
-  left: 30px;
-}
-
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel span.css_material_symbols_rounded,
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_open_route span.css_material_symbols_rounded {
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
-}
-
-/* item > capsule > separator */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_capsule_separator {
-  position: absolute;
-  top: 3px;
-  left: 29.5px;
-  width: 1px;
-  height: 24px;
-  background: var(--b-cssvar-aeaeb2);
-  contain: layout;
-  user-select: none;
-  -webkit-user-select: none;
 }
