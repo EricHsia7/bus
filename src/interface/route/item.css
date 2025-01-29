@@ -379,12 +379,12 @@
 }
 
 /* displayed: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body[displayed="false"] {
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body[displayed="false"] {
   visibility: hidden;
 }
 
 /* displayed: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body[displayed="true"] {
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body[displayed="true"] {
   visibility: visible;
 }
 
