@@ -179,6 +179,9 @@ export function listNotifcationSchedules(): Array<NotificationSchedule> {
   const now = new Date().getTime();
   let result: Array<NotificationSchedule> = [];
   for (const thisSchedule of NotifcationSchedules) {
+    if (thisSchedule === null) {
+      continue;
+    }
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
       result.push(thisSchedule);
