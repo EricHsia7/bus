@@ -179,12 +179,11 @@ export function listNotifcationSchedules(): Array<NotificationSchedule> {
   const now = new Date().getTime();
   let result: Array<NotificationSchedule> = [];
   for (const thisSchedule of NotifcationSchedules) {
-    if (thisSchedule === null) {
-      continue;
-    }
-    const thisScheduledTime = thisSchedule.scheduled_time;
-    if (thisScheduledTime > now) {
-      result.push(thisSchedule);
+    if (!(thisSchedule === null)) {
+      const thisScheduledTime = thisSchedule.scheduled_time;
+      if (thisScheduledTime > now) {
+        result.push(thisSchedule);
+      }
     }
   }
   return result;
@@ -198,8 +197,11 @@ export function listNotifcationSchedulesOfStop(StopID: NotificationSchedule['sto
     const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
     for (const index of indexes) {
       const thisSchedule = NotifcationSchedules[index];
-      if (thisSchedule.scheduled_time > now) {
-        result.push(thisSchedule);
+      if (!(thisSchedule === null)) {
+        const thisScheduledTime = thisSchedule.scheduled_time;
+        if (thisScheduledTime > now) {
+          result.push(thisSchedule);
+        }
       }
     }
   }
@@ -213,8 +215,11 @@ export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_i
     const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
     for (const index of indexes) {
       const thisSchedule = NotifcationSchedules[index];
-      if (thisSchedule.scheduled_time > now) {
-        return true;
+      if (!(thisSchedule === null)) {
+        const thisScheduledTime = thisSchedule.scheduled_time;
+        if (thisScheduledTime > now) {
+          return true;
+        }
       }
     }
   }
