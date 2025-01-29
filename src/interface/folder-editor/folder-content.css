@@ -76,26 +76,27 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  display: block;
 }
 
 /* type: stop */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
-  display: block;
+  visibility: visible;
 }
 
 /* type: route */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
-  display: block;
+  visibility: visible;
 }
 
 /* type: bus */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
-  display: block;
+  visibility: visible;
 }
 
 /* type: empty */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
-  display: none;
+  visibility: hidden;
 }
 
 /* item > capsule > sort control, delete */

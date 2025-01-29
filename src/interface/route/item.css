@@ -178,11 +178,12 @@
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  visibility: visible;
 }
 
 /* skeleton screen: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status {
-  display: none;
+  visibility: hidden;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide,

@@ -32,11 +32,12 @@
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
+  visibility: visible;
 }
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon span.css_material_symbols_rounded {
-  display: none;
+  visibility: hidden;
 }
 
 /* folders > folder > content > item > context */
@@ -107,27 +108,28 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  display: block;
 }
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule {
-  display: block;
+  visibility: visible;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule {
-  display: block;
+  visibility: visible;
   width: 30px;
 }
 
 /* type: bus */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: empty */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule {
-  display: none;
+  visibility: hidden;
 }
 
 /* folders > folder > content > item > capsule > button */
@@ -142,35 +144,36 @@
   align-items: center;
 }
 
-.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
-  color: var(--b-cssvar-333333);
-}
-
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  display: flex;
+  visibility: visible;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  display: flex;
+  visibility: visible;
 }
 
 /* type: bus */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: empty */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  display: none;
+  visibility: hidden;
+}
+
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+  visibility: visible;
 }
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
-  display: none;
+  visibility: hidden;
 }
 
 /* folders > folder > content > item > capsule > separator */
@@ -181,31 +184,32 @@
   width: 1px;
   height: 24px;
   background: var(--b-cssvar-aeaeb2);
+  display: block;
 }
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  display: block;
+  visibility: visible;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: bus */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: empty */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  display: none;
+  visibility: hidden;
 }
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  display: none;
+  visibility: hidden;
 }
 
 /* folders > folder > content > item > capsule > status */
@@ -217,31 +221,32 @@
   height: 30px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  display: block;
 }
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  display: block;
+  visibility: visible;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: bus */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  display: none;
+  visibility: hidden;
 }
 
 /* type: empty */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="empty"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  display: none;
+  visibility: hidden;
 }
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  display: none;
+  visibility: hidden;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide,
