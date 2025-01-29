@@ -365,6 +365,7 @@
   width: 100%;
   height: 171px;
   opacity: 0;
+  visibility: inherit;
 }
 
 /* animation: true && skeleton-screen: false */
