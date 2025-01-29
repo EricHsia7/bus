@@ -521,13 +521,14 @@
   white-space: nowrap;
   word-break: keep-all;
   border-radius: var(--b-cssvar-border-radius-normal);
-  display: none;
+  display: block;
+  visibility: hidden;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses[displayed="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes[displayed="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times[displayed="true"] {
-  display: block;
+  visibility: visible;
 }
 
 /* body > buses, overlapping routes, bus arrival times > bus, overlapping route, bus arrival time */
