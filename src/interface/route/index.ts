@@ -617,13 +617,17 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
-    itemBodyElement.addEventListener(
-      'transitionend',
-      function () {
-        itemBodyElement.setAttribute('displayed', 'false');
-      },
-      { once: true }
-    );
+    if (itemElement.getAttribute('animation') === 'true') {
+      itemBodyElement.addEventListener(
+        'transitionend',
+        function () {
+          itemBodyElement.setAttribute('displayed', 'false');
+        },
+        { once: true }
+      );
+    } else {
+      itemBodyElement.setAttribute('displayed', 'false');
+    }
     itemElement.setAttribute('stretched', 'false');
     threadBoxElement.setAttribute('stretched', 'false');
   } else {
