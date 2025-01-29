@@ -136,7 +136,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.classList.add('css_route_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop', ['${identifier}', null, null, null])" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body" displayed="false"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop', ['${identifier}', null, null, null])" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -189,7 +189,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       groupedItems[groupKey].push({
         name: '',
         goBack: '0',
-        status: { code: 0, text: '' },
+        status: { code: 0, text: '', time: 0 },
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],
@@ -614,11 +614,20 @@ export function switchRoute(RouteID: number, PathAttributeId: Array<number>) {
 
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
   if (itemElement.getAttribute('stretched') === 'true') {
+    itemBodyElement.addEventListener(
+      'transitionend',
+      function () {
+        itemBodyElement.setAttribute('displayed', 'false');
+      },
+      { once: true }
+    );
     itemElement.setAttribute('stretched', 'false');
     threadBoxElement.setAttribute('stretched', 'false');
   } else {
+    itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
     threadBoxElement.setAttribute('stretched', 'true');
   }
