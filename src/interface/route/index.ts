@@ -333,6 +333,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
+        const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body');
+        thisItemBodyElement.setAttribute('displayed', 'false');
         thisItemElement.setAttribute('stretched', 'false');
         thisThreadBoxElement.setAttribute('stretched', 'false');
       }
