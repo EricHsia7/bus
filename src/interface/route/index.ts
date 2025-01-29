@@ -650,7 +650,7 @@ export function switchRouteBodyTab(itemID: string, tabCode: number): void {
   switch (tabCode) {
     case 0:
       elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'flase');
+      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
       elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
       break;
     case 1:
