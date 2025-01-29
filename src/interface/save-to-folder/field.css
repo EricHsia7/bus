@@ -6,9 +6,10 @@
   height: 100%;
   overflow: hidden;
   background: var(--b-cssvar-f9f9fb-blocky);
-  display: none;
+  display: block;
+  visibility: hidden;
 }
 
 .css_save_to_folder_field[displayed="true"] {
-  display: block;
+  visibility: visible;
 }

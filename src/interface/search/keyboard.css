@@ -8,17 +8,18 @@
   padding-bottom: calc(var(--b-cssvar-safe-area-bottom) + 10px);
   box-sizing: border-box;
   background: var(--b-cssvar-ffffff-normal);
+  border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
   user-select: none;
   -webkit-user-select: none;
-  display: none;
-  border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
-}
-
-.css_search_keyboard[displayed="true"] {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
   grid-template-rows: auto;
+  visibility: hidden;
+}
+
+.css_search_keyboard[displayed="true"] {
+  visibility: visible;
 }
 
 .css_search_keyboard .css_search_keyboard_key {

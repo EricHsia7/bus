@@ -6,12 +6,13 @@
   width: 100%;
   height: 100%;
   background: var(--b-cssvar-f9f9fb-blocky);
-  display: none;
+  display: block;
+  visibility: hidden;
 }
 
 .css_settings_page_field[displayed="true"],
 .css_settings_options_page_field[displayed="true"] {
-  display: block;
+  visibility: visible;
 }
 
 .css_settings_page_field .css_settings_page_head,

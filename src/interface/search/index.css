@@ -5,11 +5,12 @@
   width: 100%;
   height: 100%;
   background: var(--b-cssvar-ffffff-normal);
-  display: none;
+  display: block;
+  visibility: hidden;
 }
 
 .css_search_field[displayed="true"] {
-  display: block;
+  visibility: visible;
 }
 
 .css_search_field .css_search_head {
