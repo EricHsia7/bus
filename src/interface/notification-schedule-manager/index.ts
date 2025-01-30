@@ -125,13 +125,13 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
     const thisItem = items[j];
     if (previousIntegration.hasOwnProperty('items')) {
       if (previousIntegration.items[j]) {
-        const previousItem = previousIntegration.groupedItems[groupKey][j];
-        updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
+        const previousItem = previousIntegration.items[j];
+        updateItem(thisItemElement, thisItem, previousItem);
       } else {
-        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+        updateItem(thisItemElement, thisItem, null);
       }
     } else {
-      updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+      updateItem(thisItemElement, thisItem, null);
     }
   }
 
