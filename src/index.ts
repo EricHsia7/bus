@@ -34,9 +34,9 @@ import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
-import { discardExpiredNotificationSchedules, initializeNotificationSchedules, integrateNotifcationSchedules, loadNotificationClient } from './data/notification/index';
+import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
-import { cancelNotificationOnNotificationManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { cancelNotificationOnNotificationManager, closeNotificationScheduleManager, openNotificationScheduleManager, setUpNotificationScheduleManagerFieldSkeletonScreen } from './interface/notification-schedule-manager/index';
 
 import './interface/theme.css';
 
@@ -378,7 +378,7 @@ window.bus = {
     cancelNotificationOnNotificationManager
   },
   test: {
-    integrateNotifcationSchedules
+    setUpNotificationScheduleManagerFieldSkeletonScreen
   }
 };
 

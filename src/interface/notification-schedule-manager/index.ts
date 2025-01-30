@@ -32,7 +32,6 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
     function updateHours(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemHoursElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_hours');
       thisItemHoursElement.innerText = thisItem.hours;
-      thisItemHoursElement.setAttribute('displayed', booleanToString(thisItem.is_first));
     }
 
     function updateMinutes(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
@@ -59,6 +58,10 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
     }
 
+    function updateFirst(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
+      thisItemElement.setAttribute('first', booleanToString(thisItem.is_first));
+    }
+
     function updateAnimation(thisItemElement: HTMLElement, animation: boolean): void {
       thisItemElement.setAttribute('animation', booleanToString(animation));
     }
@@ -73,6 +76,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       updateMain(thisItemElement, thisItem);
       updateContext(thisItemElement, thisItem);
       updateCancel(thisItemElement, thisItem);
+      updateFirst(thisItemElement, thisItem);
       updateAnimation(thisItemElement, animation);
       updateSkeletonScreen(thisItemElement, skeletonScreen);
     } else {
@@ -86,6 +90,9 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
         updateMain(thisItemElement, thisItem);
         updateContext(thisItemElement, thisItem);
         updateCancel(thisItemElement, thisItem);
+      }
+      if (!(previousItem.is_first === thisItem.is_first)) {
+        updateFirst(thisItemElement, thisItem);
       }
       if (!(skeletonScreen === previousSkeletonScreen)) {
         updateSkeletonScreen(thisItemElement, skeletonScreen);
@@ -139,7 +146,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   previousSkeletonScreen = skeletonScreen;
 }
 
-function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
+export function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;

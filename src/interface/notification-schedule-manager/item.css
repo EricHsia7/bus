@@ -8,6 +8,10 @@
   margin-bottom: 5px;
 }
 
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[first="true"] {
+  margin-top: 5px;
+}
+
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item:last-child {
   margin-bottom: 0px;
 }
@@ -30,11 +34,11 @@
   visibility: inherit;
 }
 
-.css_notification_schedule_manager_field[displayed="true"] .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_hours[displayed="true"] {
+.css_notification_schedule_manager_field[displayed="true"] .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[first="true"] .css_notification_schedule_manager_item_hours {
   visibility: visible;
 }
 
-.css_notification_schedule_manager_field[displayed="true"] .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_hours[displayed="false"] {
+.css_notification_schedule_manager_field[displayed="true"] .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[first="false"] .css_notification_schedule_manager_item_hours {
   visibility: hidden;
 }
 
