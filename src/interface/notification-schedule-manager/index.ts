@@ -20,7 +20,7 @@ function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_notification_schedule_manager_item');
   element.id = identifier;
-  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_item_hours"></div><div class="css_notification_schedule_manager_item_notification_schedule"><div class="css_notification_schedule_manager_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('delete')}</div><div class="css_notification_schedule_manager_item_notification_schedule_separator"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_item_hours"></div><div class="css_notification_schedule_manager_item_notification_schedule"><div class="css_notification_schedule_manager_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('close')}</div><div class="css_notification_schedule_manager_item_notification_schedule_separator"></div></div>`;
   return {
     element: element,
     id: identifier
