@@ -321,7 +321,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     const thisNotificationScheduleRoutePathAttributeId = thisNotificationScheduleRoute.pid;
     integratedItem.route.pathAttributeId = thisNotificationScheduleRoutePathAttributeId;
 
-    items.push(integratedNotificationSchedule);
+    items.push(integratedItem);
   }
 
   items.sort(function (a, b) {
