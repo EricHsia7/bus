@@ -7,105 +7,105 @@
   contain: layout;
 }
 
-/* item > time-offset */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_time_offset {
+/* item > hours */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_hours {
   position: absolute;
-  top: 7.5px;
-  left: 7.5px;
-  width: 35px;
-  height: 35px;
-  /* 50px: 7.5px + 35px + 7.5px */
+  top: 0px;
+  left: 0px;
+  width: 45px;
+  height: 45px;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--b-cssvar-333333);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--b-cssvar-333333);
-  background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-medium);
+}
+
+/* item > notification-schedule */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule {
+  position: absolute;
+  top: 0px;
+  left: calc(45px + 5px);
+  width: calc(100% - 45px - 5px);
+  height: 45px;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+/* item > notification-schedule > minutes */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_minutes {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 45px;
+  height: 45px;
   font-size: 20px;
   font-weight: 500;
   display: flex;
   justify-content: center;
   align-items: center;
-  contain: layout;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-/* item > context */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_context {
-  position: absolute;
-  top: 7.5px;
-  left: 50px;
-  width: calc(100% - 50px - 60px - 10px);
-  /* time-offset: 50px + capsule: 30px + padding: 10px */
-  font-size: 14px;
-  height: 14px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), 0.7);
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow: hidden;
-  contain: layout;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* item > main */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_main {
-  position: absolute;
-  top: 21.5px;
-  left: 50px;
-  width: calc(100% - 50px - 60px - 10px);
-  /* time-offset: 50px + capsule: 30px + padding: 10px */
-  font-size: 17px;
-  height: 23px;
-  line-height: 17px;
-  display: flex;
-  align-items: center;
-  color: var(--b-cssvar-333333);
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow: hidden;
-  contain: layout;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* item > capsule */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-normal);
-  overflow: hidden;
-  contain: layout;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* item > capsule > cancel */
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel {
+/* item > notification-schedule > main */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_main {
   position: absolute;
   top: 0px;
-  left: 0px;
-  width: 30px;
-  height: 30px;
+  left: calc(45px + 10px);
+  width: calc(100% - 45px - 45px - 10px);
+  height: 45px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  contain: layout;
-  user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  font-weight: 400;
   -webkit-user-select: none;
+  user-select: none;
 }
 
-.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_capsule .css_notification_schedule_manager_notification_schedule_item_cancel span.css_material_symbols_rounded {
+/* item > notification-schedule > context */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_context {
+  position: absolute;
+  top: 0px;
+  right: 45px;
+  width: calc(100% - 45px - 10px - 45px);
+  height: 45px;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+/* item > notification-schedule > cancel */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_cancel {
+  position: absolute;
+  top: 7.5px;
+  right: 7.5px;
+  width: 30px;
+  height: 30px;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_cancel span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
+}
+
+/* item > notification-schedule > separator */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_notification_schedule_item .css_notification_schedule_manager_notification_schedule_item_notification_schedule .css_notification_schedule_manager_notification_schedule_item_notification_schedule_separator {
+  position: absolute;
+  top: 3px;
+  left: calc(45px - 1px / 2);
+  width: 1px;
+  height: calc(45px - 3px * 2);
+  background: var(--b-cssvar-aeaeb2);
 }
