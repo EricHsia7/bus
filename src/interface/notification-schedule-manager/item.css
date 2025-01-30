@@ -38,7 +38,6 @@
   height: 45px;
   background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
-  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 /* item > notification-schedule > minutes */
@@ -50,6 +49,7 @@
   height: 45px;
   font-size: 20px;
   font-weight: 500;
+  color: var(--b-cssvar-333333);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,6 +96,11 @@
   right: 7.5px;
   width: 30px;
   height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel span.css_material_symbols_rounded {
