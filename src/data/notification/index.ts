@@ -263,9 +263,8 @@ export interface IntegratedNotififcationScheduleItem {
 }
 
 export interface IntegratedNotififcationSchedules {
-  groupedItems: { [key: string]: Array<IntegratedNotififcationScheduleItem> };
-  groupQuantity: number;
-  itemQuantity: { [key: string]: number };
+  items: Array<IntegratedNotififcationScheduleItem>;
+  itemQuantity: number;
   dataUpdateTime: any;
 }
 
@@ -329,33 +328,23 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     return a.scheduled_time - b.scheduled_time;
   });
 
-  let groupedItems: IntegratedNotififcationSchedules['groupedItems'] = {};
-  let itemQuantity: IntegratedNotififcationSchedules['itemQuantity'] = {};
-  let groupQuantity: IntegratedNotififcationSchedules['groupQuantity'] = 0;
-  let groupIndex: number = -1;
-  let groups: { [key: string]: number } = {};
-  for (const item of items) {
-    const group = `g_${item.date}_${item.hours}`;
-    if (!groups.hasOwnProperty(group)) {
-      groupIndex += 1;
-      groups[group] = groupIndex;
+  let items2: Array<IntegratedNotififcationScheduleItem> = [];
+  let itemQuantity: IntegratedNotififcationSchedules['itemQuantity'] = 0;
+  let groups: { [key: string]: true } = {};
+  for (let item of items) {
+    const groupKey = `g_${item.date}_${item.hours}`;
+    if (!groups.hasOwnProperty(groupKey)) {
+      groups[groupKey] = true;
+      item.is_first = true;
+    } else {
+      item.is_first = false;
     }
-    const groupKey = `g_${groups[group]}`;
-    if (!groupedItems.hasOwnProperty(groupKey)) {
-      groupedItems[groupKey] = [];
-    }
-    groupedItems[groupKey].push(item);
-
-    if (!itemQuantity.hasOwnProperty(groupKey)) {
-      itemQuantity[groupKey] = 0;
-    }
-    itemQuantity[groupKey] += 1;
+    items2.push(item);
+    itemQuantity += 1;
   }
-  groupQuantity = groupIndex + 1;
   const result: IntegratedNotififcationSchedules = {
-    groupedItems: groupedItems,
+    items: items2,
     itemQuantity: itemQuantity,
-    groupQuantity: groupQuantity,
     dataUpdateTime: dataUpdateTime[requestID]
   };
   deleteDataUpdateTime(requestID);
