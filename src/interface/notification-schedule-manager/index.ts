@@ -18,9 +18,9 @@ let previousSkeletonScreen: boolean = false;
 function generateElementOfItem(): GeneratedElement {
   const identifier = generateIdentifier('i');
   const element = document.createElement('div');
-  element.classList.add('css_notification_schedule_manager_notification_schedule_item');
+  element.classList.add('css_notification_schedule_manager_item');
   element.id = identifier;
-  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_notification_schedule_item_hours"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule"><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('delete')}</div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_separator"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_item_hours"></div><div class="css_notification_schedule_manager_item_notification_schedule"><div class="css_notification_schedule_manager_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('delete')}</div><div class="css_notification_schedule_manager_item_notification_schedule_separator"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -30,32 +30,32 @@ function generateElementOfItem(): GeneratedElement {
 function updateNotificationScheduleManagerField(integration: IntegratedNotififcationSchedules, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem, previousItem: IntegratedNotififcationScheduleItem | null): void {
     function updateHours(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
-      const thisItemHoursElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_notification_schedule_item_hours');
+      const thisItemHoursElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_hours');
       thisItemHoursElement.innerText = thisItem.hours;
       thisItemHoursElement.setAttribute('displayed', booleanToString(thisItem.is_first));
     }
 
     function updateMinutes(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule');
-      const thisItemMinutesElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_notification_schedule_item_hours');
-      thisItemMinutesElement.innerText = thisItem.hours;
+      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
+      const thisItemMinutesElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_minutes');
+      thisItemMinutesElement.innerText = thisItem.minutes;
     }
 
     function updateMain(thisItemElement: HTMLElementm, thisItem: IntegratedNotififcationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule');
-      const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule_main');
+      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
+      const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_main');
       thisItemMainElement.innerText = thisItem.name;
     }
 
     function updateContext(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule');
-      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule_main');
+      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
+      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_context');
       thisItemContextElement.innerText = `${thisItem.route.name} - ${thisItem.route.direction}`;
     }
 
     function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule');
-      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_notification_schedule_item_notification_schedule_cancel');
+      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
+      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
       thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
     }
 
@@ -102,7 +102,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
   const itemQuantity = integration.itemQuantity;
   const items = integration.items;
 
-  const currentItemSeatQuantity = elementQuerySelectorAll(NotificationScheduleList, `.css_notification_schedule_manager_notification_schedule_item`).length;
+  const currentItemSeatQuantity = elementQuerySelectorAll(NotificationScheduleList, `.css_notification_schedule_manager_item`).length;
   if (!(itemQuantity === currentItemSeatQuantity)) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
@@ -111,7 +111,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
         NotificationScheduleList.appendChild(newItemElement.element);
       }
     } else {
-      const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_notification_schedule_item');
+      const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const itemIndex = currentItemSeatQuantity - 1 - o;
         NotificationScheduleItemElements[itemIndex].remove();
@@ -119,7 +119,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
     }
   }
 
-  const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_notification_schedule_item');
+  const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item');
   for (let j = 0; j < itemQuantity; j++) {
     const thisItemElement = NotificationScheduleItemElements[j];
     const thisItem = items[j];
@@ -201,7 +201,7 @@ export async function cancelNotificationOnNotificationManager(identifier: string
   promptMessage('處理中', 'manufacturing');
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
-    const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_notification_schedule_item#${identifier}`);
+    const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_item#${identifier}`);
     itemElement.remove();
     promptMessage('已取消通知', 'check_circle');
   } else {
