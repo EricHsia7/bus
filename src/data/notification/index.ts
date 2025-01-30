@@ -243,18 +243,72 @@ export async function discardExpiredNotificationSchedules() {
   }
 }
 
-export interface IntegratedNotififcationSchedule extends NotificationSchedule {
-  route_pid: SimplifiedRouteItem['pid'];
+export interface IntegratedNotififcationScheduleItem {
+  name: NotificationSchedule['location_name'];
+  stop_id: NotificationSchedule['stop_id'];
+  estimate_time: NotificationSchedule['estimate_time'];
+  schedule_id: NotificationSchedule['schedule_id'];
+  scheduled_time: NotificationSchedule['scheduled_time'];
+  route: {
+    name: NotificationSchedule['route_name'];
+    direction: NotificationSchedule['direction'];
+    id: NotificationSchedule['route_id'];
+    pathAttributeId: SimplifiedRouteItem['pid'];
+  };
+  is_first: boolean;
+  hours: number;
+  minutes: number;
 }
 
-export type IntegratedNotififcationSchedules = Array<IntegratedNotififcationSchedule>;
+export interface IntegratedNotififcationSchedules {
+  groupedItems: { [key: string]: Array<IntegratedNotififcationScheduleItem> };
+  groupQuantity: number;
+  itemQuantity: { [key: string]: number };
+  dataUpdateTime: any;
+}
 
 export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotififcationSchedules> {
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const notificationSchedules = listNotifcationSchedules();
-  let result: IntegratedNotififcationSchedules = [];
-  for (const notificationSchedule of notificationSchedules) {
-    const thisNotificationScheduleRouteID = notificationSchedule.route_id;
+
+  let items: Array<IntegratedNotififcationScheduleItem> = [];
+
+  for (const item of notificationSchedules) {
+    let integratedItem = {} as IntegratedNotififcationScheduleItem;
+    const thisItemName = item.location_name;
+    integratedItem.name = thisItemName;
+
+    const thisItemStopID = item.stop_id;
+    integratedItem.stop_id = thisItemStopID;
+
+    const thisItemEstimateTime = item.estimate_time;
+    integratedItem.estimate_time = thisItemEstimateTime;
+
+    const thisItemScheduleID = item.schedule_id;
+    integratedItem.schedule_id = thisItemScheduleID;
+
+    const thisItemScheduledTime = item.scheduled_time;
+    integratedItem.scheduled_time = thisItemScheduledTime;
+
+    const thisItemScheduledTimeDateInstance = new Date(thisItemScheduledTime);
+    const thisItemDate = thisItemScheduledTimeDateInstance.getDate();
+    const thisItemHours = thisItemScheduledTimeDateInstance.getHours();
+    const thisItemMinutes = thisItemScheduledTimeDateInstance.getMinutes();
+    integratedItem.hours = thisItemHours;
+    integratedItem.minutes = thisItemMinutes;
+
+    integratedItem.route = {};
+    const thisRouteName = item.route_name;
+    integratedItem.route.name = thisRouteName;
+
+    const thisRouteID = item.route_id;
+    integratedItem.route.id = thisRouteID;
+
+    const thisRouteDirection = item.direction;
+    integratedItem.route.direction = thisRouteDirection;
+
+    // Collect data from Route
+    const thisNotificationScheduleRouteID = item.route_id;
     const thisNotificationScheduleRouteKey = `r_${thisNotificationScheduleRouteID}`;
     let thisNotificationScheduleRoute = {} as SimplifiedRouteItem;
     if (Route.hasOwnProperty(thisNotificationScheduleRouteKey)) {
@@ -263,22 +317,16 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
       continue;
     }
     const thisNotificationScheduleRoutePathAttributeId = thisNotificationScheduleRoute.pid;
-    let integratedNotififcationSchedule: IntegratedNotififcationSchedule = {
-      schedule_id: notificationSchedule.schedule_id,
-      direction: notificationSchedule.direction,
-      estimate_time: notificationSchedule.estimate_time,
-      stop_id: notificationSchedule.stop_id,
-      location_name: notificationSchedule.location_name,
-      route_id: notificationSchedule.route_id,
-      route_pid: thisNotificationScheduleRoutePathAttributeId,
-      route_name: notificationSchedule.route_name,
-      time_formatting_mode: notificationSchedule.time_formatting_mode,
-      time_offset: notificationSchedule.time_offset,
-      scheduled_time: notificationSchedule.scheduled_time
-    };
-    result.push(integratedNotififcationSchedule);
+    integratedItem.route.pathAttributeId = thisNotificationScheduleRoutePathAttributeId;
+
+    items.push(integratedNotififcationSchedule);
   }
-  return result;
+
+  items.sort(function (a, b) {
+    return a.scheduled_time - b.scheduled_time;
+  });
+
+  return items;
 }
 
 export interface ScheduleNotificationOption {

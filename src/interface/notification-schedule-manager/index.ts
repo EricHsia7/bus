@@ -1,5 +1,5 @@
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
-import { IntegratedNotififcationSchedule, IntegratedNotififcationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
+import { IntegratedNotififcationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
@@ -22,7 +22,7 @@ function generateElementOfItem(): GeneratedElement {
   };
 }
 
-function updateNotificationScheduleManagerField(integration: IntegratedNotififcationSchedules): void {
+function updateNotificationScheduleManagerField(Field: HTMLElement, integration: IntegratedNotififcationSchedules): void {
   const fragment = new DocumentFragment();
   NotificationScheduleList.innerHTML = '';
   for (const item of integration) {
