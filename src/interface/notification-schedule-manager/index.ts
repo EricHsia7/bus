@@ -10,12 +10,12 @@ const NotificationScheduleManagerField = documentQuerySelector('.css_notificatio
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
-function generateElementOfItem(item: IntegratedNotififcationSchedule): GeneratedElement {
+function generateElementOfItem(): GeneratedElement {
   const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_notification_schedule_manager_notification_schedule_item');
   element.id = identifier;
-  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_notification_schedule_item_time_offset">${item.time_offset * -1}</div><div class="css_notification_schedule_manager_notification_schedule_item_context">${item.route_name} - 往${item.direction}</div><div class="css_notification_schedule_manager_notification_schedule_item_main">${item.location_name}</div><div class="css_notification_schedule_manager_notification_schedule_item_capsule"><div class="css_notification_schedule_manager_notification_schedule_item_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', '${item.schedule_id}')">${getIconHTML('delete')}</div><div class="css_notification_schedule_manager_notification_schedule_item_open_route" onclick="bus.route.openRoute(${item.route_id}, [${item.route_pid.join(',')}])">${getIconHTML('keyboard_arrow_right')}</div><div class="css_notification_schedule_manager_notification_schedule_item_capsule_separator"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_notification_schedule_item_hours"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule"><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('delete')}</div><div class="css_notification_schedule_manager_notification_schedule_item_notification_schedule_separator"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -26,7 +26,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotififca
   const fragment = new DocumentFragment();
   NotificationScheduleList.innerHTML = '';
   for (const item of integration) {
-    const newItemElement = generateElementOfItem(item);
+    const newItemElement = generateElementOfItem();
     fragment.append(newItemElement.element);
   }
   NotificationScheduleList.append(fragment);
