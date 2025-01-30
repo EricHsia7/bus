@@ -1,6 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { isValidURL } from '../../tools/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { dataUpdateTime, deleteDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface NotificationClient {
@@ -256,6 +257,7 @@ export interface IntegratedNotififcationScheduleItem {
     pathAttributeId: SimplifiedRouteItem['pid'];
   };
   is_first: boolean;
+  date: number;
   hours: number;
   minutes: number;
 }
@@ -294,6 +296,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     const thisItemDate = thisItemScheduledTimeDateInstance.getDate();
     const thisItemHours = thisItemScheduledTimeDateInstance.getHours();
     const thisItemMinutes = thisItemScheduledTimeDateInstance.getMinutes();
+    integratedItem.date = thisItemDate;
     integratedItem.hours = thisItemHours;
     integratedItem.minutes = thisItemMinutes;
 
@@ -326,7 +329,37 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     return a.scheduled_time - b.scheduled_time;
   });
 
-  return items;
+  let groupedItems: IntegratedNotififcationSchedules['groupedItems'] = {};
+  let itemQuantity: IntegratedNotififcationSchedules['itemQuantity'] = {};
+  let groupQuantity: IntegratedNotififcationSchedules['groupQuantity'] = 0;
+  let groupIndex: number = -1;
+  let groups: { [key: string]: number } = {};
+  for (const item of items) {
+    const group = `g_${item.date}_${item.hours}`;
+    if (!groups.hasOwnProperty(group)) {
+      groupIndex += 1;
+      groups[group] = groupIndex;
+    }
+    const groupKey = `g_${groups[group]}`;
+    if (!groupedItems.hasOwnProperty(groupKey)) {
+      groupedItems[groupKey] = [];
+    }
+    groupedItems[groupKey].push(item);
+
+    if (!itemQuantity.hasOwnProperty(groupKey)) {
+      itemQuantity[groupKey] = 0;
+    }
+    itemQuantity[groupKey] += 1;
+  }
+  groupQuantity = groupIndex + 1;
+  const result: IntegratedNotififcationSchedules = {
+    groupedItems: groupedItems,
+    itemQuantity: itemQuantity,
+    groupQuantity: groupQuantity,
+    dataUpdateTime: dataUpdateTime[requestID]
+  };
+  deleteDataUpdateTime(requestID);
+  return result;
 }
 
 export interface ScheduleNotificationOption {
