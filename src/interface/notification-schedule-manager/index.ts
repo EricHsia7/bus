@@ -1,5 +1,5 @@
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
-import { IntegratedNotififcationScheduleItem, IntegratedNotififcationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
+import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
@@ -11,7 +11,7 @@ const NotificationScheduleManagerField = documentQuerySelector('.css_notificatio
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
-let previousIntegration = {} as IntegratedNotififcationSchedules;
+let previousIntegration = {} as IntegratedNotificationSchedules;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
@@ -27,33 +27,33 @@ function generateElementOfItem(): GeneratedElement {
   };
 }
 
-function updateNotificationScheduleManagerField(integration: IntegratedNotififcationSchedules, skeletonScreen: boolean, animation: boolean): void {
-  function updateItem(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem, previousItem: IntegratedNotififcationScheduleItem | null): void {
-    function updateHours(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
+function updateNotificationScheduleManagerField(integration: IntegratedNotificationSchedules, skeletonScreen: boolean, animation: boolean): void {
+  function updateItem(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem, previousItem: IntegratedNotificationScheduleItem | null): void {
+    function updateHours(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemHoursElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_hours');
       thisItemHoursElement.innerText = thisItem.hours;
       thisItemHoursElement.setAttribute('displayed', booleanToString(thisItem.is_first));
     }
 
-    function updateMinutes(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
+    function updateMinutes(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemMinutesElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_minutes');
       thisItemMinutesElement.innerText = thisItem.minutes;
     }
 
-    function updateMain(thisItemElement: HTMLElementm, thisItem: IntegratedNotififcationScheduleItem): void {
+    function updateMain(thisItemElement: HTMLElementm, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_main');
       thisItemMainElement.innerText = thisItem.name;
     }
 
-    function updateContext(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
+    function updateContext(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_context');
       thisItemContextElement.innerText = `${thisItem.route.name} - ${thisItem.route.direction}`;
     }
 
-    function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotififcationScheduleItem): void {
+    function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
       thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
@@ -144,8 +144,8 @@ function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: IntegratedNotififcationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
-  let items: IntegratedNotififcationSchedules['items'] = [];
+  const defaultItemQuantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
+  let items: IntegratedNotificationSchedules['items'] = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({
       name: '',

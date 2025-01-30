@@ -244,7 +244,7 @@ export async function discardExpiredNotificationSchedules() {
   }
 }
 
-export interface IntegratedNotififcationScheduleItem {
+export interface IntegratedNotificationScheduleItem {
   name: NotificationSchedule['location_name'];
   stop_id: NotificationSchedule['stop_id'];
   estimate_time: NotificationSchedule['estimate_time'];
@@ -262,20 +262,20 @@ export interface IntegratedNotififcationScheduleItem {
   minutes: number;
 }
 
-export interface IntegratedNotififcationSchedules {
-  items: Array<IntegratedNotififcationScheduleItem>;
+export interface IntegratedNotificationSchedules {
+  items: Array<IntegratedNotificationScheduleItem>;
   itemQuantity: number;
   dataUpdateTime: any;
 }
 
-export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotififcationSchedules> {
+export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotificationSchedules> {
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const notificationSchedules = listNotifcationSchedules();
 
-  let items: Array<IntegratedNotififcationScheduleItem> = [];
+  let items: Array<IntegratedNotificationScheduleItem> = [];
 
   for (const item of notificationSchedules) {
-    let integratedItem = {} as IntegratedNotififcationScheduleItem;
+    let integratedItem = {} as IntegratedNotificationScheduleItem;
     const thisItemName = item.location_name;
     integratedItem.name = thisItemName;
 
@@ -321,15 +321,15 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     const thisNotificationScheduleRoutePathAttributeId = thisNotificationScheduleRoute.pid;
     integratedItem.route.pathAttributeId = thisNotificationScheduleRoutePathAttributeId;
 
-    items.push(integratedNotififcationSchedule);
+    items.push(integratedNotificationSchedule);
   }
 
   items.sort(function (a, b) {
     return a.scheduled_time - b.scheduled_time;
   });
 
-  let items2: Array<IntegratedNotififcationScheduleItem> = [];
-  let itemQuantity: IntegratedNotififcationSchedules['itemQuantity'] = 0;
+  let items2: Array<IntegratedNotificationScheduleItem> = [];
+  let itemQuantity: IntegratedNotificationSchedules['itemQuantity'] = 0;
   let groups: { [key: string]: true } = {};
   for (let item of items) {
     const groupKey = `g_${item.date}_${item.hours}`;
@@ -342,7 +342,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     items2.push(item);
     itemQuantity += 1;
   }
-  const result: IntegratedNotififcationSchedules = {
+  const result: IntegratedNotificationSchedules = {
     items: items2,
     itemQuantity: itemQuantity,
     dataUpdateTime: dataUpdateTime[requestID]
