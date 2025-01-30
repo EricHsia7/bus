@@ -257,9 +257,9 @@ export interface IntegratedNotificationScheduleItem {
     pathAttributeId: SimplifiedRouteItem['pid'];
   };
   is_first: boolean;
-  date: number;
-  hours: number;
-  minutes: number;
+  date: string;
+  hours: string;
+  minutes: string;
 }
 
 export interface IntegratedNotificationSchedules {
@@ -295,9 +295,9 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     const thisItemDate = thisItemScheduledTimeDateInstance.getDate();
     const thisItemHours = thisItemScheduledTimeDateInstance.getHours();
     const thisItemMinutes = thisItemScheduledTimeDateInstance.getMinutes();
-    integratedItem.date = thisItemDate;
-    integratedItem.hours = thisItemHours;
-    integratedItem.minutes = thisItemMinutes;
+    integratedItem.date = String(thisItemDate).padStart(2, '0');
+    integratedItem.hours = String(thisItemHours).padStart(2, '0');
+    integratedItem.minutes = String(thisItemMinutes).padStart(2, '0');
 
     integratedItem.route = {};
     const thisRouteName = item.route_name;
