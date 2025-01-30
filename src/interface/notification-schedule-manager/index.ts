@@ -1,9 +1,10 @@
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotififcationScheduleItem, IntegratedNotififcationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
+import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
