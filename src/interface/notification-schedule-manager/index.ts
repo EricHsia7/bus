@@ -1,3 +1,4 @@
+import { getDataReceivingProgress } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
@@ -8,8 +9,9 @@ import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory,
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
-const  NotificationScheduleManagerHeadElement = elementQuerySelector(NotificationScheduleManagerField,'.css_notification_schedule_manager_head')
-const  NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(NotificationScheduleManagerHeadElement, '.')
+const NotificationScheduleManagerHeadElement = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_head');
+const NotificationScheduleManagerUpdateTimerBoxElement = elementQuerySelector(NotificationScheduleManagerHeadElement, '.css_notification_schedule_manager_update_timer_box');
+const NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(NotificationScheduleManagerUpdateTimerBoxElement, '.css_notification_schedule_manager_update_timer');
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
@@ -38,7 +40,7 @@ function updateUpdateTimer(): void {
   } else {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
   }
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
   window.requestAnimationFrame(function () {
     if (notifcationScheduleManagerRefreshTimer_streaming) {
       updateUpdateTimer();
