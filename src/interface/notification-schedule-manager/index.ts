@@ -54,7 +54,7 @@ function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_notification_schedule_manager_item');
   element.id = identifier;
-  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_item_hours"></div><div class="css_notification_schedule_manager_item_notification_schedule"><div class="css_notification_schedule_manager_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationManager('${identifier}', 'null')">${getIconHTML('close')}</div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_notification_schedule_manager_item_hours"></div><div class="css_notification_schedule_manager_item_notification_schedule"><div class="css_notification_schedule_manager_item_notification_schedule_minutes"></div><div class="css_notification_schedule_manager_item_notification_schedule_context"></div><div class="css_notification_schedule_manager_item_notification_schedule_main"></div><div class="css_notification_schedule_manager_item_notification_schedule_cancel" onclick="bus.notification.cancelNotificationOnNotificationScheduleManager('${identifier}', 'null')">${getIconHTML('close')}</div></div>`;
   return {
     element: element,
     id: identifier
@@ -89,7 +89,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
     function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
-      thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
+      thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationScheduleManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
     }
 
     function updateFirst(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
@@ -285,12 +285,15 @@ export function closeNotificationScheduleManager(): void {
   openPreviousPage();
 }
 
-export async function cancelNotificationOnNotificationManager(identifier: string, schedule_id: NotificationSchedule['schedule_id']) {
+export async function cancelNotificationOnNotificationScheduleManager(identifier: string, schedule_id: NotificationSchedule['schedule_id']) {
   promptMessage('處理中', 'manufacturing');
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
     const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_item#${identifier}`);
     itemElement.remove();
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
+    updateNotificationScheduleManagerField(integration, false, playing_animation);
     promptMessage('已取消通知', 'check_circle');
   } else {
     promptMessage('取消失敗', 'error');
