@@ -271,6 +271,7 @@ export interface IntegratedNotificationSchedules {
 export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotificationSchedules> {
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const notificationSchedules = listNotifcationSchedules();
+  const now = new Date().getTime();
 
   let items: Array<IntegratedNotificationScheduleItem> = [];
 
@@ -342,10 +343,11 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     items2.push(item);
     itemQuantity += 1;
   }
+
   const result: IntegratedNotificationSchedules = {
     items: items2,
     itemQuantity: itemQuantity,
-    dataUpdateTime: dataUpdateTime[requestID]
+    dataUpdateTime: Math.max(dataUpdateTime[requestID], now)
   };
   deleteDataUpdateTime(requestID);
   return result;
