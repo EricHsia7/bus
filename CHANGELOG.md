@@ -6,12 +6,16 @@
 
 **Implemented enhancements:**
 
+- Notification schedule manager v2 [\#97](https://github.com/EricHsia7/bus/pull/97) ([EricHsia7](https://github.com/EricHsia7))
+- Add Notification Feature [\#96](https://github.com/EricHsia7/bus/pull/96) ([EricHsia7](https://github.com/EricHsia7))
+- Add Notification API Class [\#94](https://github.com/EricHsia7/bus/pull/94) ([EricHsia7](https://github.com/EricHsia7))
+- Add power-saving option [\#92](https://github.com/EricHsia7/bus/pull/92) ([EricHsia7](https://github.com/EricHsia7))
 - Improve performance [\#89](https://github.com/EricHsia7/bus/pull/89) ([EricHsia7](https://github.com/EricHsia7))
 - Improve document manipulation [\#88](https://github.com/EricHsia7/bus/pull/88) ([EricHsia7](https://github.com/EricHsia7))
 
 **Merged pull requests:**
 
-- Add power-saving option [\#92](https://github.com/EricHsia7/bus/pull/92) ([EricHsia7](https://github.com/EricHsia7))
+- Notification Schedule v2 [\#95](https://github.com/EricHsia7/bus/pull/95) ([EricHsia7](https://github.com/EricHsia7))
 - Fix codes on dev-power-saving-option-v3 [\#91](https://github.com/EricHsia7/bus/pull/91) ([EricHsia7](https://github.com/EricHsia7))
 
 ## [v2.0.1](https://github.com/EricHsia7/bus/tree/v2.0.1) (2025-01-16)
