@@ -201,9 +201,9 @@ export function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
         pathAttributeId: []
       },
       is_first: true,
-      date: 0,
-      hours: 0,
-      minutes: 0
+      date: '',
+      hours: '',
+      minutes: ''
     });
   }
   updateNotificationScheduleManagerField(

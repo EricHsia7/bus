@@ -55,6 +55,19 @@
   visibility: hidden;
 }
 
+/* skeleton-screen: true */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_hours::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--b-cssvar-border-radius-normal);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* item > notification-schedule */
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_notification_schedule {
   position: absolute;
@@ -89,6 +102,19 @@
   -webkit-user-select: none;
 }
 
+/* skeleton-screen: true */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_minutes::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--b-cssvar-border-radius-normal);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* item > notification-schedule > context */
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_context {
   position: absolute;
@@ -106,6 +132,13 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* skeleton-screen: true */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_context {
+  width: calc(100% - 50px - 50px - 5px);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  color: rgba(0, 0, 0, 0);
 }
 
 /* item > notification-schedule > main */
@@ -129,6 +162,15 @@
   overflow: hidden;
 }
 
+/* skeleton-screen: true */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_main {
+  top: calc(21.5px + 5px);
+  width: calc(100% - 50px - 50px - 5px);
+  height: calc(23px - 5px);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  color: rgba(0, 0, 0, 0);
+}
+
 /* item > notification-schedule > cancel */
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel {
   position: absolute;
@@ -148,4 +190,27 @@
   height: 15px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_hours::after,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_minutes::after,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_context,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_main,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="false"][skeleton-screen="true"] .css_notification_schedule_manager_item_hours::after,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="false"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_minutes::after,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="false"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_context,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="false"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_main,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="false"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel {
+  background: var(--b-cssvar-ededf2);
 }
