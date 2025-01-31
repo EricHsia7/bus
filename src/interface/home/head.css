@@ -134,7 +134,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
   height: 1px;
   width: 100%;
   transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));

@@ -172,7 +172,7 @@
   display: flex;
   align-items: center;
   justify-content: right;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
@@ -208,7 +208,7 @@
   font-size: 18px;
   user-select: none;
   -webkit-user-select: none;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
 }
 
 .css_settings_options_page_field .css_settings_options_page_options .css_option .css_option_checkbox {
@@ -263,7 +263,7 @@
   position: relative;
   left: calc(10px + 5px);
   width: calc(100% - 10px * 2 - 5px * 2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   font-size: 15px;
   white-space: pre-line;
   word-break: break-all;

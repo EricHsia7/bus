@@ -6,7 +6,7 @@
   background: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   font-size: 15px;
   font-weight: 400;
   margin-top: calc(10px + 55px);
@@ -51,7 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: right;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
