@@ -291,10 +291,12 @@ export async function cancelNotificationOnNotificationScheduleManager(identifier
   if (cancellation) {
     const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_item#${identifier}`);
     itemElement.remove();
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
-    updateNotificationScheduleManagerField(integration, false, playing_animation);
     promptMessage('已取消通知', 'check_circle');
+    if (!notifcationScheduleManagerRefreshTimer_refreshing) {
+      const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+      const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
+      updateNotificationScheduleManagerField(integration, false, playing_animation);
+    }
   } else {
     promptMessage('取消失敗', 'error');
   }
