@@ -63,7 +63,7 @@
   left: 10px;
   width: 30px;
   height: 30px;
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: var(--b-cssvar-border-radius-medium);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -110,7 +110,7 @@
   left: 10px;
   width: 30px;
   height: 30px;
-  border-radius: var(--b-cssvar-border-radius-normal);
+  border-radius: var(--b-cssvar-border-radius-medium);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -136,7 +136,6 @@
 
 /* skeleton-screen: true */
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_context {
-  width: calc(100% - 50px - 50px - 5px);
   border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
 }
@@ -165,7 +164,6 @@
 /* skeleton-screen: true */
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_main {
   top: calc(21.5px + 5px);
-  width: calc(100% - 50px - 50px - 5px);
   height: calc(23px - 5px);
   border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
@@ -190,6 +188,11 @@
   height: 15px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
+  visibility: inherit;
+}
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel span.css_material_symbols_rounded {
+  visibility: hidden;
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_hours::after,
