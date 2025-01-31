@@ -1,6 +1,6 @@
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
-import { getSettingOptionValue } from '../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
@@ -8,12 +8,43 @@ import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory,
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
+const  NotificationScheduleManagerHeadElement = elementQuerySelector(NotificationScheduleManagerField,'.css_notification_schedule_manager_head')
+const  NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(NotificationScheduleManagerHeadElement, '.')
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
 let previousIntegration = {} as IntegratedNotificationSchedules;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
+
+let notifcationScheduleManagerRefreshTimer_retryInterval: number = 10 * 1000;
+let notifcationScheduleManagerRefreshTimer_baseInterval: number = 15 * 1000;
+let notifcationScheduleManagerRefreshTimer_minInterval: number = 5 * 1000;
+let notifcationScheduleManagerRefreshTimer_dynamicInterval: number = 15 * 1000;
+let notifcationScheduleManagerRefreshTimer_dynamic: boolean = true;
+let notifcationScheduleManagerRefreshTimer_streaming: boolean = false;
+let notifcationScheduleManagerRefreshTimer_lastUpdate: number = 0;
+let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
+let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
+let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
+let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
+let notifcationScheduleManagerRefreshTimer_timer: ReturnType<typeof setTimeout>;
+
+function updateUpdateTimer(): void {
+  const time = new Date().getTime();
+  let percentage = 0;
+  if (notifcationScheduleManagerRefreshTimer_refreshing) {
+    percentage = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
+  } else {
+    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
+  }
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  window.requestAnimationFrame(function () {
+    if (notifcationScheduleManagerRefreshTimer_streaming) {
+      updateUpdateTimer();
+    }
+  });
+}
 
 function generateElementOfItem(): GeneratedElement {
   const identifier = generateIdentifier('i');
@@ -49,7 +80,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
     function updateContext(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_context');
-      thisItemContextElement.innerText = `${thisItem.route.name} - ${thisItem.route.direction}`;
+      thisItemContextElement.innerText = `${thisItem.route.name} - 往${thisItem.route.direction}`;
     }
 
     function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
@@ -183,18 +214,64 @@ export function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
   );
 }
 
-async function initializeNotificationScheduleManagerField() {
-  setUpNotificationScheduleManagerFieldSkeletonScreen();
+async function refreshNotificationScheduleManager() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const requestID = generateIdentifier('r');
-  const integration = await integrateNotifcationSchedules(requestID);
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  notifcationScheduleManagerRefreshTimer_dynamic = refresh_interval_setting.dynamic;
+  notifcationScheduleManagerRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
+  notifcationScheduleManagerRefreshTimer_refreshing = true;
+  notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier('r');
+  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
+  const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
   updateNotificationScheduleManagerField(integration, false, playing_animation);
+  notifcationScheduleManagerRefreshTimer_lastUpdate = new Date().getTime();
+  if (notifcationScheduleManagerRefreshTimer_dynamic) {
+    const updateRate = await getUpdateRate();
+    notifcationScheduleManagerRefreshTimer_nextUpdate = Math.max(new Date().getTime() + notifcationScheduleManagerRefreshTimer_minInterval, integration.dataUpdateTime + notifcationScheduleManagerRefreshTimer_baseInterval / updateRate);
+  } else {
+    notifcationScheduleManagerRefreshTimer_nextUpdate = new Date().getTime() + notifcationScheduleManagerRefreshTimer_baseInterval;
+  }
+  notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime());
+  notifcationScheduleManagerRefreshTimer_refreshing = false;
+  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
+}
+
+async function streamNotificationScheduleManager() {
+  refreshNotificationScheduleManager()
+    .then(function () {
+      if (notifcationScheduleManagerRefreshTimer_streaming) {
+        notifcationScheduleManagerRefreshTimer_timer = setTimeout(function () {
+          streamRecentViews();
+        }, Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime()));
+      } else {
+        notifcationScheduleManagerRefreshTimer_streamStarted = false;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      if (notifcationScheduleManagerRefreshTimer_streaming) {
+        notifcationScheduleManagerRefreshTimer_timer = setTimeout(function () {
+          streamNotificationScheduleManager();
+        }, notifcationScheduleManagerRefreshTimer_retryInterval);
+      } else {
+        notifcationScheduleManagerRefreshTimer_streamStarted = false;
+      }
+    });
 }
 
 export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'true');
-  initializeNotificationScheduleManagerField();
+  if (!notifcationScheduleManagerRefreshTimer_streaming) {
+    notifcationScheduleManagerRefreshTimer_streaming = true;
+    if (!notifcationScheduleManagerRefreshTimer_streamStarted) {
+      notifcationScheduleManagerRefreshTimer_streamStarted = true;
+      streamNotificationScheduleManager();
+    } else {
+      refreshNotificationScheduleManager();
+    }
+    updateUpdateTimer();
+  }
   closePreviousPage();
 }
 
