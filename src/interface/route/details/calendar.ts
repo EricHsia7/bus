@@ -218,50 +218,32 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
     previousCalendar = calendar;
   }
 
-  var eventGroupQuantity = calendar.eventGroupQuantity;
-  var eventQuantity = calendar.eventQuantity;
-  var groupedEvents = calendar.groupedEvents;
-  var eventGroups = calendar.eventGroups;
+  const eventGroupQuantity = calendar.eventGroupQuantity;
+  const eventQuantity = calendar.eventQuantity;
+  const groupedEvents = calendar.groupedEvents;
+  const eventGroups = calendar.eventGroups;
 
-  // Field.setAttribute('skeleton-screen', skeletonScreen);
-
-  var currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
+  const currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
-    var capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
+    const capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var eventGroupIndex = currentEventGroupSeatQuantity + o;
-        var thisEventGroupElement = generateElementOfEventGroup();
-        elementQuerySelector(Field, '.css_route_details_calendar_events_groups').appendChild(thisEventGroupElement.element);
-        var thisDayElement = generateElementOfDay();
-        elementQuerySelector(Field, '.css_route_details_calendar_days').appendChild(thisDayElement.element);
+        // const eventGroupIndex = currentEventGroupSeatQuantity + o;
+        const newDayElement = generateElementOfDay();
+        elementQuerySelector(Field, '.css_route_details_calendar_days').appendChild(newDayElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        var eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[eventGroupIndex].remove();
+        const eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
         elementQuerySelectorAll(Field, `.css_route_details_calendar_days .css_route_details_calendar_day`)[eventGroupIndex].remove();
       }
     }
   }
 
   for (let i = 0; i < eventGroupQuantity; i++) {
-    var eventGroupKey = `d_${i}`;
-    var thisEventGroupElement = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[i];
-    var currentEventSeatQuantity = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`).length;
-    if (!(eventQuantity[eventGroupKey] === currentEventSeatQuantity)) {
-      var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
-      if (capacity < 0) {
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisEventElement = drawEvent();
-          thisEventGroupElement.appendChild(thisEventElement.element);
-        }
-      } else {
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          var eventIndex = currentEventSeatQuantity - 1 - o;
-          elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[eventIndex].remove();
-        }
-      }
+    const eventGroupKey = `d_${i}`;
+    for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
+      drawEvent();
     }
   }
 
