@@ -66,7 +66,10 @@ import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
 
-import './interface/route/details/index.css';
+import './interface/route/details/field.css';
+import './interface/route/details/head.css';
+import './interface/route/details/body.css';
+import './interface/route/details/groups.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';

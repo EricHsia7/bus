@@ -1,24 +1,50 @@
-import { GeneratedElement } from '../../index';
+import { GeneratedElement, querySize } from '../../index';
 import { generateIdentifier, compareThings, booleanToString } from '../../../tools/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
+import { getCSSVariableValue } from '../../../tools/style';
+
+const RouteDetailsField = documentQuerySelector('.css_route_details_field');
+const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
+const RouteDetailsGroupsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_groups');
+const CalendarGroupElement = elementQuerySelector(RouteDetailsGroupsElement, '.css_route_details_group[group="calendar"]');
+const CalendarCanvasElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_calendar_canvas') as HTMLCanvasElement;
+const CalendarCanvasContext = CalendarCanvasElement.getContext('2d') as CanvasRenderingContext2D;
 
 const calendar_ratio = 100;
+const hours = 24;
+const gridlineBoxHeight = 10;
+const gridlineWidth = 1.2;
+
+let canvasSize = querySize('route-details-canvas');
+let canvasWidth = canvasSize.width;
+let canvasHeight = canvasSize.height;
+
 let previousCalendar = {};
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
-function generateElementOfGridline(hours: number): GeneratedElement {
-  var identifier = generateIdentifier('l');
-  var element = document.createElement('div');
-  element.classList.add('css_route_details_calendar_gridline');
-  element.id = identifier;
-  element.style.setProperty('--b-cssvar-calendar-gridline-top', `${hours * calendar_ratio - 5}px`);
-  element.innerHTML = /*html*/ `<div class="css_route_details_calendar_gridline_label">${String(hours).padStart(2, '0')}:00</div><div class="css_route_details_calendar_gridline_line"></div>`;
-  return {
-    element: element,
-    id: identifier
-  };
+function resizeRouteDetailsCalendarCanvas(): void {
+  canvasSize = querySize('route-details-canvas');
+  canvasWidth = size.width;
+  canvasHeight = size.height;
+  CalendarCanvasElement.width = canvasWidth;
+  CalendarCanvasElement.height = canvasHeight;
+}
+
+function drawGridline(hours: number): void {
+  const boxX = 0;
+  const boxY = hours * calendar_ratio;
+  CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+  CalendarCanvasContext.textBaseline = 'top';
+  // draw line
+  CalendarCanvasContext.fillRect(boxX + 45, boxY + 5, canvasWidth - 45, gridlineWidth);
+  // draw label
+  const labelText = `${String(hours).padStart(2, '0')}:00`;
+  const labelMeasurement = CalendarCanvasContext.measureText(labelText);
+  const labelWidth = labelMeasurement.width;
+  const labelHeight = labelMeasurement.actualBoundingBoxDescent;
+  CalendarCanvasContext.fillText(labelText, 45 - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2);
 }
 
 function generateElementOfDay(): GeneratedElement {
@@ -57,7 +83,7 @@ function generateElementOfEvent(): GeneratedElement {
 export function initializeCalendarGridlines(Field: HTMLElement): void {
   elementQuerySelector(Field, '.css_route_details_calendar_gridlines').innerHTML = '';
   for (let hours = 0; hours < 24; hours++) {
-    var thisGridlineElement: GeneratedElement = generateElementOfGridline(hours);
+    var thisGridlineElement: GeneratedElement = drawGridline(hours);
     elementQuerySelector(Field, '.css_route_details_calendar_gridlines').appendChild(thisGridlineElement.element);
   }
 }

@@ -204,7 +204,7 @@ export interface Size {
   height: number;
 }
 
-type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button';
+type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button' | 'route-details-canvas';
 
 export function querySize(type: SizeType): Size {
   let width: number = 0;
@@ -227,6 +227,10 @@ export function querySize(type: SizeType): Size {
     case 'head-two-button':
       width = windowWidth - 55 * 2;
       height = 55;
+      break;
+    case 'route-details-canvas':
+      width = windowWidth - 10 * 2 - 10 * 2;
+      height = 24 * 100;
       break;
     default:
       width = 0;
