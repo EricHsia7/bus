@@ -282,6 +282,7 @@ export function openNotificationScheduleManager(): void {
 export function closeNotificationScheduleManager(): void {
   // revokePageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'false');
+  notifcationScheduleManagerRefreshTimer_streaming = false;
   openPreviousPage();
 }
 
