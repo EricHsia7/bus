@@ -3,6 +3,7 @@ import { generateIdentifier, compareThings, booleanToString } from '../../../too
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
+import { drawRoundedRect } from '../../../tools/graphic';
 
 const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
@@ -15,6 +16,8 @@ const calendar_ratio = 100;
 const hours = 24;
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
+const gridlineLabelWidthLimit = 45;
+const fontFamily: string = '"Noto Sans TC", sans-serif';
 
 let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
@@ -30,21 +33,6 @@ function resizeRouteDetailsCalendarCanvas(): void {
   canvasHeight = size.height;
   CalendarCanvasElement.width = canvasWidth;
   CalendarCanvasElement.height = canvasHeight;
-}
-
-function drawGridline(hours: number): void {
-  const boxX = 0;
-  const boxY = hours * calendar_ratio;
-  CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
-  CalendarCanvasContext.textBaseline = 'top';
-  // draw line
-  CalendarCanvasContext.fillRect(boxX + 45, boxY + 5, canvasWidth - 45, gridlineWidth);
-  // draw label
-  const labelText = `${String(hours).padStart(2, '0')}:00`;
-  const labelMeasurement = CalendarCanvasContext.measureText(labelText);
-  const labelWidth = labelMeasurement.width;
-  const labelHeight = labelMeasurement.actualBoundingBoxDescent;
-  CalendarCanvasContext.fillText(labelText, 45 - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2);
 }
 
 function generateElementOfDay(): GeneratedElement {
@@ -69,28 +57,68 @@ function generateElementOfEventGroup(): GeneratedElement {
   };
 }
 
-function generateElementOfEvent(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
-  element.classList.add('css_route_details_calendar_event');
-  element.id = identifier;
-  return {
-    element: element,
-    id: identifier
-  };
+function drawGridline(hours: number): void {
+  const boxX = 0;
+  const boxY = hours * calendar_ratio;
+
+  CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+
+  // draw line
+  CalendarCanvasContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
+
+  // draw label
+  CalendarCanvasContext.font = `400 ${12}px ${fontFamily}`;
+  CalendarCanvasContext.textBaseline = 'top';
+  const labelText = `${String(hours).padStart(2, '0')}:00`;
+  const labelMeasurement = CalendarCanvasContext.measureText(labelText);
+  const labelWidth = labelMeasurement.width;
+  const labelHeight = labelMeasurement.actualBoundingBoxDescent;
+  CalendarCanvasContext.fillText(labelText, gridlineLabelWidthLimit - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
 }
 
-export function initializeCalendarGridlines(Field: HTMLElement): void {
-  elementQuerySelector(Field, '.css_route_details_calendar_gridlines').innerHTML = '';
+function drawEvent(thisEvent: object): void {
+  const thisDayStart = new Date();
+  thisDayStart.setDate(1);
+  thisDayStart.setMonth(0);
+  thisDayStart.setFullYear(thisEvent.date.getFullYear());
+  thisDayStart.setMonth(thisEvent.date.getMonth());
+  thisDayStart.setDate(thisEvent.date.getDate());
+  thisDayStart.setHours(0);
+  thisDayStart.setMinutes(0);
+  thisDayStart.setSeconds(0);
+  thisDayStart.setMilliseconds(0);
+
+  const boxX = gridlineLabelWidthLimit;
+  const boxY = ((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+  const boxWidth = canvasWidth - gridlineLabelWidthLimit;
+  const boxHeight = ((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+
+  // draw background
+  drawRoundedRect(CalendarCanvasContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
+
+  // draw decoration
+  drawRoundedRect(CalendarCanvasContext, boxX, boxY, 3, boxHeight, 3, getCSSVariableValue('--b-cssvar-main-color'));
+
+  // draw text
+  CalendarCanvasContext.font = `400 ${12}px ${fontFamily}`;
+  CalendarCanvasContext.textBaseline = 'top';
+  CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+  const text = thisEvent.dateString;
+  const textMeasurement = CalendarCanvasContext.measureText(text);
+  const textWidth = textMeasurement.width;
+  const textHeight = textMeasurement.actualBoundingBoxDescent;
+  CalendarCanvasContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
+}
+
+export function initializeCalendarGridlines(): void {
   for (let hours = 0; hours < 24; hours++) {
-    var thisGridlineElement: GeneratedElement = drawGridline(hours);
-    elementQuerySelector(Field, '.css_route_details_calendar_gridlines').appendChild(thisGridlineElement.element);
+    drawGridline(hours);
   }
 }
 
 export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  var defaultEventQuantity = {
+  const defaultEventQuantity = {
     d_0: 47,
     d_1: 47,
     d_2: 47,
@@ -99,9 +127,9 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
     d_5: 47,
     d_6: 47
   };
-  var defaultEventGroupQuantity = 7;
-  var groupedEvents = {};
-  var eventGroups = {};
+  const defaultEventGroupQuantity = 7;
+  let groupedEvents = {};
+  let eventGroups = {};
   for (let i = 0; i < defaultEventGroupQuantity; i++) {
     var eventGroupKey = `d_${i}`;
     groupedEvents[eventGroupKey] = [];
@@ -111,7 +139,7 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
       name: ''
     };
     for (let j = 0; j < defaultEventQuantity[eventGroupKey]; j++) {
-      var date = new Date();
+      const date = new Date();
       date.setHours(0);
       date.setMinutes(j * 30);
       date.setSeconds(0);
@@ -225,7 +253,7 @@ export async function updateCalendarField(Field: HTMLElement, calendar: object, 
       var capacity = currentEventSeatQuantity - eventQuantity[eventGroupKey];
       if (capacity < 0) {
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisEventElement = generateElementOfEvent();
+          var thisEventElement = drawEvent();
           thisEventGroupElement.appendChild(thisEventElement.element);
         }
       } else {
