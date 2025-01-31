@@ -243,7 +243,7 @@ async function streamNotificationScheduleManager() {
     .then(function () {
       if (notifcationScheduleManagerRefreshTimer_streaming) {
         notifcationScheduleManagerRefreshTimer_timer = setTimeout(function () {
-          streamRecentViews();
+          streamNotificationScheduleManager();
         }, Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
         notifcationScheduleManagerRefreshTimer_streamStarted = false;
