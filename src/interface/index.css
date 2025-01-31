@@ -37,6 +37,11 @@ body * {
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
+  visibility: visible;
+}
+
+.css_splash_screen[displayed="false"] {
+  visibility: hidden;
 }
 
 .css_splash_screen svg.css_splash_screen_icon {

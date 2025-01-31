@@ -170,7 +170,8 @@ export function fadeOutSplashScreen(callback: Function): void {
     element.addEventListener(
       'animationend',
       function () {
-        element.style.display = 'none';
+        element.setAttribute('displayed', 'false');
+        element.classList.remove('css_splash_screen_fade_out');
         if (typeof callback === 'function') {
           callback();
         }
