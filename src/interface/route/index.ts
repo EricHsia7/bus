@@ -189,7 +189,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       groupedItems[groupKey].push({
         name: '',
         goBack: '0',
-        status: { code: 0, text: '', time: 0 },
+        status: { code: 8, text: '', time: -6 },
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],

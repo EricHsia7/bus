@@ -99,8 +99,9 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
         time: '',
         name: '',
         status: {
-          code: 0,
-          text: ''
+          code: 8,
+          text: '',
+          time:-6
         },
         direction: 0,
         route: {

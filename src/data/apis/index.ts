@@ -4,7 +4,7 @@ import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
 
 export interface EstimateTimeStatus {
-  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // 8: loading
   text: string;
   time: number;
 }

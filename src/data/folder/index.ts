@@ -1,4 +1,4 @@
-import { parseEstimateTime } from '../apis/index';
+import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
@@ -7,9 +7,9 @@ import { searchRouteByRouteID } from '../search/index';
 import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
-import { getStop } from '../apis/getStop/index';
-import { getLocation } from '../apis/getLocation/index';
-import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getStop, SimplifiedStop } from '../apis/getStop/index';
+import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
+import { getRoute, RouteItem, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
 
@@ -22,7 +22,7 @@ interface FolderRouteEndPoints {
   destination: string;
 }
 
-interface FolderStopRoute {
+export interface FolderStopRoute {
   name: string;
   endPoints: FolderRouteEndPoints;
   id: number;
@@ -253,8 +253,27 @@ export async function listFoldersWithContent(): Promise<FoldersWithContentArray>
   return result;
 }
 
+export interface integratedFolderStopRoute extends FolderStopRoute {
+  pathAttributeId: Array<number>;
+}
+
+export interface integratedFolderStop extends FolderStop {
+  status: EstimateTimeStatus;
+  route: integratedFolderStopRoute;
+}
+
+export interface integratedFolderRoute extends FolderRoute {
+  pathAttributeId: Array<number>;
+}
+
+export interface integratedFolderBus extends FolderBus {}
+
+export interface integratedFolderEmpty extends FolderEmpty {}
+
+export type integratedFolderContent = integratedFolderStop | integratedFolderRoute | integratedFolderBus | integratedFolderEmpty;
+
 export interface integratedFolders {
-  foldedContent: { [key: string]: Array<FolderContent> }; // TODO: integratedFolderContent
+  foldedContent: { [key: string]: Array<integratedFolderContent> }; // TODO: integratedFolderContent
   folders: { [key: string]: Folder };
   folderQuantity: number;
   itemQuantity: { [key: string]: number };
@@ -268,7 +287,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
 
   const EstimateTime = await getEstimateTime(requestID);
-  const Route = await getRoute(requestID, true);
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
 
   const foldersWithContent = await listFoldersWithContent();
 
@@ -276,7 +295,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
-  let StopIDs = [];
+  let StopIDs = [] as Array<number>;
   for (const folderWithContent1 of foldersWithContent) {
     StopIDs = StopIDs.concat(
       folderWithContent1.content
@@ -287,17 +306,19 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     );
   }
 
-  let processedEstimateTime = {};
+  let processedEstimateTime: { [key: string]: EstimateTimeItem } = {};
   for (const EstimateTimeItem of EstimateTime) {
-    if (StopIDs.indexOf(parseInt(EstimateTimeItem.StopID)) > -1) {
-      processedEstimateTime[`s_${EstimateTimeItem.StopID}`] = EstimateTimeItem;
+    if (StopIDs.indexOf(EstimateTimeItem.StopID) > -1) {
+      // parseInt?
+      const thisStopKey: string = `s_${EstimateTimeItem.StopID}`;
+      processedEstimateTime[thisStopKey] = EstimateTimeItem;
     }
   }
 
-  let foldedContent = {};
-  let itemQuantity = {};
-  let folderQuantity = 0;
-  let folders = {};
+  let foldedContent: integratedFolders['foldedContent'] = {};
+  let itemQuantity: integratedFolders['itemQuantity'] = {};
+  let folderQuantity: integratedFolders['folderQuantity'] = 0;
+  let folders: integratedFolders['folders'] = {};
 
   for (const folderWithContent2 of foldersWithContent) {
     const folderKey = `f_${folderWithContent2.folder.index}`;
@@ -307,27 +328,27 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     }
 
     for (let item of folderWithContent2.content) {
-      let integratedItem = item;
+      let integratedItem = item as integratedFolderContent;
 
       let thisStopKey: string = '';
-      let thisProcessedEstimateTime: EstimateTimeItem = {};
+      let thisProcessedEstimateTime = {} as EstimateTimeItem;
 
       let thisRouteKey: string = '';
-      let thisRoute: SimplifiedRouteItem = {};
+      let thisRoute = {} as SimplifiedRouteItem;
 
-      switch (item.type) {
+      switch (integratedItem.type) {
         case 'stop':
-          thisStopKey = `s_${item.id}`;
+          thisStopKey = `s_${integratedItem.id}`;
           if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
             thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
           }
           integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
-          thisRouteKey = `r_${item.route.id}`;
+          thisRouteKey = `r_${integratedItem.route.id}`;
           thisRoute = Route[thisRouteKey];
           integratedItem.route.pathAttributeId = thisRoute.pid;
           break;
         case 'route':
-          thisRouteKey = `r_${item.id}`;
+          thisRouteKey = `r_${integratedItem.id}`;
           thisRoute = Route[thisRouteKey];
           integratedItem.pathAttributeId = thisRoute.pid;
           break;
@@ -363,23 +384,27 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   return result;
 }
 
-export async function saveToFolder(folderID: string, content: object): Promise<boolean> {
-  var thisFolder: Folder = Folders[`f_${folderID}`];
+export async function saveToFolder(folderID: string, content: FolderContent): Promise<boolean> {
+  var thisFolder = Folders[`f_${folderID}`] as Folder;
   if (thisFolder.contentType.indexOf(content.type) > -1) {
-    await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
+    if (typeof thisFolder.storeIndex === 'number') {
+      await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
+    }
     return true;
   }
   return false;
 }
 
 export async function isSaved(type: FolderContentType, id: number | string): Promise<boolean> {
-  var folderList = await listFolders();
-  for (var folder of folderList) {
+  const folderList = await listFolders();
+  for (const folder of folderList) {
     if (folder.contentType.indexOf(type) > -1) {
-      var itemKeys = await lfListItemKeys(folder.storeIndex);
-      for (var itemKey of itemKeys) {
-        if (itemKey.indexOf(`${type}_${id}`) > -1) {
-          return true;
+      if (typeof folder.storeIndex === 'number') {
+        const itemKeys = await lfListItemKeys(folder.storeIndex);
+        for (const itemKey of itemKeys) {
+          if (itemKey.indexOf(`${type}_${id}`) > -1) {
+            return true;
+          }
         }
       }
     }
@@ -400,16 +425,16 @@ export async function removeFromFolder(folderID: string, type: FolderContentType
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
   const requestID = generateIdentifier('r');
-  const Stop = await getStop(requestID);
-  const Location = await getLocation(requestID, false);
-  const Route = await getRoute(requestID);
+  const Stop = (await getStop(requestID)) as SimplifiedStop;
+  const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
 
-  const thisStop: object = Stop[`s_${StopID}`];
+  const thisStop = Stop[`s_${StopID}`];
   const thisStopDirection: number = parseInt(thisStop.goBack);
-  const thisLocation: object = Location[`l_${thisStop.stopLocationId}`];
+  const thisLocation = Location[`l_${thisStop.stopLocationId}`];
   const thisStopName: string = thisLocation.n;
 
-  const thisRoute: object = Route[`r_${RouteID}`];
+  const thisRoute = Route[`r_${RouteID}`];
   const thisRouteName: string = thisRoute.n;
   const thisRouteDeparture: string = thisRoute.dep;
   const thisRouteDestination: string = thisRoute.des;

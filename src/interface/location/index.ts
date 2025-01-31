@@ -174,7 +174,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         route_name: '',
         route_direction: '',
         routeId: 0,
-        status: { code: -1, text: '' },
+        status: { code: 8, text: '', time: -6 },
         buses: []
       });
     }
