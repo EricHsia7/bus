@@ -185,19 +185,19 @@
 /* code: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-solid-transparent-c);
+  background: var(--b-cssvar-main-color-opacity-flattened-c);
 }
 
 /* code: 1 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c);
+  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c);
 }
 
 /* code: 1 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-inflected-to-user-position-solid-transparent-c);
+  background: var(--b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c);
 }
 
 /* code: 0.5 && segment buffer: true */

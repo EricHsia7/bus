@@ -163,7 +163,7 @@
   color: var(--b-cssvar-main-color);
   font-size: 15px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-solid-transparent-c)
+  background: var(--b-cssvar-main-color-opacity-flattened-c)
 }
 
 /* code: 0.5 */

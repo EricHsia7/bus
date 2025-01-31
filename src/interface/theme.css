@@ -3,19 +3,19 @@
   --b-cssvar-main-color-r: 50;
   --b-cssvar-main-color-g: 156;
   --b-cssvar-main-color-b: 255;
-  --b-cssvar-main-color-solid-transparent-c: #E7F3FF;
+  --b-cssvar-main-color-opacity-flattened-c: #E7F3FF;
 
-  --b-cssvar-main-color-inflected-to-segment-buffer: #3B7A91;
-  --b-cssvar-main-color-inflected-to-segment-buffer-r: 59;
-  --b-cssvar-main-color-inflected-to-segment-buffer-g: 122;
-  --b-cssvar-main-color-inflected-to-segment-buffer-b: 145;
-  --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #dfe7ed;
+  --b-cssvar-main-color-inflected-to-segment-buffer: #3D7E96;
+  --b-cssvar-main-color-inflected-to-segment-buffer-r: 61;
+  --b-cssvar-main-color-inflected-to-segment-buffer-g: 126;
+  --b-cssvar-main-color-inflected-to-segment-buffer-b: 150;
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #dfe7ed;
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
   --b-cssvar-main-color-inflected-to-user-position-g: 84;
   --b-cssvar-main-color-inflected-to-user-position-b: 199;
-  --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #D9D7EC;
+  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #D9D7EC;
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
@@ -107,19 +107,19 @@
     --b-cssvar-main-color-r: 62;
     --b-cssvar-main-color-g: 162;
     --b-cssvar-main-color-b: 255;
-    --b-cssvar-main-color-solid-transparent-c: #0A1F33;
+    --b-cssvar-main-color-opacity-flattened-c: #0A1F33;
 
     --b-cssvar-main-color-inflected-to-segment-buffer: #57B5D7;
     --b-cssvar-main-color-inflected-to-segment-buffer-r: 87;
     --b-cssvar-main-color-inflected-to-segment-buffer-g: 181;
     --b-cssvar-main-color-inflected-to-segment-buffer-b: 215;
-    --b-cssvar-main-color-inflected-to-segment-buffer-solid-transparent-c: #233742;
+    --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #233742;
 
     --b-cssvar-main-color-inflected-to-user-position: #7866F1;
     --b-cssvar-main-color-inflected-to-user-position-r: 120;
     --b-cssvar-main-color-inflected-to-user-position-g: 102;
     --b-cssvar-main-color-inflected-to-user-position-b: 241;
-    --b-cssvar-main-color-inflected-to-user-position-solid-transparent-c: #272542;
+    --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #272542;
 
     --b-cssvar-main-color-opacity-a: 1;
     --b-cssvar-main-color-opacity-b: 0.8;

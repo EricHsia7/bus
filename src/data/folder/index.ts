@@ -8,8 +8,8 @@ import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setD
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
-import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
-import { getRoute, RouteItem, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
 
