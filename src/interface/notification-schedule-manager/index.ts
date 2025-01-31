@@ -1,3 +1,4 @@
+import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { getDataReceivingProgress } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
