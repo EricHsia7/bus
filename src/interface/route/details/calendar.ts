@@ -23,6 +23,8 @@ let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
 let canvasHeight = canvasSize.height;
 
+let currentCalendar = {};
+
 let previousCalendar = {};
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
@@ -110,9 +112,24 @@ function drawEvent(thisEvent: object): void {
   CalendarCanvasContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
 }
 
-export function initializeCalendarGridlines(): void {
-  for (let hours = 0; hours < 24; hours++) {
-    drawGridline(hours);
+export function drawEventGroup(eventGroupIndex: number): void {
+  const eventGroupQuantity = currentCalendar.eventGroupQuantity;
+  const eventQuantity = currentCalendar.eventQuantity;
+  const groupedEvents = currentCalendar.groupedEvents;
+  const eventGroups = currentCalendar.eventGroups;
+
+  if (0 < eventGroupIndex && eventGroupIndex < eventGroupQuantity) {
+    CalendarCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    for (let hours = 0; hours < 24; hours++) {
+      drawGridline(hours);
+    }
+    const groupKey = `d_${eventGroupIndex}`;
+    const thisGroupEvents = groupedEvents[groupKey];
+    const thisGroupEventQuantity = eventQuantity[groupKey];
+    for (let i = 0; i < thisGroupEventQuantity; i++) {
+      const thisEvent = thisGroupEvents[i];
+      drawEvent(thisEvent);
+    }
   }
 }
 
@@ -164,100 +181,44 @@ export function setUpCalendarFieldSkeletonScreen(Field: HTMLElement) {
   );
 }
 
-export async function updateCalendarField(Field: HTMLElement, calendar: object, skeletonScreen: boolean, animation: boolean): void {
-  function updateEvent(thisElement, thisEvent, previousEvent) {
-    function updateText(thisElement: HTMLElement, thisEvent: object): void {
-      thisElement.innerText = thisEvent.dateString;
-    }
-
-    function updatePosition(thisElement: HTMLElement, thisEvent: object): void {
-      var thisDayStart = new Date();
-      thisDayStart.setDate(1);
-      thisDayStart.setMonth(0);
-      thisDayStart.setFullYear(thisEvent.date.getFullYear());
-      thisDayStart.setMonth(thisEvent.date.getMonth());
-      thisDayStart.setDate(thisEvent.date.getDate());
-      thisDayStart.setHours(0);
-      thisDayStart.setMinutes(0);
-      thisDayStart.setSeconds(0);
-      thisDayStart.setMilliseconds(0);
-      thisElement.style.setProperty('--b-cssvar-calendar-event-top', `${((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
-      thisElement.style.setProperty('--b-cssvar-calendar-event-height', `${((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio}px`);
-    }
-
-    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
-      thisElement.setAttribute('animation', booleanToString(animation));
-    }
-
-    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
-      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    }
-
-    if (previousEvent === null) {
-      updateText(thisElement, thisEvent);
-      updatePosition(thisElement, thisEvent);
-      updateAnimation(thisElement, animation);
-      updateSkeletonScreen(thisElement, skeletonScreen);
-    } else {
-      if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
-        updateText(thisElement, thisEvent);
-      }
-      if (!(thisEvent.dateString === previousEvent.dateString) || !compareThings(previousEvent, thisEvent)) {
-        updatePosition(thisElement, thisEvent);
-      }
-      if (!(animation === previousAnimation)) {
-        updateAnimation(thisElement, animation);
-      }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
-        updateSkeletonScreen(thisElement, skeletonScreen);
-      }
-    }
-  }
-
-  if (previousCalendar === {}) {
-    previousCalendar = calendar;
-  }
-
+export async function updateCalendarField(calendar: object, skeletonScreen: boolean, animation: boolean): void {
+ 
   const eventGroupQuantity = calendar.eventGroupQuantity;
   const eventQuantity = calendar.eventQuantity;
   const groupedEvents = calendar.groupedEvents;
   const eventGroups = calendar.eventGroups;
 
-  const currentEventGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`).length;
-  if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
-    const capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
+  const currentDaySeatQuantity = elementQuerySelectorAll(CalendarGroupElement, `.css_route_details_calendar_days .css_route_details_calendar_day`).length;
+  if (!(eventGroupQuantity === currentDaySeatQuantity)) {
+    const capacity = currentDaySeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         // const eventGroupIndex = currentEventGroupSeatQuantity + o;
         const newDayElement = generateElementOfDay();
-        elementQuerySelector(Field, '.css_route_details_calendar_days').appendChild(newDayElement.element);
+        elementQuerySelector(CalendarGroupElement, '.css_route_details_calendar_days').appendChild(newDayElement.element);
       }
     } else {
       for (let o = 0; o < Math.abs(capacity); o++) {
-        const eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_route_details_calendar_days .css_route_details_calendar_day`)[eventGroupIndex].remove();
+        const eventGroupIndex = currentDaySeatQuantity - 1 - o;
+        elementQuerySelectorAll(CalendarGroupElement, `.css_route_details_calendar_days .css_route_details_calendar_day`)[eventGroupIndex].remove();
       }
     }
   }
 
-  for (let i = 0; i < eventGroupQuantity; i++) {
-    const eventGroupKey = `d_${i}`;
-    for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
-      drawEvent();
-    }
-  }
+  var eventGroupKey = `d_${i}`;
+  var thisDay = eventGroups[eventGroupKey];
+  var thisDayElement = elementQuerySelectorAll(CalendarGroupElement, `.css_route_details_calendar_days .css_route_details_calendar_day`)[i];
+  thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
+  thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
+  thisDayElement.innerText = thisDay.name;
+  thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
+  thisDayElement.setAttribute('animation', animation);
+  thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
 
   for (let i = 0; i < eventGroupQuantity; i++) {
-    var eventGroupKey = `d_${i}`;
-    var thisDay = eventGroups[eventGroupKey];
-    var thisEventGroupElement = elementQuerySelectorAll(Field, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[i];
-    var thisDayElement = elementQuerySelectorAll(Field, `.css_route_details_calendar_days .css_route_details_calendar_day`)[i];
-    thisEventGroupElement.setAttribute('skeleton-screen', skeletonScreen);
-    thisEventGroupElement.setAttribute('displayed', new Date().getDay() === i ? true : false);
-    thisDayElement.innerText = thisDay.name;
-    thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
-    thisDayElement.setAttribute('animation', animation);
-    thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
+   
+    var thisEventGroupElement = elementQuerySelectorAll(CalendarGroupElement, `.css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events`)[i];
+ 
 
     for (let j = 0; j < eventQuantity[eventGroupKey]; j++) {
       const thisElement = elementQuerySelectorAll(thisEventGroupElement, `.css_route_details_calendar_event`)[j];

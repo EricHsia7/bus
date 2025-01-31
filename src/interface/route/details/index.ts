@@ -29,7 +29,7 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   const requestID = generateIdentifier('r');
   const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
-  updateCalendarField(calendarField, integration.calendar, false, playing_animation);
+  updateCalendarField(integration.calendar, false, playing_animation);
 }
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
