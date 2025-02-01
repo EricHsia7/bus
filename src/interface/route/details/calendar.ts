@@ -1,10 +1,10 @@
 import { GeneratedElement, querySize } from '../../index';
-import { generateIdentifier, compareThings, booleanToString } from '../../../tools/index';
+import { generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
 import { drawRoundedRect } from '../../../tools/graphic';
-import { Calendar } from '../../../data/route/details';
+import { Calendar, CalendarDay, CalendarEvent, CalendarEventGroup } from '../../../data/route/details';
 
 const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
@@ -15,7 +15,6 @@ const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
 const calendar_ratio = 100;
-const hours = 24;
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
@@ -24,8 +23,6 @@ const fontFamily: string = '"Noto Sans TC", sans-serif';
 let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
 let canvasHeight = canvasSize.height;
-
-let currentCalendar = {} as Calendar;
 
 let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
@@ -98,10 +95,10 @@ export function setUpCalendarGroupSkeletonScreen() {
   }
   updateCalendarGroup(
     {
-      groupedEvents: groupedEvents,
-      eventGroups: eventGroups,
-      eventGroupQuantity: defaultEventGroupQuantity,
-      eventQuantity: defaultEventQuantity
+      calendarEventGroup: groupedEvents,
+      calendarDays: eventGroups,
+      calendarDayQuantity: defaultEventGroupQuantity,
+      calendarEventQuantity: defaultEventQuantity
     },
     true,
     playing_animation
@@ -109,20 +106,89 @@ export function setUpCalendarGroupSkeletonScreen() {
 }
 
 export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean, animation: boolean): void {
-  function updateDay(thisDayElement: HTMLElement, thisDay): void {
+  function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, index: number): void {
     thisDayElement.innerText = thisDay.name;
-    thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
+    thisDayElement.setAttribute('highlighted', new Date().getDay() === index ? 'true' : 'false');
     thisDayElement.setAttribute('animation', animation);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
   }
 
-  function updateEventGroup(thisEventGroupElement: HTMLElement, )
+  function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, index: number): void {
+    function drawGridline(context: CanvasRenderingContext2D, hours: number): void {
+      const boxX = 0;
+      const boxY = hours * calendar_ratio;
 
+      context.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
 
-  const eventGroups = calendar.eventGroups;
-  const eventGroupQuantity = calendar.eventGroupQuantity;
-  const groupedEvents = calendar.groupedEvents;
-  const eventQuantity = calendar.eventQuantity;
+      // draw line
+      context.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
+
+      // draw label
+      context.font = `400 ${12}px ${fontFamily}`;
+      context.textBaseline = 'top';
+      const labelText = `${String(hours).padStart(2, '0')}:00`;
+      const labelMeasurement = context.measureText(labelText);
+      const labelWidth = labelMeasurement.width;
+      const labelHeight = labelMeasurement.actualBoundingBoxDescent;
+      context.fillText(labelText, gridlineLabelWidthLimit - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
+    }
+
+    function drawEvent(context: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent): void {
+      const thisDayStart = new Date();
+      thisDayStart.setDate(1);
+      thisDayStart.setMonth(0);
+      thisDayStart.setFullYear(thisCalendarEvent.date.getFullYear());
+      thisDayStart.setMonth(thisCalendarEvent.date.getMonth());
+      thisDayStart.setDate(thisCalendarEvent.date.getDate());
+      thisDayStart.setHours(0);
+      thisDayStart.setMinutes(0);
+      thisDayStart.setSeconds(0);
+      thisDayStart.setMilliseconds(0);
+
+      const boxX = gridlineLabelWidthLimit;
+      const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+      const boxWidth = canvasWidth - gridlineLabelWidthLimit;
+      const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+
+      // draw background
+      drawRoundedRect(context, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
+
+      // draw decoration
+      drawRoundedRect(context, boxX, boxY, 3, boxHeight, 3, getCSSVariableValue('--b-cssvar-main-color'));
+
+      // draw text
+      context.font = `400 ${12}px ${fontFamily}`;
+      context.textBaseline = 'top';
+      context.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+      const text = thisCalendarEvent.dateString;
+      const textMeasurement = context.measureText(text);
+      const textWidth = textMeasurement.width;
+      const textHeight = textMeasurement.actualBoundingBoxDescent;
+      context.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
+    }
+
+    function updateDisplayed(thisCalendarEventGroupElement: HTMLElement, index: number): void {
+      thisCalendarEventGroupElement.setAttribute('displayed', new Date().getDay() === index ? 'true' : 'false');
+    }
+
+    const thisCalendarEventGroupCanvas = elementQuerySelector(thisCalendarEventGroupElement, '.css_route_details_calendar_event_group_canvas') as HTMLCanvasElement;
+    const thisCalendarEventGroupCanvasContext = thisCalendarEventGroupCanvas.getContext('2d');
+
+    updateDisplayed(thisCalendarEventGroupElement, index);
+
+    thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    for (let hours = 0; hours < 24; hours++) {
+      drawGridline(thisCalendarEventGroupCanvasContext, hours);
+    }
+    for (const thisCalendarEvent of thisCalendarEventGroup) {
+      drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent);
+    }
+  }
+
+  const eventGroups = calendar.calendarDays;
+  const eventGroupQuantity = calendar.calendarDayQuantity;
+  const groupedEvents = calendar.calendarEventGroup;
+  const eventQuantity = calendar.calendarEventQuantity;
 
   const currentEventGroupSeatQuantity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
   if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
@@ -154,80 +220,11 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     const thisEventGroup = groupedEvents[eventGroupKey];
 
     const thisDayElement = CalendarDayElements[i];
-    const thisEventGroupElement = CalendarEventGroupElements[i]
+    const thisEventGroupElement = CalendarEventGroupElements[i];
 
-    updateDay(thisDayElement, thisDay);
-
+    updateDay(thisDayElement, thisDay, i);
+    updateEventGroup(thisEventGroupElement, thisEventGroup, i);
   }
-}
-
-export function updateCalendarEvents(calendar: object, eventGroupIndex: number, skeletonScreen: boolean, animation: boolean): void {
-  function drawEventGroup(events): void {
-    function drawGridline(hours: number): void {
-      const boxX = 0;
-      const boxY = hours * calendar_ratio;
-
-      CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
-
-      // draw line
-      CalendarCanvasContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
-
-      // draw label
-      CalendarCanvasContext.font = `400 ${12}px ${fontFamily}`;
-      CalendarCanvasContext.textBaseline = 'top';
-      const labelText = `${String(hours).padStart(2, '0')}:00`;
-      const labelMeasurement = CalendarCanvasContext.measureText(labelText);
-      const labelWidth = labelMeasurement.width;
-      const labelHeight = labelMeasurement.actualBoundingBoxDescent;
-      CalendarCanvasContext.fillText(labelText, gridlineLabelWidthLimit - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
-    }
-
-    function drawEvent(thisEvent: object): void {
-      const thisDayStart = new Date();
-      thisDayStart.setDate(1);
-      thisDayStart.setMonth(0);
-      thisDayStart.setFullYear(thisEvent.date.getFullYear());
-      thisDayStart.setMonth(thisEvent.date.getMonth());
-      thisDayStart.setDate(thisEvent.date.getDate());
-      thisDayStart.setHours(0);
-      thisDayStart.setMinutes(0);
-      thisDayStart.setSeconds(0);
-      thisDayStart.setMilliseconds(0);
-
-      const boxX = gridlineLabelWidthLimit;
-      const boxY = ((thisEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
-      const boxWidth = canvasWidth - gridlineLabelWidthLimit;
-      const boxHeight = ((thisEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
-
-      // draw background
-      drawRoundedRect(CalendarCanvasContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
-
-      // draw decoration
-      drawRoundedRect(CalendarCanvasContext, boxX, boxY, 3, boxHeight, 3, getCSSVariableValue('--b-cssvar-main-color'));
-
-      // draw text
-      CalendarCanvasContext.font = `400 ${12}px ${fontFamily}`;
-      CalendarCanvasContext.textBaseline = 'top';
-      CalendarCanvasContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
-      const text = thisEvent.dateString;
-      const textMeasurement = CalendarCanvasContext.measureText(text);
-      const textWidth = textMeasurement.width;
-      const textHeight = textMeasurement.actualBoundingBoxDescent;
-      CalendarCanvasContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
-    }
-    CalendarCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-    for (let hours = 0; hours < 24; hours++) {
-      drawGridline(hours);
-    }
-    for (const event of events) {
-      drawEvent(event);
-    }
-  }
-
-  const groupedEvents = calendar.groupedEvents;
-  const thisEventGroupKey = `d_${eventGroupIndex}`;
-  const thisGroupEvents = groupedEvents[thisEventGroupKey];
-  drawEventGroup(thisGroupEvents);
 
   previousCalendar = calendar;
   previousAnimation = animation;
