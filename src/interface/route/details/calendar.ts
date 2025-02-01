@@ -141,7 +141,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
       const labelMeasurement = context.measureText(labelText);
       const labelWidth = labelMeasurement.width;
       const labelHeight = labelMeasurement.actualBoundingBoxDescent;
-      context.fillText(labelText, gridlineLabelWidthLimit - labelWidth, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
+      context.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
     }
 
     function drawEvent(context: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent): void {
