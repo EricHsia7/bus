@@ -191,6 +191,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     for (let hours = 0; hours < 24; hours++) {
       drawGridline(thisCalendarEventGroupCanvasContext, hours);
     }
+
     for (const thisCalendarEvent of thisCalendarEventGroup) {
       drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent);
     }
