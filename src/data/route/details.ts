@@ -170,7 +170,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
             duration: 15,
             deviation: 0
           });
-          calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
+          calendar.calendarEventQuantity[dayOfWeek.code] += 1;
         }
       }
     }
