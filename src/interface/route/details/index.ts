@@ -1,5 +1,5 @@
 import { integrateRouteDetails } from '../../../data/route/details';
-import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup, updateCalendarEvents } from './calendar';
+import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
 import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './properties';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
