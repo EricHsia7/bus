@@ -1,7 +1,7 @@
 @property --b-cssvar-calendar-ratio {
   syntax: '<length>';
   inherits: false;
-  initial-value: 100px;
+  initial-value: 60px;
 }
 
 /* groups > group: calendar > head > body */
