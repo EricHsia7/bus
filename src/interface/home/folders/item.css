@@ -55,6 +55,7 @@
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -82,6 +83,7 @@
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;

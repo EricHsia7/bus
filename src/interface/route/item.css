@@ -64,22 +64,13 @@
   /* capsule: 85px + padding: 15px + gap: 5px */
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
   overflow: hidden;
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;
-}
-
-/* skeleton screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="false"] .css_route_group_item_head .css_route_group_item_name {
-  mask-image: linear-gradient(90deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) calc(100% - 15px),
-      rgba(0, 0, 0, 0.1) calc(100% - 8px),
-      rgba(0, 0, 0, 0) 100%);
-  mask-repeat: no-repeat;
 }
 
 /* skeleton screen: true */

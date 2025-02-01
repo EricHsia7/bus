@@ -1,3 +1,5 @@
+import { getTextWidth } from './graphic';
+
 export function getUnicodes(string: string, unique: boolean = true): Array<number> {
   let result = [];
   if (typeof string === 'string') {
@@ -20,3 +22,13 @@ export function containPhoneticSymbols(string: string): boolean {
     return false;
   }
 }
+
+/*
+export function truncateText(text: string, weight: number, size: string, fontFamily: string, maxWidth: number): string {
+  const fullTextWidth = getTextWidth(text, weight, size, fontFamily);
+  if (fullTextWidth <= maxWidth) {
+    return text;
+  } else {
+  }
+}
+*/
