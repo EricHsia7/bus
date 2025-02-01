@@ -14,7 +14,7 @@ const CalendarGroupBodyElement = elementQuerySelector(CalendarGroupElement, '.cs
 const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_days');
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
-const calendar_ratio = 100;
+const calendar_ratio = 60;
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
@@ -167,7 +167,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
       drawRoundedRect(context, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, getCSSVariableValue('--b-cssvar-main-color'));
 
       // draw text
-      context.font = `400 ${12}px ${fontFamily}`;
+      context.font = `400 ${14}px ${fontFamily}`;
       context.textBaseline = 'top';
       context.fillStyle = getCSSVariableValue('--b-cssvar-main-color');
       const text = thisCalendarEvent.dateString;
