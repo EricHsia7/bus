@@ -70,13 +70,13 @@ export function setUpCalendarGroupSkeletonScreen() {
     d_5: 47,
     d_6: 47
   };
-  const defaultEventGroupQuantity = 7;
-  let groupedEvents = {};
-  let eventGroups = {};
-  for (let i = 0; i < defaultEventGroupQuantity; i++) {
+  const defaultDayQuantity = 7;
+  let calendarEventGroups = {};
+  let calendarDays = {};
+  for (let i = 0; i < defaultDayQuantity; i++) {
     const eventGroupKey = `d_${i}`;
-    groupedEvents[eventGroupKey] = [];
-    eventGroups[eventGroupKey] = {
+    calendarEventGroups[eventGroupKey] = [];
+    calendarDays[eventGroupKey] = {
       day: i,
       code: `d_{i}`,
       name: ''
@@ -87,7 +87,7 @@ export function setUpCalendarGroupSkeletonScreen() {
       date.setMinutes(j * 30);
       date.setSeconds(0);
       date.setMilliseconds(0);
-      groupedEvents[eventGroupKey].push({
+      calendarEventGroups[eventGroupKey].push({
         date: date,
         dateString: '',
         duration: 15
@@ -96,9 +96,9 @@ export function setUpCalendarGroupSkeletonScreen() {
   }
   updateCalendarGroup(
     {
-      calendarEventGroup: groupedEvents,
-      calendarDays: eventGroups,
-      calendarDayQuantity: defaultEventGroupQuantity,
+      calendarEventGroups: calendarEventGroups,
+      calendarDays: calendarDays,
+      calendarDayQuantity: defaultDayQuantity,
       calendarEventQuantity: defaultEventQuantity
     },
     true,
@@ -189,7 +189,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
 
   const eventGroups = calendar.calendarDays;
   const eventGroupQuantity = calendar.calendarDayQuantity;
-  const groupedEvents = calendar.calendarEventGroup;
+  const calendarEventGroups = calendar.calendarEventGroups;
   const eventQuantity = calendar.calendarEventQuantity;
 
   const currentEventGroupSeatQuantity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
@@ -219,7 +219,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   for (let i = 0; i < eventGroupQuantity; i++) {
     const eventGroupKey = `d_${i}`;
     const thisDay = eventGroups[eventGroupKey];
-    const thisEventGroup = groupedEvents[eventGroupKey];
+    const thisEventGroup = calendarEventGroups[eventGroupKey];
 
     const thisDayElement = CalendarDayElements[i];
     const thisEventGroupElement = CalendarEventGroupElements[i];

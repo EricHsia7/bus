@@ -47,7 +47,7 @@ export interface Calendar {
     [key: string]: CalendarDay;
   };
   calendarDayQuantity: 7;
-  calendarEventGroup: {
+  calendarEventGroups: {
     [key: string]: CalendarEventGroup;
   };
   calendarEventQuantity: {
@@ -95,7 +95,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
       }
     },
     calendarDayQuantity: 7,
-    calendarEventGroup: {
+    calendarEventGroups: {
       d_0: [],
       d_1: [],
       d_2: [],
@@ -142,13 +142,13 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
           }
           // TODO: check timeTableRules
           if (violateRules === false) {
-            calendar.groupedEvents[dayOfWeek.code].push({
+            calendar.calendarEventGroups[dayOfWeek.code].push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate, 'hh:mm'),
               duration: maxWindow,
               deviation: Math.abs(averageWindow - maxWindow)
             });
-            calendar.eventQuantity[dayOfWeek.code] += 1;
+            calendar.calendarEventQuantity[dayOfWeek.code] += 1;
           }
         }
       }
@@ -164,7 +164,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
         const thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
         // TODO: check timeTableRules
         if (violateRules === false) {
-          calendar.groupedEvents[dayOfWeek.code].push({
+          calendar.calendarEventGroups[dayOfWeek.code].push({
             date: thisHeadwayDate,
             dateString: dateToString(thisHeadwayDate, 'hh:mm'),
             duration: 15,
@@ -175,8 +175,8 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
       }
     }
   }
-  for (const code in calendar.calendarEventGroup) {
-    /* calendar.calendarEvents[code] = */ calendar.calendarEventGroup[code].sort(function (a, b) {
+  for (const code in calendar.calendarEventGroups) {
+    /* calendar.calendarEvents[code] = */ calendar.calendarEventGroups[code].sort(function (a, b) {
       return a.date.getTime() - b.date.getTime();
     });
   }
