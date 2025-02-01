@@ -30,7 +30,6 @@ let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
 function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
-  const context = canvas.getContext('2d');
   canvasSize = querySize('route-details-canvas');
   canvasWidth = canvasSize.width;
   canvasHeight = canvasSize.height;
@@ -41,6 +40,7 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
   canvas.height = canvasHeight * canvasScale;
 
   // Reset transformations before scaling
+  const context = canvas.getContext('2d');
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.scale(canvasScale, canvasScale);
 }

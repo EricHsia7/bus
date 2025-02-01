@@ -132,7 +132,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
         const headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
 
         for (let i = 0; i < headwayQuantity; i++) {
-          const violateRules = false;
+          let violateRules = false;
           const thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
           if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {
             violateRules = true;
@@ -157,7 +157,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
   for (const item of TimeTable) {
     if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
       if (item.DateType === '0') {
-        const violateRules = false;
+        let violateRules = false;
         const dayOfWeek = dateValueToDayOfWeek(item.DateValue);
         const thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
         const thisDepartureTime = parseTimeCode(item.DepartureTime, 0);
