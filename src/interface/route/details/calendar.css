@@ -1,13 +1,15 @@
 @property --b-cssvar-calendar-ratio {
   syntax: '<length>';
   inherits: false;
-  initial-value: 100px;
+  initial-value: 60px;
 }
 
+/* groups > group: calendar > head > body */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body {
   height: calc(24 * var(--b-cssvar-calendar-ratio) + 60px + 10px);
 }
 
+/* groups > group: calendar > head > body > days */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days {
   position: absolute;
   top: 5px;
@@ -23,8 +25,9 @@
   -webkit-user-select: none;
 }
 
+/* groups > group: calendar > head > body > days > day */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   border-radius: var(--b-cssvar-border-radius-large);
   display: flex;
@@ -35,116 +38,63 @@
   font-weight: 500;
 }
 
+/* animation: true, skeleton-screen: false */
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[animation="true"][skeleton-screen="false"] {
+  transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
+}
+
+/* highlighted: true */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[highlighted="true"] {
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
   color: var(--b-cssvar-ffffff-normal);
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines {
-  position: absolute;
-  top: 60px;
-  left: 10px;
-  width: calc(100% - 20px);
-  height: calc(24 * var(--b-cssvar-calendar-ratio));
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline {
-  position: absolute;
-  top: var(--b-cssvar-calendar-gridline-top);
-  left: 0px;
-  height: 10px;
-  width: 100%;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline .css_route_details_calendar_gridline_label {
-  position: absolute;
-  top: 0px;
-  height: 10px;
-  width: 45px;
-  font-size: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--b-cssvar-aeaeb2);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_gridlines .css_route_details_calendar_gridline .css_route_details_calendar_gridline_line {
-  position: absolute;
-  top: 5px;
-  left: 45px;
-  width: calc(100% - 45px);
-  height: 1.2px;
-  background: var(--b-cssvar-ededf2);
-  user-select: none;
-  -webkit-user-select: none;
-  border-radius: 2px;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups {
-  position: absolute;
-  top: 60px;
-  left: 10px;
-  width: calc(100% - 20px);
-  height: calc(24 * var(--b-cssvar-calendar-ratio));
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events {
-  position: absolute;
-  top: 0px;
-  left: 45px;
-  width: calc(100% - 45px);
-  height: 100%;
-  display: none;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events[displayed="true"] {
-  display: block;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event {
-  position: absolute;
-  top: var(--b-cssvar-calendar-event-top);
-  left: 0px;
-  width: 100%;
-  height: var(--b-cssvar-calendar-event-height);
-  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
-  color: var(--b-cssvar-main-color);
-  border-radius: 3px;
-  user-select: none;
-  -webkit-user-select: none;
-  padding: 2px;
-  padding-left: 8px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event::after {
-  position: absolute;
-  content: '';
-  top: 0px;
-  left: 0px;
-  border-radius: 3px 0px 0px 3px;
-  width: 3px;
-  height: 100%;
-  background: var(--b-cssvar-main-color);
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[skeleton-screen="true"],
+/* skeleton-screen: true */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[skeleton-screen="true"] {
   color: rgba(0, 0, 0, 0);
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[skeleton-screen="true"]::after {
-  display: none;
+/* groups > group: calendar > head > body > event-groups */
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: calc(24 * var(--b-cssvar-calendar-ratio));
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[animation="true"][skeleton-screen="true"],
+/* groups > group: calendar > head > body > event-groups > event-group */
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: inherit;
+}
+
+/* displayed: false */
+.css_route_details_field[displayed="true"] .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group[displayed="false"] {
+  visibility: hidden;
+}
+
+/* displayed: true */
+.css_route_details_field[displayed="true"] .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group[displayed="true"] {
+  visibility: visible;
+}
+
+/* groups > group: calendar > head > body > event-groups > event-group > canvas */
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group .css_route_details_calendar_event_group_canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[animation="true"][skeleton-screen="true"] {
   background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
@@ -156,7 +106,6 @@
   animation-timing-function: ease-in-out;
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_events_groups .css_route_details_calendar_grouped_events .css_route_details_calendar_event[animation="false"][skeleton-screen="true"],
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[animation="false"][skeleton-screen="true"] {
   background: var(--b-cssvar-ededf2);
 }

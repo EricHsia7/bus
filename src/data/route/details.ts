@@ -1,13 +1,14 @@
-import { parseTimeCode } from '../apis/index';
-import { getProvider } from '../apis/getProvider/index';
-import { getRoute } from '../apis/getRoute/index';
+import { TimeMoment, parseTimeCode, TimeRange } from '../apis/index';
+import { getProvider, Provider, ProviderItem } from '../apis/getProvider/index';
+import { getRoute, Route } from '../apis/getRoute/index';
 import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
 import { getTimeTable } from '../apis/getTimeTable/index';
 import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from '../../tools/time';
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 
 function findRoute(Route: Route, RouteID: number): RouteItem {
-  var thisRoute: RouteItem = {};
-  for (var item of Route) {
+  let thisRoute = {} as RouteItem;
+  for (const item of Route) {
     if (item.Id === RouteID) {
       thisRoute = item;
       break;
@@ -17,8 +18,8 @@ function findRoute(Route: Route, RouteID: number): RouteItem {
 }
 
 function findProvider(Provider: Provider, providerId: number): ProviderItem {
-  var thisProvider = {};
-  for (var item of Provider) {
+  let thisProvider = {} as ProviderItem;
+  for (const item of Provider) {
     if (item.id === providerId) {
       thisProvider = item;
     }
@@ -26,18 +27,37 @@ function findProvider(Provider: Provider, providerId: number): ProviderItem {
   return thisProvider;
 }
 
-function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): object {
-  var calendar = {
-    groupedEvents: {
-      d_0: [],
-      d_1: [],
-      d_2: [],
-      d_3: [],
-      d_4: [],
-      d_5: [],
-      d_6: []
-    },
-    eventGroups: {
+export interface CalendarEvent {
+  date: Date;
+  dateString: string;
+  duration: number;
+  deviation: number;
+}
+
+export type CalendarEventGroup = Array<CalendarEvent>;
+
+export interface CalendarDay {
+  name: string;
+  day: number;
+  code: string;
+}
+
+export interface Calendar {
+  calendarDays: {
+    [key: string]: CalendarDay;
+  };
+  calendarDayQuantity: 7;
+  calendarEventGroups: {
+    [key: string]: CalendarEventGroup;
+  };
+  calendarEventQuantity: {
+    [key: string]: number;
+  };
+}
+
+function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): Calendar {
+  let calendar: Calendar = {
+    calendarDays: {
       d_0: {
         name: '日',
         day: 0,
@@ -74,8 +94,17 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
         code: 'd_6'
       }
     },
-    eventGroupQuantity: 7,
-    eventQuantity: {
+    calendarDayQuantity: 7,
+    calendarEventGroups: {
+      d_0: [],
+      d_1: [],
+      d_2: [],
+      d_3: [],
+      d_4: [],
+      d_5: [],
+      d_6: []
+    },
+    calendarEventQuantity: {
       d_0: 0,
       d_1: 0,
       d_2: 0,
@@ -85,26 +114,26 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
       d_6: 0
     }
   };
-  var thisWeekOrigin = getThisWeekOrigin();
-  for (var item of SemiTimeTable) {
+  const thisWeekOrigin = getThisWeekOrigin();
+  for (const item of SemiTimeTable) {
     if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
       if (item.DateType === '0') {
-        var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
-        var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-        var thisPeriodStartTime = parseTimeCode(item.StartTime, 0);
-        var thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
-        var thisPeriodEndTime = parseTimeCode(item.EndTime, 0);
-        var thisPeriodEndTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodEndTime.hours, thisPeriodEndTime.minutes);
-        var thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
+        const dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+        const thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+        const thisPeriodStartTime = parseTimeCode(item.StartTime, 0);
+        const thisPeriodStartTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes);
+        const thisPeriodEndTime = parseTimeCode(item.EndTime, 0);
+        const thisPeriodEndTimeDateObject = offsetDate(thisDayOrigin, 0, thisPeriodEndTime.hours, thisPeriodEndTime.minutes);
+        const thisPeriodDurationInMinutes = Math.abs(thisPeriodEndTime.hours * 60 + thisPeriodEndTime.minutes - (thisPeriodStartTime.hours * 60 + thisPeriodStartTime.minutes));
 
-        var minWindow = parseInt(item.LongHeadway);
-        var maxWindow = parseInt(item.LowHeadway);
-        var averageWindow = (maxWindow + minWindow) / 2;
-        var headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
+        const minWindow = parseInt(item.LongHeadway);
+        const maxWindow = parseInt(item.LowHeadway);
+        const averageWindow = (maxWindow + minWindow) / 2;
+        const headwayQuantity = thisPeriodDurationInMinutes / averageWindow;
 
         for (let i = 0; i < headwayQuantity; i++) {
-          var violateRules = false;
-          var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
+          let violateRules = false;
+          const thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisPeriodStartTime.hours, thisPeriodStartTime.minutes + maxWindow * i);
           if (thisHeadwayDate.getTime() < thisPeriodStartTimeDateObject.getTime()) {
             violateRules = true;
           }
@@ -113,66 +142,98 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
           }
           // TODO: check timeTableRules
           if (violateRules === false) {
-            calendar.groupedEvents[dayOfWeek.code].push({
+            calendar.calendarEventGroups[dayOfWeek.code].push({
               date: thisHeadwayDate,
               dateString: dateToString(thisHeadwayDate, 'hh:mm'),
               duration: maxWindow,
               deviation: Math.abs(averageWindow - maxWindow)
             });
-            calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
+            calendar.calendarEventQuantity[dayOfWeek.code] += 1;
           }
         }
       }
     }
   }
-  for (var item of TimeTable) {
+  for (const item of TimeTable) {
     if (PathAttributeId.indexOf(item.PathAttributeId) > -1) {
       if (item.DateType === '0') {
-        var violateRules = false;
-        var dayOfWeek = dateValueToDayOfWeek(item.DateValue);
-        var thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
-        var thisDepartureTime = parseTimeCode(item.DepartureTime, 0);
-        var thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
+        let violateRules = false;
+        const dayOfWeek = dateValueToDayOfWeek(item.DateValue);
+        const thisDayOrigin = offsetDate(thisWeekOrigin, dayOfWeek.day, 0, 0);
+        const thisDepartureTime = parseTimeCode(item.DepartureTime, 0);
+        const thisHeadwayDate = offsetDate(thisDayOrigin, 0, thisDepartureTime.hours, thisDepartureTime.minutes);
         // TODO: check timeTableRules
         if (violateRules === false) {
-          calendar.groupedEvents[dayOfWeek.code].push({
+          calendar.calendarEventGroups[dayOfWeek.code].push({
             date: thisHeadwayDate,
             dateString: dateToString(thisHeadwayDate, 'hh:mm'),
             duration: 15,
             deviation: 0
           });
-          calendar.eventQuantity[dayOfWeek.code] = calendar.eventQuantity[dayOfWeek.code] + 1;
+          calendar.calendarEventQuantity[dayOfWeek.code] += 1;
         }
       }
     }
   }
-  for (var code in calendar.groupedEvents) {
-    calendar.groupedEvents[code] = calendar.groupedEvents[code].sort(function (a, b) {
+  for (const code in calendar.calendarEventGroups) {
+    /* calendar.calendarEvents[code] = */ calendar.calendarEventGroups[code].sort(function (a, b) {
       return a.date.getTime() - b.date.getTime();
     });
   }
   return calendar;
 }
 
-function getTimeTableRules(thisRoute: RouteItem): object {
-  var thisRouteGoFirstBusTime = parseTimeCode(thisRoute.goFirstBusTime, 0);
-  var thisRouteGoLastBusTime = parseTimeCode(thisRoute.goLastBusTime, 0);
+export interface TimeTableRules {
+  go: {
+    weekday: {
+      first: TimeMoment;
+      last: TimeMoment;
+      rushHourWindow: TimeRange;
+      offRushHourWindow: TimeRange;
+    };
+    holiday: {
+      first: TimeMoment;
+      last: TimeMoment;
+      rushHourWindow: TimeRange;
+      offRushHourWindow: TimeRange;
+    };
+  };
+  back: {
+    weekday: {
+      first: TimeMoment;
+      last: TimeMoment;
+      rushHourWindow: TimeRange;
+      offRushHourWindow: TimeRange;
+    };
+    holiday: {
+      first: TimeMoment;
+      last: TimeMoment;
+      rushHourWindow: TimeRange;
+      offRushHourWindow: TimeRange;
+    };
+  };
+  realSequence: any;
+}
 
-  var thisRouteBackFirstBusTime = parseTimeCode(thisRoute.backFirstBusTime, 0);
-  var thisRouteBackLastBusTime = parseTimeCode(thisRoute.backLastBusTime, 0);
+function getTimeTableRules(thisRoute: RouteItem): TimeTableRules {
+  const thisRouteGoFirstBusTime = parseTimeCode(thisRoute.goFirstBusTime, 0);
+  const thisRouteGoLastBusTime = parseTimeCode(thisRoute.goLastBusTime, 0);
 
-  var thisRouteGoFirstBusTimeOnHoliday = parseTimeCode(thisRoute.holidayGoFirstBusTime, 0);
-  var thisRouteGoLastBusTimeOnHoliday = parseTimeCode(thisRoute.holidayGoLastBusTime, 0);
+  const thisRouteBackFirstBusTime = parseTimeCode(thisRoute.backFirstBusTime, 0);
+  const thisRouteBackLastBusTime = parseTimeCode(thisRoute.backLastBusTime, 0);
 
-  var thisRouteBackFirstBusTimeOnHoliday = parseTimeCode(thisRoute.holidayBackFirstBusTime, 0);
-  var thisRouteBackLastBusTimeOnHoliday = parseTimeCode(thisRoute.holidayBackLastBusTime, 0);
+  const thisRouteGoFirstBusTimeOnHoliday = parseTimeCode(thisRoute.holidayGoFirstBusTime, 0);
+  const thisRouteGoLastBusTimeOnHoliday = parseTimeCode(thisRoute.holidayGoLastBusTime, 0);
 
-  var rushHourWindow = parseTimeCode(thisRoute.peakHeadway, 1);
-  var offRushHourWindow = parseTimeCode(thisRoute.offPeakHeadway, 1);
+  const thisRouteBackFirstBusTimeOnHoliday = parseTimeCode(thisRoute.holidayBackFirstBusTime, 0);
+  const thisRouteBackLastBusTimeOnHoliday = parseTimeCode(thisRoute.holidayBackLastBusTime, 0);
 
-  var rushHourWindowOnHoliday = parseTimeCode(thisRoute.holidayPeakHeadway, 1);
-  var offRushHourWindowOnHoliday = parseTimeCode(thisRoute.holidayOffPeakHeadway, 1);
-  //window → the interval/gap between arrivals of buses
+  const rushHourWindow = parseTimeCode(thisRoute.peakHeadway, 1);
+  const offRushHourWindow = parseTimeCode(thisRoute.offPeakHeadway, 1);
+
+  const rushHourWindowOnHoliday = parseTimeCode(thisRoute.holidayPeakHeadway, 1);
+  const offRushHourWindowOnHoliday = parseTimeCode(thisRoute.holidayOffPeakHeadway, 1);
+  // window → the interval/gap between arrivals of buses
 
   var realSequence = thisRoute.realSequence;
   return {
@@ -208,19 +269,33 @@ function getTimeTableRules(thisRoute: RouteItem): object {
   };
 }
 
-export async function integrateRouteDetails(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<object> {
-  var Route = await getRoute(requestID, false);
-  var thisRoute = findRoute(Route, RouteID);
+export interface integratedRouteDetailsProperty {
+  key: string;
+  icon: MaterialSymbols;
+  value: string;
+}
 
-  var SemiTimeTable = await getSemiTimeTable(requestID);
-  var TimeTable = await getTimeTable(requestID);
-  var Provider = await getProvider(requestID);
-  var timeTableRules = getTimeTableRules(thisRoute);
-  var calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
-  var thisProviderId = thisRoute.providerId;
-  var thisProvider = findProvider(Provider, thisProviderId);
+export type integratedRouteDetailsProperties = Array<integratedRouteDetailsProperty>;
 
-  var result = {
+export interface integratedRouteDetails {
+  timeTableRules: TimeTableRules;
+  calendar: Calendar;
+  properties: integratedRouteDetailsProperties;
+}
+
+export async function integrateRouteDetails(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<integratedRouteDetails> {
+  const Route = (await getRoute(requestID, false)) as Route;
+  const thisRoute = findRoute(Route, RouteID);
+
+  const SemiTimeTable = await getSemiTimeTable(requestID);
+  const TimeTable = await getTimeTable(requestID);
+  const Provider = await getProvider(requestID);
+  const timeTableRules = getTimeTableRules(thisRoute);
+  const calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
+  const thisProviderId = thisRoute.providerId;
+  const thisProvider = findProvider(Provider, thisProviderId);
+
+  const result: integratedRouteDetails = {
     timeTableRules: timeTableRules,
     calendar: calendar,
     properties: [

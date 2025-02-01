@@ -66,7 +66,10 @@ import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
 
-import './interface/route/details/index.css';
+import './interface/route/details/field.css';
+import './interface/route/details/head.css';
+import './interface/route/details/body.css';
+import './interface/route/details/groups.css';
 import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
@@ -173,6 +176,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { switchCalendarDay } from './interface/route/details/calendar';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -296,7 +300,8 @@ window.bus = {
     switchRouteBodyTab,
     openRouteDetails,
     closeRouteDetails,
-    shareRoutePermalink
+    shareRoutePermalink,
+    switchCalendarDay
   },
   location: {
     openLocation,

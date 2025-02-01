@@ -40,19 +40,19 @@ export function parseEstimateTime(EstimateTime: string, mode: number): EstimateT
   return { code: 7, text: '發生錯誤', time: -5 };
 }
 
-interface Moment {
+export interface TimeMoment {
   type: 'moment';
   hours: number;
   minutes: number;
 }
 
-interface Range {
+export interface TimeRange {
   type: 'range';
   min: number;
   max: number;
 }
 
-export function parseTimeCode(code: string, mode: number): Moment | Range {
+export function parseTimeCode(code: string, mode: number): TimeMoment | TimeRange {
   if (mode === 0) {
     var hours = 0;
     var minutes = 0;
