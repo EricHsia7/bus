@@ -15,6 +15,7 @@ const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
 const calendar_ratio = 60;
+const scaleLimit = parseFloat((4096 / (calendar_ratio * 24)).toFixed(1));
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
@@ -23,7 +24,7 @@ const fontFamily: string = '"Noto Sans TC", sans-serif';
 let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
 let canvasHeight = canvasSize.height;
-let canvasScale = Math.min(window.devicePixelRatio, 4096 / (calendar_ratio * 24)) || 1;
+let canvasScale = Math.min(window.devicePixelRatio, scaleLimit) || 1;
 
 let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
@@ -33,7 +34,7 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
   canvasSize = querySize('route-details-canvas');
   canvasWidth = canvasSize.width;
   canvasHeight = canvasSize.height;
-  canvasScale = Math.min(window.devicePixelRatio, 4096 / (calendar_ratio * 24)) || 1;
+  canvasScale = Math.min(window.devicePixelRatio, scaleLimit) || 1;
 
   // Set the new size
   canvas.width = canvasWidth * canvasScale;
