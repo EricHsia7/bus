@@ -177,6 +177,7 @@
   -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
 }
 
 .css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_status,
