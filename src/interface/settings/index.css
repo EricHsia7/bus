@@ -167,7 +167,7 @@
   position: absolute;
   top: 0px;
   right: 45px;
-  width: 80px;
+  width: 100px;
   height: 55px;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   line-height: 55px;
@@ -179,6 +179,8 @@
   word-break: keep-all;
   text-overflow: ellipsis;
   text-align: right;
+  display: block;
+  overflow: hidden;
 }
 
 .css_settings_page_field .css_settings_page_settings .css_setting[type="info"] .css_setting_status,
