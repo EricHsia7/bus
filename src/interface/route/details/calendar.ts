@@ -126,26 +126,26 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   }
 
   function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, index: number): void {
-    function drawGridline(context: CanvasRenderingContext2D, hours: number): void {
+    function drawGridline(thisContext: CanvasRenderingContext2D, hours: number): void {
       const boxX = 0;
       const boxY = hours * calendar_ratio;
 
-      context.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+      thisContext.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
 
       // draw line
-      context.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
+      thisContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
 
       // draw label
-      context.font = `400 ${12}px ${fontFamily}`;
-      context.textBaseline = 'top';
+      thisContext.font = `400 ${12}px ${fontFamily}`;
+      thisContext.textBaseline = 'top';
       const labelText = `${String(hours).padStart(2, '0')}:00`;
-      const labelMeasurement = context.measureText(labelText);
+      const labelMeasurement = thisContext.measureText(labelText);
       const labelWidth = labelMeasurement.width;
       const labelHeight = labelMeasurement.actualBoundingBoxDescent;
-      context.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
+      thisContext.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
     }
 
-    function drawEvent(context: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent): void {
+    function drawEvent(thisContext: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent): void {
       const thisDayStart = new Date();
       thisDayStart.setDate(1);
       thisDayStart.setMonth(0);
@@ -163,20 +163,20 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
       const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
 
       // draw background
-      drawRoundedRect(context, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
+      drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
 
       // draw decoration
-      drawRoundedRect(context, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, getCSSVariableValue('--b-cssvar-main-color'));
+      drawRoundedRect(thisContext, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, getCSSVariableValue('--b-cssvar-main-color'));
 
       // draw text
-      context.font = `400 ${14}px ${fontFamily}`;
-      context.textBaseline = 'top';
-      context.fillStyle = getCSSVariableValue('--b-cssvar-main-color');
+      thisContext.font = `400 ${14}px ${fontFamily}`;
+      thisContext.textBaseline = 'top';
+      thisContext.fillStyle = getCSSVariableValue('--b-cssvar-main-color');
       const text = thisCalendarEvent.dateString;
-      const textMeasurement = context.measureText(text);
+      const textMeasurement = thisContext.measureText(text);
       const textWidth = textMeasurement.width;
       const textHeight = textMeasurement.actualBoundingBoxDescent;
-      context.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
+      thisContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
     }
 
     function updateDisplayed(thisCalendarEventGroupElement: HTMLElement, index: number): void {
