@@ -28,33 +28,26 @@ let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
-function resizeRouteDetailsCalendarCanvas(): void {
-  canvasSize = querySize('route-details-canvas');
-  canvasWidth = size.width;
-  canvasHeight = size.height;
-  CalendarCanvasElement.width = canvasWidth;
-  CalendarCanvasElement.height = canvasHeight;
-}
-
 function generateElementOfDay(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  // const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_day');
-  element.id = identifier;
+  // element.id = identifier;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfEventGroup(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
-  element.classList.add('css_route_details_calendar_grouped_events');
-  element.id = identifier;
+  // const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
+  element.classList.add('css_route_details_calendar_event_group');
+  element.innerHTML = `<canvas class="css_route_details_calendar_canvas"></canvas>`
+  // element.id = identifier;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
@@ -114,6 +107,13 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   }
 
   function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, index: number): void {
+    function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
+      canvasSize = querySize('route-details-canvas');
+      canvasWidth = size.width;
+      canvasHeight = size.height;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+    }
     function drawGridline(context: CanvasRenderingContext2D, hours: number): void {
       const boxX = 0;
       const boxY = hours * calendar_ratio;
@@ -175,8 +175,9 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     const thisCalendarEventGroupCanvasContext = thisCalendarEventGroupCanvas.getContext('2d');
 
     updateDisplayed(thisCalendarEventGroupElement, index);
-
+    resizeRouteDetailsCalendarCanvas(thisCalendarEventGroupCanvas);
     thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
     for (let hours = 0; hours < 24; hours++) {
       drawGridline(thisCalendarEventGroupCanvasContext, hours);
     }
