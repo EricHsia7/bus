@@ -15,7 +15,7 @@ const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
 const calendar_ratio = 60;
-const scaleLimit = parseFloat((4096 / (calendar_ratio * 24)).toFixed(1));
+const scaleLimit = Math.floor(4096 / (calendar_ratio * 24));
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
