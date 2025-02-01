@@ -43,7 +43,7 @@ function generateElementOfEventGroup(): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_event_group');
-  element.innerHTML = `<canvas class="css_route_details_calendar_canvas"></canvas>`
+  element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`
   // element.id = identifier;
   return {
     element: element,
