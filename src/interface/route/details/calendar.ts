@@ -1,5 +1,4 @@
 import { GeneratedElement, querySize } from '../../index';
-import { generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
@@ -119,6 +118,8 @@ export function setUpCalendarGroupSkeletonScreen() {
 export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean, animation: boolean): void {
   function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, index: number): void {
     thisDayElement.innerText = thisDay.name;
+    thisDayElement.setAttribute('day', index.toString());
+    thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
     thisDayElement.setAttribute('highlighted', new Date().getDay() === index ? 'true' : 'false');
     thisDayElement.setAttribute('animation', animation);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
@@ -242,4 +243,21 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   previousCalendar = calendar;
   previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
+}
+
+export function switchCalendarDay(day: number): void {
+  const calendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
+  const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
+  for (let i = 0; i < 7; i++) {
+    const thisCalendarDayElement = calendarDayElements[i];
+    const thisCalendarDayElementDay = parseInt(thisCalendarDayElement.getAttribute('day'));
+    const thisEventGroupElement = CalendarEventGroupElements[i];
+    if (thisCalendarDayElementDay === day) {
+      thisCalendarDayElement.setAttribute('highlighted', 'true');
+      thisEventGroupElement.setAttribute('displayed', 'true');
+    } else {
+      thisCalendarDayElement.setAttribute('highlighted', 'false');
+      thisEventGroupElement.setAttribute('displayed', 'false');
+    }
+  }
 }

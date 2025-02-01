@@ -176,6 +176,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { switchCalendarDay } from './interface/route/details/calendar';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -299,7 +300,8 @@ window.bus = {
     switchRouteBodyTab,
     openRouteDetails,
     closeRouteDetails,
-    shareRoutePermalink
+    shareRoutePermalink,
+    switchCalendarDay
   },
   location: {
     openLocation,
