@@ -28,6 +28,14 @@ let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
+function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
+  canvasSize = querySize('route-details-canvas');
+  canvasWidth = canvasSize.width;
+  canvasHeight = canvasSize.height;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+}
+
 function generateElementOfDay(): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
@@ -43,7 +51,7 @@ function generateElementOfEventGroup(): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_event_group');
-  element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`
+  element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`;
   // element.id = identifier;
   return {
     element: element,
@@ -107,13 +115,6 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   }
 
   function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, index: number): void {
-    function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
-      canvasSize = querySize('route-details-canvas');
-      canvasWidth = size.width;
-      canvasHeight = size.height;
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-    }
     function drawGridline(context: CanvasRenderingContext2D, hours: number): void {
       const boxX = 0;
       const boxY = hours * calendar_ratio;
