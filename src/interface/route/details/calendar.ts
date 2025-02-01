@@ -23,17 +23,30 @@ const fontFamily: string = '"Noto Sans TC", sans-serif';
 let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
 let canvasHeight = canvasSize.height;
+let canvasScale = Math.min(window.devicePixelRatio, 4096 / (calendar_ratio * 24)) || 1;
 
 let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
 function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
+  const context = canvas.getContext('2d');
   canvasSize = querySize('route-details-canvas');
   canvasWidth = canvasSize.width;
   canvasHeight = canvasSize.height;
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
+  canvasScale = Math.min(window.devicePixelRatio, 4096 / (calendar_ratio * 24)) || 1;
+
+  // Set the new size
+  canvas.width = canvasWidth * canvasScale;
+  canvas.height = canvasHeight * canvasScale;
+
+  // Maintain the same CSS size
+  canvas.style.width = `${canvasWidth}px`;
+  canvas.style.height = `${canvasHeight}px`;
+
+  // Reset transformations before scaling
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.scale(canvasScale, canvasScale);
 }
 
 function generateElementOfDay(): GeneratedElement {
