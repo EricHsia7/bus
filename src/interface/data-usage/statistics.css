@@ -27,16 +27,16 @@
 .css_data_usage_field .css_data_usage_body .css_data_usage_statistics .css_data_usage_statistics_item_name {
   position: absolute;
   left: 17.5px;
-  display: inline-flex;
-  align-items: center;
   width: calc(100% - 55px - 17.5px);
   height: 55px;
   top: 0px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
+  line-height: 55px;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -48,12 +48,15 @@
   right: 17.5px;
   width: 80px;
   height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 55px;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
