@@ -62,11 +62,16 @@
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group {
   position: absolute;
   top: 0px;
-  left: 45px;
-  width: calc(100% - 45px);
+  left: 0px;
+  width: 100%;
   height: 100%;
   display: block;
   visibility: inherit;
+}
+
+/* displayed: false */
+.css_route_details_field[displayed="false"] .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_event_groups .css_route_details_calendar_event_group[displayed="true"] {
+  visibility: hidden;
 }
 
 /* displayed: true */
