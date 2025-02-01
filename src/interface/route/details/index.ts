@@ -28,7 +28,6 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
   updateCalendarGroup(integration.calendar, false, playing_animation);
-  updateCalendarEvents(integration.calendar, false, playing_animation);
 }
 
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
