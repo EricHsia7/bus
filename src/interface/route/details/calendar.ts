@@ -40,10 +40,6 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
   canvas.width = canvasWidth * canvasScale;
   canvas.height = canvasHeight * canvasScale;
 
-  // Maintain the same CSS size
-  canvas.style.width = `${canvasWidth}px`;
-  canvas.style.height = `${canvasHeight}px`;
-
   // Reset transformations before scaling
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.scale(canvasScale, canvasScale);
