@@ -58,8 +58,7 @@
   top: 10px;
   left: 0px;
   height: 30px;
-  display: flex;
-  align-items: center;
+  display: block;
   width: calc(100% - 85px - 15px - 5px);
   /* capsule: 85px + padding: 15px + gap: 5px */
   white-space: nowrap;
@@ -68,6 +67,7 @@
   overflow: hidden;
   color: var(--b-cssvar-333333);
   font-size: 20px;
+  line-height: 30px; /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;

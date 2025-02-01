@@ -23,12 +23,31 @@ export function containPhoneticSymbols(string: string): boolean {
   }
 }
 
-/*
 export function truncateText(text: string, weight: number, size: string, fontFamily: string, maxWidth: number): string {
+  const ellipsis = '...';
+  const ellipsisWidth = getTextWidth(ellipsis, weight, size, fontFamily);
   const fullTextWidth = getTextWidth(text, weight, size, fontFamily);
+  const fullTextLength = text.length;
+  if (fullTextLength === 0) {
+    return text;
+  }
   if (fullTextWidth <= maxWidth) {
     return text;
   } else {
+    const averageCharacterWidth = fullTextWidth / fullTextLength;
+    const truncatedLength = Math.floor(maxWidth / averageCharacterWidth) - 2;
+    let lengthAdjustment = 0;
+    let lastLength = 0;
+    for (let i = 0; i < 5; i++) {
+      const adjustedText = text.substring(0, truncatedLength + lengthAdjustment);
+      const adjustedTextWidth = getTextWidth(adjustedText, weight, size, fontFamily) + ellipsisWidth;
+      if (adjustedTextWidth <= maxWidth) {
+        lastLength = truncatedLength + lengthAdjustment;
+        lengthAdjustment += 1;
+      } else {
+        break;
+      }
+    }
+    return `${text.substring(0, lastLength)}${ellipsis}`;
   }
 }
-*/
