@@ -1,3 +1,4 @@
+/* groups */
 .css_route_details_field .css_route_details_body .css_route_details_groups {
   position: relative;
   width: 100%;
@@ -6,6 +7,7 @@
   margin-top: calc(10px + 55px);
 }
 
+/* groups > group */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group {
   position: relative;
   width: 100%;
@@ -17,6 +19,7 @@
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
+/* groups > group > head */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head {
   position: relative;
   width: calc(100% - 20px);
@@ -28,6 +31,7 @@
   -webkit-user-select: none;
 }
 
+/* groups > group > head > icon */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_icon {
   position: absolute;
   top: 0px;
@@ -50,6 +54,7 @@
   color: var(--b-cssvar-333333);
 }
 
+/* groups > group > head > name */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_head .css_route_details_group_name {
   position: absolute;
   top: 0px;
@@ -65,6 +70,7 @@
   -webkit-user-select: none;
 }
 
+/* groups > group > head > body */
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group .css_route_details_group_body {
   position: relative;
   width: calc(100% - 20px);
