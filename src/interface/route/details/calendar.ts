@@ -164,12 +164,12 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
       drawRoundedRect(context, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${getCSSVariableValue('--b-cssvar-main-color-r')}, ${getCSSVariableValue('--b-cssvar-main-color-g')}, ${getCSSVariableValue('--b-cssvar-main-color-b')}, ${getCSSVariableValue('--b-cssvar-main-color-opacity-d')})`);
 
       // draw decoration
-      drawRoundedRect(context, boxX, boxY, 3, boxHeight, 3, getCSSVariableValue('--b-cssvar-main-color'));
+      drawRoundedRect(context, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, getCSSVariableValue('--b-cssvar-main-color'));
 
       // draw text
       context.font = `400 ${12}px ${fontFamily}`;
       context.textBaseline = 'top';
-      context.fillStyle = getCSSVariableValue('--b-cssvar-ededf2');
+      context.fillStyle = getCSSVariableValue('--b-cssvar-main-color');
       const text = thisCalendarEvent.dateString;
       const textMeasurement = context.measureText(text);
       const textWidth = textMeasurement.width;
