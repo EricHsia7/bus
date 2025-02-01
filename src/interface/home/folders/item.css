@@ -50,11 +50,11 @@
   font-size: 14px;
   height: 14px;
   line-height: 14px;
-  display: flex;
-  align-items: center;
+  display: block;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -76,12 +76,11 @@
   /* icon: 50px + capsule: 85px + padding: 10px */
   font-size: 17px;
   height: 23px;
-  line-height: 17px;
-  display: flex;
-  align-items: center;
+  line-height: 23px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
+  text-overflow: ellipsis;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;

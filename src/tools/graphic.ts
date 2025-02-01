@@ -6,6 +6,15 @@ export function getTextWidth(text: string, weight: number, size: string, fontFam
   return context.measureText(text).width;
 }
 
+export function getTextHeight(text: string, weight: number, size: string, fontFamily: string): number {
+  const canvas: HTMLCanvasElement = getTextHeight.canvas || (getTextHeight.canvas = document.createElement('canvas'));
+  const context = canvas.getContext('2d');
+  const font: string = `${weight} ${size} ${fontFamily}`;
+  context.font = font;
+  context.textBaseline = 'top';
+  return context.measureText(text).actualBoundingBoxDescent;
+}
+
 interface BorderRadius {
   tl: number;
   tr: number;

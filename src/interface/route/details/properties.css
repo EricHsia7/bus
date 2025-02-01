@@ -23,29 +23,6 @@
   justify-content: center;
 }
 
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
-  color: var(--b-cssvar-333333);
-}
-
-.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_value {
-  position: absolute;
-  top: 0px;
-  left: 40px;
-  width: calc(100% - 40px);
-  height: 30px;
-  color: var(--b-cssvar-333333);
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow: hidden;
-}
-
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_icon {
   top: 5px;
   height: 20px;
@@ -54,14 +31,37 @@
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_icon span.css_material_symbols_rounded {
-  color: rgba(0, 0, 0, 0);
+  visibility: hidden;
+}
+
+.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_value {
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  width: calc(100% - 40px - 10px);
+  height: 30px;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 400;
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[skeleton-screen="true"] .css_route_details_property_value {
   top: 5px;
   height: 20px;
-  width: calc(100% - 40px - 10px);
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 

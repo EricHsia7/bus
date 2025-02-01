@@ -42,29 +42,6 @@
   justify-content: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
-  color: var(--b-cssvar-333333);
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_value {
-  position: absolute;
-  top: 0px;
-  left: 40px;
-  width: calc(100% - 40px);
-  height: 30px;
-  color: var(--b-cssvar-333333);
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow: hidden;
-}
-
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon {
   top: 5px;
   height: 20px;
@@ -73,13 +50,36 @@
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon span.css_material_symbols_rounded {
-  color: rgba(0, 0, 0, 0);
+  visibility: hidden;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_value {
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  width: calc(100% - 40px - 10px);
+  height: 30px;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 400;
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
   top: 5px;
   height: 20px;
-  width: calc(100% - 40px - 10px);
   border-radius: var(--b-cssvar-border-radius-normal);
 }

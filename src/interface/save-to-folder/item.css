@@ -27,13 +27,16 @@
   position: absolute;
   top: 0px;
   left: 55px;
-  width: calc(100% - 55px);
+  width: calc(100% - 55px - 10px);
   height: 55px;
-  display: flex;
-  align-items: center;
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
+  line-height: 55px;
+  white-space: nowrap;
+  word-break: keep-all;
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

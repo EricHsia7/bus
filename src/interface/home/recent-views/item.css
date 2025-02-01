@@ -125,11 +125,13 @@
   height: 25px;
   width: calc(100% - 10px - 10px);
   font-size: 23px;
-  display: flex;
-  align-items: center;
+  line-height: 25px;
+  font-weight: 400;
   color: var(--b-cssvar-333333);
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
   contain: layout;
 }
 

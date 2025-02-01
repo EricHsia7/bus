@@ -27,15 +27,16 @@
   position: absolute;
   top: 0px;
   left: 55px;
-  width: calc(100% - 55px);
+  width: calc(100% - 55px - 55px - 80px);
   height: 55px;
-  display: flex;
-  align-items: center;
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
+  line-height: 55px;
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_status {

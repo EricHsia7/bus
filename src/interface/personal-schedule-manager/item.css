@@ -10,11 +10,14 @@
   left: 17.5px;
   width: calc(100% - 55px - 17.5px);
   height: 55px;
-  display: flex;
-  align-items: center;
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
+  line-height: 55px;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
