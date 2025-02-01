@@ -49,15 +49,15 @@
   top: 7.5px;
   left: 90px;
   width: calc(100% - 90px - 10px);
-  font-size: 14px;
   height: 14px;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 14px;
-  display: flex;
-  align-items: center;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -65,18 +65,18 @@
 /* items > item > head > route name */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_route_name {
   position: absolute;
+  top: 21.5px;
   left: 90px;
   width: calc(100% - 20px - 70px - 35px - 20px);
-  top: 21.5px;
-  font-size: 17px;
   height: 23px;
-  line-height: 17px;
-  display: flex;
-  align-items: center;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 23px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
