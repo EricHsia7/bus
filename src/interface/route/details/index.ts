@@ -1,5 +1,5 @@
 import { integrateRouteDetails } from '../../../data/route/details';
-import { setUpCalendarGroupSkeletonScreen, updateCalendarDays, updateCalendarEvents } from './calendar';
+import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup, updateCalendarEvents } from './calendar';
 import { setUpPropertiesFieldSkeletonScreen, updatePropertiesField } from './properties';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
@@ -27,7 +27,7 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   const requestID = generateIdentifier('r');
   const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(propertiesField, integration.properties, false, playing_animation);
-  updateCalendarDays(integration.calendar, false, playing_animation);
+  updateCalendarGroup(integration.calendar, false, playing_animation);
   updateCalendarEvents(integration.calendar, false, playing_animation);
 }
 

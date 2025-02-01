@@ -4,15 +4,15 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
 import { drawRoundedRect } from '../../../tools/graphic';
+import { Calendar } from '../../../data/route/details';
 
 const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
 const RouteDetailsGroupsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_groups');
-
 const CalendarGroupElement = elementQuerySelector(RouteDetailsGroupsElement, '.css_route_details_group[group="calendar"]');
-const CalendarDaysElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_calendar_days');
-const CalendarCanvasElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_calendar_canvas') as HTMLCanvasElement;
-const CalendarCanvasContext = CalendarCanvasElement.getContext('2d') as CanvasRenderingContext2D;
+const CalendarGroupBodyElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_group_body');
+const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_days');
+const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
 const calendar_ratio = 100;
 const hours = 24;
@@ -25,9 +25,9 @@ let canvasSize = querySize('route-details-canvas');
 let canvasWidth = canvasSize.width;
 let canvasHeight = canvasSize.height;
 
-let currentCalendar = {};
+let currentCalendar = {} as Calendar;
 
-let previousCalendar = {};
+let previousCalendar = {} as Calendar;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
@@ -96,7 +96,7 @@ export function setUpCalendarGroupSkeletonScreen() {
       });
     }
   }
-  updateCalendarDays(
+  updateCalendarGroup(
     {
       groupedEvents: groupedEvents,
       eventGroups: eventGroups,
@@ -108,41 +108,56 @@ export function setUpCalendarGroupSkeletonScreen() {
   );
 }
 
-export function updateCalendarDays(calendar: object, skeletonScreen: boolean, animation: boolean): void {
-  function updateCalendarDay(thisDayElement: HTMLElement, thisDay: object): void {
+export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean, animation: boolean): void {
+  function updateDay(thisDayElement: HTMLElement, thisDay): void {
     thisDayElement.innerText = thisDay.name;
     thisDayElement.setAttribute('highlighted', new Date().getDay() === i ? true : false);
     thisDayElement.setAttribute('animation', animation);
     thisDayElement.setAttribute('skeleton-screen', skeletonScreen);
   }
 
-  const eventGroupQuantity = calendar.eventGroupQuantity;
-  const eventGroups = calendar.eventGroups;
+  function updateEventGroup(thisEventGroupElement: HTMLElement, )
 
-  const currentDaySeatQuantity = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day').length;
-  if (!(eventGroupQuantity === currentDaySeatQuantity)) {
-    const capacity = currentDaySeatQuantity - eventGroupQuantity;
+
+  const eventGroups = calendar.eventGroups;
+  const eventGroupQuantity = calendar.eventGroupQuantity;
+  const groupedEvents = calendar.groupedEvents;
+  const eventQuantity = calendar.eventQuantity;
+
+  const currentEventGroupSeatQuantity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
+  if (!(eventGroupQuantity === currentEventGroupSeatQuantity)) {
+    const capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         // const eventGroupIndex = currentEventGroupSeatQuantity + o;
         const newDayElement = generateElementOfDay();
         CalendarDaysElement.appendChild(newDayElement.element);
+        const newEventGroupElement = generateElementOfEventGroup();
+        CalendarEventGroupsElement.appendChild(newEventGroupElement.element);
       }
     } else {
       const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
+      const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
       for (let o = 0; o < Math.abs(capacity); o++) {
-        const eventGroupIndex = currentDaySeatQuantity - 1 - o;
+        const eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
         CalendarDayElements[eventGroupIndex].remove();
+        CalendarEventGroupElements[eventGroupIndex].remove();
       }
     }
   }
 
   const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
+  const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (let i = 0; i < eventGroupQuantity; i++) {
     const eventGroupKey = `d_${i}`;
     const thisDay = eventGroups[eventGroupKey];
+    const thisEventGroup = groupedEvents[eventGroupKey];
+
     const thisDayElement = CalendarDayElements[i];
-    updateCalendarDay(thisDayElement, thisDay);
+    const thisEventGroupElement = CalendarEventGroupElements[i]
+
+    updateDay(thisDayElement, thisDay);
+
   }
 }
 
