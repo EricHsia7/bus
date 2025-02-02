@@ -62,7 +62,7 @@
   color: transparent;
   caret-color: transparent;
   resize: none;
-  opacity: 0;
+  opacity: 0.01;
 }
 
 .css_search_field .css_search_head .css_search_button_left,
