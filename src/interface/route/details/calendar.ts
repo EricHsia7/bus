@@ -228,7 +228,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
   const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
   const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-  const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-d');
+  const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-e');
   const mainColor = getCSSVariableValue('--b-cssvar-main-color');
   const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
@@ -301,7 +301,7 @@ export function switchCalendarDay(day: number): void {
       const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
       const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
       const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-      const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-d');
+      const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-e');
       const mainColor = getCSSVariableValue('--b-cssvar-main-color');
       const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
