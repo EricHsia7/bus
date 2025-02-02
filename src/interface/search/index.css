@@ -52,15 +52,17 @@
   height: 55px;
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(0, 0, 0, 0);
+  background: transparent;
   border: none;
   border-radius: 0px;
   font-size: 20px;
   font-weight: 500;
   padding: 0px;
   margin: 0px;
-  color: rgba(0, 0, 0, 0);
-  caret-color: rgba(0, 0, 0, 0);
+  color: transparent;
+  caret-color: transparent;
+  resize: none;
+  opacity: 0;
 }
 
 .css_search_field .css_search_head .css_search_button_left,
