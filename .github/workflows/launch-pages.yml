@@ -7,6 +7,7 @@ on:
       - main
       - dev-improve-performance-2
       - dev-improve-performance-2-update-timer
+      - dev-improve-performance-2-route-details
 
 jobs:
   launch:
