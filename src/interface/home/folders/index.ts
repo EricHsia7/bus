@@ -62,15 +62,15 @@ function updateUpdateTimer(): void {
     percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   }
   HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
-  HomeUpdateTimerElement.addEventListener(
-    'transitionend',
-    function () {
+  if (foldersRefreshTimer_streaming) {
+    HomeUpdateTimerElement.addEventListener('transitionend', function () {
       if (foldersRefreshTimer_streaming) {
         updateUpdateTimer();
       }
-    },
-    { once: true }
-  );
+    });
+  } else {
+    window.requestAnimationFrame(updateUpdateTimer);
+  }
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
