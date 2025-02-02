@@ -225,7 +225,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
       },
       RouteID: 0,
       PathAttributeId: [],
-      dataUpdateTime: null
+      dataUpdateTime: 0
     },
     true,
     playing_animation

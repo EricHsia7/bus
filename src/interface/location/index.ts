@@ -218,7 +218,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
       },
       itemQuantity: defaultItemQuantity,
       LocationName: '載入中',
-      dataUpdateTime: null
+      dataUpdateTime: 0
     },
     true,
     playing_animation

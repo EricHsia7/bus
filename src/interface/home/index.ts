@@ -1,6 +1,6 @@
 import { getRoute } from '../../data/apis/getRoute/index';
 import { getLocation } from '../../data/apis/getLocation/index';
-import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress } from '../../data/apis/loader';
+import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
@@ -44,4 +44,5 @@ export async function downloadData() {
   dataDownloadCompleted = true;
   setCompleteStatus();
   deleteDataReceivingProgress(dataDownloadRequestID);
+  deleteDataUpdateTime(dataDownloadRequestID);
 }

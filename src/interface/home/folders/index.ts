@@ -124,7 +124,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       folders: folders,
       folderQuantity: defaultFolderQuantity,
       itemQuantity: defaultItemQuantity,
-      dataUpdateTime: null
+      dataUpdateTime: 0
     },
     true,
     playing_animation

@@ -6,6 +6,7 @@ import { getLocation } from '../apis/getLocation/index';
 import { getStop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 /*
 export interface integratedBus {
@@ -152,5 +153,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     value: thisLocationItemName
   });
 
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }

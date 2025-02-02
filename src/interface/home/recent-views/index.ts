@@ -264,7 +264,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
     {
       items: items,
       itemQuantity: items.length,
-      dataUpdateTime: null
+      dataUpdateTime: 0
     },
     true,
     playing_animation

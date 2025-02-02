@@ -5,6 +5,7 @@ import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
 import { getTimeTable } from '../apis/getTimeTable/index';
 import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from '../../tools/time';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 function findRoute(Route: Route, RouteID: number): RouteItem {
   let thisRoute = {} as RouteItem;
@@ -326,5 +327,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
       }
     ]
   };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }

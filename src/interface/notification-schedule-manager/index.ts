@@ -210,7 +210,7 @@ function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
     {
       items: items,
       itemQuantity: defaultItemQuantity,
-      dataUpdateTime: null
+      dataUpdateTime: 0
     },
     true,
     playing_animation

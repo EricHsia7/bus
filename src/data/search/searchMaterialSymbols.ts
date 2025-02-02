@@ -2,6 +2,7 @@ import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { getUnicodes } from '../../tools/text';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 let searchIndex = {};
 let searchList = [];
@@ -29,6 +30,8 @@ export async function prepareForMaterialSymbolsSearch(): void {
   searchList = materialSymbols;
   searchIndex = index;
   readyToSearch = true;
+  deleteDataReceivingProgress(requestID)
+  deleteDataUpdateTime(requestID)
 }
 
 function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {

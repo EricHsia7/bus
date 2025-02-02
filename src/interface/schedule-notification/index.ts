@@ -1,6 +1,7 @@
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../data/apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { scheduleNotification } from '../../data/notification/apis/scheduleNotification/index';
 import { getNotificationClientStatus, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { getSettingOptionValue } from '../../data/settings/index';
@@ -67,6 +68,9 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     const Stop = (await getStop(requestID)) as SimplifiedStop;
     const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
     const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+
+    deleteDataReceivingProgress(requestID);
+    deleteDataUpdateTime(requestID);
 
     // Collect data from Stop
     const StopKey = `s_${StopID}`;

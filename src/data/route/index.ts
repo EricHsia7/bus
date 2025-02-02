@@ -7,7 +7,7 @@ import { getRoute } from '../apis/getRoute/index';
 import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop } from '../apis/getStop/index';
 import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, processBuses } from '../apis/index';
-import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';
 
@@ -58,7 +58,7 @@ export interface IntegratedRoute {
     RouteDeparture: string;
     RouteDestination: string;
   };
-  dataUpdateTime: any;
+  dataUpdateTime: number;
   RouteID: number;
   PathAttributeId: Array<number>;
 }
@@ -328,7 +328,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       RouteDeparture: thisRouteDeparture,
       RouteDestination: thisRouteDestination
     },
-    dataUpdateTime: dataUpdateTime[requestID],
+    dataUpdateTime: getDataUpdateTime(requestID),
     RouteID,
     PathAttributeId
   };

@@ -1,4 +1,4 @@
-import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
@@ -52,7 +52,7 @@ export interface IntegratedLocation {
     [key: string]: number;
   };
   LocationName: string;
-  dataUpdateTime: any;
+  dataUpdateTime: number;
 }
 
 async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Promise<processedBusEvent2> {
@@ -219,7 +219,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     groupQuantity: stopLocationQuantity,
     itemQuantity: itemQuantity,
     LocationName: thisLocationName,
-    dataUpdateTime: dataUpdateTime[requestID]
+    dataUpdateTime: getDataUpdateTime(requestID)
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
