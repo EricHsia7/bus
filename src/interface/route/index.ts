@@ -46,6 +46,8 @@ let routeRefreshTimer_lastUpdate: number = 0;
 let routeRefreshTimer_nextUpdate: number = 0;
 let routeRefreshTimer_refreshing: boolean = false;
 let routeRefreshTimer_currentRequestID: string = '';
+let routeRefreshTimer_currentProgress: number = 0;
+let routeRefreshTimer_targetProgress: number = 0;
 let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -102,14 +104,16 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 }
 
 function updateUpdateTimer(): void {
+  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  let percentage = 0;
   if (routeRefreshTimer_refreshing) {
-    percentage = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
+    routeRefreshTimer_targetProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
+    routeRefreshTimer_currentProgress += (routeRefreshTimer_targetProgress - routeRefreshTimer_currentProgress) * smoothingFactor;
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
+    routeRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
+    routeRefreshTimer_currentProgress = routeRefreshTimer_targetProgress;
   }
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming) {
       updateUpdateTimer();
