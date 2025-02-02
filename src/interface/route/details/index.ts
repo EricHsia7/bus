@@ -51,4 +51,8 @@ export function closeRouteDetails(): void {
   for (const CalendarEventGroupElement of CalendarEventGroupElements) {
     CalendarEventGroupElement.remove();
   }
+  const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
+  for (const CalendarDayElement of CalendarDayElements) {
+    CalendarDayElement.remove();
+  }
 }
