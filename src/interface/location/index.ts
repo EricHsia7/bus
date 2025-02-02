@@ -42,6 +42,8 @@ let locationRefreshTimer_lastUpdate: number = 0;
 let locationRefreshTimer_nextUpdate: number = 0;
 let locationRefreshTimer_refreshing: boolean = false;
 let locationRefreshTimer_currentRequestID: string = '';
+let locationRefreshTimer_currentProgress: number = 0;
+let locationRefreshTimer_targetProgress: number = 0;
 let locationRefreshTimer_streamStarted: boolean = false;
 let locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -95,14 +97,16 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function updateUpdateTimer(): void {
-  var time = new Date().getTime();
-  var percentage = 0;
+  const smoothingFactor = 0.1;
+  const time = new Date().getTime();
   if (locationRefreshTimer_refreshing) {
-    percentage = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
+    locationRefreshTimer_targetProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
+    locationRefreshTimer_currentProgress = (locationRefreshTimer_targetProgress - locationRefreshTimer_currentProgress) * smoothingFactor;
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
+    locationRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
+    locationRefreshTimer_currentProgress = locationRefreshTimer_targetProgress;
   }
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', locationRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
     if (locationRefreshTimer_streaming) {
       updateUpdateTimer();
