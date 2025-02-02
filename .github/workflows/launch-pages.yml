@@ -5,9 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-improve-performance-2
-      - dev-improve-performance-2-update-timer
-      - dev-improve-performance-2-route-details
+      - dev-search-input-text-selection
 
 jobs:
   launch:
