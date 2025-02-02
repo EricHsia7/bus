@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-improve-performance-2
+      - dev-improve-performance-2-update-timer
 
 jobs:
   launch:

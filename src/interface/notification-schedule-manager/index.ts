@@ -30,18 +30,22 @@ let notifcationScheduleManagerRefreshTimer_lastUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
 let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
+let notifcationScheduleManagerRefreshTimer_currentProgress: number = 0;
+let notifcationScheduleManagerRefreshTimer_targetProgress: number = 0;
 let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
 let notifcationScheduleManagerRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function updateUpdateTimer(): void {
+  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  let percentage = 0;
   if (notifcationScheduleManagerRefreshTimer_refreshing) {
-    percentage = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
+    notifcationScheduleManagerRefreshTimer_targetProgress = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
+    notifcationScheduleManagerRefreshTimer_currentProgress = (notifcationScheduleManagerRefreshTimer_targetProgress - notifcationScheduleManagerRefreshTimer_currentProgress) * smoothingFactor;
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
+    notifcationScheduleManagerRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
+    notifcationScheduleManagerRefreshTimer_currentProgress = notifcationScheduleManagerRefreshTimer_targetProgress;
   }
-  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
+  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', notifcationScheduleManagerRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
     if (notifcationScheduleManagerRefreshTimer_streaming) {
       updateUpdateTimer();
