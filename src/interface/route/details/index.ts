@@ -2,7 +2,7 @@ import { integrateRouteDetails } from '../../../data/route/details';
 import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
 import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { isSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { getSettingOptionValue } from '../../../data/settings/index';
@@ -47,6 +47,8 @@ export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>
 export function closeRouteDetails(): void {
   revokePageHistory('RouteDetails');
   RouteDetailsField.setAttribute('displayed', 'false');
-  CalendarDaysElement.innerHTML = '';
-  CalendarEventGroupsElement.innerHTML = '';
+  const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
+  for (const CalendarEventGroupElement of CalendarEventGroupElements) {
+    CalendarEventGroupElement.remove();
+  }
 }
