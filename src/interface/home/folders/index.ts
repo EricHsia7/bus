@@ -29,6 +29,8 @@ let foldersRefreshTimer_lastUpdate: number = 0;
 let foldersRefreshTimer_nextUpdate: number = 0;
 let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
+let foldersRefreshTimer_currentProgress: number = 0;
+let foldersRefreshTimer_targetProgress: number = 0;
 let foldersRefreshTimer_streamStarted: boolean = false;
 let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -54,23 +56,21 @@ function generateElementOfFolder(): GeneratedElement {
 }
 
 function updateUpdateTimer(): void {
+  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  let percentage = 0;
   if (foldersRefreshTimer_refreshing) {
-    percentage = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
+    foldersRefreshTimer_targetProgress = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
+    foldersRefreshTimer_currentProgress += (foldersRefreshTimer_targetProgress - foldersRefreshTimer_currentProgress) * smoothingFactor;
   } else {
-    percentage = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
+    foldersRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
+    foldersRefreshTimer_currentProgress = foldersRefreshTimer_targetProgress
   }
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', percentage.toString());
-  if (foldersRefreshTimer_refreshing && !(percentage === 0)) {
-    HomeUpdateTimerElement.addEventListener('transitionend', function () {
-      if (foldersRefreshTimer_streaming) {
-        updateUpdateTimer();
-      }
-    });
-  } else {
-    window.requestAnimationFrame(updateUpdateTimer);
-  }
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_targetProgress.toString());
+  window.requestAnimationFrame(function () {
+    if (foldersRefreshTimer_streaming) {
+      updateUpdateTimer();
+    }
+  });
 }
 
 export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
