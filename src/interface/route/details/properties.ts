@@ -18,7 +18,7 @@ function generateElementOfProperty(): GeneratedElement {
   };
 }
 
-export function setUpPropertiesFieldSkeletonScreen(Field: HTMLElement): void {
+export function setUppropertiesGroupSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   var defaultPropertyQuantity = 5;
   var properties = [];

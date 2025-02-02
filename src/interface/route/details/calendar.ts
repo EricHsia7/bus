@@ -1,11 +1,13 @@
 import { GeneratedElement, querySize } from '../../index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
 import { drawRoundedRect } from '../../../tools/graphic';
 import { Calendar, CalendarDay, CalendarEvent, CalendarEventGroup } from '../../../data/route/details';
 import { booleanToString } from '../../../tools/index';
+import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
+/*
 const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
 const RouteDetailsGroupsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_groups');
@@ -13,6 +15,7 @@ const CalendarGroupElement = elementQuerySelector(RouteDetailsGroupsElement, '.c
 const CalendarGroupBodyElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_group_body');
 const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_days');
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
+*/
 
 const calendar_ratio = 60;
 const scaleLimit = Math.floor(4096 / (calendar_ratio * 24));
