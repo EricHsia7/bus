@@ -126,10 +126,11 @@
   font-weight: 400;
   line-height: 14px;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
-  display: flex;
-  align-items: center;
   contain: layout;
+  word-break: keep-all;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -148,17 +149,16 @@
   width: calc(100% - 50px - 50px);
   height: 23px;
   font-size: 17px;
-  line-height: 17px;
+  line-height: 23px;
   font-weight: 400;
   color: var(--b-cssvar-333333);
-  display: flex;
-  align-items: center;
   white-space: nowrap;
   word-break: keep-all;
   -webkit-user-select: none;
   user-select: none;
   contain: layout;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* skeleton-screen: true */
