@@ -3,6 +3,7 @@ import { dateToRelativeTime } from '../../tools/time';
 import { getCarInfo } from '../apis/getCarInfo/index';
 import { getLocation } from '../apis/getLocation/index';
 import { getRoute } from '../apis/getRoute/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 interface RecentViewRoute {
@@ -198,7 +199,7 @@ export type integratedRecentView = integratedRecentViewRoute | integratedRecentV
 export interface integratedRecentViews {
   items: Array<integratedRecentView>;
   itemQuantity: number;
-  dataUpdateTime: any;
+  dataUpdateTime: number;
 }
 
 export async function integrateRecentViews(requestID: string): Promise<integratedRecentViews> {
@@ -283,5 +284,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
     itemQuantity: itemQuantity,
     dataUpdateTime: new Date().getTime()
   };
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }

@@ -1,7 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { isValidURL } from '../../tools/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { dataUpdateTime, deleteDataUpdateTime } from '../apis/loader';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface NotificationClient {
@@ -265,7 +265,7 @@ export interface IntegratedNotificationScheduleItem {
 export interface IntegratedNotificationSchedules {
   items: Array<IntegratedNotificationScheduleItem>;
   itemQuantity: number;
-  dataUpdateTime: any;
+  dataUpdateTime: number;
 }
 
 export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotificationSchedules> {
@@ -347,9 +347,10 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
   const result: IntegratedNotificationSchedules = {
     items: items2,
     itemQuantity: itemQuantity,
-    dataUpdateTime: Math.max(dataUpdateTime[requestID], now)
+    dataUpdateTime: Math.max(getDataUpdateTime(requestID), now)
   };
   deleteDataUpdateTime(requestID);
+  deleteDataReceivingProgress(requestID);
   return result;
 }
 

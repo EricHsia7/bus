@@ -3,7 +3,10 @@ import { timeStampToNumber } from '../../tools/time';
 import { recordRequest } from '../analytics/data-usage';
 
 let dataReceivingProgress = {};
-export let dataUpdateTime = {};
+
+export type DataUpdateTime = { [key: string]: number };
+
+export let dataUpdateTime: DataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
   const startTimeStamp = new Date().getTime();
@@ -115,7 +118,7 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  var key = `u_${tag}`;
+  const key = `u_${tag}`;
   if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
     if (expel) {
       dataReceivingProgress[requestID][key].expel = true;
@@ -138,12 +141,20 @@ export function setDataUpdateTime(requestID: string, timeStamp: string | number)
   if (!dataUpdateTime.hasOwnProperty(requestID)) {
     dataUpdateTime[requestID] = 0;
   }
-  var timeNumber = 0;
+  let timeNumber = 0;
   if (typeof timeStamp === 'string') {
     timeNumber = timeStampToNumber(timeStamp);
   }
   if (timeNumber > dataUpdateTime[requestID]) {
     dataUpdateTime[requestID] = timeNumber;
+  }
+}
+
+export function getDataUpdateTime(requestID: string): number {
+  if (dataUpdateTime.hasOwnProperty(requestID)) {
+    return dataUpdateTime[requestID] * 1;
+  } else {
+    return 0;
   }
 }
 

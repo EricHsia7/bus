@@ -1,19 +1,20 @@
-import { getRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
 import { getUnicodes } from '../../tools/text';
 import { getCarInfo } from '../apis/getCarInfo/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 let searchIndex = {};
 let searchList = [];
 let readyToSearch = false;
 
 export async function searchRouteByName(query: string): Promise<Array> {
-  var requestID = generateIdentifier('r');
-  var Route = await getRoute(requestID, true);
-  var result = [];
-  for (var key in Route) {
+  const requestID = generateIdentifier('r');
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  let result = [];
+  for (const key in Route) {
     if (String(Route[key].n).indexOf(query) > -1) {
       result.push({
         id: parseInt(key.split('_')[1]),
@@ -24,14 +25,16 @@ export async function searchRouteByName(query: string): Promise<Array> {
       });
     }
   }
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }
 
 export async function searchRouteByRouteID(RouteID: number): Promise<Array<SimplifiedRouteItem>> {
-  var requestID = generateIdentifier('r');
-  var Route = await getRoute(requestID, true);
-  var result = [];
-  for (var key in Route) {
+  const requestID = generateIdentifier('r');
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  let result = [];
+  for (const key in Route) {
     if (String(key) === `r_${RouteID}`) {
       result.push({
         id: parseInt(key.split('_')[1]),
@@ -42,6 +45,8 @@ export async function searchRouteByRouteID(RouteID: number): Promise<Array<Simpl
       });
     }
   }
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }
 
@@ -60,6 +65,8 @@ export async function searchRouteByPathAttributeId(PathAttributeId: Array<number
       });
     }
   }
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   return result;
 }
 
@@ -149,6 +156,8 @@ export async function prepareForSearch(): void {
   searchIndex = index;
   searchList = list;
   readyToSearch = true;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
 }
 
 function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {

@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - main
-      - dev-text-overflow-ellipsis
+      - dev-improve-performance-2
+      - dev-improve-performance-2-update-timer
+      - dev-improve-performance-2-route-details
 
 jobs:
   launch:

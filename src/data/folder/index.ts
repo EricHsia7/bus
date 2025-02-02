@@ -4,7 +4,7 @@ import { generateIdentifier } from '../../tools/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { searchRouteByRouteID } from '../search/index';
-import { dataUpdateTime, deleteDataReceivingProgress, deleteDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
@@ -126,21 +126,21 @@ export async function initializeFolderStores(): void {
   }
 }
 
-export async function createFolder(name: string, icon: string): Promise<boolean | string> {
+export async function createFolder(name: string, icon: MaterialSymbols): Promise<boolean | string> {
   const requestID = generateIdentifier('r');
-  var materialSymbols = await getMaterialSymbols(requestID);
+  const materialSymbols = await getMaterialSymbols(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }
 
-  var folderKeys = await lfListItemKeys(9);
+  const folderKeys = await lfListItemKeys(9);
 
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
     const existingFolder = await lfGetItem(9, `f_${identifier}`);
     if (!existingFolder) {
       const storeIndex = await registerStore(identifier);
-      var object: Folder = {
+      let object: Folder = {
         name: name,
         icon: icon,
         default: false,
@@ -277,7 +277,7 @@ export interface integratedFolders {
   folders: { [key: string]: Folder };
   folderQuantity: number;
   itemQuantity: { [key: string]: number };
-  dataUpdateTime: any;
+  dataUpdateTime: number;
 }
 
 export async function integrateFolders(requestID: string): Promise<integratedFolders> {
@@ -371,7 +371,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     folders: folders,
     folderQuantity: folderQuantity,
     itemQuantity: itemQuantity,
-    dataUpdateTime: dataUpdateTime[requestID]
+    dataUpdateTime: getDataUpdateTime(requestID)
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
