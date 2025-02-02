@@ -65,7 +65,7 @@ function updateUpdateTimer(): void {
     foldersRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
     foldersRefreshTimer_currentProgress = foldersRefreshTimer_targetProgress
   }
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_targetProgress.toString());
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
     if (foldersRefreshTimer_streaming) {
       updateUpdateTimer();
