@@ -192,7 +192,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
   const thisCalendarEventGroupCanvasContext = thisCalendarEventGroupCanvas.getContext('2d');
 
   // Update the displayed attribute
-  updateDisplayed(thisCalendarEventGroupElement, index);
+  updateDisplayed(thisCalendarEventGroupElement, currentDay, index);
 
   // Always resize the canvas to ensure proper dimensions.
   resizeRouteDetailsCalendarCanvas(thisCalendarEventGroupCanvas);
