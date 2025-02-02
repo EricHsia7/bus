@@ -59,6 +59,6 @@
 
 /* highlighted: true */
 .css_data_usage_field .css_data_usage_body .css_data_usage_graph .css_data_usage_graph_aggregation_periods .css_data_usage_graph_aggregation_period[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-c));
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
   color: var(--b-cssvar-main-color);
 }

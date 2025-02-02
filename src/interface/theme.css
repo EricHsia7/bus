@@ -19,8 +19,9 @@
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
-  --b-cssvar-main-color-opacity-c: 0.15;
-  --b-cssvar-main-color-opacity-d: 0.11;
+  --b-cssvar-main-color-opacity-c: 0.3;
+  --b-cssvar-main-color-opacity-d: 0.15;
+  --b-cssvar-main-color-opacity-e: 0.11;
 
   --b-cssvar-ffffff-normal: #ffffff;
   --b-cssvar-ffffff-normal-r: 255;
@@ -123,8 +124,8 @@
 
     --b-cssvar-main-color-opacity-a: 1;
     --b-cssvar-main-color-opacity-b: 0.8;
-    --b-cssvar-main-color-opacity-c: 0.28;
-    --b-cssvar-main-color-opacity-d: 0.15;
+    --b-cssvar-main-color-opacity-d: 0.28;
+    --b-cssvar-main-color-opacity-e: 0.15;
 
     --b-cssvar-ffffff-normal: #040406;
     --b-cssvar-ffffff-normal-r: 4;

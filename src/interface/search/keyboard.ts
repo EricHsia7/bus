@@ -4,6 +4,7 @@ import { drawRoundedRect } from '../../tools/graphic';
 import { documentQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { querySize } from '../index';
+import { getCSSVariableValue } from '../../tools/style';
 
 let keyboard_keys = [
   ['紅', '藍', '1', '2', '3'],
@@ -23,15 +24,22 @@ const searchInputCanvasScale = window.devicePixelRatio;
 const padding: number = 15 * searchInputCanvasScale;
 const cursorWidth: number = 1.8 * searchInputCanvasScale;
 const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
+const selectionHighlightBorderRadius: number = 4 * searchInputCanvasScale;
 const lineHeight: number = 25 * searchInputCanvasScale;
 const fontSize: number = 20 * searchInputCanvasScale;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 
-let textColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
-let placeholderTextColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
-let cursorColor: string = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
+let textColor: string = getCSSVariableValue('--b-cssvar-333333');
+let placeholderTextColor: string = getCSSVariableValue('--b-cssvar-aeaeb2');
+let cursorColor: string = getCSSVariableValue('--b-cssvar-main-color');
+let selectionHighlightColorR: string = getCSSVariableValue('--b-cssvar-main-color-r');
+let selectionHighlightColorG: string = getCSSVariableValue('--b-cssvar-main-color-g');
+let selectionHighlightColorB: string = getCSSVariableValue('--b-cssvar-main-color-b');
+let selectionHighlightColorA: string = getCSSVariableValue('--b-cssvar-main-color-opacity-c');
 let textWidth: number = 0;
-let slicedTextWidth: number = 0;
+let textWidthToCursorStart: number = 0;
+let selectedTextWidth: number = 0;
+let selection: boolean = false;
 let cursorOffset: number = 0;
 let size = querySize('head-one-button');
 let width = size.width * searchInputCanvasScale;
@@ -44,7 +52,7 @@ export function ResizeSearchInputCanvasSize(): void {
   height = size.height;
   searchInputCanvasElement.width = width * searchInputCanvasScale;
   searchInputCanvasElement.height = height * searchInputCanvasScale;
-  updateSearchInput(searchInputElement.value, -1);
+  updateSearchInput(searchInputElement.value, -1, -1);
 }
 
 function initializeKeyboard(): void {
@@ -90,7 +98,7 @@ export function openKeyboard() {
   animateCursor();
 
   const value = searchInputElement.value;
-  updateSearchInput(value, -1);
+  updateSearchInput(value, -1, -1);
 }
 
 export function closeKeyboard() {
@@ -108,7 +116,7 @@ export function typeTextIntoInput(value): void {
   const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  updateSearchInput(newValue, -1);
+  updateSearchInput(newValue, -1, -1);
 }
 
 export function deleteCharFromInout(): void {
@@ -116,33 +124,39 @@ export function deleteCharFromInout(): void {
   const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult(newValue);
-  updateSearchInput(newValue, -1);
+  updateSearchInput(newValue, -1, -1);
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult('');
-  updateSearchInput('', -1);
+  updateSearchInput('', -1, -1);
 }
 
-export function updateSearchInput(value: string = '', cursorIndex: number): void {
+export function updateSearchInput(value: string = '', cursorStart: number, cursorEnd: number): void {
   let empty = false;
   if (value.length === 0) {
     value = searchInputPlaceholder;
     empty = true;
-    cursorIndex = 0;
+    cursorStart = 0;
+    cursorEnd = 0;
   } else {
-    if (cursorIndex === -1) {
-      cursorIndex = value.length;
+    if (cursorStart === -1 && cursorEnd === -1) {
+      cursorStart = value.length;
+      cursorEnd = cursorStart * 1;
     }
   }
 
   size = querySize('head-one-button');
   width = size.width * searchInputCanvasScale;
   height = size.height * searchInputCanvasScale;
-  textColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-333333');
-  placeholderTextColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-aeaeb2');
-  cursorColor = getComputedStyle(document.documentElement).getPropertyValue('--b-cssvar-main-color');
+  textColor = getCSSVariableValue('--b-cssvar-333333');
+  placeholderTextColor = getCSSVariableValue('--b-cssvar-aeaeb2');
+  cursorColor = getCSSVariableValue('--b-cssvar-main-color');
+  selectionHighlightColorR = getCSSVariableValue('--b-cssvar-main-color-r');
+  selectionHighlightColorG = getCSSVariableValue('--b-cssvar-main-color-g');
+  selectionHighlightColorB = getCSSVariableValue('--b-cssvar-main-color-b');
+  selectionHighlightColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-c');
 
   searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
   searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
@@ -150,22 +164,31 @@ export function updateSearchInput(value: string = '', cursorIndex: number): void
   searchInputCanvasContext.textBaseline = 'middle';
 
   textWidth = searchInputCanvasContext.measureText(value).width;
-  slicedTextWidth = searchInputCanvasContext.measureText(value.substring(0, cursorIndex)).width;
-  cursorOffset = empty ? 1 : Math.max(1, slicedTextWidth);
+  textWidthToCursorStart = searchInputCanvasContext.measureText(value.substring(0, cursorStart)).width;
+  selectedTextWidth = searchInputCanvasContext.measureText(value.substring(cursorStart, cursorEnd)).width;
+  cursorOffset = empty ? 1 : Math.max(1, textWidthToCursorStart);
 
   searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
   searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
 
-  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  if (cursorStart === cursorEnd) {
+    selection = true;
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  } else {
+    selection = false;
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, `rgba(${selectionHighlightColorR}, ${selectionHighlightColorG}, ${selectionHighlightColorB}, ${selectionHighlightColorA})`);
+  }
 }
 
 function animateCursor(): void {
   const x = new Date().getTime() / 400;
   const alpha = Math.abs(Math.sin(x));
-  searchInputCanvasContext.globalAlpha = alpha;
-  searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
-  drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  if (selection) {
+    searchInputCanvasContext.globalAlpha = alpha;
+    searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  }
   if (playingCursorAnimation) {
     window.requestAnimationFrame(animateCursor);
   }
