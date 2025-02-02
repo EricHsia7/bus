@@ -116,7 +116,7 @@ export function setUpCalendarGroupSkeletonScreen() {
   );
 }
 
-function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay: number, index: number): void {
+function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay: number, skeletonScreen: boolean, animation: boolean, index: number): void {
   thisDayElement.innerText = thisDay.name;
   thisDayElement.setAttribute('day', index.toString());
   thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
@@ -268,7 +268,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     const thisDayElement = CalendarDayElements[i];
     const thisEventGroupElement = CalendarEventGroupElements[i];
 
-    updateDay(thisDayElement, thisDay, currentDay, i);
+    updateDay(thisDayElement, thisDay, currentDay, skeletonScreen, animation, i);
     updateEventGroup(thisEventGroupElement, thisEventGroup, currentDay, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
   }
 
@@ -278,6 +278,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
 }
 
 export function switchCalendarDay(day: number): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const calendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (let i = 0; i < 7; i++) {
@@ -302,8 +303,8 @@ export function switchCalendarDay(day: number): void {
       const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
       // Reuse the drawing logic from updateEventGroup and updateDay for the visible event group.
+      updateDay(thisCalendarDayElement, calendarDay, day, false, playing_animation, i);
       updateEventGroup(thisEventGroupElement, calendarEventGroup, day, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
-      updateDay(thisCalendarDayElement, calendarDay, day, i);
     }
     /*} else {
       thisCalendarDayElement.setAttribute('highlighted', 'false');
