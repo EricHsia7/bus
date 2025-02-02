@@ -116,118 +116,118 @@ export function setUpCalendarGroupSkeletonScreen() {
   );
 }
 
+function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay: number, index: number): void {
+  thisDayElement.innerText = thisDay.name;
+  thisDayElement.setAttribute('day', index.toString());
+  thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
+  thisDayElement.setAttribute('highlighted', currentDay === index ? 'true' : 'false');
+  thisDayElement.setAttribute('animation', booleanToString(animation));
+  thisDayElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+}
+
+function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, currentDay: number, mainColor: string, mainColorR: string, mainColorG: string, mainColorB: string, mainColorA: string, gridColor: string, index: number): void {
+  function drawGridline(thisContext: CanvasRenderingContext2D, hours: number, gridColor: string): void {
+    const boxX = 0;
+    const boxY = hours * calendar_ratio;
+
+    // Cache the color value once
+    thisContext.fillStyle = gridColor;
+
+    // Draw line
+    thisContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
+
+    // Draw label
+    thisContext.font = `400 ${12}px ${fontFamily}`;
+    thisContext.textBaseline = 'top';
+    const labelText = `${String(hours).padStart(2, '0')}:00`;
+    const labelMeasurement = thisContext.measureText(labelText);
+    const labelWidth = labelMeasurement.width;
+    const labelHeight = labelMeasurement.actualBoundingBoxDescent;
+    thisContext.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
+  }
+
+  function drawEvent(thisContext: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent, mainColor: string, mainColorR: string, mainColorG: string, mainColorB: string, mainColorA: string): void {
+    // Calculate the start of the day for this event only once.
+    const thisDayStart = new Date();
+    thisDayStart.setDate(1);
+    thisDayStart.setMonth(0);
+    thisDayStart.setFullYear(thisCalendarEvent.date.getFullYear());
+    thisDayStart.setMonth(thisCalendarEvent.date.getMonth());
+    thisDayStart.setDate(thisCalendarEvent.date.getDate());
+    thisDayStart.setHours(0);
+    thisDayStart.setMinutes(0);
+    thisDayStart.setSeconds(0);
+    thisDayStart.setMilliseconds(0);
+
+    const boxX = gridlineLabelWidthLimit;
+    const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+    const boxWidth = canvasWidth - gridlineLabelWidthLimit;
+    const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+
+    // Draw background with rounded rectangle
+    drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${mainColorR}, ${mainColorG}, ${mainColorB}, ${mainColorA})`);
+
+    // Draw decoration (a thin rounded rectangle)
+    drawRoundedRect(thisContext, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, mainColor);
+
+    // Draw event text
+    thisContext.font = `400 ${14}px ${fontFamily}`;
+    thisContext.textBaseline = 'top';
+    thisContext.fillStyle = mainColor;
+    const text = thisCalendarEvent.dateString;
+    const textMeasurement = thisContext.measureText(text);
+    const textWidth = textMeasurement.width;
+    const textHeight = textMeasurement.actualBoundingBoxDescent;
+    thisContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
+  }
+
+  function updateDisplayed(thisCalendarEventGroupElement: HTMLElement, currentDay: number, index: number): void {
+    // Set the displayed attribute based on whether it is the current day.
+    const isDisplayed = currentDay === index;
+    thisCalendarEventGroupElement.setAttribute('displayed', booleanToString(isDisplayed));
+  }
+
+  // Get the canvas and its 2D context.
+  const thisCalendarEventGroupCanvas = elementQuerySelector(thisCalendarEventGroupElement, '.css_route_details_calendar_event_group_canvas') as HTMLCanvasElement;
+  const thisCalendarEventGroupCanvasContext = thisCalendarEventGroupCanvas.getContext('2d');
+
+  // Update the displayed attribute
+  updateDisplayed(thisCalendarEventGroupElement, index);
+
+  // Always resize the canvas to ensure proper dimensions.
+  resizeRouteDetailsCalendarCanvas(thisCalendarEventGroupCanvas);
+
+  const isDisplayed = currentDay === index;
+  if (isDisplayed) {
+    // Clear the canvas and redraw the content when displayed.
+    thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    // Draw the gridlines.
+    for (let hours = 0; hours < 24; hours++) {
+      drawGridline(thisCalendarEventGroupCanvasContext, hours, gridColor);
+    }
+
+    // Draw all events for this group.
+    for (const thisCalendarEvent of thisCalendarEventGroup) {
+      drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent, mainColor, mainColorR, mainColorG, mainColorB, mainColorA);
+    }
+  } else {
+    // When not displayed, clear the canvas.
+    thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  }
+}
+
 export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean, animation: boolean): void {
-  // Cache the current day once for the whole update process.
+  // The default day to display.
   const currentDay = new Date().getDay();
 
   // Retrieve the CSS variable values just once
   const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
   const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
   const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-  const mainColorOpacity = getCSSVariableValue('--b-cssvar-main-color-opacity-d');
+  const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-d');
   const mainColor = getCSSVariableValue('--b-cssvar-main-color');
   const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
-
-  function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, index: number): void {
-    thisDayElement.innerText = thisDay.name;
-    thisDayElement.setAttribute('day', index.toString());
-    thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
-    thisDayElement.setAttribute('highlighted', currentDay === index ? 'true' : 'false');
-    thisDayElement.setAttribute('animation', booleanToString(animation));
-    thisDayElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  }
-
-  function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, index: number): void {
-    function drawGridline(thisContext: CanvasRenderingContext2D, hours: number): void {
-      const boxX = 0;
-      const boxY = hours * calendar_ratio;
-
-      // Cache the color value once
-      thisContext.fillStyle = gridColor;
-
-      // Draw line
-      thisContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
-
-      // Draw label
-      thisContext.font = `400 ${12}px ${fontFamily}`;
-      thisContext.textBaseline = 'top';
-      const labelText = `${String(hours).padStart(2, '0')}:00`;
-      const labelMeasurement = thisContext.measureText(labelText);
-      const labelWidth = labelMeasurement.width;
-      const labelHeight = labelMeasurement.actualBoundingBoxDescent;
-      thisContext.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
-    }
-
-    function drawEvent(thisContext: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent): void {
-      // Calculate the start of the day for this event only once.
-      const thisDayStart = new Date();
-      thisDayStart.setDate(1);
-      thisDayStart.setMonth(0);
-      thisDayStart.setFullYear(thisCalendarEvent.date.getFullYear());
-      thisDayStart.setMonth(thisCalendarEvent.date.getMonth());
-      thisDayStart.setDate(thisCalendarEvent.date.getDate());
-      thisDayStart.setHours(0);
-      thisDayStart.setMinutes(0);
-      thisDayStart.setSeconds(0);
-      thisDayStart.setMilliseconds(0);
-
-      const boxX = gridlineLabelWidthLimit;
-      const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
-      const boxWidth = canvasWidth - gridlineLabelWidthLimit;
-      const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
-
-      // Draw background with rounded rectangle
-      drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${mainColorR}, ${mainColorG}, ${mainColorB}, ${mainColorOpacity})`);
-
-      // Draw decoration (a thin rounded rectangle)
-      drawRoundedRect(thisContext, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, mainColor);
-
-      // Draw event text
-      thisContext.font = `400 ${14}px ${fontFamily}`;
-      thisContext.textBaseline = 'top';
-      thisContext.fillStyle = mainColor;
-      const text = thisCalendarEvent.dateString;
-      const textMeasurement = thisContext.measureText(text);
-      const textWidth = textMeasurement.width;
-      const textHeight = textMeasurement.actualBoundingBoxDescent;
-      thisContext.fillText(text, boxX + 8, boxY + (boxHeight - textHeight) / 2, textWidth);
-    }
-
-    function updateDisplayed(thisCalendarEventGroupElement: HTMLElement, index: number): void {
-      // Set the displayed attribute based on whether it is the current day.
-      const isDisplayed = currentDay === index;
-      thisCalendarEventGroupElement.setAttribute('displayed', booleanToString(isDisplayed));
-    }
-
-    // Get the canvas and its 2D context.
-    const thisCalendarEventGroupCanvas = elementQuerySelector(thisCalendarEventGroupElement, '.css_route_details_calendar_event_group_canvas') as HTMLCanvasElement;
-    const thisCalendarEventGroupCanvasContext = thisCalendarEventGroupCanvas.getContext('2d');
-
-    // Update the displayed attribute
-    updateDisplayed(thisCalendarEventGroupElement, index);
-    const isDisplayed = thisCalendarEventGroupElement.getAttribute('displayed') === 'true';
-
-    // Always resize the canvas to ensure proper dimensions.
-    resizeRouteDetailsCalendarCanvas(thisCalendarEventGroupCanvas);
-
-    if (isDisplayed) {
-      // Clear the canvas and redraw the content when displayed.
-      thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-      // Draw the gridlines.
-      for (let hours = 0; hours < 24; hours++) {
-        drawGridline(thisCalendarEventGroupCanvasContext, hours);
-      }
-
-      // Draw all events for this group.
-      for (const thisCalendarEvent of thisCalendarEventGroup) {
-        drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent);
-      }
-    } else {
-      // When not displayed, clear the canvas.
-      thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-    }
-  }
 
   const eventGroups = calendar.calendarDays;
   const eventGroupQuantity = calendar.calendarDayQuantity;
@@ -268,8 +268,8 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     const thisDayElement = CalendarDayElements[i];
     const thisEventGroupElement = CalendarEventGroupElements[i];
 
-    updateDay(thisDayElement, thisDay, i);
-    updateEventGroup(thisEventGroupElement, thisEventGroup, i);
+    updateDay(thisDayElement, thisDay, currentDay, i);
+    updateEventGroup(thisEventGroupElement, thisEventGroup, currentDay, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
   }
 
   previousCalendar = calendar;
@@ -282,22 +282,30 @@ export function switchCalendarDay(day: number): void {
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (let i = 0; i < 7; i++) {
     const thisCalendarDayElement = calendarDayElements[i];
-    const thisCalendarDayElementDay = parseInt(thisCalendarDayElement.getAttribute('day'));
+    // const thisCalendarDayElementDay = parseInt(thisCalendarDayElement.getAttribute('day'));
     const thisEventGroupElement = CalendarEventGroupElements[i];
-    if (thisCalendarDayElementDay === day) {
+    // if (thisCalendarDayElementDay === day) {
+    /*
       thisCalendarDayElement.setAttribute('highlighted', 'true');
       thisEventGroupElement.setAttribute('displayed', 'true');
+      */
+    const eventGroupKey = `d_${i}`;
+    const calendarEventGroup = previousCalendar?.calendarEventGroups[eventGroupKey];
+    const calendarDay = previousCalendar?.calendarDays[eventGroupKey];
+    if (calendarEventGroup && calendarDay) {
+      // Retrieve the CSS variable values just once
+      const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
+      const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
+      const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
+      const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-d');
+      const mainColor = getCSSVariableValue('--b-cssvar-main-color');
+      const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
-      // When a day becomes active, you can force a redraw of its canvas content
-      // using previously stored calendar data if needed.
-      // For example, if previousCalendar exists and we have a mapping to event groups:
-      const eventGroupKey = `d_${i}`;
-      const calendarEventGroup = previousCalendar?.calendarEventGroups[eventGroupKey];
-      if (calendarEventGroup) {
-        // Reuse the drawing logic from updateCalendarGroup for the visible event group.
-        updateEventGroup(thisEventGroupElement, calendarEventGroup, i);
-      }
-    } else {
+      // Reuse the drawing logic from updateEventGroup and updateDay for the visible event group.
+      updateEventGroup(thisEventGroupElement, calendarEventGroup, day, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
+      updateDay(thisCalendarDayElement, calendarDay, day, i);
+    }
+    /*} else {
       thisCalendarDayElement.setAttribute('highlighted', 'false');
       thisEventGroupElement.setAttribute('displayed', 'false');
 
@@ -305,6 +313,6 @@ export function switchCalendarDay(day: number): void {
       const canvas = elementQuerySelector(thisEventGroupElement, '.css_route_details_calendar_event_group_canvas') as HTMLCanvasElement;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    }
+    }*/
   }
 }
