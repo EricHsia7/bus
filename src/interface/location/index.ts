@@ -244,14 +244,14 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       const nextSlide = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
       const currentSlide = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
-      nextSlide.setAttribute('code', thisItem.status.code);
+      nextSlide.setAttribute('code', thisItem.status.code.toString());
       nextSlide.innerText = thisItem.status.text;
 
       if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentSlide.addEventListener(
           'animationend',
           function () {
-            currentSlide.setAttribute('code', thisItem.status.code);
+            currentSlide.setAttribute('code', thisItem.status.code.toString());
             currentSlide.innerText = thisItem.status.text;
             currentSlide.classList.remove('css_slide_fade_out');
           },
@@ -259,9 +259,13 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
         );
         currentSlide.classList.add('css_slide_fade_out');
       } else {
-        currentSlide.setAttribute('code', thisItem.status.code);
+        currentSlide.setAttribute('code', thisItem.status.code.toString());
         currentSlide.innerText = thisItem.status.text;
       }
+    }
+
+    function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
+      
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {

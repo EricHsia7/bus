@@ -37,7 +37,9 @@ export interface IntegratedLocationItem {
   route_name: string;
   route_direction: string;
   routeId: number;
+  stopId: number;
   status: EstimateTimeStatus;
+  rank: -1 | number;
   buses: Array<FormattedBus>;
   busArrivalTimes: Array<AggregatedBusArrivalTime>;
 }
@@ -150,6 +152,8 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       break;
   }
 
+  let ranking: Array<[number, number]> = []; // StopID, EstimateTime
+
   for (let i = 0; i < stopLocationQuantity; i++) {
     const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
@@ -181,6 +185,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       } else {
         continue;
       }
+      integratedItem.stopId = thisStopID;
 
       // Collect data from 'Route'
       const thisRouteID: number = thisLocation.r[i][o];
@@ -200,7 +205,9 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
         thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
       }
-      integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
+      const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
+      integratedItem.status = parsedEstimateTime;
+      ranking.push([thisStopID, parsedEstimateTime.time]);
 
       // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
@@ -224,10 +231,27 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       itemQuantity[groupKey] += 1;
     }
   }
+  ranking.sort(function (a, b) {
+    return a[1] - b[1];
+  });
   for (const key in groupedItems) {
-    groupedItems[key] = groupedItems[key].sort(function (a, b) {
-      return a.routeId - b.routeId;
-    });
+    groupedItems[key] = groupedItems[key]
+      .map((item: IntegratedLocationItem) => {
+        const thisRankingIndex = ranking.indexOf([item.stopId, item.status.time]);
+        ranking.splice(thisRankingIndex, 1);
+        return {
+          route_name: item.route_name,
+          route_direction: item.route_direction,
+          routeId: item.routeId,
+          status: item.status,
+          rank: thisRankingIndex + 1,
+          buses: Array<FormattedBus>,
+          busArrivalTimes: Array<AggregatedBusArrivalTime>
+        };
+      })
+      .sort(function (a, b) {
+        return a.routeId - b.routeId;
+      });
   }
   const result: IntegratedLocation = {
     groupedItems: groupedItems,
