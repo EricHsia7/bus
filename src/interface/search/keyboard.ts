@@ -6,7 +6,7 @@ import { getIconHTML } from '../icons/index';
 import { querySize } from '../index';
 import { getCSSVariableValue } from '../../tools/style';
 
-let keyboard_keys = [
+let keyboard_keys: Array<[string, string, string, string, string]> = [
   ['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
@@ -18,7 +18,7 @@ const keyboardElement = documentQuerySelector('.css_search_field .css_search_bod
 const searchInputCanvasElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input canvas');
 
 const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
-const searchInputPlaceholder = '搜尋路線、地點';
+const searchInputPlaceholder = '搜尋路線、地點、公車';
 const searchInputCanvasScale = window.devicePixelRatio;
 
 const padding: number = 15 * searchInputCanvasScale;
