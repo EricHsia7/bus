@@ -46,8 +46,8 @@ let routeRefreshTimer_lastUpdate: number = 0;
 let routeRefreshTimer_nextUpdate: number = 0;
 let routeRefreshTimer_refreshing: boolean = false;
 let routeRefreshTimer_currentRequestID: string = '';
-let routeRefreshTimer_currentProgress: number = 0;
-let routeRefreshTimer_targetProgress: number = 0;
+let routeRefreshTimer_currentProgress: number = -1;
+let routeRefreshTimer_targetProgress: number = -1;
 let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -612,11 +612,15 @@ export function closeRoute(): void {
   // revokePageHistory('Route');
   RouteField.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
+  routeRefreshTimer_currentProgress = -1;
+  routeRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 
-export function switchRoute(RouteID: number, PathAttributeId: Array<number>) {
+export function switchRoute(RouteID: number, PathAttributeId: Array<number>): void {
   routeRefreshTimer_streaming = false;
+  routeRefreshTimer_currentProgress = -1;
+  routeRefreshTimer_targetProgress = -1;
   openRoute(RouteID, PathAttributeId);
 }
 

@@ -29,8 +29,8 @@ let foldersRefreshTimer_lastUpdate: number = 0;
 let foldersRefreshTimer_nextUpdate: number = 0;
 let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
-let foldersRefreshTimer_currentProgress: number = 0;
-let foldersRefreshTimer_targetProgress: number = 0;
+let foldersRefreshTimer_currentProgress: number = -1;
+let foldersRefreshTimer_targetProgress: number = -1;
 let foldersRefreshTimer_streamStarted: boolean = false;
 let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 

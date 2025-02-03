@@ -42,8 +42,8 @@ let locationRefreshTimer_lastUpdate: number = 0;
 let locationRefreshTimer_nextUpdate: number = 0;
 let locationRefreshTimer_refreshing: boolean = false;
 let locationRefreshTimer_currentRequestID: string = '';
-let locationRefreshTimer_currentProgress: number = 0;
-let locationRefreshTimer_targetProgress: number = 0;
+let locationRefreshTimer_currentProgress: number = -1;
+let locationRefreshTimer_targetProgress: number = -1;
 let locationRefreshTimer_streamStarted: boolean = false;
 let locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -569,6 +569,8 @@ export function closeLocation(): void {
   // revokePageHistory('Location');
   LocationField.setAttribute('displayed', 'false');
   locationRefreshTimer_streaming = false;
+  locationRefreshTimer_currentProgress = -1;
+  locationRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 

@@ -30,8 +30,8 @@ let notifcationScheduleManagerRefreshTimer_lastUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
 let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
-let notifcationScheduleManagerRefreshTimer_currentProgress: number = 0;
-let notifcationScheduleManagerRefreshTimer_targetProgress: number = 0;
+let notifcationScheduleManagerRefreshTimer_currentProgress: number = -1;
+let notifcationScheduleManagerRefreshTimer_targetProgress: number = -1;
 let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
 let notifcationScheduleManagerRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -289,6 +289,8 @@ export function closeNotificationScheduleManager(): void {
   // revokePageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'false');
   notifcationScheduleManagerRefreshTimer_streaming = false;
+  notifcationScheduleManagerRefreshTimer_currentProgress = -1;
+  notifcationScheduleManagerRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 
