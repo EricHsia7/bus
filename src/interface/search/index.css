@@ -42,6 +42,8 @@
   height: 55px;
   user-select: none;
   -webkit-user-select: none;
+  background: var(--b-cssvar-ffffff-normal);
+  pointer-events: none;
 }
 
 .css_search_field .css_search_head .css_search_search_input input {
