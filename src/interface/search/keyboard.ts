@@ -169,12 +169,12 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   } else {
     selection = false;
-    searchInputCanvasContext.globalAlpha = 0.2;
+    searchInputCanvasContext.globalAlpha = 0.27;
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
     searchInputCanvasContext.globalAlpha = 1;
     searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
     searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
-    searchInputCanvasContext.globalAlpha = 0.15;
+    searchInputCanvasContext.globalAlpha = 0.08;
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
   }
 }
