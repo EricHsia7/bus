@@ -130,3 +130,6 @@ export async function scheduleNotificationForStopItemOnRoute(itemElementID: stri
     return;
   }
 }
+
+// TODO: support location
+// scheduleNotificationForStopItemOnLocation
