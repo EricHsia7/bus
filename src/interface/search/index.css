@@ -67,7 +67,7 @@
   padding: 0px;
   margin: 0px;
   color: transparent;
-  caret-color: rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), 0);
+  caret-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);
   resize: none;
 }
 
