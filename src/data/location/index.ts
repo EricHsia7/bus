@@ -8,8 +8,9 @@ import { getSettingOptionValue } from '../settings/index';
 import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { parseEstimateTime, formatBusEvent, FormattedBus } from '../apis/index';
+import { parseEstimateTime, formatBusEvent, FormattedBus, EstimateTimeStatus } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
 
 interface processedBusEventItem2 extends BusEventItem {
   onThisRoute: boolean;
@@ -36,8 +37,9 @@ export interface IntegratedLocationItem {
   route_name: string;
   route_direction: string;
   routeId: number;
-  status: any;
+  status: EstimateTimeStatus;
   buses: Array<FormattedBus>;
+  busArrivalTimes: Array<AggregatedBusArrivalTime>;
 }
 
 export interface IntegratedLocation {
@@ -106,8 +108,11 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const Route = await getRoute(requestID, true);
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
+  const BusArrivalTimes = await getBusArrivalTimes();
+
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
+
   let groupedItems = {} as IntegratedLocation['groupedItems'];
   let itemQuantity = {} as IntegratedLocation['itemQuantity'];
   let groups = {} as IntegratedLocation['groups'];
@@ -167,7 +172,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     const stopQuantity = thisLocation.s[i].length;
     for (let o = 0; o < stopQuantity; o++) {
       let integratedItem = {};
-      // collect data from 'Stop'
+      // Collect data from 'Stop'
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
       let thisStop: SimplifiedStopItem = {};
@@ -177,7 +182,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         continue;
       }
 
-      // collect data from 'Route'
+      // Collect data from 'Route'
       const thisRouteID: number = thisLocation.r[i][o];
       const thisRouteKey = `r_${thisRouteID}`;
       let thisRoute: SimplifiedRouteItem = {};
@@ -190,22 +195,33 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
       integratedItem.routeId = thisRouteID;
 
-      // collect data from 'processedEstimateTime'
+      // Collect data from 'processedEstimateTime'
       let thisProcessedEstimateTime: EstimateTimeItem = {};
       if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
         thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
       }
       integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
 
-      // collect data from 'processedBusEvent'
+      // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
       if (processedBusEvent.hasOwnProperty(thisStopKey)) {
         thisProcessedBusEvent = processedBusEvent[thisStopKey];
       }
       integratedItem.buses = formatBusEvent(thisProcessedBusEvent);
 
+      // Collect data from 'BusArrivalTimes'
+      let thisBusArrivalTimes = {};
+      if (BusArrivalTimes.hasOwnProperty(this)) {
+        thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
+      }
+      let flattenBusArrivalTimes = [];
+      for (const personalScheduleID in thisBusArrivalTimes) {
+        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
+      }
+      integratedItem.busArrivalTimes = flattenBusArrivalTimes;
+
       groupedItems[groupKey].push(integratedItem);
-      itemQuantity[groupKey] = itemQuantity[groupKey] + 1;
+      itemQuantity[groupKey] += 1;
     }
   }
   for (const key in groupedItems) {

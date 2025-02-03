@@ -52,18 +52,19 @@
   left: 7.5px;
   width: 35px;
   /* 50px: 7.5px + 35px + 7.5px */
-  height: 14px;
-  font-size: 14px;
+  height: 35px;
+  font-size: 20px;
   font-weight: 400;
-  line-height: 14px;
-  /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
   /* TODO: color-coded rank */
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
-  text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
 }
