@@ -601,8 +601,8 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
     } else {
       refreshRoute();
     }
-    routeRefreshTimer_currentProgress = 0;
-    routeRefreshTimer_targetProgress = 0;
+    routeRefreshTimer_currentProgress = -1;
+    routeRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
   closePreviousPage();

@@ -534,8 +534,8 @@ export function initializeFolders(): void {
     } else {
       refreshFolders();
     }
-    foldersRefreshTimer_currentProgress = 0;
-    foldersRefreshTimer_targetProgress = 0;
+    foldersRefreshTimer_currentProgress = -1;
+    foldersRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
 }
