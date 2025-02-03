@@ -45,7 +45,7 @@ export function closeSettings(): void {
   Field.setAttribute('displayed', 'false');
 }
 
-export async function downloadExportFile(): void {
+export async function downloadExportFile() {
   const exportedData = await exportData();
   releaseFile(exportedData, 'application/json', 'bus-export.json');
 }

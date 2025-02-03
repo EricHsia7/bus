@@ -500,7 +500,7 @@ async function refreshFolders(): Promise<object> {
   return { status: 'Successfully refreshed the folders.' };
 }
 
-async function streamFolders(): void {
+async function streamFolders() {
   refreshFolders()
     .then((result) => {
       if (foldersRefreshTimer_streaming) {

@@ -106,7 +106,7 @@ var Folders: { [key: string]: Folder } = {
 
 const defaultFolderQuantity = 2;
 
-export async function initializeFolderStores(): void {
+export async function initializeFolderStores() {
   var folderKeys = await lfListItemKeys(9);
   var index = defaultFolderQuantity; // avoid overwriting the default folders
   for (var folderKey of folderKeys) {

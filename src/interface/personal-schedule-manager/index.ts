@@ -21,7 +21,7 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
   };
 }
 
-async function initializePersonalScheduleManagerField(): void {
+async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
   const personalSchedules = await listPersonalSchedules();
   for (const item of personalSchedules) {

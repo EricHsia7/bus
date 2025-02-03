@@ -14,7 +14,7 @@ const endTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '
 const dayGroupBodyElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body');
 const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_editor_day');
 
-export async function saveEditedPersonalSchedule(personalScheduleID: string): void {
+export async function saveEditedPersonalSchedule(personalScheduleID: string) {
   const name = nameInputElement.value;
   const startTime = startTimeInputElement.value;
   const endTime = endTimeInputElement.value;
@@ -48,7 +48,7 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string): vo
   closePersonalScheduleEditor();
 }
 
-async function initializePersonalScheduleEditorField(personalScheduleID: string): void {
+async function initializePersonalScheduleEditorField(personalScheduleID: string) {
   const personalSchedule = await getPersonalSchedule(personalScheduleID);
   nameInputElement.value = personalSchedule.name;
   startTimeInputElement.value = timeObjectToString(personalSchedule.period.start);

@@ -8,7 +8,7 @@ let searchIndex = {};
 let searchList = [];
 let readyToSearch = false;
 
-export async function prepareForMaterialSymbolsSearch(): void {
+export async function prepareForMaterialSymbolsSearch() {
   const requestID: string = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
 

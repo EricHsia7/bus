@@ -61,7 +61,7 @@ export async function listRecentViews(): Promise<RecentViewArray> {
   return result;
 }
 
-export async function discardExpiredRecentViews(): void {
+export async function discardExpiredRecentViews() {
   const now = new Date().getTime();
   const keys = await lfListItemKeys(6);
   for (const key of keys) {
@@ -74,7 +74,7 @@ export async function discardExpiredRecentViews(): void {
   }
 }
 
-export async function logRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']): void {
+export async function logRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']) {
   const requestID = generateIdentifier('r');
   const key = `${type}_${param}`;
   const time = new Date().toISOString();

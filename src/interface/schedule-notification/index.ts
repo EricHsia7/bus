@@ -55,7 +55,7 @@ export function closeScheduleNotification(): void {
   ScheduleNotificationField.setAttribute('displayed', 'false');
 }
 
-export async function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
+export async function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number) {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const actionButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
   if (getNotificationClientStatus()) {

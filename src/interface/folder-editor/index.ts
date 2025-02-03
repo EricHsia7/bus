@@ -80,7 +80,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
   }
 }
 
-async function initializeFolderEditorField(folderID: string): void {
+async function initializeFolderEditorField(folderID: string) {
   //TODO: add skeleton screen
   var folder = await getFolder(folderID);
   var content = await listFolderContent(folderID);

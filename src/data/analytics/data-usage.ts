@@ -5,7 +5,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/i
 
 let incompleteRecords = {};
 
-export async function recordRequest(requestID: string, data: object, incomplete: boolean): void {
+export async function recordRequest(requestID: string, data: object, incomplete: boolean) {
   if (!incompleteRecords.hasOwnProperty(requestID)) {
     incompleteRecords[requestID] = data;
   }
@@ -20,7 +20,7 @@ export async function recordRequest(requestID: string, data: object, incomplete:
   }
 }
 
-export async function discardExpiredDataUsageRecords(): void {
+export async function discardExpiredDataUsageRecords() {
   const keys = await lfListItemKeys(2);
   for (const key of keys) {
     const json = await lfGetItem(2, key);

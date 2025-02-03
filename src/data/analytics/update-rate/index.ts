@@ -24,7 +24,7 @@ let trackingUpdateRate_incompleteRecords: IncompleteRecords = {
 };
 let trackingUpdateRate_currentDataLength: number = 0;
 
-export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime): void {
+export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimeStamp: number = Math.floor(now.getTime() / 1000);
   let needToReset = false;
@@ -82,7 +82,7 @@ async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, n
   return result;
 }
 
-export async function discardExpiredEstimateTimeRecordsForUpdateRate(): void {
+export async function discardExpiredEstimateTimeRecordsForUpdateRate() {
   const keys = await lfListItemKeys(3);
   for (const key of keys) {
     const json = await lfGetItem(3, key);

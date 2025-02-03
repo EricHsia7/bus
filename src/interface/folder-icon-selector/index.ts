@@ -29,7 +29,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
   };
 }
 
-async function initializeFolderIconSelectorField(): void {
+async function initializeFolderIconSelectorField() {
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsElement.innerHTML = '';
   const requestID: string = generateIdentifier('r');

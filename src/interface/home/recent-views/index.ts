@@ -294,7 +294,7 @@ async function refreshRecentViews(): Promise<object> {
   return { status: 'Successfully refreshed the recent views.' };
 }
 
-async function streamRecentViews(): void {
+async function streamRecentViews() {
   refreshRecentViews()
     .then((result) => {
       if (recentViewsRefreshTimer_streaming) {

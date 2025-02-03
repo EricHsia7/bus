@@ -17,7 +17,7 @@ function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
   };
 }
 
-async function initializeFolderManagerField(): void {
+async function initializeFolderManagerField() {
   var Field = documentQuerySelector('.css_folder_manager_field');
   var ListElement = elementQuerySelector(Field, '.css_folder_manager_body .css_folder_manager_folder_list');
   ListElement.innerHTML = '';

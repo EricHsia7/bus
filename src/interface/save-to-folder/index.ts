@@ -29,7 +29,7 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   };
 }
 
-async function initializeSaveToFolderField(type: FolderContentType, parameters: Array): void {
+async function initializeSaveToFolderField(type: FolderContentType, parameters: Array) {
   var Field = documentQuerySelector('.css_save_to_folder_field');
   elementQuerySelector(Field, '.css_save_to_folder_body .css_save_to_folder_list').innerHTML = '';
   var foldersWithContent = await listFoldersWithContent();

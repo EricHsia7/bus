@@ -28,7 +28,7 @@ export function closeSearch(): void {
   searchField.setAttribute('displayed', 'false');
 }
 
-export async function updateSearchResult(query: string): void {
+export async function updateSearchResult(query: string) {
   if (!containPhoneticSymbols(query)) {
     const typeToIcon = ['route', 'location_on', 'directions_bus'];
     let html = [];

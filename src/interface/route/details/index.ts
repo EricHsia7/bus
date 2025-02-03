@@ -22,7 +22,7 @@ export const getPermalinkActionButton = elementQuerySelector(ActionsGroupElememt
 
 export const PropertiesGroupElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
 
-async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Array<number>): void {
+async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Array<number>) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const existence = await isSaved('route', RouteID);
   svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));

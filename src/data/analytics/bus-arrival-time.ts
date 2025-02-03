@@ -47,7 +47,7 @@ export interface BusArrivalTimes {
   };
 }
 
-export async function recordEstimateTimeForBusArrivalTime(EstimateTime: EstimateTime): void {
+export async function recordEstimateTimeForBusArrivalTime(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimeStamp: number = now.getTime();
   let needToReset = false;
@@ -96,7 +96,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
   }
 }
 
-export async function discardExpiredEstimateTimeRecordsForBusArrivalTime(): void {
+export async function discardExpiredEstimateTimeRecordsForBusArrivalTime() {
   const keys = await lfListItemKeys(4);
   for (const key of keys) {
     const json = await lfGetItem(4, key);

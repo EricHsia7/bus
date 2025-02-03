@@ -3,7 +3,7 @@ import { getPermalink } from '../../../tools/permalink';
 import { promptMessage } from '../../prompt/index';
 
 
-export async function shareRoutePermalink(RouteID: number): void {
+export async function shareRoutePermalink(RouteID: number) {
   var search = await searchRouteByRouteID(RouteID);
   if (search.length > 0) {
     var link = getPermalink(0, {
