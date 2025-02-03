@@ -265,18 +265,28 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
-      
+      const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
+      thisRankElement.innerText = thisItem.rank.toString();
+      // TODO: animation
     }
 
-    function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
-      elementQuerySelector(thisElement, '.css_location_group_item_route_direction').innerText = thisItem.route_direction;
+    function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisRouteDirectionElement = elementQuerySelector(thisElement, '.css_location_group_item_route_direction');
+      thisRouteDirectionElement.innerText = thisItem.route_direction;
+    }
+
+    function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisRouteNameElement = elementQuerySelector(thisElement, '.css_location_group_item_route_name');
+      thisRouteNameElement.innerText = thisItem.route_name;
+      // TODO: selector
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
 
+    // TODO: bus arrival time
+    // TODO: butttons
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
         thisElement.setAttribute('stretched', 'false');
@@ -293,25 +303,33 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
     if (previousItem === null) {
       updateStatus(thisElement, thisItem, animation);
-      updateName(thisElement, thisItem);
+      updateRank(thisElement, thisItem, animation);
+      updateRouteDirection(thisElement, thisItem);
+      updateRouteName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+      if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
       }
-      if (!compareThings(previousItem.route_name, thisItem.route_name) || !compareThings(previousItem.route_direction, thisItem.route_direction)) {
-        updateName(thisElement, thisItem);
+      if (previousItem.rank !== thisItem.rank) {
+        updateRank(thisElement, thisItem, animation);
+      }
+      if (!compareThings(previousItem.route_direction, thisItem.route_direction)) {
+        updateRouteDirection(thisElement, thisItem);
+      }
+      if (!compareThings(previousItem.route_name, thisItem.route_name)) {
+        updateRouteName(thisElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
-      if (!(animation === previousAnimation)) {
+      if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (skeletonScreen !== previousSkeletonScreen) {
         updateStretch(thisElement, skeletonScreen);
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
