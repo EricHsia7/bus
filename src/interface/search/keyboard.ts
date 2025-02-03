@@ -151,7 +151,6 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
   cursorColor = getCSSVariableValue('--b-cssvar-main-color');
 
   searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
-  searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
   searchInputCanvasContext.textAlign = 'center';
   searchInputCanvasContext.textBaseline = 'middle';
 
@@ -165,6 +164,7 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
   if (cursorStart === cursorEnd) {
     selection = true;
     searchInputCanvasContext.globalAlpha = 1;
+    searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
     searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   } else {
@@ -172,6 +172,7 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
     searchInputCanvasContext.globalAlpha = 0.2;
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
     searchInputCanvasContext.globalAlpha = 1;
+    searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
     searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
     searchInputCanvasContext.globalAlpha = 0.15;
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
