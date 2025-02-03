@@ -32,10 +32,6 @@ const fontFamily: string = '"Noto Sans TC", sans-serif';
 let textColor: string = getCSSVariableValue('--b-cssvar-333333');
 let placeholderTextColor: string = getCSSVariableValue('--b-cssvar-aeaeb2');
 let cursorColor: string = getCSSVariableValue('--b-cssvar-main-color');
-let selectionHighlightColorR: string = getCSSVariableValue('--b-cssvar-main-color-r');
-let selectionHighlightColorG: string = getCSSVariableValue('--b-cssvar-main-color-g');
-let selectionHighlightColorB: string = getCSSVariableValue('--b-cssvar-main-color-b');
-let selectionHighlightColorA: string = getCSSVariableValue('--b-cssvar-main-color-opacity-c');
 let textWidth: number = 0;
 let textWidthToCursorStart: number = 0;
 let selectedTextWidth: number = 0;
@@ -153,10 +149,6 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
   textColor = getCSSVariableValue('--b-cssvar-333333');
   placeholderTextColor = getCSSVariableValue('--b-cssvar-aeaeb2');
   cursorColor = getCSSVariableValue('--b-cssvar-main-color');
-  selectionHighlightColorR = getCSSVariableValue('--b-cssvar-main-color-r');
-  selectionHighlightColorG = getCSSVariableValue('--b-cssvar-main-color-g');
-  selectionHighlightColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-  selectionHighlightColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-c');
 
   searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
   searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
@@ -168,16 +160,21 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
   selectedTextWidth = searchInputCanvasContext.measureText(value.substring(cursorStart, cursorEnd)).width;
   cursorOffset = empty ? 1 : Math.max(1, textWidthToCursorStart);
 
-  searchInputCanvasContext.globalAlpha = 1;
   searchInputCanvasContext.clearRect(0, 0, width, height);
-  searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
 
   if (cursorStart === cursorEnd) {
     selection = true;
+    searchInputCanvasContext.globalAlpha = 1;
+    searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
   } else {
     selection = false;
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, `rgba(${selectionHighlightColorR}, ${selectionHighlightColorG}, ${selectionHighlightColorB}, ${selectionHighlightColorA})`);
+    searchInputCanvasContext.globalAlpha = 0.2;
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
+    searchInputCanvasContext.globalAlpha = 1;
+    searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
+    searchInputCanvasContext.globalAlpha = 0.15;
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
   }
 }
 
