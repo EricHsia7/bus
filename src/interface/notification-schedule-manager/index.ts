@@ -278,6 +278,8 @@ export function openNotificationScheduleManager(): void {
     } else {
       refreshNotificationScheduleManager();
     }
+    notifcationScheduleManagerRefreshTimer_currentProgress = 0;
+    notifcationScheduleManagerRefreshTimer_targetProgress = 0;
     updateUpdateTimer();
   }
   closePreviousPage();

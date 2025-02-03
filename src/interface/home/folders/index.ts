@@ -63,7 +63,7 @@ function updateUpdateTimer(): void {
     foldersRefreshTimer_currentProgress += (foldersRefreshTimer_targetProgress - foldersRefreshTimer_currentProgress) * smoothingFactor;
   } else {
     foldersRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
-    foldersRefreshTimer_currentProgress = foldersRefreshTimer_targetProgress
+    foldersRefreshTimer_currentProgress = foldersRefreshTimer_targetProgress;
   }
   HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
@@ -534,6 +534,8 @@ export function initializeFolders(): void {
     } else {
       refreshFolders();
     }
+    foldersRefreshTimer_currentProgress = 0;
+    foldersRefreshTimer_targetProgress = 0;
     updateUpdateTimer();
   }
 }

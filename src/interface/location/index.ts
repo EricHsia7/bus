@@ -558,6 +558,8 @@ export function openLocation(hash: string): void {
     } else {
       refreshLocation();
     }
+    locationRefreshTimer_currentProgress = 0;
+    locationRefreshTimer_targetProgress = 0;
     updateUpdateTimer();
   }
   closePreviousPage();
