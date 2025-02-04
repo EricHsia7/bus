@@ -178,8 +178,11 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         route_name: '',
         route_direction: '',
         routeId: 0,
+        stopId: 0,
         status: { code: 8, text: '', time: -6 },
-        buses: []
+        rank: 0,
+        buses: [],
+        busArrivalTimes: []
       });
     }
   }
@@ -266,7 +269,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
-      console.log(JSON.stringify(thisItem, null, 2))
+      console.log(JSON.stringify(thisItem, null, 2));
       thisRankElement.innerText = thisItem.rank.toString();
       // TODO: animation
     }

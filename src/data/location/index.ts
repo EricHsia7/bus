@@ -39,7 +39,7 @@ export interface IntegratedLocationItem {
   routeId: number;
   stopId: number;
   status: EstimateTimeStatus;
-  rank: -1 | number;
+  rank: 0 | number;
   buses: Array<FormattedBus>;
   busArrivalTimes: Array<AggregatedBusArrivalTime>;
 }
