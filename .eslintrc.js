@@ -1,6 +1,8 @@
 module.exports = {
-  extends: ['eslint:recommended'],
+  parser: '@typescript-eslint/parser',
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   rules: {
-    'no-const-assign': 'error' // Prevents reassignment of const variables
+    'no-const-assign': 'error', // Prevents reassignment of `const` variables
+    '@typescript-eslint/no-redeclare': 'error' // Prevents redeclaring variables
   }
 };

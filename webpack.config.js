@@ -119,7 +119,7 @@ module.exports = (env, argv) => {
       }),
       new ESLintPlugin({
         extensions: ['js', 'jsx', 'ts', 'tsx'], // Adjust based on your project
-        failOnError: false
+        failOnError: true
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
