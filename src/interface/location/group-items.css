@@ -30,13 +30,13 @@
 }
 
 /* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_item[stretched="true"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
 }
 
 /* items > item > head */
-.css_location_field .css_location_groups .css_location_group .css_location_group_item .css_location_group_item_head {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -146,7 +146,7 @@
 }
 
 /* items > item > head > capsule > stretch */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -160,11 +160,11 @@
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch {
   display: none;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
@@ -172,12 +172,12 @@
 }
 
 /* animation: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 
@@ -554,8 +554,8 @@
 }
 
 /* items > item > body > buses, bus arrival times > message */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_route_group_item_buses_message,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_route_group_item_bus_arrival_message {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_buses_message,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_message {
   position: absolute;
   top: 0px;
   left: 0px;
