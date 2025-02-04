@@ -35,6 +35,7 @@ export interface LocationGroup {
 
 export interface IntegratedLocationItemRanking {
   number: number;
+  text: '--' | string;
   code: -1 | 0 | 1 | 2 | 3; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%
 }
 
@@ -135,6 +136,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
     const thisStopKey = `s_${thisStopID}`;
     result[thisStopKey] = {
       number: index,
+      text: index.toString(),
       code: rankingCode
     };
     index += 1;
@@ -238,7 +240,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       integratedItem.stopId = thisStopID;
 
       // Collect data from 'thisGroupRanking'
-      let thisItemRanking = { number: 0, code: -1 } as IntegratedLocationItemRanking;
+      let thisItemRanking = { number: 0, text: '--', code: -1 } as IntegratedLocationItemRanking;
       if (thisGroupRanking.hasOwnProperty(thisStopKey)) {
         thisItemRanking = thisGroupRanking[thisStopKey];
       }

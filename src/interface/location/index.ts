@@ -182,6 +182,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         status: { code: 8, text: '', time: -6 },
         ranking: {
           number: 0,
+          text: '--',
           code: -1
         },
         buses: [],
@@ -272,7 +273,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
-      thisRankElement.innerText = thisItem.ranking.number.toString();
+      thisRankElement.innerText = thisItem.ranking.text;
       thisRankElement.setAttribute('code', thisItem.ranking.code.toString());
       // TODO: animation
     }
