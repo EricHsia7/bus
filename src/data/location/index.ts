@@ -254,6 +254,8 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     testObj[key].sort()
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
+        const abc = testObj[key]
+        console.log(abc)
         const thisRankingIndex = ranking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
         return {
           route_name: item.route_name,
