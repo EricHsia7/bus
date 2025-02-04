@@ -158,6 +158,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   }
 
   let ranking: Array<[number, number]> = []; // StopID, EstimateTime
+  let testObj = {};
 
   for (let i = 0; i < stopLocationQuantity; i++) {
     const groupKey = `g_${i}`;
@@ -178,6 +179,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         }
       ]
     };
+    testObj[groupKey] = [];
     /*
     if (!ranking.hasOwnProperty(groupKey)) {
       ranking[groupKey] = [];
@@ -220,7 +222,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       if (parsedEstimateTime.time >= 0) {
         ranking.push([thisStopID, parsedEstimateTime.time]);
       }
-
+      console.log(testObj[groupKey]);
       // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
       if (processedBusEvent.hasOwnProperty(thisStopKey)) {
