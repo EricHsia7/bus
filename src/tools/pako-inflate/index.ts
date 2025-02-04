@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../index';
 
 let pakoInflateWorkerResponses = {};
-let port;
+var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {

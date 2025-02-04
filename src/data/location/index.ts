@@ -92,10 +92,10 @@ async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Pro
   return result;
 }
 
-type processEstimateTime2Result =  { [key: string]: EstimateTimeItem }
+type processEstimateTime2Result = { [key: string]: EstimateTimeItem };
 
 function processEstimateTime2(EstimateTime: EstimateTime, StopIDs: Array<number>): processEstimateTime2Result {
-  let result:processEstimateTime2Result = {};
+  let result: processEstimateTime2Result = {};
   for (const item of EstimateTime) {
     if (StopIDs.indexOf(item.StopID) > -1) {
       const thisStopKey = `s_${item.StopID}`;
@@ -124,7 +124,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const BusArrivalTimes = await getBusArrivalTimes();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const location_labels = getSettingOptionValue('location_labels') as string
+  const location_labels = getSettingOptionValue('location_labels') as string;
 
   let groupedItems = {} as IntegratedLocation['groupedItems'];
   let itemQuantity = {} as IntegratedLocation['itemQuantity'];
@@ -226,7 +226,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       }
 
       // Collect data from 'processedBusEvent'
-      let thisProcessedBusEvent :  Array<processedBusEventItem2>= [] 
+      let thisProcessedBusEvent: Array<processedBusEventItem2> = [];
       if (processedBusEvent.hasOwnProperty(thisStopKey)) {
         thisProcessedBusEvent = processedBusEvent[thisStopKey];
       }
