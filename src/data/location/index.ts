@@ -244,16 +244,16 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     }
   }
 
+  for (const key in ranking) {
+    ranking[key].sort(function (a, b) {
+      return a[1] - b[1];
+    });
+  }
+
   for (const key in groupedItems) {
-    let sortedRanking = [];
-    if (ranking.hasOwnProperty(key)) {
-      sortedRanking = ranking[key].sort(function (a, b) {
-        return a[1] - b[1];
-      });
-    }
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
-        const thisRankingIndex = sortedRanking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
+        const thisRankingIndex = ranking[key].findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
         return {
           route_name: item.route_name,
           route_direction: item.route_direction,
