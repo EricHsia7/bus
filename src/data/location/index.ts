@@ -228,7 +228,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
 
       // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = {};
-      if (BusArrivalTimes.hasOwnProperty(this)) {
+      if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       let flattenBusArrivalTimes = [];
