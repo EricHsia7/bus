@@ -178,7 +178,9 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         }
       ]
     };
-    ranking[groupKey] = [];
+    if (!ranking.hasOwnProperty(groupKey)) {
+      ranking[groupKey] = [];
+    }
     const stopQuantity = thisLocation.s[i].length;
     for (let o = 0; o < stopQuantity; o++) {
       let integratedItem = {};
