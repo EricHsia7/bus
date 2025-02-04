@@ -36,7 +36,7 @@ export interface LocationGroup {
 export interface IntegratedLocationItemRanking {
   number: number;
   text: '--' | string;
-  code: -1 | 0 | 1 | 2 | 3; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%
+  code: -1 | 0 | 1 | 2 | 3 | 4; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%, 4: 100%
 }
 
 export interface IntegratedLocationItem {
