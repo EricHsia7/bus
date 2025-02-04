@@ -1,14 +1,14 @@
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation, MergedLocation, MergedLocationItem } from '../apis/getLocation/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { getLocation } from '../apis/getLocation/index';
 import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
-import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getStop, SimplifiedStopItem } from '../apis/getStop/index';
+import { getRoute } from '../apis/getRoute/index';
+import { getStop } from '../apis/getStop/index';
 import { getSettingOptionValue } from '../settings/index';
 import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { parseEstimateTime, formatBusEvent, FormattedBus, EstimateTimeStatus, processBuses } from '../apis/index';
+import { parseEstimateTime, formatBusEvent, FormattedBus, EstimateTimeStatus } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
 
@@ -19,7 +19,7 @@ interface processedBusEventItem2 extends BusEventItem {
 }
 
 type processedBusEvent2 = {
-  [key: string]: Array<processedBusEventItem2>;
+  [key: string]: processedBusEventItem2;
 };
 
 export interface LocationGroupProperty {
@@ -65,22 +65,19 @@ export interface IntegratedLocation {
 }
 
 async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Promise<processedBusEvent2> {
-  let result = {} as processedBusEvent2;
-  for (const item of BusEvent) {
-    let processedItem = item as processedBusEventItem2;
-    const thisStopID = parseInt(item.StopID);
-    const thisStopKey = `s_${item.StopID}`;
-    const thisRouteID = parseInt(item.RouteID);
+  let result: processedBusEvent2 = {};
+  for (var item of BusEvent) {
+    var thisStopID = parseInt(item.StopID);
+    var thisRouteID = parseInt(item.RouteID);
     if (StopIDs.indexOf(thisStopID) > -1) {
-      processedItem.onThisRoute = true;
-      processedItem.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
-      const searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
-      processedItem.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
-
+      item.onThisRoute = true;
+      item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
+      var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
+      item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
       if (!result.hasOwnProperty('s_' + item.StopID)) {
-        result[thisStopKey] = [processedItem];
+        result['s_' + item.StopID] = [item];
       } else {
-        result[thisStopKey].push(processedItem);
+        result['s_' + item.StopID].push(item);
       }
     }
   }
@@ -92,14 +89,11 @@ async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Pro
   return result;
 }
 
-type processEstimateTime2Result = { [key: string]: EstimateTimeItem };
-
-function processEstimateTime2(EstimateTime: EstimateTime, StopIDs: Array<number>): processEstimateTime2Result {
-  let result: processEstimateTime2Result = {};
-  for (const item of EstimateTime) {
-    if (StopIDs.indexOf(item.StopID) > -1) {
-      const thisStopKey = `s_${item.StopID}`;
-      result[thisStopKey] = item;
+function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
+  var result = {};
+  for (var item of EstimateTime) {
+    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
+      result[`s_${item.StopID}`] = item;
     }
   }
   return result;
@@ -117,27 +111,27 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   const EstimateTime = await getEstimateTime(requestID);
-  const Location = (await getLocation(requestID, true)) as MergedLocation;
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const Location = await getLocation(requestID, true);
+  const Route = await getRoute(requestID, true);
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusArrivalTimes = await getBusArrivalTimes();
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const location_labels = getSettingOptionValue('location_labels') as string;
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const location_labels = getSettingOptionValue('location_labels');
 
   let groupedItems = {} as IntegratedLocation['groupedItems'];
   let itemQuantity = {} as IntegratedLocation['itemQuantity'];
   let groups = {} as IntegratedLocation['groups'];
 
   const thisLocationKey = `ml_${hash}`;
-  const thisLocation = Location[thisLocationKey] as MergedLocationItem;
+  const thisLocation = Location[thisLocationKey];
   const thisLocationName = thisLocation.n;
   const stopLocationIds = thisLocation.id;
   const setsOfVectors = thisLocation.v;
 
-  let StopIDs: Array<number> = [];
-  let RouteIDs: Array<number> = [];
+  let StopIDs = [];
+  let RouteIDs = [];
   const stopLocationQuantity = stopLocationIds.length;
 
   for (let i = 0; i < stopLocationQuantity; i++) {
@@ -148,7 +142,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
   const processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
 
-  let labels: Array<string> = [];
+  let labels = [];
   switch (location_labels) {
     case 'address':
       labels = generateLabelFromAddresses(thisLocation.a);
@@ -163,9 +157,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       break;
   }
 
-  let ranking: {
-    [key: string]: Array<[number, number]>;
-  } = {}; // StopID, EstimateTime
+  let ranking: Array<[number, number]> = []; // StopID, EstimateTime
 
   for (let i = 0; i < stopLocationQuantity; i++) {
     const groupKey = `g_${i}`;
@@ -186,14 +178,13 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         }
       ]
     };
-    ranking[groupKey] = [];
     const stopQuantity = thisLocation.s[i].length;
     for (let o = 0; o < stopQuantity; o++) {
-      let integratedItem = {} as IntegratedLocationItem;
+      let integratedItem = {};
       // Collect data from 'Stop'
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
-      let thisStop = {} as SimplifiedStopItem;
+      let thisStop: SimplifiedStopItem = {};
       if (Stop.hasOwnProperty(thisStopKey)) {
         thisStop = Stop[thisStopKey];
       } else {
@@ -204,7 +195,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       // Collect data from 'Route'
       const thisRouteID: number = thisLocation.r[i][o];
       const thisRouteKey = `r_${thisRouteID}`;
-      let thisRoute = {} as SimplifiedRouteItem;
+      let thisRoute: SimplifiedRouteItem = {};
       if (Route.hasOwnProperty(thisRouteKey)) {
         thisRoute = Route[thisRouteKey];
       } else {
@@ -215,18 +206,18 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'processedEstimateTime'
-      let thisProcessedEstimateTime = {} as EstimateTimeItem;
+      let thisProcessedEstimateTime: EstimateTimeItem = {};
       if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
         thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
       }
       const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
       integratedItem.status = parsedEstimateTime;
       if (parsedEstimateTime.time >= 0) {
-        ranking[groupKey].push([thisStopID, parsedEstimateTime.time]);
+        ranking.push([thisStopID, parsedEstimateTime.time]);
       }
 
       // Collect data from 'processedBusEvent'
-      let thisProcessedBusEvent: Array<processedBusEventItem2> = [];
+      let thisProcessedBusEvent = [];
       if (processedBusEvent.hasOwnProperty(thisStopKey)) {
         thisProcessedBusEvent = processedBusEvent[thisStopKey];
       }
@@ -234,7 +225,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
 
       // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = {};
-      if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
+      if (BusArrivalTimes.hasOwnProperty(this)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       let flattenBusArrivalTimes = [];
@@ -247,29 +238,13 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       itemQuantity[groupKey] += 1;
     }
   }
-
+  ranking.sort(function (a, b) {
+    return a[1] - b[1];
+  });
   for (const key in groupedItems) {
-    ranking[key].sort(function (a, b) {
-      return a[1] - b[1];
-    });
-    const thisRankingLength = ranking[key].length;
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
-        const thisRankingIndex = ranking[key].findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
-        const thisRankingRatio = (thisRankingIndex + 1) / thisRankingLength;
-        let thisRankingCode = -1;
-        if (0 < thisRankingRatio && thisRankingRatio <= 0.25) {
-          thisRankingCode = 0;
-        }
-        if (0.25 < thisRankingRatio && thisRankingRatio <= 0.5) {
-          thisRankingCode = 1;
-        }
-        if (0.5 < thisRankingRatio && thisRankingRatio <= 0.75) {
-          thisRankingCode = 2;
-        }
-        if (0.75 < thisRankingRatio && thisRankingRatio <= 1) {
-          thisRankingCode = 3;
-        }
+        const thisRankingIndex = ranking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
         return {
           route_name: item.route_name,
           route_direction: item.route_direction,
@@ -278,7 +253,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
           status: item.status,
           rank: {
             number: thisRankingIndex + 1,
-            code: thisRankingCode
+            code: 0 // TODO: code
           },
           buses: item.buses,
           busArrivalTimes: item.busArrivalTimes
