@@ -58,7 +58,7 @@
   color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
   /* TODO: color-coded rank */
-  border-radius: var(--b-cssvar-border-radius-medium);
+  border-radius: var(--b-cssvar-border-radius-small);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,25 +72,29 @@
 /* code: -1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="-1"] {
   background: var(--b-cssvar-ededf2);
-  color: var(--b-cssvar-333333);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  font-weight: 400;
 }
 
 /* code: 0 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="0"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-a);
   color: var(--b-cssvar-333333); /* --b-cssvar-ranking-color-0 */
+  font-weight: 500;
 }
 
 /* code: 1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="1"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-b);
   color: var(--b-cssvar-333333);
+  font-weight: 500;
 }
 
 /* code: 2 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="2"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-c);
   color: var(--b-cssvar-333333);
+  font-weight: 500;
 }
 
 /* code: 3, 4 */
@@ -98,6 +102,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="4"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-d);
   color: var(--b-cssvar-333333);
+  font-weight: 500;
 }
 
 /* items > item > head > route direction */
