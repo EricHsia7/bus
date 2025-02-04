@@ -1,5 +1,5 @@
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
 import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
 import { getRoute } from '../apis/getRoute/index';
@@ -33,7 +33,7 @@ export interface LocationGroup {
   properties: Array<LocationGroupProperty>;
 }
 
-export interface IntegratedLocationItemRank {
+export interface IntegratedLocationItemRanking {
   number: number;
   code: -1 | 0 | 1 | 2 | 3; // -1: not applicable 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%
 }
@@ -44,7 +44,7 @@ export interface IntegratedLocationItem {
   routeId: number;
   stopId: number;
   status: EstimateTimeStatus;
-  rank: IntegratedLocationItemRank;
+  ranking: IntegratedLocationItemRanking;
   buses: Array<FormattedBus>;
   busArrivalTimes: Array<AggregatedBusArrivalTime>;
 }
@@ -89,12 +89,54 @@ async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Pro
   return result;
 }
 
-function processEstimateTime2(EstimateTime: Array, StopIDs: Array<number>): object {
-  var result = {};
-  for (var item of EstimateTime) {
-    if (StopIDs.indexOf(parseInt(item.StopID)) > -1) {
-      result[`s_${item.StopID}`] = item;
+interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
+
+type BatchFoundEstimateTime = {
+  [key: string]: BatchFoundEstimateTimeItem;
+};
+
+function batchFindEstimateTime(EstimateTime: EstimateTime, StopIDList: Array<number>): BatchFoundEstimateTime {
+  let result = {};
+  for (const item of EstimateTime) {
+    if (StopIDList.indexOf(item.StopID) > -1) {
+      const thisStopKey: string = `s_${item.StopID}`;
+      result[thisStopKey] = item;
     }
+  }
+  return result;
+}
+
+type BatchFoundEstimateTimeRanking = {
+  [key: string]: IntegratedLocationItemRanking;
+};
+
+function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTime, StopIDList: Array<number>): BatchFoundEstimateTimeRanking {
+  // StopIDList act as a secondary filter
+  let result: BatchFoundEstimateTimeRanking = {};
+  let rankingArray: Array<[number, number]> = []; // StopID, EstimateTime
+  for (const thisStopKey in batchFoundEstimateTime) {
+    const thisBatchFoundEstimateTimeItem = batchFoundEstimateTime[thisStopKey];
+    const thisStopID = thisBatchFoundEstimateTimeItem.StopID;
+    const thisEstimateTime = parseInt(thisBatchFoundEstimateTimeItem.EstimateTime);
+    if (thisEstimateTime >= 0 && StopIDList.indexOf(thisStopID) > -1) {
+      rankingArray.push([thisStopID, thisEstimateTime]);
+    }
+  }
+  const rankingArrayLength = rankingArray.length;
+  rankingArray.sort(function (a, b) {
+    return a[1] - b[1];
+  });
+  let index = 1;
+  for (const rankingItem of rankingArray) {
+    // Classify into 4 groups and give a code
+    const rankingRatio = index / rankingArrayLength;
+    const rankingCode = (rankingRatio - (rankingRatio % 0.25)) / 0.25;
+    const thisStopID = rankingItem[0];
+    const thisStopKey = `s_${thisStopID}`;
+    result[thisStopKey] = {
+      number: index,
+      code: rankingCode
+    };
   }
   return result;
 }
@@ -139,7 +181,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     RouteIDs = RouteIDs.concat(thisLocation.r[i]);
   }
 
-  const processedEstimateTime = processEstimateTime2(EstimateTime, StopIDs);
+  const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
   const processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
 
   let labels = [];
@@ -156,9 +198,6 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     default:
       break;
   }
-
-  let ranking: Array<[number, number]> = []; // StopID, EstimateTime
-  let testObj = {};
 
   for (let i = 0; i < stopLocationQuantity; i++) {
     const groupKey = `g_${i}`;
@@ -179,15 +218,13 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         }
       ]
     };
-    testObj[groupKey] = [];
-    /*
-    if (!ranking.hasOwnProperty(groupKey)) {
-      ranking[groupKey] = [];
-    }
-    */
-    const stopQuantity = thisLocation.s[i].length;
+
+    const thisGroupStops = thisLocation.s[i];
+    const stopQuantity = thisGroupStops.length;
+    const thisGroupRanking = rankBatchFoundEstimateTime(batchFoundEstimateTime, thisGroupStops);
+
     for (let o = 0; o < stopQuantity; o++) {
-      let integratedItem = {};
+      let integratedItem = {} as IntegratedLocationItem;
       // Collect data from 'Stop'
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
@@ -198,6 +235,9 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         continue;
       }
       integratedItem.stopId = thisStopID;
+
+      // Collect data from 'thisGroupRanking'
+      integratedItem.ranking = thisGroupRanking[thisStopKey];
 
       // Collect data from 'Route'
       const thisRouteID: number = thisLocation.r[i][o];
@@ -214,19 +254,14 @@ export async function integrateLocation(hash: string, requestID: string): Promis
 
       // Collect data from 'processedEstimateTime'
       let thisProcessedEstimateTime: EstimateTimeItem = {};
-      if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
-        thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
+      if (batchFoundEstimateTime.hasOwnProperty(thisStopKey)) {
+        thisProcessedEstimateTime = batchFoundEstimateTime[thisStopKey];
       } else {
         continue;
       }
       const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode);
       integratedItem.status = parsedEstimateTime;
-      if (parsedEstimateTime.time >= 0) {
-        ranking.push([thisStopID, parsedEstimateTime.time]);
-      }
-      testObj[groupKey].push(123);
-      testObj[groupKey].push([123, 456]);
-      console.log(testObj[groupKey]);
+
       // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
       if (processedBusEvent.hasOwnProperty(thisStopKey)) {
@@ -251,12 +286,12 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   }
 
   for (const key in groupedItems) {
-    testObj[key].sort();
-    groupedItems[key] = groupedItems[key]
+    groupedItems[key].sort(function (a, b) {
+      return a.routeId - b.routeId;
+    });
+    /*
       .map((item: IntegratedLocationItem) => {
-        const abc = testObj[key] || [];
-        console.log(abc);
-        const thisRankingIndex = ranking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
+        // accessing ranking[key] inside map callback will cause constant violations any way
         return {
           route_name: item.route_name,
           route_direction: item.route_direction,
@@ -265,15 +300,12 @@ export async function integrateLocation(hash: string, requestID: string): Promis
           status: item.status,
           rank: {
             number: thisRankingIndex + 1,
-            code: 0 // TODO: code
+            code: 0
           },
           buses: item.buses,
           busArrivalTimes: item.busArrivalTimes
         };
-      })
-      .sort(function (a, b) {
-        return a.routeId - b.routeId;
-      });
+      })*/
   }
   const result: IntegratedLocation = {
     groupedItems: groupedItems,
