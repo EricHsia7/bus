@@ -223,6 +223,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
         ranking.push([thisStopID, parsedEstimateTime.time]);
       }
       testObj[groupKey].push(123)
+      testObj[groupKey].push([123,456])
       console.log(testObj[groupKey]);
       // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
