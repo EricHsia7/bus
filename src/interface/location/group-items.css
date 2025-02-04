@@ -403,8 +403,8 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times {
   position: absolute;
   top: 45px;
-  left: 0px;
-  width: calc(100% - 15px);
+  left: 15px;
+  width: calc(100% - 30px);
   height: 121px;
   overflow-x: scroll;
   overflow-y: hidden;
