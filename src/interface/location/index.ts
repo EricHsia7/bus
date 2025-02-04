@@ -602,9 +602,22 @@ export function closeLocation(): void {
 
 export function stretchLocationItemBody(itemID: string): void {
   const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   if (itemElement.getAttribute('stretched') === 'true') {
+    if (itemElement.getAttribute('animation') === 'true') {
+      itemBodyElement.addEventListener(
+        'transitionend',
+        function () {
+          itemBodyElement.setAttribute('displayed', 'false');
+        },
+        { once: true }
+      );
+    } else {
+      itemBodyElement.setAttribute('displayed', 'false');
+    }
     itemElement.setAttribute('stretched', 'false');
   } else {
+    itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
   }
 }
