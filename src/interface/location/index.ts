@@ -180,7 +180,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         routeId: 0,
         stopId: 0,
         status: { code: 8, text: '', time: -6 },
-        rank: {
+        ranking: {
           number: 0,
           code: -1
         },
@@ -272,8 +272,8 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
-      thisRankElement.innerText = thisItem.rank.number.toString();
-      thisRankElement.setAttribute('code', thisItem.rank.code.toString());
+      thisRankElement.innerText = thisItem.ranking.number.toString();
+      thisRankElement.setAttribute('code', thisItem.ranking.code.toString());
       // TODO: animation
     }
 
@@ -321,7 +321,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
       }
-      if (previousItem.rank !== thisItem.rank) {
+      if (previousItem.ranking !== thisItem.ranking) {
         updateRank(thisElement, thisItem, animation);
       }
       if (!compareThings(previousItem.route_direction, thisItem.route_direction)) {
