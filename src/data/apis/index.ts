@@ -1,5 +1,5 @@
-import { BusEvent } from './getBusEvent/index';
-import { BusData } from './getBusData/index';
+import { BusEvent, BusEventItem } from './getBusEvent/index';
+import { BusData, BusDataItem } from './getBusData/index';
 import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
 
@@ -98,22 +98,31 @@ export interface ProcessedBusPosition {
 }
 
 export interface ProcessedBus {
+  CarType: BusEventItem['CarType'];
+  BusStatus: BusEventItem['BusStatus'];
   BusID: string;
+  CarOnStop: BusEventItem['CarOnStop'];
   onThisRoute: boolean;
   position: ProcessedBusPosition;
+  RouteName: string;
+  RouteID: number;
   index: number;
 }
 
-export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): { [key: string]: Array<ProcessedBus> } {
-  var result = {};
-  var BusDataObj = {};
+export type processedBuses = { [key: string]: Array<ProcessedBus> };
+
+export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): processedBuses {
+  let result = {} as processedBuses;
+  let BusDataObj: {
+    [key: string]: BusDataItem;
+  } = {};
   for (const BusDataItem of BusData) {
     var thisBusID = BusDataItem.BusID;
     BusDataObj[thisBusID] = BusDataItem;
   }
 
   for (let BusEventItem of BusEvent) {
-    let processedItem = {};
+    let processedItem = {} as ProcessedBus;
 
     // collect data from 'BusEvent'
     processedItem.CarType = BusEventItem.CarType;
@@ -137,7 +146,7 @@ export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: Simpli
     processedItem.index = index;
 
     // collect data from 'BusData'
-    let thisBusData = {};
+    let thisBusData = {} as BusDataItem;
     if (BusDataObj.hasOwnProperty(thisBusID)) {
       thisBusData = BusDataObj[thisBusID];
     } else {
@@ -190,17 +199,7 @@ interface FormattedBusPosition {
   latitude: number;
 }
 
-export interface FormattedBus {
-  type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
-  carNumber: string;
-  status: FormattedBusStatus;
-  RouteName: string;
-  onThisRoute: boolean;
-  index: number;
-  position: FormattedBusPosition;
-}
-
-export function parseCarType(CarType: '0' | '1' | '2' | '3'): string {
+export function parseCarType(CarType: '0' | '1' | '2' | '3'): '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型' {
   let type = '';
   switch (CarType) {
     case '0':
@@ -266,8 +265,18 @@ export function parseBusStatus(BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '9
   return situation;
 }
 
+export interface FormattedBus {
+  type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
+  carNumber: string;
+  status: FormattedBusStatus;
+  RouteName: string;
+  onThisRoute: boolean;
+  index: number;
+  position: FormattedBusPosition;
+}
+
 export function formatBus(object: ProcessedBus): FormattedBus {
-  let result: FormattedBus = {};
+  let result = {} as FormattedBus;
 
   const CarType = object.CarType;
   const type = parseCarType(CarType);

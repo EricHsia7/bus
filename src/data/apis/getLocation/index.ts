@@ -1,6 +1,7 @@
 import { getAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 import { lfGetItem, lfSetItem } from '../../storage/index';
+import { ParsedAddress } from '../../../tools/address';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -40,7 +41,7 @@ export interface MergedLocationItem {
   r: Array<Array<number>>; // RouteIDs
   s: Array<Array<number>>; // StopIDs
   v: Array<Array<[number, number]>>; // sets of vectors
-  a: Array<object | string>; // addresses
+  a: Array<ParsedAddress>; // addresses
   id: Array<number>;
   hash: string;
 }

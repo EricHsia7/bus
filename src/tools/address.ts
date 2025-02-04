@@ -8,7 +8,7 @@ interface AddressPart {
   type: number;
 }
 
-interface ParsedAddress {
+export interface ParsedAddress {
   city: string[];
   district: string[];
   area: string[];
