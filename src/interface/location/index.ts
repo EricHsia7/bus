@@ -180,7 +180,10 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         routeId: 0,
         stopId: 0,
         status: { code: 8, text: '', time: -6 },
-        rank: 0,
+        rank: {
+          number: 0,
+          code: -1
+        },
         buses: [],
         busArrivalTimes: []
       });
