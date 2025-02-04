@@ -249,7 +249,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
         console.log(10, 0);
-        const thisRankingIndex = ranking.indexOf([item.stopId, item.status.time]);
+        const thisRankingIndex = ranking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
         console.log(10, 1, thisRankingIndex);
         return {
           route_name: item.route_name,

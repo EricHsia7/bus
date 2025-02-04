@@ -266,6 +266,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
+      console.log(JSON.stringify(thisItem, null, 2))
       thisRankElement.innerText = thisItem.rank.toString();
       // TODO: animation
     }
