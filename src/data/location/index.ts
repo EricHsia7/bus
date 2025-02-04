@@ -214,7 +214,9 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
       integratedItem.status = parsedEstimateTime;
       if (parsedEstimateTime.time >= 0) {
-        ranking[groupKey].push([thisStopID, parsedEstimateTime.time]);
+        if (ranking.hasOwnProperty(groupKey)) {
+          ranking[groupKey].push([thisStopID, parsedEstimateTime.time]);
+        }
       }
 
       // Collect data from 'processedBusEvent'
@@ -241,9 +243,12 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   }
 
   for (const key in groupedItems) {
-    const sortedRanking = [...ranking[key]].sort(function (a, b) {
-      return a[1] - b[1];
-    });
+    let sortedRanking = [];
+    if (ranking.hasOwnProperty(key)) {
+      sortedRanking = ranking[key].sort(function (a, b) {
+        return a[1] - b[1];
+      });
+    }
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
         const thisRankingIndex = sortedRanking.findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
