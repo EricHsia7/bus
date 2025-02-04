@@ -9,7 +9,7 @@
 }
 
 /* items > item */
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item {
   display: block;
   height: 50px;
   width: 100%;
@@ -172,17 +172,17 @@
 }
 
 /* animation: true */
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 
 /* head > capsule > status */
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -198,8 +198,8 @@
   visibility: hidden;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide,
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -351,7 +351,7 @@
   vertical-align: top;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button:last-child {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button:last-child {
   margin-right: 0px;
 }
 
@@ -380,7 +380,7 @@
   align-items: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_route_group_tracks .css_route_group_items_track .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   font-size: 18px;
