@@ -137,6 +137,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
       number: index,
       code: rankingCode
     };
+    index += 1;
   }
   return result;
 }
