@@ -258,8 +258,8 @@ export async function integrateLocation(hash: string, requestID: string): Promis
           stopId: item.stopId,
           status: item.status,
           rank: thisRankingIndex + 1,
-          buses: Array<FormattedBus>,
-          busArrivalTimes: Array<AggregatedBusArrivalTime>
+          buses: item.buses,
+          busArrivalTimes: item.busArrivalTimes
         };
       })
       .sort(function (a, b) {
