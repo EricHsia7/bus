@@ -217,6 +217,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
       integratedItem.status = parsedEstimateTime;
       ranking.push([thisStopID, parsedEstimateTime.time]);
+      console.log(JSON.stringify(ranking, null, 2));
 
       // Collect data from 'processedBusEvent'
       let thisProcessedBusEvent = [];
@@ -249,11 +250,12 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       .map((item: IntegratedLocationItem) => {
         console.log(10, 0);
         const thisRankingIndex = ranking.indexOf([item.stopId, item.status.time]);
-        console.log(10, 1);
+        console.log(10, 1, thisRankingIndex);
         return {
           route_name: item.route_name,
           route_direction: item.route_direction,
           routeId: item.routeId,
+          stopId: item.stopId,
           status: item.status,
           rank: thisRankingIndex + 1,
           buses: Array<FormattedBus>,
