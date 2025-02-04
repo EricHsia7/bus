@@ -177,6 +177,7 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 import { switchCalendarDay } from './interface/route/details/calendar';
+import { integrateLocation } from './data/location/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -218,7 +219,7 @@ window.bus = {
                 initializeFolders();
               });
               const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement
+              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
               mediaQuery.addEventListener('change', function () {
                 updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
               });
@@ -381,6 +382,9 @@ window.bus = {
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute,
     cancelNotificationOnNotificationScheduleManager
+  },
+  test: {
+    integrateLocation
   }
 };
 
