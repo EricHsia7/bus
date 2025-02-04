@@ -246,9 +246,24 @@ export async function integrateLocation(hash: string, requestID: string): Promis
     ranking[key].sort(function (a, b) {
       return a[1] - b[1];
     });
+    const thisRankingLength = ranking[key].length;
     groupedItems[key] = groupedItems[key]
       .map((item: IntegratedLocationItem) => {
         const thisRankingIndex = ranking[key].findIndex((subArray) => subArray[0] === item.stopId && subArray[1] === item.status.time);
+        const thisRankingRatio = (thisRankingIndex + 1) / thisRankingLength;
+        let thisRankingCode = -1;
+        if (0 < thisRankingRatio && thisRankingRatio <= 0.25) {
+          thisRankingCode = 0;
+        }
+        if (0.25 < thisRankingRatio && thisRankingRatio <= 0.5) {
+          thisRankingCode = 1;
+        }
+        if (0.5 < thisRankingRatio && thisRankingRatio <= 0.75) {
+          thisRankingCode = 2;
+        }
+        if (0.75 < thisRankingRatio && thisRankingRatio <= 1) {
+          thisRankingCode = 3;
+        }
         return {
           route_name: item.route_name,
           route_direction: item.route_direction,
@@ -257,7 +272,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
           status: item.status,
           rank: {
             number: thisRankingIndex + 1,
-            code: 0 // TODO: code
+            code: thisRankingCode
           },
           buses: item.buses,
           busArrivalTimes: item.busArrivalTimes

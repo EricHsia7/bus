@@ -37,6 +37,7 @@ import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegi
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { switchCalendarDay } from './interface/route/details/calendar';
 
 import './interface/theme.css';
 
@@ -176,8 +177,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { switchCalendarDay } from './interface/route/details/calendar';
-import { integrateLocation } from './data/location/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -382,9 +381,6 @@ window.bus = {
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute,
     cancelNotificationOnNotificationScheduleManager
-  },
-  test: {
-    integrateLocation
   }
 };
 
