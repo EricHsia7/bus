@@ -97,7 +97,7 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.5;
+  const smoothingFactor = 0.7;
   const time = new Date().getTime();
   if (locationRefreshTimer_refreshing) {
     locationRefreshTimer_targetProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
@@ -650,5 +650,28 @@ export function stretchLocationItemBody(itemID: string): void {
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
+  }
+}
+
+export function switchLocationBodyTab(itemID: string, tabCode: number): void {
+  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
+  const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
+  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');
+  for (const t of buttonElements) {
+    t.setAttribute('highlighted', 'false');
+  }
+  elementQuerySelector(buttonsElement, `.css_location_group_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
+  switch (tabCode) {
+    case 0:
+      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'false');
+      break;
+    case 1:
+      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'true');
+      break;
+    default:
+      break;
   }
 }
