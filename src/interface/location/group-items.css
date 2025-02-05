@@ -508,7 +508,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time {
   position: relative;
-  width: calc(var(--b-cssvar-route-field-width) * 0.6);
+  width: calc(var(--b-cssvar-location-field-width) * 0.6);
   height: 121px;
   box-sizing: border-box;
   background: var(--b-cssvar-f9f9fb-normal);
