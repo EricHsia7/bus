@@ -322,7 +322,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
       }
-      if (previousItem.ranking !== thisItem.ranking) {
+      if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
         updateRank(thisElement, thisItem, animation);
       }
       if (!compareThings(previousItem.route_direction, thisItem.route_direction)) {
