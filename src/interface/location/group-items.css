@@ -56,7 +56,7 @@
   color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
   /* TODO: color-coded rank */
-  border-radius: var(--b-cssvar-border-radius-small);
+  border-radius: var(--b-cssvar-border-radius-medium);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,6 +108,11 @@
   font-size: 15px;
 }
 
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank {
+  color: rgba(0, 0, 0, 0);
+}
+
 /* items > item > head > route direction */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_route_direction {
   position: absolute;
@@ -126,6 +131,12 @@
   text-overflow: ellipsis;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_direction {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 /* items > item > head > route name */
