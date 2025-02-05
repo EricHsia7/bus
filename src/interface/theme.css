@@ -9,9 +9,9 @@
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 61;
   --b-cssvar-main-color-inflected-to-segment-buffer-g: 126;
   --b-cssvar-main-color-inflected-to-segment-buffer-b: 150;
-  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #dfe7ed;
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #DFE7ED;
 
-  --b-cssvar-main-color-inflected-to-user-position: #6354c7;
+  --b-cssvar-main-color-inflected-to-user-position: #6354C7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
   --b-cssvar-main-color-inflected-to-user-position-g: 84;
   --b-cssvar-main-color-inflected-to-user-position-b: 199;
@@ -23,12 +23,12 @@
   --b-cssvar-main-color-opacity-d: 0.15;
   --b-cssvar-main-color-opacity-e: 0.11;
 
-  --b-cssvar-ffffff-normal: #ffffff;
+  --b-cssvar-ffffff-normal: #FFFFFF;
   --b-cssvar-ffffff-normal-r: 255;
   --b-cssvar-ffffff-normal-g: 255;
   --b-cssvar-ffffff-normal-b: 255;
 
-  --b-cssvar-ffffff-blocky: #ffffff;
+  --b-cssvar-ffffff-blocky: #FFFFFF;
   --b-cssvar-ffffff-blocky-r: 255;
   --b-cssvar-ffffff-blocky-g: 255;
   --b-cssvar-ffffff-blocky-b: 255;
@@ -36,12 +36,12 @@
   --b-cssvar-ffffff-opacity-a: 1;
   --b-cssvar-ffffff-opacity-b: 0.7;
 
-  --b-cssvar-f9f9fb-normal: #f9f9fb;
+  --b-cssvar-f9f9fb-normal: #F9F9FB;
   --b-cssvar-f9f9fb-normal-r: 249;
   --b-cssvar-f9f9fb-normal-g: 249;
   --b-cssvar-f9f9fb-normal-b: 251;
 
-  --b-cssvar-f9f9fb-blocky: #f9f9fb;
+  --b-cssvar-f9f9fb-blocky: #F9F9FB;
   --b-cssvar-f9f9fb-blocky-r: 249;
   --b-cssvar-f9f9fb-blocky-g: 249;
   --b-cssvar-f9f9fb-blocky-b: 251;
@@ -59,7 +59,7 @@
   --b-cssvar-f9f9fb-opacity-a: 1;
   --b-cssvar-f9f9fb-opacity-b: 0.7;
 
-  --b-cssvar-ededf2: #ededf2;
+  --b-cssvar-ededf2: #EDEDF2;
   --b-cssvar-ededf2-r: 237;
   --b-cssvar-ededf2-g: 237;
   --b-cssvar-ededf2-b: 242;
@@ -75,7 +75,7 @@
   --b-cssvar-ededf2-inflected-to-user-position-g: 230;
   --b-cssvar-ededf2-inflected-to-user-position-b: 240;
 
-  --b-cssvar-aeaeb2: #aeaeb2;
+  --b-cssvar-aeaeb2: #AEAEB2;
   --b-cssvar-aeaeb2-r: 174;
   --b-cssvar-aeaeb2-g: 174;
   --b-cssvar-aeaeb2-b: 178;
@@ -91,17 +91,17 @@
   --b-cssvar-333333-opacity-d: 0.6;
   --b-cssvar-333333-opacity-e: 0.33;
 
-  --b-cssvar-ranking-color-0: #EFBD1A;
-  --b-cssvar-ranking-color-0-opacity-flattened-a: #EED277;
+  --b-cssvar-ranking-color-0: #D4AF37;
+  --b-cssvar-ranking-color-0-opacity-flattened-a: #dfca88;
 
-  --b-cssvar-ranking-color-1: #F1C32D;
-  --b-cssvar-ranking-color-0-opacity-flattened-b: #EFD995;
+  --b-cssvar-ranking-color-1: #DAB642;
+  --b-cssvar-ranking-color-0-opacity-flattened-b: #e4d39f;
 
-  --b-cssvar-ranking-color-2: #F3C83A;
-  --b-cssvar-ranking-color-0-opacity-flattened-c: #EFE0B2;
+  --b-cssvar-ranking-color-2: #DFBD4C;
+  --b-cssvar-ranking-color-0-opacity-flattened-c: #efe0b2;
 
-  --b-cssvar-ranking-color-3: #F5CC47;
-  --b-cssvar-ranking-color-0-opacity-flattened-d: #EFE6D0;
+  --b-cssvar-ranking-color-3: #E5C457;
+  --b-cssvar-ranking-color-0-opacity-flattened-d: #EBE5D3;
 
   --b-cssvar-ranking-color-opacity-a: 0.57;
   --b-cssvar-ranking-color-opacity-b: 0.47;
@@ -205,12 +205,16 @@
     --b-cssvar-333333-opacity-d: 0.6;
     --b-cssvar-333333-opacity-e: 0.26;
 
+    --b-cssvar-ranking-color-0: #EFBD1A;
     --b-cssvar-ranking-color-0-opacity-flattened-a: #96791F;
 
+    --b-cssvar-ranking-color-1: #F1C32D;
     --b-cssvar-ranking-color-0-opacity-flattened-b: #826D29;
 
+    --b-cssvar-ranking-color-2: #F3C83A;
     --b-cssvar-ranking-color-0-opacity-flattened-c: #6A5B2D;
 
+    --b-cssvar-ranking-color-3: #F5CC47;
     --b-cssvar-ranking-color-0-opacity-flattened-d: #4B422D;
   }
 }
