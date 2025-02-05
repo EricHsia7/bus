@@ -91,22 +91,22 @@
   --b-cssvar-333333-opacity-d: 0.6;
   --b-cssvar-333333-opacity-e: 0.33;
 
-  --b-cssvar-ranking-color-0: #D4AF37;
-  --b-cssvar-ranking-color-0-opacity-flattened-a: #dfca88;
+  --b-cssvar-ranking-color-0: #51DB8D;
+  --b-cssvar-ranking-color-0-opacity-flattened-a: #BFF2D5;
 
-  --b-cssvar-ranking-color-1: #DAB642;
-  --b-cssvar-ranking-color-0-opacity-flattened-b: #e4d39f;
+  --b-cssvar-ranking-color-1: #4FD78A;
+  --b-cssvar-ranking-color-0-opacity-flattened-b: #CFF4DF;
 
-  --b-cssvar-ranking-color-2: #DFBD4C;
-  --b-cssvar-ranking-color-0-opacity-flattened-c: #efe0b2;
+  --b-cssvar-ranking-color-2: #4CD387;
+  --b-cssvar-ranking-color-0-opacity-flattened-c: #E1F8EB;
 
-  --b-cssvar-ranking-color-3: #E5C457;
-  --b-cssvar-ranking-color-0-opacity-flattened-d: #EBE5D3;
+  --b-cssvar-ranking-color-3: #4ACF84;
+  --b-cssvar-ranking-color-0-opacity-flattened-d: #F2FCF6;
 
-  --b-cssvar-ranking-color-opacity-a: 0.57;
-  --b-cssvar-ranking-color-opacity-b: 0.47;
-  --b-cssvar-ranking-color-opacity-c: 0.35;
-  --b-cssvar-ranking-color-opacity-d: 0.20;
+  --b-cssvar-ranking-color-opacity-a: 0.37;
+  --b-cssvar-ranking-color-opacity-b: 0.27;
+  --b-cssvar-ranking-color-opacity-c: 0.17;
+  --b-cssvar-ranking-color-opacity-d: 0.07;
 
   --b-cssvar-disabled-opacity: 0.6;
 
@@ -205,17 +205,18 @@
     --b-cssvar-333333-opacity-d: 0.6;
     --b-cssvar-333333-opacity-e: 0.26;
 
-    --b-cssvar-ranking-color-0: #EFBD1A;
-    --b-cssvar-ranking-color-0-opacity-flattened-a: #96791F;
+    --b-cssvar-ranking-color-0-opacity-flattened-a: #266742;
 
-    --b-cssvar-ranking-color-1: #F1C32D;
-    --b-cssvar-ranking-color-0-opacity-flattened-b: #826D29;
+    --b-cssvar-ranking-color-0-opacity-flattened-b: #1d4f33;
 
-    --b-cssvar-ranking-color-2: #F3C83A;
-    --b-cssvar-ranking-color-0-opacity-flattened-c: #6A5B2D;
+    --b-cssvar-ranking-color-0-opacity-flattened-c: #153925;
 
-    --b-cssvar-ranking-color-3: #F5CC47;
-    --b-cssvar-ranking-color-0-opacity-flattened-d: #4B422D;
+    --b-cssvar-ranking-color-0-opacity-flattened-d: #0c2316;
+
+    --b-cssvar-ranking-color-opacity-a: 0.47;
+    --b-cssvar-ranking-color-opacity-b: 0.37;
+    --b-cssvar-ranking-color-opacity-c: 0.27;
+    --b-cssvar-ranking-color-opacity-d: 0.17;
   }
 }
 
