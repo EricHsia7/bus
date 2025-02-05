@@ -9,6 +9,7 @@ import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
+import { indexToDay, timeObjectToString } from '../../tools/time';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
@@ -316,10 +317,15 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const thisBusesElement = elementQuerySelector(thisElement, '.css_location_group_item_buses');
+      thisBusesElement.innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
 
-    // TODO: bus arrival time
+    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_location_group_item_bus_arrival_times');
+      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_location_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_location_group_item_bus_arrival_time_attributes"><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
+    }
+
     // TODO: butttons
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
       if (skeletonScreen) {
@@ -341,6 +347,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       updateRouteDirection(thisElement, thisItem);
       updateRouteName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
+      updateBusArrivalTimes(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
@@ -359,6 +366,9 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
+      }
+      if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+        updateBusArrivalTimes(thisElement, thisItem);
       }
       if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
@@ -463,18 +473,18 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   }
 
   for (let i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
+    const groupKey = `g_${i}`;
+    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+      const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisItemElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(thisItemElement.element);
+          const newItemElement = generateElementOfItem();
+          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(newItemElement.element);
         }
       } else {
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var itemIndex = currentItemSeatQuantity - 1 - o;
+          const itemIndex = currentItemSeatQuantity - 1 - o;
           elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[itemIndex].remove();
         }
       }
