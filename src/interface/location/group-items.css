@@ -53,8 +53,6 @@
   width: 30px;
   /* 55px: 15px + 30px + 10px */
   height: 30px;
-  font-size: 18px;
-  font-weight: 500;
   color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
   /* TODO: color-coded rank */
@@ -74,6 +72,7 @@
   background: var(--b-cssvar-ededf2);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   font-weight: 400;
+  font-size: 18px;
 }
 
 /* code: 0 */
@@ -81,6 +80,7 @@
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-a);
   color: var(--b-cssvar-333333); /* --b-cssvar-ranking-color-0 */
   font-weight: 500;
+  font-size: 15px;
 }
 
 /* code: 1 */
@@ -88,6 +88,7 @@
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-b);
   color: var(--b-cssvar-333333);
   font-weight: 500;
+  font-size: 15px;
 }
 
 /* code: 2 */
@@ -95,6 +96,7 @@
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-c);
   color: var(--b-cssvar-333333);
   font-weight: 500;
+  font-size: 15px;
 }
 
 /* code: 3, 4 */
@@ -103,6 +105,7 @@
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-d);
   color: var(--b-cssvar-333333);
   font-weight: 500;
+  font-size: 15px;
 }
 
 /* items > item > head > route direction */
