@@ -530,10 +530,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
       const thisElement = elementQuerySelectorAll(thisGroupElement, `.css_location_group_items .css_location_group_item`)[j];
       const thisItem = groupedItems[groupKey][j];
+      console.log(JSON.stringify(thisItem, null, 2));
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
-            var previousItem = previousIntegration.groupedItems[groupKey][j];
+            const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
