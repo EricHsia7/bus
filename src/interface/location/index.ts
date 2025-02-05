@@ -409,10 +409,10 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (!compareThings(previousProperty.value, thisProperty.value)) {
         updateValue(thisElement, thisProperty);
       }
-      if (!(animation === previousAnimation)) {
+      if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (skeletonScreen !== previousSkeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
@@ -472,38 +472,46 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
   }
 
+  const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
+    const thisLocationGroupElement = LocationGroupElements[i];
+    const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
+        const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, `.css_location_group_items`);
         for (let o = 0; o < Math.abs(capacity); o++) {
           const newItemElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(newItemElement.element);
+          LocationGroupItemsElement.appendChild(newItemElement.element);
         }
       } else {
+        const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`);
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[itemIndex].remove();
+          LocationGroupItemElements[itemIndex].remove();
         }
       }
     }
 
-    var currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
-    var groupPropertyQuantity = groups[groupKey].properties.length;
+    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
+    const groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
-      var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
+      const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
       if (capacity < 0) {
+        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
+        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          //var propertyIndex = currentGroupPropertySeatQuantity + o;
-          var thisPropertyElement = generateElementOfGroupDetailsProperty();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body`).appendChild(thisPropertyElement.element);
+          // var propertyIndex = currentGroupPropertySeatQuantity + o;
+          const newPropertyElement = generateElementOfGroupDetailsProperty();
+          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement.element);
         }
       } else {
+        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
+        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[propertyIndex].remove();
+          const propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
+          elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property')[propertyIndex].remove();
         }
       }
     }
@@ -524,7 +532,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
-            var previousProperty = previousIntegration.groups[groupKey].properties[k];
+            const previousProperty = previousIntegration.groups[groupKey].properties[k];
             updateProperty(thisElement, thisProperty, previousProperty);
           } else {
             updateProperty(thisElement, thisProperty, null);
@@ -540,7 +548,6 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
       const thisElement = elementQuerySelectorAll(thisGroupElement, `.css_location_group_items .css_location_group_item`)[j];
       const thisItem = groupedItems[groupKey][j];
-      console.log(JSON.stringify(thisItem, null, 2));
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
@@ -557,7 +564,9 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       }
     }
   }
+
   previousIntegration = integration;
+  previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
 }
 
