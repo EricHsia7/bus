@@ -97,7 +97,7 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.1;
+  const smoothingFactor = 0.5;
   const time = new Date().getTime();
   if (locationRefreshTimer_refreshing) {
     locationRefreshTimer_targetProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
