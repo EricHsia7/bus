@@ -120,7 +120,7 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1"></div><div class="css_location_group_item_rank_current_slide" code="-1"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -272,10 +272,36 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
+      const thisElementRect = thisElement.getBoundingClientRect();
+      const top = thisElementRect.top;
+      const left = thisElementRect.left;
+      const bottom = thisElementRect.bottom;
+      const right = thisElementRect.right;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
-      thisRankElement.innerText = thisItem.ranking.text;
-      thisRankElement.setAttribute('code', thisItem.ranking.code.toString());
-      // TODO: animation
+      const nextSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
+      const currentSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
+
+      nextSlide.setAttribute('code', thisItem.ranking.code.toString());
+      nextSlide.innerText = thisItem.ranking.text;
+
+      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+        currentSlide.addEventListener(
+          'animationend',
+          function () {
+            currentSlide.setAttribute('code', thisItem.ranking.code.toString());
+            currentSlide.innerText = thisItem.ranking.text;
+            currentSlide.classList.remove('css_location_group_item_rank_current_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentSlide.classList.add('css_location_group_item_rank_current_slide_fade_out');
+      } else {
+        currentSlide.setAttribute('code', thisItem.ranking.code.toString());
+        currentSlide.innerText = thisItem.ranking.text;
+      }
     }
 
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {

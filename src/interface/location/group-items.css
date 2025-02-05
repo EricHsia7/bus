@@ -53,22 +53,32 @@
   width: 35px;
   /* 55px: 15px + 35px + 5px */
   height: 35px;
-  color: var(--b-cssvar-333333);
   background: var(--b-cssvar-ededf2);
-  /* TODO: color-coded rank */
   border-radius: var(--b-cssvar-border-radius-medium);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-  word-break: keep-all;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
 }
 
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  word-break: keep-all;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* code: -1 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="-1"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="-1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="-1"] {
   background: var(--b-cssvar-ededf2);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   font-weight: 400;
@@ -76,7 +86,8 @@
 }
 
 /* code: 0 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="0"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="0"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="0"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-a);
   color: var(--b-cssvar-ranking-color-0);
   font-weight: 500;
@@ -84,7 +95,8 @@
 }
 
 /* code: 1 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="1"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="1"] {
   background: var(--b-cssvar-ranking-color-1-opacity-flattened-b);
   color: var(--b-cssvar-ranking-color-1);
   font-weight: 500;
@@ -92,7 +104,8 @@
 }
 
 /* code: 2 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="2"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="2"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="2"] {
   background: var(--b-cssvar-ranking-color-2-opacity-flattened-c);
   color: var(--b-cssvar-ranking-color-2);
   font-weight: 500;
@@ -100,8 +113,10 @@
 }
 
 /* code: 3, 4 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="3"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="4"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="4"] {
   background: var(--b-cssvar-ranking-color-3-opacity-flattened-d);
   color: var(--b-cssvar-ranking-color-3);
   font-weight: 500;
@@ -109,8 +124,17 @@
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
   color: rgba(0, 0, 0, 0);
+}
+
+/* fadeout */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
 }
 
 /* items > item > head > route direction */
