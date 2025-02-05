@@ -6,7 +6,7 @@ import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop, SimplifiedStopItem } from '../apis/getStop/index';
-import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, processBuses } from '../apis/index';
+import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, batchFindBusesForRoute } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';
@@ -87,7 +87,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const BusData = await getBusData(requestID);
   const BusArrivalTimes = await getBusArrivalTimes();
 
-  const processedBuses = processBuses(BusEvent, BusData, Route, RouteID, PathAttributeId);
+  const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
@@ -167,12 +167,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         id: item.StopID
       });
 
-      // collect data from 'processedBuses'
+      // collect data from 'batchFoundBuses'
       let buses = []; // as  Array<FormattedBus>
       for (var overlappingStopID of thisLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
-        if (processedBuses.hasOwnProperty(overlappingStopKey)) {
-          buses.push(processedBuses[overlappingStopKey].map((e) => formatBus(e)));
+        if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
+          buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));
         }
       }
       integratedStopItem.buses = buses.flat().sort(function (a, b) {

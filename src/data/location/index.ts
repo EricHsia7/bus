@@ -1,94 +1,16 @@
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation } from '../apis/getLocation/index';
-import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
+import { getBusEvent } from '../apis/getBusEvent/index';
 import { getRoute } from '../apis/getRoute/index';
 import { getStop } from '../apis/getStop/index';
 import { getSettingOptionValue } from '../settings/index';
-import { searchRouteByPathAttributeId } from '../search/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { parseEstimateTime, formatBusEvent, FormattedBus, EstimateTimeStatus } from '../apis/index';
+import { parseEstimateTime, FormattedBus, EstimateTimeStatus, batchFindBusesForLocation, formatBus } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
-
-interface processedBusEventItem2 extends BusEventItem {
-  onThisRoute: boolean;
-  index: number;
-  RouteName: string;
-}
-
-type processedBusEvent2 = {
-  [key: string]: processedBusEventItem2;
-};
-
-export interface LocationGroupProperty {
-  key: string;
-  icon: MaterialSymbols;
-  value: string;
-}
-
-export interface LocationGroup {
-  name: string;
-  properties: Array<LocationGroupProperty>;
-}
-
-export interface IntegratedLocationItemRanking {
-  number: number;
-  text: '--' | string;
-  code: -1 | 0 | 1 | 2 | 3 | 4; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%, 4: 100%
-}
-
-export interface IntegratedLocationItem {
-  route_name: string;
-  route_direction: string;
-  routeId: number;
-  stopId: number;
-  status: EstimateTimeStatus;
-  ranking: IntegratedLocationItemRanking;
-  buses: Array<FormattedBus>;
-  busArrivalTimes: Array<AggregatedBusArrivalTime>;
-}
-
-export interface IntegratedLocation {
-  groupedItems: {
-    [key: string]: Array<IntegratedLocationItem>;
-  };
-  groups: {
-    [key: string]: LocationGroup;
-  };
-  groupQuantity: number;
-  itemQuantity: {
-    [key: string]: number;
-  };
-  LocationName: string;
-  dataUpdateTime: number;
-}
-
-async function processBusEvent2(BusEvent: BusEvent, StopIDs: Array<number>): Promise<processedBusEvent2> {
-  let result: processedBusEvent2 = {};
-  for (var item of BusEvent) {
-    var thisStopID = parseInt(item.StopID);
-    var thisRouteID = parseInt(item.RouteID);
-    if (StopIDs.indexOf(thisStopID) > -1) {
-      item.onThisRoute = true;
-      item.index = String(item.BusID).charCodeAt(0) * Math.pow(10, -5);
-      var searchRouteResult = await searchRouteByPathAttributeId(thisRouteID);
-      item.RouteName = searchRouteResult.length > 0 ? searchRouteResult[0].n : '';
-      if (!result.hasOwnProperty('s_' + item.StopID)) {
-        result['s_' + item.StopID] = [item];
-      } else {
-        result['s_' + item.StopID].push(item);
-      }
-    }
-  }
-  for (var key in result) {
-    result[key] = result[key].sort(function (a, b) {
-      return a.index - b.index;
-    });
-  }
-  return result;
-}
+import { getBusData } from '../apis/getBusData/index';
 
 interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
 
@@ -144,6 +66,49 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
   return result;
 }
 
+export interface LocationGroupProperty {
+  key: string;
+  icon: MaterialSymbols;
+  value: string;
+}
+
+export interface LocationGroup {
+  name: string;
+  properties: Array<LocationGroupProperty>;
+}
+
+export interface IntegratedLocationItemRanking {
+  number: number;
+  text: '--' | string;
+  code: -1 | 0 | 1 | 2 | 3 | 4; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%, 4: 100%
+}
+
+export interface IntegratedLocationItem {
+  route_name: string;
+  route_direction: string;
+  routeId: number;
+  stopId: number;
+  status: EstimateTimeStatus;
+  ranking: IntegratedLocationItemRanking;
+  buses: Array<FormattedBus>;
+  busArrivalTimes: Array<AggregatedBusArrivalTime>;
+}
+
+export interface IntegratedLocation {
+  groupedItems: {
+    [key: string]: Array<IntegratedLocationItem>;
+  };
+  groups: {
+    [key: string]: LocationGroup;
+  };
+  groupQuantity: number;
+  itemQuantity: {
+    [key: string]: number;
+  };
+  LocationName: string;
+  dataUpdateTime: number;
+}
+
 export async function integrateLocation(hash: string, requestID: string): Promise<IntegratedLocation> {
   setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
@@ -160,6 +125,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const Route = await getRoute(requestID, true);
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
+  const BusData = await getBusData(requestID);
   const BusArrivalTimes = await getBusArrivalTimes();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
@@ -185,7 +151,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   }
 
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
-  const processedBusEvent = await processBusEvent2(BusEvent, StopIDs);
+  const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
   let labels = [];
   switch (location_labels) {
@@ -259,22 +225,22 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
       integratedItem.routeId = thisRouteID;
 
-      // Collect data from 'processedEstimateTime'
-      let thisProcessedEstimateTime: EstimateTimeItem = {};
+      // Collect data from 'batchFoundEstimateTime'
+      let thisEstimateTime = {} as EstimateTimeItem;
       if (batchFoundEstimateTime.hasOwnProperty(thisStopKey)) {
-        thisProcessedEstimateTime = batchFoundEstimateTime[thisStopKey];
+        thisEstimateTime = batchFoundEstimateTime[thisStopKey];
       } else {
         continue;
       }
-      const parsedEstimateTime = parseEstimateTime(thisProcessedEstimateTime.EstimateTime, time_formatting_mode);
+      const parsedEstimateTime = parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode);
       integratedItem.status = parsedEstimateTime;
 
-      // Collect data from 'processedBusEvent'
-      let thisProcessedBusEvent = [];
-      if (processedBusEvent.hasOwnProperty(thisStopKey)) {
-        thisProcessedBusEvent = processedBusEvent[thisStopKey];
+      // Collect data from 'batchFoundBuses'
+      let buses = [];
+      if (batchFoundBuses.hasOwnProperty(thisStopKey)) {
+        buses = batchFoundBuses[thisStopKey].map((e) => formatBus(e));
       }
-      integratedItem.buses = formatBusEvent(thisProcessedBusEvent);
+      integratedItem.buses = buses;
 
       // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = {};
