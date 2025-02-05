@@ -78,23 +78,23 @@
 /* code: 0 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="0"] {
   background: var(--b-cssvar-ranking-color-0-opacity-flattened-a);
-  color: var(--b-cssvar-333333); /* --b-cssvar-ranking-color-0 */
+  color: var(--b-cssvar-ranking-color-0);
   font-weight: 500;
   font-size: 15px;
 }
 
 /* code: 1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="1"] {
-  background: var(--b-cssvar-ranking-color-0-opacity-flattened-b);
-  color: var(--b-cssvar-333333);
+  background: var(--b-cssvar-ranking-color-1-opacity-flattened-b);
+  color: var(--b-cssvar-ranking-color-1);
   font-weight: 500;
   font-size: 15px;
 }
 
 /* code: 2 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="2"] {
-  background: var(--b-cssvar-ranking-color-0-opacity-flattened-c);
-  color: var(--b-cssvar-333333);
+  background: var(--b-cssvar-ranking-color-2-opacity-flattened-c);
+  color: var(--b-cssvar-ranking-color-2);
   font-weight: 500;
   font-size: 15px;
 }
@@ -102,8 +102,8 @@
 /* code: 3, 4 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="3"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank[code="4"] {
-  background: var(--b-cssvar-ranking-color-0-opacity-flattened-d);
-  color: var(--b-cssvar-333333);
+  background: var(--b-cssvar-ranking-color-3-opacity-flattened-d);
+  color: var(--b-cssvar-ranking-color-3);
   font-weight: 500;
   font-size: 15px;
 }
