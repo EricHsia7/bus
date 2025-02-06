@@ -11,6 +11,7 @@ import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { isSaved } from '../../data/folder/index';
+import { stopHasNotifcationSchedules } from '../../data/notification/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
@@ -130,37 +131,37 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  const identifier = generateIdentifier('g');
+  // const identifier = generateIdentifier('g');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group');
   element.innerHTML = /*html*/ `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfTab(): GeneratedElement {
-  const identifier = generateIdentifier('t');
+  // const identifier = generateIdentifier('t');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group_tab');
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  const identifier = generateIdentifier('p');
+  // const identifier = generateIdentifier('p');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group_details_property');
   element.innerHTML = /*html*/ `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
@@ -181,7 +182,11 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         route_direction: '',
         routeId: 0,
         stopId: 0,
-        status: { code: 8, text: '', time: -6 },
+        status: {
+          code: 8,
+          text: '',
+          time: -6
+        },
         ranking: {
           number: 0,
           text: '--',
@@ -351,6 +356,15 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       });
     }
 
+    function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
+      const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
+      const scheduleNotificationButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="schedule-notification"]');
+      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}, ${thisItem.status.time}])`);
+      const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
+      scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
+    }
+
     if (previousItem === null) {
       updateStatus(thisElement, thisItem, animation);
       updateRank(thisElement, thisItem, animation);
@@ -362,9 +376,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateSaveToFolderButton(thisElement, thisItem);
+      updateScheduleNotificationButton(thisElement, thisItem);
     } else {
       if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
+        updateScheduleNotificationButton(thisElement, thisItem);
       }
       if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
         updateRank(thisElement, thisItem, animation);
@@ -469,15 +485,17 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_location_groups`).appendChild(newGroupElement.element);
+        LocationGroupsElement.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_location_head .css_location_group_tabs_tray`).appendChild(newTabElement.element);
+        LocationGroupTabsTrayElement.appendChild(newTabElement.element);
       }
     } else {
+      const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
+      const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[groupIndex].remove();
+        LocationGroupElements[groupIndex].remove();
+        LocationGroupTabElements[groupIndex].remove();
       }
     }
   }
