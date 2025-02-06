@@ -80,7 +80,7 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
 }
 
 export function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
-  const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_route_group .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
+  const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
