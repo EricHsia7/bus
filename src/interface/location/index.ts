@@ -165,7 +165,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   };
 }
 
-function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
+function setUpLocationFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -198,7 +198,6 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
     }
   }
   updateLocationField(
-    Field,
     {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
@@ -243,7 +242,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
+function updateLocationField(integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
     function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisElementRect = thisElement.getBoundingClientRect();
@@ -479,7 +478,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   // TODO: updateTab
 
-  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
@@ -522,7 +521,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       }
     }
 
-    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
+    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
     const groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
       const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
@@ -547,11 +546,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
+    const thisTabElement = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab')[i];
     thisTabElement.innerHTML = /*html*/ `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
-    const thisGroupElement = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i];
+    const thisGroupElement = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i];
     const groupPropertyQuantity = groups[groupKey].properties.length;
 
     for (let k = 0; k < groupPropertyQuantity; k++) {
@@ -598,7 +597,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshLocation(): Promise<object> {
+async function refreshLocation() {
   const time = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
@@ -608,7 +607,7 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
-  updateLocationField(LocationField, integration, false, playing_animation);
+  updateLocationField(integration, false, playing_animation);
   locationRefreshTimer_lastUpdate = time;
   if (locationRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
@@ -619,12 +618,11 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - time);
   locationRefreshTimer_refreshing = false;
   LocationUpdateTimerElement.setAttribute('refreshing', 'false');
-  return { status: 'Successfully refreshed the location.' };
 }
 
 export function streamLocation(): void {
   refreshLocation()
-    .then((result) => {
+    .then(function () {
       if (locationRefreshTimer_streaming) {
         locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
@@ -652,8 +650,8 @@ export function openLocation(hash: string): void {
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   LocationField.setAttribute('displayed', 'true');
-  elementQuerySelector(LocationField, '.css_location_groups').scrollLeft = 0;
-  setUpLocationFieldSkeletonScreen(LocationField);
+  LocationGroupsElement.scrollLeft = 0;
+  setUpLocationFieldSkeletonScreen();
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
     if (!locationRefreshTimer_streamStarted) {
