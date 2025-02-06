@@ -157,7 +157,7 @@
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   background: var(--b-cssvar-333333);
-  width: 30px;
+  width: 10px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-location-tab-line-width-scale));
