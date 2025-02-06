@@ -72,7 +72,7 @@ export function scheduleNotificationForStopItemOnRoute(itemElementID: string, St
         break;
       case 2:
         promptMessage('在設定中註冊後才可設定到站通知', 'warning');
-        closeScheduleNotification();
+        scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       default:
         break;
@@ -99,7 +99,7 @@ export function scheduleNotificationForStopItemOnLocation(itemElementID: string,
         break;
       case 2:
         promptMessage('在設定中註冊後才可設定到站通知', 'warning');
-        closeScheduleNotification();
+        scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       default:
         break;
