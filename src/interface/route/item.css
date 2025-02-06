@@ -519,6 +519,12 @@
   visibility: inherit;
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses::-webkit-scrollbar,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes::-webkit-scrollbar,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times::-webkit-scrollbar {
+  display: none;
+}
+
 .css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses[displayed="false"],
 .css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes[displayed="false"],
 .css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times[displayed="false"] {

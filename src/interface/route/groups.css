@@ -16,6 +16,10 @@
   grid-template-columns: repeat(var(--b-cssvar-route-group-quantity), var(--b-cssvar-route-field-width));
 }
 
+.css_route_field .css_route_groups::-webkit-scrollbar {
+  display: none;
+}
+
 .css_route_field .css_route_groups .css_route_group {
   --b-cssvar-route-field-width: inherit;
   position: relative;
@@ -31,11 +35,7 @@
   contain: layout;
 }
 
-.css_route_field .css_route_groups .css_route_group::-webkit-scrollbar,
-.css_route_field .css_route_groups::-webkit-scrollbar,
-.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_buses::-webkit-scrollbar,
-.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes::-webkit-scrollbar,
-.css_route_field .css_route_groups .css_route_group .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times::-webkit-scrollbar {
+.css_route_field .css_route_groups .css_route_group::-webkit-scrollbar {
   display: none;
 }
 
