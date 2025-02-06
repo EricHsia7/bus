@@ -1,8 +1,12 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { isValidURL } from '../../tools/index';
+import { generateIdentifier, isValidURL } from '../../tools/index';
+import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime } from '../apis/loader';
+import { getSettingOptionValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
+import { scheduleNotification } from './apis/scheduleNotification/index';
 
 export interface NotificationClient {
   provider: string;
@@ -401,3 +405,67 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
     index: 5
   }
 ];
+
+export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<0 | 1 | 2> {
+  if (getNotificationClientStatus()) {
+    const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
+    const requestID = generateIdentifier('r');
+    const Stop = (await getStop(requestID)) as SimplifiedStop;
+    const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
+    const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+
+    deleteDataReceivingProgress(requestID);
+    deleteDataUpdateTime(requestID);
+
+    // Collect data from Stop
+    const StopKey = `s_${StopID}`;
+    let thisStop = {} as SimplifiedStopItem;
+    if (Stop.hasOwnProperty(StopKey)) {
+      thisStop = Stop[StopKey];
+    } else {
+      return 0;
+    }
+    const thisStopLocationId = thisStop.stopLocationId;
+    const thisStopGoBack = thisStop.goBack;
+
+    // Collect data from Location
+    const thisLocationKey = `l_${thisStopLocationId}`;
+    let thisLocation = {} as SimplifiedLocationItem;
+    if (Location.hasOwnProperty(thisLocationKey)) {
+      thisLocation = Location[thisLocationKey];
+    } else {
+      return 0;
+    }
+    const thisLocationName = thisLocation.n;
+
+    // Collect data from Route
+    const RouteKey = `r_${RouteID}`;
+    let thisRoute = {} as SimplifiedRouteItem;
+    if (Route.hasOwnProperty(RouteKey)) {
+      thisRoute = Route[RouteKey];
+    } else {
+      return 0;
+    }
+
+    const thisRouteName = thisRoute.n;
+    const thisRouteDeparture = thisRoute.dep;
+    const thisRouteDestination = thisRoute.des;
+    const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisStopGoBack ? parseInt(thisStopGoBack) : 0];
+
+    // Collect data from scheduleNotificationOptions
+    const thisOption = scheduleNotificationOptions[index];
+    const timeOffset = thisOption.time_offset;
+
+    const now = new Date().getTime();
+    const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
+
+    const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
+    if (scheduling === false) {
+      return 0; // error
+    } else {
+      return 1; // successful
+    }
+  } else {
+    return 2; // no registration
+  }
+}
