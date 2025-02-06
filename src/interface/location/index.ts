@@ -342,11 +342,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
     }
 
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body')
-      const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons')
+      const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
+      const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}])`);
-      isSaved('stop',thisItem.stopId).then((e) => {
+      isSaved('stop', thisItem.stopId).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
     }
@@ -361,6 +361,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       updateStretch(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
+      updateSaveToFolderButton(thisElement, thisItem);
     } else {
       if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
@@ -368,11 +369,10 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
         updateRank(thisElement, thisItem, animation);
       }
-      if (!compareThings(previousItem.route_direction, thisItem.route_direction)) {
+      if (previousItem.stopId !== thisItem.stopId) {
         updateRouteDirection(thisElement, thisItem);
-      }
-      if (!compareThings(previousItem.route_name, thisItem.route_name)) {
         updateRouteName(thisElement, thisItem);
+        updateSaveToFolderButton(thisElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
