@@ -17,7 +17,7 @@ import { openSettingsOptions, closeSettingsOptions, settingsOptionsHandler } fro
 import { initializeSettings } from './data/settings/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
 import { documentQuerySelector } from './tools/query-selector';
-import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopItemOnRoute } from './interface/save-to-folder/index';
+import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteOnRoute, saveStopItemOnLocation, saveStopItemOnRoute } from './interface/save-to-folder/index';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
@@ -324,7 +324,9 @@ window.bus = {
     saveEditedFolder,
     selectFolderIcon,
     saveStopItemOnRoute,
+    saveStopItemOnLocation,
     saveRouteOnDetailsPage,
+    saveRouteOnRoute,
     removeItemOnFolderEditor,
     moveItemOnFolderEditor
   },
