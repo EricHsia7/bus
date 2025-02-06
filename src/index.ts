@@ -35,7 +35,7 @@ import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
-import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
+import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
 
@@ -383,6 +383,7 @@ window.bus = {
     openScheduleNotification,
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute,
+    scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
   }
 };
