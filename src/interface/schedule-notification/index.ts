@@ -1,11 +1,4 @@
-import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../../data/apis/getLocation/index';
-import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
-import { getStop, SimplifiedStop, SimplifiedStopItem } from '../../data/apis/getStop/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
-import { scheduleNotification } from '../../data/notification/apis/scheduleNotification/index';
-import { getNotificationClientStatus, scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
-import { getSettingOptionValue } from '../../data/settings/index';
-import { generateIdentifier } from '../../tools/index';
+import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
