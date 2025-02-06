@@ -88,36 +88,41 @@ export function dateToRelativeTime(date: Date): string {
 }
 
 export function formatTime(time: number, mode: number): string {
-  time = Math.round(time);
+  const roundedTime = Math.round(time);
   switch (mode) {
-    case 0:
-      return `${time}秒`;
+    case 0: {
+      return `${roundedTime}秒`;
       break;
-    case 1:
-      var minutes = String((time - (time % 60)) / 60);
-      var seconds = String(time % 60);
+    }
+    case 1: {
+      const minutes = String((roundedTime - (roundedTime % 60)) / 60);
+      const seconds = String(roundedTime % 60);
       return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
       break;
-    case 2:
-      var minutes = String(Math.floor(time / 60));
+    }
+    case 2: {
+      const minutes = String(Math.floor(roundedTime / 60));
       return `${minutes}分`;
       break;
-    case 3:
-      if (time >= 60 * 60) {
-        var hours = String(parseFloat((time / (60 * 60)).toFixed(1)));
+    }
+    case 3: {
+      if (roundedTime >= 60 * 60) {
+        const hours = String(parseFloat((roundedTime / (60 * 60)).toFixed(1)));
         return `${hours}時`;
       }
-      if (60 <= time && time < 60 * 60) {
-        var minutes = String(Math.floor(time / 60));
+      if (60 <= roundedTime && roundedTime < 60 * 60) {
+        const minutes = String(Math.floor(roundedTime / 60));
         return `${minutes}分`;
       }
-      if (time < 60) {
-        return `${time}秒`;
+      if (roundedTime < 60) {
+        return `${roundedTime}秒`;
       }
       break;
-    default:
+    }
+    default: {
       return '--';
       break;
+    }
   }
 }
 

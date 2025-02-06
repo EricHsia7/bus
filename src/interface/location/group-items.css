@@ -31,7 +31,8 @@
 
 /* stretched: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] {
-  height: 221px;
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* items > item > head */
@@ -41,14 +42,109 @@
   left: 0px;
   width: 100%;
   height: 50px;
+  background: rgba(0, 0, 0, 0);
+}
+
+/* items > item > head > rank */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank {
+  position: absolute;
+  top: 7.5px;
+  left: 15px;
+  width: 35px;
+  /* 55px: 15px + 35px + 5px */
+  height: 35px;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-medium);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  word-break: keep-all;
+  user-select: none;
+  -webkit-user-select: none;
+  visibility: inherit;
+}
+
+/* code: -1 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="-1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="-1"] {
+  background: var(--b-cssvar-ededf2);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  font-weight: 400;
+  font-size: 18px;
+}
+
+/* code: 0 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="0"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="0"] {
+  background: var(--b-cssvar-ranking-color-0-opacity-flattened-a);
+  color: var(--b-cssvar-ranking-color-0);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* code: 1 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="1"] {
+  background: var(--b-cssvar-ranking-color-1-opacity-flattened-b);
+  color: var(--b-cssvar-ranking-color-1);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* code: 2 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="2"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="2"] {
+  background: var(--b-cssvar-ranking-color-2-opacity-flattened-c);
+  color: var(--b-cssvar-ranking-color-2);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* code: 3, 4 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="4"] {
+  background: var(--b-cssvar-ranking-color-3-opacity-flattened-d);
+  color: var(--b-cssvar-ranking-color-3);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
+  visibility: hidden;
+}
+
+/* fadeout */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
 }
 
 /* items > item > head > route direction */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_route_direction {
   position: absolute;
   top: 7.5px;
-  left: 90px;
-  width: calc(100% - 90px - 10px);
+  left: 55px;
+  width: calc(100% - 55px - 85px - 15px - 5px);
+  /* rank: 55px + capsule: 85px + padding: 15px + gap: 5px */
   height: 14px;
   font-size: 14px;
   font-weight: 400;
@@ -62,12 +158,19 @@
   -webkit-user-select: none;
 }
 
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_direction {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-large);
+}
+
 /* items > item > head > route name */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_route_name {
   position: absolute;
   top: 21.5px;
-  left: 90px;
-  width: calc(100% - 20px - 70px - 35px - 20px);
+  left: 55px;
+  width: calc(100% - 55px - 85px - 15px - 5px);
+  /* rank: 55px + capsule: 85px + padding: 15px + gap: 5px */
   height: 23px;
   font-size: 17px;
   font-weight: 400;
@@ -83,155 +186,177 @@
 
 /* skeleton screen: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name {
+  top: calc(21.5px + 5px);
+  height: calc(23px - 5px);
   color: rgba(0, 0, 0, 0);
-  background: var(--b-cssvar-ededf2);
-  top: 7.5px;
-  height: 35px;
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
-/* items > item > head > status */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status {
+/* items > item > head > capsule */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule {
   position: absolute;
-  top: 7.5px;
-  left: 10px;
-  height: 35px;
-  width: 70px;
-  border-radius: var(--b-cssvar-border-radius-large);
+  top: 10px;
+  right: 15px;
+  width: 85px;
+  height: 30px;
   background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
-}
-
-/* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status {
-  background: var(--b-cssvar-ededf2);
-}
-
-/* items > item > head > status > slide */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  height: 35px;
-  width: 70px;
-  white-space: nowrap;
-  word-break: keep-all;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--b-cssvar-333333);
-  font-size: 13px;
-  font-weight: 700;
-  -webkit-user-select: none;
   user-select: none;
-  background: var(--b-cssvar-ededf2);
+  -webkit-user-select: none;
+}
+
+/* items > item > head > capsule > capsule separator */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_capsule_separator {
+  position: absolute;
+  top: 3px;
+  left: calc(55px - 1px / 2);
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status .css_next_slide,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_status .css_current_slide {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_capsule_separator {
   display: none;
 }
 
-/* code: 6, 5, 4, 3 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="6"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="5"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="4"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="3"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="6"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="5"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="4"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="3"] {
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* code: 2 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="2"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="2"] {
-  color: var(--b-cssvar-ffffff-normal);
-  font-size: 15px;
-  font-weight: 700;
-  background: var(--b-cssvar-main-color);
-}
-
-/* code: 1 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="1"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="1"] {
-  color: var(--b-cssvar-main-color);
-  font-size: 15px;
-  font-weight: 700;
-  background: var(--b-cssvar-main-color-opacity-flattened-c)
-}
-
-/* code: 0.5 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="0.5"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="0.5"] {
-  color: var(--b-cssvar-333333);
-  font-size: 15px;
-  font-weight: 700;
-}
-
-/* code: 0 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_next_slide[code="0"],
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_current_slide[code="0"] {
-  color: var(--b-cssvar-333333);
-  font-size: 15px;
-  font-weight: 700;
-  transition: none;
-}
-
-/* fadeout */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_status .css_slide_fade_out {
-  animation-name: fadeout;
-  animation-timing-function: ease-in-out;
-  animation-duration: var(--b-cssvar-transition-duration);
-  animation-fill-mode: forwards;
-}
-
-/* items > item > head > stretch */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_stretch {
+/* items > item > head > capsule > stretch */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch {
   position: absolute;
-  top: 7.5px;
-  right: 10px;
-  height: 35px;
-  width: 35px;
-  -webkit-user-select: none;
-  user-select: none;
-  border-radius: var(--b-cssvar-border-radius-large);
-  background: var(--b-cssvar-f9f9fb-normal);
+  top: 0px;
+  right: 0px;
+  height: 30px;
+  width: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch {
-  background: var(--b-cssvar-ededf2);
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch {
+  display: none;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
 
-/* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
-  display: none;
-}
-
-/* animation: true && skeleton screen: false */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
+/* animation: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_stretch span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
+}
+
+/* head > capsule > status */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  overflow: hidden;
+  background: var(--b-cssvar-ededf2);
+  visibility: inherit;
+}
+
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status {
+  visibility: hidden;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  white-space: nowrap;
+  word-break: keep-all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* code: 7 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="7"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="7"] {
+  background: var(--b-cssvar-ededf2);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* code: 6, 5, 4, 3 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="6"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="3"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="6"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="4"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="3"] {
+  background: var(--b-cssvar-ededf2);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* code: 2 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="2"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="2"] {
+  color: var(--b-cssvar-ffffff-normal);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color);
+}
+
+/* code: 1 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="1"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="1"] {
+  color: var(--b-cssvar-main-color);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--b-cssvar-main-color-opacity-flattened-c);
+}
+
+/* code: 0.5 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="0.5"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="0.5"] {
+  background: var(--b-cssvar-ededf2);
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* code: 0 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="0"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="0"] {
+  background: var(--b-cssvar-ededf2);
+  color: var(--b-cssvar-333333);
+  font-size: 13px;
+  font-weight: 700;
+  transition: none;
+}
+
+/* fadeout */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_slide_fade_out {
+  animation-name: fadeout;
+  animation-timing-function: ease-in-out;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-fill-mode: forwards;
 }
 
 /* items > item > body */
@@ -242,11 +367,7 @@
   width: 100%;
   height: 171px;
   opacity: 0;
-}
-
-/* stretched: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_body {
-  opacity: 1;
+  visibility: inherit;
 }
 
 /* animation: true && skeleton-screen: false */
@@ -254,12 +375,27 @@
   transition: opacity var(--b-cssvar-transition-duration);
 }
 
+/* ststretched: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] .css_location_group_item_body {
+  opacity: 1;
+}
+
+/* displayed: false */
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body[displayed="false"] {
+  visibility: hidden;
+}
+
+/* displayed: true */
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body[displayed="true"] {
+  visibility: visible;
+}
+
 /* items > item > body > buttons */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons {
   position: absolute;
   top: 5px;
-  left: 10px;
-  width: calc(100% - 20px);
+  left: 15px;
+  width: calc(100% - 30px);
   height: 35px;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -277,7 +413,7 @@
   position: relative;
   height: 35px;
   display: inline-flex;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   border-radius: var(--b-cssvar-border-radius-large);
   align-items: center;
@@ -291,18 +427,27 @@
   vertical-align: top;
 }
 
-/* animation:true && stretched: true && skeleton-screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button:last-child {
+  margin-right: 0px;
+}
+
+/* animation: true && stretched: true && skeleton-screen: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button {
   transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
 }
 
 /* highlighted: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[highlighted="true"] {
-  background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
   color: var(--b-cssvar-main-color);
 }
 
-/* items > item > body > buttons > button > icon */
+/* enabled: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[enabled="false"] {
+  opacity: var(--b-cssvar-disabled-opacity);
+}
+
+/* items > item > body > buttons > button > button icon */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon {
   position: relative;
   display: inline-flex;
@@ -312,28 +457,30 @@
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
+  font-size: 18px;
   color: var(--b-cssvar-333333);
 }
 
 /* animation: true && stretched: true && skeleton-screen: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
-  transition: --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
+  transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
 }
 
 /* highlighted: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[highlighted="true"] span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[highlighted="true"] .css_location_group_item_button_icon span.css_material_symbols_rounded {
   color: var(--b-cssvar-main-color);
   --b-cssvar-font-variation-settings-fill: 1;
 }
 
-/* items > item > body > buses */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses {
+/* items > item > body > buses, bus arrival times */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times {
   position: absolute;
   top: 45px;
-  left: 10px;
-  width: calc(100% - 20px);
+  left: 15px;
+  width: calc(100% - 30px);
   height: 121px;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -343,20 +490,23 @@
   white-space: nowrap;
   word-break: keep-all;
   border-radius: var(--b-cssvar-border-radius-normal);
-  display: none;
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses::-webkit-scrollbar {
-  display: none;
-}
-
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses[displayed="true"] {
   display: block;
+  visibility: inherit;
 }
 
-/* items > item > body > buses > bus */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus {
-  --b-cssvar-location-field-width: inherit;
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses[displayed="false"],
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times[displayed="false"] {
+  visibility: hidden;
+}
+
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses[displayed="true"],
+.css_location_field[displayed="true"] .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times[displayed="true"] {
+  visibility: visible;
+}
+
+/* items > item > body > buses, bus arrival times > bus, bus arrival time */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time {
   position: relative;
   width: calc(var(--b-cssvar-location-field-width) * 0.6);
   height: 121px;
@@ -368,17 +518,19 @@
   scroll-snap-align: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus:last-child {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus:last-child,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time:last-child {
   margin-right: 0px;
 }
 
 /* on this route: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus[on-this-route="true"] {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus[on-this-route="true"] {
   background: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-e));
 }
 
-/* items > item > body > buses > bus > title */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title {
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > title */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -386,8 +538,9 @@
   height: 20px;
 }
 
-/* items > item > body > buses > bus > title > icon */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_icon {
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > title > icon */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_icon,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -398,14 +551,16 @@
   align-items: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_icon span.css_material_symbols_rounded {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_icon span.css_material_symbols_rounded,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
 }
 
-/* items > item > body > buses > bus > title > car number */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_car_number {
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > title > car number, time */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_car_number,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_time {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -420,8 +575,9 @@
   overflow: hidden;
 }
 
-/* items > item > body > buses > bus > attributes */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes {
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time attributes */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -430,9 +586,12 @@
 }
 
 /* items > item > body > buses > bus > attributes > car route, car status, car type */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_name,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_period,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_days {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -446,20 +605,33 @@
   align-items: center;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route {
   top: 0px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status {
   top: 25px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type {
   top: 50px;
 }
 
-/* items > item > body > buses > message */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_buses .css_location_group_item_buses_message {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_name {
+  top: 0px;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_period {
+  top: 25px;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_days {
+  top: 50px;
+}
+
+/* items > item > body > buses, bus arrival times > message */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_buses_message,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_message {
   position: absolute;
   top: 0px;
   left: 0px;

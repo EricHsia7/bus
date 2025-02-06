@@ -8,6 +8,7 @@ export interface BusEventItem {
   ProviderID: number;
   CarID: number;
   DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end
+  BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99'; // 0: 正常, 1: 車禍, 2: 故障, 3: 塞車, 4: 緊急求援, 5: 加油, 99: 非營運狀態
   RouteID: string; // PathAttributeId (number in string)
   GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
   StopID: string; // number in string

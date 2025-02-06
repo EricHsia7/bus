@@ -1,5 +1,5 @@
 import { FoldersWithContentArray, listFoldersWithContent } from '../folder/index';
-import { listPersonalSchedules } from '../personal-schedule/index';
+import { listPersonalSchedules, PersonalScheduleArray } from '../personal-schedule/index';
 import { listRecentViews, RecentViewArray } from '../recent-views/index';
 import { listSettingsWithOptions, SettingsWithOptionsArray } from '../settings/index';
 

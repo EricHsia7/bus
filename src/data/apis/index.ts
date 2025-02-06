@@ -1,5 +1,5 @@
-import { BusEvent } from './getBusEvent/index';
-import { BusData } from './getBusData/index';
+import { BusEvent, BusEventItem } from './getBusEvent/index';
+import { BusData, BusDataItem } from './getBusData/index';
 import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
 
@@ -92,28 +92,37 @@ export function parseTimeCode(code: string, mode: number): TimeMoment | TimeRang
   }
 }
 
-export interface ProcessedBusPosition {
+export interface BatchFoundBusPosition {
   longitude: number;
   latitude: number;
 }
 
-export interface ProcessedBus {
+export interface BatchFoundBus {
+  CarType: BusEventItem['CarType'];
+  BusStatus: BusEventItem['BusStatus'];
   BusID: string;
+  CarOnStop: BusEventItem['CarOnStop'];
   onThisRoute: boolean;
-  position: ProcessedBusPosition;
+  position: BatchFoundBusPosition;
+  RouteName: string;
+  RouteID: number;
   index: number;
 }
 
-export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): { [key: string]: Array<ProcessedBus> } {
-  var result = {};
-  var BusDataObj = {};
+export type BatchFoundBuses = { [key: string]: Array<BatchFoundBus> };
+
+export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): BatchFoundBuses {
+  let result = {} as BatchFoundBuses;
+  let BusDataObj: {
+    [key: string]: BusDataItem;
+  } = {};
   for (const BusDataItem of BusData) {
     var thisBusID = BusDataItem.BusID;
     BusDataObj[thisBusID] = BusDataItem;
   }
 
   for (let BusEventItem of BusEvent) {
-    let processedItem = {};
+    let processedItem = {} as BatchFoundBus;
 
     // collect data from 'BusEvent'
     processedItem.CarType = BusEventItem.CarType;
@@ -123,21 +132,21 @@ export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: Simpli
 
     // check whether this bus is on the route
     const thisRouteID = parseInt(BusEventItem.RouteID);
-    const thisBusID = BusEventItem.BusID;
+    const thisBusID = String(BusEventItem.BusID);
     let isOnThisRoute: boolean = false;
     let index: number = 0;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10) {
       isOnThisRoute = true;
-      index = String(BusEventItem.BusID).charCodeAt(0) * Math.pow(10, -5);
+      index = thisBusID.charCodeAt(0) * Math.pow(10, -5);
     } else {
       isOnThisRoute = false;
-      index = String(BusEventItem.BusID).charCodeAt(0);
+      index = thisBusID.charCodeAt(0);
     }
     processedItem.onThisRoute = isOnThisRoute;
     processedItem.index = index;
 
     // collect data from 'BusData'
-    let thisBusData = {};
+    let thisBusData = {} as BusDataItem;
     if (BusDataObj.hasOwnProperty(thisBusID)) {
       thisBusData = BusDataObj[thisBusID];
     } else {
@@ -168,6 +177,81 @@ export function processBuses(BusEvent: BusEvent, BusData: BusData, Route: Simpli
       result[StopKey] = [];
     }
     result[StopKey].push(processedItem);
+    // Handle multiple buses (of the same route) on a stop
+  }
+  /*
+  for (var key in result) {
+    result[key] = result[key].sort(function (a, b) {
+      return a.index - b.index;
+    });
+  }
+  */
+  return result;
+}
+
+export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, StopIDList: Array<number>): BatchFoundBuses {
+  let result = {} as BatchFoundBuses;
+  let BusDataObj: {
+    [key: string]: BusDataItem;
+  } = {};
+  for (const BusDataItem of BusData) {
+    var thisBusID = BusDataItem.BusID;
+    BusDataObj[thisBusID] = BusDataItem;
+  }
+
+  for (let BusEventItem of BusEvent) {
+    let processedItem = {} as BatchFoundBus;
+
+    const thisStopID = parseInt(BusEventItem.StopID);
+    const thisRouteID = parseInt(BusEventItem.RouteID);
+    const thisBusID = String(BusEventItem.BusID);
+
+    // Check whether this bus is on one of the specified stops
+    if (StopIDList.indexOf(thisStopID) < 0) {
+      continue;
+    }
+
+    processedItem.index = thisBusID.charCodeAt(0);
+    processedItem.onThisRoute = true; // Every entry in Location is stop-route pair
+
+    // Collect data from 'BusEvent'
+    processedItem.CarType = BusEventItem.CarType;
+    processedItem.BusStatus = BusEventItem.BusStatus;
+    processedItem.BusID = BusEventItem.BusID;
+    processedItem.CarOnStop = BusEventItem.CarOnStop;
+
+    // Collect data from 'BusData'
+    let thisBusData = {} as BusDataItem;
+    if (BusDataObj.hasOwnProperty(thisBusID)) {
+      thisBusData = BusDataObj[thisBusID];
+    } else {
+      continue;
+    }
+    processedItem.position = {
+      latitude: parseFloat(thisBusData.Latitude),
+      longitude: parseFloat(thisBusData.Longitude)
+    };
+
+    // Search data from 'Route'
+    let searchedRoute = {};
+    let isRouteSearched = false;
+    for (const key in Route) {
+      const thisRouteItem = Route[key];
+      const pid = thisRouteItem.pid;
+      if (pid.indexOf(thisRouteID) > -1) {
+        searchedRoute = thisRouteItem;
+        isRouteSearched = true;
+        break;
+      }
+    }
+    processedItem.RouteName = isRouteSearched ? searchedRoute.n : '未知路線';
+    processedItem.RouteID = isRouteSearched ? searchedRoute.id : null;
+
+    const StopKey = `s_${thisStopID}`;
+    if (!result.hasOwnProperty(StopKey)) {
+      result[StopKey] = [];
+    }
+    result[StopKey].push(processedItem);
   }
   /*
   for (var key in result) {
@@ -190,17 +274,7 @@ interface FormattedBusPosition {
   latitude: number;
 }
 
-export interface FormattedBus {
-  type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
-  carNumber: string;
-  status: FormattedBusStatus;
-  RouteName: string;
-  onThisRoute: boolean;
-  index: number;
-  position: FormattedBusPosition;
-}
-
-export function parseCarType(CarType: '0' | '1' | '2' | '3'): string {
+export function parseCarType(CarType: '0' | '1' | '2' | '3'): '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型' {
   let type = '';
   switch (CarType) {
     case '0':
@@ -266,36 +340,38 @@ export function parseBusStatus(BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '9
   return situation;
 }
 
-export function formatBus(object: ProcessedBus): FormattedBus {
-  let result: FormattedBus = {};
+export interface FormattedBus {
+  type: '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型';
+  carNumber: string;
+  status: FormattedBusStatus;
+  RouteName: string;
+  onThisRoute: boolean;
+  index: number;
+  position: FormattedBusPosition;
+}
 
-  const CarType = object.CarType;
+export function formatBus(batchFoundBus: BatchFoundBus): FormattedBus {
+  let result = {} as FormattedBus;
+
+  const CarType = batchFoundBus.CarType;
   const type = parseCarType(CarType);
   result.type = type;
 
-  const CarOnStop = object.CarOnStop;
+  const CarOnStop = batchFoundBus.CarOnStop;
   const onStop = parseCarOnStop(CarOnStop);
 
-  const BusStatus = object.BusStatus;
+  const BusStatus = batchFoundBus.BusStatus;
   const situation = parseBusStatus(BusStatus);
 
-  result.carNumber = object.BusID;
+  result.carNumber = batchFoundBus.BusID;
   result.status = {
     onStop: onStop,
     situation: situation,
     text: `${onStop} | ${situation}`
   };
-  result.RouteName = object.RouteName;
-  result.onThisRoute = object.onThisRoute;
-  result.index = object.index;
-  result.position = object.position;
-  return result;
-}
-
-export function formatBusEvent(buses: Array<ProcessedBus>): Array<FormattedBus> {
-  let result = [];
-  for (const bus of buses) {
-    result.push(formatBus(bus));
-  }
+  result.RouteName = batchFoundBus.RouteName;
+  result.onThisRoute = batchFoundBus.onThisRoute;
+  result.index = batchFoundBus.index;
+  result.position = batchFoundBus.position;
   return result;
 }

@@ -5,7 +5,7 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody } from './interface/location/index';
+import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
@@ -17,7 +17,7 @@ import { openSettingsOptions, closeSettingsOptions, settingsOptionsHandler } fro
 import { initializeSettings } from './data/settings/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
 import { documentQuerySelector } from './tools/query-selector';
-import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveStopItemOnRoute } from './interface/save-to-folder/index';
+import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteOnRoute, saveStopItemOnLocation, saveStopItemOnRoute } from './interface/save-to-folder/index';
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
@@ -35,8 +35,9 @@ import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
-import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
+import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { switchCalendarDay } from './interface/route/details/calendar';
 
 import './interface/theme.css';
 
@@ -176,7 +177,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { switchCalendarDay } from './interface/route/details/calendar';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -218,7 +218,7 @@ window.bus = {
                 initializeFolders();
               });
               const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement
+              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
               mediaQuery.addEventListener('change', function () {
                 updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
               });
@@ -306,7 +306,8 @@ window.bus = {
   location: {
     openLocation,
     closeLocation,
-    stretchLocationItemBody
+    stretchLocationItemBody,
+    switchLocationBodyTab
   },
   folder: {
     openSaveToFolder,
@@ -323,7 +324,9 @@ window.bus = {
     saveEditedFolder,
     selectFolderIcon,
     saveStopItemOnRoute,
+    saveStopItemOnLocation,
     saveRouteOnDetailsPage,
+    saveRouteOnRoute,
     removeItemOnFolderEditor,
     moveItemOnFolderEditor
   },
@@ -380,6 +383,7 @@ window.bus = {
     openScheduleNotification,
     closeScheduleNotification,
     scheduleNotificationForStopItemOnRoute,
+    scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
   }
 };

@@ -9,6 +9,9 @@ import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
+import { indexToDay, timeObjectToString } from '../../tools/time';
+import { isSaved } from '../../data/folder/index';
+import { stopHasNotifcationSchedules } from '../../data/notification/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
@@ -97,7 +100,7 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.1;
+  const smoothingFactor = 0.7;
   const time = new Date().getTime();
   if (locationRefreshTimer_refreshing) {
     locationRefreshTimer_targetProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
@@ -120,7 +123,7 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div></div><div class="css_location_group_item_body"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0">公車</div></div><div class="css_location_group_item_buses" displayed="true"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1"></div><div class="css_location_group_item_rank_current_slide" code="-1"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-location', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-location', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -128,41 +131,41 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  const identifier = generateIdentifier('g');
+  // const identifier = generateIdentifier('g');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group');
   element.innerHTML = /*html*/ `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfTab(): GeneratedElement {
-  const identifier = generateIdentifier('t');
+  // const identifier = generateIdentifier('t');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group_tab');
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  const identifier = generateIdentifier('p');
+  // const identifier = generateIdentifier('p');
   const element = document.createElement('div');
-  element.id = identifier;
+  // element.id = identifier;
   element.classList.add('css_location_group_details_property');
   element.innerHTML = /*html*/ `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
-function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
+function setUpLocationFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -178,13 +181,23 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
         route_name: '',
         route_direction: '',
         routeId: 0,
-        status: { code: 8, text: '', time: -6 },
-        buses: []
+        stopId: 0,
+        status: {
+          code: 8,
+          text: '',
+          time: -6
+        },
+        ranking: {
+          number: 0,
+          text: '--',
+          code: -1
+        },
+        buses: [],
+        busArrivalTimes: []
       });
     }
   }
   updateLocationField(
-    Field,
     {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
@@ -229,7 +242,7 @@ function setUpLocationFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateLocationField(Field: HTMLElement, integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
+function updateLocationField(integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
     function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
       const thisElementRect = thisElement.getBoundingClientRect();
@@ -244,14 +257,14 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       const nextSlide = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
       const currentSlide = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
-      nextSlide.setAttribute('code', thisItem.status.code);
+      nextSlide.setAttribute('code', thisItem.status.code.toString());
       nextSlide.innerText = thisItem.status.text;
 
       if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
         currentSlide.addEventListener(
           'animationend',
           function () {
-            currentSlide.setAttribute('code', thisItem.status.code);
+            currentSlide.setAttribute('code', thisItem.status.code.toString());
             currentSlide.innerText = thisItem.status.text;
             currentSlide.classList.remove('css_slide_fade_out');
           },
@@ -259,18 +272,63 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
         );
         currentSlide.classList.add('css_slide_fade_out');
       } else {
-        currentSlide.setAttribute('code', thisItem.status.code);
+        currentSlide.setAttribute('code', thisItem.status.code.toString());
         currentSlide.innerText = thisItem.status.text;
       }
     }
 
-    function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      elementQuerySelector(thisElement, '.css_location_group_item_route_name').innerText = thisItem.route_name;
-      elementQuerySelector(thisElement, '.css_location_group_item_route_direction').innerText = thisItem.route_direction;
+    function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
+      const thisElementRect = thisElement.getBoundingClientRect();
+      const top = thisElementRect.top;
+      const left = thisElementRect.left;
+      const bottom = thisElementRect.bottom;
+      const right = thisElementRect.right;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
+      const nextSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
+      const currentSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
+
+      nextSlide.setAttribute('code', thisItem.ranking.code.toString());
+      nextSlide.innerText = thisItem.ranking.text;
+
+      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+        currentSlide.addEventListener(
+          'animationend',
+          function () {
+            currentSlide.setAttribute('code', thisItem.ranking.code.toString());
+            currentSlide.innerText = thisItem.ranking.text;
+            currentSlide.classList.remove('css_location_group_item_rank_current_slide_fade_out');
+          },
+          { once: true }
+        );
+        currentSlide.classList.add('css_location_group_item_rank_current_slide_fade_out');
+      } else {
+        currentSlide.setAttribute('code', thisItem.ranking.code.toString());
+        currentSlide.innerText = thisItem.ranking.text;
+      }
+    }
+
+    function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisRouteDirectionElement = elementQuerySelector(thisElement, '.css_location_group_item_route_direction');
+      thisRouteDirectionElement.innerText = thisItem.route_direction;
+    }
+
+    function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisRouteNameElement = elementQuerySelector(thisElement, '.css_location_group_item_route_name');
+      thisRouteNameElement.innerText = thisItem.route_name;
+      // TODO: selector
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      elementQuerySelector(thisElement, '.css_location_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const thisBusesElement = elementQuerySelector(thisElement, '.css_location_group_item_buses');
+      thisBusesElement.innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+    }
+
+    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_location_group_item_bus_arrival_times');
+      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_location_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_location_group_item_bus_arrival_time_attributes"><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
     }
 
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
@@ -287,27 +345,60 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
+    function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
+      const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
+      const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
+      saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}])`);
+      isSaved('stop', thisItem.stopId).then((e) => {
+        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+      });
+    }
+
+    function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
+      const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
+      const scheduleNotificationButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="schedule-notification"]');
+      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}, ${thisItem.status.time}])`);
+      const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
+      scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
+    }
+
     if (previousItem === null) {
       updateStatus(thisElement, thisItem, animation);
-      updateName(thisElement, thisItem);
+      updateRank(thisElement, thisItem, animation);
+      updateRouteDirection(thisElement, thisItem);
+      updateRouteName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
+      updateBusArrivalTimes(thisElement, thisItem);
       updateStretch(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
+      updateSaveToFolderButton(thisElement, thisItem);
+      updateScheduleNotificationButton(thisElement, thisItem);
     } else {
-      if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+      if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisElement, thisItem, animation);
+        updateScheduleNotificationButton(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.route_name, thisItem.route_name) || !compareThings(previousItem.route_direction, thisItem.route_direction)) {
-        updateName(thisElement, thisItem);
+      if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
+        updateRank(thisElement, thisItem, animation);
+      }
+      if (previousItem.stopId !== thisItem.stopId) {
+        updateRouteDirection(thisElement, thisItem);
+        updateRouteName(thisElement, thisItem);
+        updateSaveToFolderButton(thisElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
-      if (!(animation === previousAnimation)) {
+      if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+        updateBusArrivalTimes(thisElement, thisItem);
+      }
+      if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (skeletonScreen !== previousSkeletonScreen) {
         updateStretch(thisElement, skeletonScreen);
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
@@ -343,10 +434,10 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (!compareThings(previousProperty.value, thisProperty.value)) {
         updateValue(thisElement, thisProperty);
       }
-      if (!(animation === previousAnimation)) {
+      if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (skeletonScreen !== previousSkeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
@@ -387,57 +478,67 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
   LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   // TODO: updateTab
 
-  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        elementQuerySelector(Field, `.css_location_groups`).appendChild(newGroupElement.element);
+        LocationGroupsElement.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        elementQuerySelector(Field, `.css_location_head .css_location_group_tabs_tray`).appendChild(newTabElement.element);
+        LocationGroupTabsTrayElement.appendChild(newTabElement.element);
       }
     } else {
+      const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
+      const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[groupIndex].remove();
-        elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[groupIndex].remove();
+        LocationGroupElements[groupIndex].remove();
+        LocationGroupTabElements[groupIndex].remove();
       }
     }
   }
 
+  const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
   for (let i = 0; i < groupQuantity; i++) {
-    var groupKey = `g_${i}`;
-    var currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`).length;
+    const groupKey = `g_${i}`;
+    const thisLocationGroupElement = LocationGroupElements[i];
+    const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`).length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
-      var capacity = currentItemSeatQuantity - itemQuantity[groupKey];
+      const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
+        const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, `.css_location_group_items`);
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var thisItemElement = generateElementOfItem();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items`).appendChild(thisItemElement.element);
+          const newItemElement = generateElementOfItem();
+          LocationGroupItemsElement.appendChild(newItemElement.element);
         }
       } else {
+        const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`);
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var itemIndex = currentItemSeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_items .css_location_group_item`)[itemIndex].remove();
+          const itemIndex = currentItemSeatQuantity - 1 - o;
+          LocationGroupItemElements[itemIndex].remove();
         }
       }
     }
 
-    var currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
-    var groupPropertyQuantity = groups[groupKey].properties.length;
+    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
+    const groupPropertyQuantity = groups[groupKey].properties.length;
     if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
-      var capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
+      const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
       if (capacity < 0) {
+        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
+        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          //var propertyIndex = currentGroupPropertySeatQuantity + o;
-          var thisPropertyElement = generateElementOfGroupDetailsProperty();
-          elementQuerySelector(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body`).appendChild(thisPropertyElement.element);
+          // var propertyIndex = currentGroupPropertySeatQuantity + o;
+          const newPropertyElement = generateElementOfGroupDetailsProperty();
+          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement.element);
         }
       } else {
+        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
+        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
         for (let o = 0; o < Math.abs(capacity); o++) {
-          var propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[propertyIndex].remove();
+          const propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
+          elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property')[propertyIndex].remove();
         }
       }
     }
@@ -445,11 +546,11 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
 
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const thisTabElement = elementQuerySelectorAll(Field, `.css_location_head .css_location_group_tabs_tray .css_location_group_tab`)[i];
+    const thisTabElement = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab')[i];
     thisTabElement.innerHTML = /*html*/ `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
-    const thisGroupElement = elementQuerySelectorAll(Field, `.css_location_groups .css_location_group`)[i];
+    const thisGroupElement = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i];
     const groupPropertyQuantity = groups[groupKey].properties.length;
 
     for (let k = 0; k < groupPropertyQuantity; k++) {
@@ -458,7 +559,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
-            var previousProperty = previousIntegration.groups[groupKey].properties[k];
+            const previousProperty = previousIntegration.groups[groupKey].properties[k];
             updateProperty(thisElement, thisProperty, previousProperty);
           } else {
             updateProperty(thisElement, thisProperty, null);
@@ -477,7 +578,7 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
-            var previousItem = previousIntegration.groupedItems[groupKey][j];
+            const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -490,11 +591,13 @@ function updateLocationField(Field: HTMLElement, integration: IntegratedLocation
       }
     }
   }
+
   previousIntegration = integration;
+  previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshLocation(): Promise<object> {
+async function refreshLocation() {
   const time = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
@@ -504,7 +607,7 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
-  updateLocationField(LocationField, integration, false, playing_animation);
+  updateLocationField(integration, false, playing_animation);
   locationRefreshTimer_lastUpdate = time;
   if (locationRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
@@ -515,12 +618,11 @@ async function refreshLocation(): Promise<object> {
   locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - time);
   locationRefreshTimer_refreshing = false;
   LocationUpdateTimerElement.setAttribute('refreshing', 'false');
-  return { status: 'Successfully refreshed the location.' };
 }
 
 export function streamLocation(): void {
   refreshLocation()
-    .then((result) => {
+    .then(function () {
       if (locationRefreshTimer_streaming) {
         locationRefreshTimer_timer = setTimeout(function () {
           streamLocation();
@@ -548,8 +650,8 @@ export function openLocation(hash: string): void {
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   LocationField.setAttribute('displayed', 'true');
-  elementQuerySelector(LocationField, '.css_location_groups').scrollLeft = 0;
-  setUpLocationFieldSkeletonScreen(LocationField);
+  LocationGroupsElement.scrollLeft = 0;
+  setUpLocationFieldSkeletonScreen();
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
     if (!locationRefreshTimer_streamStarted) {
@@ -576,9 +678,45 @@ export function closeLocation(): void {
 
 export function stretchLocationItemBody(itemID: string): void {
   const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   if (itemElement.getAttribute('stretched') === 'true') {
+    if (itemElement.getAttribute('animation') === 'true') {
+      itemBodyElement.addEventListener(
+        'transitionend',
+        function () {
+          itemBodyElement.setAttribute('displayed', 'false');
+        },
+        { once: true }
+      );
+    } else {
+      itemBodyElement.setAttribute('displayed', 'false');
+    }
     itemElement.setAttribute('stretched', 'false');
   } else {
+    itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
+  }
+}
+
+export function switchLocationBodyTab(itemID: string, tabCode: number): void {
+  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
+  const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
+  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');
+  for (const t of buttonElements) {
+    t.setAttribute('highlighted', 'false');
+  }
+  elementQuerySelector(buttonsElement, `.css_location_group_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
+  switch (tabCode) {
+    case 0:
+      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'false');
+      break;
+    case 1:
+      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'true');
+      break;
+    default:
+      break;
   }
 }

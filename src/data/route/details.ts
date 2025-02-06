@@ -1,6 +1,6 @@
 import { TimeMoment, parseTimeCode, TimeRange } from '../apis/index';
 import { getProvider, Provider, ProviderItem } from '../apis/getProvider/index';
-import { getRoute, Route } from '../apis/getRoute/index';
+import { getRoute, Route, RouteItem } from '../apis/getRoute/index';
 import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
 import { getTimeTable } from '../apis/getTimeTable/index';
 import { dateToString, dateValueToDayOfWeek, getThisWeekOrigin, offsetDate } from '../../tools/time';
@@ -56,7 +56,7 @@ export interface Calendar {
   };
 }
 
-function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: Array, TimeTable: Array): Calendar {
+function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<number>, timeTableRules: object, SemiTimeTable: [], TimeTable: []): Calendar {
   let calendar: Calendar = {
     calendarDays: {
       d_0: {

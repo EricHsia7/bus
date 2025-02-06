@@ -1,5 +1,5 @@
 import { convertToUnitVector } from '../../../tools/math';
-import { Location, SimplifiedLocation } from './index';
+import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
 self.onmessage = function (e) {
   const result = simplifyLocation_worker(e.data);
@@ -44,7 +44,7 @@ function simplifyLocation_worker(Location: Location): SimplifiedLocation {
 
     const key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
-      let simplifiedItem: SimplifiedLocationItem = {};
+      let simplifiedItem = {} as SimplifiedLocationItem;
       simplifiedItem.n = item.nameZh;
       simplifiedItem.lo = parseFloat(item.longitude);
       simplifiedItem.la = parseFloat(item.latitude);

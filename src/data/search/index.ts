@@ -50,9 +50,9 @@ export async function searchRouteByRouteID(RouteID: number): Promise<Array<Simpl
   return result;
 }
 
-export async function searchRouteByPathAttributeId(PathAttributeId: Array<number>): Promise<Array<SimplifiedRouteItem>> {
+export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
   const requestID = generateIdentifier('r');
-  const Route = await getRoute(requestID, true);
+  const Route = await getRoute(requestID, true) as SimplifiedRoute
   let result = [];
   for (const key in Route) {
     if (String(Route[key].pid).indexOf(PathAttributeId) > -1) {

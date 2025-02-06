@@ -94,7 +94,7 @@ export async function discardExpiredEstimateTimeRecordsForUpdateRate() {
 }
 
 let getUpdateRateWorkerResponses = {};
-let port;
+var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {

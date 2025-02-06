@@ -1,21 +1,33 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
-import { generateIdentifier } from '../../tools/index';
+import { booleanToString } from '../../tools/index';
 import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
 
-function generateElementOfItem(item: FoldersWithContent, type: FolderContentType, parameters: Array): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'bus';
+
+const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
+const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
+const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
+
+function generateElementOfItem(item: FoldersWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
+  // const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');
-  element.id = identifier;
+  // element.id = identifier;
   switch (type) {
-    case 'stop':
+    case 'stop-on-route':
       element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.folder.id}', ${parameters[1]}, ${parameters[2]})`);
+      break;
+    case 'stop-on-location':
+      element.setAttribute('onclick', `bus.folder.saveStopItemOnLocation('${parameters[0]}', '${item.folder.id}', ${parameters[1]}, ${parameters[2]})`);
       break;
     case 'route':
       element.setAttribute('onclick', `bus.folder.saveRouteOnDetailsPage('${item.folder.id}', ${parameters[0]})`);
+      break;
+    case 'route-on-route':
+      element.setAttribute('onclick', `bus.folder.saveRouteOnRoute('${item.folder.id}', ${parameters[0]})`);
       break;
     case 'bus':
       break;
@@ -25,41 +37,56 @@ function generateElementOfItem(item: FoldersWithContent, type: FolderContentType
   element.innerHTML = /*html*/ `<div class="css_save_to_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
-async function initializeSaveToFolderField(type: FolderContentType, parameters: Array) {
-  var Field = documentQuerySelector('.css_save_to_folder_field');
-  elementQuerySelector(Field, '.css_save_to_folder_body .css_save_to_folder_list').innerHTML = '';
-  var foldersWithContent = await listFoldersWithContent();
-  for (var item of foldersWithContent) {
-    var thisElement = generateElementOfItem(item, type, parameters);
-    elementQuerySelector(Field, '.css_save_to_folder_body .css_save_to_folder_list').appendChild(thisElement.element);
+async function initializeSaveToFolderField(type: SaveToFolderType, parameters: Array<any>) {
+  SaveToFolderListElement.innerHTML = '';
+  const foldersWithContent = await listFoldersWithContent();
+  for (const item of foldersWithContent) {
+    const newItemElement = generateElementOfItem(item, type, parameters);
+    SaveToFolderListElement.appendChild(newItemElement.element);
   }
 }
 
-export function openSaveToFolder(type: FolderContentType, parameters: Array): void {
+export function openSaveToFolder(type: SaveToFolderType, parameters: Array<any>): void {
   pushPageHistory('SaveToFolder');
-  var Field = documentQuerySelector('.css_save_to_folder_field');
-  Field.setAttribute('displayed', 'true');
+  SaveToFolderField.setAttribute('displayed', 'true');
   initializeSaveToFolderField(type, parameters);
 }
 
 export function closeSaveToFolder(): void {
   revokePageHistory('SaveToFolder');
-  var Field = documentQuerySelector('.css_save_to_folder_field');
-  Field.setAttribute('displayed', 'false');
+  SaveToFolderField.setAttribute('displayed', 'false');
 }
 
 export function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
-  var itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
-  var actionButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
+  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+  const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
       isSaved('stop', StopID).then((k) => {
         if (k) {
-          actionButtonElement.setAttribute('highlighted', k);
+          saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
+          promptMessage('已儲存至資料夾', 'folder');
+          closeSaveToFolder();
+        }
+      });
+    } else {
+      promptMessage('此資料夾不支援站牌類型項目', 'warning');
+    }
+  });
+}
+
+export function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
+  const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
+  const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="save-to-folder"]');
+  saveStop(folderID, StopID, RouteID).then((e) => {
+    if (e) {
+      isSaved('stop', StopID).then((k) => {
+        if (k) {
+          saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
           promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }
@@ -71,12 +98,27 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
 }
 
 export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
-  var actionButtonElement = documentQuerySelector('.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
+  const actionButtonElement = documentQuerySelector('.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
       isSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
+          promptMessage('已儲存至資料夾', 'folder');
+          closeSaveToFolder();
+        }
+      });
+    } else {
+      promptMessage('此資料夾不支援路線類型項目', 'warning');
+    }
+  });
+}
+
+export function saveRouteOnRoute(folderID: string, RouteID: number): void {
+  saveRoute(folderID, RouteID).then((e) => {
+    if (e) {
+      isSaved('route', RouteID).then((k) => {
+        if (k) {
           promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }

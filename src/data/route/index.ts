@@ -2,11 +2,11 @@ import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-a
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation } from '../apis/getLocation/index';
-import { getRoute } from '../apis/getRoute/index';
+import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
-import { getStop } from '../apis/getStop/index';
-import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, processBuses } from '../apis/index';
+import { getStop, SimplifiedStopItem } from '../apis/getStop/index';
+import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, batchFindBusesForRoute } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';
@@ -78,16 +78,16 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-  const Route = await getRoute(requestID, true);
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const Stop = await getStop(requestID);
-  const Location = await getLocation(requestID, false);
+  const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
   const SegmentBuffers = await getSegmentBuffers(requestID);
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
   const BusArrivalTimes = await getBusArrivalTimes();
 
-  const processedBuses = processBuses(BusEvent, BusData, Route, RouteID, PathAttributeId);
+  const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
@@ -96,13 +96,13 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
 
   let result = [];
   let positions = [];
 
   for (const item of EstimateTime) {
-    let integratedStopItem: integratedStopItem = {};
+    let integratedStopItem = {} as integratedStopItem;
 
     const thisRouteID = item.RouteID;
 
@@ -113,7 +113,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // collect data from 'Stop'
       const thisStopKey = `s_${item.StopID}`;
-      let thisStop: SimplifiedStopItem = {};
+      let thisStop = {} as SimplifiedStopItem;
       if (Stop.hasOwnProperty(thisStopKey)) {
         thisStop = Stop[thisStopKey];
       } else {
@@ -125,7 +125,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // collect data from 'Location'
       const thisLocationKey = `l_${thisStop.stopLocationId}`;
-      let thisLocation: SimplifiedLocationItem = {};
+      let thisLocation = {} as SimplifiedLocationItem
       if (Location.hasOwnProperty(thisLocationKey)) {
         thisLocation = Location[thisLocationKey];
       } else {
@@ -137,7 +137,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .map((id: number) => {
           const overlappingRouteKey = `r_${id}`;
           if (Route.hasOwnProperty(overlappingRouteKey)) {
-            const overlappingRoute: SimplifiedRouteItem = Route[overlappingRouteKey];
+            const overlappingRoute = Route[overlappingRouteKey] as SimplifiedRouteItem;
             const formattedOverlappingRoute = {
               name: overlappingRoute.n,
               RouteEndPoints: {
@@ -167,12 +167,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         id: item.StopID
       });
 
-      // collect data from 'processedBuses'
-      let buses: Array<FormattedBus> = [];
+      // collect data from 'batchFoundBuses'
+      let buses = []; // as  Array<FormattedBus>
       for (var overlappingStopID of thisLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
-        if (processedBuses.hasOwnProperty(overlappingStopKey)) {
-          buses.push(processedBuses[overlappingStopKey].map((e) => formatBus(e)));
+        if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
+          buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));
         }
       }
       integratedStopItem.buses = buses.flat().sort(function (a, b) {
