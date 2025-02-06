@@ -167,7 +167,7 @@
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* skeleton screen: true */
