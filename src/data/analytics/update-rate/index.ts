@@ -69,7 +69,7 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
 
 async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
   const keys = await lfListItemKeys(3);
-  let result: Array<[number, number]> = [];
+  const result: Array<[number, number]> = [];
   for (const key of keys) {
     const json = await lfGetItem(3, key);
     const object: IncompleteRecords = JSON.parse(json);
@@ -93,8 +93,8 @@ export async function discardExpiredEstimateTimeRecordsForUpdateRate() {
   }
 }
 
-let getUpdateRateWorkerResponses = {};
-var port;
+const getUpdateRateWorkerResponses = {};
+let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
@@ -148,7 +148,7 @@ export async function getUpdateRateInTime(): Promise<string> {
       const firstColumn: Array<number> = group.map((item) => item[0]);
       const secondColumn: Array<number> = group.map((item) => item[1]);
       const rowCount: number = firstColumn.length;
-      let timeStampUponChanges: Array<number> = [];
+      const timeStampUponChanges: Array<number> = [];
       for (let i = 1; i < rowCount; i++) {
         const change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
         if (change > 0) {

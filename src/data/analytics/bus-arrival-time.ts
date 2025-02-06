@@ -109,7 +109,7 @@ export async function discardExpiredEstimateTimeRecordsForBusArrivalTime() {
 
 export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   // Merge data by stops
-  let recordsGroupedByStops = {};
+  const recordsGroupedByStops = {};
   const keys = await lfListItemKeys(4);
   for (const key of keys) {
     const existingRecord = await lfGetItem(4, key);
@@ -123,15 +123,15 @@ export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   }
 
   // Extract Arrival Times
-  let busArrivalTimesGroupedByStops = {};
+  const busArrivalTimesGroupedByStops = {};
   for (const stopKey2 in recordsGroupedByStops) {
-    let recordsOfThisStop = recordsGroupedByStops[stopKey2];
+    const recordsOfThisStop = recordsGroupedByStops[stopKey2];
     recordsOfThisStop.sort(function (a, b) {
       return a.timeStamp - b.timeStamp;
     });
     const recordsOfThisStopLength = recordsOfThisStop.length;
     let EstimateTimeInThisPeriod = [];
-    let busArrivalTimeInThisPeriod = [];
+    const busArrivalTimeInThisPeriod = [];
     for (let i = 0; i < recordsOfThisStopLength; i++) {
       const currentRecord = recordsOfThisStop[i];
       const nextRecord = recordsOfThisStop[i + 1] || recordsOfThisStop[i];
@@ -159,7 +159,7 @@ export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
 
   // Group bus arrival times by stops and personal schedules
   const personalSchedules = await listPersonalSchedules();
-  let result = {};
+  const result = {};
   for (const personalSchedule of personalSchedules) {
     const personalScheduleID = personalSchedule.id;
     const personalScheduleName = personalSchedule.name;

@@ -19,13 +19,13 @@ export interface BusEventItem {
 export type BusEvent = Array<BusEventItem>;
 
 export async function getBusEvent(requestID: string): Promise<BusEvent> {
-  var apis = [
+  const apis = [
     [0, 1],
     [1, 1]
   ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-  var result = [];
-  for (var api of apis) {
-    var data = await fetchData(api.url, requestID, `getBusEvent_${api.e[0]}`, 'json');
+  let result = [];
+  for (const api of apis) {
+    const data = await fetchData(api.url, requestID, `getBusEvent_${api.e[0]}`, 'json');
     result = result.concat(data.BusInfo);
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }

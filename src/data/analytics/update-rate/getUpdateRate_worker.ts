@@ -1,7 +1,7 @@
 import { splitDataByDelta } from '../../../tools/array';
 import { pearsonCorrelation } from '../../../tools/math';
 
-let taskQueue = [];
+const taskQueue = [];
 let isProcessing = false;
 
 if ('onconnect' in self) {

@@ -3,7 +3,7 @@ import { segmentsToPath, simplifyPath } from '../../tools/path';
 import { dateToString, TimeStampPeriod } from '../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 
-let incompleteRecords = {};
+const incompleteRecords = {};
 
 export async function recordRequest(requestID: string, data: object, incomplete: boolean) {
   if (!incompleteRecords.hasOwnProperty(requestID)) {
@@ -33,8 +33,8 @@ export async function discardExpiredDataUsageRecords() {
 
 export async function getDataUsageRecordsPeriod(): Promise<TimeStampPeriod> {
   const keys = await lfListItemKeys(2);
-  let startTimeArray = [];
-  let endTimeArray = [];
+  const startTimeArray = [];
+  const endTimeArray = [];
   for (const key of keys) {
     const json = await lfGetItem(2, key);
     const object = JSON.parse(json);
@@ -80,7 +80,7 @@ export async function generateDataUsageGraph(aggregationPeriod: AggregationPerio
       break;
   }
 
-  let aggregatedData = {};
+  const aggregatedData = {};
   for (const key of keys) {
     const json = await lfGetItem(2, key);
     const object = JSON.parse(json);
@@ -98,7 +98,7 @@ export async function generateDataUsageGraph(aggregationPeriod: AggregationPerio
     }
   }
 
-  let graphDataArray = [];
+  const graphDataArray = [];
   for (const graphDataKey in aggregatedData) {
     const item = aggregatedData[graphDataKey];
     graphDataArray.push(item);
@@ -116,7 +116,7 @@ export async function generateDataUsageGraph(aggregationPeriod: AggregationPerio
     const minContentLength = Math.min(...contentLengthArray);
     const maxContentLength = Math.max(...contentLengthArray);
 
-    let points = [];
+    const points = [];
     for (const graphData of graphDataArray) {
       const point = {
         x: Math.round(padding + ((graphData.start_time - minStartTime) / (maxStartTime - minStartTime)) * width),

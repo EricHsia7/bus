@@ -89,7 +89,7 @@ function storeIndexToCategory(store: number): StoreCategory {
 
 export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
   let totalSizeInBytes = 0;
-  let categorizedSizesInBytes: CategorizedSizesInBytes = {};
+  const categorizedSizesInBytes: CategorizedSizesInBytes = {};
   const storesLength = getStoresLength();
 
   for (let i = 0; i < storesLength; i++) {
@@ -110,12 +110,12 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
         size: 0
       };
     }
-    categorizedSizesInBytes[thisCategory.key].size = categorizedSizesInBytes[thisCategory.key].size + thisStoreSizeInBytes;
+    categorizedSizesInBytes[thisCategory.key].size += thisStoreSizeInBytes;
   }
 
   const totalSize = convertBytes(totalSizeInBytes);
 
-  let categorizedSizes: CategorizedSizes = {};
+  const categorizedSizes: CategorizedSizes = {};
   for (const key in categorizedSizesInBytes) {
     const thisCategory = categorizedSizesInBytes[key].category;
     const thisCategorySize = categorizedSizesInBytes[key].size;
