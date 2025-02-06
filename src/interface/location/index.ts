@@ -491,10 +491,12 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     } else {
       const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
       const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const groupIndex = currentGroupSeatQuantity - 1 - o;
-        LocationGroupElements[groupIndex].remove();
-        LocationGroupTabElements[groupIndex].remove();
+      const numberToRemove = Math.abs(capacity);
+      const startIndex = currentGroupSeatQuantity - 1;
+      const endIndex = currentGroupSeatQuantity - numberToRemove;
+      for (let o = startIndex; o >= endIndex; o--) {
+        LocationGroupElements[o].remove();
+        LocationGroupTabElements[o].remove();
       }
     }
   }
