@@ -192,8 +192,8 @@ window.bus = {
         const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
         setUpFolderFieldSkeletonScreen(FolderField);
         checkAppVersion()
-          .then((e) => {
-            if (e.status === 'ok') {
+          .then((status) => {
+            if (status === 'ok') {
               initializeRouteSliding();
               initializeLocationSliding();
               ResizeRouteField();
@@ -268,14 +268,14 @@ window.bus = {
                 askForPositioningPermission();
               });
             }
-            if (e.status === 'fetchError' || e.status === 'unknownError') {
+            if (status === 'fetchError' || status === 'unknownError') {
               fadeOutSplashScreen();
-              alert(e.status);
+              alert(status);
             }
           })
-          .catch((e) => {
+          .catch((error) => {
             fadeOutSplashScreen();
-            alert(e);
+            alert(error);
           });
       });
     }

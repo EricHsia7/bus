@@ -49,9 +49,9 @@ const branchName = execSync('git branch --show-current').toString().trim();
 const thisVersion = {
   build: workflowRunNumber,
   hash: commitHash.substring(0, 7),
-  fullHash: commitHash,
-  branchName: branchName,
-  timeStamp: new Date().toISOString()
+  full_hash: commitHash,
+  branch_name: branchName,
+  timestamp: new Date().toISOString()
 };
 
 async function outputVersionJSON() {
