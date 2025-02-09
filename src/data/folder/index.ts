@@ -130,12 +130,13 @@ export async function initializeFolderStores() {
 export async function createFolder(name: string, icon: MaterialSymbols): Promise<boolean | string> {
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }
 
   const folderKeys = await lfListItemKeys(10);
-
   const identifier: string = generateIdentifier();
   if (!Folders.hasOwnProperty(`f_${identifier}`)) {
     const existingFolder = await lfGetItem(10, `f_${identifier}`);
@@ -209,9 +210,7 @@ export async function listFolderContent(folderID: string): Promise<Array<FolderC
       }
     }
     result.sort(function (a, b) {
-      var c = a.index || 0;
-      var d = b.index || 0;
-      return c - d;
+      return a.index - b.index;
     });
   } else {
     const emptyItem: FolderEmpty = {
@@ -387,7 +386,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 }
 
 export async function saveToFolder(folderID: string, content: FolderContent): Promise<boolean> {
-  var thisFolder = Folders[`f_${folderID}`] as Folder;
+  const thisFolder = Folders[`f_${folderID}`];
   if (thisFolder.contentType.indexOf(content.type) > -1) {
     if (typeof thisFolder.storeIndex === 'number') {
       await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
