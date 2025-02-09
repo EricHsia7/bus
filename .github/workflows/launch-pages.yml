@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-location-new-layout
+      - dev-compatibility
 
 jobs:
   launch:

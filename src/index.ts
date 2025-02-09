@@ -177,6 +177,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { checkCompatibility } from './data/settings/compatibility';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -192,90 +193,92 @@ window.bus = {
         const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
         setUpFolderFieldSkeletonScreen(FolderField);
         checkAppVersion()
-          .then((e) => {
-            if (e.status === 'ok') {
-              initializeRouteSliding();
-              initializeLocationSliding();
-              ResizeRouteField();
-              ResizeLocationField();
-              ResizeSearchInputCanvasSize();
-              window.addEventListener('resize', () => {
+          .then((status) => {
+            if (status === 'ok') {
+              checkCompatibility().then(function () {
+                initializeRouteSliding();
+                initializeLocationSliding();
                 ResizeRouteField();
                 ResizeLocationField();
                 ResizeSearchInputCanvasSize();
-              });
-              if (screen) {
-                if (screen.orientation) {
-                  screen.orientation.addEventListener('change', () => {
-                    ResizeRouteField();
-                    ResizeLocationField();
-                    ResizeSearchInputCanvasSize();
-                  });
-                }
-              }
-              initializeRecentViews();
-              initializeFolderStores().then(() => {
-                initializeFolders();
-              });
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
-              mediaQuery.addEventListener('change', function () {
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('paste', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('cut', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('keyup', function () {
-                updateSearchResult(searchInputElement.value);
-                updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-
-              const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
-              searchMaterialSymbolsInputElement.addEventListener('paste', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('cut', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              openPermalink();
-              fadeOutSplashScreen(function () {
-                loadNotificationClient();
-                initializeNotificationSchedules().then(function () {
-                  discardExpiredNotificationSchedules();
+                window.addEventListener('resize', () => {
+                  ResizeRouteField();
+                  ResizeLocationField();
+                  ResizeSearchInputCanvasSize();
                 });
-                askForPositioningPermission();
+                if (screen) {
+                  if (screen.orientation) {
+                    screen.orientation.addEventListener('change', () => {
+                      ResizeRouteField();
+                      ResizeLocationField();
+                      ResizeSearchInputCanvasSize();
+                    });
+                  }
+                }
+                initializeRecentViews();
+                initializeFolderStores().then(() => {
+                  initializeFolders();
+                });
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
+                mediaQuery.addEventListener('change', function () {
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+                searchInputElement.addEventListener('paste', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+                searchInputElement.addEventListener('cut', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+                searchInputElement.addEventListener('selectionchange', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+                document.addEventListener('selectionchange', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+                searchInputElement.addEventListener('keyup', function () {
+                  updateSearchResult(searchInputElement.value);
+                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                });
+
+                const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+                searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                document.addEventListener('selectionchange', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+                });
+                openPermalink();
+                fadeOutSplashScreen(function () {
+                  loadNotificationClient();
+                  initializeNotificationSchedules().then(function () {
+                    discardExpiredNotificationSchedules();
+                  });
+                  askForPositioningPermission();
+                });
               });
             }
-            if (e.status === 'fetchError' || e.status === 'unknownError') {
+            if (status === 'fetchError' || status === 'unknownError') {
               fadeOutSplashScreen();
-              alert(e.status);
+              alert(status);
             }
           })
-          .catch((e) => {
+          .catch((error) => {
             fadeOutSplashScreen();
-            alert(e);
+            alert(error);
           });
       });
     }

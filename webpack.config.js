@@ -49,9 +49,9 @@ const branchName = execSync('git branch --show-current').toString().trim();
 const thisVersion = {
   build: workflowRunNumber,
   hash: commitHash.substring(0, 7),
-  fullHash: commitHash,
-  branchName: branchName,
-  timeStamp: new Date().toISOString()
+  full_hash: commitHash,
+  branch_name: branchName,
+  timestamp: new Date().toISOString()
 };
 
 async function outputVersionJSON() {
@@ -78,9 +78,9 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env': {
           HASH: JSON.stringify(thisVersion.hash),
-          FULL_HASH: JSON.stringify(thisVersion.fullHash),
-          BRANCH_NAME: JSON.stringify(thisVersion.branchName),
-          TIME_STAMP: JSON.stringify(thisVersion.timeStamp)
+          FULL_HASH: JSON.stringify(thisVersion.full_hash),
+          BRANCH_NAME: JSON.stringify(thisVersion.branch_name),
+          TIME_STAMP: JSON.stringify(thisVersion.timestamp)
         }
       }),
       new HtmlWebpackPlugin({

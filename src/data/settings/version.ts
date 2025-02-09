@@ -15,9 +15,17 @@ function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   }
 }
 
-async function getAppVersion(): Promise<object> {
+interface AppVersion {
+  build: number;
+  hash: string;
+  full_hash: string;
+  branch_name: string; // branch name of the code base
+  timestamp: string; // timestamp in ISO fromat
+}
+
+async function getAppVersion(): Promise<AppVersion | false> {
   try {
-    var response = await fetch(`./version.json?_=${new Date().getTime()}`, {
+    const response = await fetch(`./version.json?_=${new Date().getTime()}`, {
       cache: 'no-store'
     });
     if (!response.ok) {
@@ -26,12 +34,7 @@ async function getAppVersion(): Promise<object> {
     return response.json();
   } catch (error) {
     console.error('There was a problem with the fetch operation:', error);
-    return {
-      build: null,
-      hash: null,
-      fullHash: null,
-      branchName: null
-    };
+    return false;
   }
 }
 
@@ -56,21 +59,23 @@ export function getHTMLVersionTimeStamp(): string {
   return documentQuerySelector('head meta[name="version-time-stamp"]').getAttribute('content');
 }
 
-export async function checkAppVersion(): Promise<object> {
-  var app_version = await getAppVersion();
-  if (app_version) {
-    if (!(app_version.hash === null)) {
-      if (!(getHTMLVersionHash() === app_version.hash)) {
-        refreshPageWithTimeStamp(app_version.hash, true);
-        return { status: 'refreshing' };
-      } else {
-        refreshPageWithTimeStamp(app_version.hash, false);
-        return { status: 'ok' };
-      }
+type AppVersionStatus = 'fetchError' | 'unknownError' | 'refreshing' | 'ok';
+
+export async function checkAppVersion(): Promise<AppVersionStatus> {
+  const appVersion = await getAppVersion();
+  if (typeof appVersion === 'boolean') {
+    if (appVersion === false) {
+      return 'fetchError';
     } else {
-      return { status: 'fetchError' };
+      return 'unknownError';
     }
   } else {
-    return { status: 'unknownError' };
+    if (!(getHTMLVersionHash() === appVersion.hash)) {
+      refreshPageWithTimeStamp(appVersion.hash, true);
+      return 'refreshing';
+    } else {
+      refreshPageWithTimeStamp(appVersion.hash, false);
+      return 'ok';
+    }
   }
 }
