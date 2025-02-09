@@ -10,12 +10,14 @@ let storage = {
   recentViewsStore: false, // 6
   notificationStore: false, // 7
   notificationScheduleStore: false, // 8
-  folderManifestStore: false, // 9
+  folderListStore: false, // 9
   folderContentIndexStore: false, // 10
-  folderContentStore: false // 11
+  folderContentStore: false, // 11
+  savedStopFolderStore: false, // 12
+  savedRouteFolderStore: false // 13
 };
 
-let stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderManifestStore', 'folderContentIndexStore', 'folderContentStore'];
+let stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 async function dropInstance(store: number): Promise<any> {
   const storeKey = stores[store];

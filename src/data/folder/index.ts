@@ -30,7 +30,6 @@ export interface FolderContentStop {
   name: string;
   direction: number;
   route: FolderContentStopRoute;
-  index: number;
 }
 
 export interface FolderContentRoute {
@@ -39,7 +38,6 @@ export interface FolderContentRoute {
   timestamp: number;
   name: string;
   endPoints: FolderContentRouteEndPoints;
-  index: number;
 }
 
 export interface FolderContentBus {
@@ -47,13 +45,11 @@ export interface FolderContentBus {
   id: number; // CarID
   timestamp: number;
   busID: string; // BusID
-  index: number;
 }
 
 export interface FolderContentEmpty {
   type: 'empty';
   id: number;
-  index: number;
 }
 
 export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
@@ -76,16 +72,16 @@ export interface FolderWithContent extends Folder {
 
 export type FolderWithContentArray = Array<FolderWithContent>;
 
-const Folders: { [key: string]: Folder } = {};
+const FolderList: { [key: string]: Folder } = {};
 
-export async function initializeFolderStores() {
+export async function initializeFolderList() {
   const folderKeys = await lfListItemKeys(9);
   for (const folderKey of folderKeys) {
     const thisFolderJSON = await lfGetItem(9, folderKey);
     if (thisFolderJSON) {
       const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
-      if (!Folders.hasOwnProperty(folderKey)) {
-        Folders[folderKey] = thisFolderObject;
+      if (!FolderList.hasOwnProperty(folderKey)) {
+        FolderList[folderKey] = thisFolderObject;
       }
     }
   }
@@ -104,7 +100,7 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   // Check existence
   const folderID = generateIdentifier();
   const folderKey = `f_${folderID}`;
-  if (Folders.hasOwnProperty(folderKey)) {
+  if (FolderList.hasOwnProperty(folderKey)) {
     return false;
   }
   const existingFolder = await lfGetItem(9, folderKey);
@@ -122,7 +118,7 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   };
 
   // Save folder
-  Folders[folderKey] = newFolder;
+  FolderList[folderKey] = newFolder;
   await lfSetItem(9, folderKey, JSON.stringify(newFolder));
   return folderID;
 }
@@ -155,21 +151,21 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   };
 
   // Save folder
-  Folders[folderKey] = modifiedFolder;
+  FolderList[folderKey] = modifiedFolder;
   await lfSetItem(9, folderKey, JSON.stringify(modifiedFolder));
   return true;
 }
 
 export function getFolder(folderID: Folder['id']): Folder | false {
   const folderKey: string = `f_${folderID}`;
-  if (!Folders.hasOwnProperty(folderKey)) {
+  if (!FolderList.hasOwnProperty(folderKey)) {
     return false;
   }
   const folderObject: Folder = {
-    name: Folders[folderKey].name,
-    icon: Folders[folderKey].icon,
-    id: Folders[folderKey].id,
-    timestamp: Folders[folderKey].timestamp
+    name: FolderList[folderKey].name,
+    icon: FolderList[folderKey].icon,
+    id: FolderList[folderKey].id,
+    timestamp: FolderList[folderKey].timestamp
   };
   return folderObject;
   // return cloneDeep(Folders[folderKey]);
@@ -177,12 +173,12 @@ export function getFolder(folderID: Folder['id']): Folder | false {
 
 export function listFolders(): FolderArray {
   const result = [];
-  for (const folderKey in Folders) {
+  for (const folderKey in FolderList) {
     const folderObject: Folder = {
-      name: Folders[folderKey].name,
-      icon: Folders[folderKey].icon,
-      id: Folders[folderKey].id,
-      timestamp: Folders[folderKey].timestamp
+      name: FolderList[folderKey].name,
+      icon: FolderList[folderKey].icon,
+      id: FolderList[folderKey].id,
+      timestamp: FolderList[folderKey].timestamp
     };
     result.push(folderObject);
   }
@@ -482,8 +478,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
         destination: thisRouteDestination
       },
       id: RouteID
-    },
-    index: folderContentLength
+    }
   };
   const save = await saveToFolder(folderID, newContent);
   return save;
@@ -510,8 +505,7 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
     endPoints: {
       departure: thisRoute.dep,
       destination: thisRoute.des
-    },
-    index: folderContentLength
+    }
   };
   const save = await saveToFolder(folderID, content);
   return save;

@@ -58,7 +58,7 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '最近檢視';
       key = 'recentViews';
       break;
-    case 'folderManifestStore':
+    case 'folderListStore':
       name = '資料夾';
       key = 'folders';
       break;
