@@ -15,39 +15,37 @@ import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-ti
 
 const cloneDeep = require('lodash/cloneDeep');
 
-export type FolderContentType = 'stop' | 'route' | 'bus' | 'empty';
-
-interface FolderRouteEndPoints {
+interface FolderContentRouteEndPoints {
   departure: string;
   destination: string;
 }
 
-export interface FolderStopRoute {
+export interface FolderContentStopRoute {
   name: string;
-  endPoints: FolderRouteEndPoints;
+  endPoints: FolderContentRouteEndPoints;
   id: number;
 }
 
-export interface FolderStop {
+export interface FolderContentStop {
   type: 'stop';
   id: number;
   time: string;
   name: string;
   direction: number;
-  route: FolderStopRoute;
+  route: FolderContentStopRoute;
   index: number;
 }
 
-export interface FolderRoute {
+export interface FolderContentRoute {
   type: 'route';
   id: number;
   time: string;
   name: string;
-  endPoints: FolderRouteEndPoints;
+  endPoints: FolderContentRouteEndPoints;
   index: number;
 }
 
-export interface FolderBus {
+export interface FolderContentBus {
   type: 'bus';
   id: number; // CarID
   time: string;
@@ -55,79 +53,48 @@ export interface FolderBus {
   index: number;
 }
 
-export interface FolderEmpty {
+export interface FolderContentEmpty {
   type: 'empty';
   id: number;
   index: number;
 }
 
-export type FolderContent = FolderStop | FolderRoute | FolderBus | FolderEmpty;
+export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
+
+export type FolderContentType = FolderContent['type'];
 
 export interface Folder {
   name: string;
   icon: MaterialSymbols;
-  default: boolean;
-  storeIndex: number;
-  index: number;
-  contentType: Array<FolderContentType>;
   id: string;
   timestamp: number;
 }
 
-export interface FoldersWithContent {
-  folder: Folder;
+export type FolderArray = Array<Folder>;
+
+export interface FolderWithContent extends Folder {
   content: Array<FolderContent>;
   contentLength: number;
 }
 
-export type FoldersWithContentArray = Array<FoldersWithContent>;
+export type FolderWithContentArray = Array<FolderWithContent>;
 
-var Folders: { [key: string]: Folder } = {
-  f_saved_stop: {
-    name: '已收藏站牌',
-    icon: 'location_on',
-    default: true,
-    index: 0,
-    storeIndex: 11,
-    contentType: ['stop'],
-    id: 'saved_stop',
-    timestamp: 0
-  },
-  f_saved_route: {
-    name: '已收藏路線',
-    icon: 'route',
-    default: true,
-    index: 1,
-    storeIndex: 12,
-    contentType: ['route'],
-    id: 'saved_route',
-    timestamp: 0
-  }
-};
-
-const defaultFolderQuantity = 2;
+const Folders: { [key: string]: Folder } = {};
 
 export async function initializeFolderStores() {
-  const folderKeys = await lfListItemKeys(10);
-  let index = defaultFolderQuantity * 1; // avoid overwriting the default folders
+  const folderKeys = await lfListItemKeys(9);
   for (const folderKey of folderKeys) {
-    const thisFolder: string = await lfGetItem(10, folderKey);
-    if (thisFolder) {
-      const thisFolderObject = JSON.parse(thisFolder) as Folder;
-      const storeIndex = await registerStore(thisFolderObject.id);
-      thisFolderObject.storeIndex = storeIndex; // assign a new store index
-      thisFolderObject.index = index;
-      if (!thisFolderObject.default) {
-        if (!Folders.hasOwnProperty(`f_${thisFolderObject.id}`)) {
-          Folders[`f_${thisFolderObject.id}`] = thisFolderObject;
-        }
+    const thisFolderJSON = await lfGetItem(9, folderKey);
+    if (thisFolderJSON) {
+      const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
+      if (!Folders.hasOwnProperty(folderKey)) {
+        Folders[folderKey] = thisFolderObject;
       }
-      index += 1;
     }
   }
 }
 
-export async function createFolder(name: string, icon: MaterialSymbols): Promise<boolean | string> {
+export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<boolean | string> {
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
@@ -136,25 +103,21 @@ export async function createFolder(name: string, icon: MaterialSymbols): Promise
     return false;
   }
 
-  const folderKeys = await lfListItemKeys(10);
-  const identifier: string = generateIdentifier();
-  if (!Folders.hasOwnProperty(`f_${identifier}`)) {
-    const existingFolder = await lfGetItem(10, `f_${identifier}`);
+  const folderID = generateIdentifier();
+  const folderKey = `f_${folderID}`
+  if (!Folders.hasOwnProperty(folderKey)) {
+    const existingFolder = await lfGetItem(9, folderKey);
     if (!existingFolder) {
-      const storeIndex = await registerStore(identifier);
-      let object: Folder = {
+      const nowTime = new Date().getTime()
+      let newFolder: Folder = {
         name: name,
         icon: icon,
-        default: false,
-        storeIndex: storeIndex,
-        index: folderKeys.length + defaultFolderQuantity,
-        contentType: ['stop', 'route', 'bus'],
-        id: identifier,
-        timestamp: new Date().getTime()
+        id: folderID,
+        timestamp: nowTime
       };
-      Folders[`f_${identifier}`] = object;
-      await lfSetItem(10, `f_${identifier}`, JSON.stringify(object));
-      return identifier;
+      Folders[folderKey] = newFolder;
+      await lfSetItem(9, folderKey, JSON.stringify(newFolder));
+      return folderID;
     } else {
       return false;
     }
@@ -166,7 +129,7 @@ export async function createFolder(name: string, icon: MaterialSymbols): Promise
 export async function updateFolder(folder: Folder): Promise<boolean> {
   if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
     const folderKey: string = `f_${folder.id}`;
-    const existingFolder: string = await lfGetItem(10, folderKey);
+    const existingFolder: string = await lfGetItem(9, folderKey);
     if (existingFolder) {
       const requestID = generateIdentifier('r');
       const materialSymbols = await getMaterialSymbols(requestID);
@@ -174,7 +137,7 @@ export async function updateFolder(folder: Folder): Promise<boolean> {
         return false;
       } else {
         Folders[folderKey] = folder;
-        await lfSetItem(10, folderKey, JSON.stringify(folder));
+        await lfSetItem(9, folderKey, JSON.stringify(folder));
         return true;
       }
     } else {
@@ -213,7 +176,7 @@ export async function listFolderContent(folderID: string): Promise<Array<FolderC
       return a.index - b.index;
     });
   } else {
-    const emptyItem: FolderEmpty = {
+    const emptyItem: FolderContentEmpty = {
       type: 'empty',
       id: 0,
       index: 0
@@ -239,7 +202,7 @@ async function getFolderContentLength(folderID: string): Promise<number> {
   }
 }
 
-export async function listFoldersWithContent(): Promise<FoldersWithContentArray> {
+export async function listFoldersWithContent(): Promise<FolderWithContentArray> {
   var Folders = await listFolders();
   var result = [];
   for (var folder of Folders) {
@@ -254,22 +217,22 @@ export async function listFoldersWithContent(): Promise<FoldersWithContentArray>
   return result;
 }
 
-export interface integratedFolderStopRoute extends FolderStopRoute {
+export interface integratedFolderStopRoute extends FolderContentStopRoute {
   pathAttributeId: Array<number>;
 }
 
-export interface integratedFolderStop extends FolderStop {
+export interface integratedFolderStop extends FolderContentStop {
   status: EstimateTimeStatus;
   route: integratedFolderStopRoute;
 }
 
-export interface integratedFolderRoute extends FolderRoute {
+export interface integratedFolderRoute extends FolderContentRoute {
   pathAttributeId: Array<number>;
 }
 
-export interface integratedFolderBus extends FolderBus {}
+export interface integratedFolderBus extends FolderContentBus {}
 
-export interface integratedFolderEmpty extends FolderEmpty {}
+export interface integratedFolderEmpty extends FolderContentEmpty {}
 
 export type integratedFolderContent = integratedFolderStop | integratedFolderRoute | integratedFolderBus | integratedFolderEmpty;
 
@@ -441,7 +404,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   const thisRouteDestination: string = thisRoute.des;
 
   var folderContentLength = await getFolderContentLength(folderID);
-  var content: FolderStop = {
+  var content: FolderContentStop = {
     type: 'stop',
     id: StopID,
     time: new Date().toISOString(),
@@ -466,7 +429,7 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
   var searchedRoute = await searchRouteByRouteID(RouteID);
   if (searchedRoute.length > 0) {
     var Route = searchedRoute[0];
-    var content: FolderRoute = {
+    var content: FolderContentRoute = {
       type: 'route',
       id: RouteID,
       time: new Date().toISOString(),

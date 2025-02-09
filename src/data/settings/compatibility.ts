@@ -9,7 +9,8 @@ const compatibilityTags: Array<CompatibilityTag> = [
   {
     timestamp: '2025-02-08T00:00:00.000Z',
     script: null
-  }
+  },
+  // TODO: migrate default folders
 ];
 
 const compatibilityTagQuantity = compatibilityTags.length;

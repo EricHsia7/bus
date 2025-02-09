@@ -1,7 +1,7 @@
 import { Folder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { GeneratedElement, querySize } from '../../index';
 import { getIconHTML } from '../../icons/index';
-import { getSettingOptionValue, SettingSelectOptionBooleanValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';

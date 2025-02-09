@@ -1,10 +1,10 @@
-import { FoldersWithContent, listFoldersWithContent } from '../../data/folder/index';
+import { FolderWithContent, listFoldersWithContent } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 
-function generateElementOfItem(item: FoldersWithContent): GeneratedElement {
+function generateElementOfItem(item: FolderWithContent): GeneratedElement {
   var identifier = generateIdentifier('i');
   var element = document.createElement('div');
   element.classList.add('css_folder_manager_folder_item');

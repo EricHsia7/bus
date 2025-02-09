@@ -1,7 +1,7 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { booleanToString } from '../../tools/index';
-import { listFoldersWithContent, FoldersWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
+import { listFoldersWithContent, FolderWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
 
@@ -11,7 +11,7 @@ const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
 const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
 const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
 
-function generateElementOfItem(item: FoldersWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
+function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');

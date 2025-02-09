@@ -1,4 +1,4 @@
-import { FoldersWithContentArray, listFoldersWithContent } from '../folder/index';
+import { FolderWithContentArray, listFoldersWithContent } from '../folder/index';
 import { listPersonalSchedules, PersonalScheduleArray } from '../personal-schedule/index';
 import { listRecentViews, RecentViewArray } from '../recent-views/index';
 import { listSettingsWithOptions, SettingsWithOptionsArray } from '../settings/index';
@@ -6,20 +6,20 @@ import { listSettingsWithOptions, SettingsWithOptionsArray } from '../settings/i
 export interface ExportedDataVersion1 {
   time: string;
   version: 1;
-  folders: FoldersWithContentArray;
+  folders: FolderWithContentArray;
 }
 
 export interface ExportedDataVersion2 {
   time: string;
   version: 2;
-  folders: FoldersWithContentArray;
+  folders: FolderWithContentArray;
   settings: SettingsWithOptionsArray;
 }
 
 export interface ExportedDataVersion3 {
   time: string;
   version: 3;
-  folders: FoldersWithContentArray;
+  folders: FolderWithContentArray;
   settings: SettingsWithOptionsArray;
   personal_schedules: PersonalScheduleArray;
 }
@@ -27,7 +27,7 @@ export interface ExportedDataVersion3 {
 export interface ExportedDataVersion4 {
   time: string;
   version: 4;
-  folders: FoldersWithContentArray;
+  folders: FolderWithContentArray;
   settings: SettingsWithOptionsArray;
   personal_schedules: PersonalScheduleArray;
   recent_views: RecentViewArray;
