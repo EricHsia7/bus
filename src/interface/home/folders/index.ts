@@ -90,11 +90,10 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
       index: i,
       icon: '',
       default: false,
-      storeIndex: null,
+      storeIndex: -1,
       contentType: [],
       id: '',
-      time: '',
-      timeNumber: 0
+      timestamp: 0
     };
     for (let j = 0; j < defaultItemQuantity[folderKey]; j++) {
       foldedContent[folderKey].push({
