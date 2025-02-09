@@ -54,8 +54,6 @@ export interface FolderContentEmpty {
 
 export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
 
-export type FolderContentType = FolderContent['type'];
-
 export interface Folder {
   name: string;
   icon: MaterialSymbols;
@@ -87,7 +85,7 @@ export async function initializeFolderList() {
   }
 }
 
-export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<boolean | string> {
+export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<Folder['id'] | false> {
   // Validate icon
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
@@ -451,7 +449,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   return true;
 }
 
-export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
+export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: number): Promise<boolean> {
   const requestID = generateIdentifier('r');
   const Stop = (await getStop(requestID)) as SimplifiedStop;
   const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
@@ -486,7 +484,7 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   return save;
 }
 
-export async function saveRoute(folderID: string, RouteID: number): Promise<boolean> {
+export async function saveRoute(folderID: Folder['id'], RouteID: number): Promise<boolean> {
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   deleteDataReceivingProgress(requestID);
@@ -499,7 +497,7 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
     return false;
   }
 
-  const content: FolderContentRoute = {
+  const newContent: FolderContentRoute = {
     type: 'route',
     id: RouteID,
     timestamp: new Date().getTime(),
@@ -509,13 +507,13 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
       destination: thisRoute.des
     }
   };
-  const save = await saveToFolder(folderID, content);
+  const save = await saveToFolder(folderID, newContent);
   return save;
 }
 
 // TODO: Save Bus
 
-export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): Promise<boolean> {
+export async function updateFolderContentIndex(folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): Promise<boolean> {
   const folderKey = `f_${folderID}`;
   const thisFolderContentKey = `${type}_${id}`;
   const thisFolder = getFolder(folderID);

@@ -12,7 +12,7 @@ import { MaterialSymbols } from '../../icons/material-symbols-type';
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
-const HomeFoldersField = elementQuerySelector(HomeBodyElement, '.css_home_folders');
+const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_folders');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
 let previousIntegration = {} as integratedFolders;
@@ -112,15 +112,14 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
           },
           id: 0,
           pathAttributeId: []
-        },
-        index: j
+        }
       };
       folder.content.push(folderContent);
     }
     folders.push(folder);
   }
 
-  updateFolderField(
+  updateFoldersElement(
     Field,
     {
       folders: folders,
@@ -131,7 +130,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateFolderField(Field: HTMLElement, integration: integratedFolders, skeletonScreen: boolean, animation: boolean): void {
+function updateFoldersElement(Field: HTMLElement, integration: integratedFolders, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: integratedFolderContent, previousItem: integratedFolderContent | null) {
     function updateType(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       thisElement.setAttribute('type', thisItem.type);
@@ -380,25 +379,19 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-
   const folders = integration.folders;
   const foldersLength = folders.length;
 
-  // Field.setAttribute('skeleton-screen', skeletonScreen);
-
-  const currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
+  const currentFolderSeatQuantity = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder').length;
   if (!(foldersLength === currentFolderSeatQuantity)) {
     const capacity = currentFolderSeatQuantity - foldersLength;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newFolderElement = generateElementOfFolder();
-        Field.appendChild(newFolderElement.element);
+        HomeFoldersElement.appendChild(newFolderElement.element);
       }
     } else {
-      const FolderElements = elementQuerySelectorAll(Field, `.css_home_folder`);
+      const FolderElements = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const folderIndex = currentFolderSeatQuantity - 1 - o;
         FolderElements[folderIndex].remove();
@@ -406,21 +399,23 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
+  const FolderElements = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder');
   for (let i = 0; i < foldersLength; i++) {
     const thisFolder = folders[i];
     const thisFolderContent = thisFolder.content;
     const thisFolderContentLength = thisFolderContent.length;
-    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
+    const thisFolderElement = FolderElements[i];
+    const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
+    const currentItemSeatQuantity = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item').length;
     if (!(thisFolderContentLength === currentItemSeatQuantity)) {
       const capacity = currentItemSeatQuantity - thisFolderContentLength;
       if (capacity < 0) {
-        const FolderContentElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content`);
         for (let o = 0; o < Math.abs(capacity); o++) {
           const newItemElement = generateElementOfItem();
-          FolderContentElement.appendChild(newItemElement.element);
+          thisFolderContentElement.appendChild(newItemElement.element);
         }
       } else {
-        const FolderContentItemElements = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`);
+        const FolderContentItemElements = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
           FolderContentItemElements[itemIndex].remove();
@@ -429,11 +424,13 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
+  const FolderElements2 = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder');
   for (let i = 0; i < foldersLength; i++) {
     const thisFolder = folders[i];
     const thisFolderContent = thisFolder.content;
-    const thisFolderContentLength = thisFolderContent.length;
-    const thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
+    const thisFolderContentLength = thisFolderContent.length; // the actual length (including 'empty content')
+    const thisFolderElement = FolderElements2[i];
+    const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
     if (previousIntegration.hasOwnProperty('folders')) {
       if (previousIntegration.folders[i]) {
         const previousFolder = previousIntegration.folders[i];
@@ -445,8 +442,9 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
       updateFolder(thisFolderElement, thisFolder, null);
     }
 
+    const thisFolderItemElements = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item');
     for (let j = 0; j < thisFolderContentLength; j++) {
-      const thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
+      const thisElement = thisFolderItemElements[j];
       const thisItem = thisFolderContent[j];
       if (previousIntegration.hasOwnProperty('folders')) {
         if (previousIntegration.folders[i]) {
@@ -480,7 +478,7 @@ async function refreshFolders() {
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFolderField(HomeFoldersField, integration, false, playing_animation);
+  updateFoldersElement(HomeFoldersElement, integration, false, playing_animation);
   foldersRefreshTimer_lastUpdate = time;
   if (foldersRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
@@ -518,7 +516,7 @@ async function streamFolders() {
 }
 
 export function initializeFolders(): void {
-  setUpFolderFieldSkeletonScreen(HomeFoldersField);
+  setUpFolderFieldSkeletonScreen(HomeFoldersElement);
   if (!foldersRefreshTimer_streaming) {
     foldersRefreshTimer_streaming = true;
     if (!foldersRefreshTimer_streamStarted) {

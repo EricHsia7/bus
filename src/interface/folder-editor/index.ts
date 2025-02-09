@@ -1,4 +1,4 @@
-import { Folder, FolderContent, FolderContentType, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
+import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
@@ -100,7 +100,7 @@ export function closeFolderEditor(): void {
   openPreviousPage();
 }
 
-export function removeItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number): void {
+export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: number): void {
   const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
@@ -121,7 +121,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: string, type:
   });
 }
 
-export function moveItemOnFolderEditor(itemID: string, folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): void {
+export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): void {
   const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {

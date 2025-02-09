@@ -1,7 +1,7 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { booleanToString } from '../../tools/index';
-import { listFoldersWithContent, FolderWithContent, FolderContentType, saveStop, isFolderContentSaved, saveRoute } from '../../data/folder/index';
+import { listFoldersWithContent, FolderWithContent, saveStop, isFolderContentSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
 
