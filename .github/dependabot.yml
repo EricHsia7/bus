@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" # The package manager used
+    directory: "/" # The directory where your package.json file is located
+    schedule:
+      interval: "weekly" # Check for updates weekly
+    commit-message:
+      prefix: "deps" # Prefix for the commit messages
+    open-pull-requests-limit: 5 # Limit the number of open PRs at any time
+    target-branch: "main" # Target branch for the pull requests
+    rebase-strategy: "auto" # Rebase PRs automatically if conflicts arise
+    labels:
+      - "dependencies" # Label to apply to the PRs
+    reviewers:
+      - "EricHsia7" # Replace with GitHub usernames of reviewers
