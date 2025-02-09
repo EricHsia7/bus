@@ -1,21 +1,21 @@
 const localforage = require('localforage');
 
 let storage = {
-  cacheStore: false,
-  settingsStore: false,
-  dataUsageRecordsStore: false,
-  updateRateRecordsStore: false,
-  busArrivalTimeRecordsStore: false,
-  personalScheduleStore: false,
-  recentViewsStore: false,
-  notificationStore: false,
-  notificationScheduleStore: false,
-  folderListStore: false,
-  savedStopFolderStore: false,
-  savedRouteFolderStore: false
+  cacheStore: false, // 0
+  settingsStore: false, // 1
+  dataUsageRecordsStore: false, // 2
+  updateRateRecordsStore: false, // 3
+  busArrivalTimeRecordsStore: false, // 4
+  personalScheduleStore: false, // 5
+  recentViewsStore: false, // 6
+  notificationStore: false, // 7
+  notificationScheduleStore: false, // 8
+  folderListStore: false, // 9
+  folderContentIndexStore: false, // 10
+  folderContentStore: false // 11
 };
 
-let stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'savedStopFolderStore', 'savedRouteFolderStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 async function dropInstance(store: number): Promise<any> {
   const storeKey = stores[store];
@@ -103,6 +103,7 @@ export function getStoresLength(): number {
   return stores.length;
 }
 
+/*
 export async function registerStore(id: string): Promise<number> {
   const storeKey = `F${id}Store`;
   if (!storage.hasOwnProperty(storeKey) && stores.indexOf(storeKey) < 0) {
@@ -115,6 +116,7 @@ export async function registerStore(id: string): Promise<number> {
     return stores.indexOf(storeKey);
   }
 }
+*/
 
 export async function isStoragePersistent(): Promise<boolean> {
   // Check if site's storage has been marked as persistent

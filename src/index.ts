@@ -9,7 +9,7 @@ import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationF
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
-import { initializeFolderStores } from './data/folder/index';
+import { initializeFolderList } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
 import { openSettings, closeSettings, downloadExportFile, openFileToImportData, viewCommitOfCurrentVersion, showPromptToAskForPersistentStorage } from './interface/settings/index';
@@ -178,6 +178,7 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 import { checkCompatibility } from './data/settings/compatibility';
+import { lfSetItem } from './data/storage/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -216,7 +217,7 @@ window.bus = {
                   }
                 }
                 initializeRecentViews();
-                initializeFolderStores().then(() => {
+                initializeFolderList().then(() => {
                   initializeFolders();
                 });
                 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -388,6 +389,9 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  test: {
+    lfSetItem
   }
 };
 

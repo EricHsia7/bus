@@ -6,7 +6,7 @@ import { booleanToString, compareThings, generateIdentifier } from '../../tools/
 import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { isSaved } from '../../data/folder/index';
+import { isFolderContentSaved } from '../../data/folder/index';
 import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
@@ -357,7 +357,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-route', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
-      isSaved('stop', thisItem.id).then((e) => {
+      isFolderContentSaved('stop', thisItem.id).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
     }

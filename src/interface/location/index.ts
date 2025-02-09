@@ -10,7 +10,7 @@ import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage,
 import { promptMessage } from '../prompt/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { isSaved } from '../../data/folder/index';
+import { isFolderContentSaved } from '../../data/folder/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
@@ -350,7 +350,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}])`);
-      isSaved('stop', thisItem.stopId).then((e) => {
+      isFolderContentSaved('stop', thisItem.stopId).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
     }
