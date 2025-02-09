@@ -18,23 +18,23 @@ function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, 
   // element.id = identifier;
   switch (type) {
     case 'stop-on-route':
-      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.folder.id}', ${parameters[1]}, ${parameters[2]})`);
+      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.id}', ${parameters[1]}, ${parameters[2]})`);
       break;
     case 'stop-on-location':
-      element.setAttribute('onclick', `bus.folder.saveStopItemOnLocation('${parameters[0]}', '${item.folder.id}', ${parameters[1]}, ${parameters[2]})`);
+      element.setAttribute('onclick', `bus.folder.saveStopItemOnLocation('${parameters[0]}', '${item.id}', ${parameters[1]}, ${parameters[2]})`);
       break;
     case 'route':
-      element.setAttribute('onclick', `bus.folder.saveRouteOnDetailsPage('${item.folder.id}', ${parameters[0]})`);
+      element.setAttribute('onclick', `bus.folder.saveRouteOnDetailsPage('${item.id}', ${parameters[0]})`);
       break;
     case 'route-on-route':
-      element.setAttribute('onclick', `bus.folder.saveRouteOnRoute('${item.folder.id}', ${parameters[0]})`);
+      element.setAttribute('onclick', `bus.folder.saveRouteOnRoute('${item.id}', ${parameters[0]})`);
       break;
     case 'bus':
       break;
     default:
       break;
   }
-  element.innerHTML = /*html*/ `<div class="css_save_to_folder_item_icon">${getIconHTML(item.folder.icon)}</div><div class="css_save_to_folder_item_name">${item.folder.name}</div>`;
+  element.innerHTML = /*html*/ `<div class="css_save_to_folder_item_icon">${getIconHTML(item.icon)}</div><div class="css_save_to_folder_item_name">${item.name}</div>`;
   return {
     element: element,
     id: ''

@@ -7,23 +7,19 @@ import { lfGetItem } from '../storage/index';
 
 export async function importFolders(data: FolderWithContentArray): Promise<boolean> {
   for (const FolderWithContent of data) {
-    const folder = FolderWithContent.folder;
+    const folder = FolderWithContent;
     var update = false;
     var creation = false;
-    if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
-      const folderKey: string = `f_${folder.id}`;
-      const existingFolder: string = await lfGetItem(9, folderKey);
-      if (existingFolder) {
-        update = await updateFolder(folder);
-      } else {
-        creation = await createFolder(folder.name, folder.icon);
-      }
+    const folderKey: string = `f_${folder.id}`;
+    const existingFolder: string = await lfGetItem(9, folderKey);
+    if (existingFolder) {
+      update = await updateFolder(folder);
     } else {
-      update = true;
+      creation = await createFolder(folder.name, folder.icon);
     }
     if (update) {
       for (const content of FolderWithContent.content) {
-        await saveToFolder(FolderWithContent.folder.id, content);
+        await saveToFolder(FolderWithContent.id, content);
       }
     }
     if (creation) {
