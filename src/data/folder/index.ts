@@ -13,7 +13,7 @@ import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
 
-const cloneDeep = require('lodash/cloneDeep');
+// const cloneDeep = require('lodash/cloneDeep');
 
 interface FolderContentRouteEndPoints {
   departure: string;
@@ -95,6 +95,7 @@ export async function initializeFolderStores() {
 }
 
 export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<boolean | string> {
+  // Validate icon
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
@@ -103,113 +104,152 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
     return false;
   }
 
+  // Check existence
+  if (Folders.hasOwnProperty(folderKey)) {
+    return false;
+  }
+  const existingFolder = await lfGetItem(9, folderKey);
+  if (existingFolder) {
+    return false;
+  }
+
+  // Generate folder
   const folderID = generateIdentifier();
-  const folderKey = `f_${folderID}`
+  const folderKey = `f_${folderID}`;
+  const nowTime = new Date().getTime();
+  let newFolder: Folder = {
+    name: name,
+    icon: icon,
+    id: folderID,
+    timestamp: nowTime
+  };
+
+  // Save folder
+  Folders[folderKey] = newFolder;
+  await lfSetItem(9, folderKey, JSON.stringify(newFolder));
+  return folderID;
+}
+
+export async function updateFolder(folderID: Folder['id'], name: Folder['name'], icon: Folder['icon']): Promise<boolean> {
+  const folderKey: string = `f_${folderID}`;
+
+  // Check existence
+  const existingFolderJSON = await lfGetItem(9, folderKey);
+  if (!existingFolderJSON) {
+    return false;
+  }
+  const existingFolderObject = JSON.parse(existingFolderJSON) as Folder;
+
+  // Validate icon
+  const requestID = generateIdentifier('r');
+  const materialSymbols = await getMaterialSymbols(requestID);
+  if (materialSymbols.indexOf(icon) < 0) {
+    return false;
+  }
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+
+  // Generate folder
+  const modifiedFolder: Folder = {
+    name: name,
+    icon: icon,
+    id: folderID,
+    timestamp: existingFolderObject.timestamp
+  };
+
+  // Save folder
+  Folders[folderKey] = modifiedFolder;
+  await lfSetItem(9, folderKey, JSON.stringify(modifiedFolder));
+  return true;
+}
+
+export function getFolder(folderID: Folder['id']): Folder | false {
+  const folderKey: string = `f_${folderID}`;
   if (!Folders.hasOwnProperty(folderKey)) {
-    const existingFolder = await lfGetItem(9, folderKey);
-    if (!existingFolder) {
-      const nowTime = new Date().getTime()
-      let newFolder: Folder = {
-        name: name,
-        icon: icon,
-        id: folderID,
-        timestamp: nowTime
-      };
-      Folders[folderKey] = newFolder;
-      await lfSetItem(9, folderKey, JSON.stringify(newFolder));
-      return folderID;
-    } else {
-      return false;
-    }
-  } else {
     return false;
   }
+  const folderObject: Folder = {
+    name: Folders[folderKey].name,
+    icon: Folders[folderKey].icon,
+    id: Folders[folderKey].id,
+    timestamp: Folders[folderKey].timestamp
+  };
+  return folderObject;
+  // return cloneDeep(Folders[folderKey]);
 }
 
-export async function updateFolder(folder: Folder): Promise<boolean> {
-  if (['saved_stop', 'saved_route'].indexOf(folder.id) < 0 && !folder.default) {
-    const folderKey: string = `f_${folder.id}`;
-    const existingFolder: string = await lfGetItem(9, folderKey);
-    if (existingFolder) {
-      const requestID = generateIdentifier('r');
-      const materialSymbols = await getMaterialSymbols(requestID);
-      if (materialSymbols.indexOf(folder.icon) < 0) {
-        return false;
-      } else {
-        Folders[folderKey] = folder;
-        await lfSetItem(9, folderKey, JSON.stringify(folder));
-        return true;
-      }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
+export function listFolders(): FolderArray {
+  const result = [];
+  for (const folderKey in Folders) {
+    const folderObject: Folder = {
+      name: Folders[folderKey].name,
+      icon: Folders[folderKey].icon,
+      id: Folders[folderKey].id,
+      timestamp: Folders[folderKey].timestamp
+    };
+    result.push(folderObject);
   }
-}
-
-export function getFolder(folderID: string): Folder {
-  return cloneDeep(Folders[`f_${folderID}`]);
-}
-
-export async function listFolders(): Promise<Array<Folder>> {
-  let result = [];
-  for (const folder in Folders) {
-    result.push(Folders[folder]);
-  }
+  result.sort(function (a, b) {
+    return a.timestamp - b.timestamp;
+  });
   return result;
 }
 
 export async function listFolderContent(folderID: string): Promise<Array<FolderContent>> {
-  let result = [];
-  const thisFolder = Folders[`f_${folderID}`];
-  const itemKeys = await lfListItemKeys(thisFolder.storeIndex);
-  if (itemKeys.length > 0) {
-    for (const itemKey of itemKeys) {
-      const item = await lfGetItem(thisFolder.storeIndex, itemKey);
-      if (item) {
-        const itemObject = JSON.parse(item) as FolderContent;
-        result.push(itemObject);
-      }
-    }
-    result.sort(function (a, b) {
-      return a.index - b.index;
-    });
-  } else {
+  let result: Array<FolderContent> = [];
+
+  const folderKey = `f_${folderID}`;
+  const thisFolder = getFolder(folderID);
+  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+    return result;
+  }
+
+  const thisFolderContentIndexJSON = await lfGetItem(10, folderKey);
+  if (!thisFolderContentIndexJSON) {
+    return result;
+  }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  if (thisFolderContentIndexArray.length === 0) {
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
       id: 0,
       index: 0
     };
     result.push(emptyItem);
+    return result;
+  }
+
+  for (const thisFolderContentKey of thisFolderContentIndexArray) {
+    const thisContentJSON = await lfGetItem(11, thisFolderContentKey);
+    if (thisContentJSON) {
+      const thisContentObject = JSON.parse(thisContentJSON) as FolderContent;
+      result.push(thisContentObject);
+    }
   }
   return result;
 }
 
 async function getFolderContentLength(folderID: string): Promise<number> {
-  const thisFolder = getFolder(folderID);
-  const itemKeys = await lfListItemKeys(thisFolder.storeIndex);
-  if (itemKeys.length === 1) {
-    const folderContent = await listFolderContent(folderID);
-    const firstItem = folderContent[0];
-    if (firstItem.type === 'empty') {
-      return 0;
-    } else {
-      return 1;
-    }
-  } else {
-    return itemKeys.length;
+  const folderKey = `f_${folderID}`;
+  const thisFolderContentIndexJSON = await lfGetItem(10, folderKey);
+  if (!thisFolderContentIndexJSON) {
+    return 0;
   }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  return thisFolderContentIndexArray.length;
 }
 
 export async function listFoldersWithContent(): Promise<FolderWithContentArray> {
-  var Folders = await listFolders();
-  var result = [];
-  for (var folder of Folders) {
-    var folderContent = await listFolderContent(folder.id);
-    var folderContentLength = await getFolderContentLength(folder.id);
+  const folders = await listFolders();
+  const result: FolderWithContentArray = [];
+  for (const folder of folders) {
+    const folderContent = await listFolderContent(folder.id);
+    const folderContentLength = await getFolderContentLength(folder.id);
     result.push({
-      folder: folder,
+      name: folder.name,
+      icon: folder.icon,
+      id: folder.id,
+      timestamp: folder.timestamp,
       content: folderContent,
       contentLength: folderContentLength
     });
@@ -236,11 +276,13 @@ export interface integratedFolderEmpty extends FolderContentEmpty {}
 
 export type integratedFolderContent = integratedFolderStop | integratedFolderRoute | integratedFolderBus | integratedFolderEmpty;
 
+export interface integratedFolder extends Folder {
+  content: Array<integratedFolderContent>;
+  contentLength: number;
+}
+
 export interface integratedFolders {
-  foldedContent: { [key: string]: Array<integratedFolderContent> }; // TODO: integratedFolderContent
-  folders: { [key: string]: Folder };
-  folderQuantity: number;
-  itemQuantity: { [key: string]: number };
+  folders: Array<integratedFolder>;
   dataUpdateTime: number;
 }
 
@@ -284,8 +326,9 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   let folderQuantity: integratedFolders['folderQuantity'] = 0;
   let folders: integratedFolders['folders'] = {};
 
+  let index = 0;
   for (const folderWithContent2 of foldersWithContent) {
-    const folderKey = `f_${folderWithContent2.folder.index}`;
+    const folderKey = `f_${index}`;
     if (!foldedContent.hasOwnProperty(folderKey)) {
       foldedContent[folderKey] = [];
       itemQuantity[folderKey] = 0;
@@ -326,8 +369,9 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
       foldedContent[folderKey].push(integratedItem);
       itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
     }
-    folders[folderKey] = folderWithContent2.folder;
+    folders[folderKey] = folderWithContent2;
     folderQuantity += 1;
+    index += 1;
   }
 
   const result: integratedFolders = {
