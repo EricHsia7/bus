@@ -178,6 +178,7 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 import { checkCompatibility } from './data/settings/compatibility';
+import { lfSetItem } from './data/storage/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -388,6 +389,9 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  test: {
+    lfSetItem
   }
 };
 
