@@ -14,17 +14,7 @@ const compatibilityTags: Array<CompatibilityTag> = [
 
 const compatibilityTagQuantity = compatibilityTags.length;
 
-/*
-export function getLastCompatibilityTag(): CompatibilityTag {
-  return compatibilityTags.at(-1);
-}
-
-export function getOldestCompatibilityTag(): CompatibilityTag {
-  return compatibilityTags[0];
-}
-*/
-
-export async function checkCompatibility() {
+export async function checkCompatibility(): Promise<boolean> {
   const now = new Date();
   const nowTime = now.getTime();
   const key = 'compatibility';
@@ -44,17 +34,25 @@ export async function checkCompatibility() {
     if (startIndex !== -1) {
       for (let j = startIndex; j < compatibilityTagQuantity; j++) {
         const thisCompatibilityTag = compatibilityTags[j];
-        if (typeof thisCompatibilityTag.script === 'function') {
-          if (thisCompatibilityTag.script.constructor.name === 'AsyncFunction') {
-            await thisCompatibilityTag.script();
+        const thisCompatibilityTagTimestamp = thisCompatibilityTag.timestamp;
+        const thisCompatibilityTagTime = new Date(thisCompatibilityTagTimestamp).getTime();
+        const thisCompatibilityTagScript = thisCompatibilityTag.script;
+        if (thisCompatibilityTagTime > nowTime) {
+          break;
+        }
+        if (typeof thisCompatibilityTagScript === 'function') {
+          if (thisCompatibilityTagScript.constructor.name === 'AsyncFunction') {
+            await thisCompatibilityTagScript();
           } else {
-            thisCompatibilityTag.script();
+            thisCompatibilityTagScript();
           }
         }
       }
     }
     await lfSetItem(1, timestamp_key, now.toISOString());
+    return true;
   } else {
     await lfSetItem(1, timestamp_key, now.toISOString());
+    return true;
   }
 }
