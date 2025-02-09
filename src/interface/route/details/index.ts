@@ -3,7 +3,7 @@ import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calenda
 import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { isSaved } from '../../../data/folder/index';
+import { isFolderContentSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { getSettingOptionValue } from '../../../data/settings/index';
 
@@ -24,7 +24,7 @@ export const PropertiesGroupElement = elementQuerySelector(RouteDetailsField, '.
 
 async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Array<number>) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const existence = await isSaved('route', RouteID);
+  const existence = await isFolderContentSaved('route', RouteID);
   svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));
   svaeToFolderActionButtonElement.setAttribute('highlighted', booleanToString(existence));
   svaeToFolderActionButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);

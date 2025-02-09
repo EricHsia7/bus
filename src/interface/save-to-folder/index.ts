@@ -1,7 +1,7 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { booleanToString } from '../../tools/index';
-import { listFoldersWithContent, FolderWithContent, FolderContentType, saveStop, isSaved, saveRoute } from '../../data/folder/index';
+import { listFoldersWithContent, FolderWithContent, FolderContentType, saveStop, isFolderContentSaved, saveRoute } from '../../data/folder/index';
 import { getIconHTML } from '../icons/index';
 import { promptMessage } from '../prompt/index';
 
@@ -66,7 +66,7 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
-      isSaved('stop', StopID).then((k) => {
+      isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
           promptMessage('已儲存至資料夾', 'folder');
@@ -84,7 +84,7 @@ export function saveStopItemOnLocation(itemElementID: string, folderID: string, 
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
-      isSaved('stop', StopID).then((k) => {
+      isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
           promptMessage('已儲存至資料夾', 'folder');
@@ -101,7 +101,7 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
   const actionButtonElement = documentQuerySelector('.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
-      isSaved('route', RouteID).then((k) => {
+      isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
           promptMessage('已儲存至資料夾', 'folder');
@@ -117,7 +117,7 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
 export function saveRouteOnRoute(folderID: string, RouteID: number): void {
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
-      isSaved('route', RouteID).then((k) => {
+      isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
           promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();

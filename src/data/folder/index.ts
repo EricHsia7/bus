@@ -12,6 +12,7 @@ import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
+import { fadeOutSplashScreen } from '../../interface/index';
 
 // const cloneDeep = require('lodash/cloneDeep');
 
@@ -29,7 +30,7 @@ export interface FolderContentStopRoute {
 export interface FolderContentStop {
   type: 'stop';
   id: number;
-  time: string;
+  timestamp: number;
   name: string;
   direction: number;
   route: FolderContentStopRoute;
@@ -39,7 +40,7 @@ export interface FolderContentStop {
 export interface FolderContentRoute {
   type: 'route';
   id: number;
-  time: string;
+  timestamp: number;
   name: string;
   endPoints: FolderContentRouteEndPoints;
   index: number;
@@ -48,7 +49,7 @@ export interface FolderContentRoute {
 export interface FolderContentBus {
   type: 'bus';
   id: number; // CarID
-  time: string;
+  timestamp: number;
   busID: string; // BusID
   index: number;
 }
@@ -105,6 +106,8 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   }
 
   // Check existence
+  const folderID = generateIdentifier();
+  const folderKey = `f_${folderID}`;
   if (Folders.hasOwnProperty(folderKey)) {
     return false;
   }
@@ -114,8 +117,6 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   }
 
   // Generate folder
-  const folderID = generateIdentifier();
-  const folderKey = `f_${folderID}`;
   const nowTime = new Date().getTime();
   let newFolder: Folder = {
     name: name,
@@ -195,10 +196,10 @@ export function listFolders(): FolderArray {
   return result;
 }
 
-export async function listFolderContent(folderID: string): Promise<Array<FolderContent>> {
-  let result: Array<FolderContent> = [];
+export async function listFolderContent(folderID: Folder['id']): Promise<Array<FolderContent>> {
+  const result: Array<FolderContent> = [];
 
-  const folderKey = `f_${folderID}`;
+  const folderKey: string = `f_${folderID}`;
   const thisFolder = getFolder(folderID);
   if (typeof thisFolder === 'boolean' && thisFolder === false) {
     return result;
@@ -229,8 +230,8 @@ export async function listFolderContent(folderID: string): Promise<Array<FolderC
   return result;
 }
 
-async function getFolderContentLength(folderID: string): Promise<number> {
-  const folderKey = `f_${folderID}`;
+async function getFolderContentLength(folderID: Folder['id']): Promise<number> {
+  const folderKey: string = `f_${folderID}`;
   const thisFolderContentIndexJSON = await lfGetItem(10, folderKey);
   if (!thisFolderContentIndexJSON) {
     return 0;
@@ -257,24 +258,24 @@ export async function listFoldersWithContent(): Promise<FolderWithContentArray> 
   return result;
 }
 
-export interface integratedFolderStopRoute extends FolderContentStopRoute {
+export interface integratedFolderContentStopRoute extends FolderContentStopRoute {
   pathAttributeId: Array<number>;
 }
 
-export interface integratedFolderStop extends FolderContentStop {
+export interface integratedFolderContentStop extends FolderContentStop {
   status: EstimateTimeStatus;
-  route: integratedFolderStopRoute;
+  route: integratedFolderContentStopRoute;
 }
 
-export interface integratedFolderRoute extends FolderContentRoute {
+export interface integratedFolderContentRoute extends FolderContentRoute {
   pathAttributeId: Array<number>;
 }
 
-export interface integratedFolderBus extends FolderContentBus {}
+export interface integratedFolderContentBus extends FolderContentBus {}
 
-export interface integratedFolderEmpty extends FolderContentEmpty {}
+export interface integratedFolderContentEmpty extends FolderContentEmpty {}
 
-export type integratedFolderContent = integratedFolderStop | integratedFolderRoute | integratedFolderBus | integratedFolderEmpty;
+export type integratedFolderContent = integratedFolderContentStop | integratedFolderContentRoute | integratedFolderContentBus | integratedFolderContentEmpty;
 
 export interface integratedFolder extends Folder {
   content: Array<integratedFolderContent>;
@@ -312,53 +313,50 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     );
   }
 
-  let processedEstimateTime: { [key: string]: EstimateTimeItem } = {};
+  let batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
   for (const EstimateTimeItem of EstimateTime) {
     if (StopIDs.indexOf(EstimateTimeItem.StopID) > -1) {
-      // parseInt?
       const thisStopKey: string = `s_${EstimateTimeItem.StopID}`;
-      processedEstimateTime[thisStopKey] = EstimateTimeItem;
+      batchFoundEstimateTime[thisStopKey] = EstimateTimeItem;
     }
   }
 
-  let foldedContent: integratedFolders['foldedContent'] = {};
-  let itemQuantity: integratedFolders['itemQuantity'] = {};
-  let folderQuantity: integratedFolders['folderQuantity'] = 0;
-  let folders: integratedFolders['folders'] = {};
+  let folders: integratedFolders['folders'] = [];
 
-  let index = 0;
   for (const folderWithContent2 of foldersWithContent) {
-    const folderKey = `f_${index}`;
-    if (!foldedContent.hasOwnProperty(folderKey)) {
-      foldedContent[folderKey] = [];
-      itemQuantity[folderKey] = 0;
-    }
+    // Initialize integratedFolder
+    const integratedFolder: integratedFolder = {
+      name: folderWithContent2.name,
+      icon: folderWithContent2.icon,
+      id: folderWithContent2.id,
+      timestamp: folderWithContent2.timestamp,
+      content: [],
+      contentLength: folderWithContent2.contentLength
+    };
 
     for (let item of folderWithContent2.content) {
       let integratedItem = item as integratedFolderContent;
-
-      let thisStopKey: string = '';
-      let thisProcessedEstimateTime = {} as EstimateTimeItem;
-
-      let thisRouteKey: string = '';
-      let thisRoute = {} as SimplifiedRouteItem;
-
       switch (integratedItem.type) {
-        case 'stop':
-          thisStopKey = `s_${integratedItem.id}`;
-          if (processedEstimateTime.hasOwnProperty(thisStopKey)) {
-            thisProcessedEstimateTime = processedEstimateTime[thisStopKey];
+        case 'stop': {
+          const thisStopKey = `s_${integratedItem.id}`;
+          let thisEstimateTime = {} as EstimateTimeItem;
+          if (batchFoundEstimateTime.hasOwnProperty(thisStopKey)) {
+            thisEstimateTime = batchFoundEstimateTime[thisStopKey];
+          } else {
+            break;
           }
-          integratedItem.status = parseEstimateTime(thisProcessedEstimateTime?.EstimateTime, time_formatting_mode);
-          thisRouteKey = `r_${integratedItem.route.id}`;
-          thisRoute = Route[thisRouteKey];
+          integratedItem.status = parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode);
+          const thisRouteKey = `r_${integratedItem.route.id}`;
+          const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
           integratedItem.route.pathAttributeId = thisRoute.pid;
           break;
-        case 'route':
-          thisRouteKey = `r_${integratedItem.id}`;
-          thisRoute = Route[thisRouteKey];
+        }
+        case 'route': {
+          const thisRouteKey = `r_${integratedItem.id}`;
+          const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
           integratedItem.pathAttributeId = thisRoute.pid;
           break;
+        }
         case 'bus':
           break;
         case 'empty':
@@ -366,69 +364,96 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
         default:
           break;
       }
-      foldedContent[folderKey].push(integratedItem);
-      itemQuantity[folderKey] = itemQuantity[folderKey] + 1;
+      integratedFolder.content.push(integratedItem);
     }
-    folders[folderKey] = folderWithContent2;
-    folderQuantity += 1;
-    index += 1;
+    folders.push(integratedFolder);
   }
 
   const result: integratedFolders = {
-    foldedContent: foldedContent,
     folders: folders,
-    folderQuantity: folderQuantity,
-    itemQuantity: itemQuantity,
     dataUpdateTime: getDataUpdateTime(requestID)
   };
+
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
+
   if (!power_saving) {
     if (refresh_interval_setting.dynamic) {
       await recordEstimateTimeForUpdateRate(EstimateTime);
     }
     await recordEstimateTimeForBusArrivalTime(EstimateTime);
   }
+
   return result;
 }
 
-export async function saveToFolder(folderID: string, content: FolderContent): Promise<boolean> {
-  const thisFolder = Folders[`f_${folderID}`];
-  if (thisFolder.contentType.indexOf(content.type) > -1) {
-    if (typeof thisFolder.storeIndex === 'number') {
-      await lfSetItem(thisFolder.storeIndex, `${content.type}_${content.id}`, JSON.stringify(content));
-    }
-    return true;
-  }
-  return false;
-}
+export async function saveToFolder(folderID: Folder['id'], content: FolderContent): Promise<boolean> {
+  const folderKey = `f_${folderID}`;
+  const contentKey = `${content.type}_${content.id}`;
+  const thisFolder = getFolder(folderID);
 
-export async function isSaved(type: FolderContentType, id: number | string): Promise<boolean> {
-  const folderList = await listFolders();
-  for (const folder of folderList) {
-    if (folder.contentType.indexOf(type) > -1) {
-      if (typeof folder.storeIndex === 'number') {
-        const itemKeys = await lfListItemKeys(folder.storeIndex);
-        for (const itemKey of itemKeys) {
-          if (itemKey.indexOf(`${type}_${id}`) > -1) {
-            return true;
-          }
-        }
-      }
-    }
+  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+    return false;
   }
-  return false;
-}
 
-export async function removeFromFolder(folderID: string, type: FolderContentType, id: number): Promise<boolean> {
-  var thisFolder: Folder = Folders[`f_${folderID}`];
-  var existence = await isSaved(type, id);
-  if (existence) {
-    await lfRemoveItem(thisFolder.storeIndex, `${type}_${id}`);
+  const thisFolderContentIndexJSON = (await lfGetItem(10, folderKey)) as string;
+  if (!thisFolderContentIndexJSON) {
+    return false;
+  }
+
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  if (thisFolderContentIndexArray.length === 0 || thisFolderContentIndexArray.indexOf(contentKey) < 0) {
+    await lfSetItem(10, folderKey, JSON.stringify(thisFolderContentIndexArray.concat(contentKey)));
+    await lfSetItem(11, contentKey, JSON.stringify(content));
     return true;
   } else {
     return false;
   }
+}
+
+export async function isFolderContentSaved(type: FolderContent['type'], id: FolderContent['id']): Promise<boolean> {
+  const folderContentKeyToCheck = `${type}_${id}`;
+
+  const keys = await lfListItemKeys(10);
+  for (const key of keys) {
+    const thisFolderContentIndexJSON = (await lfGetItem(10, key)) as string;
+    if (!thisFolderContentIndexJSON) {
+      continue;
+    }
+    const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+    if (thisFolderContentIndexArray.indexOf(folderContentKeyToCheck) > -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export async function removeFromFolder(folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id']): Promise<boolean> {
+  const folderKey = `f_${folderID}`;
+  const thisFolderContentKey = `${type}_${id}`;
+  // Check existence
+  const thisFolder = getFolder(folderID);
+  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+    return false;
+  }
+
+  // Remove reference from folder content index
+  const thisFolderContentIndexJSON = (await lfGetItem(10, folderKey)) as string;
+  if (!thisFolderContentIndexJSON) {
+    return false;
+  }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
+  if (index > -1 && thisFolderContentIndexArray.length > 0) {
+    await lfSetItem(10, folderKey, JSON.stringify(thisFolderContentIndexArray.splice(index, 1)));
+  }
+
+  // Remove content if there are no other references
+  const isSaved = await isFolderContentSaved(type, id);
+  if (isSaved === false) {
+    await lfRemoveItem(11, thisFolderContentKey);
+  }
+  return true;
 }
 
 export async function saveStop(folderID: string, StopID: number, RouteID: number): Promise<boolean> {
@@ -447,11 +472,11 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   const thisRouteDeparture: string = thisRoute.dep;
   const thisRouteDestination: string = thisRoute.des;
 
-  var folderContentLength = await getFolderContentLength(folderID);
-  var content: FolderContentStop = {
+  const folderContentLength = await getFolderContentLength(folderID);
+  const newContent: FolderContentStop = {
     type: 'stop',
     id: StopID,
-    time: new Date().toISOString(),
+    timestamp: new Date().getTime(),
     name: thisStopName,
     direction: thisStopDirection,
     route: {
@@ -464,33 +489,39 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
     },
     index: folderContentLength
   };
-  var save = await saveToFolder(folderID, content);
+  const save = await saveToFolder(folderID, newContent);
   return save;
 }
 
 export async function saveRoute(folderID: string, RouteID: number): Promise<boolean> {
-  var folderContentLength = await getFolderContentLength(folderID);
-  var searchedRoute = await searchRouteByRouteID(RouteID);
-  if (searchedRoute.length > 0) {
-    var Route = searchedRoute[0];
-    var content: FolderContentRoute = {
-      type: 'route',
-      id: RouteID,
-      time: new Date().toISOString(),
-      name: Route.n,
-      endPoints: {
-        departure: Route.dep,
-        destination: Route.des
-      },
-      index: folderContentLength
-    };
-    var save = await saveToFolder(folderID, content);
-    return save;
+  const requestID = generateIdentifier('r');
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  const thisRouteKey = `r_${RouteID}`;
+  let thisRoute = {} as SimplifiedRouteItem;
+  if (Route.hasOwnProperty(thisRouteKey)) {
+    thisRoute = Route[thisRouteKey];
   } else {
     return false;
   }
+  const folderContentLength = await getFolderContentLength(folderID);
+  const content: FolderContentRoute = {
+    type: 'route',
+    id: RouteID,
+    timestamp: new Date().getTime(),
+    name: thisRoute.n,
+    endPoints: {
+      departure: thisRoute.dep,
+      destination: thisRoute.des
+    },
+    index: folderContentLength
+  };
+  const save = await saveToFolder(folderID, content);
+  return save;
 }
-//TODO: saveBus
+
+// TODO: Save Bus
 
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): Promise<boolean> {
   var thisFolder = getFolder(folderID);
