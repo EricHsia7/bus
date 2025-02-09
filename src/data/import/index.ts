@@ -13,7 +13,7 @@ export async function importFolders(data: FolderWithContentArray): Promise<boole
     const folderKey: string = `f_${folder.id}`;
     const existingFolder: string = await lfGetItem(9, folderKey);
     if (existingFolder) {
-      update = await updateFolder(folder);
+      update = await updateFolder(folder.id, folder.name, folder.icon);
     } else {
       creation = await createFolder(folder.name, folder.icon);
     }
