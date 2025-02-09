@@ -74,7 +74,7 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
         }
       });
     } else {
-      promptMessage('此資料夾不支援站牌類型項目', 'warning');
+      promptMessage('無法儲存', 'warning');
     }
   });
 }
@@ -92,7 +92,7 @@ export function saveStopItemOnLocation(itemElementID: string, folderID: string, 
         }
       });
     } else {
-      promptMessage('此資料夾不支援站牌類型項目', 'warning');
+      promptMessage('無法儲存', 'warning');
     }
   });
 }
@@ -109,7 +109,7 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
         }
       });
     } else {
-      promptMessage('此資料夾不支援路線類型項目', 'warning');
+      promptMessage('無法儲存', 'warning');
     }
   });
 }
@@ -124,7 +124,7 @@ export function saveRouteOnRoute(folderID: string, RouteID: number): void {
         }
       });
     } else {
-      promptMessage('此資料夾不支援路線類型項目', 'warning');
+      promptMessage('無法儲存', 'warning');
     }
   });
 }
