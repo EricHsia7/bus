@@ -62,22 +62,17 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '資料夾';
       key = 'folders';
       break;
-    case 'savedStopFolderStore':
+    case 'folderContentIndexStore':
       name = '資料夾';
       key = 'folders';
       break;
-    case 'savedRouteFolderStore':
+    case 'folderContentStore':
       name = '資料夾';
       key = 'folders';
       break;
     default:
-      if (storeKey.startsWith('F') && storeKey.endsWith('Store')) {
-        name = '資料夾';
-        key = 'folders';
-      } else {
-        name = '其他';
-        key = 'others';
-      }
+      name = '其他';
+      key = 'others';
       break;
   }
   const result = {

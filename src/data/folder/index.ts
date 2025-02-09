@@ -426,36 +426,28 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   const thisFolderContentKey = `${type}_${id}`;
 
   // Check existence
-  console.log(0);
   const thisFolder = getFolder(folderID);
   if (typeof thisFolder === 'boolean' && thisFolder === false) {
-    console.log(1);
     return false;
   }
 
   // Remove reference from folder content index
-  console.log(2);
   const thisFolderContentIndexJSON = (await lfGetItem(10, folderKey)) as string;
   if (!thisFolderContentIndexJSON) {
-    console.log(3);
     return false;
   }
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
   const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
   if (index > -1 && thisFolderContentIndexArray.length > 0) {
-    console.log(4);
     thisFolderContentIndexArray.splice(index, 1);
     await lfSetItem(10, folderKey, JSON.stringify(thisFolderContentIndexArray));
   }
 
   // Remove content if there are no other references
-  console.log(5);
   const isSaved = await isFolderContentSaved(type, id);
   if (isSaved === false) {
-    console.log(6);
     await lfRemoveItem(11, thisFolderContentKey);
   }
-  console.log(7);
   return true;
 }
 

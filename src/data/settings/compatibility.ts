@@ -1,5 +1,4 @@
-import { createFolder, Folder, FolderContent, FolderContentBus, FolderContentRoute, FolderContentStop, saveToFolder } from '../folder/index';
-import { lfGetItem, lfListItemKeys, lfSetItem, registerStore } from '../storage/index';
+import { lfGetItem, lfSetItem } from '../storage/index';
 
 interface CompatibilityTag {
   timestamp: string; // timestamp in ISO format (the date after which changes will take effect)
@@ -13,7 +12,8 @@ const compatibilityTags: Array<CompatibilityTag> = [
   },
   {
     timestamp: '2025-02-09T00:00:00.000Z',
-    script: async function () {
+    script: null
+    /* async function () {
       const savedStopFolderID = await createFolder('已收藏站牌', 'location_on');
       const savedStopFolderKeys = await lfListItemKeys(12);
       for (const key of savedStopFolderKeys) {
@@ -58,7 +58,7 @@ const compatibilityTags: Array<CompatibilityTag> = [
           await lfSetItem(11, contentKey, JSON.stringify(contentObject));
         }
       }
-    }
+    } */
   }
 ];
 

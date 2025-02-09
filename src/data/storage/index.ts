@@ -12,12 +12,10 @@ let storage = {
   notificationScheduleStore: false, // 8
   folderListStore: false, // 9
   folderContentIndexStore: false, // 10
-  folderContentStore: false, // 11
-  savedStopFolderStore: false, // 12
-  savedRouteFolderStore: false // 13
+  folderContentStore: false // 11
 };
 
-let stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 async function dropInstance(store: number): Promise<any> {
   const storeKey = stores[store];
@@ -105,6 +103,7 @@ export function getStoresLength(): number {
   return stores.length;
 }
 
+/*
 export async function registerStore(id: string): Promise<number> {
   const storeKey = `F${id}Store`;
   if (!storage.hasOwnProperty(storeKey) && stores.indexOf(storeKey) < 0) {
@@ -117,6 +116,7 @@ export async function registerStore(id: string): Promise<number> {
     return stores.indexOf(storeKey);
   }
 }
+*/
 
 export async function isStoragePersistent(): Promise<boolean> {
   // Check if site's storage has been marked as persistent

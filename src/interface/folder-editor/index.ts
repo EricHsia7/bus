@@ -150,9 +150,8 @@ export function moveItemOnFolderEditor(itemID: string, folderID: string, type: F
 }
 
 export function saveEditedFolder(folderID: string): void {
-  var thisFolder: Folder = getFolder(folderID);
-  thisFolder.name = NameInputElement.value;
-  thisFolder.icon = IconInputElement.value;
-  updateFolder(thisFolder);
+  const name = NameInputElement.value;
+  const icon = IconInputElement.icon;
+  updateFolder(folderID, name, icon);
   closeFolderEditor();
 }
