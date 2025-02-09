@@ -125,11 +125,9 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
 }
 
 export async function updateFolder(folderID: Folder['id'], name: Folder['name'], icon: Folder['icon']): Promise<boolean> {
-  console.log(0)
   const folderKey: string = `f_${folderID}`;
 
   // Check existence
-  console.log(1)
   const existingFolderJSON = await lfGetItem(9, folderKey);
   if (!existingFolderJSON) {
     return false;
@@ -137,17 +135,15 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   const existingFolderObject = JSON.parse(existingFolderJSON) as Folder;
 
   // Validate icon
-  console.log(2)
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
 
   // Generate folder
-  console.log(3)
   const modifiedFolder: Folder = {
     name: name,
     icon: icon,
@@ -156,7 +152,6 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   };
 
   // Save folder
-  console.log(4)
   FolderList[folderKey] = modifiedFolder;
   await lfSetItem(9, folderKey, JSON.stringify(modifiedFolder));
   return true;
