@@ -528,7 +528,7 @@ export async function updateFolderContentIndex(folderID: Folder['id'], type: Fol
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
 
   const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
-  if (index > -1 && thisFolderContentIndexArray.length > 0) {
+  if (index > -1 && thisFolderContentIndexArray.length > 1) {
     let offset: number = 0;
     switch (direction) {
       case 'up':

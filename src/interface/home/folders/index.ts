@@ -73,7 +73,7 @@ function updateUpdateTimer(): void {
   });
 }
 
-export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
+export function setUpFolderFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -120,7 +120,6 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   }
 
   updateFoldersElement(
-    Field,
     {
       folders: folders,
       dataUpdateTime: 0
@@ -130,7 +129,7 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateFoldersElement(Field: HTMLElement, integration: integratedFolders, skeletonScreen: boolean, animation: boolean): void {
+function updateFoldersElement(integration: integratedFolders, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: integratedFolderContent, previousItem: integratedFolderContent | null) {
     function updateType(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       thisElement.setAttribute('type', thisItem.type);
@@ -478,7 +477,7 @@ async function refreshFolders() {
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFoldersElement(HomeFoldersElement, integration, false, playing_animation);
+  updateFoldersElement(integration, false, playing_animation);
   foldersRefreshTimer_lastUpdate = time;
   if (foldersRefreshTimer_dynamic) {
     const updateRate = await getUpdateRate();
