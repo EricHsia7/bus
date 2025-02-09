@@ -120,6 +120,7 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   // Save folder
   FolderList[folderKey] = newFolder;
   await lfSetItem(9, folderKey, JSON.stringify(newFolder));
+  await lfSetItem(10, folderKey, JSON.stringify([]));
   return folderID;
 }
 
@@ -423,28 +424,37 @@ export async function isFolderContentSaved(type: FolderContent['type'], id: Fold
 export async function removeFromFolder(folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id']): Promise<boolean> {
   const folderKey = `f_${folderID}`;
   const thisFolderContentKey = `${type}_${id}`;
+
   // Check existence
+  console.log(0);
   const thisFolder = getFolder(folderID);
   if (typeof thisFolder === 'boolean' && thisFolder === false) {
+    console.log(1);
     return false;
   }
 
   // Remove reference from folder content index
+  console.log(2);
   const thisFolderContentIndexJSON = (await lfGetItem(10, folderKey)) as string;
   if (!thisFolderContentIndexJSON) {
+    console.log(3);
     return false;
   }
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
   const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
   if (index > -1 && thisFolderContentIndexArray.length > 0) {
+    console.log(4);
     await lfSetItem(10, folderKey, JSON.stringify(thisFolderContentIndexArray.splice(index, 1)));
   }
 
   // Remove content if there are no other references
+  console.log(5);
   const isSaved = await isFolderContentSaved(type, id);
   if (isSaved === false) {
+    console.log(6);
     await lfRemoveItem(11, thisFolderContentKey);
   }
+  console.log(7);
   return true;
 }
 
@@ -464,7 +474,6 @@ export async function saveStop(folderID: string, StopID: number, RouteID: number
   const thisRouteDeparture: string = thisRoute.dep;
   const thisRouteDestination: string = thisRoute.des;
 
-  const folderContentLength = await getFolderContentLength(folderID);
   const newContent: FolderContentStop = {
     type: 'stop',
     id: StopID,
@@ -496,7 +505,7 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
   } else {
     return false;
   }
-  const folderContentLength = await getFolderContentLength(folderID);
+
   const content: FolderContentRoute = {
     type: 'route',
     id: RouteID,
