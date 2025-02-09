@@ -43,17 +43,19 @@ const compatibilityTags: Array<CompatibilityTag> = [
       }
 
       const customFolderKeys = await lfListItemKeys(9);
-      for (const key of customFolderKeys) {
-        const thisFolderJSON = await lfGetItem(9, key);
+      for (const folderKey of customFolderKeys) {
+        const thisFolderJSON = await lfGetItem(9, folderKey);
         const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
         const storeIndex = await registerStore(thisFolderObject.id);
         const contentKeys = await lfListItemKeys(storeIndex);
+        await lfSetItem(10, folderKey, JSON.stringify(contentKeys));
         for (const contentKey of contentKeys) {
           const contentJSON = await lfGetItem(storeIndex, contentKey);
           const contentObject = JSON.parse(contentJSON) as FolderContentStop | FolderContentRoute | FolderContentBus;
           contentObject.timestamp = new Date(contentObject.time).getTime();
           delete contentObject.time;
           delete contentObject.index;
+          await lfSetItem(11, contentKey, JSON.stringify(contentObject));
         }
       }
     }
