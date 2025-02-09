@@ -1,9 +1,8 @@
 import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
-import { lfSetItem, lfGetItem, lfListItemKeys, registerStore, lfRemoveItem } from '../storage/index';
+import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
 import { generateIdentifier } from '../../tools/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
-import { searchRouteByRouteID } from '../search/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
@@ -12,9 +11,6 @@ import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
-import { fadeOutSplashScreen } from '../../interface/index';
-
-// const cloneDeep = require('lodash/cloneDeep');
 
 interface FolderContentRouteEndPoints {
   departure: string;

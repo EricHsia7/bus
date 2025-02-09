@@ -1,4 +1,4 @@
-import { Folder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
+import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { GeneratedElement, querySize } from '../../index';
 import { getIconHTML } from '../../icons/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
@@ -78,28 +78,25 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
-  const defaultItemQuantity = { f_0: Math.floor(FieldHeight / 50 / 3) + 2, f_1: Math.floor(FieldHeight / 50 / 3) + 2, f_2: Math.floor(FieldHeight / 50 / 3) + 2 };
-  const defaultFolderQuantity = 3;
-  let foldedContent = {} as integratedFolders['foldedContent'];
-  let folders = {} as integratedFolders['folders'];
-  for (let i = 0; i < defaultFolderQuantity; i++) {
-    const folderKey: string = `f_${i}`;
-    foldedContent[folderKey] = [];
-    folders[folderKey] = {
+  const contentLength = Math.floor(FieldHeight / 50 / 3) + 2;
+  const folderQuantity = 3;
+
+  const folders: integratedFolders['folders'] = [];
+  for (let i = 0; i < folderQuantity; i++) {
+    const folder: integratedFolder = {
       name: '',
-      index: i,
       icon: '',
-      default: false,
-      storeIndex: -1,
-      contentType: [],
       id: '',
-      timestamp: 0
+      timestamp: 0,
+      content: [],
+      contentLength: contentLength
     };
-    for (let j = 0; j < defaultItemQuantity[folderKey]; j++) {
-      foldedContent[folderKey].push({
+
+    for (let j = 0; j < contentLength; j++) {
+      const folderContent: integratedFolderContent = {
         type: 'stop',
         id: 0,
-        time: '',
+        timestamp: 0,
         name: '',
         status: {
           code: 8,
@@ -117,16 +114,16 @@ export function setUpFolderFieldSkeletonScreen(Field: HTMLElement): void {
           pathAttributeId: []
         },
         index: j
-      });
+      };
+      folder.content.push(folderContent);
     }
+    folders.push(folder);
   }
+
   updateFolderField(
     Field,
     {
-      foldedContent: foldedContent,
       folders: folders,
-      folderQuantity: defaultFolderQuantity,
-      itemQuantity: defaultItemQuantity,
       dataUpdateTime: 0
     },
     true,
@@ -387,16 +384,14 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
 
-  const folderQuantity = integration.folderQuantity;
-  const itemQuantity = integration.itemQuantity;
-  const foldedContent = integration.foldedContent;
   const folders = integration.folders;
+  const foldersLength = folders.length;
 
   // Field.setAttribute('skeleton-screen', skeletonScreen);
 
   const currentFolderSeatQuantity = elementQuerySelectorAll(Field, `.css_home_folder`).length;
-  if (!(folderQuantity === currentFolderSeatQuantity)) {
-    const capacity = currentFolderSeatQuantity - folderQuantity;
+  if (!(foldersLength === currentFolderSeatQuantity)) {
+    const capacity = currentFolderSeatQuantity - foldersLength;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newFolderElement = generateElementOfFolder();
@@ -411,11 +406,13 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
-  for (let i = 0; i < folderQuantity; i++) {
-    const folderKey = `f_${i}`;
+  for (let i = 0; i < foldersLength; i++) {
+    const thisFolder = folders[i];
+    const thisFolderContent = thisFolder.content;
+    const thisFolderContentLength = thisFolderContent.length;
     const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`).length;
-    if (!(itemQuantity[folderKey] === currentItemSeatQuantity)) {
-      const capacity = currentItemSeatQuantity - itemQuantity[folderKey];
+    if (!(thisFolderContentLength === currentItemSeatQuantity)) {
+      const capacity = currentItemSeatQuantity - thisFolderContentLength;
       if (capacity < 0) {
         const FolderContentElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content`);
         for (let o = 0; o < Math.abs(capacity); o++) {
@@ -432,18 +429,15 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
     }
   }
 
-  for (let i = 0; i < folderQuantity; i++) {
-    const folderKey = `f_${i}`;
+  for (let i = 0; i < foldersLength; i++) {
+    const thisFolder = folders[i];
+    const thisFolderContent = thisFolder.content;
+    const thisFolderContentLength = thisFolderContent.length;
     const thisFolderElement = elementQuerySelectorAll(Field, `.css_home_folder`)[i];
-    const thisFolder = folders[folderKey];
     if (previousIntegration.hasOwnProperty('folders')) {
-      if (previousIntegration.folders.hasOwnProperty(folderKey)) {
-        if (previousIntegration.folders[folderKey]) {
-          const previousFolder = previousIntegration.folders[folderKey];
-          updateFolder(thisFolderElement, thisFolder, previousFolder);
-        } else {
-          updateFolder(thisFolderElement, thisFolder, null);
-        }
+      if (previousIntegration.folders[i]) {
+        const previousFolder = previousIntegration.folders[i];
+        updateFolder(thisFolderElement, thisFolder, previousFolder);
       } else {
         updateFolder(thisFolderElement, thisFolder, null);
       }
@@ -451,13 +445,13 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
       updateFolder(thisFolderElement, thisFolder, null);
     }
 
-    for (let j = 0; j < itemQuantity[folderKey]; j++) {
+    for (let j = 0; j < thisFolderContentLength; j++) {
       const thisElement = elementQuerySelectorAll(elementQuerySelectorAll(Field, `.css_home_folder`)[i], `.css_home_folder_content .css_home_folder_item`)[j];
-      const thisItem = foldedContent[folderKey][j];
-      if (previousIntegration.hasOwnProperty('foldedContent')) {
-        if (previousIntegration.foldedContent.hasOwnProperty(folderKey)) {
-          if (previousIntegration.foldedContent[folderKey][j]) {
-            const previousItem = previousIntegration.foldedContent[folderKey][j];
+      const thisItem = thisFolderContent[j];
+      if (previousIntegration.hasOwnProperty('folders')) {
+        if (previousIntegration.folders[i]) {
+          if (previousIntegration.folders[i].content[j]) {
+            const previousItem = previousIntegration.folders[i].content[j];
             updateItem(thisElement, thisItem, previousItem);
           } else {
             updateItem(thisElement, thisItem, null);
@@ -470,12 +464,13 @@ function updateFolderField(Field: HTMLElement, integration: integratedFolders, s
       }
     }
   }
+
   previousIntegration = integration;
   previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshFolders(): Promise<object> {
+async function refreshFolders() {
   const time = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
@@ -496,12 +491,11 @@ async function refreshFolders(): Promise<object> {
   foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - time);
   foldersRefreshTimer_refreshing = false;
   HomeUpdateTimerElement.setAttribute('refreshing', 'false');
-  return { status: 'Successfully refreshed the folders.' };
 }
 
 async function streamFolders() {
   refreshFolders()
-    .then((result) => {
+    .then(function () {
       if (foldersRefreshTimer_streaming) {
         foldersRefreshTimer_timer = setTimeout(function () {
           streamFolders();
