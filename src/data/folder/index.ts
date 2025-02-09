@@ -524,13 +524,22 @@ export async function saveRoute(folderID: string, RouteID: number): Promise<bool
 // TODO: Save Bus
 
 export async function updateFolderContentIndex(folderID: string, type: FolderContentType, id: number, direction: 'up' | 'down'): Promise<boolean> {
-  var thisFolder = getFolder(folderID);
-  var thisFolderContent = await listFolderContent(folderID);
-  var thisContentKey = `${type}_${id}`;
-  var thisContent = await lfGetItem(thisFolder.storeIndex, thisContentKey);
-  if (thisContent) {
-    var thisContentObject: FolderContent = JSON.parse(thisContent);
-    var offset: number = 0;
+  const folderKey = `f_${folderID}`;
+  const thisFolderContentKey = `${type}_${id}`;
+  const thisFolder = getFolder(folderID);
+  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+    return false;
+  }
+
+  const thisFolderContentIndexJSON = (await lfGetItem(10, folderKey)) as string;
+  if (!thisFolderContentIndexJSON) {
+    return false;
+  }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+
+  const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
+  if (index > -1 && thisFolderContentIndexArray.length > 0) {
+    let offset: number = 0;
     switch (direction) {
       case 'up':
         offset = -1;
@@ -542,19 +551,11 @@ export async function updateFolderContentIndex(folderID: string, type: FolderCon
         offset = 0;
         break;
     }
-    var adjacentContentObject = thisFolderContent[thisContentObject.index + offset];
-    if (adjacentContentObject) {
-      var adjacentContentKey = `${adjacentContentObject.type}_${adjacentContentObject.id}`;
-
-      var thisContentIndex = thisContentObject.index;
-      var adjacentContentIndex = adjacentContentObject.index;
-      thisContentObject.index = adjacentContentIndex;
-      adjacentContentObject.index = thisContentIndex;
-      await lfSetItem(thisFolder.storeIndex, thisContentKey, JSON.stringify(thisContentObject));
-      await lfSetItem(thisFolder.storeIndex, adjacentContentKey, JSON.stringify(adjacentContentObject));
-      return true;
-    }
+    thisFolderContentIndexArray.splice(index, 1);
+    thisFolderContentIndexArray.splice(index + offset, 0, thisFolderContentKey);
+    await lfSetItem(10, folderKey, JSON.stringify(thisFolderContentIndexArray));
+    return true;
   } else {
-    return false; // content dosen't exist
+    return false;
   }
 }
