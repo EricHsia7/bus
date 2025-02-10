@@ -271,7 +271,7 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-async function refreshRecentViews(): Promise<object> {
+async function refreshRecentViews() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
@@ -291,12 +291,11 @@ async function refreshRecentViews(): Promise<object> {
   recentViewsRefreshTimer_dynamicInterval = Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - new Date().getTime());
   recentViewsRefreshTimer_refreshing = false;
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
-  return { status: 'Successfully refreshed the recent views.' };
 }
 
 async function streamRecentViews() {
   refreshRecentViews()
-    .then((result) => {
+    .then(function () {
       if (recentViewsRefreshTimer_streaming) {
         recentViewsRefreshTimer_timer = setTimeout(function () {
           streamRecentViews();

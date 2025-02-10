@@ -537,7 +537,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshRoute(): Promise<object> {
+async function refreshRoute() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
@@ -557,12 +557,11 @@ async function refreshRoute(): Promise<object> {
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime());
   routeRefreshTimer_refreshing = false;
   RouteUpdateTimerElement.setAttribute('refreshing', 'false');
-  return { status: 'Successfully refreshed the route.' };
 }
 
 export function streamRoute(): void {
   refreshRoute()
-    .then((result) => {
+    .then(function () {
       if (routeRefreshTimer_streaming) {
         routeRefreshTimer_timer = setTimeout(function () {
           streamRoute();

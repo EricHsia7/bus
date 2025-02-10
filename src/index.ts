@@ -38,6 +38,7 @@ import { discardExpiredNotificationSchedules, initializeNotificationSchedules, l
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
+import { checkCompatibility } from './data/settings/compatibility';
 
 import './interface/theme.css';
 
@@ -177,8 +178,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { checkCompatibility } from './data/settings/compatibility';
-import { lfSetItem } from './data/storage/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -389,9 +388,6 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
-  },
-  test: {
-    lfSetItem
   }
 };
 
