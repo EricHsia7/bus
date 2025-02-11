@@ -4,7 +4,7 @@ import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(message: string, icon: MaterialSymbols): void {
+export function promptMessage(message: string, icon: MaterialSymbols, actionLabel: string, action: Function): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (!(allPromptElements === null)) {
     for (const promptElement of allPromptElements) {
@@ -13,6 +13,15 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
   }
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+
+  let showActionButton: boolean = false;
+  if (typeof actionLabel === 'string') {
+    if (actionLabel.length > 0) {
+if (typeof action === 'function') {
+showActionButton = true
+}
+}
+  }
 
   const promptID: string = generateIdentifier();
 
@@ -30,6 +39,20 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
   promptMessageElement.classList.add('css_prompt_message');
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
+
+if(showActionButton) {
+const actionButtonElement =  document.createElement('div');
+  actionButtonElement.classList.add('css_prompt_action_button');
+actionButtonElement.innerText = actionLabel;
+actionButtonElement.addEventListener(
+      'click',
+      function () {
+        action();
+      },
+      { once: true }
+    );
+  promptElement.appendChild(actionButtonElement);
+}
 
   document.body.appendChild(promptElement);
 
