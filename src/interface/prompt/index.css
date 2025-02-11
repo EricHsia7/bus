@@ -97,12 +97,13 @@
   width: calc(100% - 45px);
   height: 45px;
   color: var(--b-cssvar-333333);
-  font-size: 17px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 45px;
   user-select: none;
   -webkit-user-select: none;
   word-break: keep-all;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
