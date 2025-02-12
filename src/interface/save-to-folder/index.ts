@@ -69,12 +69,12 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage('folder', '已儲存至資料夾');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage('warning', '無法儲存');
     }
   });
 }
@@ -87,12 +87,12 @@ export function saveStopItemOnLocation(itemElementID: string, folderID: string, 
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage('folder', '已儲存至資料夾');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage('warning', '無法儲存');
     }
   });
 }
@@ -104,12 +104,12 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage('folder', '已儲存至資料夾');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage('warning', '無法儲存');
     }
   });
 }
@@ -119,12 +119,12 @@ export function saveRouteOnRoute(folderID: string, RouteID: number): void {
     if (e) {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage('folder', '已儲存至資料夾');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage('warning', '無法儲存');
     }
   });
 }

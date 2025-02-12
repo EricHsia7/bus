@@ -38,9 +38,9 @@ export function createFormulatedPersonalSchedule(): void {
   createPersonalSchedule(name, startHours, startMinutes, endHours, endMinutes, days).then(function (e) {
     if (e) {
       closePersonalScheduleCreator();
-      promptMessage('已建立個人化行程', 'calendar_view_day');
+      promptMessage('calendar_view_day', '已建立個人化行程');
     } else {
-      promptMessage('無法建立個人化行程', 'error');
+      promptMessage('error', '無法建立個人化行程');
     }
   });
 }

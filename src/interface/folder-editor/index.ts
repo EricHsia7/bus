@@ -107,16 +107,16 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
       itemElement.remove();
       switch (type) {
         case 'stop':
-          promptMessage('已移除站牌', 'delete');
+          promptMessage('delete', '已移除站牌');
           break;
         case 'route':
-          promptMessage('已移除路線', 'delete');
+          promptMessage('delete', '已移除路線');
           break;
         default:
           break;
       }
     } else {
-      promptMessage('無法移除', 'error');
+      promptMessage('error', '無法移除');
     }
   });
 }
@@ -131,20 +131,20 @@ export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], t
           if (previousSibling) {
             itemElement.parentNode.insertBefore(itemElement, previousSibling);
           }
-          promptMessage('已往上移', 'arrow_circle_up');
+          promptMessage('arrow_circle_up', '已往上移');
           break;
         case 'down':
           const nextSibling = itemElement.nextElementSibling;
           if (nextSibling) {
             itemElement.parentNode.insertBefore(nextSibling, itemElement);
           }
-          promptMessage('已往下移', 'arrow_circle_down');
+          promptMessage('arrow_circle_down', '已往下移');
           break;
         default:
           break;
       }
     } else {
-      promptMessage('無法移動', 'error');
+      promptMessage('error', '無法移動');
     }
   });
 }

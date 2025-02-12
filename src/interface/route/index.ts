@@ -573,7 +573,7 @@ export function streamRoute(): void {
     .catch((err) => {
       console.error(err);
       if (routeRefreshTimer_streaming) {
-        promptMessage(`（路線）發生網路錯誤，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
+        promptMessage('error', `（路線）發生網路錯誤，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`);
         routeRefreshTimer_timer = setTimeout(function () {
           streamRoute();
         }, routeRefreshTimer_retryInterval);

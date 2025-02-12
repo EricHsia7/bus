@@ -4,7 +4,22 @@ import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(message: string, icon: MaterialSymbols, actionLabel?: string, action?: Function): void {
+interface PromptMessageComponentCallback {
+  type: 'callback';
+  callback: Function;
+}
+
+interface PromptMessageComponentActionButton {
+  type: 'action-button';
+  label: string;
+  action: Function;
+}
+
+type PromptMessageComponent = PromptMessageComponentCallback | PromptMessageComponentActionButton;
+
+type PromptMessageComponents = Array<PromptMessageComponent>;
+
+export function promptMessage(icon: MaterialSymbols, message: string, components: PromptMessageComponents): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (!(allPromptElements === null)) {
     for (const promptElement of allPromptElements) {
@@ -14,22 +29,13 @@ export function promptMessage(message: string, icon: MaterialSymbols, actionLabe
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
-  let showActionButton: boolean = false;
-  if (typeof actionLabel === 'string') {
-    if (actionLabel.length > 0) {
-      if (typeof action === 'function') {
-        showActionButton = true;
-      }
-    }
-  }
-
   const promptID: string = generateIdentifier();
 
   const promptElement = document.createElement('div');
   promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
   promptElement.setAttribute('animation', booleanToString(playing_animation));
-  promptElement.setAttribute('action', showActionButton);
+  promptElement.setAttribute('action', 'false');
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
@@ -41,30 +47,52 @@ export function promptMessage(message: string, icon: MaterialSymbols, actionLabe
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
 
-  if (showActionButton) {
-    const actionButtonElement = document.createElement('div');
-    actionButtonElement.classList.add('css_prompt_action_button');
-    actionButtonElement.innerText = actionLabel;
-    actionButtonElement.addEventListener(
-      'click',
-      function () {
-        action();
-      },
-      { once: true }
-    );
-    promptElement.appendChild(actionButtonElement);
+  for (const component of components) {
+    switch (component.type) {
+      case 'action-button':
+        if (typeof component.label === 'string') {
+          if (component.label.length > 0) {
+            if (typeof component.action === 'function') {
+              promptElement.setAttribute('action', 'true');
+              const actionButtonElement = document.createElement('div');
+              actionButtonElement.classList.add('css_prompt_action_button');
+              actionButtonElement.innerText = component.label;
+              actionButtonElement.addEventListener(
+                'click',
+                function () {
+                  component.action();
+                },
+                { once: true }
+              );
+              promptElement.appendChild(actionButtonElement);
+            }
+          }
+        }
+        break;
+      case 'callback':
+        if (typeof component.callback === 'function') {
+          promptElement.addEventListener(
+            'animationend',
+            function () {
+              component.callback();
+            },
+            { once: true }
+          );
+        }
+        break;
+      default:
+        break;
+    }
   }
+
+  promptElement.addEventListener(
+    'animationend',
+    function (event: Event) {
+      const target = event.target as HTMLElement;
+      target.remove();
+    },
+    { once: true }
+  );
 
   document.body.appendChild(promptElement);
-
-  const promptElementInstance = document.getElementById(promptID);
-  if (!(promptElementInstance === null)) {
-    promptElementInstance.addEventListener(
-      'animationend',
-      function () {
-        promptElementInstance.remove();
-      },
-      { once: true }
-    );
-  }
 }
