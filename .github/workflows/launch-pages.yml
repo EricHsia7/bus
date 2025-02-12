@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-cancel-notification-schedule-button-on-prompt-interface
+      - dev-prompt
 
 jobs:
   launch:
