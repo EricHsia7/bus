@@ -20,6 +20,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   let element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_editor_folder_item');
+  element.setAttribute('displayed', 'true');
   element.setAttribute('type', item.type);
   let context = '';
   let main = '';
@@ -102,6 +103,39 @@ export function closeFolderEditor(): void {
 
 export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: number): void {
   const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+  itemElement.setAttribute('displayed', 'false');
+  let message = '';
+  switch (type) {
+    case 'stop':
+      message = '已移除站牌';
+      break;
+    case 'route':
+      message = '已移除路線';
+      break;
+    case 'bus':
+      message = '已移除公車';
+      break;
+    default:
+      break;
+  }
+
+  promptMessage('delete', message, [
+    {
+      type: 'callback',
+      callback: function () {
+        removeFromFolder(folderID, type, id);
+      }
+    },
+    {
+      type: 'action-button',
+      label: '取消',
+      action: function () {
+        this.removeCallback();
+        itemElement.setAttribute('displayed', 'true');
+      }
+    }
+  ]);
+  /*
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
       itemElement.remove();
@@ -119,6 +153,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
       promptMessage('error', '無法移除');
     }
   });
+  */
 }
 
 export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): void {

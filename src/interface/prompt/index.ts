@@ -1,6 +1,6 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../tools/index';
-import { documentQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
@@ -20,6 +20,24 @@ type PromptMessageComponent = PromptMessageComponentCallback | PromptMessageComp
 type PromptMessageComponents = Array<PromptMessageComponent>;
 
 export function promptMessage(icon: MaterialSymbols, message: string, components: PromptMessageComponents): void {
+  this.removeCallback = function () {
+    let containValidCallbackComponent: boolean = false;
+    for (const component of components) {
+      if (component.type === 'callback') {
+        if (typeof component.callback === 'function') {
+          containValidCallbackComponent = true;
+        }
+      }
+    }
+
+    if (containValidCallbackComponent) {
+      const element = documentQuerySelector(`.css_prompt#${this._promptID}`);
+      if (element !== null) {
+        element.removeEventListener('animationend', this._callbackFunction, { once: true });
+      }
+    }
+  };
+
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (!(allPromptElements === null)) {
     for (const promptElement of allPromptElements) {
@@ -71,13 +89,11 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
         break;
       case 'callback':
         if (typeof component.callback === 'function') {
-          promptElement.addEventListener(
-            'animationend',
-            function () {
-              component.callback();
-            },
-            { once: true }
-          );
+          this._callbackFunction = function () {
+            component.callback.call(this);
+          };
+          this._promptID = promptID;
+          promptElement.addEventListener('animationend', this._callbackFunction, { once: true });
         }
         break;
       default:
