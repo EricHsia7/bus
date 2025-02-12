@@ -109,13 +109,13 @@
 }
 
 .css_prompt[action="true"] .css_prompt_message {
-  width: calc(100% - 45px - 70px);
+  width: calc(100% - 45px - 75px);
 }
 
 .css_prompt .css_prompt_action_button {
   position: absolute;
   top: 0px;
-  right: 10px;
+  right: 15px;
   height: 45px;
   width: 60px;
   display: flex;
