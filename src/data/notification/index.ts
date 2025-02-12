@@ -406,7 +406,7 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
   }
 ];
 
-export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<0 | 1 | 2> {
+export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<[0, null] | [1, string] | [2, null]> {
   if (getNotificationClientStatus()) {
     const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
     const requestID = generateIdentifier('r');
@@ -461,11 +461,11 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
 
     const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
     if (scheduling === false) {
-      return 0; // error
+      return [0, null]; // error
     } else {
-      return 1; // successful
+      return [1, scheduling]; // successful
     }
   } else {
-    return 2; // no registration
+    return [2, null]; // no registration
   }
 }

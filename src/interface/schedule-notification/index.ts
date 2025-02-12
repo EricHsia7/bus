@@ -1,3 +1,4 @@
+import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
@@ -59,14 +60,22 @@ export function scheduleNotificationForStopItemOnRoute(itemElementID: string, St
   promptMessage('處理中', 'manufacturing');
   scheduleNotificationButtonElement.setAttribute('enabled', 'false');
   closeScheduleNotification();
-  scheduleNotificationForStop(StopID, RouteID, EstimateTime, index).then((result) => {
-    switch (result) {
+  scheduleNotificationForStop(StopID, RouteID, EstimateTime, index).then((scheduling) => {
+    switch (scheduling[0]) {
       case 0:
         promptMessage('設定失敗', 'error');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       case 1:
-        promptMessage('設定成功', 'check_circle');
+        promptMessage('設定成功', 'check_circle', '取消', function () {
+          cancelNotification(scheduling[1]).then((cancellation) => {
+            if (cancellation) {
+              promptMessage('已取消', 'check_circle');
+            } else {
+              promptMessage('取消失敗', 'error');
+            }
+          });
+        });
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         scheduleNotificationButtonElement.setAttribute('highlighted', 'true');
         break;
