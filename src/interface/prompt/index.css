@@ -107,3 +107,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.css_prompt .css_prompt_action_button {
+  position: absolute;
+  top: 0px;
+  right: 7.5px;
+  height: 45px;
+  width: 60px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--b-cssvar-main-color);
+  user-select: none;
+  -webkit-user-select: none;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.css_prompt[action="true"] .css_prompt_action_button {
+  visibility: visible;
+}
