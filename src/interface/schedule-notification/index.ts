@@ -68,6 +68,7 @@ export function scheduleNotificationForStopItemOnRoute(itemElementID: string, St
         break;
       case 1:
         promptMessage('設定成功', 'check_circle', '取消', function () {
+          promptMessage('處理中', 'manufacturing');
           cancelNotification(scheduling[1]).then((cancellation) => {
             if (cancellation) {
               promptMessage('已取消', 'check_circle');
