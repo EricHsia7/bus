@@ -4,6 +4,7 @@ import { documentQuerySelector, documentQuerySelectorAll } from '../../tools/que
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
+// The callback component should be before action button if removeCallback is set to true
 interface PromptMessageComponentCallback {
   type: 'callback';
   callback: Function;
@@ -13,6 +14,7 @@ interface PromptMessageComponentActionButton {
   type: 'action-button';
   label: string;
   action: Function;
+  removeCallback: boolean;
 }
 
 type PromptMessageComponent = PromptMessageComponentCallback | PromptMessageComponentActionButton;
@@ -20,24 +22,6 @@ type PromptMessageComponent = PromptMessageComponentCallback | PromptMessageComp
 type PromptMessageComponents = Array<PromptMessageComponent>;
 
 export function promptMessage(icon: MaterialSymbols, message: string, components: PromptMessageComponents): void {
-  this.removeCallback = function () {
-    let containValidCallbackComponent: boolean = false;
-    for (const component of components) {
-      if (component.type === 'callback') {
-        if (typeof component.callback === 'function') {
-          containValidCallbackComponent = true;
-        }
-      }
-    }
-
-    if (containValidCallbackComponent) {
-      const element = documentQuerySelector(`.css_prompt#${this._promptID}`);
-      if (element !== null) {
-        element.removeEventListener('animationend', this._callbackFunction, { once: true });
-      }
-    }
-  };
-
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (!(allPromptElements === null)) {
     for (const promptElement of allPromptElements) {
@@ -47,10 +31,10 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
-  const promptID: string = generateIdentifier();
+  // const promptID: string = generateIdentifier();
 
   const promptElement = document.createElement('div');
-  promptElement.id = promptID;
+  // promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
   promptElement.setAttribute('animation', booleanToString(playing_animation));
   promptElement.setAttribute('action', 'false');
@@ -64,6 +48,8 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
   promptMessageElement.classList.add('css_prompt_message');
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
+
+  let callbackFunction: Function | null = null;
 
   for (const component of components) {
     switch (component.type) {
@@ -79,6 +65,9 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
                 'click',
                 function () {
                   component.action();
+                  if (component.removeCallback && typeof callbackFunction === 'function') {
+                    promptElement.addEventListener('animationend', callbackFunction, { once: true });
+                  }
                 },
                 { once: true }
               );
@@ -89,11 +78,8 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
         break;
       case 'callback':
         if (typeof component.callback === 'function') {
-          this._callbackFunction = function () {
-            component.callback.call(this);
-          };
-          this._promptID = promptID;
-          promptElement.addEventListener('animationend', this._callbackFunction, { once: true });
+          callbackFunction = component.callback;
+          promptElement.addEventListener('animationend', callbackFunction, { once: true });
         }
         break;
       default:

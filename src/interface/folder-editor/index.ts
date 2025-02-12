@@ -130,9 +130,9 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
       type: 'action-button',
       label: '取消',
       action: function () {
-        this.removeCallback();
         itemElement.setAttribute('displayed', 'true');
-      }
+      },
+      removeCallback: true
     }
   ]);
   /*
