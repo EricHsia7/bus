@@ -17,10 +17,10 @@ export function promptMessage(message: string, icon: MaterialSymbols, actionLabe
   let showActionButton: boolean = false;
   if (typeof actionLabel === 'string') {
     if (actionLabel.length > 0) {
-if (typeof action === 'function') {
-showActionButton = true
-}
-}
+      if (typeof action === 'function') {
+        showActionButton = true;
+      }
+    }
   }
 
   const promptID: string = generateIdentifier();
@@ -29,6 +29,7 @@ showActionButton = true
   promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
   promptElement.setAttribute('animation', booleanToString(playing_animation));
+  promptElement.setAttribute('action', showActionButton);
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
@@ -40,19 +41,19 @@ showActionButton = true
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
 
-if(showActionButton) {
-const actionButtonElement =  document.createElement('div');
-  actionButtonElement.classList.add('css_prompt_action_button');
-actionButtonElement.innerText = actionLabel;
-actionButtonElement.addEventListener(
+  if (showActionButton) {
+    const actionButtonElement = document.createElement('div');
+    actionButtonElement.classList.add('css_prompt_action_button');
+    actionButtonElement.innerText = actionLabel;
+    actionButtonElement.addEventListener(
       'click',
       function () {
         action();
       },
       { once: true }
     );
-  promptElement.appendChild(actionButtonElement);
-}
+    promptElement.appendChild(actionButtonElement);
+  }
 
   document.body.appendChild(promptElement);
 

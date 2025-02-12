@@ -108,6 +108,10 @@
   text-overflow: ellipsis;
 }
 
+.css_prompt[action="true"] .css_prompt_message {
+  width: calc(100% - 45px - 60px);
+}
+
 .css_prompt .css_prompt_action_button {
   position: absolute;
   top: 0px;
