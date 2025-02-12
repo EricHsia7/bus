@@ -66,7 +66,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
                 function () {
                   component.action();
                   if (component.removeCallback && typeof callbackFunction === 'function') {
-                    promptElement.addEventListener('animationend', callbackFunction, { once: true });
+                    promptElement.removeEventListener('animationend', callbackFunction, { once: true });
                   }
                 },
                 { once: true }
