@@ -1,6 +1,6 @@
 import { getSettingOptionValue } from '../../data/settings/index';
-import { booleanToString, generateIdentifier } from '../../tools/index';
-import { documentQuerySelector, documentQuerySelectorAll } from '../../tools/query-selector';
+import { booleanToString } from '../../tools/index';
+import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
@@ -23,9 +23,9 @@ type PromptMessageComponents = Array<PromptMessageComponent>;
 
 export function promptMessage(icon: MaterialSymbols, message: string, components: PromptMessageComponents): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
-  if (!(allPromptElements === null)) {
-    for (const promptElement of allPromptElements) {
-      promptElement.remove();
+  if (allPromptElements) {
+    for (const element of allPromptElements) {
+      element.remove();
     }
   }
 
@@ -33,21 +33,21 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
 
   // const promptID: string = generateIdentifier();
 
-  const promptElement = document.createElement('div');
+  const newPromptElement = document.createElement('div');
   // promptElement.id = promptID;
-  promptElement.classList.add('css_prompt');
-  promptElement.setAttribute('animation', booleanToString(playing_animation));
-  promptElement.setAttribute('action', 'false');
+  newPromptElement.classList.add('css_prompt');
+  newPromptElement.setAttribute('animation', booleanToString(playing_animation));
+  newPromptElement.setAttribute('action', 'false');
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
   promptIconElement.innerHTML = getIconHTML(icon);
-  promptElement.appendChild(promptIconElement);
+  newPromptElement.appendChild(promptIconElement);
 
   const promptMessageElement = document.createElement('div');
   promptMessageElement.classList.add('css_prompt_message');
   promptMessageElement.innerText = message;
-  promptElement.appendChild(promptMessageElement);
+  newPromptElement.appendChild(promptMessageElement);
 
   let callbackFunction: Function | null = null;
 
@@ -57,7 +57,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
         if (typeof component.label === 'string') {
           if (component.label.length > 0) {
             if (typeof component.action === 'function') {
-              promptElement.setAttribute('action', 'true');
+              newPromptElement.setAttribute('action', 'true');
               const actionButtonElement = document.createElement('div');
               actionButtonElement.classList.add('css_prompt_action_button');
               actionButtonElement.innerText = component.label;
@@ -66,12 +66,12 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
                 function () {
                   component.action();
                   if (component.removeCallback && typeof callbackFunction === 'function') {
-                    promptElement.removeEventListener('animationend', callbackFunction, { once: true });
+                    newPromptElement.removeEventListener('animationend', callbackFunction, { once: true });
                   }
                 },
                 { once: true }
               );
-              promptElement.appendChild(actionButtonElement);
+              newPromptElement.appendChild(actionButtonElement);
             }
           }
         }
@@ -79,7 +79,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
       case 'callback':
         if (typeof component.callback === 'function') {
           callbackFunction = component.callback;
-          promptElement.addEventListener('animationend', callbackFunction, { once: true });
+          newPromptElement.addEventListener('animationend', callbackFunction, { once: true });
         }
         break;
       default:
@@ -87,7 +87,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
     }
   }
 
-  promptElement.addEventListener(
+  newPromptElement.addEventListener(
     'animationend',
     function (event: Event) {
       const target = event.target as HTMLElement;
@@ -96,5 +96,5 @@ export function promptMessage(icon: MaterialSymbols, message: string, components
     { once: true }
   );
 
-  document.body.appendChild(promptElement);
+  document.body.appendChild(newPromptElement);
 }
