@@ -4,7 +4,7 @@ import { documentQuerySelectorAll } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(message: string, icon: MaterialSymbols, actionLabel: string, action: Function): void {
+export function promptMessage(message: string, icon: MaterialSymbols, actionLabel?: string, action?: Function): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (!(allPromptElements === null)) {
     for (const promptElement of allPromptElements) {
