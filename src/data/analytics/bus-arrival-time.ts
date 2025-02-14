@@ -24,7 +24,15 @@ interface EstimateTimeRecordForBusArrivalTimeObject {
   data: { [key: string]: Array<EstimateTimeRecordForBusArrivalTime> };
 }
 
-interface BusArrivalTimeDataGroup {}
+type BusArrivalTimeData = [number, number]; // EstimateTime, timestamp
+
+interface BusArrivalTimeDataGroup {
+  value: number;
+  data: Array<BusArrivalTimeData>;
+  length: number;
+  flattened: boolean;
+  id: number; // stop id
+}
 
 export interface AggregatedBusArrivalTime {
   time: string;
