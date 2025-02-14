@@ -4,6 +4,23 @@ import { formatTime } from '../../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 
+type UpdateRateData = [number, number]; // EstimateTime, timestamp
+
+interface UpdateRateDataGroup {
+  data: Array<UpdateRateData>;
+  value: number;
+  length: number;
+  flattened: boolean;
+  timestamp: number;
+  id: number; // stop id
+}
+
+interface UpdateRateDataWriteAheadLogGroup {
+  data: Array<UpdateRateData>;
+  timestamp: number;
+  id: string;
+}
+
 interface IncompleteRecords {
   trackingID: string;
   timeStamp: number;
@@ -12,58 +29,61 @@ interface IncompleteRecords {
   };
 }
 
-const trackingUpdateRate_sampleQuantity: number = 64;
-const trackingUpdateRate_monitorTimes: number = 90;
-let trackingUpdateRate_trackedStops: Array<number> = [];
-let trackingUpdateRate_trackingID: string = '';
-let trackingUpdateRate_tracking: boolean = false;
-let trackingUpdateRate_incompleteRecords: IncompleteRecords = {
-  trackingID: '',
-  timeStamp: 0,
-  data: {}
+const updateRateData_sampleQuantity: number = 64;
+const updateRateData_maxDataLength: number = 90;
+let updateRateData_trackedStops: Array<number> = [];
+let updateRateData_writeAheadLog_id: string = '';
+let updateRateData_writeAheadLog_tracking: boolean = false;
+let updateRateData_writeAheadLog_currentDataLength: number = 0;
+let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
+  data: {},
+  timestamp: 0,
+  id: ''
 };
-let trackingUpdateRate_currentDataLength: number = 0;
 
 export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime) {
   const now = new Date();
-  const currentTimeStamp: number = Math.floor(now.getTime() / 1000);
+  const currentTimestamp: number = now.getTime();
   let needToReset = false;
-  if (!trackingUpdateRate_tracking) {
-    trackingUpdateRate_tracking = true;
-    trackingUpdateRate_trackedStops = [];
-    trackingUpdateRate_trackingID = generateIdentifier('e');
-    trackingUpdateRate_incompleteRecords = {
-      trackingID: trackingUpdateRate_trackingID,
-      timeStamp: new Date().getTime(),
-      data: {}
+  // Initialize
+  if (!updateRateData_writeAheadLog_tracking) {
+    updateRateData_writeAheadLog_tracking = true;
+    updateRateData_trackedStops = [];
+    updateRateData_writeAheadLog_id = generateIdentifier('u');
+    updateRateData_writeAheadLog_group = {
+      data: {},
+      timestamp: currentTimestamp,
+      id: updateRateData_writeAheadLog_id
     };
-    trackingUpdateRate_currentDataLength = 0;
-    const EstimateTimeLength: number = EstimateTime.length - 1;
-    for (let i = 0; i < trackingUpdateRate_sampleQuantity; i++) {
-      const randomIndex: number = Math.max(Math.min(Math.round(Math.random() * EstimateTimeLength), EstimateTimeLength), 0);
+    updateRateData_writeAheadLog_currentDataLength = 0;
+    const EstimateTimeLength1: number = EstimateTime.length - 1;
+    for (let i = 0; i < updateRateData_sampleQuantity; i++) {
+      const randomIndex: number = Math.floor(Math.random() * EstimateTimeLength1);
       const randomItem = EstimateTime[randomIndex];
-      trackingUpdateRate_trackedStops.push(randomItem.StopID);
+      updateRateData_trackedStops.push(randomItem.StopID);
     }
   }
+
+  // Record EstimateTime
   for (const item of EstimateTime) {
     const stopID = item.StopID;
     const stopKey = `s_${stopID}`;
-    if (trackingUpdateRate_trackedStops.indexOf(stopID) > -1) {
-      if (!trackingUpdateRate_incompleteRecords.data.hasOwnProperty(stopKey)) {
-        trackingUpdateRate_incompleteRecords.data[stopKey] = [];
+    if (updateRateData_trackedStops.indexOf(stopID) > -1) {
+      if (!updateRateData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
+        updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
-      trackingUpdateRate_incompleteRecords.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimeStamp });
-      trackingUpdateRate_currentDataLength += 1;
-      if (trackingUpdateRate_currentDataLength > trackingUpdateRate_monitorTimes) {
+      updateRateData_writeAheadLog_group.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimestamp });
+      updateRateData_writeAheadLog_currentDataLength += 1;
+      if (updateRateData_writeAheadLog_currentDataLength > updateRateData_maxDataLength) {
         needToReset = true;
       }
     }
   }
-  if (needToReset || trackingUpdateRate_currentDataLength % 15 === 0) {
-    await lfSetItem(3, trackingUpdateRate_trackingID, JSON.stringify(trackingUpdateRate_incompleteRecords));
+  if (needToReset || updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
+    await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
   if (needToReset) {
-    trackingUpdateRate_tracking = false;
+    updateRateData_writeAheadLog_tracking = false;
   }
 }
 

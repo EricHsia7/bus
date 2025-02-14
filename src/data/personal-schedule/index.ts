@@ -47,12 +47,12 @@ export async function createPersonalSchedule(name: string, startHours: number, s
     days: days,
     id: identifier
   };
-  await lfSetItem(5, identifier, JSON.stringify(object));
+  await lfSetItem(6, identifier, JSON.stringify(object));
   return true;
 }
 
 export async function getPersonalSchedule(personalScheduleID: string): Promise<PersonalSchedule> {
-  const existingPersonalSchedule = await lfGetItem(5, personalScheduleID);
+  const existingPersonalSchedule = await lfGetItem(6, personalScheduleID);
   if (existingPersonalSchedule) {
     const object = JSON.parse(existingPersonalSchedule);
     return object;
@@ -62,15 +62,15 @@ export async function getPersonalSchedule(personalScheduleID: string): Promise<P
 export async function updatePersonalSchedule(personalSchedule: PersonalSchedule): Promise<boolean> {
   const thisPersonalSchedule = await getPersonalSchedule(personalSchedule.id);
   if (thisPersonalSchedule) {
-    await lfSetItem(5, personalSchedule.id, JSON.stringify(personalSchedule));
+    await lfSetItem(6, personalSchedule.id, JSON.stringify(personalSchedule));
   }
 }
 
 export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
   let result: PersonalScheduleArray = [];
-  const keys = await lfListItemKeys(5);
+  const keys = await lfListItemKeys(6);
   for (const key of keys) {
-    const existingPersonalSchedule = await lfGetItem(5, key);
+    const existingPersonalSchedule = await lfGetItem(6, key);
     if (existingPersonalSchedule) {
       const existingPersonalScheduleObject = JSON.parse(existingPersonalSchedule);
       result.push(existingPersonalScheduleObject);

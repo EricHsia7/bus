@@ -88,7 +88,7 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
       }
     }
     if (needToReset || trackingBusArrivalTime_currentDataLength % 8 === 0) {
-      await lfSetItem(4, trackingBusArrivalTime_trackingID, JSON.stringify(trackingBusArrivalTime_incompleteRecords));
+      await lfSetItem( 5, trackingBusArrivalTime_trackingID, JSON.stringify(trackingBusArrivalTime_incompleteRecords));
     }
     if (needToReset) {
       trackingBusArrivalTime_tracking = false;
@@ -97,12 +97,12 @@ export async function recordEstimateTimeForBusArrivalTime(EstimateTime: Estimate
 }
 
 export async function discardExpiredEstimateTimeRecordsForBusArrivalTime() {
-  const keys = await lfListItemKeys(4);
+  const keys = await lfListItemKeys( 5);
   for (const key of keys) {
-    const json = await lfGetItem(4, key);
+    const json = await lfGetItem( 5, key);
     const object: object = JSON.parse(json);
     if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 30 * 1000) {
-      await lfRemoveItem(4, key);
+      await lfRemoveItem( 5, key);
     }
   }
 }
@@ -110,9 +110,9 @@ export async function discardExpiredEstimateTimeRecordsForBusArrivalTime() {
 export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   // Merge data by stops
   let recordsGroupedByStops = {};
-  const keys = await lfListItemKeys(4);
+  const keys = await lfListItemKeys( 5);
   for (const key of keys) {
-    const existingRecord = await lfGetItem(4, key);
+    const existingRecord = await lfGetItem( 5, key);
     const existingRecordObject: EstimateTimeRecordForBusArrivalTimeObject = JSON.parse(existingRecord);
     for (const stopKey1 in existingRecordObject.data) {
       if (!recordsGroupedByStops.hasOwnProperty(stopKey1)) {
