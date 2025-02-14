@@ -5,14 +5,15 @@ let storage = {
   settingsStore: false, // 1
   dataUsageRecordsStore: false, // 2
   updateRateRecordsStore: false, // 3
-  busArrivalTimeRecordsStore: false, // 4
-  personalScheduleStore: false, // 5
-  recentViewsStore: false, // 6
-  notificationStore: false, // 7
-  notificationScheduleStore: false, // 8
-  folderListStore: false, // 9
-  folderContentIndexStore: false, // 10
-  folderContentStore: false // 11
+  busArrivalTimeDataWriteAheadLogStore: false, // 4
+  busArrivalTimeDataStore: false, // 5
+  personalScheduleStore: false, // 6
+  recentViewsStore: false, // 7
+  notificationStore: false, // 8
+  notificationScheduleStore: false, // 9
+  folderListStore: false, // 10
+  folderContentIndexStore: false, // 11
+  folderContentStore: false // 12
 };
 
 const stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateRecordsStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
@@ -138,4 +139,23 @@ export async function askForPersistentStorage(): Promise<'granted' | 'denied' | 
     }
   }
   return 'unsupported';
+}
+
+export function lsSetItem(key: string, value: string): void {
+  localStorage.setItem(key, value);
+}
+
+export function lsGetItem(key: string): string {
+  const value = localStorage.getItem(key);
+  return value;
+}
+
+export function lsListItemKeys(): Array<string> {
+  let result = [];
+  for (const key in localStorage) {
+    if (localStorage.hasOwnProperty(key)) {
+      result.push(key);
+    }
+  }
+  return result;
 }
