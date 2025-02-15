@@ -83,9 +83,22 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
   if (needToReset) {
+    for (const stopID of updateRateData_trackedStops) {
+      const stopKey = `s_${stopID}`;
+      const data = updateRateData_writeAheadLog_group.data[stopKey];
+      const existingData = await lfGetItem(3, stopKey);
+      if (existingData) {
+        const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
+        existingDataObject.data = existingDataObject.data.concat(data);
+        existingDataObject.length += data.length;
+        existingDataObject.timestamp = currentTimestamp;
+      }
+    }
     updateRateData_writeAheadLog_tracking = false;
   }
 }
+
+export async function recoverUpdateRateDataFromWriteAheadLog() {}
 
 async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
   const keys = await lfListItemKeys(3);
