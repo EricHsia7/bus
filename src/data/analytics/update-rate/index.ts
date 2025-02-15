@@ -57,11 +57,37 @@ function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGrou
   let sumEstimateTime = 0;
   let sumEstimateTimeSquared = 0;
   let sumTimestamp = 0;
-  let sumTimestampSquared;
+  let sumTimestampSquared = 0;
+  let dataLength = 0;
   for (const item of data) {
     const estimateTime = item[0];
     const timestamp = item[1];
+    dataLength += 1;
+    sumEstimateTime += estimateTime;
+    sumTimestamp += timestamp;
+    sumEstimateTimeSquared += Math.pow(estimateTime, 2);
+    sumTimestampSquared += Math.pow(timestamp, 2);
   }
+
+  const averageEstimateTime = sumEstimateTime / dataLength;
+  const averageTimestamp = sumTimestamp / dataLength;
+
+  const estimateTimeVariance = sumEstimateTimeSquared / dataLength - Math.pow(averageEstimateTime, 2);
+  const timestampVariance = sumTimestampSquared / dataLength - Math.pow(averageTimestamp, 2);
+
+  const estimateTimeSTDEV = Math.sqrt(estimateTimeVariance);
+  const timestampSTDEV = Math.sqrt(timestampVariance);
+  const result: UpdateRateDataGroup = {
+    estimate_time: {
+      average: averageEstimateTime,
+      stdev: estimateTimeSTDEV
+    },
+    timestamp: {
+      average: averageTimestamp,
+      stdev: timestampSTDEV
+    }
+  };
+  return result;
 }
 
 export async function collectUpdateRateData(EstimateTime: EstimateTime) {
@@ -116,6 +142,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
         dataGroup.data = existingDataObject.data.concat(data);
+        dataGroup.stats = existingDataObject.stats;
         dataGroup.length = existingDataObject.length + data.length;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
@@ -123,11 +150,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         dataGroup.value = existingDataObject.value;
       } else {
         dataGroup.data = data;
-        dataGroup.stats = {
-          estimate_time: {
-            average
-          }
-        };
+        dataGroup.stats = getUpdateRateDataStats(data);
         dataGroup.length = data.length;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
