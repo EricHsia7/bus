@@ -53,6 +53,17 @@ let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   id: ''
 };
 
+function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGroupStats {
+  let sumEstimateTime = 0;
+  let sumEstimateTimeSquared = 0;
+  let sumTimestamp = 0;
+  let sumTimestampSquared;
+  for (const item of data) {
+    const estimateTime = item[0];
+    const timestamp = item[1];
+  }
+}
+
 export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimestamp: number = now.getTime();
@@ -84,16 +95,18 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       if (!updateRateData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
-      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp]);
+      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp - updateRateData_writeAheadLog_group.timestamp]);
       updateRateData_writeAheadLog_currentDataLength += 1;
       if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
         needToReset = true;
       }
     }
   }
+
   if (needToReset || updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
+
   if (needToReset) {
     for (const stopID of updateRateData_trackedStops) {
       const stopKey = `s_${stopID}`;
@@ -104,12 +117,17 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
         dataGroup.data = existingDataObject.data.concat(data);
         dataGroup.length = existingDataObject.length + data.length;
-        dataGroup.timestamp = currentTimestamp;
+        dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
         dataGroup.flattened = existingDataObject.flattened;
         dataGroup.value = existingDataObject.value;
       } else {
         dataGroup.data = data;
+        dataGroup.stats = {
+          estimate_time: {
+            average
+          }
+        };
         dataGroup.length = data.length;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
@@ -118,6 +136,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       }
       await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
     }
+
     updateRateData_writeAheadLog_tracking = false;
   }
 }
