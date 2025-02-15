@@ -86,13 +86,25 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     for (const stopID of updateRateData_trackedStops) {
       const stopKey = `s_${stopID}`;
       const data = updateRateData_writeAheadLog_group.data[stopKey];
+      let dataGroup = {} as UpdateRateDataGroup;
       const existingData = await lfGetItem(3, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-        existingDataObject.data = existingDataObject.data.concat(data);
-        existingDataObject.length += data.length;
-        existingDataObject.timestamp = currentTimestamp;
+        dataGroup.data = existingDataObject.data.concat(data);
+        dataGroup.length = existingDataObject.length + data.length;
+        dataGroup.timestamp = currentTimestamp;
+        dataGroup.id = stopID;
+        dataGroup.flattened = existingDataObject.flattened;
+        dataGroup.value = existingDataObject.value;
+      } else {
+        dataGroup.data = data;
+        dataGroup.length = data.length;
+        dataGroup.timestamp = currentTimestamp;
+        dataGroup.id = stopID;
+        dataGroup.flattened = false;
+        dataGroup.value = 0;
       }
+      await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
     }
     updateRateData_writeAheadLog_tracking = false;
   }
