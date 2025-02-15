@@ -5,7 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { recordEstimateTimeForUpdateRate } from '../analytics/update-rate/index';
+import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -370,7 +370,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 
   if (!power_saving) {
     if (refresh_interval_setting.dynamic) {
-      await recordEstimateTimeForUpdateRate(EstimateTime);
+      await collectUpdateRateData(EstimateTime);
     }
     await recordEstimateTimeForBusArrivalTime(EstimateTime);
   }

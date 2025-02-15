@@ -30,18 +30,18 @@ interface IncompleteRecords {
 }
 
 const updateRateData_sampleQuantity: number = 64;
-const updateRateData_maxDataLength: number = 90;
 let updateRateData_trackedStops: Array<number> = [];
 let updateRateData_writeAheadLog_id: string = '';
 let updateRateData_writeAheadLog_tracking: boolean = false;
 let updateRateData_writeAheadLog_currentDataLength: number = 0;
+const updateRateData_writeAheadLog_maxDataLength: number = 90;
 let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   data: {},
   timestamp: 0,
   id: ''
 };
 
-export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime) {
+export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimestamp: number = now.getTime();
   let needToReset = false;
@@ -72,9 +72,9 @@ export async function recordEstimateTimeForUpdateRate(EstimateTime: EstimateTime
       if (!updateRateData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
-      updateRateData_writeAheadLog_group.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimestamp });
+      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp]);
       updateRateData_writeAheadLog_currentDataLength += 1;
-      if (updateRateData_writeAheadLog_currentDataLength > updateRateData_maxDataLength) {
+      if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
         needToReset = true;
       }
     }
