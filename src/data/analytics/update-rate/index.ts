@@ -6,9 +6,21 @@ import { EstimateTime } from '../../apis/getEstimateTime/index';
 
 type UpdateRateData = [number, number]; // EstimateTime, timestamp
 
+interface UpdateRateDataGroupStats {
+  estimate_time: {
+    average: number;
+    stdev: number;
+  };
+  timestamp: {
+    average: number;
+    stdev: number;
+  };
+}
+
 interface UpdateRateDataGroup {
   data: Array<UpdateRateData>;
-  value: number;
+  stats: UpdateRateDataGroupStats;
+  correlation: number;
   length: number;
   flattened: boolean;
   timestamp: number;
