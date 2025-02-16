@@ -52,17 +52,25 @@ export function pearsonCorrelation(x: Array<number>, y: Array<number>): number {
   return numerator / denominator;
 }
 
+export function mergeStandardDeviation(targetAverage: number, targetSTDEV: number, targetDataLength: number, sourceAverage: number, sourceSTDEV: number, sourceDataLength: number): number {
+  const mergedDataLength = targetDataLength + sourceDataLength;
+
+  const mergedAverage = (targetDataLength * targetAverage + sourceDataLength * sourceAverage) / mergedDataLength;
+
+  const mergedVariance = (targetDataLength * (Math.pow(targetSTDEV, 2) + Math.pow(targetAverage, 2)) + sourceDataLength * (Math.pow(sourceSTDEV, 2) + Math.pow(sourceAverage, 2))) / mergedDataLength - Math.pow(mergedAverage, 2);
+
+  const mergedSTDEV = Math.sqrt(mergedVariance);
+  return mergedSTDEV;
+}
+
 export function mergePearsonCorrelation(targetXAverage: number, targetYAverage: number, targetXSTDEV: number, targetYSTDEV: number, targetDataLength: number, targetCorrelation: number, sourceXAverage: number, sourceYAverage: number, sourceXSTDEV: number, sourceYSTDEV: number, sourceDataLength: number, sourceCorrelation: number): number {
   const mergedDataLength = targetDataLength + sourceDataLength;
 
   const mergedXAverage = (targetDataLength * targetXAverage + sourceDataLength * sourceXAverage) / mergedDataLength;
   const mergedYAverage = (targetDataLength * targetYAverage + sourceDataLength * sourceYAverage) / mergedDataLength;
 
-  const mergedXVariance = (targetDataLength * (Math.pow(targetXSTDEV, 2) + Math.pow(targetXAverage, 2)) + sourceDataLength * (Math.pow(sourceXSTDEV, 2) + Math.pow(sourceXAverage, 2))) / mergedDataLength - Math.pow(mergedXAverage, 2);
-  const mergedYVariance = (targetDataLength * (Math.pow(targetYSTDEV, 2) + Math.pow(targetYAverage, 2)) + sourceDataLength * (Math.pow(sourceYSTDEV, 2) + Math.pow(sourceYAverage, 2))) / mergedDataLength - Math.pow(mergedYAverage, 2);
-
-  const mergedXSTDEV = Math.sqrt(mergedXVariance);
-  const mergedYSTDEV = Math.sqrt(mergedYVariance);
+  const mergedXSTDEV = mergeStandardDeviation(targetXAverage, targetXSTDEV, targetDataLength, sourceXAverage, sourceXSTDEV, sourceDataLength);
+  const mergedYSTDEV = mergeStandardDeviation(targetYAverage, targetYSTDEV, targetDataLength, sourceYAverage, sourceYSTDEV, sourceDataLength);
 
   const mergedCorrelation = (targetDataLength * (targetXSTDEV * targetYSTDEV * targetCorrelation + targetXAverage * targetYAverage) + sourceDataLength * (sourceXSTDEV * sourceYSTDEV * sourceCorrelation + sourceXAverage * sourceYAverage) - mergedDataLength * mergedXAverage * mergedYAverage) / (mergedDataLength * mergedXSTDEV * mergedYSTDEV);
   return mergedCorrelation;

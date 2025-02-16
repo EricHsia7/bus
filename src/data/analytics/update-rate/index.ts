@@ -3,6 +3,7 @@ import { splitDataByDelta } from '../../../tools/array';
 import { formatTime } from '../../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
+import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';
 
 type UpdateRateData = [number, number]; // EstimateTime, timestamp
 
@@ -15,13 +16,13 @@ interface UpdateRateDataGroupStats {
     average: number;
     stdev: number;
   };
+  correlation: number;
+  length: number;
 }
 
 interface UpdateRateDataGroup {
   data: Array<UpdateRateData>;
   stats: UpdateRateDataGroupStats;
-  correlation: number;
-  length: number;
   flattened: boolean;
   timestamp: number;
   id: number; // stop id
@@ -77,7 +78,18 @@ function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGrou
 
   const estimateTimeSTDEV = Math.sqrt(estimateTimeVariance);
   const timestampSTDEV = Math.sqrt(timestampVariance);
-  const result: UpdateRateDataGroup = {
+
+  let covariance = 0;
+  for (const item2 of data) {
+    const estimateTime = item2[0];
+    const timestamp = item2[1];
+    covariance += (estimateTime - averageEstimateTime) * (timestamp - averageTimestamp);
+  }
+  covariance /= dataLength;
+
+  const correlation = covariance / (estimateTimeSTDEV * timestampSTDEV);
+
+  const result: UpdateRateDataGroupStats = {
     estimate_time: {
       average: averageEstimateTime,
       stdev: estimateTimeSTDEV
@@ -85,7 +97,35 @@ function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGrou
     timestamp: {
       average: averageTimestamp,
       stdev: timestampSTDEV
-    }
+    },
+    length: dataLength,
+    correlation: correlation
+  };
+  return result;
+}
+
+function mergeUpdateRateDataStats(targetStats: UpdateRateDataGroupStats, sourceStats: UpdateRateDataGroupStats): UpdateRateDataGroupStats {
+  const mergedDataLength = targetStats.length + sourceStats.length;
+
+  const mergedAverageEstimateTime = (targetStats.estimate_time.average * targetStats.length + sourceStats.estimate_time.average * sourceStats.length) / mergedDataLength;
+  const mergedAverageTimestamp = (targetStats.timestamp.average * targetStats.length + sourceStats.timestamp.average * sourceStats.length) / mergedDataLength;
+
+  const mergedEstimateTimeSTDEV = mergeStandardDeviation(targetStats.estimate_time.average, targetStats.estimate_time.stdev, targetStats.length, sourceStats.estimate_time.average, sourceStats.estimate_time.stdev, sourceStats.length);
+  const mergedTimestampSTDEV = mergeStandardDeviation(targetStats.timestamp.average, targetStats.timestamp.stdev, targetStats.length, sourceStats.timestamp.average, sourceStats.timestamp.stdev, sourceStats.length);
+
+  const mergedCorrelation = mergePearsonCorrelation(targetStats.estimate_time.average, targetStats.timestamp.average, targetStats.estimate_time.stdev, targetStats.timestamp.stdev, targetStats.length, targetStats.correlation, sourceStats.estimate_time.average, sourceStats.timestamp.average, sourceStats.estimate_time.stdev, sourceStats.timestamp.stdev, sourceStats.length, sourceStats.correlation);
+
+  const result: UpdateRateDataGroupStats = {
+    estimate_time: {
+      average: mergedAverageEstimateTime,
+      stdev: mergedEstimateTimeSTDEV
+    },
+    timestamp: {
+      average: mergedAverageTimestamp,
+      stdev: mergedTimestampSTDEV
+    },
+    length: mergedDataLength,
+    correlation: mergedCorrelation
   };
   return result;
 }
@@ -142,20 +182,16 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
         dataGroup.data = existingDataObject.data.concat(data);
-        dataGroup.stats = existingDataObject.stats;
-        dataGroup.length = existingDataObject.length + data.length;
+        dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(data));
+        dataGroup.flattened = existingDataObject.flattened;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
-        dataGroup.flattened = existingDataObject.flattened;
-        dataGroup.value = existingDataObject.value;
       } else {
         dataGroup.data = data;
         dataGroup.stats = getUpdateRateDataStats(data);
-        dataGroup.length = data.length;
+        dataGroup.flattened = false;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
-        dataGroup.flattened = false;
-        dataGroup.value = 0;
       }
       await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
     }
