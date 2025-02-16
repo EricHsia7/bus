@@ -233,10 +233,12 @@ export async function listUpdateRateDataGroups(): Promise<Array<UpdateRateDataGr
   let result: Array<UpdateRateDataGroup> = [];
   for (const key of keys) {
     const json = await lfGetItem(3, key);
-    const object = JSON.parse(json) as UpdateRateDataGroup;
-    const thisTimestamp = object.timestamp;
-    if (thisTimestamp > oneWeekAgo) {
-      result.push(object);
+    if (json) {
+      const object = JSON.parse(json) as UpdateRateDataGroup;
+      const thisTimestamp = object.timestamp;
+      if (thisTimestamp > oneWeekAgo) {
+        result.push(object);
+      }
     }
   }
   return result;
