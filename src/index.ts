@@ -293,6 +293,7 @@ window.bus = {
       discardExpiredDataUsageRecords();
       discardExpiredEstimateTimeRecordsForBusArrivalTime();
       discardExpiredRecentViews();
+      discardExpiredUpdateRateDataGroups();
     }
   },
   route: {
