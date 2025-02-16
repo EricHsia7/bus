@@ -468,7 +468,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 }
 
 async function refreshFolders() {
-  const time = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
@@ -478,14 +477,17 @@ async function refreshFolders() {
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   updateFoldersElement(integration, false, playing_animation);
-  foldersRefreshTimer_lastUpdate = time;
+  let updateRate = 0;
   if (foldersRefreshTimer_dynamic) {
-    const updateRate = await getUpdateRate();
-    foldersRefreshTimer_nextUpdate = Math.max(time + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
-  } else {
-    foldersRefreshTimer_nextUpdate = time + foldersRefreshTimer_baseInterval;
+    updateRate = await getUpdateRate();
   }
-  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - time);
+  foldersRefreshTimer_lastUpdate = new Date().getTime();
+  if (foldersRefreshTimer_dynamic) {
+    foldersRefreshTimer_nextUpdate = Math.max(foldersRefreshTimer_lastUpdate + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
+  } else {
+    foldersRefreshTimer_nextUpdate = foldersRefreshTimer_lastUpdate + foldersRefreshTimer_baseInterval;
+  }
+  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - foldersRefreshTimer_lastUpdate);
   foldersRefreshTimer_refreshing = false;
   HomeUpdateTimerElement.setAttribute('refreshing', 'false');
 }

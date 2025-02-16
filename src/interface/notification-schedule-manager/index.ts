@@ -231,14 +231,17 @@ async function refreshNotificationScheduleManager() {
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
   updateNotificationScheduleManagerField(integration, false, playing_animation);
+  let updateRate = 0;
+  if (notifcationScheduleManagerRefreshTimer_dynamic) {
+    updateRate = await getUpdateRate();
+  }
   notifcationScheduleManagerRefreshTimer_lastUpdate = new Date().getTime();
   if (notifcationScheduleManagerRefreshTimer_dynamic) {
-    const updateRate = await getUpdateRate();
-    notifcationScheduleManagerRefreshTimer_nextUpdate = Math.max(new Date().getTime() + notifcationScheduleManagerRefreshTimer_minInterval, integration.dataUpdateTime + notifcationScheduleManagerRefreshTimer_baseInterval / updateRate);
+    notifcationScheduleManagerRefreshTimer_nextUpdate = Math.max(notifcationScheduleManagerRefreshTimer_lastUpdate + notifcationScheduleManagerRefreshTimer_minInterval, integration.dataUpdateTime + notifcationScheduleManagerRefreshTimer_baseInterval / updateRate);
   } else {
-    notifcationScheduleManagerRefreshTimer_nextUpdate = new Date().getTime() + notifcationScheduleManagerRefreshTimer_baseInterval;
+    notifcationScheduleManagerRefreshTimer_nextUpdate = notifcationScheduleManagerRefreshTimer_lastUpdate + notifcationScheduleManagerRefreshTimer_baseInterval;
   }
-  notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime());
+  notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - notifcationScheduleManagerRefreshTimer_lastUpdate);
   notifcationScheduleManagerRefreshTimer_refreshing = false;
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
 }
