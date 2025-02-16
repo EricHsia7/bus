@@ -272,6 +272,7 @@ if (typeof SharedWorker !== 'undefined') {
 port.onmessage = function (e) {
   const [result, taskID] = e.data;
   if (getUpdateRateWorkerResponses[taskID]) {
+    console.log(taskID, result);
     getUpdateRateWorkerResponses[taskID](result); // Resolve the correct promise
     delete getUpdateRateWorkerResponses[taskID]; // Clean up the response handler
   }
