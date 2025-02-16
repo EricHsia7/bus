@@ -1,5 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
-import { discardExpiredEstimateTimeRecordsForUpdateRate } from './data/analytics/update-rate/index';
+import { discardExpiredUpdateRateDataGroups } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
@@ -289,7 +289,7 @@ window.bus = {
       loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'noto_sans_tc');
       loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'material_symbols');
       downloadData();
-      discardExpiredEstimateTimeRecordsForUpdateRate();
+      discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageRecords();
       discardExpiredEstimateTimeRecordsForBusArrivalTime();
       discardExpiredRecentViews();

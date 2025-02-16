@@ -5,9 +5,9 @@ import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storag
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';
 
-type UpdateRateData = [number, number]; // EstimateTime, timestamp
+export type UpdateRateData = [number, number]; // EstimateTime, timestamp
 
-interface UpdateRateDataGroupStats {
+export interface UpdateRateDataGroupStats {
   estimate_time: {
     average: number;
     stdev: number;
@@ -20,7 +20,7 @@ interface UpdateRateDataGroupStats {
   length: number;
 }
 
-interface UpdateRateDataGroup {
+export interface UpdateRateDataGroup {
   data: Array<UpdateRateData>;
   stats: UpdateRateDataGroupStats;
   flattened: boolean;
@@ -200,29 +200,66 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   }
 }
 
-export async function recoverUpdateRateDataFromWriteAheadLog() {}
+export async function recoverUpdateRateDataFromWriteAheadLog() {
+  const now = new Date().getTime();
+  const oneWeekAgo = now - 60 * 60 * 7 * 1000;
+  const keys = await lfListItemKeys(4);
+  for (const key of keys) {
+    const json = await lfGetItem(4, key);
+    const object = JSON.parse(json) as UpdateRateDataWriteAheadLogGroup;
+    const thisTimestamp = object.timestamp;
+    const thisID = object.id;
+    if (thisTimestamp > oneWeekAgo) {
+      for (const stopKey in object) {
+        const thisStopData = object[stopKey];
+        let dataGroup = {} as UpdateRateDataGroup;
+        const existingData = await lfGetItem(3, stopKey);
+        if (existingData) {
+          const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
+          dataGroup.data = existingDataObject.data.concat(thisStopData);
+          dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
+          dataGroup.flattened = existingDataObject.flattened;
+          dataGroup.timestamp = existingDataObject.timestamp;
+          dataGroup.id = stopID;
+        } else {
+          dataGroup.data = thisStopData;
+          dataGroup.stats = getUpdateRateDataStats(thisStopData);
+          dataGroup.flattened = false;
+          dataGroup.timestamp = currentTimestamp;
+          dataGroup.id = stopID;
+        }
+        await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+        await lfRemoveItem(4, thisID);
+      }
+    }
+  }
+}
 
-async function listRecordedEstimateTimeForUpdateRate(): Promise<Array<[number, number]>> {
+async function listUpdateRateDataGroups(): Promise<Array<UpdateRateDataGroup>> {
+  const now = new Date().getTime();
+  const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const keys = await lfListItemKeys(3);
-  let result: Array<[number, number]> = [];
+  let result: Array<UpdateRateDataGroup> = [];
   for (const key of keys) {
     const json = await lfGetItem(3, key);
-    const object: IncompleteRecords = JSON.parse(json);
-    if (!(new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000)) {
-      for (const key2 in object.data) {
-        result.push(...object.data[key2].map((item) => [item.EstimateTime, item.timeStamp]));
-      }
+    const object = JSON.parse(json) as UpdateRateDataGroup;
+    const thisTimestamp = object.timestamp;
+    if (thisTimestamp > oneWeekAgo) {
+      result.push(object);
     }
   }
   return result;
 }
 
-export async function discardExpiredEstimateTimeRecordsForUpdateRate() {
+export async function discardExpiredUpdateRateDataGroups() {
+  const now = new Date().getTime();
+  const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const keys = await lfListItemKeys(3);
   for (const key of keys) {
     const json = await lfGetItem(3, key);
     const object = JSON.parse(json) as IncompleteRecords;
-    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 7 * 1000) {
+    const thisTimestamp = object.timestamp;
+    if (thisTimestamp <= oneWeekAgo) {
       await lfRemoveItem(3, key);
     }
   }
@@ -256,7 +293,7 @@ port.onerror = function (e) {
 };
 
 export async function getUpdateRate(): Promise<number> {
-  const collection = await listRecordedEstimateTimeForUpdateRate();
+  const dataGroups = await listUpdateRateDataGroups();
   const taskID = generateIdentifier('t');
 
   const result = await new Promise((resolve, reject) => {
@@ -266,18 +303,19 @@ export async function getUpdateRate(): Promise<number> {
       reject(e.message);
     };
 
-    port.postMessage([collection, taskID]); // Send the task to the worker
+    port.postMessage([dataGroups, taskID]); // Send the task to the worker
   });
 
   return result;
 }
 
+/*
 export async function getUpdateRateInTime(): Promise<string> {
   let totalWeight: number = 0;
   let totalAverageChange: number = 0;
   let weightedAverageChange: number = 0;
-  const collection = await listRecordedEstimateTimeForUpdateRate();
-  for (const dataSet of collection) {
+  const dataGroup = await listUpdateRateDataGroups();
+  for (const dataSet of dataGroup) {
     const groups = splitDataByDelta(dataSet);
     for (const group of groups) {
       const firstColumn: Array<number> = group.map((item) => item[0]);
@@ -305,3 +343,4 @@ export async function getUpdateRateInTime(): Promise<string> {
   weightedAverageChange = totalAverageChange / totalWeight;
   return isNaN(weightedAverageChange) ? '!' : formatTime(weightedAverageChange, 0);
 }
+*/
