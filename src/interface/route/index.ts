@@ -547,9 +547,12 @@ async function refreshRoute() {
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
   updateRouteField(RouteField, integration, false, playing_animation);
+  let updateRate = 0;
+  if (routeRefreshTimer_dynamic) {
+    updateRate = await getUpdateRate();
+  }
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
-    const updateRate = await getUpdateRate();
     routeRefreshTimer_nextUpdate = Math.max(routeRefreshTimer_lastUpdate + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
   } else {
     routeRefreshTimer_nextUpdate = routeRefreshTimer_lastUpdate + routeRefreshTimer_baseInterval;
