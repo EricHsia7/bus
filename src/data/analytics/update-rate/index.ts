@@ -26,18 +26,10 @@ export interface UpdateRateDataGroup {
   id: number; // stop id
 }
 
-interface UpdateRateDataWriteAheadLogGroup {
+export interface UpdateRateDataWriteAheadLogGroup {
   data: Array<UpdateRateData>;
   timestamp: number;
   id: string;
-}
-
-interface IncompleteRecords {
-  trackingID: string;
-  timeStamp: number;
-  data: {
-    [key: string]: { EstimateTime: number; timeStamp: number }[];
-  };
 }
 
 const updateRateData_sampleQuantity: number = 64;
@@ -255,7 +247,7 @@ export async function discardExpiredUpdateRateDataGroups() {
   const keys = await lfListItemKeys(3);
   for (const key of keys) {
     const json = await lfGetItem(3, key);
-    const object = JSON.parse(json) as IncompleteRecords;
+    const object = JSON.parse(json) as UpdateRateDataGroup;
     const thisTimestamp = object.timestamp;
     if (thisTimestamp <= oneWeekAgo) {
       await lfRemoveItem(3, key);
