@@ -1,6 +1,4 @@
 import { generateIdentifier } from '../../../tools/index';
-import { splitDataByDelta } from '../../../tools/array';
-import { formatTime } from '../../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';

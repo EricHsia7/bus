@@ -1,6 +1,3 @@
-import { splitDataByDelta } from '../../../tools/array';
-import { pearsonCorrelation } from '../../../tools/math';
-
 let taskQueue = [];
 
 /*: Array<{
@@ -31,7 +28,7 @@ if ('onconnect' in self) {
   };
 }
 
-function getUpdateRate_worker(): number {
+function getUpdateRate_worker(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
