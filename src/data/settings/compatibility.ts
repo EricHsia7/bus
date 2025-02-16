@@ -42,20 +42,20 @@ const compatibilityTags: Array<CompatibilityTag> = [
         await saveToFolder(savedRouteFolderID, contentObject);
       }
 
-      const customFolderKeys = await lfListItemKeys(9);
+      const customFolderKeys = await lfListItemKeys( 10);
       for (const folderKey of customFolderKeys) {
-        const thisFolderJSON = await lfGetItem(9, folderKey);
+        const thisFolderJSON = await lfGetItem( 10, folderKey);
         const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
         const storeIndex = await registerStore(thisFolderObject.id);
         const contentKeys = await lfListItemKeys(storeIndex);
-        await lfSetItem(10, folderKey, JSON.stringify(contentKeys));
+        await lfSetItem( 11, folderKey, JSON.stringify(contentKeys));
         for (const contentKey of contentKeys) {
           const contentJSON = await lfGetItem(storeIndex, contentKey);
           const contentObject = JSON.parse(contentJSON) as FolderContentStop | FolderContentRoute | FolderContentBus;
           contentObject.timestamp = new Date(contentObject.time).getTime();
           delete contentObject.time;
           delete contentObject.index;
-          await lfSetItem(11, contentKey, JSON.stringify(contentObject));
+          await lfSetItem( 12, contentKey, JSON.stringify(contentObject));
         }
       }
     } */

@@ -281,14 +281,17 @@ async function refreshRecentViews() {
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
   updateRecentViewsField(RecentViewsField, integration, false, playing_animation);
+  let updateRate = 0;
+  if (recentViewsRefreshTimer_dynamic) {
+    updateRate = await getUpdateRate();
+  }
   recentViewsRefreshTimer_lastUpdate = new Date().getTime();
   if (recentViewsRefreshTimer_dynamic) {
-    const updateRate = await getUpdateRate();
-    recentViewsRefreshTimer_nextUpdate = Math.max(new Date().getTime() + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
+    recentViewsRefreshTimer_nextUpdate = Math.max(recentViewsRefreshTimer_lastUpdate + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
   } else {
-    recentViewsRefreshTimer_nextUpdate = new Date().getTime() + recentViewsRefreshTimer_baseInterval;
+    recentViewsRefreshTimer_nextUpdate = recentViewsRefreshTimer_lastUpdate + recentViewsRefreshTimer_baseInterval;
   }
-  recentViewsRefreshTimer_dynamicInterval = Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - new Date().getTime());
+  recentViewsRefreshTimer_dynamicInterval = Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - recentViewsRefreshTimer_lastUpdate);
   recentViewsRefreshTimer_refreshing = false;
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
 }

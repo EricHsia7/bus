@@ -42,7 +42,11 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '分析';
       key = 'analytics';
       break;
-    case 'updateRateRecordsStore':
+    case 'updateRateDataStore':
+      name = '分析';
+      key = 'analytics';
+      break;
+    case 'updateRateDataWriteAheadLogStore':
       name = '分析';
       key = 'analytics';
       break;

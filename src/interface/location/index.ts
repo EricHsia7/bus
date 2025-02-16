@@ -598,7 +598,6 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 }
 
 async function refreshLocation() {
-  const time = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
@@ -608,14 +607,17 @@ async function refreshLocation() {
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
   updateLocationField(integration, false, playing_animation);
-  locationRefreshTimer_lastUpdate = time;
+  let updateRate = 0;
   if (locationRefreshTimer_dynamic) {
-    const updateRate = await getUpdateRate();
-    locationRefreshTimer_nextUpdate = Math.max(time + locationRefreshTimer_minInterval, integration.dataUpdateTime + locationRefreshTimer_baseInterval / updateRate);
-  } else {
-    locationRefreshTimer_nextUpdate = time + locationRefreshTimer_baseInterval;
+    updateRate = await getUpdateRate();
   }
-  locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - time);
+  locationRefreshTimer_lastUpdate = new Date().getTime();
+  if (locationRefreshTimer_dynamic) {
+    locationRefreshTimer_nextUpdate = Math.max(locationRefreshTimer_lastUpdate + locationRefreshTimer_minInterval, integration.dataUpdateTime + locationRefreshTimer_baseInterval / updateRate);
+  } else {
+    locationRefreshTimer_nextUpdate = locationRefreshTimer_lastUpdate + locationRefreshTimer_baseInterval;
+  }
+  locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - locationRefreshTimer_lastUpdate);
   locationRefreshTimer_refreshing = false;
   LocationUpdateTimerElement.setAttribute('refreshing', 'false');
 }
