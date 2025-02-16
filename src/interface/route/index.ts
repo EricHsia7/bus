@@ -538,6 +538,8 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute() {
+  const t = new Date().getTime();
+  console.log(0, new Date().getTime() - t);
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
@@ -546,11 +548,15 @@ async function refreshRoute() {
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
+  console.log(1, new Date().getTime() - t);
+
   updateRouteField(RouteField, integration, false, playing_animation);
+  console.log(2, new Date().getTime() - t);
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {
     updateRate = await getUpdateRate();
   }
+  console.log(3, new Date().getTime() - t);
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
     routeRefreshTimer_nextUpdate = Math.max(routeRefreshTimer_lastUpdate + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
@@ -560,6 +566,7 @@ async function refreshRoute() {
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - routeRefreshTimer_lastUpdate);
   routeRefreshTimer_refreshing = false;
   RouteUpdateTimerElement.setAttribute('refreshing', 'false');
+  console.log(4, new Date().getTime() - t);
 }
 
 export function streamRoute(): void {
