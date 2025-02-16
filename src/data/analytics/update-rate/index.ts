@@ -19,9 +19,9 @@ export interface UpdateRateDataGroupStats {
 }
 
 export interface UpdateRateDataGroup {
-  data: Array<UpdateRateData>;
+  // data: Array<UpdateRateData>;
   stats: UpdateRateDataGroupStats;
-  flattened: boolean;
+  // flattened: boolean;
   timestamp: number;
   id: number; // stop id
 }
@@ -171,15 +171,15 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       const existingData = await lfGetItem(3, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-        dataGroup.data = existingDataObject.data.concat(data);
+        // dataGroup.data = existingDataObject.data.concat(data);
         dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(data));
-        dataGroup.flattened = existingDataObject.flattened;
+        // dataGroup.flattened = existingDataObject.flattened;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
-        dataGroup.data = data;
+        // dataGroup.data = data;
         dataGroup.stats = getUpdateRateDataStats(data);
-        dataGroup.flattened = false;
+        // dataGroup.flattened = false;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }
@@ -207,15 +207,15 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
         const existingData = await lfGetItem(3, stopKey);
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-          dataGroup.data = existingDataObject.data.concat(thisStopData);
+          // dataGroup.data = existingDataObject.data.concat(thisStopData);
           dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
-          dataGroup.flattened = existingDataObject.flattened;
+          // dataGroup.flattened = existingDataObject.flattened;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
-          dataGroup.data = thisStopData;
+          // dataGroup.data = thisStopData;
           dataGroup.stats = getUpdateRateDataStats(thisStopData);
-          dataGroup.flattened = false;
+          // dataGroup.flattened = false;
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
         }
@@ -226,7 +226,7 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
   }
 }
 
-async function listUpdateRateDataGroups(): Promise<Array<UpdateRateDataGroup>> {
+export async function listUpdateRateDataGroups(): Promise<Array<UpdateRateDataGroup>> {
   const now = new Date().getTime();
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const keys = await lfListItemKeys(3);
