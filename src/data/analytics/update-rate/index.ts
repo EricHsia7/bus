@@ -151,7 +151,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       if (!updateRateData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
-      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp - updateRateData_writeAheadLog_group.timestamp]);
+      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
       updateRateData_writeAheadLog_currentDataLength += 1;
       if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
         needToReset = true;
