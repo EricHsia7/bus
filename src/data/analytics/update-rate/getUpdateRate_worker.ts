@@ -39,8 +39,10 @@ function getUpdateRate_worker(): void {
   let totalCorrelation: number = 0;
   let totalWeight: number = 0;
   for (const dataGroup of dataGroups) {
-    totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
-    totalWeight += dataGroup.stats.length;
+    if (dataGroup.stats.correlation < -0.2 || dataGroup.stats > 0.2) {
+      totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
+      totalWeight += dataGroup.stats.length;
+    }
   }
   weightedAverage = totalCorrelation / totalWeight;
 
