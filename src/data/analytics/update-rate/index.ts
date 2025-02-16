@@ -32,7 +32,7 @@ export interface UpdateRateDataWriteAheadLogGroup {
   id: string;
 }
 
-const updateRateData_sampleQuantity: number = 64;
+const updateRateData_sampleQuantity: number = 16;
 let updateRateData_trackedStops: Array<number> = [];
 let updateRateData_writeAheadLog_id: string = '';
 let updateRateData_writeAheadLog_tracking: boolean = false;
