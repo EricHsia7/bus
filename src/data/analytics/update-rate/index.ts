@@ -159,7 +159,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     }
   }
 
-  if (needToReset || updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
+  if (updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
 
@@ -184,6 +184,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         dataGroup.id = stopID;
       }
       await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+      await lfRemoveItem(4, updateRateData_writeAheadLog_id);
     }
 
     updateRateData_writeAheadLog_tracking = false;
@@ -272,7 +273,7 @@ if (typeof SharedWorker !== 'undefined') {
 port.onmessage = function (e) {
   const [result, taskID] = e.data;
   if (getUpdateRateWorkerResponses[taskID]) {
-    console.log(taskID, result);
+    console.log(result);
     getUpdateRateWorkerResponses[taskID](result); // Resolve the correct promise
     delete getUpdateRateWorkerResponses[taskID]; // Clean up the response handler
   }
