@@ -19,9 +19,7 @@ export interface UpdateRateDataGroupStats {
 }
 
 export interface UpdateRateDataGroup {
-  // data: Array<UpdateRateData>;
   stats: UpdateRateDataGroupStats;
-  // flattened: boolean;
   timestamp: number;
   id: number; // stop id
 }
@@ -43,6 +41,8 @@ let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   timestamp: 0,
   id: ''
 };
+let updateRateData_groups: Array<UpdateRateDataGroup> = [];
+let updateRateData_groupsIndex: { [key: string]: number } = {};
 
 function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGroupStats {
   let sumEstimateTime = 0;
@@ -171,19 +171,22 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       const existingData = await lfGetItem(3, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-        // dataGroup.data = existingDataObject.data.concat(data);
         dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(data));
-        // dataGroup.flattened = existingDataObject.flattened;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
-        // dataGroup.data = data;
         dataGroup.stats = getUpdateRateDataStats(data);
-        // dataGroup.flattened = false;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }
       await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+      if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+        const existingIndex = updateRateData_groupsIndex[stopKey];
+        updateRateData_groups.splice(existingIndex, 1, dataGroup);
+      } else {
+        updateRateData_groups[stopKey] = updateRateData_groups.length;
+        updateRateData_groups.push(dataGroup);
+      }
       await lfRemoveItem(4, updateRateData_writeAheadLog_id);
     }
 
@@ -207,41 +210,51 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
         const existingData = await lfGetItem(3, stopKey);
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-          // dataGroup.data = existingDataObject.data.concat(thisStopData);
           dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
-          // dataGroup.flattened = existingDataObject.flattened;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
-          // dataGroup.data = thisStopData;
           dataGroup.stats = getUpdateRateDataStats(thisStopData);
-          // dataGroup.flattened = false;
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
         }
         await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+        if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+          const existingIndex = updateRateData_groupsIndex[stopKey];
+          updateRateData_groups.splice(existingIndex, 1, dataGroup);
+        } else {
+          updateRateData_groups[stopKey] = updateRateData_groups.length;
+          updateRateData_groups.push(dataGroup);
+        }
         await lfRemoveItem(4, thisID);
       }
     }
   }
 }
 
-export async function listUpdateRateDataGroups(): Promise<Array<UpdateRateDataGroup>> {
+export async function initializeUpdateRateDataGroups() {
   const now = new Date().getTime();
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const keys = await lfListItemKeys(3);
-  let result: Array<UpdateRateDataGroup> = [];
+  let index: number = 0;
   for (const key of keys) {
     const json = await lfGetItem(3, key);
     if (json) {
       const object = JSON.parse(json) as UpdateRateDataGroup;
       const thisTimestamp = object.timestamp;
       if (thisTimestamp > oneWeekAgo) {
-        result.push(object);
+        updateRateData_groups.push(object);
+        updateRateData_groupsIndex[key] = index;
+        index += 1;
       }
     }
   }
-  return result;
+}
+
+export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
+  const now = new Date().getTime();
+  const oneWeekAgo = now - 60 * 60 * 7 * 1000;
+  return updateRateData_groups.filter((item) => item.timestamp > oneWeekAgo);
 }
 
 export async function discardExpiredUpdateRateDataGroups() {

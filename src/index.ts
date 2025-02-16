@@ -1,5 +1,5 @@
 import { updateSearchResult } from './interface/search/index';
-import { discardExpiredUpdateRateDataGroups } from './data/analytics/update-rate/index';
+import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
@@ -293,7 +293,11 @@ window.bus = {
       discardExpiredDataUsageRecords();
       discardExpiredEstimateTimeRecordsForBusArrivalTime();
       discardExpiredRecentViews();
-      discardExpiredUpdateRateDataGroups();
+      discardExpiredUpdateRateDataGroups().then(function () {
+        initializeUpdateRateDataGroups().then(function () {
+          recoverUpdateRateDataFromWriteAheadLog();
+        });
+      });
     }
   },
   route: {

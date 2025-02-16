@@ -34,23 +34,26 @@ function getUpdateRate_worker(): void {
   isProcessing = true;
   const { dataGroups, taskID, port } = taskQueue.shift();
 
-  // Perform the calculation
-  let weightedAverage: number = 0;
-  let totalCorrelation: number = 0;
-  let totalWeight: number = 0;
-  for (const dataGroup of dataGroups) {
-    if (dataGroup.stats.correlation < -0.2 || dataGroup.stats > 0.2) {
-      totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
-      totalWeight += dataGroup.stats.length;
+  if (dataGroups.length === 0) {
+    port.postMessage([0.8, taskID]);
+  } else {
+    // Perform the calculation
+    let weightedAverage: number = 0;
+    let totalCorrelation: number = 0;
+    let totalWeight: number = 0;
+    for (const dataGroup of dataGroups) {
+      if (dataGroup.stats.correlation < -0.2 || dataGroup.stats > 0.2) {
+        totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
+        totalWeight += dataGroup.stats.length;
+      }
     }
+    weightedAverage = totalCorrelation / totalWeight;
+
+    const result = isNaN(weightedAverage) ? 0.8 : Math.abs(weightedAverage);
+
+    // Send the result back to the main thread
+    port.postMessage([result, taskID]);
   }
-  weightedAverage = totalCorrelation / totalWeight;
-
-  const result = isNaN(weightedAverage) ? 0.8 : Math.abs(weightedAverage);
-
-  // Send the result back to the main thread
-  port.postMessage([result, taskID]);
-
   isProcessing = false;
   getUpdateRate_worker(); // Process next task in queue, if any
 }
