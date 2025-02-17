@@ -51,7 +51,7 @@ export function generateIdentifier(prefix: string = ''): string {
   return result;
   */
   const randomNumber = Math.random();
-  return prefix.concat(randomNumber.toString(16).substring(2));
+  return prefix.concat(randomNumber.toString(36).substring(2));
 }
 
 export function getNoCacheParameter(interval: number): string {
