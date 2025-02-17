@@ -87,19 +87,6 @@
   border-radius: var(--b-cssvar-border-radius-large);
 }
 
-/*
-.css_route_field .css_route_head .css_route_group_tabs {
-  --b-cssvar-route-group-quantity: inherit;
-  position: absolute;
-  bottom: 5px;
-  left: 0px;
-  width: 100%;
-  height: 40px;
-  display: grid;
-  grid-template-columns: repeat(var(--b-cssvar-route-group-quantity), 1fr);
-  contain: layout;
-}*/
-
 .css_route_field .css_route_head .css_route_group_tabs {
   position: absolute;
   bottom: 5px;
