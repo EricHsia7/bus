@@ -101,7 +101,7 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
   RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 10).toString());
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
-} 
+}
 
 function updateUpdateTimer(): void {
   const smoothingFactor = 0.1;
@@ -459,12 +459,16 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
+      const RouteGroupsFragment = new DocumentFragment();
+      const RouteGroupTabsTrayFragment = new DocumentFragment();
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        RouteGroupsElement.appendChild(newGroupElement.element);
+        RouteGroupsFragment.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        RouteGroupTabsTrayElement.appendChild(newTabElement.element);
+        RouteGroupTabsTrayFragment.appendChild(newTabElement.element);
       }
+      RouteGroupsElement.append(RouteGroupsFragment);
+      RouteGroupTabsTrayElement.append(RouteGroupTabsTrayFragment);
     } else {
       const GroupElements = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`);
       const TabElements = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`);
@@ -484,12 +488,16 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       if (capacity < 0) {
         const RouteGroupItemsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track');
         const RouteGroupThreadsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track');
+        const RouteGroupItemsTrackFragment = new DocumentFragment();
+        const RouteGroupThreadsTrackFragment = new DocumentFragment();
         for (let o = 0; o < Math.abs(capacity); o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
           const newItemElement = generateElementOfItem(newThreadBoxElement.id);
-          RouteGroupItemsTrackElement.appendChild(newItemElement.element);
-          RouteGroupThreadsTrackElement.appendChild(newThreadBoxElement.element);
+          RouteGroupItemsTrackFragment.appendChild(newItemElement.element);
+          RouteGroupThreadsTrackFragment.appendChild(newThreadBoxElement.element);
         }
+        RouteGroupItemsTrackElement.append(RouteGroupItemsTrackFragment);
+        RouteGroupThreadsTrackElement.append(RouteGroupThreadsTrackFragment);
       } else {
         const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
         const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
@@ -538,7 +546,6 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 }
 
 async function refreshRoute() {
-  const t = new Date().getTime();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
