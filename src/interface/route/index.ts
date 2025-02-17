@@ -148,22 +148,25 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  var identifier = generateIdentifier('g');
-  var element = document.createElement('div');
+  // const identifier = generateIdentifier('g');
+  const element = document.createElement('div');
   element.classList.add('css_route_group');
-  element.id = identifier;
-  var tracksElement = document.createElement('div');
+  // element.id = identifier;
+  const tracksElement = document.createElement('div');
   tracksElement.classList.add('css_route_group_tracks');
-  var threadTrackElement = document.createElement('div');
+
+  const threadTrackElement = document.createElement('div');
   threadTrackElement.classList.add('css_route_group_threads_track');
-  var itemsTrackElement = document.createElement('div');
+
+  const itemsTrackElement = document.createElement('div');
   itemsTrackElement.classList.add('css_route_group_items_track');
+
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
