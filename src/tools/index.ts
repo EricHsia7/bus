@@ -1,7 +1,6 @@
 export const md5 = require('md5');
 export const sha256 = require('sha256');
 
-
 export function compareThings(a: any, b: any): boolean {
   function anyToString(any: any): string {
     return JSON.stringify({ e: any });
@@ -41,6 +40,7 @@ export function compareThings(a: any, b: any): boolean {
 }
 
 export function generateIdentifier(prefix: string = ''): string {
+  /*
   const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
   let result = `${prefix}_`;
   const length: number = 16;
@@ -49,6 +49,9 @@ export function generateIdentifier(prefix: string = ''): string {
     result += characterSet.substring(randomNumber, randomNumber + 1);
   }
   return result;
+  */
+  const randomNumber = Math.random();
+  return prefix.concat(randomNumber.toString(16).substring(2));
 }
 
 export function getNoCacheParameter(interval: number): string {
