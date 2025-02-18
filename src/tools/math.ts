@@ -103,15 +103,39 @@ export function smoothArray(array: Array<number>): Array<number> {
 }
 
 export function softmaxArray(array: Array<number>): Array<number> {
-  // Step 1: Exponentiate each element (for numerical stability, subtract the max value)
-  const max = Math.max(...array);
-  const expArr = array.map((value) => Math.exp(value - max));
+  const arrayLength = array.length;
 
-  // Step 2: Sum all the exponentiated values
-  const sumExp = expArr.reduce((accumulation, value) => accumulation + value, 0);
+  // Return an empty array if the input is empty
+  if (arrayLength === 0) {
+    return [];
+  }
 
-  // Step 3: Normalize each value
-  return expArr.map((value) => value / sumExp);
+  // Find the global maximum
+  let max = -Infinity;
+  for (let i = arrayLength - 1; i >= 0; i--) {
+    const item = array[i];
+    if (item > max) {
+      max = item;
+    }
+  }
+
+  // Exponentiate each element (for numerical stability, subtract the max value)
+  // Sum all the exponentiated values
+  const expArray = new Float32Array(arrayLength);
+  let sumExp = 0;
+  for (let j = arrayLength - 1; j >= 0; j--) {
+    const exp = Math.exp(array[j] - max);
+    expArray[j] = exp;
+    sumExp += exp;
+  }
+
+  // Normalize each value
+  let normalizedArray = new Float32Array(arrayLength);
+  for (let k = arrayLength - 1; k >= 0; k--) {
+    const normalizedValue = expArray[k] / sumExp;
+    normalizedArray[k] = normalizedValue;
+  }
+  return Array.from(normalizedArray);
 }
 
 export function calculateAverage(array: Array<number>): number {

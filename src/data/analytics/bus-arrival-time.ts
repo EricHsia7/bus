@@ -223,3 +223,7 @@ export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
 
   return result;
 }
+
+export async function generateBusArrivalTimeGraphs() {
+  
+}
