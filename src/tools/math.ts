@@ -138,6 +138,15 @@ export function softmaxArray(array: Array<number>): Array<number> {
   return Array.from(normalizedArray);
 }
 
+export function sigmoidArray(array: Array<number>): Array<number> {
+  const arrayLength = array.length;
+  const normalizedArray = new Float32Array(arrayLength);
+  for (let i = arrayLength - 1; i >= 0; i--) {
+    normalizedArray[i] = 1 / (1 + Math.exp(-1 * array[i]));
+  }
+  return Array.from(normalizedArray);
+}
+
 export function calculateAverage(array: Array<number>): number {
   if (array.length === 0) {
     return 0;
