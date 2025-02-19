@@ -10,7 +10,7 @@ import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { recordEstimateTimeForBusArrivalTime } from '../analytics/bus-arrival-time';
+import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time';
 
 interface FolderContentRouteEndPoints {
   departure: string;
@@ -249,6 +249,29 @@ export async function listFoldersWithContent(): Promise<FolderWithContentArray> 
   return result;
 }
 
+export async function listAllFolderContent(types: Array<FolderContent['type']>): Promise<Array<FolderContent>> {
+  let useFilter: boolean = true;
+  if (typeof types !== 'object' || !Array.isArray(types)) {
+    useFilter = false;
+  }
+  let result: Array<FolderContent> = [];
+  const keys = await lfListItemKeys(12);
+  for (const key of keys) {
+    const json = await lfGetItem(12, key);
+    if (json) {
+      const object = JSON.parse(json) as FolderContent;
+      if (useFilter) {
+        if (types.indexOf(object.type) > -1) {
+          result.push(object);
+        }
+      } else {
+        result.push(object);
+      }
+    }
+  }
+  return result;
+}
+
 export interface integratedFolderContentStopRoute extends FolderContentStopRoute {
   pathAttributeId: Array<number>;
 }
@@ -372,7 +395,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     if (refresh_interval_setting.dynamic) {
       await collectUpdateRateData(EstimateTime);
     }
-    await recordEstimateTimeForBusArrivalTime(EstimateTime);
+    await collectBusArrivalTimeData(EstimateTime);
   }
 
   return result;

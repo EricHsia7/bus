@@ -130,7 +130,7 @@ export function softmaxArray(array: Array<number>): Array<number> {
   }
 
   // Normalize each value
-  let normalizedArray = new Float32Array(arrayLength);
+  const normalizedArray = new Float32Array(arrayLength);
   for (let k = arrayLength - 1; k >= 0; k--) {
     const normalizedValue = expArray[k] / sumExp;
     normalizedArray[k] = normalizedValue;
