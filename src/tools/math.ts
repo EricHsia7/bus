@@ -206,3 +206,24 @@ export function aggregateNumbers(array: Array<number>, exponent: number): Array<
   result.sort((a, b) => a - b);
   return result;
 }
+
+export function findExtremum(array: Array<number>): [number, number] {
+  const arrayLength = array.length;
+  if (arrayLength === 0) {
+    return [0, 0];
+  }
+
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (let i = arrayLength - 1; i >= 0; i--) {
+    const item = array[i];
+    if (item > max) {
+      max = item;
+    }
+    if (item < min) {
+      min = item;
+    }
+  }
+  return [min, max];
+}

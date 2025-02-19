@@ -116,3 +116,7 @@ export function isValidURL(string: string): boolean {
     return false; // Invalid URL
   }
 }
+
+export function nearestPowerOf2(x: number): number {
+  return 1 << (31 - Math.clz32(x));
+}

@@ -204,3 +204,27 @@ export interface TimeStampPeriod {
 export function timeObjectToString(timeObject: TimeObject): string {
   return `${String(timeObject.hours).padStart(2, '0')}:${String(timeObject.minutes).padStart(2, '0')}`;
 }
+
+export function maxConcurrency(periods: Array<TimePeriod>): number {
+  let events = [];
+
+  // Convert intervals into events
+  for (let { start, end } of periods) {
+    events.push([start.hours * 60 + start.minutes, 1]); // Start of an interval
+    events.push([end.hours * 60 + end.minutes, -1]); // End of an interval
+  }
+
+  // Sort events: Primary by time, secondary by type (-1 before +1)
+  events.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+  let maxCount = 0;
+  let currentCount = 0;
+
+  // Sweep through the events
+  for (let [, type] of events) {
+    currentCount += type;
+    maxCount = Math.max(maxCount, currentCount);
+  }
+
+  return maxCount;
+}

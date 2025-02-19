@@ -1,4 +1,5 @@
 import { generateIdentifier } from '../../../tools/index';
+import { findExtremum } from '../../../tools/math';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../../personal-schedule/index';
@@ -22,9 +23,13 @@ export type BusArrivalTimeDataGroupStats = Array<number>;
 
 export interface BusArrivalTimeDataGroup {
   stats: BusArrivalTimeDataGroupStats;
+  max: number;
+  min: number;
   timestamp: number;
   id: number; // stop id
 }
+
+export type BusArrivalTimeDataGroupArray = Array<BusArrivalTimeDataGroup>
 
 export interface BusArrivalTimeDataWriteAheadLog {
   data: {
@@ -41,9 +46,11 @@ export interface BusArrivalTimeGraph {
     width: number;
     height: number;
   };
+  position: {
+    x: number;
+    y: number;
+  };
 }
-
-type BusArrivalTimeGraphPart = 'background' | 'content';
 
 export interface AggregatedBusArrivalTime {
   time: string;
@@ -134,11 +141,19 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         const existingData = await lfGetItem(6, stopKey);
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-          dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, getBusArrivalTimeDataStats(data));
+          const newStats = getBusArrivalTimeDataStats(data);
+          dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
+          const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
+          dataGroup.min = newExtremum[0];
+          dataGroup.max = newExtremum[1];
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
-          dataGroup.stats = getBusArrivalTimeDataStats(data);
+          const newStats = getBusArrivalTimeDataStats(data);
+          dataGroup.stats = newStats;
+          const newExtremum = findExtremum(newStats);
+          dataGroup.min = newExtremum[0];
+          dataGroup.max = newExtremum[1];
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
         }
@@ -162,11 +177,19 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       const existingData = await lfGetItem(6, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-        dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, getBusArrivalTimeDataStats(thisStopData));
+        const newStats = getBusArrivalTimeDataStats(thisStopData);
+        dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
+        const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
+        dataGroup.min = newExtremum[0];
+        dataGroup.max = newExtremum[1];
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
-        dataGroup.stats = getBusArrivalTimeDataStats(thisStopData);
+        const newStats = getBusArrivalTimeDataStats(thisStopData);
+        dataGroup.stats = newStats;
+        const newExtremum = findExtremum(newStats);
+        dataGroup.min = newExtremum[0];
+        dataGroup.max = newExtremum[1];
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }
@@ -174,138 +197,6 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       await lfRemoveItem(5, thisID);
     }
   }
-}
-
-export async function discardExpiredEstimateTimeRecordsForBusArrivalTime() {
-  /*
-  const keys = await lfListItemKeys(6);
-  for (const key of keys) {
-    const json = await lfGetItem(6, key);
-    const object: object = JSON.parse(json);
-    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 30 * 1000) {
-      await lfRemoveItem(6, key);
-    }
-  }
-  */
-}
-
-export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
-  /*
-  // Merge data by stops
-  let recordsGroupedByStops = {};
-  const keys = await lfListItemKeys(5);
-  for (const key of keys) {
-    const existingRecord = await lfGetItem(5, key);
-    const existingRecordObject: BusArrivalTimeDataWriteAheadLog = JSON.parse(existingRecord);
-    for (const stopKey1 in existingRecordObject.data) {
-      if (!recordsGroupedByStops.hasOwnProperty(stopKey1)) {
-        recordsGroupedByStops[stopKey1] = [];
-      }
-      recordsGroupedByStops[stopKey1] = recordsGroupedByStops[stopKey1].concat(existingRecordObject.data[stopKey1]);
-    }
-  }
-
-  // Extract Arrival Times
-  let busArrivalTimesGroupedByStops = {};
-  for (const stopKey2 in recordsGroupedByStops) {
-    let recordsOfThisStop = recordsGroupedByStops[stopKey2];
-    recordsOfThisStop.sort(function (a, b) {
-      return a.timeStamp - b.timeStamp;
-    });
-    const recordsOfThisStopLength = recordsOfThisStop.length;
-    let EstimateTimeInThisPeriod = [];
-    let busArrivalTimeInThisPeriod = [];
-    for (let i = 0; i < recordsOfThisStopLength; i++) {
-      const currentRecord = recordsOfThisStop[i];
-      const nextRecord = recordsOfThisStop[i + 1] || recordsOfThisStop[i];
-
-      const currentRecordEstimateTime = currentRecord.EstimateTime;
-      const nextRecordEstimateTime = nextRecord.EstimateTime;
-
-      const delta = nextRecordEstimateTime - currentRecordEstimateTime;
-      if (delta < 0 && currentRecordEstimateTime >= 0) {
-        // decreasing estimate time value
-        EstimateTimeInThisPeriod.push(currentRecord);
-      } else {
-        EstimateTimeInThisPeriod.sort(function (a, b) {
-          return a.EstimateTime - b.EstimateTime;
-        });
-        if (EstimateTimeInThisPeriod.length > 0) {
-          const closestRecord = EstimateTimeInThisPeriod[0];
-          busArrivalTimeInThisPeriod.push(new Date(closestRecord.timeStamp + closestRecord.EstimateTime * 1000));
-        }
-        EstimateTimeInThisPeriod = [];
-      }
-    }
-    busArrivalTimesGroupedByStops[stopKey2] = busArrivalTimeInThisPeriod;
-  }
-
-  // Group bus arrival times by stops and personal schedules
-  const personalSchedules = await listPersonalSchedules();
-  let result = {};
-  for (const personalSchedule of personalSchedules) {
-    const personalScheduleID = personalSchedule.id;
-    const personalScheduleName = personalSchedule.name;
-
-    // Iterate over each stop in busArrivalTimesGroupedByStops
-    for (const stopKey3 in busArrivalTimesGroupedByStops) {
-      // Initialize the structure for each stop in the result
-      if (!result.hasOwnProperty(stopKey3)) {
-        result[stopKey3] = {};
-      }
-
-      if (!result[stopKey3].hasOwnProperty(personalScheduleID)) {
-        result[stopKey3][personalScheduleID] = {
-          name: personalScheduleName,
-          id: personalScheduleID,
-          busArrivalTimes: []
-        };
-      }
-
-      let busArrivalTimes = [];
-      for (const busArrivalTime of busArrivalTimesGroupedByStops[stopKey3]) {
-        const busArrivalTimeDay = busArrivalTime.getDay();
-        const busArrivalTimeHours = busArrivalTime.getHours();
-        const busArrivalTimeMinutes = busArrivalTime.getMinutes();
-
-        // Check if the personal schedule covers this day
-        if (personalSchedule.days.indexOf(busArrivalTimeDay) > -1) {
-          const totalMinutes = busArrivalTimeHours * 60 + busArrivalTimeMinutes;
-          const scheduleTotalStartMinutes = personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes;
-          const scheduleTotalEndMinutes = personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes;
-
-          // Check if the bus time falls within the personal schedule's time period
-          if (totalMinutes >= scheduleTotalStartMinutes && totalMinutes <= scheduleTotalEndMinutes) {
-            // Add the bus arrival time to the result
-            busArrivalTimes.push(totalMinutes);
-          }
-        }
-      }
-
-      // Aggregate bus arrival times
-      const aggregatedBusArrivalTimes = aggregateNumbers(aggregateNumbers(busArrivalTimes, 1.355), 1.65);
-
-      let aggregatedBusArrivalTimeObjects = [];
-      for (const aggregatedBusArrivalTime of aggregatedBusArrivalTimes) {
-        const totalMinutes = Math.floor(aggregatedBusArrivalTime);
-        const minutes = totalMinutes % 60;
-        const hours = (totalMinutes - minutes) / 60;
-        const timeObject: TimeObject = {
-          hours: hours,
-          minutes: minutes
-        };
-        aggregatedBusArrivalTimeObjects.push({
-          time: timeObjectToString(timeObject),
-          personalSchedule: personalSchedule
-        });
-      }
-
-      result[stopKey3][personalScheduleID].busArrivalTimes = aggregatedBusArrivalTimeObjects;
-    }
-  }
-
-  return result;
-  */
 }
 
 let drawBusArrivalTimeGraphContentWorkerResponses = {};
@@ -345,7 +236,7 @@ async function drawBusArrivalTimeGraphContent() {
       reject(e.message);
     };
 
-    port.postMessage([ personalSchedules, busArrivalTimes, taskID]); // Send the task to the worker
+    port.postMessage([personalSchedules, busArrivalTimes, taskID]); // Send the task to the worker
   });
   return result;
 }

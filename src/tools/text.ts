@@ -51,3 +51,21 @@ export function truncateText(text: string, weight: number, size: string, fontFam
     return `${text.substring(0, lastLength)}${ellipsis}`;
   }
 }
+
+export function formatNumberWithSuffix(num: number, maxLength: number = 4): string {
+  const suffixes = ['', 'K', 'M', 'B', 'T', 'Q'];
+  let magnitude = 0;
+
+  while (Math.abs(num) >= 1000 && magnitude < suffixes.length - 1) {
+    num /= 1000;
+    magnitude++;
+  }
+
+  let numStr = num.toFixed(1).replace(/\.0$/, '');
+
+  while (numStr.length + suffixes[magnitude].length > maxLength && numStr.includes('.')) {
+    numStr = numStr.slice(0, -1);
+  }
+
+  return numStr + suffixes[magnitude];
+}
