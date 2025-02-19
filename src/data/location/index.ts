@@ -9,7 +9,7 @@ import { addressToString, generateLabelFromAddresses } from '../../tools/address
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { parseEstimateTime, FormattedBus, EstimateTimeStatus, batchFindBusesForLocation, formatBus } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
+import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 
 interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}

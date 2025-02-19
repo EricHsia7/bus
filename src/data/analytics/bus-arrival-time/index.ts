@@ -1,8 +1,9 @@
-import { generateIdentifier } from '../../tools/index';
-import { EstimateTime } from '../apis/getEstimateTime/index';
-import { listAllFolderContent } from '../folder/index';
-import { isInPersonalSchedule, PersonalSchedule } from '../personal-schedule/index';
-import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../storage/index';
+import { generateIdentifier } from '../../../tools/index';
+import { EstimateTime } from '../../apis/getEstimateTime/index';
+import { listAllFolderContent } from '../../folder/index';
+import { isInPersonalSchedule } from '../../personal-schedule/index';
+import { PersonalSchedule } from '../../personal-schedule/index';
+import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../../storage/index';
 
 const busArrivalTimeData_writeAheadLog_maxDataLength: number = 32;
 let busArrivalTimeData_writeAheadLog_id: string = '';
@@ -14,11 +15,6 @@ let busArrivalTimeData_writeAheadLog_group: BusArrivalTimeDataWriteAheadLog = {
   id: ''
 };
 let busArrivalTimeData_writeAheadLog_currentDataLength: number = 0;
-
-interface EstimateTimeRecordForBusArrivalTime {
-  EstimateTime: number;
-  timeStamp: number;
-}
 
 export type BusArrivalTimeData = [number, number]; // EstimateTime (seconds), timestamp (milliseconds)
 
@@ -301,10 +297,11 @@ export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   */
 }
 
-export async function updateBusArrivalTimeGraphs() {
-
+async function drawBusArrivalTimeGraphContent() {
+  
 }
 
+export async function updateBusArrivalTimeGraphs() {}
 
 export interface BusArrivalTimeGraph {
   background: string; // blob url
@@ -315,7 +312,4 @@ export interface BusArrivalTimeGraph {
   };
 }
 
-
-export function getBusArrivalTimeGraphs(): BusArrivalTimeGraph{
-
-}
+export function getBusArrivalTimeGraphs(): BusArrivalTimeGraph {}

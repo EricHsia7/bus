@@ -1,4 +1,4 @@
-import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
+import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';

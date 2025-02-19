@@ -10,7 +10,7 @@ import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time';
+import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 
 interface FolderContentRouteEndPoints {
   departure: string;
