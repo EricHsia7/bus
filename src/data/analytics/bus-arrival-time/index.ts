@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../../../tools/index';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
-import { isInPersonalSchedule } from '../../personal-schedule/index';
+import { isInPersonalSchedule, listPersonalSchedules } from '../../personal-schedule/index';
 import { PersonalSchedule } from '../../personal-schedule/index';
 import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../../storage/index';
 
@@ -33,6 +33,17 @@ export interface BusArrivalTimeDataWriteAheadLog {
   timestamp: number;
   id: string;
 }
+
+export interface BusArrivalTimeGraph {
+  background: string; // blob url
+  content: string; // blob url
+  size: {
+    width: number;
+    height: number;
+  };
+}
+
+type BusArrivalTimeGraphPart = 'background' | 'content';
 
 export interface AggregatedBusArrivalTime {
   time: string;
@@ -297,19 +308,48 @@ export async function getBusArrivalTimes(): Promise<BusArrivalTimes> {
   */
 }
 
+let drawBusArrivalTimeGraphContentWorkerResponses = {};
+var port;
+
+// Check if SharedWorker is supported, and fall back to Worker if not
+if (typeof SharedWorker !== 'undefined') {
+  const getUpdateRateSharedWorker = new SharedWorker(new URL('./drawBusArrivalTimeGraphContent_worker.ts', import.meta.url)); // Reusable shared worker
+  port = getUpdateRateSharedWorker.port; // Access the port for communication
+  port.start(); // Start the port (required by some browsers)
+} else {
+  const getUpdateRateWorker = new Worker(new URL('./drawBusArrivalTimeGraphContent_worker.ts', import.meta.url)); // Fallback to standard worker
+  port = getUpdateRateWorker; // Use Worker directly for communication
+}
+
+// Handle messages from the worker
+port.onmessage = function (e) {
+  const [result, taskID] = e.data;
+  if (drawBusArrivalTimeGraphContentWorkerResponses[taskID]) {
+    drawBusArrivalTimeGraphContentWorkerResponses[taskID](result); // Resolve the correct promise
+    delete drawBusArrivalTimeGraphContentWorkerResponses[taskID]; // Clean up the response handler
+  }
+};
+
+// Handle errors
+port.onerror = function (e) {
+  console.error(e.message);
+};
+
 async function drawBusArrivalTimeGraphContent() {
-  
+  const personalSchedules = await listPersonalSchedules();
+  const busArrivalTimes = await getBusArrivalTimes();
+  const result = await new Promise((resolve, reject) => {
+    drawBusArrivalTimeGraphContentWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+
+    port.onerror = function (e) {
+      reject(e.message);
+    };
+
+    port.postMessage([ personalSchedules, busArrivalTimes, taskID]); // Send the task to the worker
+  });
+  return result;
 }
 
 export async function updateBusArrivalTimeGraphs() {}
-
-export interface BusArrivalTimeGraph {
-  background: string; // blob url
-  content: string; // blob url
-  size: {
-    width: number;
-    height: number;
-  };
-}
 
 export function getBusArrivalTimeGraphs(): BusArrivalTimeGraph {}
