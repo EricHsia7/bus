@@ -45,11 +45,11 @@ export async function saveNotificationClient() {
     client_id: NotificationClientID,
     secret: NotificationSecret
   };
-  await lfSetItem(8, 'n_client', JSON.stringify(currentClient));
+  await lfSetItem(9, 'n_client', JSON.stringify(currentClient));
 }
 
 export async function loadNotificationClient() {
-  const existingClient = await lfGetItem(8, 'n_client');
+  const existingClient = await lfGetItem(9, 'n_client');
   if (existingClient) {
     const existingClientObject = JSON.parse(existingClient) as NotificationClient;
     NotificationProvider = existingClientObject.provider;
@@ -93,10 +93,10 @@ export function setNotificationSecret(secret: NotificationClient['secret']): voi
 
 export async function initializeNotificationSchedules() {
   const now = new Date().getTime();
-  const keys = await lfListItemKeys(9);
+  const keys = await lfListItemKeys(10);
   let index: number = 0;
   for (const key of keys) {
-    const thisScheduleJSON = await lfGetItem(9, key);
+    const thisScheduleJSON = await lfGetItem(10, key);
     const thisSchedule = JSON.parse(thisScheduleJSON) as NotificationSchedule;
     const thisScheduledTime = thisSchedule.scheduled_time;
     if (thisScheduledTime > now) {
@@ -135,7 +135,7 @@ export async function saveNotificationSchedule(schedule_id: NotificationSchedule
     NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey] = [];
   }
   NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey].push(thisNotificationScheduleIndex);
-  await lfSetItem(9, schedule_id, JSON.stringify(thisNotificationSchedule));
+  await lfSetItem(10, schedule_id, JSON.stringify(thisNotificationSchedule));
 }
 
 export function getNotificationSchedule(schedule_id: NotificationSchedule['schedule_id']): NotificationSchedule | false {
@@ -163,7 +163,7 @@ export async function updateNotificationSchedule(schedule_id: NotificationSchedu
       scheduled_time: scheduled_time
     });
     NotifcationSchedules.splice(existingScheduleIndex, 1, updatedSchedule);
-    await lfSetItem(9, schedule_id, JSON.stringify(updatedSchedule));
+    await lfSetItem(10, schedule_id, JSON.stringify(updatedSchedule));
   }
 }
 
@@ -176,7 +176,7 @@ export async function removeNotificationSchedule(schedule_id: NotificationSchedu
     NotifcationSchedules.splice(existingScheduleIndex, 1, null);
     NotifcationSchedulesStopIDIndex[thisScheduleStopKey].splice(NotifcationSchedulesStopIDIndex[thisScheduleStopKey].indexOf(existingScheduleIndex), 1);
     delete NotifcationSchedulesIndex[schedule_id];
-    await lfRemoveItem(9, schedule_id);
+    await lfRemoveItem(10, schedule_id);
   }
 }
 
@@ -243,7 +243,7 @@ export async function discardExpiredNotificationSchedules() {
       NotifcationSchedules.splice(existingScheduleIndex, 1, null);
       NotifcationSchedulesStopIDIndex[thisScheduleStopKey].splice(NotifcationSchedulesStopIDIndex[thisScheduleStopKey].indexOf(existingScheduleIndex), 1);
       delete NotifcationSchedulesIndex[schedule_id];
-      await lfRemoveItem(9, schedule_id);
+      await lfRemoveItem(10, schedule_id);
     }
   }
 }

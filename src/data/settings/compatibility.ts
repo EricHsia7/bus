@@ -15,9 +15,9 @@ const compatibilityTags: Array<CompatibilityTag> = [
     script: null
     /* async function () {
       const savedStopFolderID = await createFolder('已收藏站牌', 'location_on');
-      const savedStopFolderKeys = await lfListItemKeys(12);
+      const savedStopFolderKeys = await lfListItemKeys(13);
       for (const key of savedStopFolderKeys) {
-        const contentJSON = await lfGetItem(12, key);
+        const contentJSON = await lfGetItem(13, key);
         const contentObject = JSON.parse(contentJSON) as Folder;
         contentObject.timestamp = new Date(contentObject.time).getTime();
         delete contentObject.default;
@@ -29,9 +29,9 @@ const compatibilityTags: Array<CompatibilityTag> = [
       }
 
       const savedRouteFolderID = await createFolder('已收藏路線', 'route');
-      const savedRouteFolderKeys = await lfListItemKeys(12);
+      const savedRouteFolderKeys = await lfListItemKeys(13);
       for (const key of savedRouteFolderKeys) {
-        const contentJSON = await lfGetItem(12, key);
+        const contentJSON = await lfGetItem(13, key);
         const contentObject = JSON.parse(contentJSON) as Folder;
         contentObject.timestamp = new Date(contentObject.time).getTime();
         delete contentObject.default;
@@ -42,20 +42,20 @@ const compatibilityTags: Array<CompatibilityTag> = [
         await saveToFolder(savedRouteFolderID, contentObject);
       }
 
-      const customFolderKeys = await lfListItemKeys( 10);
+      const customFolderKeys = await lfListItemKeys(11);
       for (const folderKey of customFolderKeys) {
-        const thisFolderJSON = await lfGetItem( 10, folderKey);
+        const thisFolderJSON = await lfGetItem(11, folderKey);
         const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
         const storeIndex = await registerStore(thisFolderObject.id);
         const contentKeys = await lfListItemKeys(storeIndex);
-        await lfSetItem( 11, folderKey, JSON.stringify(contentKeys));
+        await lfSetItem(12, folderKey, JSON.stringify(contentKeys));
         for (const contentKey of contentKeys) {
           const contentJSON = await lfGetItem(storeIndex, contentKey);
           const contentObject = JSON.parse(contentJSON) as FolderContentStop | FolderContentRoute | FolderContentBus;
           contentObject.timestamp = new Date(contentObject.time).getTime();
           delete contentObject.time;
           delete contentObject.index;
-          await lfSetItem( 12, contentKey, JSON.stringify(contentObject));
+          await lfSetItem(13, contentKey, JSON.stringify(contentObject));
         }
       }
     } */

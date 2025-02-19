@@ -2,7 +2,7 @@ import { generateIdentifier } from '../../tools/index';
 import { aggregateNumbers } from '../../tools/math';
 import { TimeObject, timeObjectToString } from '../../tools/time';
 import { EstimateTime } from '../apis/getEstimateTime/index';
-import { listFoldersWithContent } from '../folder/index';
+import { listAllFolderContent } from '../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule } from '../personal-schedule/index';
 import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../storage/index';
 
@@ -22,7 +22,7 @@ interface EstimateTimeRecordForBusArrivalTime {
   timeStamp: number;
 }
 
-export type BusArrivalTimeData = [number, number]; // EstimateTime (seconds), timestamp (seconds)
+export type BusArrivalTimeData = [number, number]; // EstimateTime (seconds), timestamp (milliseconds)
 
 export interface BusArrivalTimeDataGroup {
   stats: Uint32Array;
@@ -68,18 +68,12 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
       data: {}
     };
     busArrivalTimeData_writeAheadLog_currentDataLength = 0;
-    const foldersWithContent = await listFoldersWithContent();
-    for (const folderWithContent1 of foldersWithContent) {
-      
-      busArrivalTimeData_writeAheadLog_trackedStops = busArrivalTimeData_writeAheadLog_trackedStops.concat(
-        folderWithContent1.content
-          .filter((m) => {
-            return m.type === 'stop' ? true : false;
-          })
-          .map((e) => e.id)
-      );
-    }
+    const allFolderContent = await listAllFolderContent(['stop']);
+    busArrivalTimeData_writeAheadLog_trackedStops = allFolderContent.map((e) => e.id);
+    
   }
+
+    // Record EstimateTime
   if (isInPersonalSchedule(now)) {
     for (const item of EstimateTime) {
       const stopID = item.StopID;
@@ -88,7 +82,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         if (!busArrivalTimeData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
           busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
         }
-        busArrivalTimeData_writeAheadLog_group.data[stopKey].push({ EstimateTime: parseInt(item.EstimateTime), timeStamp: currentTimestamp });
+        busArrivalTimeData_writeAheadLog_group.data[stopKey].push([ parseInt(item.EstimateTime), currentTimestamp ]);
         busArrivalTimeData_writeAheadLog_currentDataLength += 1;
         if (busArrivalTimeData_writeAheadLog_currentDataLength > busArrivalTimeData_writeAheadLog_maxDataLength) {
           needToReset = true;

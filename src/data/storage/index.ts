@@ -6,14 +6,15 @@ let storage = {
   dataUsageRecordsStore: false, // 2
   updateRateDataStore: false, // 3
   updateRateDataWriteAheadLogStore: false, // 4
-  busArrivalTimeRecordsStore: false, // 5
-  personalScheduleStore: false, // 6
-  recentViewsStore: false, // 7
-  notificationStore: false, // 8
-  notificationScheduleStore: false, // 9
-  folderListStore: false, // 10
-  folderContentIndexStore: false, // 11
-  folderContentStore: false // 12
+  busArrivalTimeDataWriteAheadLogStore: false, // 5
+  busArrivalTimeDataStore: false, // 6
+  personalScheduleStore: false, // 7
+  recentViewsStore: false, // 8
+  notificationStore: false, // 9
+  notificationScheduleStore: false, // 10
+  folderListStore: false, // 11
+  folderContentIndexStore: false, // 12
+  folderContentStore: false // 13
 };
 
 const stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeRecordsStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
