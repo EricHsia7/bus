@@ -229,30 +229,7 @@ export function maxConcurrency(periods: Array<TimePeriod>): number {
   return maxCount;
 }
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
-
-  push(value) {
-    this.heap.push(value);
-    this.heap.sort((a, b) => a - b);
-  }
-
-  pop() {
-    return this.heap.shift();
-  }
-
-  peek() {
-    return this.heap.length > 0 ? this.heap[0] : null;
-  }
-
-  size() {
-    return this.heap.length;
-  }
-}
-
-export function assignTracks(periods: Array<TimePeriod>) {
+export function assignTracks(periods: Array<TimePeriod>): Array<Array<TimePeriod>> {
   if (periods.length === 0) return [];
 
   // Convert periods into events
