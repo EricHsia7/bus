@@ -29,7 +29,7 @@ export interface BusArrivalTimeDataGroup {
   id: number; // stop id
 }
 
-export type BusArrivalTimeDataGroupArray = Array<BusArrivalTimeDataGroup>
+export type BusArrivalTimeDataGroupArray = Array<BusArrivalTimeDataGroup>;
 
 export interface BusArrivalTimeDataWriteAheadLog {
   data: {
@@ -39,32 +39,13 @@ export interface BusArrivalTimeDataWriteAheadLog {
   id: string;
 }
 
-export interface BusArrivalTimeGraph {
-  background: string; // blob url
-  content: string; // blob url
-  size: {
-    width: number;
-    height: number;
-  };
-  position: {
-    x: number;
-    y: number;
-  };
-}
-
-export interface AggregatedBusArrivalTime {
-  time: string;
+export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
+  graph: string; // svg
 }
 
 export interface BusArrivalTimes {
-  [stopKey: string]: {
-    [personalScheduleID: string]: {
-      name: string;
-      id: string;
-      busArrivalTimes: Array<AggregatedBusArrivalTime>;
-    };
-  };
+  [stopKey: string]: Array<BusArrivalTime>;
 }
 
 function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): BusArrivalTimeDataGroupStats {
@@ -199,16 +180,29 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
   }
 }
 
+export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
+  const keys = await lfListItemKeys(6);
+  let result: BusArrivalTimeDataGroupArray = [];
+  for (const key of keys) {
+    const json = await lfGetItem(6, key);
+    if (json) {
+      const object = JSON.parse(json) as BusArrivalTimeDataGroup;
+      result.push(object);
+    }
+  }
+  return result;
+}
+
 let drawBusArrivalTimeGraphContentWorkerResponses = {};
 var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
-  const getUpdateRateSharedWorker = new SharedWorker(new URL('./drawBusArrivalTimeGraphContent_worker.ts', import.meta.url)); // Reusable shared worker
+  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getBusArrivalTimes_worker.ts', import.meta.url)); // Reusable shared worker
   port = getUpdateRateSharedWorker.port; // Access the port for communication
   port.start(); // Start the port (required by some browsers)
 } else {
-  const getUpdateRateWorker = new Worker(new URL('./drawBusArrivalTimeGraphContent_worker.ts', import.meta.url)); // Fallback to standard worker
+  const getUpdateRateWorker = new Worker(new URL('./getBusArrivalTimes_worker.ts', import.meta.url)); // Fallback to standard worker
   port = getUpdateRateWorker; // Use Worker directly for communication
 }
 
@@ -226,21 +220,15 @@ port.onerror = function (e) {
   console.error(e.message);
 };
 
-async function drawBusArrivalTimeGraphContent() {
+export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
   const personalSchedules = await listPersonalSchedules();
-  const busArrivalTimes = await getBusArrivalTimes();
+  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
   const result = await new Promise((resolve, reject) => {
     drawBusArrivalTimeGraphContentWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
-
     port.onerror = function (e) {
       reject(e.message);
     };
-
-    port.postMessage([personalSchedules, busArrivalTimes, taskID]); // Send the task to the worker
+    port.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID]); // Send the task to the worker
   });
   return result;
 }
-
-export async function updateBusArrivalTimeGraphs() {}
-
-export function getBusArrivalTimeGraphs(): BusArrivalTimeGraph {}
