@@ -9,7 +9,7 @@ import { addressToString, generateLabelFromAddresses } from '../../tools/address
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { parseEstimateTime, FormattedBus, EstimateTimeStatus, batchFindBusesForLocation, formatBus } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
+import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 
 interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
@@ -91,7 +91,7 @@ export interface IntegratedLocationItem {
   status: EstimateTimeStatus;
   ranking: IntegratedLocationItemRanking;
   buses: Array<FormattedBus>;
-  busArrivalTimes: Array<AggregatedBusArrivalTime>;
+  busArrivalTimes: Array<BusArrivalTime>;
 }
 
 export interface IntegratedLocation {
@@ -126,7 +126,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
-  const BusArrivalTimes = await getBusArrivalTimes();
+  const BusArrivalTimes = await getBusArrivalTimes(300, 150); // TODO: dynamically calculate the size
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
@@ -243,15 +243,11 @@ export async function integrateLocation(hash: string, requestID: string): Promis
       integratedItem.buses = buses;
 
       // Collect data from 'BusArrivalTimes'
-      let thisBusArrivalTimes = {};
+      let thisBusArrivalTimes = [];
       if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
-      let flattenBusArrivalTimes = [];
-      for (const personalScheduleID in thisBusArrivalTimes) {
-        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
-      }
-      integratedItem.busArrivalTimes = flattenBusArrivalTimes;
+      integratedItem.busArrivalTimes = thisBusArrivalTimes;
 
       groupedItems[groupKey].push(integratedItem);
       itemQuantity[groupKey] += 1;
