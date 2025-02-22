@@ -18,7 +18,7 @@ let busArrivalTimeData_writeAheadLog_group: BusArrivalTimeDataWriteAheadLog = {
 };
 let busArrivalTimeData_writeAheadLog_currentDataLength: number = 0;
 
-export type BusArrivalTimeData = [number, number]; // EstimateTime (seconds), timestamp (milliseconds)
+export type BusArrivalTimeData = [estimateTime: number, timestamp: number]; // EstimateTime (seconds), timestamp (milliseconds)
 
 export type BusArrivalTimeDataGroupStats = Array<number>;
 

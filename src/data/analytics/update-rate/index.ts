@@ -3,7 +3,7 @@ import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storag
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';
 
-export type UpdateRateData = [number, number]; // EstimateTime (seconds), timestamp (seconds)
+export type UpdateRateData = [estimateTime: number, timestamp: number]; // EstimateTime (seconds), timestamp (seconds)
 
 export interface UpdateRateDataGroupStats {
   estimate_time: {
@@ -24,7 +24,7 @@ export interface UpdateRateDataGroup {
   id: number; // stop id
 }
 
-export type UpdateRateDataGroupArray = Array<UpdateRateDataGroup>
+export type UpdateRateDataGroupArray = Array<UpdateRateDataGroup>;
 
 export interface UpdateRateDataWriteAheadLogGroup {
   data: Array<UpdateRateData>;
