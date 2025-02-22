@@ -48,6 +48,9 @@ async function processWorkerTask(): Promise<void> {
     const endIndex = personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes;
     const barWidth = chartWidth / (endIndex - startIndex);
     for (const busArrivalTimeDataGroup of busArrivalTimeDataGroups) {
+      if (personalSchedule.days.indexOf(busArrivalTimeDataGroup.day) < 0) {
+        continue;
+      }
       const statsMax = busArrivalTimeDataGroup.max;
       const statsArray = busArrivalTimeDataGroup.stats.slice(startIndex, endIndex);
       const statsArrayLength = statsArray.length;
@@ -68,7 +71,8 @@ async function processWorkerTask(): Promise<void> {
       }
       result[stopKey].push({
         personalSchedule: personalSchedule,
-        chart: svg
+        chart: svg,
+        day: busArrivalTimeDataGroup.day
       });
     }
   }

@@ -44,6 +44,7 @@ export interface BusArrivalTimeDataWriteAheadLog {
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
   chart: string; // svg
+  day: WeekDayIndex;
 }
 
 export interface BusArrivalTimes {

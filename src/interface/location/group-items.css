@@ -569,15 +569,32 @@
   position: absolute;
   top: 0px;
   left: 25px;
-  width: calc(100% - 35px);
+  width: calc(100% - 20px - 5px - 60px);
   height: 20px;
-  display: flex;
-  align-items: center;
   font-size: 20px;
+  line-height: 20px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* items > item > body > bus arrival times > bus arrival time > title > personal schedule time */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_personal_schedule_time {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 60px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
 }
 
 /* items > item > body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time chart */
