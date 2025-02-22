@@ -278,11 +278,11 @@ var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
-  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getUpdateRate_worker.ts', import.meta.url)); // Reusable shared worker
+  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getUpdateRate-worker.ts', import.meta.url)); // Reusable shared worker
   port = getUpdateRateSharedWorker.port; // Access the port for communication
   port.start(); // Start the port (required by some browsers)
 } else {
-  const getUpdateRateWorker = new Worker(new URL('./getUpdateRate_worker.ts', import.meta.url)); // Fallback to standard worker
+  const getUpdateRateWorker = new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url)); // Fallback to standard worker
   port = getUpdateRateWorker; // Use Worker directly for communication
 }
 
