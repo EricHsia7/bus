@@ -576,7 +576,7 @@
   position: absolute;
   top: 0px;
   left: 25px;
-  width: calc(100% - 20px - 5px - 100px);
+  width: calc(100% - 20px - 5px - 120px);
   height: 20px;
   font-size: 20px;
   line-height: 20px;
@@ -592,7 +592,7 @@
   position: absolute;
   top: 0px;
   right: 0px;
-  width: 100px;
+  width: 120px;
   height: 20px;
   font-size: 14px;
   line-height: 20px;
