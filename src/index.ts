@@ -29,7 +29,7 @@ import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
-import { discardExpiredEstimateTimeRecordsForBusArrivalTime } from './data/analytics/bus-arrival-time';
+import { discardExpiredEstimateTimeRecordsForBusArrivalTime, recoverBusArrivalTimeDataFromWriteAheadLog } from './data/analytics/bus-arrival-time/index';
 import { closeBus, openBus } from './interface/bus/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
@@ -291,7 +291,8 @@ window.bus = {
       downloadData();
       discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageRecords();
-      discardExpiredEstimateTimeRecordsForBusArrivalTime();
+      // discardExpiredEstimateTimeRecordsForBusArrivalTime();
+      recoverBusArrivalTimeDataFromWriteAheadLog();
       discardExpiredRecentViews();
       discardExpiredUpdateRateDataGroups().then(function () {
         initializeUpdateRateDataGroups().then(function () {

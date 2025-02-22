@@ -309,7 +309,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_route_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_route_group_item_bus_arrival_time_attributes"><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
+      elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_route_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
     }
 
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
@@ -551,12 +551,13 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 async function refreshRoute() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
-  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, routeRefreshTimer_currentRequestID);
+  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
   updateRouteField(RouteField, integration, false, playing_animation);
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {

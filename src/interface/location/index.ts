@@ -328,7 +328,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_location_group_item_bus_arrival_times');
-      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('schedule')}</div><div class="css_location_group_item_bus_arrival_time_time">${busArrivalTime.time}</div></div><div class="css_location_group_item_bus_arrival_time_attributes"><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">個人化行程：${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_period">時段：${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_days">重複：${busArrivalTime.personalSchedule.days.map((day) => indexToDay(day).name).join('、')}</div></div></div>`).join('');
+      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_location_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
     }
 
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
@@ -600,12 +600,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 async function refreshLocation() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
-  const integration = await integrateLocation(currentHashSet_hash, locationRefreshTimer_currentRequestID);
+  const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, locationRefreshTimer_currentRequestID);
   updateLocationField(integration, false, playing_animation);
   let updateRate = 0;
   if (locationRefreshTimer_dynamic) {

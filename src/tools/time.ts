@@ -204,3 +204,69 @@ export interface TimeStampPeriod {
 export function timeObjectToString(timeObject: TimeObject): string {
   return `${String(timeObject.hours).padStart(2, '0')}:${String(timeObject.minutes).padStart(2, '0')}`;
 }
+
+export function maxConcurrency(periods: Array<TimePeriod>): number {
+  let events: Array<[number, 1 | -1]> = [];
+
+  // Convert periods into events
+  for (let { start, end } of periods) {
+    events.push([start.hours * 60 + start.minutes, 1]); // Start of a period
+    events.push([end.hours * 60 + end.minutes, -1]); // End of a period
+  }
+
+  // Sort events: Primary by time, secondary by type (-1 before +1)
+  events.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+  let maxCount = 0;
+  let currentCount = 0;
+
+  // Sweep through the events
+  for (let [, type] of events) {
+    currentCount += type;
+    maxCount = Math.max(maxCount, currentCount);
+  }
+
+  return maxCount;
+}
+
+export function assignTracks(periods: Array<TimePeriod>): Array<Array<TimePeriod>> {
+  if (periods.length === 0) return [];
+
+  // Convert periods into events
+  let events: Array<[number, number, number]> = [];
+  let index = 0;
+  for (let { start, end } of periods) {
+    events.push([start.hours * 60 + start.minutes, end.hours * 60 + end.minutes, index]);
+    index += 1;
+  }
+
+  // Sort intervals by start time
+  events.sort((a, b) => a[0] - b[0]);
+
+  let tracks = [];
+  for (let [start, end, index] of events) {
+    let assigned = false;
+    for (let i = 0; i < tracks.length; i++) {
+      if (tracks[i][tracks[i].length - 1][1] <= start) {
+        tracks[i].push([start, end, index]);
+        assigned = true;
+        break;
+      }
+    }
+    if (!assigned) {
+      tracks.push([[start, end, index]]);
+    }
+  }
+
+  let i = 0;
+  for (const track of tracks) {
+    let j = 0;
+    for (const event of track) {
+      tracks[i][j] = periods[event[2]];
+      j += 1;
+    }
+    i += 1;
+  }
+
+  return tracks;
+}

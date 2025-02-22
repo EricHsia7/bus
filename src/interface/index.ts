@@ -204,7 +204,7 @@ export interface Size {
   height: number;
 }
 
-type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button' | 'route-details-canvas';
+type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button' | 'route-details-canvas' | 'route-bus-arrival-time-chart' | 'location-bus-arrival-time-chart';
 
 export function querySize(type: SizeType): Size {
   let width: number = 0;
@@ -231,6 +231,14 @@ export function querySize(type: SizeType): Size {
     case 'route-details-canvas':
       width = windowWidth - 10 * 2 - 10 * 2;
       height = 24 * 60;
+      break;
+    case 'route-bus-arrival-time-chart':
+      width = windowWidth - 45 - 15 - 20;
+      height = 75;
+      break;
+    case 'location-bus-arrival-time-chart':
+      width = windowWidth - 30 - 20;
+      height = 75;
       break;
     default:
       width = 0;

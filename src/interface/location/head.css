@@ -152,6 +152,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -161,6 +163,8 @@
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-location-tab-line-width-scale));
+  user-select: none;
+  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -176,6 +180,8 @@
   height: 1px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
+  user-select: none;
+  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -188,6 +194,8 @@
   width: 100%;
   transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
   transition: none;
+  user-select: none;
+  -webkit-user-select: none;
   contain: layout;
 }
 

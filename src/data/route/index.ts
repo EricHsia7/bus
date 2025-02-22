@@ -1,4 +1,4 @@
-import { AggregatedBusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time';
+import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
@@ -40,7 +40,7 @@ export interface integratedStopItem {
   status: EstimateTimeStatus;
   buses: Array<FormattedBus>;
   overlappingRoutes: Array<formattedOverlappingRoute>;
-  busArrivalTimes: Array<AggregatedBusArrivalTime>;
+  busArrivalTimes: Array<BusArrivalTime>;
   sequence: number;
   position: integratedStopItemPosition;
   nearest: boolean;
@@ -63,7 +63,7 @@ export interface IntegratedRoute {
   PathAttributeId: Array<number>;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<IntegratedRoute> {
+export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedRoute> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
@@ -85,7 +85,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
-  const BusArrivalTimes = await getBusArrivalTimes();
+  const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
 
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
@@ -125,7 +125,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // collect data from 'Location'
       const thisLocationKey = `l_${thisStop.stopLocationId}`;
-      let thisLocation = {} as SimplifiedLocationItem
+      let thisLocation = {} as SimplifiedLocationItem;
       if (Location.hasOwnProperty(thisLocationKey)) {
         thisLocation = Location[thisLocationKey];
       } else {
@@ -180,15 +180,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       });
 
       // collect data from 'BusArrivalTimes'
-      let thisBusArrivalTimes = {};
+      let thisBusArrivalTimes = [];
       if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
-      let flattenBusArrivalTimes = [];
-      for (const personalScheduleID in thisBusArrivalTimes) {
-        flattenBusArrivalTimes = flattenBusArrivalTimes.concat(thisBusArrivalTimes[personalScheduleID].busArrivalTimes);
-      }
-      integratedStopItem.busArrivalTimes = flattenBusArrivalTimes;
+      integratedStopItem.busArrivalTimes = thisBusArrivalTimes;
 
       // check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;

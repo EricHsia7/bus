@@ -513,7 +513,6 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time {
   position: relative;
-  width: calc(var(--b-cssvar-location-field-width) * 0.6);
   height: 121px;
   box-sizing: border-box;
   background: var(--b-cssvar-f9f9fb-normal);
@@ -521,6 +520,14 @@
   display: inline-flex;
   margin-right: 5px;
   scroll-snap-align: center;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus {
+  width: calc(var(--b-cssvar-location-field-width) * 0.6);
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time {
+  width: calc(var(--b-cssvar-location-field-width) - 30px);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus:last-child,
@@ -563,26 +570,43 @@
   color: var(--b-cssvar-333333);
 }
 
-/* items > item > body > buses, bus arrival times > bus, bus arrival time > title > car number, time */
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > title > car number, personal schedule name */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_car_number,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_time {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_personal_schedule_name {
   position: absolute;
   top: 0px;
   left: 25px;
-  width: calc(100% - 35px);
+  width: calc(100% - 20px - 5px - 120px);
   height: 20px;
-  display: flex;
-  align-items: center;
   font-size: 20px;
+  line-height: 20px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* items > item > body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time attributes */
+/* items > item > body > bus arrival times > bus arrival time > title > personal schedule time */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_personal_schedule_time {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 120px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+
+/* items > item > body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time chart */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -590,13 +614,23 @@
   height: 75px;
 }
 
+/* items > item > body > bus arrival times > bus arrival time > bus arrival time chart > svg */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart svg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 75px;
+}
+
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart svg path {
+  fill: var(--b-cssvar-main-color);
+}
+
 /* items > item > body > buses > bus > attributes > car route, car status, car type */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_name,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_period,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_days {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_type {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -622,15 +656,15 @@
   top: 50px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_name {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart .css_location_group_item_bus_arrival_time_personal_schedule_name {
   top: 0px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_period {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart .css_location_group_item_bus_arrival_time_personal_schedule_period {
   top: 25px;
 }
 
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_attributes .css_location_group_item_bus_arrival_time_personal_schedule_days {
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart .css_location_group_item_bus_arrival_time_personal_schedule_days {
   top: 50px;
 }
 
