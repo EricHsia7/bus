@@ -42,11 +42,6 @@ async function processWorkerTask(): Promise<void> {
 
   const result: BusArrivalTimes = {};
 
-  // Define constants
-  const oneDayInMinutes = 60 * 24;
-  // const chartWidth = 300
-  // const chartHeight = 171
-
   // For each personalSchedule, build an SVG graph
   for (const personalSchedule of personalSchedules) {
     const startIndex = personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes;
@@ -59,7 +54,7 @@ async function processWorkerTask(): Promise<void> {
       let pathCommand = '';
       pathCommand += `M${chartWidth},${chartHeight}`;
       for (let j = statsArrayLength - 1; j >= 0; j--) {
-        let x = ((j + 1) / oneDayInMinutes) * chartWidth; // Shift right for correct alignment
+        let x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
         let y = (1 - statsArray[j] / statsMax) * chartHeight;
         pathCommand += ` L${x},${y}`;
         pathCommand += ` L${x - barWidth},${y}`;
