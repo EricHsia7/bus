@@ -63,7 +63,7 @@ function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): BusArrival
       offset = 1;
     } else {
       time = item[1];
-      offset = -1;
+      offset = 0;
     }
     const date = new Date(time);
     const index = date.getHours() * 60 + date.getMinutes();
