@@ -1,11 +1,12 @@
-let taskQueue = [];
+import { UpdateRateDataGroupArray } from './index';
 
-/*: Array<{
-  dataGroups: Array<UpdateRateDataGroup>;
+interface task {
+  dataGroups: UpdateRateDataGroupArray;
   taskID: string;
   port: any;
-}>*/
+}
 
+let taskQueue: Array<task> = [];
 let isProcessing: boolean = false;
 
 if ('onconnect' in self) {
@@ -15,7 +16,7 @@ if ('onconnect' in self) {
     port.onmessage = function (event) {
       const [dataGroups, taskID] = event.data;
       taskQueue.push({ dataGroups, taskID, port });
-      getUpdateRate_worker();
+      processWorkerTask();
     };
   };
 } else {
@@ -24,15 +25,15 @@ if ('onconnect' in self) {
   self.onmessage = function (event) {
     const [dataGroups, taskID] = event.data;
     taskQueue.push({ dataGroups, taskID, port });
-    getUpdateRate_worker();
+    processWorkerTask();
   };
 }
 
-function getUpdateRate_worker(): void {
+function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const { dataGroups, taskID, port } = taskQueue.shift();
+  const { dataGroups, taskID, port }: task = taskQueue.shift();
 
   if (dataGroups.length === 0) {
     port.postMessage([0.8, taskID]);
@@ -55,5 +56,5 @@ function getUpdateRate_worker(): void {
     port.postMessage([result, taskID]);
   }
   isProcessing = false;
-  getUpdateRate_worker(); // Process next task in queue, if any
+  processWorkerTask(); // Process next task in queue, if any
 }

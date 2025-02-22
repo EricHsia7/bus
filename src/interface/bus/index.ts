@@ -1,6 +1,6 @@
 import { integrateBus } from '../../data/bus/index';
 import { logRecentView } from '../../data/recent-views/index';
-import { getSettingOptionValue, SettingSelectOptionBooleanValue } from '../../data/settings/index';
+import { getSettingOptionValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';

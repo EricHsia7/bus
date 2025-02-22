@@ -1,11 +1,11 @@
 import { SegmentBuffers, SimplifiedSegmentBuffer } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifySegmentBuffers_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifySegmentBuffers_worker(array: SegmentBuffers): SimplifiedSegmentBuffer {
+function processWorkerTask(array: SegmentBuffers): SimplifiedSegmentBuffer {
   let result: SimplifiedSegmentBuffer = {};
   for (const item of array) {
     if (item.hasOwnProperty('BufferZones')) {

@@ -24,6 +24,8 @@ export interface UpdateRateDataGroup {
   id: number; // stop id
 }
 
+export type UpdateRateDataGroupArray = Array<UpdateRateDataGroup>
+
 export interface UpdateRateDataWriteAheadLogGroup {
   data: Array<UpdateRateData>;
   timestamp: number;

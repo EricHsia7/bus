@@ -1,11 +1,11 @@
 import { SegmentBuffers } from './index';
 
 self.onmessage = function (e) {
-  const result = extractSegmentBuffers_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function extractSegmentBuffers_worker(xml: string): SegmentBuffers {
+function processWorkerTask(xml: string): SegmentBuffers {
   const startingTagRegex = /^\s*<([a-z_]*)>/im;
   const endingTagRegex = /^\s*<\/([a-z_]*)>/im;
   const inlineRegex = /^\s*<([a-z_]*)>([^<>]*)<\/([a-z_]*)>/im;

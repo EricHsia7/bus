@@ -1,11 +1,11 @@
 import { Stop, SimplifiedStop } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyStop_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyStop_worker(array: Stop): SimplifiedStop {
+function processWorkerTask(array: Stop): SimplifiedStop {
   var result: SimplifiedStop = {};
   for (var item of array) {
     var key = `s_${item.Id}`;

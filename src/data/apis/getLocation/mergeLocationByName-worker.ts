@@ -3,11 +3,11 @@ import { md5 } from '../../../tools/index';
 import { mergeAddressesIntoOne } from '../../../tools/address';
 
 self.onmessage = function (e) {
-  const result = mergeLocationByName_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function mergeLocationByName_worker(object: SimplifiedLocation): MergedLocation {
+function processWorkerTask(object: SimplifiedLocation): MergedLocation {
   let result: MergedLocation = {};
   for (const key in object) {
     const hash = md5(

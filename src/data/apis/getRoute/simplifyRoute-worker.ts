@@ -1,11 +1,11 @@
 import { Route, SimplifiedRoute } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyRoute_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyRoute_worker(Route: Route): SimplifiedRoute {
+function processWorkerTask(Route: Route): SimplifiedRoute {
   let result = {};
   for (const item of Route) {
     const simplifiedItem = {};

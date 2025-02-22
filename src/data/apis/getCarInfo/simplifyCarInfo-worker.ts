@@ -1,11 +1,11 @@
 import { CarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyCarInfo_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyCarInfo_worker(CarInfo: CarInfo): SimplifiedCarInfo {
+function processWorkerTask(CarInfo: CarInfo): SimplifiedCarInfo {
   let result: SimplifiedCarInfo = {};
   for (const item of CarInfo) {
     const simplifiedItem: SimplifiedCarInfoItem = {};

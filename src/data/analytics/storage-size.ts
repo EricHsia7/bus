@@ -50,7 +50,11 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '分析';
       key = 'analytics';
       break;
-    case 'busArrivalTimeRecordsStore':
+    case 'busArrivalTimeDataWriteAheadLogStore':
+      name = '分析';
+      key = 'analytics';
+      break;
+    case 'busArrivalTimeDataStore':
       name = '分析';
       key = 'analytics';
       break;

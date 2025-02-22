@@ -2,11 +2,11 @@ import { convertToUnitVector } from '../../../tools/math';
 import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
 self.onmessage = function (e) {
-  const result = simplifyLocation_worker(e.data);
+  const result = processWorkerTask(e.data);
   self.postMessage(result); // Send the result back to the main thread
 };
 
-function simplifyLocation_worker(Location: Location): SimplifiedLocation {
+function processWorkerTask(Location: Location): SimplifiedLocation {
   let locationsByRoute = {};
   for (const item of Location) {
     const thisRouteID = item.routeId;
