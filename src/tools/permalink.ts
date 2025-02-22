@@ -3,31 +3,30 @@ import { openRoute } from '../interface/route/index';
 import { openLocation } from '../interface/location/index';
 
 export function openPermalink(): void {
-  var current_url = new URL(location.href);
-  var permalinkValue = current_url.searchParams.get('permalink');
-  if (!(permalinkValue === null)) {
-    var permalinkString = String(permalinkValue);
+  const current_url = new URL(location.href);
+  const permalinkValue = current_url.searchParams.get('permalink');
+  if (permalinkValue !== null) {
+    const permalinkString = String(permalinkValue);
     if (/^[0-1]\@(.*)(\~.*){0,1}/.test(permalinkString)) {
-      var array = permalinkString.split(/[\@\~]/);
-      var type = parseInt(array[0]);
+      const values = permalinkString.split(/[\@\~]/);
+      const type = parseInt(values[0]);
       //route
       switch (type) {
         case 0:
-          searchRouteByRouteID(parseInt(array[1], 16)).then((e) => {
-            if (e.length > 0) {
-              openRoute(e[0].id, e[0].pid);
+          searchRouteByRouteID(parseInt(values[1], 16)).then((result) => {
+            if (result !== false) {
+              openRoute(result.id, result.pid);
             } else {
-              searchRouteByName(array[2]).then((p) => {
-                if (p.length > 0) {
-                  openRoute(p[0].id, p[0].pid);
+              searchRouteByName(values[2]).then((result2) => {
+                if (result2.length > 0) {
+                  openRoute(result2[0].id, result2[0].pid);
                 }
               });
             }
           });
           break;
         case 1:
-          var hash = array[1];
-          openLocation(hash);
+          openLocation(values[1]);
           break;
         default:
           break;
@@ -37,7 +36,7 @@ export function openPermalink(): void {
 }
 
 export function getPermalink(type: number, approach: object): string {
-  var link = new URL('https://erichsia7.github.io/bus/');
+  const link = new URL('https://erichsia7.github.io/bus/');
   switch (type) {
     case 0:
       link.searchParams.set('permalink', `0@${parseInt(approach.id).toString(16)}~${approach.name}`);

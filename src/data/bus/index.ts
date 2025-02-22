@@ -8,28 +8,6 @@ import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
-/*
-export interface integratedBus {
-  carNumber: string;
-  type: string;
-  status: {
-    onStop: string;
-    situation: string;
-    text: string;
-  };
-  LocationName: string;
-  PathAttributeId: number;
-  RouteName: string;
-  RouteID: number;
-  FullPathAttributeId: Array<number>;
-  RouteEndPoints: {
-    RouteDeparture: string;
-    RouteDestination: string;
-  };
-  RouteDirection: string;
-}
-*/
-
 export interface integratedBus {
   properties: Array<{
     key: string;

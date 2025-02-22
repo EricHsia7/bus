@@ -1,5 +1,5 @@
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
 import { getUnicodes } from '../../tools/text';
@@ -10,19 +10,14 @@ let searchIndex = {};
 let searchList = [];
 let readyToSearch = false;
 
-export async function searchRouteByName(query: string): Promise<Array> {
+export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  let result = [];
+  let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
-    if (String(Route[key].n).indexOf(query) > -1) {
-      result.push({
-        id: parseInt(key.split('_')[1]),
-        pid: Route[key].pid,
-        dep: Route[key].dep,
-        des: Route[key].des,
-        n: Route[key].n
-      });
+    const thisRoute = Route[key];
+    if (String(thisRoute.n).indexOf(query) > -1) {
+      result.push(thisRoute);
     }
   }
   deleteDataReceivingProgress(requestID);
@@ -30,39 +25,29 @@ export async function searchRouteByName(query: string): Promise<Array> {
   return result;
 }
 
-export async function searchRouteByRouteID(RouteID: number): Promise<Array<SimplifiedRouteItem>> {
+export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedRouteItem | false> {
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  let result = [];
-  for (const key in Route) {
-    if (String(key) === `r_${RouteID}`) {
-      result.push({
-        id: parseInt(key.split('_')[1]),
-        pid: Route[key].pid,
-        dep: Route[key].dep,
-        des: Route[key].des,
-        n: Route[key].n
-      });
-    }
+  let found: boolean = false;
+  let result = {} as SimplifiedRouteItem;
+  const routeKey = `r_${RouteID}`;
+  if (Route.hasOwnProperty(routeKey)) {
+    result = Route[routeKey];
+    found = true;
   }
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  return result;
+  return found ? result : false;
 }
 
 export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
   const requestID = generateIdentifier('r');
-  const Route = await getRoute(requestID, true) as SimplifiedRoute
-  let result = [];
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
-    if (String(Route[key].pid).indexOf(PathAttributeId) > -1) {
-      result.push({
-        id: parseInt(key.split('_')[1]),
-        pid: Route[key].pid,
-        dep: Route[key].dep,
-        des: Route[key].des,
-        n: Route[key].n
-      });
+    const thisRoute = Route[key];
+    if (String(thisRoute.pid).indexOf(PathAttributeId) > -1) {
+      result.push(thisRoute);
     }
   }
   deleteDataReceivingProgress(requestID);
@@ -72,19 +57,20 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number): Pro
 
 export async function prepareForSearch() {
   const requestID = generateIdentifier('r');
-  const Route = await getRoute(requestID, true);
-  const mergedLocation = await getLocation(requestID, true);
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const mergedLocation = (await getLocation(requestID, true)) as MergedLocation;
   const CarInfo = await getCarInfo(requestID, true);
   let index = {};
   let list = [];
   let i = 0;
   for (const key in Route) {
+    const thisRoute = Route[key];
     const thisItem = {
-      id: parseInt(key.split('_')[1]),
-      pid: Route[key].pid,
-      dep: Route[key].dep,
-      des: Route[key].des,
-      n: Route[key].n,
+      id: thisRoute.id,
+      pid: thisRoute.pid,
+      dep: thisRoute.dep,
+      des: thisRoute.des,
+      n: thisRoute.n,
       hash: '',
       lo: '',
       la: '',
@@ -104,14 +90,15 @@ export async function prepareForSearch() {
     i += 1;
   }
   for (const key in mergedLocation) {
+    const thisLocation = mergedLocation[key];
     const thisItem = {
-      id: mergedLocation[key].id,
-      n: mergedLocation[key].n,
-      lo: mergedLocation[key].lo,
-      la: mergedLocation[key].la,
-      r: mergedLocation[key].r,
-      s: mergedLocation[key].s,
-      hash: mergedLocation[key].hash,
+      id: thisLocation.id,
+      n: thisLocation.n,
+      lo: thisLocation.lo,
+      la: thisLocation.la,
+      r: thisLocation.r,
+      s: thisLocation.s,
+      hash: thisLocation.hash,
       dep: '',
       des: '',
       pid: [],
@@ -129,12 +116,13 @@ export async function prepareForSearch() {
     i += 1;
   }
   for (const key in CarInfo) {
+    const thisCarInfo = CarInfo[key];
     const thisItem = {
-      id: CarInfo[key].BusId,
+      id: thisCarInfo.BusId,
       pid: [],
       dep: '',
       des: '',
-      n: CarInfo[key].CarNum,
+      n: thisCarInfo.CarNum,
       hash: '',
       lo: '',
       la: '',
