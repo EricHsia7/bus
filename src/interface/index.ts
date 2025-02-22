@@ -235,6 +235,7 @@ export function querySize(type: SizeType): Size {
     case 'bus-arrival-time-chart':
       width = windowWidth * 0.6 - 20;
       height = 75;
+      break;
     default:
       width = 0;
       height = 0;
