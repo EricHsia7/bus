@@ -33,7 +33,7 @@ if ('onconnect' in self) {
 }
 
 // Main processing function
-async function processWorkerTask(): Promise<void> {
+function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
   isProcessing = true;
 

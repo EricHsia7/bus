@@ -27,7 +27,7 @@ if ('onconnect' in self) {
   };
 }
 
-function processWorkerTask() {
+function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
