@@ -84,7 +84,10 @@ export function dateToRelativeTime(date: Date): string {
   if (interval >= 1) {
     return `${interval}分鐘前`;
   }
-  return `${seconds}秒前`;
+  if (seconds > 0) {
+    return `${seconds}秒前`;
+  }
+  return '現在';
 }
 
 export function formatTime(time: number, mode: number): string {
