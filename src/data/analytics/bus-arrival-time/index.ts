@@ -1,5 +1,6 @@
 import { generateIdentifier } from '../../../tools/index';
 import { findExtremum } from '../../../tools/math';
+import { WeekDayIndex } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules } from '../../personal-schedule/index';
@@ -23,6 +24,7 @@ export type BusArrivalTimeDataGroupStats = Array<number>;
 
 export interface BusArrivalTimeDataGroup {
   stats: BusArrivalTimeDataGroupStats;
+  day: WeekDayIndex;
   max: number;
   min: number;
   timestamp: number;
@@ -80,6 +82,7 @@ function mergeBusArrivalTimeDataStats(targetStats: BusArrivalTimeDataGroupStats,
 export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimestamp: number = now.getTime();
+  const currentDay = now.getDay();
   let needToReset = false;
   // Initialize
   if (!busArrivalTimeData_writeAheadLog_tracking) {
@@ -99,7 +102,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   if (isInPersonalSchedule(now)) {
     for (const item of EstimateTime) {
       const stopID = item.StopID;
-      const stopKey = `s_${stopID}`;
+      const stopKey = `s_${stopID}_${currentDay}`;
       if (busArrivalTimeData_trackedStops.indexOf(stopID) > -1) {
         if (!busArrivalTimeData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
           busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
@@ -116,7 +119,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
     }
     if (needToReset) {
       for (const stopID of busArrivalTimeData_trackedStops) {
-        const stopKey = `s_${stopID}`;
+        const stopKey = `s_${stopID}_${currentDay}`;
         const data = busArrivalTimeData_writeAheadLog_group.data[stopKey];
         let dataGroup = {} as BusArrivalTimeDataGroup;
         const existingData = await lfGetItem(6, stopKey);
@@ -127,6 +130,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
           dataGroup.min = newExtremum[0];
           dataGroup.max = newExtremum[1];
+          dataGroup.day = currentDay;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
@@ -135,6 +139,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const newExtremum = findExtremum(newStats);
           dataGroup.min = newExtremum[0];
           dataGroup.max = newExtremum[1];
+          dataGroup.day = currentDay;
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
         }
@@ -147,6 +152,9 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
 }
 
 export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
+  const now = new Date();
+  const currentTimestamp = now.getTime();
+  const currentDay = now.getDay();
   const keys = await lfListItemKeys(5);
   for (const key of keys) {
     const json = await lfGetItem(5, key);
@@ -158,11 +166,13 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       const existingData = await lfGetItem(6, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
+        const existingDataTime = new Date(existingDataObject.timestamp);
         const newStats = getBusArrivalTimeDataStats(thisStopData);
         dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
         const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
+        dataGroup.day = existingDataTime.getDay();
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
@@ -171,6 +181,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         const newExtremum = findExtremum(newStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
+        dataGroup.day = currentDay;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }

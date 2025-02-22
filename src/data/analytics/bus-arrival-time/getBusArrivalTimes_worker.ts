@@ -73,7 +73,7 @@ async function processWorkerTask(): Promise<void> {
     }
   }
 
-  // ─── Send the complete HTML back to the main thread ───
+  // Send the complete HTML back to the main thread
   port.postMessage([result, taskID]);
 
   isProcessing = false;
