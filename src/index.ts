@@ -292,7 +292,7 @@ window.bus = {
       discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageRecords();
       // discardExpiredEstimateTimeRecordsForBusArrivalTime();
-      recoverBusArrivalTimeDataFromWriteAheadLog()
+      recoverBusArrivalTimeDataFromWriteAheadLog();
       discardExpiredRecentViews();
       discardExpiredUpdateRateDataGroups().then(function () {
         initializeUpdateRateDataGroups().then(function () {

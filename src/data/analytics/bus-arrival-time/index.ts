@@ -223,6 +223,8 @@ port.onerror = function (e) {
 export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
   const personalSchedules = await listPersonalSchedules();
   const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
+
+  const taskID = generateIdentifier('t');
   const result = await new Promise((resolve, reject) => {
     drawBusArrivalTimeGraphContentWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
     port.onerror = function (e) {
