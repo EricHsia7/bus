@@ -41,7 +41,7 @@ export interface BusArrivalTimeDataWriteAheadLog {
 
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
-  graph: string; // svg
+  chart: string; // svg
 }
 
 export interface BusArrivalTimes {
@@ -193,7 +193,7 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
   return result;
 }
 
-let drawBusArrivalTimeGraphContentWorkerResponses = {};
+let getBusArrivalTimesWorkerResponses = {};
 var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -209,9 +209,9 @@ if (typeof SharedWorker !== 'undefined') {
 // Handle messages from the worker
 port.onmessage = function (e) {
   const [result, taskID] = e.data;
-  if (drawBusArrivalTimeGraphContentWorkerResponses[taskID]) {
-    drawBusArrivalTimeGraphContentWorkerResponses[taskID](result); // Resolve the correct promise
-    delete drawBusArrivalTimeGraphContentWorkerResponses[taskID]; // Clean up the response handler
+  if (getBusArrivalTimesWorkerResponses[taskID]) {
+    getBusArrivalTimesWorkerResponses[taskID](result); // Resolve the correct promise
+    delete getBusArrivalTimesWorkerResponses[taskID]; // Clean up the response handler
   }
 };
 
@@ -221,12 +221,13 @@ port.onerror = function (e) {
 };
 
 export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
+  const taskID = generateIdentifier('t');
+
   const personalSchedules = await listPersonalSchedules();
   const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
 
-  const taskID = generateIdentifier('t');
   const result = await new Promise((resolve, reject) => {
-    drawBusArrivalTimeGraphContentWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+    getBusArrivalTimesWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
     port.onerror = function (e) {
       reject(e.message);
     };

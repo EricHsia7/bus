@@ -63,7 +63,7 @@ export interface IntegratedRoute {
   PathAttributeId: Array<number>;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, requestID: string): Promise<IntegratedRoute> {
+export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedRoute> {
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   setDataReceivingProgress(requestID, 'getStop_0', 0, false);
@@ -85,7 +85,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
-  const BusArrivalTimes = await getBusArrivalTimes(300, 150);
+  const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
 
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 

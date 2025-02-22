@@ -66,14 +66,14 @@ async function processWorkerTask(): Promise<void> {
         pathCommand += ` L${x - barWidth},${chartHeight}`;
       }
       pathCommand += ' Z';
-      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg"><path d="${pathCommand}" fill="black" stroke="none" stroke-width="0"/></svg>`;
+      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg"><path d="${pathCommand}" stroke="none" stroke-width="0"/></svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
       if (!result.hasOwnProperty(stopKey)) {
         result[stopKey] = [];
       }
       result[stopKey].push({
         personalSchedule: personalSchedule,
-        graph: svg
+        chart: svg
       });
     }
   }

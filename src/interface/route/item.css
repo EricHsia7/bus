@@ -638,10 +638,10 @@
   color: var(--b-cssvar-333333);
 }
 
-/* body > buses, overlapping routes, bus arrival times > bus, overlapping route, bus arrival time > title > car number, overlapping route name, time */
+/* body > buses, overlapping routes, bus arrival times > bus, overlapping route, bus arrival time > title > car number, overlapping route name, personal schedule name */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_title .css_route_group_item_bus_car_number,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_title .css_route_group_item_overlapping_route_name,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_title .css_route_group_item_bus_arrival_time_time {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_title .css_route_group_item_bus_arrival_time_personal_schedule_name {
   position: absolute;
   top: 0px;
   left: 25px;
@@ -656,9 +656,9 @@
   overflow: hidden;
 }
 
-/* body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time attributes */
+/* body > buses, bus arrival times > bus, bus arrival time > car attributes, bus arrival time chart */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart {
   position: absolute;
   top: 36px;
   left: 10px;
@@ -666,12 +666,23 @@
   height: 75px;
 }
 
+/* body > bus arrival times > bus arrival time > bus arrival time chart > svg */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 75px;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path {
+  fill: var(--b-cssvar-333333);
+}
+
+/* body > buses > bus > attributes > car route, car status, car type */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes .css_route_group_item_bus_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes .css_route_group_item_bus_car_status,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes .css_route_group_item_bus_car_type,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_name,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_period,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_days {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes .css_route_group_item_bus_car_type {
   font-size: 17px;
   position: absolute;
   left: 0px;
@@ -694,18 +705,6 @@
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus .css_route_group_item_bus_attributes .css_route_group_item_bus_car_type {
-  top: 50px;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_name {
-  top: 0px;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_period {
-  top: 25px;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_attributes .css_route_group_item_bus_arrival_time_personal_schedule_days {
   top: 50px;
 }
 

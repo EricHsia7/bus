@@ -109,7 +109,7 @@ export interface IntegratedLocation {
   dataUpdateTime: number;
 }
 
-export async function integrateLocation(hash: string, requestID: string): Promise<IntegratedLocation> {
+export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedLocation> {
   setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
@@ -126,7 +126,7 @@ export async function integrateLocation(hash: string, requestID: string): Promis
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
-  const BusArrivalTimes = await getBusArrivalTimes(300, 150); // TODO: dynamically calculate the size
+  const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
