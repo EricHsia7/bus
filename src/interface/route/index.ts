@@ -551,7 +551,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 async function refreshRoute() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('bus-arrival-time-chart');
+  const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;

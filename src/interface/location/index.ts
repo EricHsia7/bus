@@ -600,7 +600,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 async function refreshLocation() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('bus-arrival-time-chart');
+  const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
