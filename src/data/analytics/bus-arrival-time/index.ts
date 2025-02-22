@@ -160,19 +160,18 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
     const json = await lfGetItem(5, key);
     const object = JSON.parse(json) as BusArrivalTimeDataWriteAheadLog;
     const thisID = object.id;
-    for (const stopKey in object) {
+    for (const stopKey in object.data) {
       const thisStopData = object[stopKey];
       let dataGroup = {} as BusArrivalTimeDataGroup;
       const existingData = await lfGetItem(6, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-        const existingDataTime = new Date(existingDataObject.timestamp);
         const newStats = getBusArrivalTimeDataStats(thisStopData);
         dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
         const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
-        dataGroup.day = existingDataTime.getDay();
+        dataGroup.day = existingDataObject.day;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
