@@ -569,7 +569,7 @@
   position: absolute;
   top: 0px;
   left: 25px;
-  width: calc(100% - 20px - 5px - 60px);
+  width: calc(100% - 20px - 5px - 80px);
   height: 20px;
   font-size: 20px;
   line-height: 20px;
@@ -585,9 +585,9 @@
   position: absolute;
   top: 0px;
   right: 0px;
-  width: 60px;
+  width: 80px;
   height: 20px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
