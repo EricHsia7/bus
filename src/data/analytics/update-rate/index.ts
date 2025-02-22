@@ -204,7 +204,7 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
     const thisTimestamp = object.timestamp;
     const thisID = object.id;
     if (thisTimestamp > oneWeekAgo) {
-      for (const stopKey in object) {
+      for (const stopKey in object.data) {
         const thisStopData = object[stopKey];
         let dataGroup = {} as UpdateRateDataGroup;
         const existingData = await lfGetItem(3, stopKey);
