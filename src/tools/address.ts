@@ -4,23 +4,23 @@ import { areItemsDifferent } from './array';
 interface AddressPart {
   suffixes?: string;
   key: keyof ParsedAddress;
-  process: (e: string[] | null) => string[] | number[] | null;
+  process: (e: Array<string> | null) => Array<string> | Array<number> | null;
   type: number;
 }
 
 export interface ParsedAddress {
-  city: string[];
-  district: string[];
-  area: string[];
-  road: string[];
-  road_section: number[];
-  alley: number[];
-  alley_branch: number[];
-  doorplate: number[];
-  floornumber: string[];
-  exit: string[];
-  direction: string[];
-  [key: string]: string[] | number[] | null;
+  city: Array<string>;
+  district: Array<string>;
+  area: Array<string>;
+  road: Array<string>;
+  road_section: Array<number>;
+  alley: Array<number>;
+  alley_branch: Array<number>;
+  doorplate: Array<number>;
+  floornumber: Array<string>;
+  exit: Array<string>;
+  direction: Array<string>;
+  [key: string]: Array<string> | Array<number> | null;
 }
 
 interface FeatureCounts {
