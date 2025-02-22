@@ -3,12 +3,8 @@ import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
 import { getUnicodes } from '../../tools/text';
-import { getCarInfo } from '../apis/getCarInfo/index';
+import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
-
-let searchIndex = {};
-let searchList = [];
-let readyToSearch = false;
 
 export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {
   const requestID = generateIdentifier('r');
@@ -55,14 +51,39 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number): Pro
   return result;
 }
 
+interface SearchItem {
+  id: string | number | Array<number>;
+  pid: Array<number>;
+  dep: string;
+  des: string;
+  n: string;
+  hash: string;
+  lo: Array<number>;
+  la: Array<number>;
+  r: Array<Array<number>>;
+  s: Array<Array<number>>;
+  type: 0 | 1 | 2; // 0: route, 1: location, 2: car info
+}
+
+export interface SearchResult {
+  item: SearchItem;
+  score: number;
+}
+
+type SearchIndex = { [unicodeKey: string]: number };
+
+let searchIndex: SearchIndex = {};
+let searchList: Array<SearchItem> = [];
+let readyToSearch: boolean = false;
+
 export async function prepareForSearch() {
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const mergedLocation = (await getLocation(requestID, true)) as MergedLocation;
-  const CarInfo = await getCarInfo(requestID, true);
-  let index = {};
-  let list = [];
-  let i = 0;
+  const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;
+  let index: SearchIndex = {};
+  let list: Array<SearchItem> = [];
+  let i: number = 0;
   for (const key in Route) {
     const thisRoute = Route[key];
     const thisItem = {
@@ -162,7 +183,7 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
   return score;
 }
 
-export function searchFor(query: string, limit: number): Array {
+export function searchFor(query: string, limit: number): Array<SearchResult> {
   if (!readyToSearch) {
     return [];
   }
@@ -201,7 +222,7 @@ export function searchFor(query: string, limit: number): Array {
     }
   }
 
-  let result = [];
+  let result: Array<SearchResult> = [];
   let quantity = 0;
 
   // Prioritize exact matches for buses
