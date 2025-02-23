@@ -627,6 +627,16 @@
   fill: var(--b-cssvar-main-color);
 }
 
+/* segment buffer: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[segment-buffer="true"] .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart svg path {
+  fill: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[nearest="true"] .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_chart svg path {
+  fill: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
 /* items > item > body > buses > bus > attributes > car route, car status, car type */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_route,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_attributes .css_location_group_item_bus_car_status,
