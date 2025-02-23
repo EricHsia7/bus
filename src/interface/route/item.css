@@ -714,12 +714,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path {
-  fill: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  fill: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path {
-  fill: var(--b-cssvar-ededf2-inflected-to-user-position);
+  fill: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* body > buses > bus > attributes > car route, car status, car type */
