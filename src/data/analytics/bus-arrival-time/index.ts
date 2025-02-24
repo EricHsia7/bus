@@ -127,8 +127,9 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
           const newStats = getBusArrivalTimeDataStats(data);
-          dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
-          const newExtremum = findExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
+          const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
+          dataGroup.stats = mergedStats;
+          const newExtremum = findExtremum(mergedStats);
           dataGroup.min = newExtremum[0];
           dataGroup.max = newExtremum[1];
           dataGroup.day = currentDay;
