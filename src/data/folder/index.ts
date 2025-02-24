@@ -54,6 +54,8 @@ export interface FolderContentEmpty {
 
 export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
 
+export type FolderContentArray = Array<FolderContent>;
+
 export interface Folder {
   name: string;
   icon: MaterialSymbols;
@@ -64,11 +66,17 @@ export interface Folder {
 export type FolderArray = Array<Folder>;
 
 export interface FolderWithContent extends Folder {
-  content: Array<FolderContent>;
+  content: FolderContentArray;
   contentLength: number;
 }
 
 export type FolderWithContentArray = Array<FolderWithContent>;
+
+export interface FolderWithContentIndex extends Folder {
+  contentIndex: Array<string>;
+}
+
+export type FolderWithContentIndexArray = Array<FolderWithContentIndex>;
 
 const FolderList: { [key: string]: Folder } = {};
 
@@ -187,8 +195,8 @@ export function listFolders(): FolderArray {
   return result;
 }
 
-export async function listFolderContent(folderID: Folder['id']): Promise<Array<FolderContent>> {
-  const result: Array<FolderContent> = [];
+export async function listFolderContent(folderID: Folder['id']): Promise<FolderContentArray> {
+  const result: FolderContentArray = [];
 
   const folderKey: string = `f_${folderID}`;
   const thisFolder = getFolder(folderID);
@@ -204,8 +212,7 @@ export async function listFolderContent(folderID: Folder['id']): Promise<Array<F
   if (thisFolderContentIndexArray.length === 0) {
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
-      id: 0,
-      index: 0
+      id: 0
     };
     result.push(emptyItem);
     return result;
@@ -249,12 +256,12 @@ export async function listFoldersWithContent(): Promise<FolderWithContentArray> 
   return result;
 }
 
-export async function listAllFolderContent(types: Array<FolderContent['type']>): Promise<Array<FolderContent>> {
+export async function listAllFolderContent(types: Array<FolderContent['type']>): Promise<FolderContentArray> {
   let useFilter: boolean = true;
   if (typeof types !== 'object' || !Array.isArray(types)) {
     useFilter = false;
   }
-  let result: Array<FolderContent> = [];
+  let result: FolderContentArray = [];
   const keys = await lfListItemKeys(13);
   for (const key of keys) {
     const json = await lfGetItem(13, key);
@@ -269,6 +276,42 @@ export async function listAllFolderContent(types: Array<FolderContent['type']>):
       }
     }
   }
+  return result;
+}
+
+export interface FoldersExport {
+  folders: FolderWithContentIndexArray;
+  content: FolderContentArray;
+}
+
+export async function exportFolders(): Promise<FoldersExport> {
+  const folderKeys = await lfListItemKeys(11);
+  const folders: FolderWithContentIndexArray = [];
+  for (const folderKey of folderKeys) {
+    const thisFolderJSON = await lfGetItem(11, folderKey);
+    const thisFolderContentIndexJSON = await lfGetItem(12, folderKey);
+    if (thisFolderJSON && thisFolderContentIndexJSON) {
+      const thisFolderObject = JSON.parse(thisFolderJSON) as FolderWithContentIndex;
+      const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON);
+      thisFolderObject.contentIndex = thisFolderContentIndexArray;
+      folders.push(thisFolderObject);
+    }
+  }
+  const contentKeys = await lfListItemKeys(13);
+  const content: FolderContentArray = [];
+  for (const contentKey of contentKeys) {
+    const thisContentJSON = await lfGetItem(13, contentKey);
+    if (thisContentJSON) {
+      const thisContentObject = JSON.parse(thisContentJSON) as FolderContent;
+      content.push(thisContentObject);
+    }
+  }
+
+  const result: FoldersExport = {
+    folders: folders,
+    content: content
+  };
+
   return result;
 }
 

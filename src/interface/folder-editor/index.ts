@@ -1,4 +1,4 @@
-import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
+import { Folder, FolderContent, FolderContentArray, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
@@ -57,7 +57,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   };
 }
 
-function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
+function updateFolderEditorField(folder: Folder, content: FolderContentArray): void {
   NameInputElement.value = folder.name;
   IconInputElement.value = folder.icon;
 
