@@ -69,7 +69,7 @@ function processWorkerTask(): void {
         verticalGridlinePathCommand += ` M${i * verticalGridlineGap},0`;
         verticalGridlinePathCommand += ` L${i * verticalGridlineGap},${chartHeight}`;
       }
-      const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" class="css_bus_arrival_time_chart_vertical_gridline"/>`;
+      const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
       // Bars
       let barsPathCommand = '';
@@ -82,7 +82,7 @@ function processWorkerTask(): void {
         barsPathCommand += ` L${x - barWidth},${chartHeight}`;
       }
       barsPathCommand += ' Z';
-      const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" class="css_bus_arrival_time_chart_bars"/>`;
+      const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
 
       const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${bars}</svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
