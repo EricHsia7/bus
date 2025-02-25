@@ -65,7 +65,7 @@ function processWorkerTask(): void {
       }
       const verticalGridlineQuantity = statsArray / verticalGridlineInterval;
       const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
-      for (let i = verticalGridlineQuantity - 1; i >= 0; i++) {
+      for (let i = verticalGridlineQuantity - 1; i >= 0; i--) {
         verticalGridlinePathCommand += ` M${i * verticalGridlineGap},0`;
         verticalGridlinePathCommand += ` M${i * verticalGridlineGap},${chartHeight}`;
       }
