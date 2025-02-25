@@ -54,17 +54,38 @@ function processWorkerTask(): void {
       const statsMax = busArrivalTimeDataGroup.max;
       const statsArray = busArrivalTimeDataGroup.stats.slice(startIndex, endIndex);
       const statsArrayLength = statsArray.length;
-      let pathCommand = '';
-      pathCommand += `M${chartWidth},${chartHeight}`;
+
+      // Gridline
+      let verticalGridlinePathCommand = '';
+      let verticalGridlineInterval = 0; // minutes
+      if (statsArrayLength / 30 <= 3) {
+        verticalGridlineInterval = 10;
+      } else {
+        verticalGridlineInterval = 30;
+      }
+      const verticalGridlineQuantity = statsArray / verticalGridlineInterval;
+      const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
+      for (let i = verticalGridlineQuantity - 1; i >= 0; i++) {
+        verticalGridlinePathCommand += ` M${i * verticalGridlineGap},0`;
+        verticalGridlinePathCommand += ` M${i * verticalGridlineGap},${chartHeight}`;
+      }
+      verticalGridlinePathCommand += ' Z';
+      const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" class="css_bus_arrival_time_chart_vertical_gridline"/>`;
+
+      // Bars
+      let barsPathCommand = '';
+      barsPathCommand += `M${chartWidth},${chartHeight}`;
       for (let j = statsArrayLength - 1; j >= 0; j--) {
         let x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
         let y = (1 - statsArray[j] / statsMax) * chartHeight;
-        pathCommand += ` L${x},${y}`;
-        pathCommand += ` L${x - barWidth},${y}`;
-        pathCommand += ` L${x - barWidth},${chartHeight}`;
+        barsPathCommand += ` L${x},${y}`;
+        barsPathCommand += ` L${x - barWidth},${y}`;
+        barsPathCommand += ` L${x - barWidth},${chartHeight}`;
       }
-      pathCommand += ' Z';
-      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg"><path d="${pathCommand}" stroke="none" stroke-width="0"/></svg>`;
+      barsPathCommand += ' Z';
+      const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" class="css_bus_arrival_time_chart_bars"/>`;
+
+      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${bars}</svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
       if (!result.hasOwnProperty(stopKey)) {
         result[stopKey] = [];
