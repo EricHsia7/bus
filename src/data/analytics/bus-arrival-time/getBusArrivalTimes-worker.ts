@@ -66,13 +66,14 @@ function processWorkerTask(): void {
       const verticalGridlineQuantity = Math.floor(statsArrayLength / verticalGridlineInterval);
       const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
       for (let i = verticalGridlineQuantity - 1; i >= 0; i--) {
-        verticalGridlinePathCommand += ` M${i * verticalGridlineGap},0`;
-        verticalGridlinePathCommand += ` L${i * verticalGridlineGap},${chartHeight}`;
+        verticalGridlinePathCommand += ` M${0.35 / 2 + i * verticalGridlineGap},0`;
+        verticalGridlinePathCommand += ` L${0.35 / 2 + i * verticalGridlineGap},${chartHeight}`;
+        // the stroke alignment is "center"
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
       // Bottom line
-      const bottomLinePathCommand = `M0,${chartHeight} L${chartWidth},${chartHeight}`;
+      const bottomLinePathCommand = `M0,${chartHeight} L${chartWidth},${chartHeight - 0.35 / 2}`;
       const bottomLine = `<path d="${bottomLinePathCommand}" fill="none" stroke-width="0.35" component="bottom-line"/>`;
 
       // Bars
