@@ -708,7 +708,9 @@
   height: 75px;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path[component="vertical-gridline"] {
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path[component="vertical-gridline"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time .css_route_group_item_bus_arrival_time_chart svg path[component="bottom-line"]   {
   stroke: var(--b-cssvar-aeaeb2);
 }
 

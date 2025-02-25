@@ -71,6 +71,10 @@ function processWorkerTask(): void {
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
+      // Bottom line
+      const bottomLinePathCommand = `M0,${chartHeight} L${chartWidth},${chartHeight}`;
+      const bottomLine = `<path d="${bottomLinePathCommand}" fill="none" stroke-width="0.35" component="bottom-line"/>`;
+
       // Bars
       let barsPathCommand = '';
       barsPathCommand += `M${chartWidth},${chartHeight}`;
@@ -84,7 +88,7 @@ function processWorkerTask(): void {
       barsPathCommand += ' Z';
       const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
 
-      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${bars}</svg>`;
+      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${bottomLine}${bars}</svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
       if (!result.hasOwnProperty(stopKey)) {
         result[stopKey] = [];
