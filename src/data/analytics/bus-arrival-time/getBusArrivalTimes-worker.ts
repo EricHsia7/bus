@@ -63,13 +63,12 @@ function processWorkerTask(): void {
       } else {
         verticalGridlineInterval = 30;
       }
-      const verticalGridlineQuantity = statsArray / verticalGridlineInterval;
+      const verticalGridlineQuantity = statsArrayLength / verticalGridlineInterval;
       const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
       for (let i = verticalGridlineQuantity - 1; i >= 0; i--) {
         verticalGridlinePathCommand += ` M${i * verticalGridlineGap},0`;
-        verticalGridlinePathCommand += ` M${i * verticalGridlineGap},${chartHeight}`;
+        verticalGridlinePathCommand += ` L${i * verticalGridlineGap},${chartHeight}`;
       }
-      verticalGridlinePathCommand += ' Z';
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" class="css_bus_arrival_time_chart_vertical_gridline"/>`;
 
       // Bars
