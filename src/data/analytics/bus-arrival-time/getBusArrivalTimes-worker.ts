@@ -32,6 +32,18 @@ if ('onconnect' in self) {
   };
 }
 
+let canvas;
+let ctx;
+let supportOffscreenCanvas: boolean = false;
+if ('OffscreenCanvas' in self) {
+  canvas = new OffscreenCanvas();
+  ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  const fontFamily: string = '"Noto Sans TC", sans-serif';
+  ctx.font = `400 ${12}px ${fontFamily}`;
+  ctx.textBaseline = 'top';
+  supportOffscreenCanvas = true;
+}
+
 // Main processing function
 function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
@@ -55,7 +67,8 @@ function processWorkerTask(): void {
       const statsArray = busArrivalTimeDataGroup.stats.slice(startIndex, endIndex);
       const statsArrayLength = statsArray.length;
 
-      // Gridline
+      // Gridline and labels
+      let verticalGridlineLabels = '';
       let verticalGridlinePathCommand = '';
       let verticalGridlineInterval = 0; // minutes
       if (statsArrayLength / 30 <= 3) {
@@ -66,9 +79,23 @@ function processWorkerTask(): void {
       const verticalGridlineQuantity = Math.floor(statsArrayLength / verticalGridlineInterval);
       const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
       for (let i = verticalGridlineQuantity - 1; i >= 0; i--) {
-        verticalGridlinePathCommand += ` M${0.35 / 2 + i * verticalGridlineGap},0`;
-        verticalGridlinePathCommand += ` L${0.35 / 2 + i * verticalGridlineGap},${chartHeight}`;
+        const x = 0.35 / 2 + i * verticalGridlineGap;
+        verticalGridlinePathCommand += ` M${x},0`;
+        verticalGridlinePathCommand += ` L${x},${chartHeight}`;
         // the stroke alignment is "center"
+        const labelTime = startIndex + i * verticalGridlineInterval;
+        const labelMinutes = labelTime % 60;
+        const labelHours = (labelTime - labelMinutes) / 60;
+        const label = `${labelHours.toString().padStart(2, '0')}:${labelMinutes.toString().padStart(2, '0')}`;
+        let labelWidth = 30;
+        let labelHeight = 12;
+        if (supportOffscreenCanvas) {
+          const textMeasurement = ctx.measureText(label) as TextMetrics;
+          labelWidth = textMeasurement.width;
+          labelHeight = textMeasurement.actualBoundingBoxDescent;
+        }
+        const y = (chartHeight - labelHeight) / 2;
+        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})">${label}</text>`;
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
@@ -89,7 +116,7 @@ function processWorkerTask(): void {
       barsPathCommand += ' Z';
       const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
 
-      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${bottomLine}${bars}</svg>`;
+      const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${verticalGridlineLabels}${bottomLine}${bars}</svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
       if (!result.hasOwnProperty(stopKey)) {
         result[stopKey] = [];
