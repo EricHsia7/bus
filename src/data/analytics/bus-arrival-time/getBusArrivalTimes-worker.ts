@@ -97,7 +97,7 @@ function processWorkerTask(): void {
           labelHeight = textMeasurement.actualBoundingBoxDescent;
         }
         const y = (chartHeight - labelHeight) / 2;
-        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})" dominant-baseline="middle" font-size="${fontSize}" component="label">${label}</text>`;
+        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})" dominant-baseline="hanging" font-size="${fontSize}" component="label">${label}</text>`;
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
