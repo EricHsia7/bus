@@ -7,12 +7,12 @@ export async function shareRoutePermalink(RouteID: number) {
   if (thisRoute !== false) {
     const link = getPermalink(0, {
       id: RouteID,
-      name: search[0].n
+      name: thisRoute.n
     });
     if (navigator.share) {
       navigator
         .share({
-          title: search[0].n,
+          title: thisRoute.n,
           url: link
         })
         .then(() => {
