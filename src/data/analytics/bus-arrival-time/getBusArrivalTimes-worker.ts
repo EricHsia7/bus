@@ -32,14 +32,16 @@ if ('onconnect' in self) {
   };
 }
 
+const fontSize = 12
+const fontFamily: string = '"Noto Sans TC", sans-serif';
+
 let canvas;
 let ctx;
 let supportOffscreenCanvas: boolean = false;
 if ('OffscreenCanvas' in self) {
   canvas = new OffscreenCanvas();
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-  const fontFamily: string = '"Noto Sans TC", sans-serif';
-  ctx.font = `400 ${12}px ${fontFamily}`;
+  ctx.font = `400 ${fontSize}px ${fontFamily}`;
   ctx.textBaseline = 'top';
   supportOffscreenCanvas = true;
 }
@@ -95,7 +97,7 @@ function processWorkerTask(): void {
           labelHeight = textMeasurement.actualBoundingBoxDescent;
         }
         const y = (chartHeight - labelHeight) / 2;
-        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})">${label}</text>`;
+        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})" font-size="${fontSize}" component="label">${label}</text>`;
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
