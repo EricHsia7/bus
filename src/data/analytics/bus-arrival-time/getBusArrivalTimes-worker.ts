@@ -99,6 +99,7 @@ function processWorkerTask(): void {
         }
         const y = (chartHeight - labelHeight) / 2;
         verticalGridlineLabels += `<text x="${x + 3}" y="${y}" transform="rotate(-90 ${(x + 3 + x + 3 + labelWidth) / 2} ${(y + y + labelHeight) / 2})" font-weight="${fontWeight}" font-size="${fontSize}" font-family="${fontFamily}" component="label">${label}</text>`;
+        // rotate(degree x y) x: absolute x of the origin, y: absolute y of the origin, origin: a point around which an element rotates
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
