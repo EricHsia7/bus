@@ -49,6 +49,7 @@ if ('OffscreenCanvas' in self) {
 
 // Main processing function
 function processWorkerTask(): void {
+  console.log(supportOffscreenCanvas);
   if (isProcessing || taskQueue.length === 0) return;
   isProcessing = true;
 
