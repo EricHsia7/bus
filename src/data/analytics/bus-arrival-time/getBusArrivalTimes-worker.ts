@@ -39,7 +39,7 @@ const fontFamily: string = `'Noto Sans TC', sans-serif`;
 let canvas;
 let ctx;
 let supportOffscreenCanvas: boolean = false;
-if ('OffscreenCanvas' in self) {
+if (typeof OffscreenCanvas !== 'undefined') {
   canvas = new OffscreenCanvas();
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
@@ -49,7 +49,6 @@ if ('OffscreenCanvas' in self) {
 
 // Main processing function
 function processWorkerTask(): void {
-  console.log(supportOffscreenCanvas);
   if (isProcessing || taskQueue.length === 0) return;
   isProcessing = true;
 
