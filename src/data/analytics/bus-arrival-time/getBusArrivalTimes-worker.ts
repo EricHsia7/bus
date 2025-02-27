@@ -40,7 +40,7 @@ let canvas;
 let ctx;
 let supportOffscreenCanvas: boolean = false;
 if (typeof OffscreenCanvas !== 'undefined') {
-  canvas = new OffscreenCanvas();
+  canvas = new OffscreenCanvas(100, 100);
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   ctx.textBaseline = 'top';
