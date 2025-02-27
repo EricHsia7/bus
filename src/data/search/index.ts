@@ -170,7 +170,7 @@ export async function prepareForSearch() {
 }
 
 function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
-  // 1. Index data by character for well-differentiated entries
+  // 1. Index data by characters for entries well-differentiated in characters
   // 2. The results are ranked by positional difference for relevance
   // 3. Some entries are prioritized for exact matches
   let score = 0;
