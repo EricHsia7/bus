@@ -35,6 +35,9 @@ export async function prepareForMaterialSymbolsSearch() {
 }
 
 function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
+  // 1. The exact matches are highly prioritized here
+  // 2. The penalty mechanism is for missing matches
+  // 3. It might "outlet" partially relevant results
   let score = 0;
   let i = 0;
   for (const unicode of resultUnicodes) {

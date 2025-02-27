@@ -32,7 +32,7 @@ if ('onconnect' in self) {
   };
 }
 
-const fontSize = 12;
+const fontSize = 10;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 
 let canvas;
