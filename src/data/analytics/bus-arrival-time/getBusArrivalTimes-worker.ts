@@ -40,7 +40,7 @@ let canvas;
 let ctx;
 let supportOffscreenCanvas: boolean = false;
 if (typeof OffscreenCanvas !== 'undefined') {
-  canvas = new OffscreenCanvas(100, 100);
+  canvas = new OffscreenCanvas(64, 64);
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   ctx.textBaseline = 'top';
@@ -98,7 +98,7 @@ function processWorkerTask(): void {
           labelHeight = textMeasurement.actualBoundingBoxDescent;
         }
         const y = (chartHeight - labelHeight) / 2;
-        verticalGridlineLabels += `<text x="${x}" y="${y}" transform="rotate(-90 ${(x + x + labelWidth) / 2} ${(y + y + labelHeight) / 2})" font-weight="${fontWeight}" font-size="${fontSize}" font-family="${fontFamily}" component="label">${label}</text>`;
+        verticalGridlineLabels += `<text x="${x + 3}" y="${y}" transform="rotate(-90 ${(x + 3 + x + 3 + labelWidth) / 2} ${(y + y + labelHeight) / 2})" font-weight="${fontWeight}" font-size="${fontSize}" font-family="${fontFamily}" component="label">${label}</text>`;
       }
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
