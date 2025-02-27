@@ -156,57 +156,6 @@ export function calculateAverage(array: Array<number>): number {
   }
 }
 
-export function aggregateNumbers(array: Array<number>, exponent: number): Array<number> {
-  const arrLength = array.length;
-
-  if (arrLength < 3) {
-    return array;
-  }
-
-  let sum: number = 0;
-  for (let i = 0; i < arrLength; i++) {
-    sum += array[i];
-  }
-  let average = sum / arrLength;
-
-  let SquaredDeviationSum: number = 0;
-  for (let j = 0; j < arrLength; j++) {
-    SquaredDeviationSum += Math.pow(array[j] - average, 2);
-  }
-  const standardDeviation = Math.sqrt(SquaredDeviationSum / arrLength);
-
-  let exponentials = [];
-  let exponentialSum = 0;
-  for (let k = 0; k < arrLength; k++) {
-    const exponential = Math.exp(array[k] / standardDeviation);
-    exponentialSum += exponential;
-    exponentials.push(exponential);
-  }
-
-  let P = Math.pow(arrLength, exponent);
-  let groupedNumbers = {};
-  for (let l = 0; l < arrLength; l++) {
-    const key = `k_${Math.floor((exponentials[l] / exponentialSum) * P)}`;
-    if (!groupedNumbers.hasOwnProperty(key)) {
-      groupedNumbers[key] = {
-        sum: 0,
-        len: 0
-      };
-    }
-    groupedNumbers[key].sum += array[l];
-    groupedNumbers[key].len += 1;
-  }
-
-  let result = [];
-  for (const key in groupedNumbers) {
-    const thisGroup = groupedNumbers[key];
-    result.push(Math.floor(thisGroup.sum / thisGroup.len));
-  }
-
-  result.sort((a, b) => a - b);
-  return result;
-}
-
 export function findExtremum(array: Array<number>): [number, number] {
   const arrayLength = array.length;
   if (arrayLength === 0) {

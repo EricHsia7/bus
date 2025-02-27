@@ -385,10 +385,12 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   if (!(foldersLength === currentFolderSeatQuantity)) {
     const capacity = currentFolderSeatQuantity - foldersLength;
     if (capacity < 0) {
+      const fragment = new DocumentFragment();
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newFolderElement = generateElementOfFolder();
-        HomeFoldersElement.appendChild(newFolderElement.element);
+        fragment.appendChild(newFolderElement.element);
       }
+      HomeFoldersElement.append(fragment);
     } else {
       const FolderElements = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder');
       for (let o = 0; o < Math.abs(capacity); o++) {
