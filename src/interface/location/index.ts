@@ -55,9 +55,13 @@ var currentHashSet_hash: string = '';
 var tabPadding: number = 20;
 
 export function initializeLocationSliding(): void {
-  LocationGroupsElement.addEventListener('touchstart', function () {
-    locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
-  });
+  LocationGroupsElement.addEventListener(
+    'touchstart',
+    function () {
+      locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
+    },
+    { passive: true }
+  );
 
   LocationGroupsElement.addEventListener(
     'scroll',

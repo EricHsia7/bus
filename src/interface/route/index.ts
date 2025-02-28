@@ -57,9 +57,13 @@ let currentRouteIDSet_PathAttributeId: Array<number> = [];
 let tabPadding: number = 20;
 
 export function initializeRouteSliding(): void {
-  RouteGroupsElement.addEventListener('touchstart', function () {
-    routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
-  });
+  RouteGroupsElement.addEventListener(
+    'touchstart',
+    function () {
+      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
+    },
+    { passive: true }
+  );
 
   RouteGroupsElement.addEventListener(
     'scroll',
