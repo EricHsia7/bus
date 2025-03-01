@@ -245,15 +245,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
-    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, animation: boolean): void {
-      const thisItemElementRect = thisItemElement.getBoundingClientRect();
-      const top = thisItemElementRect.top;
-      const left = thisItemElementRect.left;
-      const bottom = thisItemElementRect.bottom;
-      const right = thisItemElementRect.right;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, animation: boolean, skeletonScreen: boolean): void {
       const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
       const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
       const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
@@ -267,32 +259,42 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
 
-      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        currentThreadSlideElement.addEventListener(
-          'animationend',
-          function () {
-            currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
-            currentThreadSlideElement.classList.remove('css_slide_fade_out');
-          },
-          { once: true }
-        );
-        currentItemSlideElement.addEventListener(
-          'animationend',
-          function () {
-            currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
-            currentItemSlideElement.innerText = thisItem.status.text;
-            currentItemSlideElement.classList.remove('css_slide_fade_out');
-          },
-          { once: true }
-        );
-        currentThreadSlideElement.classList.add('css_slide_fade_out');
-        currentItemSlideElement.classList.add('css_slide_fade_out');
-      } else {
-        currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+      if (!skeletonScreen) {
+        const thisItemElementRect = thisItemElement.getBoundingClientRect();
+        const top = thisItemElementRect.top;
+        const left = thisItemElementRect.left;
+        const bottom = thisItemElementRect.bottom;
+        const right = thisItemElementRect.right;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
 
-        currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
-        currentItemSlideElement.innerText = thisItem.status.text;
+        if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+          currentThreadSlideElement.addEventListener(
+            'animationend',
+            function () {
+              currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+              currentThreadSlideElement.classList.remove('css_slide_fade_out');
+            },
+            { once: true }
+          );
+          currentItemSlideElement.addEventListener(
+            'animationend',
+            function () {
+              currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+              currentItemSlideElement.innerText = thisItem.status.text;
+              currentItemSlideElement.classList.remove('css_slide_fade_out');
+            },
+            { once: true }
+          );
+          currentThreadSlideElement.classList.add('css_slide_fade_out');
+          currentItemSlideElement.classList.add('css_slide_fade_out');
+          return;
+        }
       }
+
+      currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+      currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+      currentItemSlideElement.innerText = thisItem.status.text;
     }
 
     function updateSegmentBuffer(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
@@ -321,7 +323,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       thisThreadBoxElement.setAttribute('nearest', booleanToString(thisItem.nearest));
     }
 
-    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, animation: boolean): void {
+    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, animation: boolean, skeletonScreen: boolean): void {
       const previousProgress = previousItem?.progress || 0;
       const thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
@@ -377,14 +379,14 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     if (previousItem === null) {
-      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation, skeletonScreen);
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
       updateBusArrivalTimes(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
-      updateThread(thisThreadBoxElement, thisItem, previousItem, animation);
+      updateThread(thisThreadBoxElement, thisItem, previousItem, animation, skeletonScreen);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
