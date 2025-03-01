@@ -7,7 +7,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
-import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize } from '../index';
+import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize, GroupScrollTops } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
@@ -243,9 +243,26 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
+function checkItemElementVisibility(boxHeight: number, groupIndex: number, index: number, scrollTop: number): boolean {
+  const itemHeight = 50;
+  if (routeSliding_initialIndex !== groupIndex && routeSliding_targetIndex !== groupIndex) {
+    return false;
+  }
+  const itemQuantityFromTop = Math.floor(scrollTop / itemHeight) - 1;
+  const itemQuantityWithinBox = Math.floor(boxHeight / itemHeight) + 1;
+  if (index < itemQuantityFromTop) {
+    return false;
+  }
+  if (index > itemQuantityFromTop + itemQuantityWithinBox) {
+    return false;
+  }
+  return true;
+}
+
 function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
-  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
-    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, animation: boolean): void {
+  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, groupIndex: number, index: number, scrollTop: number): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, groupIndex: number, index: number, scrollTop: number, animation: boolean): void {
+      /*
       const thisItemElementRect = thisItemElement.getBoundingClientRect();
       const top = thisItemElementRect.top;
       const left = thisItemElementRect.left;
@@ -253,7 +270,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       const right = thisItemElementRect.right;
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-
+      */
       const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
       const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
       const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
@@ -267,7 +284,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
       nextItemSlideElememt.innerText = thisItem.status.text;
 
-      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+      if (animation && checkItemElementVisibility(routeSliding_fieldHeight, groupIndex, index, scrollTop)) {
         currentThreadSlideElement.addEventListener(
           'animationend',
           function () {
@@ -377,7 +394,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     if (previousItem === null) {
-      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, groupIndex, index, scrollTop, animation);
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
@@ -392,7 +409,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       updateScheduleNotificationButton(thisItemElement, thisItem);
     } else {
       if (!(thisItem.status.time === previousItem.status.time)) {
-        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, groupIndex, index, scrollTop, animation);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
@@ -440,8 +457,9 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 
   let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
+    const groupKey = `g_${i}`;
     const width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    routeSliding_groupStyles[`g_${i}`] = {
+    routeSliding_groupStyles[groupKey] = {
       width: width,
       offset: cumulativeOffset
     };
@@ -462,7 +480,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
 
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
@@ -477,7 +495,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       RouteGroupsElement.append(RouteGroupsFragment);
       RouteGroupTabsTrayElement.append(RouteGroupTabsTrayFragment);
     } else {
-      const GroupElements = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`);
+      const GroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
       const TabElements = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
@@ -517,15 +535,20 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
 
+  const GroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', `${i}`);
+    const thisGroupElement = GroupElements[i];
+    const thisGroupElementScrollTop = thisGroupElement.scrollTop;
+    const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
+    const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
+    const RouteGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
+    const RouteGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, `.css_route_group_thread_box`);
 
-    const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
-    const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
       const thisItemElement = RouteGroupItemElements[j];
       const thisThreadBoxElement = RouteGroupThreadElements[j];
@@ -534,15 +557,15 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             const previousItem = previousIntegration.groupedItems[groupKey][j];
-            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem, i, j, thisGroupElementScrollTop);
           } else {
-            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, i, j, thisGroupElementScrollTop);
           }
         } else {
-          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, i, j, thisGroupElementScrollTop);
         }
       } else {
-        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, i, j, thisGroupElementScrollTop);
       }
     }
   }
