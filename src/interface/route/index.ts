@@ -248,7 +248,7 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 function checkItemElementVisibility(boxHeight: number, groupIndex: number, index: number, scrollTop: number): boolean {
   const itemHeight = 50;
   const groupKey = `g_${groupIndex}`;
-  const offsetedScrollTop = scrollTop + routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey];
+  const offsetedScrollTop = Math.max(0, scrollTop + routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey]);
 
   if (routeSliding_initialIndex !== groupIndex && routeSliding_targetIndex !== groupIndex) {
     return false;
