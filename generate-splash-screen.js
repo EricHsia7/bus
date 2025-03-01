@@ -4,6 +4,7 @@ const md5 = require('md5');
 
 // Array of device data containing information about various devices and their dimensions
 const deviceData = [
+  { name: `iPad Mini (7th gen)`, width: 744, height: 1133, scale: 2 },
   { name: `iPhone 16 Pro Max`, width: 440, height: 956, scale: 3 },
   { name: `iPhone 16 Pro`, width: 402, height: 874, scale: 3 },
   { name: `iPhone 16 Plus`, width: 430, height: 932, scale: 3 },
