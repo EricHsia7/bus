@@ -199,6 +199,10 @@ export type GroupStyles = {
   };
 };
 
+export type GroupScrollTopOffsets = {
+  [key: string] : number
+}
+
 export interface Size {
   width: number;
   height: number;

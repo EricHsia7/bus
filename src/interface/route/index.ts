@@ -7,7 +7,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
-import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize, GroupScrollTops } from '../index';
+import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize, GroupScrollTops, GroupScrollTopOffsets } from '../index';
 import { promptMessage } from '../prompt/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { logRecentView } from '../../data/recent-views/index';
@@ -50,6 +50,8 @@ let routeRefreshTimer_currentProgress: number = -1;
 let routeRefreshTimer_targetProgress: number = -1;
 let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
+
+let routeItemElementVisibilityCheck_groupScrollTopOffsets: GroupScrollTopOffsets = {};
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
@@ -245,10 +247,13 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
 
 function checkItemElementVisibility(boxHeight: number, groupIndex: number, index: number, scrollTop: number): boolean {
   const itemHeight = 50;
+  const groupKey = `g_${groupIndex}`;
+  const offsetedScrollTop = scrollTop + routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey];
+
   if (routeSliding_initialIndex !== groupIndex && routeSliding_targetIndex !== groupIndex) {
     return false;
   }
-  const itemQuantityFromTop = Math.floor(scrollTop / itemHeight) - 1;
+  const itemQuantityFromTop = Math.floor(offsetedScrollTop / itemHeight) - 1;
   const itemQuantityWithinBox = Math.floor(boxHeight / itemHeight) + 1;
   if (index < itemQuantityFromTop) {
     return false;
@@ -464,6 +469,9 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
+    if (!routeItemElementVisibilityCheck_groupScrollTopOffsets.hasOwnProperty(groupKey) || skeletonScreen) {
+      routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey] = 0;
+    }
   }
   const offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
   if (!routeSliding_sliding) {
@@ -669,6 +677,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
+  const groupKey = `g_${routeSliding_initialIndex}`;
   if (itemElement.getAttribute('stretched') === 'true') {
     if (itemElement.getAttribute('animation') === 'true') {
       itemBodyElement.addEventListener(
@@ -683,10 +692,12 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     }
     itemElement.setAttribute('stretched', 'false');
     threadBoxElement.setAttribute('stretched', 'false');
+    routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey] += 171;
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
     threadBoxElement.setAttribute('stretched', 'true');
+    routeItemElementVisibilityCheck_groupScrollTopOffsets[groupKey] -= 171;
   }
 }
 
