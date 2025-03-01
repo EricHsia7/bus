@@ -394,7 +394,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       updateScheduleNotificationButton(thisItemElement, thisItem);
     } else {
       if (!(thisItem.status.time === previousItem.status.time)) {
-        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation, skeletonScreen);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
@@ -410,7 +410,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateThread(thisThreadBoxElement, thisItem, previousItem, animation);
+        updateThread(thisThreadBoxElement, thisItem, previousItem, animation, skeletonScreen);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateName(thisItemElement, thisItem);
