@@ -185,7 +185,7 @@ function generateElementOfTab(): GeneratedElement {
   };
 }
 
-function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
+function setUpRouteFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -221,7 +221,6 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
     }
   }
   updateRouteField(
-    Field,
     {
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
@@ -243,9 +242,9 @@ function setUpRouteFieldSkeletonScreen(Field: HTMLElement): void {
   );
 }
 
-function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
-  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null): void {
-    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, animation: boolean, skeletonScreen: boolean): void {
+function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
+  function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
+    function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, skeletonScreen: boolean, animation: boolean): void {
       const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
       const currentThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_current_slide');
       const nextThreadSlideElement = elementQuerySelector(thisThreadStatusElement, '.css_next_slide');
@@ -260,35 +259,36 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       nextItemSlideElememt.innerText = thisItem.status.text;
 
       if (!skeletonScreen) {
-        const thisItemElementRect = thisItemElement.getBoundingClientRect();
-        const top = thisItemElementRect.top;
-        const left = thisItemElementRect.left;
-        const bottom = thisItemElementRect.bottom;
-        const right = thisItemElementRect.right;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-        if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-          currentThreadSlideElement.addEventListener(
-            'animationend',
-            function () {
-              currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
-              currentThreadSlideElement.classList.remove('css_slide_fade_out');
-            },
-            { once: true }
-          );
-          currentItemSlideElement.addEventListener(
-            'animationend',
-            function () {
-              currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
-              currentItemSlideElement.innerText = thisItem.status.text;
-              currentItemSlideElement.classList.remove('css_slide_fade_out');
-            },
-            { once: true }
-          );
-          currentThreadSlideElement.classList.add('css_slide_fade_out');
-          currentItemSlideElement.classList.add('css_slide_fade_out');
-          return;
+        if (animation) {
+          const thisItemElementRect = thisItemElement.getBoundingClientRect();
+          const top = thisItemElementRect.top;
+          const left = thisItemElementRect.left;
+          const bottom = thisItemElementRect.bottom;
+          const right = thisItemElementRect.right;
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
+          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+            currentThreadSlideElement.addEventListener(
+              'animationend',
+              function () {
+                currentThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
+                currentThreadSlideElement.classList.remove('css_slide_fade_out');
+              },
+              { once: true }
+            );
+            currentItemSlideElement.addEventListener(
+              'animationend',
+              function () {
+                currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+                currentItemSlideElement.innerText = thisItem.status.text;
+                currentItemSlideElement.classList.remove('css_slide_fade_out');
+              },
+              { once: true }
+            );
+            currentThreadSlideElement.classList.add('css_slide_fade_out');
+            currentItemSlideElement.classList.add('css_slide_fade_out');
+            return;
+          }
         }
       }
 
@@ -323,25 +323,29 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       thisThreadBoxElement.setAttribute('nearest', booleanToString(thisItem.nearest));
     }
 
-    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, animation: boolean, skeletonScreen: boolean): void {
+    function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
       const previousProgress = previousItem?.progress || 0;
       const thisProgress = thisItem?.progress || 0;
       const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
-      if (animation && !(previousProgress === 0) && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${100}%`);
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${100}%`);
-        thisThreadElement.addEventListener(
-          'transitionend',
-          function () {
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${0}%`);
-          },
-          { once: true }
-        );
-      } else {
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', `${0}%`);
-        thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+      if (!skeletonScreen) {
+        if (animation) {
+          if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '100%');
+            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '100%');
+            thisThreadElement.addEventListener(
+              'transitionend',
+              function () {
+                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
+                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '0%');
+              },
+              { once: true }
+            );
+            return;
+          }
+        }
       }
+      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
+      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
     }
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
@@ -379,14 +383,14 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
 
     if (previousItem === null) {
-      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation, skeletonScreen);
+      updateStatus(thisItemElement, thisThreadBoxElement, thisItem, skeletonScreen, animation);
       updateName(thisItemElement, thisItem);
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
       updateBusArrivalTimes(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
-      updateThread(thisThreadBoxElement, thisItem, previousItem, animation, skeletonScreen);
+      updateThread(thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);
       updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
       updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
@@ -394,7 +398,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
       updateScheduleNotificationButton(thisItemElement, thisItem);
     } else {
       if (!(thisItem.status.time === previousItem.status.time)) {
-        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, animation, skeletonScreen);
+        updateStatus(thisItemElement, thisThreadBoxElement, thisItem, skeletonScreen, animation);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.buses, thisItem.buses)) {
@@ -410,7 +414,7 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
       if (!(previousItem.progress === thisItem.progress)) {
-        updateThread(thisThreadBoxElement, thisItem, previousItem, animation, skeletonScreen);
+        updateThread(thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);
       }
       if (!(previousItem.id === thisItem.id)) {
         updateName(thisItemElement, thisItem);
@@ -461,26 +465,25 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
   RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
-  const currentGroupSeatQuantity = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`).length;
+  const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
   if (!(groupQuantity === currentGroupSeatQuantity)) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
-      const RouteGroupsFragment = new DocumentFragment();
-      const RouteGroupTabsTrayFragment = new DocumentFragment();
+      const newGroupsFragment = new DocumentFragment();
+      const newTabsFragment = new DocumentFragment();
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        RouteGroupsFragment.appendChild(newGroupElement.element);
+        newGroupsFragment.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        RouteGroupTabsTrayFragment.appendChild(newTabElement.element);
+        newTabsFragment.appendChild(newTabElement.element);
       }
-      RouteGroupsElement.append(RouteGroupsFragment);
-      RouteGroupTabsTrayElement.append(RouteGroupTabsTrayFragment);
+      RouteGroupsElement.append(newGroupsFragment);
+      RouteGroupTabsTrayElement.append(newTabsFragment);
     } else {
-      const GroupElements = elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`);
-      const TabElements = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`);
+      const GroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
+      const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
         GroupElements[groupIndex].remove();
@@ -489,62 +492,72 @@ function updateRouteField(Field: HTMLElement, integration: IntegratedRoute, skel
     }
   }
 
+  const RouteGroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
+
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const currentItemSeatQuantity = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`).length;
+    const thisGroupElement = RouteGroupElements[i];
+    const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
+    const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
+    const currentItemSeatQuantity = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item').length;
     if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
-        const RouteGroupItemsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track');
-        const RouteGroupThreadsTrackElement = elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track');
-        const RouteGroupItemsTrackFragment = new DocumentFragment();
-        const RouteGroupThreadsTrackFragment = new DocumentFragment();
+        const newItemsFragment = new DocumentFragment();
+        const newThreadsFragment = new DocumentFragment();
         for (let o = 0; o < Math.abs(capacity); o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
           const newItemElement = generateElementOfItem(newThreadBoxElement.id);
-          RouteGroupItemsTrackFragment.appendChild(newItemElement.element);
-          RouteGroupThreadsTrackFragment.appendChild(newThreadBoxElement.element);
+          newItemsFragment.appendChild(newItemElement.element);
+          newThreadsFragment.appendChild(newThreadBoxElement.element);
         }
-        RouteGroupItemsTrackElement.append(RouteGroupItemsTrackFragment);
-        RouteGroupThreadsTrackElement.append(RouteGroupThreadsTrackFragment);
+        thisGroupItemsTrackElement.append(newItemsFragment);
+        thisGroupThreadsTrackElement.append(newThreadsFragment);
       } else {
-        const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
-        const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
+        const thisGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
+        const thisGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
-          RouteGroupItemElements[itemIndex].remove();
-          RouteGroupThreadElements[itemIndex].remove();
+          thisGroupItemElements[itemIndex].remove();
+          thisGroupThreadElements[itemIndex].remove();
         }
       }
     }
   }
 
+  const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const thisTabElement = elementQuerySelectorAll(Field, `.css_route_head .css_route_group_tabs .css_route_group_tabs_tray .css_route_group_tab`)[i];
+
+    const thisTabElement = TabElements[i];
     thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-index', `${i}`);
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
-    const RouteGroupItemElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_items_track'), `.css_route_group_item`);
-    const RouteGroupThreadElements = elementQuerySelectorAll(elementQuerySelector(elementQuerySelectorAll(Field, `.css_route_groups .css_route_group`)[i], '.css_route_group_threads_track'), `.css_route_group_thread_box`);
+    const thisGroupElement = RouteGroupElements[i];
+    const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
+    const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
+
+    const thisGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
+    const thisGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
+
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = RouteGroupItemElements[j];
-      const thisThreadBoxElement = RouteGroupThreadElements[j];
+      const thisItemElement = thisGroupItemElements[j];
+      const thisThreadBoxElement = thisGroupThreadElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             const previousItem = previousIntegration.groupedItems[groupKey][j];
-            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);
           } else {
-            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+            updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, skeletonScreen, animation);
           }
         } else {
-          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+          updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, skeletonScreen, animation);
         }
       } else {
-        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null);
+        updateItem(thisItemElement, thisThreadBoxElement, thisItem, null, skeletonScreen, animation);
       }
     }
   }
@@ -564,7 +577,7 @@ async function refreshRoute() {
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
-  updateRouteField(RouteField, integration, false, playing_animation);
+  updateRouteField(integration, false, playing_animation);
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {
     updateRate = await getUpdateRate();
