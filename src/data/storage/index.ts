@@ -3,7 +3,7 @@ const localforage = require('localforage');
 let storage = {
   cacheStore: false, // 0
   settingsStore: false, // 1
-  dataUsageRecordsStore: false, // 2
+  dataUsageStatsStore: false, // 2
   updateRateDataStore: false, // 3
   updateRateDataWriteAheadLogStore: false, // 4
   busArrivalTimeDataWriteAheadLogStore: false, // 5
@@ -17,7 +17,7 @@ let storage = {
   folderContentStore: false // 13
 };
 
-const stores = ['cacheStore', 'settingsStore', 'dataUsageRecordsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 async function dropInstance(store: number): Promise<any> {
   const storeKey = stores[store];

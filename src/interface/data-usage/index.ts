@@ -1,4 +1,4 @@
-import { AggregationPeriod, calculateTotalDataUsage, generateDataUsageGraph, getDataUsageRecordsPeriod } from '../../data/analytics/data-usage/index';
+import { AggregationPeriod, getTotalDataUsage, generateDataUsageGraph, getDataUsageStatsPeriod } from '../../data/analytics/data-usage/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { dateToString } from '../../tools/time';
 import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
@@ -31,8 +31,8 @@ async function updateDataUsageGraph(aggregationPeriod: AggregationPeriod) {
 }
 
 async function updateDataUsageStatistics() {
-  const totalDataUsage = await calculateTotalDataUsage();
-  const recordsPeriod = await getDataUsageRecordsPeriod();
+  const totalDataUsage = await getTotalDataUsage();
+  const recordsPeriod = await getDataUsageStatsPeriod();
   totalDataUsageElement.innerText = totalDataUsage;
   startTimeElement.innerText = dateToString(recordsPeriod.start, 'YYYY-MM-DD hh:mm:ss');
   endTimeElement.innerText = dateToString(recordsPeriod.end, 'YYYY-MM-DD hh:mm:ss');

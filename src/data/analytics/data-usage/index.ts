@@ -12,63 +12,87 @@ export interface DataUsageStatsChunk {
   id: string; // d_<YYYY>_<MM>_<DD>
 }
 
-const DataUsagePeriod = 7 // days
+const DataUsagePeriod = 7; // days
 
-let incompleteRecords = {};
-
-export async function recordRequest(requestID: string, data: object, incomplete: boolean) {
-  console.log(requestID, incomplete);
-  if (!incompleteRecords.hasOwnProperty(requestID)) {
-    incompleteRecords[requestID] = data;
-  }
-  incompleteRecords[requestID].end_time = data.end_time;
-  incompleteRecords[requestID].content_length = incompleteRecords[requestID].content_length + data.content_length;
-
-  if (!incomplete) {
-    if (incompleteRecords.hasOwnProperty(requestID)) {
-      await lfSetItem(2, requestID, JSON.stringify(incompleteRecords[requestID]));
-      delete incompleteRecords[requestID];
+export async function recordDataUsage(contentLength: number, date: Date) {
+  const key = `d_${dateToString(date, 'YYYY_MM_DD')}`;
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const index = hours * 60 + minutes;
+  const existingDataUsageStatsChunkJSON = await lfGetItem(2, key);
+  if (existingDataUsageStatsChunkJSON) {
+    const existingDataUsageStatsChunkObject = JSON.parse(existingDataUsageStatsChunkJSON) as DataUsageStatsChunk;
+    if (contentLength > existingDataUsageStatsChunkObject.max_byte) {
+      existingDataUsageStatsChunkObject.max_byte = contentLength;
     }
+    if (contentLength < existingDataUsageStatsChunkObject.min_byte) {
+      existingDataUsageStatsChunkObject.min_byte = contentLength;
+    }
+    existingDataUsageStatsChunkObject.byte_sum += contentLength;
+    existingDataUsageStatsChunkObject.bytes[index] += contentLength;
+    await lfSetItem(2, key, JSON.stringify(existingDataUsageStatsChunkObject));
+  } else {
+    const newDataUsageStatsChunk = {} as DataUsageStatsChunk;
+    const bytes = new Uint32Array(60 * 24);
+    bytes[index] += contentLength;
+    newDataUsageStatsChunk.bytes = Array.from(bytes);
+    newDataUsageStatsChunk.max_byte = contentLength;
+    newDataUsageStatsChunk.min_byte = 0;
+    newDataUsageStatsChunk.byte_sum = contentLength;
+    newDataUsageStatsChunk.timestamp = date.getTime();
+    newDataUsageStatsChunk.id = key;
+    await lfSetItem(2, key, JSON.stringify(newDataUsageStatsChunk));
   }
 }
 
 export async function discardExpiredDataUsageRecords() {
+  const now = new Date().getTime();
   const keys = await lfListItemKeys(2);
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object: object = JSON.parse(json);
-    if (new Date().getTime() - object.timeStamp > 60 * 60 * 24 * 30 * 1000) {
+    const object = JSON.parse(json) as DataUsageStatsChunk;
+    if (now - object.timestamp > 60 * 60 * 24 * 7 * 1000) {
       await lfRemoveItem(2, key);
     }
   }
 }
 
-export async function getDataUsageRecordsPeriod(): Promise<TimeStampPeriod> {
+export async function getDataUsageStatsPeriod(): Promise<TimeStampPeriod> {
+  let minTimestamp = Infinity;
+  let maxTimestamp = -Infinity;
   const keys = await lfListItemKeys(2);
-  let startTimeArray = [];
-  let endTimeArray = [];
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object = JSON.parse(json);
-    startTimeArray.push(object.start_time);
-    endTimeArray.push(object.end_time);
+    const object = JSON.parse(json) as DataUsageStatsChunk;
+    const timestamp = object.timestamp;
+    if (timestamp < minTimestamp) {
+      minTimestamp = timestamp;
+    }
+    if (timestamp > maxTimestamp) {
+      maxTimestamp = timestamp;
+    }
   }
-  const minStartTime = new Date(Math.min(...startTimeArray));
-  const maxEndTime = new Date(Math.max(...endTimeArray));
+
+  if (minTimestamp === Infinity) {
+    minTimestamp = 0;
+  }
+  if (maxTimestamp === -Infinity) {
+    maxTimestamp = 0;
+  }
 
   return {
-    start: minStartTime,
-    end: maxEndTime
+    start: new Date(minTimestamp),
+    end: new Date(maxTimestamp)
   };
 }
 
-export async function calculateTotalDataUsage(): Promise<string> {
+export async function getTotalDataUsage(): Promise<string> {
   const keys = await lfListItemKeys(2);
-  let totalContentLength = 0;
+  let totalContentLength: number = 0;
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object = JSON.parse(json);
-    totalContentLength += object.content_length;
+    const object = JSON.parse(json) as DataUsageStatsChunk
+    totalContentLength += object.byte_sum
   }
   return convertBytes(totalContentLength);
 }
@@ -95,9 +119,9 @@ export async function generateDataUsageGraph(aggregationPeriod: AggregationPerio
   let aggregatedData = {};
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object = JSON.parse(json);
-    const startDate = new Date(object.start_time);
-    const graphDataKey = `d_${dateToString(startDate, dateToStringTemplate)}`;
+    const object = JSON.parse(json) as DataUsageStatsChunk
+    const startTimestamp = new Date(object.timestamp);
+    const graphDataKey = `d_${dateToString(startTimestamp, dateToStringTemplate)}`;
     if (!aggregatedData.hasOwnProperty(graphDataKey)) {
       aggregatedData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
     }
