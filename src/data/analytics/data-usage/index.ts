@@ -91,8 +91,8 @@ export async function getTotalDataUsage(): Promise<string> {
   let totalContentLength: number = 0;
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object = JSON.parse(json) as DataUsageStatsChunk
-    totalContentLength += object.byte_sum
+    const object = JSON.parse(json) as DataUsageStatsChunk;
+    totalContentLength += object.byte_sum;
   }
   return convertBytes(totalContentLength);
 }
@@ -100,44 +100,38 @@ export async function getTotalDataUsage(): Promise<string> {
 export type AggregationPeriod = 'minutely' | 'hourly' | 'daily';
 
 export async function generateDataUsageGraph(aggregationPeriod: AggregationPeriod, width: number, height: number, padding: number): Promise<string | boolean> {
-  const keys = await lfListItemKeys(2);
-  let dateToStringTemplate = 'YYYY_MM_DD_hh_mm_ss';
+  let increment: number = 0;
   switch (aggregationPeriod) {
     case 'minutely':
-      dateToStringTemplate = 'YYYY_MM_DD_hh_mm';
+      increment = 1;
       break;
     case 'hourly':
-      dateToStringTemplate = 'YYYY_MM_DD_hh';
+      increment = 60;
       break;
     case 'daily':
-      dateToStringTemplate = 'YYYY_MM_DD';
+      increment = 60 * 24;
       break;
     default:
       break;
   }
 
-  let aggregatedData = {};
+  const data: Array<DataUsageStatsChunk> = [];
+  const keys = await lfListItemKeys(2);
   for (const key of keys) {
     const json = await lfGetItem(2, key);
-    const object = JSON.parse(json) as DataUsageStatsChunk
-    const startTimestamp = new Date(object.timestamp);
-    const graphDataKey = `d_${dateToString(startTimestamp, dateToStringTemplate)}`;
-    if (!aggregatedData.hasOwnProperty(graphDataKey)) {
-      aggregatedData[graphDataKey] = { start_time: object.start_time, end_time: object.end_time, content_length: 0 };
-    }
-    aggregatedData[graphDataKey].content_length = aggregatedData[graphDataKey].content_length + object.content_length;
-    if (object.start_time < aggregatedData[graphDataKey].start_time) {
-      aggregatedData[graphDataKey].start_time = object.start_time;
-    }
-    if (object.end_time > aggregatedData[graphDataKey].end_time) {
-      aggregatedData[graphDataKey].end_time = object.end_time;
-    }
+    const object = JSON.parse(json) as DataUsageStatsChunk;
+    data.push(object);
   }
 
-  let graphDataArray = [];
-  for (const graphDataKey in aggregatedData) {
-    const item = aggregatedData[graphDataKey];
-    graphDataArray.push(item);
+  data.sort(function (a, b) {
+    a.timestamp - b.timestamp;
+  });
+
+  const dataLength = data.length;
+
+  const graphDataArray = new Uint32Array(dataLength * 60 * 24);
+  for (let i = 0; i < dataLength; i++) {
+    graphDataArray.set(data[i], i * 60 * 24);
   }
 
   if (graphDataArray.length > 3) {
