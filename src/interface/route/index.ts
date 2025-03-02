@@ -242,7 +242,7 @@ function setUpRouteFieldSkeletonScreen(): void {
   );
 }
 
-function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean) {
+function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
     function updateStatus(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, skeletonScreen: boolean, animation: boolean): void {
       const thisThreadStatusElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread_status');
