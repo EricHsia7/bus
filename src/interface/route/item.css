@@ -11,7 +11,7 @@
   display: block;
   background: var(--b-cssvar-ffffff-normal);
   overflow: hidden;
-  contain: layout size;
+  contain: layout;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item:first-child {
@@ -72,7 +72,6 @@
   font-weight: 400;
   -webkit-user-select: none;
   user-select: none;
-  contain: layout size;
 }
 
 /* skeleton screen: true */
@@ -93,7 +92,6 @@
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
-  contain: layout size;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule {
@@ -112,7 +110,6 @@
   width: 1px;
   height: 24px;
   background: var(--b-cssvar-aeaeb2);
-  contain: layout size;
 }
 
 /* skeleton screen: true */
@@ -174,7 +171,6 @@
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
   visibility: inherit;
-  contain: layout size;
 }
 
 /* skeleton screen: true */
@@ -196,7 +192,6 @@
   justify-content: center;
   -webkit-user-select: none;
   user-select: none;
-  contain: layout size;
 }
 
 /* code: 7 */
