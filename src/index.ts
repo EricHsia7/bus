@@ -1,6 +1,6 @@
 import { updateSearchResult } from './interface/search/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
-import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
+import { discardExpiredDataUsageRecords } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';

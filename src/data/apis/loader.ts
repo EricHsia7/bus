@@ -1,6 +1,6 @@
 import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
-import { recordRequest } from '../analytics/data-usage';
+import { recordRequest } from '../analytics/data-usage/index';
 
 let dataReceivingProgress = {};
 

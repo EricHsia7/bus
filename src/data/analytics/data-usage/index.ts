@@ -1,11 +1,23 @@
-import { convertBytes } from '../../tools/convert';
-import { segmentsToPath, simplifyPath } from '../../tools/path';
-import { dateToString, TimeStampPeriod } from '../../tools/time';
-import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
+import { convertBytes } from '../../../tools/convert';
+import { segmentsToPath, simplifyPath } from '../../../tools/path';
+import { dateToString, TimeStampPeriod } from '../../../tools/time';
+import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
+
+export interface DataUsageStatsChunk {
+  bytes: Array<number>;
+  max_byte: number;
+  min_byte: number;
+  byte_sum: number;
+  timestamp: number;
+  id: string; // d_<YYYY>_<MM>_<DD>
+}
+
+const DataUsagePeriod = 7 // days
 
 let incompleteRecords = {};
 
 export async function recordRequest(requestID: string, data: object, incomplete: boolean) {
+  console.log(requestID, incomplete);
   if (!incompleteRecords.hasOwnProperty(requestID)) {
     incompleteRecords[requestID] = data;
   }
