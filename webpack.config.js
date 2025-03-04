@@ -110,6 +110,13 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'google-fonts-stylesheets'
             }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'google-fonts-sources'
+            }
           }
         ]
       }),
