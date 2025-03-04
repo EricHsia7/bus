@@ -287,7 +287,7 @@ window.bus = {
     if (!bus_secondly_initialized) {
       bus_secondly_initialized = true;
       loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap', 'noto_sans_tc');
-      loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200', 'material_symbols');
+      loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0..1,0&display=swap', 'material_symbols');
       downloadData();
       discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageRecords();
