@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-workers-with-weakmap
 
 jobs:
   launch:
