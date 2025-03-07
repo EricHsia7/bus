@@ -62,11 +62,10 @@ async function outputVersionJSON() {
 outputVersionJSON();
 
 module.exports = (env, argv) => {
-  const isProduction = argv.mode === 'production';
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: isProduction ? '[contenthash].css' : 'index.css'
+        filename: '[contenthash].css'
         // Output CSS filename
       }),
       new MangleCssClassPlugin({
@@ -137,7 +136,7 @@ module.exports = (env, argv) => {
     mode: 'production', // Set the mode to 'production' or 'development'
     entry: './src/index.ts', // Entry point of your application
     output: {
-      filename: isProduction ? '[contenthash].js' : 'index.js', // Output bundle filename
+      filename: '[contenthash].js', // Output bundle filename
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
       crossOriginLoading: 'anonymous', // Required for SRI
@@ -172,7 +171,7 @@ module.exports = (env, argv) => {
       mainFields: ['browser', 'module', 'main']
     },
     optimization: {
-      minimize: isProduction,
+      minimize: true,
       minimizer: [
         new TerserPlugin({
           terserOptions: {

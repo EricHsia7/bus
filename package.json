@@ -31,7 +31,7 @@
     "css-loader": "^7.1.2",
     "mini-css-extract-plugin": "^2.9.1",
     "css-minimizer-webpack-plugin": "^7.0.0",
-    "cssnano-preset-advanced": "^7.0.5",
+    "cssnano-preset-advanced": "^7.0.6",
     "html-webpack-plugin": "^5.6.0",
     "workbox-webpack-plugin": "^7.1.0",
     "webpack-bundle-analyzer": "^4.10.2",
