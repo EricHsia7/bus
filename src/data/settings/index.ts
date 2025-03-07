@@ -153,8 +153,8 @@ let Settings: SettingsObject = {
     status: '',
     action: `bus.settings.openSettingsOptions('refresh_interval')`,
     type: 'select',
-    default_option: 3,
-    option: 3,
+    default_option: 0,
+    option: 0,
     options: [
       {
         name: '自動',
