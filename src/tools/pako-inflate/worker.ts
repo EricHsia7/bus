@@ -6,7 +6,7 @@ interface task {
   port: any;
 }
 
-let taskQueue: Array<task> = [];
+const taskQueue: Array<task> = [];
 let isProcessing: boolean = false;
 
 if ('onconnect' in self) {

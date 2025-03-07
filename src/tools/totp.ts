@@ -1,7 +1,7 @@
 import * as OTPAuth from 'otpauth';
 
 export function generateTOTPToken(secret: string): string {
-  let totp = new OTPAuth.TOTP({
+  const totp = new OTPAuth.TOTP({
     issuer: 'Bus',
     label: 'Bus',
     algorithm: 'SHA256',

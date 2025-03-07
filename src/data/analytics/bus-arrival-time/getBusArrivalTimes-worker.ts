@@ -10,7 +10,7 @@ interface task {
   port: any;
 }
 
-let taskQueue: Array<task> = [];
+const taskQueue: Array<task> = [];
 let isProcessing: boolean = false;
 
 // Setup message handling (works for dedicated or shared workers)
@@ -111,8 +111,8 @@ function processWorkerTask(): void {
       let barsPathCommand = '';
       barsPathCommand += `M${chartWidth},${chartHeight}`;
       for (let j = statsArrayLength - 1; j >= 0; j--) {
-        let x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
-        let y = (1 - statsArray[j] / statsMax) * chartHeight;
+        const x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
+        const y = (1 - statsArray[j] / statsMax) * chartHeight;
         barsPathCommand += ` L${x},${y}`;
         barsPathCommand += ` L${x - barWidth},${y}`;
         barsPathCommand += ` L${x - barWidth},${chartHeight}`;
