@@ -177,7 +177,7 @@ function generateCalendarFromTimeTables(RouteID: number, PathAttributeId: Array<
     }
   }
   for (const code in calendar.calendarEventGroups) {
-    /* calendar.calendarEvents[code] = */ calendar.calendarEventGroups[code].sort(function (a, b) {
+    calendar.calendarEventGroups[code].sort(function (a, b) {
       return a.date.getTime() - b.date.getTime();
     });
   }
