@@ -33,7 +33,7 @@ export async function exportData(): Promise<string> {
   for (const folder of folders) {
     const key = `f_${folder.id}`;
     const thisFolderContentIndexArray = await getFolderContentIndexArray(folder.id);
-    folderContentIndex[key] = thisFolderContentIndexArray;
+    result.folderContentIndex[key] = thisFolderContentIndexArray;
   }
   const allFolderContent = await listAllFolderContent([]);
   result.folderContent = allFolderContent;
