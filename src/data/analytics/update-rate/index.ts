@@ -32,12 +32,12 @@ export interface UpdateRateDataWriteAheadLogGroup {
   id: string;
 }
 
-const updateRateData_sampleQuantity: number = 16;
+const updateRateData_sampleQuantity: number = 32;
 let updateRateData_trackedStops: Array<number> = [];
 let updateRateData_writeAheadLog_id: string = '';
 let updateRateData_writeAheadLog_tracking: boolean = false;
 let updateRateData_writeAheadLog_currentDataLength: number = 0;
-const updateRateData_writeAheadLog_maxDataLength: number = 90;
+const updateRateData_writeAheadLog_maxDataLength: number = 45;
 let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   data: {},
   timestamp: 0,
