@@ -1,4 +1,3 @@
-import { generateIdentifier } from '../../../tools/index';
 import { createDateObjectFromDate, dateToString, offsetDate, TimeStampPeriod } from '../../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
 
@@ -90,7 +89,7 @@ export async function listDataUsageStatsChunks(): Promise<DataUsageStatsChunkArr
   return result;
 }
 
-export async function discardExpiredDataUsageRecords() {
+export async function discardExpiredDataUsageStats() {
   const millisecondsPerDay = 60 * 60 * 24 * 1000;
   const expirationPeriod = millisecondsPerDay * DataUsagePeriod;
   const now = new Date().getTime();
