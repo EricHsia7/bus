@@ -119,7 +119,7 @@ function processWorkerTask(): void {
   };
   port.postMessage([11]);
 
-  // Send the complete HTML back to the main thread
+  // Send the result back to the main thread
   port.postMessage([result, taskID]);
 
   isProcessing = false;

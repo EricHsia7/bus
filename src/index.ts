@@ -24,7 +24,7 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadCSS } from './interface/lazy-css';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
-import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
+import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
 import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
@@ -352,8 +352,7 @@ window.bus = {
   },
   dataUsage: {
     openDataUsage,
-    closeDataUsage,
-    switchDataUsageGraphAggregationPeriod
+    closeDataUsage
   },
   personalSchedule: {
     openPersonalScheduleManager,

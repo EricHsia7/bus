@@ -139,24 +139,14 @@ port.onerror = function (e) {
 };
 
 export async function getDataUsageStats(width: number, height: number, padding: number): Promise<DataUsageStats> {
-  console.log('a', 0);
   const taskID = generateIdentifier('t');
-  console.log('a', 1);
-
   const dataUsageStatsChunks = await listDataUsageStatsChunks();
-  console.log('a', 2);
-
   const result = await new Promise((resolve, reject) => {
-    console.log('a', 3);
-
     workerResponses[taskID] = resolve; // Store the resolve function for this taskID
     port.onerror = function (e) {
-      console.log('a', 4);
       reject(e.message);
     };
-    console.log('a', 5);
     port.postMessage([dataUsageStatsChunks, width, height, padding, taskID]); // Send the task to the worker
   });
-  console.log('a', 6);
   return result;
 }
