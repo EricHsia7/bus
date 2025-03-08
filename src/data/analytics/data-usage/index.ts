@@ -36,14 +36,15 @@ export async function recordDataUsage(contentLength: number, date: Date) {
   const existingDataUsageStatsChunkJSON = await lfGetItem(2, key);
   if (existingDataUsageStatsChunkJSON) {
     const existingDataUsageStatsChunkObject = JSON.parse(existingDataUsageStatsChunkJSON) as DataUsageStatsChunk;
-    if (contentLength > existingDataUsageStatsChunkObject.stats.max) {
-      existingDataUsageStatsChunkObject.stats.max = contentLength;
-    }
-    if (contentLength < existingDataUsageStatsChunkObject.stats.min) {
-      existingDataUsageStatsChunkObject.stats.min = contentLength;
-    }
     existingDataUsageStatsChunkObject.stats.sum += contentLength;
     existingDataUsageStatsChunkObject.data[index] += contentLength;
+    const changedData = existingDataUsageStatsChunkObject.data[index];
+    if (changedData > existingDataUsageStatsChunkObject.stats.max) {
+      existingDataUsageStatsChunkObject.stats.max = changedData;
+    }
+    if (changedData < existingDataUsageStatsChunkObject.stats.min) {
+      existingDataUsageStatsChunkObject.stats.min = changedData;
+    }
     await lfSetItem(2, key, JSON.stringify(existingDataUsageStatsChunkObject));
   } else {
     const newDataUsageStatsChunk = {} as DataUsageStatsChunk;
