@@ -3,48 +3,18 @@ import { Segments, segmentsToPath, simplifyPath } from '../../../tools/path';
 import { createDateObjectFromDate } from '../../../tools/time';
 import { DataUsagePeriod, DataUsageStats, DataUsageStatsChunkArray } from './index';
 
-interface task {
-  dataUsageStatsChunks: DataUsageStatsChunkArray;
-  width: number;
-  height: number;
-  padding: number;
-  taskID: string;
-  port: any;
-}
+self.onmessage = function (e) {
+  const result = processWorkerTask(e.data);
+  self.postMessage(result); // Send the result back to the main thread
+};
 
-let taskQueue: Array<task> = [];
-let isProcessing: boolean = false;
-
-// Setup message handling (works for dedicated or shared workers)
-if ('onconnect' in self) {
-  self.onconnect = function (e) {
-    const port = e.ports[0];
-    port.onmessage = function (event) {
-      port.postMessage([-1]);
-      const [dataUsageStatsChunks, width, height, padding, taskID] = event.data;
-      taskQueue.push({ dataUsageStatsChunks, width, height, padding, taskID, port });
-      processWorkerTask();
-    };
-  };
-} else {
-  const port = self;
-  self.onmessage = function (event) {
-    port.postMessage([-1]);
-    const [dataUsageStatsChunks, width, height, padding, taskID] = event.data;
-    taskQueue.push({ dataUsageStatsChunks, width, height, padding, taskID, port });
-    processWorkerTask();
-  };
-}
+type data = [dataUsageStatsChunks: DataUsageStatsChunkArray, width: number, height: number, padding: number];
 
 const minutesPerDay = 60 * 24;
 
 // Main processing function
-function processWorkerTask(): void {
-  if (isProcessing || taskQueue.length === 0) return;
-  isProcessing = true;
-
-  // Dequeue the next task
-  const { dataUsageStatsChunks, width, height, padding, taskID, port }: task = taskQueue.shift();
+function processWorkerTask(data: data): DataUsageStats {
+  const [dataUsageStatsChunks, width, height, padding] = data;
 
   const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
 
@@ -111,8 +81,5 @@ function processWorkerTask(): void {
   };
 
   // Send the result back to the main thread
-  port.postMessage([result, taskID]);
-
-  isProcessing = false;
-  processWorkerTask(); // Process next task in the queue if any
+  return result;
 }

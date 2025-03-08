@@ -105,48 +105,20 @@ export async function discardExpiredDataUsageRecords() {
   }
 }
 
-let workerResponses: {
-  [key: string]: Function;
-} = {};
-var port;
-
-// Check if SharedWorker is supported, and fall back to Worker if not
-if (typeof SharedWorker !== 'undefined') {
-  const getDataUsageStatsSharedWorker = new SharedWorker(new URL('./worker.ts', import.meta.url)); // Reusable shared worker
-  port = getDataUsageStatsSharedWorker.port; // Access the port for communication
-  port.start(); // Start the port (required by some browsers)
-} else {
-  const getDataUsageStatsWorker = new Worker(new URL('./worker.ts', import.meta.url)); // Fallback to standard worker
-  port = getDataUsageStatsWorker; // Use Worker directly for communication
-}
-
-// Handle messages from the worker
-port.onmessage = function (e) {
-  if (e.data.length === 1) {
-    console.log(e.data[0]);
-    return;
-  }
-  const [result, taskID] = e.data;
-  if (workerResponses[taskID]) {
-    workerResponses[taskID](result); // Resolve the correct promise
-    delete workerResponses[taskID]; // Clean up the response handler
-  }
-};
-
-// Handle errors
-port.onerror = function (e) {
-  console.error(e.message);
-};
-
 export async function getDataUsageStats(width: number, height: number, padding: number): Promise<DataUsageStats> {
-  const taskID = generateIdentifier('t');
+  const worker = new Worker(new URL('./simplifyCarInfo-worker.ts', import.meta.url));
   const dataUsageStatsChunks = await listDataUsageStatsChunks();
+  // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
-    workerResponses[taskID] = resolve; // Store the resolve function for this taskID
-    port.onerror = function (e) {
-      reject(e.message);
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
     };
-    port.postMessage([dataUsageStatsChunks, width, height, padding, taskID]); // Send the task to the worker
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+    worker.postMessage([dataUsageStatsChunks, width, height, padding]); // Send data to the worker
   });
   return result;
 }
