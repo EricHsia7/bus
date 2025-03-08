@@ -315,5 +315,6 @@ export async function getUpdateRate(): Promise<number> {
     port.postMessage([dataGroups, taskID]); // Send the task to the worker
   });
 
+  console.log(dataGroups.length, result);
   return result;
 }

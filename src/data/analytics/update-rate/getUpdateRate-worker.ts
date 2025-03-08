@@ -43,14 +43,14 @@ function processWorkerTask(): void {
     let totalCorrelation: number = 0;
     let totalWeight: number = 0;
     for (const dataGroup of dataGroups) {
-      if (dataGroup.stats.correlation < -0.2 || dataGroup.stats > 0.2) {
+      if (dataGroup.stats.correlation < -0.5 || dataGroup.stats.correlation > 0.5) {
         totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
         totalWeight += dataGroup.stats.length;
       }
     }
     weightedAverage = totalCorrelation / totalWeight;
 
-    const result = isNaN(weightedAverage) ? 0.8 : Math.max(0.6, Math.abs(weightedAverage));
+    const result = isNaN(weightedAverage) ? 0.8 : Math.abs(weightedAverage);
 
     // Send the result back to the main thread
     port.postMessage([result, taskID]);
