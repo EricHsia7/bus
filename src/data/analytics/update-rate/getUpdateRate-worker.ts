@@ -43,7 +43,10 @@ function processWorkerTask(): void {
     let totalCorrelation: number = 0;
     let totalWeight: number = 0;
     for (const dataGroup of dataGroups) {
-      if (dataGroup.stats.correlation < -0.2 || dataGroup.stats > 0.2) {
+      if (typeof dataGroup.stats.correlation !== 'number') {
+        continue;
+      }
+      if (dataGroup.stats.correlation < -0.2 || dataGroup.stats.correlation > 0.2) {
         totalCorrelation += dataGroup.stats.correlation * dataGroup.stats.length;
         totalWeight += dataGroup.stats.length;
       }
