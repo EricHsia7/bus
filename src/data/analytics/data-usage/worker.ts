@@ -20,6 +20,7 @@ if ('onconnect' in self) {
   self.onconnect = function (e) {
     const port = e.ports[0];
     port.onmessage = function (event) {
+      port.postMessage([-1]);
       const [dataUsageStatsChunks, width, height, padding, taskID] = event.data;
       taskQueue.push({ dataUsageStatsChunks, width, height, padding, taskID, port });
       processWorkerTask();
@@ -28,6 +29,7 @@ if ('onconnect' in self) {
 } else {
   const port = self;
   self.onmessage = function (event) {
+    port.postMessage([-1]);
     const [dataUsageStatsChunks, width, height, padding, taskID] = event.data;
     taskQueue.push({ dataUsageStatsChunks, width, height, padding, taskID, port });
     processWorkerTask();
@@ -43,6 +45,10 @@ function processWorkerTask(): void {
 
   // Dequeue the next task
   const { dataUsageStatsChunks, width, height, padding, taskID, port }: task = taskQueue.shift();
+  port.postMessage([0]);
+
+  const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
+  port.postMessage([1]);
 
   let extremum: Array<number> = [];
   let sum: number = 0;
@@ -51,34 +57,40 @@ function processWorkerTask(): void {
     extremum.push(dataUsageStatsChunk.stats.min);
     sum += dataUsageStatsChunk.stats.sum;
   }
+  port.postMessage([2]);
   const [min, max] = findExtremum(extremum);
+  port.postMessage([3]);
 
   const start = dataUsageStatsChunks[0].date;
-  const end = dataUsageStatsChunks[dataUsageStatsChunks.length - 1].date;
+  const end = dataUsageStatsChunks[dataUsageStatsChunksLength - 1].date;
   const startDate = createDateObjectFromDate(start[0], start[1], start[2]);
   const endDate = createDateObjectFromDate(end[0], end[1], end[2]);
+  port.postMessage([4]);
 
-  const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
   const points: Segments = [];
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
     const data = dataUsageStatsChunk.data;
-    for (let j = 0; j < 60 * 24; j++) {
+    for (let j = 0; j < minutesPerDay; j++) {
       const x = padding + (i / DataUsagePeriod + j / minutesPerDay) * width;
       const y = padding + (1 - data[j] / max) * height;
-      points.push({ x: x | 0, y: y | 0 });
+      points.push({ x, y });
     }
   }
+  port.postMessage([5]);
 
   // X-axis (horizontal)
   const xAxis = `<line x1="${padding}" y1="${height + padding}" x2="${padding + width}" y2="${height + padding}" stroke="var(--b-cssvar-333333)" stroke-width="1" />`;
+  port.postMessage([6]);
 
   // Y-axis (vertical)
   const yAxis = `<line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height + padding}" stroke="var(--b-cssvar-333333)" stroke-width="1" />`;
+  port.postMessage([7]);
 
   // Axis Labels
   const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)">時間</text>`;
   const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding * 0.7}, ${padding + height / 2})">傳輸量</text>`;
+  port.postMessage([8]);
 
   // Paths
   const simplifiedPath = simplifyPath(points, 1.1);
@@ -87,9 +99,11 @@ function processWorkerTask(): void {
   const path = `<path d="${pathData}" fill="none" stroke="var(--b-cssvar-main-color)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" opacity="1"></path>`;
   const fillingPath = `<path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)"></path>`;
   const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.3);" /><stop offset="73%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.09);" /><stop offset="100%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);" /></linearGradient>`;
+  port.postMessage([9]);
 
   // SVG
   const chart = /*html*/ `<svg xmlns="http://www.w3.org/2000/svg" width="${width + padding * 2}px" height="${height + padding * 2}px" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${fillingPath}${path}${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}</svg>`;
+  port.postMessage([10]);
 
   const result: DataUsageStats = {
     stats: {
@@ -103,6 +117,7 @@ function processWorkerTask(): void {
     },
     chart
   };
+  port.postMessage([11]);
 
   // Send the complete HTML back to the main thread
   port.postMessage([result, taskID]);

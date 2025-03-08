@@ -1,6 +1,4 @@
-import { convertBytes } from '../../../tools/convert';
 import { generateIdentifier } from '../../../tools/index';
-import { segmentsToPath, simplifyPath } from '../../../tools/path';
 import { createDateObjectFromDate, dateToString, offsetDate, TimeStampPeriod } from '../../../tools/time';
 import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
 
@@ -67,7 +65,7 @@ export async function listDataUsageStatsChunks(): Promise<DataUsageStatsChunkArr
   endDate.setMinutes(0);
   endDate.setSeconds(0);
   endDate.setMilliseconds(0);
-  const startDate = offsetDate(endDate, -DataUsagePeriod, 0, 0);
+  const startDate = offsetDate(endDate, -1 * DataUsagePeriod, 0, 0);
   const result: DataUsageStatsChunkArray = [];
   for (let i = 0; i < DataUsagePeriod; i++) {
     const date = offsetDate(startDate, i, 0, 0);
@@ -114,16 +112,20 @@ var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
-  const getUpdateRateSharedWorker = new SharedWorker(new URL('./worker.ts', import.meta.url)); // Reusable shared worker
-  port = getUpdateRateSharedWorker.port; // Access the port for communication
+  const getDataUsageStatsSharedWorker = new SharedWorker(new URL('./worker.ts', import.meta.url)); // Reusable shared worker
+  port = getDataUsageStatsSharedWorker.port; // Access the port for communication
   port.start(); // Start the port (required by some browsers)
 } else {
-  const getUpdateRateWorker = new Worker(new URL('./worker.ts', import.meta.url)); // Fallback to standard worker
-  port = getUpdateRateWorker; // Use Worker directly for communication
+  const getDataUsageStatsWorker = new Worker(new URL('./worker.ts', import.meta.url)); // Fallback to standard worker
+  port = getDataUsageStatsWorker; // Use Worker directly for communication
 }
 
 // Handle messages from the worker
 port.onmessage = function (e) {
+  if (e.data.length === 1) {
+    console.log(e.data[0]);
+    return;
+  }
   const [result, taskID] = e.data;
   if (workerResponses[taskID]) {
     workerResponses[taskID](result); // Resolve the correct promise
@@ -137,17 +139,24 @@ port.onerror = function (e) {
 };
 
 export async function getDataUsageStats(width: number, height: number, padding: number): Promise<DataUsageStats> {
+  console.log('a', 0);
   const taskID = generateIdentifier('t');
+  console.log('a', 1);
 
   const dataUsageStatsChunks = await listDataUsageStatsChunks();
+  console.log('a', 2);
 
   const result = await new Promise((resolve, reject) => {
+    console.log('a', 3);
+
     workerResponses[taskID] = resolve; // Store the resolve function for this taskID
     port.onerror = function (e) {
+      console.log('a', 4);
       reject(e.message);
     };
+    console.log('a', 5);
     port.postMessage([dataUsageStatsChunks, width, height, padding, taskID]); // Send the task to the worker
   });
-
+  console.log('a', 6);
   return result;
 }
