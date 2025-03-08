@@ -581,6 +581,7 @@ async function refreshRoute() {
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {
     updateRate = await getUpdateRate();
+    promptMessage(updateRate.toString(), 'bug_report');
   }
   routeRefreshTimer_lastUpdate = new Date().getTime();
   if (routeRefreshTimer_dynamic) {
