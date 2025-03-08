@@ -1,6 +1,6 @@
 import { updateSearchResult } from './interface/search/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
-import { discardExpiredDataUsageRecords } from './data/analytics/data-usage';
+import { discardExpiredDataUsageRecords } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
@@ -24,7 +24,7 @@ import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, upda
 import { loadCSS } from './interface/lazy-css';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
-import { closeDataUsage, openDataUsage, switchDataUsageGraphAggregationPeriod } from './interface/data-usage/index';
+import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
 import { closeStorage, openStorage } from './interface/storage/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
@@ -169,7 +169,7 @@ import './interface/schedule-notification/item.css';
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
 import './interface/data-usage/body.css';
-import './interface/data-usage/graph.css';
+import './interface/data-usage/chart.css';
 import './interface/data-usage/statistics.css';
 
 import './interface/storage/field.css';
@@ -354,8 +354,7 @@ window.bus = {
   },
   dataUsage: {
     openDataUsage,
-    closeDataUsage,
-    switchDataUsageGraphAggregationPeriod
+    closeDataUsage
   },
   personalSchedule: {
     openPersonalScheduleManager,

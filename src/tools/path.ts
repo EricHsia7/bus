@@ -1,9 +1,9 @@
-interface Segment {
+export interface Segment {
   x: number;
   y: number;
 }
 
-type Segments = Array<Segment>;
+export type Segments = Array<Segment>;
 
 function distanceToSegment(point: Segment, start: Segment, end: Segment): number {
   let dx = end.x - start.x;

@@ -208,6 +208,20 @@ export function timeObjectToString(timeObject: TimeObject): string {
   return `${String(timeObject.hours).padStart(2, '0')}:${String(timeObject.minutes).padStart(2, '0')}`;
 }
 
+export function createDateObjectFromDate(year: number, month: number, date: number): Date {
+  var dateObject = new Date();
+  dateObject.setDate(1); // Set to the first day of the month to prevent date from being clamped
+  dateObject.setMonth(0);
+  dateObject.setFullYear(year);
+  dateObject.setMonth(month - 1);
+  dateObject.setDate(date);
+  dateObject.setHours(0);
+  dateObject.setMinutes(0);
+  dateObject.setSeconds(0);
+  dateObject.setMilliseconds(0);
+  return dateObject;
+}
+
 export function maxConcurrency(periods: Array<TimePeriod>): number {
   let events: Array<[number, 1 | -1]> = [];
 

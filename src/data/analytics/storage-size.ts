@@ -38,7 +38,7 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '設定';
       key = 'settings';
       break;
-    case 'dataUsageRecordsStore':
+    case 'dataUsageStatsStore':
       name = '分析';
       key = 'analytics';
       break;

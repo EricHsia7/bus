@@ -1,6 +1,6 @@
 import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
-import { recordRequest } from '../analytics/data-usage';
+import { recordDataUsage } from '../analytics/data-usage/index';
 
 let dataReceivingProgress = {};
 
@@ -9,8 +9,6 @@ export type DataUpdateTime = { [key: string]: number };
 export let dataUpdateTime: DataUpdateTime = {};
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
-  const startTimeStamp = new Date().getTime();
-
   // Create a connection timeout promise
   const connectionTimeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out')), connectionTimeoutDuration));
 
@@ -73,8 +71,8 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  const endTimeStamp = new Date().getTime();
-  await recordRequest(requestID, { end_time: endTimeStamp, start_time: startTimeStamp, content_length: contentLength }, receivedLength < contentLength);
+  const now = new Date();
+  await recordDataUsage(contentLength, now);
 
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array]);
