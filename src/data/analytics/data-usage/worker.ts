@@ -40,7 +40,7 @@ function processWorkerTask(data: data): DataUsageStats {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
     const data = dataUsageStatsChunk.data;
     for (let j = 0; j < minutesPerDay; j++) {
-      const x = padding + (i / DataUsagePeriod + j / minutesPerDay) * width;
+      const x = padding + ((i / DataUsagePeriod + j / minutesPerDay) / (DataUsagePeriod + 1)) * width;
       const y = padding + (1 - data[j] / max) * height;
       points.push({ x, y });
     }
