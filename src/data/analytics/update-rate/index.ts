@@ -267,7 +267,8 @@ export async function discardExpiredUpdateRateDataGroups() {
     const json = await lfGetItem(3, key);
     const object = JSON.parse(json) as UpdateRateDataGroup;
     const thisTimestamp = object.timestamp;
-    if (thisTimestamp <= oneWeekAgo) {
+    const thisCorrelation = object.stats.correlation;
+    if (thisTimestamp <= oneWeekAgo || typeof thisCorrelation !== 'number') {
       await lfRemoveItem(3, key);
     }
   }
