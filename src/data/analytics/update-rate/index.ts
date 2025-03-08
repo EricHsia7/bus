@@ -125,7 +125,6 @@ function mergeUpdateRateDataStats(targetStats: UpdateRateDataGroupStats, sourceS
 export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimestamp: number = now.getTime();
-  let needToReset = false;
   // Initialize
   if (!updateRateData_writeAheadLog_tracking) {
     updateRateData_writeAheadLog_tracking = true;
@@ -154,10 +153,6 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
       updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
-      updateRateData_writeAheadLog_currentDataLength += 1;
-      if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
-        needToReset = true;
-      }
     }
   }
 
@@ -165,7 +160,9 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
 
-  if (needToReset) {
+  updateRateData_writeAheadLog_currentDataLength += 1;
+
+  if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
     for (const stopID of updateRateData_trackedStops) {
       const stopKey = `s_${stopID}`;
       const data = updateRateData_writeAheadLog_group.data[stopKey];
