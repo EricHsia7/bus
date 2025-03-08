@@ -105,7 +105,7 @@ export async function discardExpiredDataUsageStats() {
 }
 
 export async function getDataUsageStats(width: number, height: number, padding: number): Promise<DataUsageStats> {
-  const worker = new Worker(new URL('./worker.ts', import.meta.url));
+  const worker = new Worker(new URL('./getDataUsageStats-worker.ts', import.meta.url));
   const dataUsageStatsChunks = await listDataUsageStatsChunks();
   // Wrap worker communication in a promise
   const result = await new Promise((resolve, reject) => {
