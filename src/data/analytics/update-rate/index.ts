@@ -32,12 +32,12 @@ export interface UpdateRateDataWriteAheadLogGroup {
   id: string;
 }
 
-const updateRateData_sampleQuantity: number = 16;
+const updateRateData_sampleQuantity: number = 32;
 let updateRateData_trackedStops: Array<number> = [];
 let updateRateData_writeAheadLog_id: string = '';
 let updateRateData_writeAheadLog_tracking: boolean = false;
 let updateRateData_writeAheadLog_currentDataLength: number = 0;
-const updateRateData_writeAheadLog_maxDataLength: number = 90;
+const updateRateData_writeAheadLog_maxDataLength: number = 45;
 let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   data: {},
   timestamp: 0,
@@ -154,14 +154,15 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
       updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
-      updateRateData_writeAheadLog_currentDataLength += 1;
-      if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
-        needToReset = true;
-      }
     }
   }
 
-  if (updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
+  updateRateData_writeAheadLog_currentDataLength += 1;
+  if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
+    needToReset = true;
+  }
+
+  if (updateRateData_writeAheadLog_currentDataLength % 5 === 0) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
 
@@ -316,39 +317,3 @@ export async function getUpdateRate(): Promise<number> {
 
   return result;
 }
-
-/*
-export async function getUpdateRateInTime(): Promise<string> {
-  let totalWeight: number = 0;
-  let totalAverageChange: number = 0;
-  let weightedAverageChange: number = 0;
-  const dataGroup = await listUpdateRateDataGroups();
-  for (const dataSet of dataGroup) {
-    const groups = splitDataByDelta(dataSet);
-    for (const group of groups) {
-      const firstColumn: Array<number> = group.map((item) => item[0]);
-      const secondColumn: Array<number> = group.map((item) => item[1]);
-      const rowCount: number = firstColumn.length;
-      let timeStampUponChanges: Array<number> = [];
-      for (let i = 1; i < rowCount; i++) {
-        const change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
-        if (change > 0) {
-          timeStampUponChanges.push(secondColumn[i]);
-        }
-      }
-      const timeStampUponChangesLength: number = timeStampUponChanges.length;
-      let totalChange: number = 0;
-      let average: number = 0;
-      for (let i = 1; i < timeStampUponChangesLength; i++) {
-        const change: number = Math.abs(timeStampUponChanges[i] - timeStampUponChanges[i - 1]); // measured in seconds
-        totalChange += change;
-      }
-      average = totalChange / (timeStampUponChangesLength - 1);
-      totalAverageChange += isNaN(average) ? 0 : average * rowCount;
-      totalWeight += isNaN(average) ? 0 : rowCount;
-    }
-  }
-  weightedAverageChange = totalAverageChange / totalWeight;
-  return isNaN(weightedAverageChange) ? '!' : formatTime(weightedAverageChange, 0);
-}
-*/
