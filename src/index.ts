@@ -169,7 +169,7 @@ import './interface/schedule-notification/item.css';
 import './interface/data-usage/field.css';
 import './interface/data-usage/head.css';
 import './interface/data-usage/body.css';
-import './interface/data-usage/graph.css';
+import './interface/data-usage/chart.css';
 import './interface/data-usage/statistics.css';
 
 import './interface/storage/field.css';
