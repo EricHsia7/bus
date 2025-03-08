@@ -67,7 +67,7 @@ export async function listDataUsageStatsChunks(): Promise<DataUsageStatsChunkArr
   endDate.setMilliseconds(0);
   const startDate = offsetDate(endDate, -1 * DataUsagePeriod, 0, 0);
   const result: DataUsageStatsChunkArray = [];
-  for (let i = 0; i < DataUsagePeriod; i++) {
+  for (let i = 1; i <= DataUsagePeriod; i++) {
     const date = offsetDate(startDate, i, 0, 0);
     const key = `d_${dateToString(date, 'YYYY_MM_DD')}`;
     const existingDataUsageStatsChunkJSON = await lfGetItem(2, key);
