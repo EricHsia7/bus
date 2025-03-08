@@ -47,7 +47,7 @@ function processWorkerTask(): void {
         continue;
       }
       const absoluteCorrelation = Math.abs(dataGroup.stats.correlation);
-      if (absoluteCorrelation <= -0.5) {
+      if (absoluteCorrelation >= 0.5) {
         totalCorrelation += absoluteCorrelation * dataGroup.stats.length;
         totalWeight += dataGroup.stats.length;
       }
