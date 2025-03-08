@@ -50,9 +50,11 @@ export async function recordDataUsage(contentLength: number, date: Date) {
     const data = new Uint32Array(60 * 24);
     data[index] += contentLength;
     newDataUsageStatsChunk.data = Array.from(data);
-    newDataUsageStatsChunk.stats.max = contentLength;
-    newDataUsageStatsChunk.stats.min = 0;
-    newDataUsageStatsChunk.stats.sum = contentLength;
+    newDataUsageStatsChunk.stats = {
+      sum: contentLength,
+      max: contentLength,
+      min: 0
+    };
     newDataUsageStatsChunk.date = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
     await lfSetItem(2, key, JSON.stringify(newDataUsageStatsChunk));
   }
@@ -77,9 +79,11 @@ export async function listDataUsageStatsChunks(): Promise<DataUsageStatsChunkArr
       const blankDataUsageStatsChunk = {} as DataUsageStatsChunk;
       const data = new Uint32Array(60 * 24);
       blankDataUsageStatsChunk.data = Array.from(data);
-      blankDataUsageStatsChunk.stats.max = 0;
-      blankDataUsageStatsChunk.stats.min = 0;
-      blankDataUsageStatsChunk.stats.sum = 0;
+      blankDataUsageStatsChunk.stats = {
+        sum: 0,
+        max: 0,
+        min: 0
+      };
       blankDataUsageStatsChunk.date = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
       result.push(blankDataUsageStatsChunk);
     }
