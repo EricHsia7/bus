@@ -38,6 +38,15 @@ function processWorkerTask(data: data): DataUsageStats {
   const points: Segments = [];
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
+    const sum = dataUsageStatsChunk.stats.sum;
+    if (sum === 0) {
+      const x1 = padding + (i / (DataUsagePeriod + 1)) * width;
+      const x2 = padding + ((i + (minutesPerDay - 1) / minutesPerDay) / (DataUsagePeriod + 1)) * width;
+      const y = padding + height;
+      points.push({ x: x1, y });
+      points.push({ x: x2, y });
+      continue;
+    }
     const data = dataUsageStatsChunk.data;
     for (let j = 0; j < minutesPerDay; j++) {
       const x = padding + ((i + j / minutesPerDay) / (DataUsagePeriod + 1)) * width;
