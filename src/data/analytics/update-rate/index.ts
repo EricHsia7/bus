@@ -156,7 +156,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     }
   }
 
-  if (updateRateData_writeAheadLog_currentDataLength % 15 === 0) {
+  if (updateRateData_writeAheadLog_currentDataLength % 5 === 0) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
 
