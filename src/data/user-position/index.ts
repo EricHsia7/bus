@@ -91,7 +91,7 @@ export function getNearestPosition(positions: Array<position>, radius: number = 
     result = result.sort(function (a, b) {
       return a.distance - b.distance;
     });
-    return result[0].position
+    return result[0].position;
   } else {
     return null;
   }

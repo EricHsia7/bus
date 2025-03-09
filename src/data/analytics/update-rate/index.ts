@@ -157,8 +157,6 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     }
   }
 
-  console.log(updateRateData_writeAheadLog_group);
-
   updateRateData_writeAheadLog_currentDataLength += 1;
   if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
     needToReset = true;
@@ -319,6 +317,5 @@ export async function getUpdateRate(): Promise<number> {
     port.postMessage([dataGroups, taskID]); // Send the task to the worker
   });
 
-  console.log(dataGroups.length, result);
   return result;
 }
