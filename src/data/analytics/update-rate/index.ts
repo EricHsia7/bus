@@ -221,7 +221,7 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
             dataGroup.id = existingDataObject.id;
           } else {
             dataGroup.stats = getUpdateRateDataStats(thisStopData);
-            dataGroup.timestamp = currentTimestamp;
+            dataGroup.timestamp = thisTimestamp;
             dataGroup.id = parseInt(stopKey.split('_')[1]);
           }
           await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
