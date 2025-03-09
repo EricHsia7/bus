@@ -217,11 +217,11 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
           const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
           dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
           dataGroup.timestamp = existingDataObject.timestamp;
-          dataGroup.id = stopID;
+          dataGroup.id = existingDataObject.id;
         } else {
           dataGroup.stats = getUpdateRateDataStats(thisStopData);
           dataGroup.timestamp = currentTimestamp;
-          dataGroup.id = stopID;
+          dataGroup.id = parseInt(stopKey.split('_')[1]);
         }
         await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
         if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
