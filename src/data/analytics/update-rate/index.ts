@@ -205,37 +205,37 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
   const keys = await lfListItemKeys(4);
   for (const key of keys) {
     const json = await lfGetItem(4, key);
-    const object = JSON.parse(json) as UpdateRateDataWriteAheadLogGroup;
-    const thisTimestamp = object.timestamp;
-    const thisID = object.id;
-    if (thisTimestamp > oneWeekAgo) {
-      for (const stopKey in object.data) {
-        const thisStopData = object[stopKey];
-        let dataGroup = {} as UpdateRateDataGroup;
-        const existingData = await lfGetItem(3, stopKey);
-        if (existingData) {
-          console.log(0);
-          const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-          dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
-          dataGroup.timestamp = existingDataObject.timestamp;
-          dataGroup.id = existingDataObject.id;
-        } else {
-          console.log(1);
-          dataGroup.stats = getUpdateRateDataStats(thisStopData);
-          dataGroup.timestamp = currentTimestamp;
-          dataGroup.id = parseInt(stopKey.split('_')[1]);
-        }
-        await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
-        if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
-          const existingIndex = updateRateData_groupsIndex[stopKey];
-          updateRateData_groups.splice(existingIndex, 1, dataGroup);
-        } else {
-          updateRateData_groups[stopKey] = updateRateData_groups.length;
-          updateRateData_groups.push(dataGroup);
+    if (json) {
+      const object = JSON.parse(json) as UpdateRateDataWriteAheadLogGroup;
+      const thisTimestamp = object.timestamp;
+      const thisID = object.id;
+      if (thisTimestamp > oneWeekAgo) {
+        for (const stopKey in object.data) {
+          const thisStopData = object.data[stopKey];
+          let dataGroup = {} as UpdateRateDataGroup;
+          const existingData = await lfGetItem(3, stopKey);
+          if (existingData) {
+            const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
+            dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
+            dataGroup.timestamp = existingDataObject.timestamp;
+            dataGroup.id = existingDataObject.id;
+          } else {
+            dataGroup.stats = getUpdateRateDataStats(thisStopData);
+            dataGroup.timestamp = currentTimestamp;
+            dataGroup.id = parseInt(stopKey.split('_')[1]);
+          }
+          await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+          if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+            const existingIndex = updateRateData_groupsIndex[stopKey];
+            updateRateData_groups.splice(existingIndex, 1, dataGroup);
+          } else {
+            updateRateData_groups[stopKey] = updateRateData_groups.length;
+            updateRateData_groups.push(dataGroup);
+          }
         }
       }
+      await lfRemoveItem(4, thisID);
     }
-    await lfRemoveItem(4, thisID);
   }
 }
 
@@ -245,21 +245,17 @@ export async function initializeUpdateRateDataGroups() {
   const keys = await lfListItemKeys(3);
   let index: number = 0;
   for (const key of keys) {
-    console.log(3);
     const json = await lfGetItem(3, key);
     if (json) {
-      console.log(4);
       const object = JSON.parse(json) as UpdateRateDataGroup;
       const thisTimestamp = object.timestamp;
       if (thisTimestamp > oneWeekAgo) {
-        console.log(5);
         updateRateData_groups.push(object);
         updateRateData_groupsIndex[key] = index;
         index += 1;
       }
     }
   }
-  console.log(6);
 }
 
 export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
