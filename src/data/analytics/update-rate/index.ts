@@ -214,11 +214,13 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
         let dataGroup = {} as UpdateRateDataGroup;
         const existingData = await lfGetItem(3, stopKey);
         if (existingData) {
+          console.log(0);
           const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
           dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = existingDataObject.id;
         } else {
+          console.log(1);
           dataGroup.stats = getUpdateRateDataStats(thisStopData);
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = parseInt(stopKey.split('_')[1]);
@@ -231,9 +233,9 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
           updateRateData_groups[stopKey] = updateRateData_groups.length;
           updateRateData_groups.push(dataGroup);
         }
-        await lfRemoveItem(4, thisID);
       }
     }
+    await lfRemoveItem(4, thisID);
   }
 }
 
