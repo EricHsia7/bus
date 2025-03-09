@@ -245,17 +245,21 @@ export async function initializeUpdateRateDataGroups() {
   const keys = await lfListItemKeys(3);
   let index: number = 0;
   for (const key of keys) {
+    console.log(3);
     const json = await lfGetItem(3, key);
     if (json) {
+      console.log(4);
       const object = JSON.parse(json) as UpdateRateDataGroup;
       const thisTimestamp = object.timestamp;
       if (thisTimestamp > oneWeekAgo) {
+        console.log(5);
         updateRateData_groups.push(object);
         updateRateData_groupsIndex[key] = index;
         index += 1;
       }
     }
   }
+  console.log(6);
 }
 
 export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
