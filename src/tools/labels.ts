@@ -79,7 +79,7 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
       return b.dotProduct - a.dotProduct;
     });
     const bestMatch = result2[0];
-    result.push(bestMatch.label);
+    result.push(`向${bestMatch.label}行駛`);
   }
   return result;
 }
