@@ -18,10 +18,10 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
   const WestVector = [-1, 0];
   const SouthVector = [0, -1];
   // intercardinal directions
-  const NorthEastVector = [Math.sqrt(2) / 2, Math.sqrt(2) / 2]; // 45 degrees
-  const SouthEastVector = [Math.sqrt(2) / 2, -Math.sqrt(2) / 2]; // 135 degrees
-  const SouthWestVector = [-Math.sqrt(2) / 2, -Math.sqrt(2) / 2]; // 225 degrees
-  const NorthWestVector = [-Math.sqrt(2) / 2, Math.sqrt(2) / 2]; // 315 degrees
+  const NorthEastVector = [Math.SQRT2 / 2, Math.SQRT2 / 2]; // 45 degrees
+  const SouthEastVector = [Math.SQRT2 / 2, -Math.SQRT2 / 2]; // 135 degrees
+  const SouthWestVector = [-Math.SQRT2 / 2, -Math.SQRT2 / 2]; // 225 degrees
+  const NorthWestVector = [-Math.SQRT2 / 2, Math.SQRT2 / 2]; // 315 degrees
 
   const directions = [
     {
