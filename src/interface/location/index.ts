@@ -684,8 +684,8 @@ export function closeLocation(): void {
 }
 
 export function stretchLocationItemBody(itemID: string): void {
-  const itemElement = documentGetElementByID(itemID);
-  // const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  // const itemElement = documentGetElementByID(itemID);
+  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   if (itemElement.getAttribute('stretched') === 'true') {
     if (itemElement.getAttribute('animation') === 'true') {
@@ -707,8 +707,8 @@ export function stretchLocationItemBody(itemID: string): void {
 }
 
 export function switchLocationBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = documentGetElementByID(itemID);
-  // const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+  // const itemElement = documentGetElementByID(itemID);
+  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
   const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');

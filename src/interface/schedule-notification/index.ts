@@ -54,8 +54,8 @@ export function closeScheduleNotification(): void {
 }
 
 export function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
-  const itemElement = documentGetElementByID(itemElementID);
-  // const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+  // const itemElement = documentGetElementByID(itemElementID);
+  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const scheduleNotificationButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
   promptMessage('處理中', 'manufacturing');
   scheduleNotificationButtonElement.setAttribute('enabled', 'false');
@@ -82,8 +82,8 @@ export function scheduleNotificationForStopItemOnRoute(itemElementID: string, St
 }
 
 export function scheduleNotificationForStopItemOnLocation(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
-  const itemElement = documentGetElementByID(itemElementID);
-  // const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
+  // const itemElement = documentGetElementByID(itemElementID);
+  const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const scheduleNotificationButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="schedule-notification"]');
   promptMessage('處理中', 'manufacturing');
   scheduleNotificationButtonElement.setAttribute('enabled', 'false');
