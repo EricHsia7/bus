@@ -13,3 +13,7 @@ export function elementQuerySelector(element: HTMLElement, selectorExpression: s
 export function elementQuerySelectorAll(element: HTMLElement, selectorExpression: string): NodeListOf<HTMLElement> {
   return element.querySelectorAll(selectorExpression);
 }
+
+export function documentGetElementByID(id: string): HTMLElement {
+  return document.getElementById(id);
+}
