@@ -1,4 +1,4 @@
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentGetElementByID, documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { booleanToString } from '../../tools/index';
 import { listFoldersWithContent, FolderWithContent, saveStop, isFolderContentSaved, saveRoute } from '../../data/folder/index';
@@ -62,7 +62,8 @@ export function closeSaveToFolder(): void {
 }
 
 export function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
-  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+  const itemElement = documentGetElementByID(itemElementID);
+  // const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
@@ -80,7 +81,8 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
 }
 
 export function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
-  const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
+  const itemElement = documentGetElementByID(itemElementID);
+  // const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
     if (e) {
