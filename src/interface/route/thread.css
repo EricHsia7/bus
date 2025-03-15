@@ -26,7 +26,7 @@
 /* animation: true && skeleton screen: false */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] {
   transition: height var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: ease-out;
 }
 
 /* segment buffer: true */
