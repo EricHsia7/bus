@@ -682,8 +682,8 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     itemElement.setAttribute('stretched', 'true');
     threadBoxElement.setAttribute('stretched', 'true');
   }
-  const finalPositions = elementsBelow.map((element) => element.getBoundingClientRect().top);
   requestAnimationFrame(function () {
+    const finalPositions = elementsBelow.map((element) => element.getBoundingClientRect().top);
     const elementsBelowLength = elementsBelow.length;
     for (let i = 0; i < elementsBelowLength; i++) {
       const element = elementsBelow[i];
