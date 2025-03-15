@@ -17,3 +17,17 @@ export function elementQuerySelectorAll(element: HTMLElement, selectorExpression
 export function documentGetElementByID(id: string): HTMLElement {
   return document.getElementById(id);
 }
+
+export function getElementsBelow(referenceElement: HTMLElement, className: string): Array<HTMLElement> {
+  const elements = [];
+  let sibling = referenceElement.nextElementSibling;
+
+  while (sibling) {
+    if (sibling.classList.contains(className)) {
+      elements.push(sibling);
+    }
+    sibling = sibling.nextElementSibling;
+  }
+
+  return elements;
+}
