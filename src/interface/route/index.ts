@@ -688,6 +688,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     for (let i = 0; i < elementsBelowLength; i++) {
       const element = elementsBelow[i];
       element.style.transform = `translateY(${initialPositions[i] - finalPositions[i]}px)`;
+      element.getBoundingClientRect();
       element.style.transform = `translateY(0px)`;
     }
   });
