@@ -662,7 +662,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
   const elementsBelow = getElementsBelow(itemElement, 'css_route_group_item');
-  const parentElement = itemElement.parentElement as HTMLElement;
+  const groupElement = itemElement.parentElement?.parentElement as HTMLElement;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
@@ -678,7 +678,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     if (animation) {
       // Separate the element from the document flow
       itemElement.style.position = 'absolute';
-      itemElement.style.top = `${itemElementBoundingClientRect.top + parentElement.scrollTop}px`;
+      itemElement.style.top = `${itemElementBoundingClientRect.top + groupElement.scrollTop}px`;
       itemElement.style.left = '0px';
 
       // Apply compensation transform
