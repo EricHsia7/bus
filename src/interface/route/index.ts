@@ -690,13 +690,13 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
   const threadTrackElementRect = threadTrackElement.getBoundingClientRect();
   const threadBoxElementRect = threadBoxElement.getBoundingClientRect();
 
-  const scrollLeft = groupElement.scrollLeft;
+  // const scrollLeft = groupElement.scrollLeft;
   const scrollTop = groupElement.scrollTop;
 
-  const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left + scrollLeft;
+  // const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left + scrollLeft;
   const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top + scrollTop;
 
-  const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
+  // const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
   const itemElementY = itemElementRect.top - itemsTrackElementRect.top + scrollTop;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
@@ -707,11 +707,11 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
 
     // Separate the elements from the document flow while keeping its position
     threadBoxElement.setAttribute('stretching', 'true');
-    threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-x', `${threadBoxElementX}px`);
+    // threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-x', `${threadBoxElementX}px`);
     threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-y', `${threadBoxElementY}px`);
 
     itemElement.setAttribute('stretching', 'true');
-    itemElement.style.setProperty('--b-cssvar-css-route-group-item-x', `${itemElementX}px`);
+    // itemElement.style.setProperty('--b-cssvar-css-route-group-item-x', `${itemElementX}px`);
     itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
