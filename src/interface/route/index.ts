@@ -737,6 +737,7 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
           thisItemElement.setAttribute('push-state', '0');
         }
         // Deposit the element
+        threadBoxElement.setAttribute('stretching', 'false');
         itemElement.setAttribute('stretching', 'false');
       },
       { once: true }
