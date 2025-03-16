@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-smoother-expanding-and-contracting-transition
+      - dev-smoother-expanding-and-contracting-transition-state-based-compensation-2
 
 jobs:
   launch:
