@@ -165,6 +165,10 @@ function generateElementOfGroup(): GeneratedElement {
   const itemsTrackElement = document.createElement('div');
   itemsTrackElement.classList.add('css_route_group_items_track');
 
+  const itemSpaceElement = document.createElement('div');
+  itemSpaceElement.classList.add('css_route_group_item_space_top');
+
+  itemsTrackElement.appendChild(itemSpaceElement);
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
@@ -679,7 +683,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const normalTransform = `translateY(0px)`;
 
   if (animation) {
-    // Separate the element from the document flow
+    // Separate the element from the document flow while keeping its position
     itemElement.style.position = 'absolute';
     itemElement.style.left = `${x}px`;
     itemElement.style.top = `${y}px`;
@@ -692,7 +696,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     itemElement.addEventListener(
       'transitionend',
       function () {
-        // Deposit the element
+        // Deposit the elements
         itemElement.style.position = 'relative';
         itemElement.style.top = '';
         itemElement.style.left = '';
@@ -707,6 +711,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     itemElement.addEventListener(
       'transitionstart',
       function () {
+        // Transition the elements below
         for (const element of elementsBelow) {
           element.style.transition = 'transform var(--b-cssvar-transition-duration)';
           element.style.transform = movingTransform;
@@ -716,7 +721,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     );
   }
 
-  // Transition the elements
+  // Switch the state of the stretching element
   if (stretched) {
     if (animation) {
       itemBodyElement.addEventListener(
