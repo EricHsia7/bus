@@ -53,12 +53,14 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="1"] {
   transform: translateY(50px);
   /* compensate the height of the already collapsed element separated from the document flow */
+  z-index: -1;
 }
 
 /* push-direction: 1 && push-state: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="2"] {
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
+  z-index: -1;
 }
 
 /* push-direction: 2 && push-state: 0 */
@@ -70,12 +72,14 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="1"] {
   transform: translateY(calc(50px + 171px));
   /* compensate the height of the already expanded element separated from the document flow */
+  z-index: -1;
 }
 
 /* push-direction: 2 && push-state: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="2"] {
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
+  z-index: -1;
 }
 
 /* stretched: true */
@@ -120,10 +124,6 @@
   height: calc(100% - 10px);
   background: linear-gradient(180deg, var(--b-cssvar-ededf2) 0%, var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2) 100%);
   z-index: 2;
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-state="2"] .css_route_group_thread {
-  z-index: 3;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread {
