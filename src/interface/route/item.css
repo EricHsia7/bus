@@ -1,3 +1,15 @@
+@property --b-cssvar-css-route-group-item-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-css-route-group-item-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 /* item space top */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item_space_top {
   position: relative;
@@ -28,6 +40,48 @@
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
+/* stretching: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretching="true"] {
+  position: absolute;
+  left: var(--b-cssvar-css-route-group-item-x);
+  top: var(--b-cssvar-css-route-group-item-y);
+}
+
+/* push-direction: 1 & push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 & push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="1"] {
+  transform: translateY(50px);
+  /* compensate the height of the already collapsed element separated from the document flow */
+}
+
+/* push-direction: 1 & push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="2"] {
+  transform: translateY(calc(50px + 171px));
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+/* push-direction: 2 & push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 2 & push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="1"] {
+  transform: translateY(calc(50px + 171px));
+  /* compensate the height of the already expanded element separated from the document flow */
+}
+
+/* push-direction: 2 & push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="2"] {
+  transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+/* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
