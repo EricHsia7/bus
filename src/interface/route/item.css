@@ -55,8 +55,8 @@
 /* push-direction: 1 & push-state: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="1"] {
   transform: translateY(50px);
-  transition: transform var(--b-cssvar-transition-duration);
   /* compensate the height of the already collapsed element separated from the document flow */
+  transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* push-direction: 1 & push-state: 2 */
@@ -72,15 +72,15 @@
 
 /* push-direction: 2 & push-state: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="1"] {
-  transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
   /* compensate the height of the already expanded element separated from the document flow */
+  transform: translateY(calc(50px + 171px));
 }
 
 /* push-direction: 2 & push-state: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="2"] {
-  transition: transform var(--b-cssvar-transition-duration);
   transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
@@ -90,7 +90,7 @@
 }
 
 /* animation: true && skeleton screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
   transition: height var(--b-cssvar-transition-duration);
 }
 
