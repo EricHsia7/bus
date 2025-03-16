@@ -678,42 +678,51 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const movingTransform = `translateY(${stretched ? 50 : 50 + 171}px)`;
   const normalTransform = `translateY(0px)`;
 
+  if (animation) {
+    // Separate the element from the document flow
+    itemElement.style.position = 'absolute';
+    itemElement.style.left = `${x}px`;
+    itemElement.style.top = `${y}px`;
+
+    // Apply compensation transform
+    for (const element of elementsBelow) {
+      element.style.transform = compensationTransform;
+    }
+
+    itemElement.addEventListener(
+      'transitionend',
+      function () {
+        // Deposit the element
+        itemElement.style.position = 'relative';
+        itemElement.style.top = '';
+        itemElement.style.left = '';
+        for (const element of elementsBelow) {
+          element.style.transform = normalTransform;
+          element.style.transition = '';
+        }
+      },
+      { once: true }
+    );
+
+    itemElement.addEventListener(
+      'transitionstart',
+      function () {
+        for (const element of elementsBelow) {
+          element.style.transition = 'transform var(--b-cssvar-transition-duration)';
+          element.style.transform = movingTransform;
+        }
+      },
+      { once: true }
+    );
+  }
+
   // Transition the elements
   if (stretched) {
     if (animation) {
-      // Separate the element from the document flow
-      itemElement.style.position = 'absolute';
-      itemElement.style.left = `${x}px`;
-      itemElement.style.top = `${y}px`;
-
-      // Apply compensation transform
-      for (const element of elementsBelow) {
-        element.style.transform = compensationTransform;
-      }
-
       itemBodyElement.addEventListener(
         'transitionend',
         function () {
           itemBodyElement.setAttribute('displayed', 'false');
-          // Deposit the element
-          itemElement.style.position = 'relative';
-          itemElement.style.top = '';
-          itemElement.style.left = '';
-          for (const element of elementsBelow) {
-            element.style.transform = normalTransform;
-            element.style.transition = '';
-          }
-        },
-        { once: true }
-      );
-
-      itemElement.addEventListener(
-        'transitionstart',
-        function () {
-          for (const element of elementsBelow) {
-            element.style.transition = 'transform var(--b-cssvar-transition-duration)';
-            element.style.transform = movingTransform;
-          }
         },
         { once: true }
       );
