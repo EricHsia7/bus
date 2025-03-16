@@ -683,7 +683,6 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
       // Apply compensation transform
       for (const element of elementsBelow) {
         element.style.transform = compensationTransform;
-        element.style.transition = 'transform var(--b-cssvar-transition-duration)';
       }
 
       itemBodyElement.addEventListener(
@@ -702,9 +701,16 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
         { once: true }
       );
 
-      for (const element of elementsBelow) {
-        element.style.transform = movingTransform;
-      }
+      itemElement.addEventListener(
+        'transitionstart',
+        function () {
+          for (const element of elementsBelow) {
+            element.style.transition = 'transform var(--b-cssvar-transition-duration)';
+            element.style.transform = movingTransform;
+          }
+        },
+        { once: true }
+      );
     } else {
       itemBodyElement.setAttribute('displayed', 'false');
     }
