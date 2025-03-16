@@ -683,8 +683,8 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     if (animation) {
       // Separate the element from the document flow
       itemElement.style.position = 'absolute';
-      itemElement.style.top = `${x}px`;
-      itemElement.style.left = `${y}px`;
+      itemElement.style.left = `${x}px`;
+      itemElement.style.top = `${y}px`;
 
       // Apply compensation transform
       for (const element of elementsBelow) {
