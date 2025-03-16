@@ -4,7 +4,7 @@ import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
-import { documentGetElementByID, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { GeneratedElement, pushPageHistory, closePreviousPage, openPreviousPage, GroupStyles, querySize } from '../index';
@@ -658,20 +658,53 @@ export function switchRoute(RouteID: number, PathAttributeId: Array<number>): vo
 }
 
 export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
-  // const itemElement = documentGetElementByID(itemElementID);
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
-  // const threadBoxElement = documentGetElementByID(threadBoxElementID);
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
-  if (itemElement.getAttribute('stretched') === 'true') {
-    if (itemElement.getAttribute('animation') === 'true') {
+  const elementsBelow = getElementsBelow(itemElement, 'css_route_group_item');
+
+  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+
+  const itemElementBoundingClientRect = itemElement.getBoundingClientRect();
+
+  const compensationTransform = `translateY(${stretched ? 50 + 171 : 50}px)`;
+  const movingTransform = `translateY(${stretched ? 50 : 50 + 171}px)`;
+  const normalTransform = `translateY(0px)`;
+
+  // Transition the elements
+  if (stretched) {
+    if (animation) {
+      // Separate the element from the document flow
+      itemElement.style.position = 'fixed';
+      itemElement.style.top = `${itemElementBoundingClientRect.top}px`;
+      itemElement.style.left = `${itemElementBoundingClientRect.left}px`;
+
+      // Apply compensation transform
+      for (const element of elementsBelow) {
+        element.style.transform = compensationTransform;
+        element.style.transition = 'transform var(--b-cssvar-transition-duration)';
+      }
+
       itemBodyElement.addEventListener(
         'transitionend',
         function () {
           itemBodyElement.setAttribute('displayed', 'false');
+          // Deposit the element
+          itemElement.style.position = 'relative';
+          itemElement.style.top = '';
+          itemElement.style.left = '';
+          for (const element of elementsBelow) {
+            element.style.transform = normalTransform;
+            element.style.transition = '';
+          }
         },
         { once: true }
       );
+
+      for (const element of elementsBelow) {
+        element.style.transform = movingTransform;
+      }
     } else {
       itemBodyElement.setAttribute('displayed', 'false');
     }
