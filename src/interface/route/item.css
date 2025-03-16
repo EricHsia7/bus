@@ -47,35 +47,35 @@
   top: var(--b-cssvar-css-route-group-item-y);
 }
 
-/* push-direction: 1 & push-state: 0 */
+/* push-direction: 1 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="0"] {
   transform: translateY(0px);
 }
 
-/* push-direction: 1 & push-state: 1 */
+/* push-direction: 1 && push-state: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="1"] {
   transform: translateY(50px);
   /* compensate the height of the already collapsed element separated from the document flow */
 }
 
-/* push-direction: 1 & push-state: 2 */
+/* push-direction: 1 && push-state: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="2"] {
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
 }
 
-/* push-direction: 2 & push-state: 0 */
+/* push-direction: 2 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="0"] {
   transform: translateY(0px);
 }
 
-/* push-direction: 2 & push-state: 1 */
+/* push-direction: 2 && push-state: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="1"] {
   transform: translateY(calc(50px + 171px));
   /* compensate the height of the already expanded element separated from the document flow */
 }
 
-/* push-direction: 2 & push-state: 2 */
+/* push-direction: 2 && push-state: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="2"] {
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
@@ -87,7 +87,7 @@
   /* head: 50px + body: 171px */
 }
 
-/* animation: true && skeleton screen: false */
+/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
   transition: height var(--b-cssvar-transition-duration);
 }
@@ -420,8 +420,8 @@
   visibility: inherit;
 }
 
-/* animation: true && skeleton-screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"] .css_route_group_item_body {
+/* animation: true && skeleton-screen: false && push-direction: 0 && push-state: 0*/
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_item_body {
   transition: opacity var(--b-cssvar-transition-duration);
 }
 

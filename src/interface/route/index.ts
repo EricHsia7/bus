@@ -698,10 +698,12 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     itemElement.addEventListener(
       'transitionend',
       function () {
-        // Deposit the elements
+        // Reset the push direction and push state
         for (const element of elementsBelow) {
+          element.setAttribute('push-direction', '0');
           element.setAttribute('push-state', '0');
         }
+        // Deposit the element
         itemElement.setAttribute('stretching', 'false');
       },
       { once: true }
