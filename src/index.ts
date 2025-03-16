@@ -2,7 +2,7 @@ import { updateSearchResult } from './interface/search/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
-import { openRoute, closeRoute, switchRoute, stretchRouteItemBody, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
+import { openRoute, closeRoute, switchRoute, stretchRouteItem, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody, switchLocationBodyTab } from './interface/location/index';
@@ -303,7 +303,7 @@ window.bus = {
     }
   },
   route: {
-    stretchRouteItemBody,
+    stretchRouteItem,
     openRoute,
     closeRoute,
     switchRoute,

@@ -131,6 +131,9 @@ function generateElementOfThreadBox(): GeneratedElement {
   element.classList.add('css_route_group_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
+  element.setAttribute('stretching', 'false');
+  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   element.innerHTML = /*html*/ `<div class="css_route_group_thread"></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
@@ -147,7 +150,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   element.setAttribute('stretching', 'false');
   element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItemBody('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body" displayed="false"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-route', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-route', ['${identifier}', null, null, null])" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItem('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body" displayed="false"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-route', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-route', ['${identifier}', null, null, null])" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -165,6 +168,9 @@ function generateElementOfGroup(): GeneratedElement {
   const threadTrackElement = document.createElement('div');
   threadTrackElement.classList.add('css_route_group_threads_track');
 
+  const threadBoxSpace = document.createElement('div');
+  threadBoxSpace.classList.add('css_route_group_thread_box_space_top');
+
   const itemsTrackElement = document.createElement('div');
   itemsTrackElement.classList.add('css_route_group_items_track');
 
@@ -172,6 +178,7 @@ function generateElementOfGroup(): GeneratedElement {
   itemSpaceElement.classList.add('css_route_group_item_space_top');
 
   itemsTrackElement.appendChild(itemSpaceElement);
+  threadTrackElement.appendChild(threadBoxSpace);
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
@@ -664,19 +671,33 @@ export function switchRoute(RouteID: number, PathAttributeId: Array<number>): vo
   openRoute(RouteID, PathAttributeId);
 }
 
-export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: string): void {
+export function stretchRouteItem(itemElementID: string, threadBoxElementID: string): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
   const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
-  const elementsBelow = getElementsBelow(itemElement, 'css_route_group_item');
+
   const itemsTrackElement = itemElement.parentElement as HTMLElement;
+  const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
   const groupElement = itemsTrackElement.parentElement as HTMLElement;
 
-  const itemElementRect = itemElement.getBoundingClientRect();
-  const itemsTrackElementRect = itemsTrackElement.getBoundingClientRect();
+  const elementsBelowThreadBoxElement = getElementsBelow(threadBoxElement, 'css_route_group_thread_box');
+  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item');
 
-  const x = itemElementRect.left - itemsTrackElementRect.left + groupElement.scrollLeft;
-  const y = itemElementRect.top - itemsTrackElementRect.top + groupElement.scrollTop;
+  const elementsBelowLength = elementsBelowItemElement.length; // = elementsBelowThreadBoxElement.length
+
+  const itemsTrackElementRect = itemsTrackElement.getBoundingClientRect();
+  const itemElementRect = itemElement.getBoundingClientRect();
+  const threadTrackElementRect = threadTrackElement.getBoundingClientRect();
+  const threadBoxElementRect = threadBoxElement.getBoundingClientRect();
+
+  const scrollLeft = groupElement.scrollLeft;
+  const scrollTop = groupElement.scrollTop;
+
+  const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left + scrollLeft;
+  const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top + scrollTop;
+
+  const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
+  const itemElementY = itemElementRect.top - itemsTrackElementRect.top + scrollTop;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
@@ -684,24 +705,36 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
 
-    // Separate the element from the document flow while keeping its position
+    // Separate the elements from the document flow while keeping its position
+    threadBoxElement.setAttribute('stretching', 'true');
+    threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-x', `${threadBoxElementX}px`);
+    threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-y', `${threadBoxElementY}px`);
+
     itemElement.setAttribute('stretching', 'true');
-    itemElement.style.setProperty('--b-cssvar-css-route-group-item-x', `${x}px`);
-    itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${y}px`);
+    itemElement.style.setProperty('--b-cssvar-css-route-group-item-x', `${itemElementX}px`);
+    itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
-    for (const element of elementsBelow) {
-      element.setAttribute('push-direction', pushDirection);
-      element.setAttribute('push-state', '1');
+    for (let i = 0; i < elementsBelowLength; i++) {
+      const thisItemElement = elementsBelowItemElement[i];
+      const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+      thisThreadBoxElement.setAttribute('push-direction', pushDirection);
+      thisThreadBoxElement.setAttribute('push-state', '1');
+      thisItemElement.setAttribute('push-direction', pushDirection);
+      thisItemElement.setAttribute('push-state', '1');
     }
 
     itemElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (const element of elementsBelow) {
-          element.setAttribute('push-direction', '0');
-          element.setAttribute('push-state', '0');
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelowItemElement[i];
+          const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+          thisThreadBoxElement.setAttribute('push-direction', '0');
+          thisThreadBoxElement.setAttribute('push-state', '0');
+          thisItemElement.setAttribute('push-direction', '0');
+          thisItemElement.setAttribute('push-state', '0');
         }
         // Deposit the element
         itemElement.setAttribute('stretching', 'false');
@@ -713,8 +746,11 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
       'transitionstart',
       function () {
         // Transition the elements below
-        for (const element of elementsBelow) {
-          element.setAttribute('push-state', '2');
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelowItemElement[i];
+          const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+          thisThreadBoxElement.setAttribute('push-state', '2');
+          thisItemElement.setAttribute('push-state', '2');
         }
       },
       { once: true }
