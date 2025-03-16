@@ -676,7 +676,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   if (stretched) {
     if (animation) {
       // Separate the element from the document flow
-      itemElement.style.position = 'fixed';
+      itemElement.style.position = 'absolute';
       itemElement.style.top = `${itemElementBoundingClientRect.top}px`;
       itemElement.style.left = `${itemElementBoundingClientRect.left}px`;
 
