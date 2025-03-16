@@ -667,8 +667,6 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
 
-  const itemElementBoundingClientRect = itemElement.getBoundingClientRect();
-
   const compensationTransform = `translateY(${stretched ? 50 + 171 : 50}px)`;
   const movingTransform = `translateY(${stretched ? 50 : 50 + 171}px)`;
   const normalTransform = `translateY(0px)`;
@@ -678,7 +676,7 @@ export function stretchRouteItemBody(itemElementID: string, threadBoxElementID: 
     if (animation) {
       // Separate the element from the document flow
       itemElement.style.position = 'absolute';
-      itemElement.style.top = `${itemElementBoundingClientRect.top + groupElement.scrollTop}px`;
+      itemElement.style.top = `${itemBodyElement.offsetTop}px`;
       itemElement.style.left = '0px';
 
       // Apply compensation transform
