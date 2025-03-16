@@ -56,7 +56,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="1"] {
   transform: translateY(50px);
   /* compensate the height of the already collapsed element separated from the document flow */
-  transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* push-direction: 1 & push-state: 2 */
@@ -72,9 +71,8 @@
 
 /* push-direction: 2 & push-state: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="1"] {
-  transition: transform var(--b-cssvar-transition-duration);
-  /* compensate the height of the already expanded element separated from the document flow */
   transform: translateY(calc(50px + 171px));
+  /* compensate the height of the already expanded element separated from the document flow */
 }
 
 /* push-direction: 2 & push-state: 2 */
