@@ -81,8 +81,8 @@
   transition: transform var(--b-cssvar-transition-duration);
 }
 
-/* animation: true && skeleton screen: false && push-direction: 1 && push-state: 0 */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
+/* animation: true && skeleton screen: false && stretching: true && push-direction: 0 && push-state: 0 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"][stretching="true"][push-direction="0"][push-state="0"] {
   transition: clip-path var(--b-cssvar-transition-duration);
 }
 
