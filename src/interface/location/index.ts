@@ -4,7 +4,7 @@ import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
-import { documentGetElementByID, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentGetElementByID, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -127,7 +127,10 @@ function generateElementOfItem(): GeneratedElement {
   element.classList.add('css_location_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
-  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1"></div><div class="css_location_group_item_rank_current_slide" code="-1"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItemBody('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-location', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-location', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.setAttribute('stretching', 'false');
+  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1"></div><div class="css_location_group_item_rank_current_slide" code="-1"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItem('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-location', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-location', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -683,12 +686,69 @@ export function closeLocation(): void {
   openPreviousPage();
 }
 
-export function stretchLocationItemBody(itemID: string): void {
-  // const itemElement = documentGetElementByID(itemID);
-  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+export function stretchLocationItem(itemElementID: string): void {
+  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
-  if (itemElement.getAttribute('stretched') === 'true') {
-    if (itemElement.getAttribute('animation') === 'true') {
+
+  const itemsElement = itemElement.parentElement as HTMLElement;
+
+  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_location_group_item');
+  const elementsBelowLength = elementsBelowItemElement.length;
+
+  const itemsElementRect = itemsElement.getBoundingClientRect();
+  const itemElementRect = itemElement.getBoundingClientRect();
+
+  // const itemElementX = itemElementRect.left - itemsElementRect.left;
+  const itemElementY = itemElementRect.top - itemsElementRect.top;
+
+  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+
+  if (animation) {
+    const pushDirection = stretched ? '2' : '1';
+
+    // Separate the elements from the document flow while keeping its position
+    itemElement.setAttribute('stretching', 'true');
+    // itemElement.style.setProperty('--b-cssvar-css-location-group-item-x', `${itemElementX}px`);
+    itemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
+
+    // Set push direction and push state
+    for (let i = 0; i < elementsBelowLength; i++) {
+      const thisItemElement = elementsBelowItemElement[i];
+      thisItemElement.setAttribute('push-direction', pushDirection);
+      thisItemElement.setAttribute('push-state', '1');
+    }
+
+    itemElement.addEventListener(
+      'transitionend',
+      function () {
+        // Reset the push direction and push state
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelowItemElement[i];
+          thisItemElement.setAttribute('push-direction', '0');
+          thisItemElement.setAttribute('push-state', '0');
+        }
+        // Deposit the element
+        itemElement.setAttribute('stretching', 'false');
+      },
+      { once: true }
+    );
+
+    itemElement.addEventListener(
+      'transitionstart',
+      function () {
+        // Transition the elements below
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelowItemElement[i];
+          thisItemElement.setAttribute('push-state', '2');
+        }
+      },
+      { once: true }
+    );
+  }
+
+  if (stretched) {
+    if (animation) {
       itemBodyElement.addEventListener(
         'transitionend',
         function () {

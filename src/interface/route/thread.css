@@ -1,3 +1,33 @@
+/*
+@property --b-cssvar-css-route-group-thread-box-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+*/
+
+@property --b-cssvar-css-route-group-thread-box-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-css-route-group-thread-z-index {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* thread box space top */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box_space_top {
+  position: relative;
+  width: 45px;
+  height: 95px;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* thread box */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box {
   position: relative;
@@ -11,20 +41,64 @@
   transition: none;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:first-child {
-  margin-top: 95px;
-}
-
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child {
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] {
-  height: calc(50px + 171px);
+/* stretching: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretching="true"] {
+  position: absolute;
+  /* left: var(--b-cssvar-css-route-group-thread-box-x);*/
+  left: 0px;
+  top: var(--b-cssvar-css-route-group-thread-box-y);
 }
 
-/* animation: true && skeleton screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] {
+/* push-direction: 1 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="1"] {
+  transform: translateY(50px);
+  /* compensate the height of the already collapsed element separated from the document flow */
+  z-index: var(--b-cssvar-css-route-group-thread-z-index);
+}
+
+/* push-direction: 1 && push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="2"] {
+  transform: translateY(calc(50px + 171px));
+  transition: transform var(--b-cssvar-transition-duration);
+  z-index: var(--b-cssvar-css-route-group-thread-z-index);
+}
+
+/* push-direction: 2 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 2 && push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="1"] {
+  transform: translateY(calc(50px + 171px));
+  /* compensate the height of the already expanded element separated from the document flow */
+  z-index: var(--b-cssvar-css-route-group-thread-z-index);
+}
+
+/* push-direction: 2 && push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="2"] {
+  transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
+  z-index: var(--b-cssvar-css-route-group-thread-z-index);
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] {
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
+}
+
+/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
   transition: height var(--b-cssvar-transition-duration);
 }
 

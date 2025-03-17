@@ -1,3 +1,27 @@
+/*
+@property --b-cssvar-css-route-group-item-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+*/
+
+@property --b-cssvar-css-route-group-item-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* item space top */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item_space_top {
+  position: relative;
+  width: 100%;
+  height: 95px;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* item */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item {
   position: relative;
@@ -14,23 +38,75 @@
   contain: layout;
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item:first-child {
-  margin-top: 95px;
-}
-
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item:last-child {
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
+/* stretching: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretching="true"] {
+  position: absolute;
+  /* left: var(--b-cssvar-css-route-group-item-x);*/
+  left: 0px;
+  top: var(--b-cssvar-css-route-group-item-y);
+}
+
+/* push-direction: 1 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="1"] {
+  transform: translateY(50px);
+  /* compensate the height of the already collapsed element separated from the document flow */
+}
+
+/* push-direction: 1 && push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="2"] {
+  transform: translateY(calc(50px + 171px));
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+/* push-direction: 2 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 2 && push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="1"] {
+  transform: translateY(calc(50px + 171px));
+  /* compensate the height of the already expanded element separated from the document flow */
+}
+
+/* push-direction: 2 && push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="2"][push-state="2"] {
+  transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+/* stretched: false && stretching: false */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="false"][stretching="true"] {
+  height: 50px;
+}
+
+/* stretched: false && stretching: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="false"][stretching="true"] {
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
+}
+
+/* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
 }
 
-/* animation: true && skeleton screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"] {
-  transition: height var(--b-cssvar-transition-duration);
+/* animation: true && skeleton screen: false && stretching: true && push-direction: 0 && push-state: 0 */
+/*
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][stretching="true"][push-direction="0"][push-state="0"] {
+  transition: clip-path var(--b-cssvar-transition-duration);
 }
+*/
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] {
@@ -360,8 +436,8 @@
   visibility: inherit;
 }
 
-/* animation: true && skeleton-screen: false */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"] .css_route_group_item_body {
+/* animation: true && skeleton-screen: false && push-direction: 0 && push-state: 0*/
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_item_body {
   transition: opacity var(--b-cssvar-transition-duration);
 }
 
