@@ -1,3 +1,17 @@
+/*
+@property --b-cssvar-css-location-group-item-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+*/
+
+@property --b-cssvar-css-location-group-item-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 /* items */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items {
   position: relative;
