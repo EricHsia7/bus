@@ -698,6 +698,7 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
 
   // const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
   const itemElementY = itemElementRect.top - itemsTrackElementRect.top + scrollTop;
+  console.log(0, itemElementRect.top, itemsTrackElementRect.top, scrollTop);
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
