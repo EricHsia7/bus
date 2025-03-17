@@ -672,9 +672,9 @@ export function switchRoute(RouteID: number, PathAttributeId: Array<number>): vo
 }
 
 export function stretchRouteItem(itemElementID: string, threadBoxElementID: string): void {
-  const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
-  const threadBoxElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
+  const threadBoxElement = elementQuerySelector(RouteGroupsElement, `.css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
 
   const itemsTrackElement = itemElement.parentElement as HTMLElement;
   const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
@@ -693,7 +693,7 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
   const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top;
 
   // const itemElementX = itemElementRect.left - itemsTrackElementRect.left;
-  const itemElementY = itemElementRect.top - itemsTrackElementRect.top;
+  const itemElementY = itemElementRect.top - itemsTrackElementRect.top; // itemElementRect.top + scrollTop - (itemsTrackElementRect.top + scrollTop)
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;

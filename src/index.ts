@@ -5,7 +5,7 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItem, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItemBody, switchLocationBodyTab } from './interface/location/index';
+import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
@@ -316,7 +316,7 @@ window.bus = {
   location: {
     openLocation,
     closeLocation,
-    stretchLocationItemBody,
+    stretchLocationItem,
     switchLocationBodyTab
   },
   folder: {
