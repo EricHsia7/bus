@@ -29,6 +29,7 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
+  clip-path: inset(0 0 0 0);
   -webkit-user-select: none;
   user-select: none;
   transition: none;
@@ -88,11 +89,12 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
+  clip-path: inset(0 0 0 0);
 }
 
 /* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
-  transition: height var(--b-cssvar-transition-duration);
+  transition: clip-path var(--b-cssvar-transition-duration);
 }
 
 /* segment buffer: true */
