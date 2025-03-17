@@ -691,21 +691,15 @@ export function stretchLocationItemBody(itemID: string): void {
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
 
   const itemsElement = itemElement.parentElement as HTMLElement;
-  const groupElement = itemsElement.parentElement as HTMLElement;
 
   const elementsBelowItemElement = getElementsBelow(itemElement, 'css_location_group_item');
-
-  const elementsBelowLength = elementsBelowItemElement.length; // = elementsBelowThreadBoxElement.length
+  const elementsBelowLength = elementsBelowItemElement.length;
 
   const itemsElementRect = itemsElement.getBoundingClientRect();
   const itemElementRect = itemElement.getBoundingClientRect();
 
-  // const scrollLeft = groupElement.scrollLeft;
-  const scrollTop = groupElement.scrollTop;
-
-  // const itemElementX = itemElementRect.left - itemsElementRect.left + scrollLeft;
-  const itemElementY = itemElementRect.top - itemsElementRect.top // + scrollTop;
-  console.log(1, itemElementRect.top, itemsElementRect.top, scrollTop);
+  // const itemElementX = itemElementRect.left - itemsElementRect.left;
+  const itemElementY = itemElementRect.top - itemsElementRect.top;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;

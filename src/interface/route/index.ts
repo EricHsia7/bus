@@ -678,7 +678,6 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
 
   const itemsTrackElement = itemElement.parentElement as HTMLElement;
   const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
-  const groupElement = itemsTrackElement.parentElement as HTMLElement;
 
   const elementsBelowThreadBoxElement = getElementsBelow(threadBoxElement, 'css_route_group_thread_box');
   const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item');
@@ -690,15 +689,11 @@ export function stretchRouteItem(itemElementID: string, threadBoxElementID: stri
   const threadTrackElementRect = threadTrackElement.getBoundingClientRect();
   const threadBoxElementRect = threadBoxElement.getBoundingClientRect();
 
-  // const scrollLeft = groupElement.scrollLeft;
-  const scrollTop = groupElement.scrollTop;
+  // const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left;
+  const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top;
 
-  // const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left + scrollLeft;
-  const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top + scrollTop;
-
-  // const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
-  const itemElementY = itemElementRect.top - itemsTrackElementRect.top + scrollTop;
-  console.log(0, itemElementRect.top, itemsTrackElementRect.top, scrollTop);
+  // const itemElementX = itemElementRect.left - itemsTrackElementRect.left;
+  const itemElementY = itemElementRect.top - itemsTrackElementRect.top;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
