@@ -34,7 +34,6 @@
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
-  transition: none;
   contain: layout;
 }
 
