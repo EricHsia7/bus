@@ -704,8 +704,8 @@ export function stretchLocationItemBody(itemID: string): void {
   const scrollTop = groupElement.scrollTop;
   console.log(scrollTop);
 
-  // const itemElementX = itemElementRect.left - itemsTrackElementRect.left + scrollLeft;
-  const itemElementY = itemElementRect.top - itemsElementRect.top + itemsElement.offsetTop + scrollTop;
+  // const itemElementX = itemElementRect.left - itemsElementRect.left + scrollLeft;
+  const itemElementY = itemElementRect.top - itemsElementRect.top + scrollTop;
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
