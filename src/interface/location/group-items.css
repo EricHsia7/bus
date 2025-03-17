@@ -30,7 +30,6 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  clip-path: inset(0 0 0 0);
   background: var(--b-cssvar-ffffff-normal);
   display: block;
   -webkit-user-select: none;
@@ -45,6 +44,7 @@
   /* left: var(--b-cssvar-css-location-group-item-x);*/
   left: 0px;
   top: var(--b-cssvar-css-location-group-item-y);
+  clip-path: inset(0 0 0 0);
 }
 
 /* push-direction: 1 && push-state: 0 */
