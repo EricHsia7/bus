@@ -47,6 +47,8 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track {
   position: relative;
+  height: auto;
+  min-height: calc(50px + 171px);
   display: inline-block;
   contain: layout;
 }
