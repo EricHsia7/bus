@@ -89,18 +89,21 @@
 /* stretched: false && stretching: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="false"] {
   height: 50px;
+  clip-path: inset(0 0 0 0);
 }
 
 /* stretched: false && stretching: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
+  clip-path: inset(0 0 171px 0);
 }
 
 /* stretched: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="true"] {
   height: calc(50px + 171px);
   /* head: 50px + body: 171px */
+  clip-path: inset(0 0 0 0);
 }
 
 /* items > item > head */
