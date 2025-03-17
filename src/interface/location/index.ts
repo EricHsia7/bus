@@ -693,7 +693,7 @@ export function stretchLocationItemBody(itemID: string): void {
   const itemsElement = itemElement.parentElement as HTMLElement;
   const groupElement = itemsElement.parentElement as HTMLElement;
 
-  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item');
+  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_location_group_item');
 
   const elementsBelowLength = elementsBelowItemElement.length; // = elementsBelowThreadBoxElement.length
 
