@@ -93,6 +93,7 @@
 /* stretched: false && stretching: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="false"][stretching="true"] {
   height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* stretched: true */

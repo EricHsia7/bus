@@ -25,13 +25,14 @@
 
 /* items > item */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item {
-  display: block;
+  position: relative;
   height: 50px;
   width: 100%;
-  position: relative;
   margin: 0px;
   padding: 0px;
+  clip-path: inset(0 0 0 0);
   background: var(--b-cssvar-ffffff-normal);
+  display: block;
   -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
@@ -82,7 +83,18 @@
 
 /* animation: true && skeleton screen: false && push-direction: 1 && push-state: 0 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
-  transition: height var(--b-cssvar-transition-duration);
+  transition: clip-path var(--b-cssvar-transition-duration);
+}
+
+/* stretched: false && stretching: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="false"] {
+  height: 50px;
+}
+
+/* stretched: false && stretching: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="true"] {
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* stretched: true */
