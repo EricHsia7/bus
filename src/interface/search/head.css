@@ -85,6 +85,10 @@
   color: var(--b-cssvar-333333);
 }
 
+.css_search_field .css_search_head .css_search_button_right span.css_material_symbols_rounded {
+  transition: color var(--b-cssvar-transition-duration);
+}
+
 .css_search_field .css_search_head .css_search_button_right[type="-1"] span.css_material_symbols_rounded {
   color: var(--b-cssvar-aeaeb2);
 }
