@@ -75,7 +75,8 @@
   right: 0px;
 }
 
-.css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded {
+.css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded,
+.css_search_field .css_search_head .css_search_button_right span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

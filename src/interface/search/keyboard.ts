@@ -1,7 +1,7 @@
 import { updateSearchResult } from './index';
 import { supportTouch } from '../../tools/index';
 import { drawRoundedRect } from '../../tools/graphic';
-import { documentQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { querySize } from '../index';
 import { getCSSVariableValue } from '../../tools/style';
@@ -13,9 +13,13 @@ let keyboard_keys: Array<[string, string, string, string, string]> = [
   ['鍵盤', '幹線', '清空', '0', '刪除']
 ];
 
-const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
-const keyboardElement = documentQuerySelector('.css_search_field .css_search_body .css_search_keyboard');
-const searchInputCanvasElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input canvas');
+const searchField = documentQuerySelector('.css_search_field');
+const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
+const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
+const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input');
+const searchInputCanvasElement = elementQuerySelector(searchHeadElement, '.css_search_search_input canvas');
+const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
+const keyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
 const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
 const searchInputPlaceholder = '搜尋路線、地點、公車';
@@ -108,24 +112,27 @@ export function openSystemKeyboard(event: Event) {
 }
 
 export function typeTextIntoInput(value): void {
+  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
   const currentValue = String(searchInputElement.value);
   const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
-  updateSearchResult(newValue);
+  updateSearchResult(newValue, currentType);
   updateSearchInput(newValue, -1, -1);
 }
 
 export function deleteCharFromInout(): void {
+  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
   const currentValue = String(searchInputElement.value);
   const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
-  updateSearchResult(newValue);
+  updateSearchResult(newValue, currentType);
   updateSearchInput(newValue, -1, -1);
 }
 
 export function emptyInput(): void {
+  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
   searchInputElement.value = '';
-  updateSearchResult('');
+  updateSearchResult('', currentType);
   updateSearchInput('', -1, -1);
 }
 
