@@ -1,4 +1,4 @@
-import { updateSearchResult } from './interface/search/index';
+import { switchSearchTypeFilter, updateSearchResult } from './interface/search/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
@@ -58,7 +58,9 @@ import './interface/home/folders/item.css';
 import './interface/home/recent-views/recent-views.css';
 import './interface/home/recent-views/item.css';
 
-import './interface/search/index.css';
+import './interface/search/field.css';
+import './interface/search/head.css';
+import './interface/search/body.css';
 import './interface/search/keyboard.css';
 
 import './interface/route/field.css';
@@ -346,7 +348,8 @@ window.bus = {
     typeTextIntoInput,
     deleteCharFromInout,
     emptyInput,
-    openSystemKeyboard
+    openSystemKeyboard,
+    switchSearchTypeFilter
   },
   storage: {
     openStorage,

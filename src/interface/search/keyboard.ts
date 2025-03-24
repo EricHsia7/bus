@@ -37,13 +37,13 @@ let textWidthToCursorStart: number = 0;
 let selectedTextWidth: number = 0;
 let selection: boolean = false;
 let cursorOffset: number = 0;
-let size = querySize('head-one-button');
+let size = querySize('head-two-button');
 let width = size.width * searchInputCanvasScale;
 let height = size.height * searchInputCanvasScale;
 let playingCursorAnimation: boolean = false;
 
 export function ResizeSearchInputCanvasSize(): void {
-  size = querySize('head-one-button');
+  size = querySize('head-two-button');
   width = size.width;
   height = size.height;
   searchInputCanvasElement.width = width * searchInputCanvasScale;

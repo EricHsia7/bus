@@ -1,15 +1,19 @@
 import { openKeyboard, closeKeyboard } from './keyboard';
-import { prepareForSearch, searchFor } from '../../data/search/index';
+import { prepareForSearch, searchFor, SearchItem } from '../../data/search/index';
 import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
 import { promptMessage } from '../prompt/index';
-import { documentQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/text';
 import { pushPageHistory, revokePageHistory } from '../index';
+import { MaterialSymbols } from '../icons/material-symbols-type';
 
 const searchField = documentQuerySelector('.css_search_field');
-const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input');
-const searchResultsElement = documentQuerySelector('.css_search_field .css_search_body .css_search_results');
+const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
+const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
+const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input');
+const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
+const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 
 export function openSearch(): void {
   if (dataDownloadCompleted) {
@@ -28,11 +32,11 @@ export function closeSearch(): void {
   searchField.setAttribute('displayed', 'false');
 }
 
-export async function updateSearchResult(query: string) {
+export function updateSearchResult(query: string, type: SearchItem | -1): void {
   if (!containPhoneticSymbols(query)) {
     const typeToIcon = ['route', 'location_on', 'directions_bus'];
     let html = [];
-    const searchResults = searchFor(query, 30);
+    const searchResults = searchFor(query, type, 30);
     for (const result of searchResults) {
       const name = result.item.n;
       const typeIcon = getIconHTML(typeToIcon[result.item.type]);
@@ -54,4 +58,19 @@ export async function updateSearchResult(query: string) {
     }
     searchResultsElement.innerHTML = html.join('');
   }
+}
+
+export function switchSearchTypeFilter(): void {
+  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+  let type: number = -1;
+  if (currentType >= -1 && currentType < 2) {
+    type = currentType + 1;
+  } else {
+    type = -1;
+  }
+  const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
+  searchTypeFilterButtonElement.innerHTML = getIconHTML(icons[type + 1]);
+  searchTypeFilterButtonElement.setAttribute('type', type.toString());
+  const query = searchInputElement.value;
+  updateSearchResult(query, type);
 }

@@ -51,7 +51,7 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number): Pro
   return result;
 }
 
-interface SearchItem {
+export interface SearchItem {
   id: string | number | Array<number>;
   pid: Array<number>;
   dep: string;
@@ -70,7 +70,7 @@ export interface SearchResult {
   score: number;
 }
 
-type SearchIndex = { [unicodeKey: string]: number };
+export type SearchIndex = { [unicodeKey: string]: Array<number> };
 
 let searchIndex: SearchIndex = {};
 let searchList: Array<SearchItem> = [];
@@ -186,7 +186,7 @@ function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes
   return score;
 }
 
-export function searchFor(query: string, limit: number): Array<SearchResult> {
+export function searchFor(query: string, type: SearchItem['type'] | -1, limit: number): Array<SearchResult> {
   if (!readyToSearch) {
     return [];
   }
@@ -226,39 +226,49 @@ export function searchFor(query: string, limit: number): Array<SearchResult> {
   }
 
   let result: Array<SearchResult> = [];
-  let quantity = 0;
+  let quantity: number = 0;
 
-  // Prioritize exact matches for buses
-  const exactMatches = searchList.filter((item) => item.n === query && item.type === 2);
-  const exactMatchIds = new Set(); // To track exact matches to avoid duplicates
-  for (const item of exactMatches) {
-    result.push({
-      item: item,
-      score: Infinity // Highest possible score for exact matches
-    });
-    exactMatchIds.add(item.id);
-    quantity += 1;
-    if (quantity >= limit) {
-      break;
+  const exactMatchIds = new Set(); // Track exact matches to avoid duplicates
+  if (type === -1 || type === 2) {
+    // Prioritize exact matches for buses
+    const exactMatches = searchList.filter((item) => item.n === query && item.type === 2);
+    for (const item of exactMatches) {
+      result.push({
+        item: item,
+        score: Infinity // Highest possible score for exact matches
+      });
+      exactMatchIds.add(item.id);
+      quantity += 1;
+      if (quantity >= limit) {
+        break;
+      }
     }
   }
 
   if (quantity < limit) {
     for (const j of intersection) {
       let thisItem = searchList[j];
-      if (!exactMatchIds.has(thisItem.id)) {
-        // Check if the item is not already an exact match
-        const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
-        if (quantity < limit) {
-          result.push({
-            item: thisItem,
-            score: score
-          });
-        } else {
-          break;
-        }
-        quantity += 1;
+
+      // Check if the item is of the type
+      if (type !== -1 && type !== thisItem.type) {
+        continue;
       }
+
+      // Check if the item is not already an exact match
+      if (exactMatchIds.has(thisItem.id)) {
+        continue;
+      }
+
+      const score = calculateSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem.n, false));
+      if (quantity < limit) {
+        result.push({
+          item: thisItem,
+          score: score
+        });
+      } else {
+        break;
+      }
+      quantity += 1;
     }
   }
 
