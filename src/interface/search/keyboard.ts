@@ -150,7 +150,7 @@ export function updateSearchInput(value: string = '', cursorStart: number, curso
     }
   }
 
-  size = querySize('head-one-button');
+  size = querySize('head-two-button');
   width = size.width * searchInputCanvasScale;
   height = size.height * searchInputCanvasScale;
   textColor = getCSSVariableValue('--b-cssvar-333333');
