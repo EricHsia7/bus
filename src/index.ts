@@ -223,27 +223,33 @@ window.bus = {
                 });
                 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
                 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
+                const searchTypeFilterButtonElement = documentQuerySelector('.css_search_field .css_search_head .css_search_button_right');
                 mediaQuery.addEventListener('change', function () {
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('paste', function () {
-                  updateSearchResult(searchInputElement.value);
+                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+                  updateSearchResult(searchInputElement.value, currentType);
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('cut', function () {
-                  updateSearchResult(searchInputElement.value);
+                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+                  updateSearchResult(searchInputElement.value, currentType);
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('selectionchange', function () {
-                  updateSearchResult(searchInputElement.value);
+                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+                  updateSearchResult(searchInputElement.value, currentType);
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 document.addEventListener('selectionchange', function () {
-                  updateSearchResult(searchInputElement.value);
+                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+                  updateSearchResult(searchInputElement.value, currentType);
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('keyup', function () {
-                  updateSearchResult(searchInputElement.value);
+                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+                  updateSearchResult(searchInputElement.value, currentType);
                   updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
 
