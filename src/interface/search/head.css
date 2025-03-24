@@ -93,5 +93,5 @@
 .css_search_field .css_search_head .css_search_button_right[type="1"] span.css_material_symbols_rounded,
 .css_search_field .css_search_head .css_search_button_right[type="2"] span.css_material_symbols_rounded {
   color: var(--b-cssvar-333333);
-  text-shadow: 0px 0px 5px rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.15);
+  text-shadow: 0px 0px 5px rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.8);
 }
