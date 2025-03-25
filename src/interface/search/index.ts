@@ -1,4 +1,3 @@
-import { openKeyboard, closeKeyboard } from './keyboard';
 import { prepareForSearch, searchFor, SearchItem } from '../../data/search/index';
 import { getIconHTML } from '../icons/index';
 import { dataDownloadCompleted } from '../home/index';
@@ -50,7 +49,7 @@ export function getSearchInputValue(): string {
   return String(searchInputElement.value);
 }
 
-export function getSearchTypeFilterValue(): number {
+export function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
   return parseInt(searchTypeFilterButtonElement.getAttribute('type'));
 }
 
