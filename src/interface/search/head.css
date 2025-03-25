@@ -1,0 +1,98 @@
+.css_search_field .css_search_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  contain: layout;
+}
+
+.css_search_field .css_search_head .css_search_search_input {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px - 55px);
+  height: 55px;
+  overflow: hidden;
+  contain: layout;
+}
+
+.css_search_field .css_search_head .css_search_search_input canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  user-select: none;
+  -webkit-user-select: none;
+  background: var(--b-cssvar-ffffff-normal);
+  pointer-events: none;
+}
+
+.css_search_field .css_search_head .css_search_search_input input {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 55px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 0px;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 0px;
+  margin: 0px;
+  color: transparent;
+  caret-color: rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), 0);
+  resize: none;
+}
+
+.css_search_field .css_search_head .css_search_button_left,
+.css_search_field .css_search_head .css_search_button_right {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_search_field .css_search_head .css_search_button_left {
+  top: 0px;
+  left: 0px;
+}
+
+.css_search_field .css_search_head .css_search_button_right {
+  top: 0px;
+  right: 0px;
+}
+
+.css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded,
+.css_search_field .css_search_head .css_search_button_right span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+}
+
+.css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded {
+  color: var(--b-cssvar-333333);
+}
+
+.css_search_field .css_search_head .css_search_button_right[type="-1"] span.css_material_symbols_rounded {
+  color: var(--b-cssvar-aeaeb2);
+}
+
+.css_search_field .css_search_head .css_search_button_right[type="0"] span.css_material_symbols_rounded,
+.css_search_field .css_search_head .css_search_button_right[type="1"] span.css_material_symbols_rounded,
+.css_search_field .css_search_head .css_search_button_right[type="2"] span.css_material_symbols_rounded {
+  color: var(--b-cssvar-main-color);
+  text-shadow: 0px 0px 5px rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.6);
+  overflow: visible;
+}

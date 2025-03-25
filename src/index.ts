@@ -1,4 +1,4 @@
-import { updateSearchResult } from './interface/search/index';
+import { switchSearchTypeFilter, updateSearchResult } from './interface/search/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
@@ -8,7 +8,7 @@ import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, resizeSearchInputCanvas, updateSearchInput } from './interface/search/index';
 import { initializeFolderList } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
@@ -21,7 +21,6 @@ import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteO
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
-import { loadCSS } from './interface/lazy-css';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
@@ -58,7 +57,9 @@ import './interface/home/folders/item.css';
 import './interface/home/recent-views/recent-views.css';
 import './interface/home/recent-views/item.css';
 
-import './interface/search/index.css';
+import './interface/search/field.css';
+import './interface/search/head.css';
+import './interface/search/body.css';
 import './interface/search/keyboard.css';
 
 import './interface/route/field.css';
@@ -200,18 +201,18 @@ window.bus = {
                 initializeLocationSliding();
                 ResizeRouteField();
                 ResizeLocationField();
-                ResizeSearchInputCanvasSize();
+                resizeSearchInputCanvas();
                 window.addEventListener('resize', () => {
                   ResizeRouteField();
                   ResizeLocationField();
-                  ResizeSearchInputCanvasSize();
+                  resizeSearchInputCanvas();
                 });
                 if (screen) {
                   if (screen.orientation) {
                     screen.orientation.addEventListener('change', () => {
                       ResizeRouteField();
                       ResizeLocationField();
-                      ResizeSearchInputCanvasSize();
+                      resizeSearchInputCanvas();
                     });
                   }
                 }
@@ -222,27 +223,27 @@ window.bus = {
                 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
                 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
                 mediaQuery.addEventListener('change', function () {
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('paste', function () {
-                  updateSearchResult(searchInputElement.value);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('cut', function () {
-                  updateSearchResult(searchInputElement.value);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('selectionchange', function () {
-                  updateSearchResult(searchInputElement.value);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 document.addEventListener('selectionchange', function () {
-                  updateSearchResult(searchInputElement.value);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('keyup', function () {
-                  updateSearchResult(searchInputElement.value);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
 
                 const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
@@ -346,7 +347,8 @@ window.bus = {
     typeTextIntoInput,
     deleteCharFromInout,
     emptyInput,
-    openSystemKeyboard
+    openSystemKeyboard,
+    switchSearchTypeFilter
   },
   storage: {
     openStorage,

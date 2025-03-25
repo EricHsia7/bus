@@ -1,0 +1,79 @@
+.css_search_field .css_search_body {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.css_search_field .css_search_body .css_search_results {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - clamp(200px, 36%, 270px));
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  background: var(--b-cssvar-ffffff-normal);
+}
+
+.css_search_field .css_search_body .css_search_results::-webkit-scrollbar {
+  display: none;
+}
+
+.css_search_field .css_search_body .css_search_results .css_search_search_result {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_search_field .css_search_body .css_search_results .css_search_search_result:first-child {
+  margin-top: 55px;
+}
+
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type span.css_material_symbols_rounded {
+  height: 20px;
+  width: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_route_name {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px);
+  height: 50px;
+  display: flex;
+  font-size: 20px;
+  color: var(--b-cssvar-333333);
+  font-weight: 400;
+  -webkit-user-select: none;
+  user-select: none;
+  align-items: center;
+  white-space: nowrap;
+  word-break: keep-all;
+}
