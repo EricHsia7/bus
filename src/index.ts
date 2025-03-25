@@ -8,7 +8,7 @@ import { shareRoutePermalink } from './interface/route/details/actions';
 import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
-import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, ResizeSearchInputCanvasSize, updateSearchInput } from './interface/search/keyboard';
+import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, resizeSearchInputCanvas, updateSearchInput } from './interface/search/index';
 import { initializeFolderList } from './data/folder/index';
 import { downloadData } from './interface/home/index';
 import { checkAppVersion } from './data/settings/version';
@@ -21,7 +21,6 @@ import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteO
 import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
 import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
 import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
-import { loadCSS } from './interface/lazy-css';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { setUpFolderFieldSkeletonScreen, initializeFolders } from './interface/home/folders/index';
 import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
@@ -202,18 +201,18 @@ window.bus = {
                 initializeLocationSliding();
                 ResizeRouteField();
                 ResizeLocationField();
-                ResizeSearchInputCanvasSize();
+                resizeSearchInputCanvas();
                 window.addEventListener('resize', () => {
                   ResizeRouteField();
                   ResizeLocationField();
-                  ResizeSearchInputCanvasSize();
+                  resizeSearchInputCanvas();
                 });
                 if (screen) {
                   if (screen.orientation) {
                     screen.orientation.addEventListener('change', () => {
                       ResizeRouteField();
                       ResizeLocationField();
-                      ResizeSearchInputCanvasSize();
+                      resizeSearchInputCanvas();
                     });
                   }
                 }
@@ -223,34 +222,28 @@ window.bus = {
                 });
                 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
                 const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
-                const searchTypeFilterButtonElement = documentQuerySelector('.css_search_field .css_search_head .css_search_button_right');
                 mediaQuery.addEventListener('change', function () {
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('paste', function () {
-                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-                  updateSearchResult(searchInputElement.value, currentType);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('cut', function () {
-                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-                  updateSearchResult(searchInputElement.value, currentType);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('selectionchange', function () {
-                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-                  updateSearchResult(searchInputElement.value, currentType);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 document.addEventListener('selectionchange', function () {
-                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-                  updateSearchResult(searchInputElement.value, currentType);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
                 searchInputElement.addEventListener('keyup', function () {
-                  const currentType = parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-                  updateSearchResult(searchInputElement.value, currentType);
-                  updateSearchInput(searchInputElement.value, searchInputElement.selectionStart, searchInputElement.selectionEnd);
+                  updateSearchResult();
+                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
                 });
 
                 const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
