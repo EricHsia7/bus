@@ -26,39 +26,39 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
   const directions = [
     {
       vector: unknownVector,
-      label: '未知'
+      label: '未知方向'
     },
     {
       vector: NorthVector,
-      label: '北↑'
+      label: '向北↑'
     },
     {
       vector: EastVector,
-      label: '東→'
+      label: '向東→'
     },
     {
       vector: SouthVector,
-      label: '南↓'
+      label: '向南↓'
     },
     {
       vector: WestVector,
-      label: '西←'
+      label: '向西←'
     },
     {
       vector: NorthEastVector,
-      label: '東北↗'
+      label: '向東北↗'
     },
     {
       vector: SouthEastVector,
-      label: '東南↘'
+      label: '向東南↘'
     },
     {
       vector: SouthWestVector,
-      label: '西南↙'
+      label: '向西南↙'
     },
     {
       vector: NorthWestVector,
-      label: '西北↖'
+      label: '向西北↖'
     }
   ];
 
