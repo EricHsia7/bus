@@ -100,7 +100,7 @@ export async function prepareForSearch() {
       type: 0
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(`${thisItem.n}${thisItem.dep}${thisItem.des}`, true);
+    const unicodes = getUnicodes(`${thisItem.n.toLowerCase()}${thisItem.dep.toLowerCase()}${thisItem.des.toLowerCase()}`, true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
@@ -126,7 +126,7 @@ export async function prepareForSearch() {
       type: 1
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(thisItem.n, true);
+    const unicodes = getUnicodes(thisItem.n.toLowerCase(), true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
@@ -152,7 +152,7 @@ export async function prepareForSearch() {
       type: 2
     };
     list.push(thisItem);
-    const unicodes = getUnicodes(thisItem.n, true);
+    const unicodes = getUnicodes(thisItem.n.toLowerCase(), true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
       if (!index.hasOwnProperty(key)) {
@@ -191,8 +191,9 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
     return [];
   }
 
-  const queryUnicodes = getUnicodes(query, true);
-  const asIsQueryUnicodes = getUnicodes(query, false);
+  const lowerCaseQuery = query.toLowerCase();
+  const queryUnicodes = getUnicodes(lowerCaseQuery, true);
+  const asIsQueryUnicodes = getUnicodes(lowerCaseQuery, false);
   let unicodeGroups = [];
 
   for (const unicode of queryUnicodes) {
@@ -231,7 +232,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
   const exactMatchIds = new Set(); // Track exact matches to avoid duplicates
   if (type === -1 || type === 2) {
     // Prioritize exact matches for buses
-    const exactMatches = searchList.filter((item) => item.n === query && item.type === 2);
+    const exactMatches = searchList.filter((item) => item.n === lowerCaseQuery && item.type === 2);
     for (const item of exactMatches) {
       result.push({
         item: item,
