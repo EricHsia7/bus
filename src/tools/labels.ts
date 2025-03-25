@@ -30,35 +30,35 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
     },
     {
       vector: NorthVector,
-      label: '北'
+      label: '北↑'
     },
     {
       vector: EastVector,
-      label: '東'
+      label: '東→'
     },
     {
       vector: SouthVector,
-      label: '南'
+      label: '南↓'
     },
     {
       vector: WestVector,
-      label: '西'
+      label: '西←'
     },
     {
       vector: NorthEastVector,
-      label: '東北'
+      label: '東北↗'
     },
     {
       vector: SouthEastVector,
-      label: '東南'
+      label: '東南↘'
     },
     {
       vector: SouthWestVector,
-      label: '西南'
+      label: '西南↙'
     },
     {
       vector: NorthWestVector,
-      label: '西北'
+      label: '西北↖'
     }
   ];
 
@@ -79,7 +79,7 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
       return b.dotProduct - a.dotProduct;
     });
     const bestMatch = result2[0];
-    result.push(`向${bestMatch.label}行駛`);
+    result.push(bestMatch.label);
   }
   return result;
 }
