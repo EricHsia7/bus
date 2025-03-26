@@ -78,6 +78,14 @@ function storeIndexToCategory(store: number): StoreCategory {
       name = '資料夾';
       key = 'folders';
       break;
+    case 'notificationStore':
+      name = '通知';
+      key = 'notification';
+      break;
+    case 'notificationScheduleStore':
+      name = '通知';
+      key = 'notification';
+      break;
     default:
       name = '其他';
       key = 'others';
@@ -113,7 +121,7 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
         size: 0
       };
     }
-    categorizedSizesInBytes[thisCategory.key].size = categorizedSizesInBytes[thisCategory.key].size + thisStoreSizeInBytes;
+    categorizedSizesInBytes[thisCategory.key].size += thisStoreSizeInBytes;
   }
 
   const totalSize = convertBytes(totalSizeInBytes);
