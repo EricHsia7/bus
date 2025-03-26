@@ -99,7 +99,7 @@ export async function initializeNotificationSchedules() {
     const thisScheduleJSON = await lfGetItem(10, key);
     const thisSchedule = JSON.parse(thisScheduleJSON) as NotificationSchedule;
     const thisScheduledTime = thisSchedule.scheduled_time;
-    if (thisScheduledTime > now) {
+    // if (thisScheduledTime > now) {
       const thisScheduleID = thisSchedule.schedule_id;
       const thisScheduleStopID = thisSchedule.stop_id;
       const thisScheduleStopKey = `s_${thisScheduleStopID}`;
@@ -110,7 +110,7 @@ export async function initializeNotificationSchedules() {
       }
       NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(index);
       index += 1;
-    }
+    // }
   }
 }
 
