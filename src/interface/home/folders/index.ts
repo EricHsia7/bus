@@ -519,7 +519,7 @@ async function streamFolders() {
 }
 
 export function initializeFolders(): void {
-  setUpFolderFieldSkeletonScreen(HomeFoldersElement);
+  setUpFolderFieldSkeletonScreen();
   if (!foldersRefreshTimer_streaming) {
     foldersRefreshTimer_streaming = true;
     if (!foldersRefreshTimer_streamStarted) {

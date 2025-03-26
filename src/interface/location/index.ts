@@ -543,9 +543,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       } else {
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
         const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
+        const propertyElements = elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
-          elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property')[propertyIndex].remove();
+          propertyElements[propertyIndex].remove();
         }
       }
     }
