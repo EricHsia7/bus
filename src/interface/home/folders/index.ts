@@ -508,7 +508,7 @@ async function streamFolders() {
     .catch((err) => {
       console.error(err);
       if (foldersRefreshTimer_streaming) {
-        promptMessage(`（資料夾）發生網路錯誤，將在${foldersRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
+        promptMessage(`資料夾網路連線中斷，將在${foldersRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
         foldersRefreshTimer_timer = setTimeout(function () {
           streamFolders();
         }, foldersRefreshTimer_retryInterval);
