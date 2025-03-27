@@ -30,3 +30,82 @@ export function convertNumberToLetters(number: number): string {
   }
   return result;
 }
+
+export interface CardinalDirection {
+  vector: [number, number];
+  name: string;
+  symbol: string;
+}
+
+export function convertVectorToCardinalDirection(vector: [number, number]): CardinalDirection {
+  const unknownVector = [0, 0];
+  // cardinal directions
+  const NorthVector = [0, 1];
+  const EastVector = [1, 0];
+  const WestVector = [-1, 0];
+  const SouthVector = [0, -1];
+  // intercardinal directions
+  const NorthEastVector = [Math.SQRT1_2, Math.SQRT1_2]; // 45 degrees
+  const SouthEastVector = [Math.SQRT1_2, -Math.SQRT1_2]; // 135 degrees
+  const SouthWestVector = [-Math.SQRT1_2, -Math.SQRT1_2]; // 225 degrees
+  const NorthWestVector = [-Math.SQRT1_2, Math.SQRT1_2]; // 315 degrees
+
+  const directions: Array<CardinalDirection> = [
+    {
+      vector: unknownVector,
+      name: '未知',
+      symbol: '?'
+    },
+    {
+      vector: NorthVector,
+      name: '北',
+      symbol: '↑'
+    },
+    {
+      vector: EastVector,
+      name: '東',
+      symbol: '→'
+    },
+    {
+      vector: SouthVector,
+      name: '南',
+      symbol: '↓'
+    },
+    {
+      vector: WestVector,
+      name: '西',
+      symbol: '←'
+    },
+    {
+      vector: NorthEastVector,
+      name: '東北',
+      symbol: '↗'
+    },
+    {
+      vector: SouthEastVector,
+      name: '東南',
+      symbol: '↘'
+    },
+    {
+      vector: SouthWestVector,
+      name: '西南',
+      symbol: '↙'
+    },
+    {
+      vector: NorthWestVector,
+      name: '西北',
+      symbol: '↖'
+    }
+  ];
+  const unitVector = convertToUnitVector(vector);
+  let maxDotProduct = -Infinity;
+  let bestMatch: CardinalDirection = directions[0];
+  for (const direction of directions) {
+    const dotProduct = direction.vector[0] * unitVector[0] + direction.vector[1] * unitVector[1];
+    if (dotProduct > maxDotProduct) {
+      maxDotProduct = dotProduct;
+      bestMatch = direction;
+    }
+  }
+  return bestMatch;
+}
