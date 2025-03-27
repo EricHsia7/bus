@@ -38,6 +38,7 @@ import { closeScheduleNotification, openScheduleNotification, scheduleNotificati
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
 import { checkCompatibility } from './data/settings/compatibility';
+import { askForCalibratingPermission, getUserOrientation } from './data/user-orientation/index';
 
 import './interface/theme.css';
 
@@ -269,6 +270,7 @@ window.bus = {
                     discardExpiredNotificationSchedules();
                   });
                   askForPositioningPermission();
+                  askForCalibratingPermission();
                 });
               });
             }
@@ -396,6 +398,10 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  test: {
+    askForCalibratingPermission,
+    getUserOrientation
   }
 };
 
