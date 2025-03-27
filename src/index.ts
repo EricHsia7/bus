@@ -270,6 +270,7 @@ window.bus = {
                     discardExpiredNotificationSchedules();
                   });
                   askForPositioningPermission();
+                  askForCalibratingPermission();
                 });
               });
             }
