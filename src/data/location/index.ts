@@ -1,8 +1,8 @@
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
-import { getRoute } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
 import { getStop } from '../apis/getStop/index';
 import { getSettingOptionValue } from '../settings/index';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
@@ -11,6 +11,8 @@ import { parseEstimateTime, FormattedBus, EstimateTimeStatus, batchFindBusesForL
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
+import { CardinalDirection, convertVectorToCardinalDirection } from '../../tools/convert';
+import { convertToUnitVector } from '../../tools/math';
 
 interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
 
@@ -121,8 +123,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   const EstimateTime = await getEstimateTime(requestID);
-  const Location = await getLocation(requestID, true);
-  const Route = await getRoute(requestID, true);
+  const Location = (await getLocation(requestID, true)) as MergedLocation;
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const Stop = await getStop(requestID);
   const BusEvent = await getBusEvent(requestID);
   const BusData = await getBusData(requestID);
@@ -153,6 +155,19 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
   const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
+  const cardinalDirections: Array<CardinalDirection> = [];
+  for (const vectorSet of thisLocation.v) {
+    let x: number = 0;
+    let y: number = 0;
+    for (const vector of vectorSet) {
+      x += vector[0];
+      y += vector[1];
+    }
+    const meanVector = convertToUnitVector([x, y]);
+    const cardinalDirection = convertVectorToCardinalDirection(meanVector);
+    cardinalDirections.push(cardinalDirection);
+  }
+
   let labels = [];
   switch (location_labels) {
     case 'address':
@@ -162,7 +177,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       labels = generateLetterLabels(stopLocationQuantity);
       break;
     case 'directions':
-      labels = generateDirectionLabels(setsOfVectors);
+      labels = generateDirectionLabels(cardinalDirections);
       break;
     default:
       break;
@@ -184,6 +199,11 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
           key: 'exact_position',
           icon: 'location_on',
           value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
+        },
+        {
+          key: 'cardinal_direction',
+          icon: cardinalDirections[i].icon,
+          value: cardinalDirections[i].name
         }
       ]
     };

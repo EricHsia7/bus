@@ -1,3 +1,5 @@
+import { MaterialSymbols } from '../interface/icons/material-symbols-type';
+
 export function convertPositionsToDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6378.137;
   const dLat = (lat2 * Math.PI) / 180 - (lat1 * Math.PI) / 180;
@@ -35,6 +37,7 @@ export interface CardinalDirection {
   vector: [number, number];
   name: string;
   symbol: string;
+  icon: MaterialSymbols;
 }
 
 export function convertVectorToCardinalDirection(vector: [number, number]): CardinalDirection {
@@ -54,47 +57,56 @@ export function convertVectorToCardinalDirection(vector: [number, number]): Card
     {
       vector: unknownVector,
       name: '未知',
-      symbol: '?'
+      symbol: '?',
+      icon: 'explore'
     },
     {
       vector: NorthVector,
       name: '北',
-      symbol: '↑'
+      symbol: '↑',
+      icon: 'north'
     },
     {
       vector: EastVector,
       name: '東',
-      symbol: '→'
+      symbol: '→',
+      icon: 'east'
     },
     {
       vector: SouthVector,
       name: '南',
-      symbol: '↓'
+      symbol: '↓',
+      icon: 'south'
     },
     {
       vector: WestVector,
       name: '西',
-      symbol: '←'
+      symbol: '←',
+      icon: 'west'
     },
     {
       vector: NorthEastVector,
       name: '東北',
-      symbol: '↗'
+      symbol: '↗',
+      icon: 'north_east'
     },
     {
       vector: SouthEastVector,
       name: '東南',
-      symbol: '↘'
+      symbol: '↘',
+      icon: 'south_east'
     },
     {
       vector: SouthWestVector,
       name: '西南',
-      symbol: '↙'
+      symbol: '↙',
+      icon: 'south_west'
     },
     {
       vector: NorthWestVector,
       name: '西北',
-      symbol: '↖'
+      symbol: '↖',
+      icon: 'north_west'
     }
   ];
   const unitVector = convertToUnitVector(vector);
