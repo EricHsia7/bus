@@ -94,7 +94,7 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
   time_formatting_mode: {
@@ -259,6 +259,37 @@ let Settings: SettingsObject = {
       }
     ],
     description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
+  },
+  display_user_orientation: {
+    key: 'display_user_orientation',
+    name: '顯示方向',
+    icon: 'explore',
+    status: '',
+    action: `bus.settings.openSettingsOptions('display_user_orientation')`,
+    type: 'select',
+    default_option: 1,
+    option: 1,
+    options: [
+      {
+        name: '開啟',
+        value: {
+          type: 2,
+          boolean: true
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 1
+      },
+      {
+        name: '關閉',
+        value: {
+          type: 2,
+          boolean: false
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
+      }
+    ],
+    description: '是否在地點頁面上顯示裝置的方向。若設為開啟，本應用程式將要求動作與方向存取權限。'
   },
   location_labels: {
     key: 'location_labels',

@@ -36,6 +36,7 @@ export function convertNumberToLetters(number: number): string {
 
 export interface CardinalDirection {
   vector: [number, number];
+  id: number;
   name: string;
   symbol: string;
   icon: MaterialSymbols;
@@ -57,54 +58,63 @@ export function convertVectorToCardinalDirection(vector: [number, number]): Card
   const directions: Array<CardinalDirection> = [
     {
       vector: unknownVector,
+      id: -1,
       name: '未知',
       symbol: '?',
       icon: 'explore'
     },
     {
       vector: NorthVector,
+      id: 0,
       name: '北',
       symbol: '↑',
       icon: 'north'
     },
     {
       vector: EastVector,
+      id: 1,
       name: '東',
       symbol: '→',
       icon: 'east'
     },
     {
       vector: SouthVector,
+      id: 2,
       name: '南',
       symbol: '↓',
       icon: 'south'
     },
     {
       vector: WestVector,
+      id: 3,
       name: '西',
       symbol: '←',
       icon: 'west'
     },
     {
       vector: NorthEastVector,
+      id: 4,
       name: '東北',
       symbol: '↗',
       icon: 'north_east'
     },
     {
       vector: SouthEastVector,
+      id: 5,
       name: '東南',
       symbol: '↘',
       icon: 'south_east'
     },
     {
       vector: SouthWestVector,
+      id: 6,
       name: '西南',
       symbol: '↙',
       icon: 'south_west'
     },
     {
       vector: NorthWestVector,
+      id: 7,
       name: '西北',
       symbol: '↖',
       icon: 'north_west'
