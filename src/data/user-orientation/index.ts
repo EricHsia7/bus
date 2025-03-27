@@ -1,6 +1,5 @@
-import { CardinalDirection, convertVectorToCardinalDirection } from '../../tools/convert';
+import { CardinalDirection, getCardinalDirectionFromVector, UnknownCardinalDirection } from '../../tools/cardinal-direction';
 import { getSettingOptionValue } from '../settings/index';
-import { askForPersistentStorage } from '../storage/index';
 
 interface Orientation {
   degree: number;
@@ -57,13 +56,7 @@ export function getUserOrientation(): Orientation {
   if (alpha === -1) {
     return {
       degree: -1,
-      cardinalDirection: {
-        vector: [0, 0],
-        id: -1,
-        name: '未知',
-        symbol: '?',
-        icon: 'explore'
-      }
+      cardinalDirection: UnknownCardinalDirection
     };
   } else {
     let angle = alpha + 90;
@@ -72,7 +65,7 @@ export function getUserOrientation(): Orientation {
     }
     angle *= Math.PI / 180;
     const vector = [Math.cos(angle), Math.sin(angle)];
-    const cardinalDirection = convertVectorToCardinalDirection(vector);
+    const cardinalDirection = getCardinalDirectionFromVector(vector);
     return {
       degree: alpha,
       cardinalDirection: cardinalDirection

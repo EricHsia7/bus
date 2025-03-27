@@ -1,4 +1,5 @@
-import { CardinalDirection, convertNumberToLetters } from './convert';
+import { CardinalDirection } from './cardinal-direction';
+import { convertNumberToLetters } from './convert';
 
 export function generateLetterLabels(quantity: number): Array<string> {
   let result: Array<string> = [];

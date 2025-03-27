@@ -11,7 +11,7 @@ import { parseEstimateTime, FormattedBus, EstimateTimeStatus, batchFindBusesForL
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
-import { CardinalDirection, convertVectorToCardinalDirection } from '../../tools/convert';
+import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { convertToUnitVector } from '../../tools/math';
 import { getUserOrientation } from '../user-orientation/index';
 
@@ -168,7 +168,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       y += vector[1];
     }
     const meanVector = convertToUnitVector([x, y]);
-    const cardinalDirection = convertVectorToCardinalDirection(meanVector);
+    const cardinalDirection = getCardinalDirectionFromVector(meanVector);
     cardinalDirections.push(cardinalDirection);
   }
 
