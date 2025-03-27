@@ -71,15 +71,17 @@ export function generateDirectionLabels(setsOfVectors: Array<Array<[number, numb
     }
     const meanVector = convertToUnitVector([x, y]);
     let result2 = [];
+    let maxDotProduct = -Infinity;
+    let bestMatch = {};
     for (const direction of directions) {
       const dotProduct = direction.vector[0] * meanVector[0] + direction.vector[1] * meanVector[1];
-      result2.push({ label: direction.label, dotProduct: dotProduct });
+      if(dotProduct > maxDotProduct) {
+maxDotProduct = dotProduct;
+bestMatch = direction.label;
+}
+
     }
-    result2 = result2.sort(function (a, b) {
-      return b.dotProduct - a.dotProduct;
-    });
-    const bestMatch = result2[0];
-    result.push(bestMatch.label);
+    result.push(bestMatch);
   }
   return result;
 }
