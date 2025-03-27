@@ -32,23 +32,21 @@ export function askForCalibratingPermission(): void {
                 true
               );
             } else {
-              if ('ondeviceorientation' in window) {
-                window.addEventListener(
-                  'deviceorientation',
-                  function (event: DeviceOrientationEvent) {
-                    if (event.absolute) {
-                      userOrientation.current = event?.alpha || -1;
+              window.addEventListener(
+                'deviceorientation',
+                function (event: DeviceOrientationEvent) {
+                  if (event.absolute) {
+                    userOrientation.current = event?.alpha || -1;
+                  } else {
+                    if (event.webkitCompassHeading) {
+                      userOrientation.current = event.webkitCompassHeading || -1;
                     } else {
-                      if (event.webkitCompassHeading) {
-                        userOrientation.current = event.webkitCompassHeading || -1;
-                      } else {
-                        userOrientation.current = event?.alpha || -1;
-                      }
+                      userOrientation.current = event?.alpha || -1;
                     }
-                  },
-                  true
-                );
-              }
+                  }
+                },
+                true
+              );
             }
           } else {
             console.error('Permission not granted for DeviceOrientation');
