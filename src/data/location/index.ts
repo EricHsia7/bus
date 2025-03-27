@@ -13,6 +13,7 @@ import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-tim
 import { getBusData } from '../apis/getBusData/index';
 import { CardinalDirection, convertVectorToCardinalDirection } from '../../tools/convert';
 import { convertToUnitVector } from '../../tools/math';
+import { getUserOrientation } from '../user-orientation/index';
 
 interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
 
@@ -132,10 +133,13 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
+  const display_user_orientation = getSettingOptionValue('display_user_orientation');
 
   let groupedItems = {} as IntegratedLocation['groupedItems'];
   let itemQuantity = {} as IntegratedLocation['itemQuantity'];
   let groups = {} as IntegratedLocation['groups'];
+
+  const userOrientation = getUserOrientation();
 
   const thisLocationKey = `ml_${hash}`;
   const thisLocation = Location[thisLocationKey];
@@ -156,7 +160,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
   const cardinalDirections: Array<CardinalDirection> = [];
-  for (const vectorSet of thisLocation.v) {
+  for (const vectorSet of setsOfVectors) {
     let x: number = 0;
     let y: number = 0;
     for (const vector of vectorSet) {
@@ -203,7 +207,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         {
           key: 'cardinal_direction',
           icon: cardinalDirections[i].icon,
-          value: cardinalDirections[i].name
+          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前方向）' : ''}`
         }
       ]
     };

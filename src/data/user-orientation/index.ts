@@ -1,5 +1,6 @@
 import { CardinalDirection, convertVectorToCardinalDirection } from '../../tools/convert';
 import { getSettingOptionValue } from '../settings/index';
+import { askForPersistentStorage } from '../storage/index';
 
 interface Orientation {
   degree: number;
@@ -7,7 +8,7 @@ interface Orientation {
 }
 
 const userOrientation = {
-  current: 0,
+  current: -1,
   permission: {
     gained: false,
     asked: false
@@ -27,12 +28,12 @@ export function askForCalibratingPermission(): void {
               'deviceorientation',
               function (event: DeviceOrientationEvent) {
                 if (event.absolute) {
-                  userOrientation.current = event?.alpha || 0;
+                  userOrientation.current = event?.alpha || -1;
                 } else {
                   if (event.webkitCompassHeading) {
-                    userOrientation.current = event.webkitCompassHeading || 0;
+                    userOrientation.current = event.webkitCompassHeading || -1;
                   } else {
-                    userOrientation.current = event?.alpha || 0;
+                    userOrientation.current = event?.alpha || -1;
                   }
                 }
               },
@@ -53,15 +54,28 @@ export function askForCalibratingPermission(): void {
 
 export function getUserOrientation(): Orientation {
   const alpha = userOrientation.current;
-  let angle = alpha + 90;
-  if (angle > 360) {
-    angle -= 360;
-  }
-  angle *= Math.PI / 180;
-  const vector = [Math.cos(angle), Math.sin(angle)]
-  const cardinalDirection = convertVectorToCardinalDirection(vector);
-  return {
-    degree: alpha,
-    cardinalDirection: cardinalDirection
+  if (alpha === -1) {
+    return {
+      degree: -1,
+      cardinalDirection: {
+        vector: [0, 0],
+        id: -1,
+        name: '未知',
+        symbol: '?',
+        icon: 'explore'
+      }
+    };
+  } else {
+    let angle = alpha + 90;
+    if (angle > 360) {
+      angle -= 360;
+    }
+    angle *= Math.PI / 180;
+    const vector = [Math.cos(angle), Math.sin(angle)];
+    const cardinalDirection = convertVectorToCardinalDirection(vector);
+    return {
+      degree: alpha,
+      cardinalDirection: cardinalDirection
+    };
   }
 }
