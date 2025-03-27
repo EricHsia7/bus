@@ -37,7 +37,7 @@ import { discardExpiredNotificationSchedules, initializeNotificationSchedules, l
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
-import { checkCompatibility } from './data/settings/compatibility';
+import { askForCalibratingPermission } from './data/user-orientation/index';
 
 import './interface/theme.css';
 
@@ -179,7 +179,6 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
-import { askForCalibratingPermission } from './data/user-orientation/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -197,87 +196,85 @@ window.bus = {
         checkAppVersion()
           .then((status) => {
             if (status === 'ok') {
-              checkCompatibility().then(function () {
-                initializeRouteSliding();
-                initializeLocationSliding();
+              initializeRouteSliding();
+              initializeLocationSliding();
+              ResizeRouteField();
+              ResizeLocationField();
+              resizeSearchInputCanvas();
+              window.addEventListener('resize', () => {
                 ResizeRouteField();
                 ResizeLocationField();
                 resizeSearchInputCanvas();
-                window.addEventListener('resize', () => {
-                  ResizeRouteField();
-                  ResizeLocationField();
-                  resizeSearchInputCanvas();
-                });
-                if (screen) {
-                  if (screen.orientation) {
-                    screen.orientation.addEventListener('change', () => {
-                      ResizeRouteField();
-                      ResizeLocationField();
-                      resizeSearchInputCanvas();
-                    });
-                  }
-                }
-                initializeRecentViews();
-                initializeFolderList().then(() => {
-                  initializeFolders();
-                });
-                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-                const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
-                mediaQuery.addEventListener('change', function () {
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-                searchInputElement.addEventListener('paste', function () {
-                  updateSearchResult();
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-                searchInputElement.addEventListener('cut', function () {
-                  updateSearchResult();
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-                searchInputElement.addEventListener('selectionchange', function () {
-                  updateSearchResult();
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-                document.addEventListener('selectionchange', function () {
-                  updateSearchResult();
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-                searchInputElement.addEventListener('keyup', function () {
-                  updateSearchResult();
-                  updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-                });
-
-                const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
-                searchMaterialSymbolsInputElement.addEventListener('paste', function () {
-                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-                });
-                searchMaterialSymbolsInputElement.addEventListener('cut', function () {
-                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-                });
-                searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
-                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-                });
-                document.addEventListener('selectionchange', function () {
-                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-                });
-                searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
-                  updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-                });
-                openPermalink();
-                fadeOutSplashScreen(function () {
-                  loadNotificationClient();
-                  initializeNotificationSchedules().then(function () {
-                    discardExpiredNotificationSchedules();
+              });
+              if (screen) {
+                if (screen.orientation) {
+                  screen.orientation.addEventListener('change', () => {
+                    ResizeRouteField();
+                    ResizeLocationField();
+                    resizeSearchInputCanvas();
                   });
-                  document.addEventListener(
-                    'click',
-                    function () {
-                      askForPositioningPermission();
-                      askForCalibratingPermission();
-                    },
-                    { once: true }
-                  );
+                }
+              }
+              initializeRecentViews();
+              initializeFolderList().then(() => {
+                initializeFolders();
+              });
+              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
+              mediaQuery.addEventListener('change', function () {
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              searchInputElement.addEventListener('paste', function () {
+                updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              searchInputElement.addEventListener('cut', function () {
+                updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              searchInputElement.addEventListener('selectionchange', function () {
+                updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              document.addEventListener('selectionchange', function () {
+                updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              searchInputElement.addEventListener('keyup', function () {
+                updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+
+              const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+              searchMaterialSymbolsInputElement.addEventListener('paste', function () {
+                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+              });
+              searchMaterialSymbolsInputElement.addEventListener('cut', function () {
+                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+              });
+              searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
+                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+              });
+              document.addEventListener('selectionchange', function () {
+                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+              });
+              searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
+                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
+              });
+              openPermalink();
+              fadeOutSplashScreen(function () {
+                loadNotificationClient();
+                initializeNotificationSchedules().then(function () {
+                  discardExpiredNotificationSchedules();
                 });
+                document.addEventListener(
+                  'click',
+                  function () {
+                    askForPositioningPermission();
+                    askForCalibratingPermission();
+                  },
+                  { once: true }
+                );
               });
             }
             if (status === 'fetchError' || status === 'unknownError') {
