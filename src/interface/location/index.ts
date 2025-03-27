@@ -4,7 +4,7 @@ import { getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
-import { documentGetElementByID, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -221,6 +221,11 @@ function setUpLocationFieldSkeletonScreen(): void {
               key: '1',
               icon: '',
               value: ''
+            },
+            {
+              key: '2',
+              icon: '',
+              value: ''
             }
           ]
         },
@@ -234,6 +239,11 @@ function setUpLocationFieldSkeletonScreen(): void {
             },
             {
               key: '1',
+              icon: '',
+              value: ''
+            },
+            {
+              key: '2',
               icon: '',
               value: ''
             }
