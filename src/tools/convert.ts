@@ -1,4 +1,5 @@
 import { MaterialSymbols } from '../interface/icons/material-symbols-type';
+import { convertToUnitVector } from './math';
 
 export function convertPositionsToDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6378.137;
