@@ -23,31 +23,21 @@ export function askForCalibratingPermission(): void {
         .then((permissionState) => {
           if (permissionState === 'granted') {
             // Permission granted, start listening to the event
-            if ('ondeviceorientationabsolute' in window) {
-              window.addEventListener(
-                'deviceorientationabsolute',
-                function (event: DeviceOrientationEvent) {
+            window.addEventListener(
+              'deviceorientation',
+              function (event: DeviceOrientationEvent) {
+                if (event.absolute) {
                   userOrientation.current = event?.alpha || -1;
-                },
-                true
-              );
-            } else {
-              window.addEventListener(
-                'deviceorientation',
-                function (event: DeviceOrientationEvent) {
-                  if (event.absolute) {
-                    userOrientation.current = event?.alpha || -1;
+                } else {
+                  if (event.webkitCompassHeading) {
+                    userOrientation.current = event.webkitCompassHeading || -1;
                   } else {
-                    if (event.webkitCompassHeading) {
-                      userOrientation.current = event.webkitCompassHeading || -1;
-                    } else {
-                      userOrientation.current = event?.alpha || -1;
-                    }
+                    userOrientation.current = event?.alpha || -1;
                   }
-                },
-                true
-              );
-            }
+                }
+              },
+              true
+            );
           } else {
             console.error('Permission not granted for DeviceOrientation');
           }
