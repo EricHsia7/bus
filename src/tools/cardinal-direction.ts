@@ -21,7 +21,7 @@ export const UnknownCardinalDirection: CardinalDirection = {
 
 // cardinal directions
 export const NorthCardinalDirection: CardinalDirection = {
-  vector: [0, 1],
+  vector: [0, 1], // 90 degress
   id: 0,
   name: '北',
   symbol: '↑',
@@ -29,7 +29,7 @@ export const NorthCardinalDirection: CardinalDirection = {
 };
 
 export const WestCardinalDirection: CardinalDirection = {
-  vector: [1, 0],
+  vector: [1, 0], // 0 degres
   id: 1,
   name: '東',
   symbol: '→',
@@ -37,7 +37,7 @@ export const WestCardinalDirection: CardinalDirection = {
 };
 
 export const SouthCardinalDirection: CardinalDirection = {
-  vector: [0, -1],
+  vector: [0, -1], // 270 degress
   id: 2,
   name: '南',
   symbol: '↓',
@@ -45,7 +45,7 @@ export const SouthCardinalDirection: CardinalDirection = {
 };
 
 export const EastCardinalDirection: CardinalDirection = {
-  vector: [-1, 0],
+  vector: [-1, 0], // 180 degress
   id: 3,
   name: '西',
   symbol: '←',

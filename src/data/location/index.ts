@@ -207,7 +207,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         {
           key: 'cardinal_direction',
           icon: cardinalDirections[i].icon,
-          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前方向）' : ''}`
+          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}`
         }
       ]
     };

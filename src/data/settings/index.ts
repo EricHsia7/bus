@@ -262,7 +262,7 @@ let Settings: SettingsObject = {
   },
   display_user_orientation: {
     key: 'display_user_orientation',
-    name: '顯示方向',
+    name: '顯示裝置指向',
     icon: 'explore',
     status: '',
     action: `bus.settings.openSettingsOptions('display_user_orientation')`,
@@ -289,7 +289,7 @@ let Settings: SettingsObject = {
         powerSavingAlternative: -1
       }
     ],
-    description: '是否在地點頁面上顯示裝置的方向。若設為開啟，本應用程式將要求動作與方向存取權限。'
+    description: '是否在地點頁面上顯示裝置所指方向。若設為開啟，本應用程式將要求動作與方向存取權限。'
   },
   location_labels: {
     key: 'location_labels',
