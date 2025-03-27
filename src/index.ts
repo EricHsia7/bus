@@ -38,7 +38,6 @@ import { closeScheduleNotification, openScheduleNotification, scheduleNotificati
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
 import { checkCompatibility } from './data/settings/compatibility';
-import { askForCalibratingPermission, getUserOrientation } from './data/user-orientation/index';
 
 import './interface/theme.css';
 
@@ -180,6 +179,7 @@ import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
+import { askForCalibratingPermission } from './data/user-orientation/index';
 
 let bus_initialized = false;
 let bus_secondly_initialized = false;
@@ -269,8 +269,14 @@ window.bus = {
                   initializeNotificationSchedules().then(function () {
                     discardExpiredNotificationSchedules();
                   });
-                  askForPositioningPermission();
-                  askForCalibratingPermission();
+                  document.addEventListener(
+                    'click',
+                    function () {
+                      askForPositioningPermission();
+                      askForCalibratingPermission();
+                    },
+                    { once: true }
+                  );
                 });
               });
             }
@@ -398,10 +404,6 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
-  },
-  test: {
-    askForCalibratingPermission,
-    getUserOrientation
   }
 };
 
