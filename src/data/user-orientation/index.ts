@@ -16,12 +16,17 @@ const userOrientation = {
 };
 
 export function askForCalibratingPermission(): void {
+  console.log(0);
   if (userOrientation.permission.asked === false && getSettingOptionValue('display_user_orientation')) {
+    console.log(1);
     userOrientation.permission.asked = true;
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      console.log(2);
       DeviceOrientationEvent.requestPermission()
         .then((permissionState) => {
+          console.log(3, permissionState);
           if (permissionState === 'granted') {
+            console.log(4);
             // Permission granted, start listening to the event
             window.addEventListener(
               'deviceorientation',
@@ -39,13 +44,16 @@ export function askForCalibratingPermission(): void {
               true
             );
           } else {
+            console.log(5);
             console.error('Permission not granted for DeviceOrientation');
           }
         })
         .catch((err) => {
+          console.log(6);
           console.error('Error requesting DeviceOrientation permission:', err);
         });
     } else {
+      console.log(7);
       console.log(`DeviceOrientation isn't supported.`);
     }
   }
