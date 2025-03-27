@@ -59,7 +59,7 @@ export function getUserOrientation(): Orientation {
       cardinalDirection: UnknownCardinalDirection
     };
   } else {
-    let angle = alpha + 90;
+    let angle: number = alpha + 90;
     if (angle > 360) {
       angle -= 360;
     }
