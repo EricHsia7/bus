@@ -329,7 +329,7 @@ let Settings: SettingsObject = {
         powerSavingAlternative: -1
       }
     ],
-    description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
+    description: '用於區分位於同個地點的不同站牌。行徑方向表示可搭乘路線從本站到下一站的方向（與車流同向）；地址特徵表示不同站牌的地址差異處；英文字母表示按照順序以字母編號。'
   },
   proxy: {
     key: 'proxy',
