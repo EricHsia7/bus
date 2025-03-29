@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../../tools/index';
 import { dateToRelativeTime } from '../../tools/time';
 import { getCarInfo } from '../apis/getCarInfo/index';
-import { getLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute } from '../apis/getRoute/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
@@ -108,7 +108,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
         existingRecentViewLocationObject.time = time;
         await lfSetItem(8, key, JSON.stringify(existingRecentViewLocationObject));
       } else {
-        const Location = await getLocation(requestID, true);
+        const Location = (await getLocation(requestID, 1)) as MergedLocation;
         const LocationKey = `ml_${param}`;
         if (Location.hasOwnProperty(LocationKey)) {
           const thisLocation = Location[LocationKey];

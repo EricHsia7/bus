@@ -41,7 +41,7 @@ export async function downloadData() {
   updateDownloadProgress();
   progressElement.addEventListener('transitioncancel', setCompleteStatus);
   await getRoute(dataDownloadRequestID, true);
-  await getLocation(dataDownloadRequestID, true);
+  await getLocation(dataDownloadRequestID, 1);
   await getCarInfo(dataDownloadRequestID, true);
   await getMaterialSymbols(dataDownloadRequestID);
   dataDownloadCompleted = true;

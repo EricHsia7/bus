@@ -38,6 +38,7 @@ import { closeScheduleNotification, openScheduleNotification, scheduleNotificati
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { switchCalendarDay } from './interface/route/details/calendar';
 import { askForCalibratingPermission } from './data/user-orientation/index';
+import { getLocation } from './data/apis/getLocation/index';
 
 import './interface/theme.css';
 
@@ -401,6 +402,9 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  test: {
+    getLocation
   }
 };
 

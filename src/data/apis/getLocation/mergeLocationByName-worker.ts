@@ -32,7 +32,9 @@ function processWorkerTask(object: SimplifiedLocation): MergedLocation {
     } else {
       result[nameKey].lo.push(object[key].lo);
       result[nameKey].la.push(object[key].la);
-      result[nameKey].g.push(object[key].g);
+      if (result[nameKey].g.indexOf(object[key].g) < 0) {
+        result[nameKey].g.push(object[key].g);
+      }
       result[nameKey].r.push(object[key].r);
       result[nameKey].s.push(object[key].s);
       result[nameKey].v.push(object[key].v);

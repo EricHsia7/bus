@@ -2,7 +2,7 @@ import { searchRouteByPathAttributeId } from '../search/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
-import { getLocation } from '../apis/getLocation/index';
+import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getStop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
@@ -24,7 +24,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const BusData = await getBusData(requestID);
   const BusEvent = await getBusEvent(requestID);
   const Stop = await getStop(requestID);
-  const Location = await getLocation(requestID, false);
+  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
 
   let result: integratedBus = {
     properties: [],
