@@ -94,6 +94,8 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
+export type ExportedSettings = { [key: string]: number };
+
 const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
@@ -611,6 +613,27 @@ export function listSettingsWithOptions(): SettingsWithOptionsArray {
           result.push(item);
         }
       }
+    }
+  }
+  return result;
+}
+
+export async function exportSettings(): Promise<ExportedSettings> {
+  const result: ExportedSettings = {};
+  const userSettings = await lfListItemKeys(1);
+  for (const key of userSettings) {
+    if (SettingKeys.indexOf(key) < 0) {
+      continue;
+    }
+    if (Settings[key].type !== 'select') {
+      continue;
+    }
+    const userSetting = await lfGetItem(1, key);
+    if (userSetting !== null) {
+      const userSettingOption = parseInt(userSetting);
+      result[key] = userSettingOption;
+    } else {
+      result[key] = Settings[key].default_option;
     }
   }
   return result;
