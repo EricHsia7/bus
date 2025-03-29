@@ -70,6 +70,14 @@ export interface FolderWithContent extends Folder {
 
 export type FolderWithContentArray = Array<FolderWithContent>;
 
+export type FolderContentIndex = string;
+
+export type FolderContentIndexArray = Array<FolderContentIndex>;
+
+export interface ExportedFolder extends Folder {
+  contentIndex: FolderContentIndexArray;
+}
+
 const FolderList: { [key: string]: Folder } = {};
 
 export async function initializeFolderList() {
@@ -155,6 +163,65 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   return true;
 }
 
+export async function importFolder(folderID: Folder['id'], name: Folder['name'], icon: Folder['icon'], timestamp: Folder['timestamp'], contentIndex: FolderContentIndexArray): Promise<boolean> {
+  const folderKey: string = `f_${folderID}`;
+  // Check existence
+  const existingFolderJSON = await lfGetItem(11, folderKey);
+  if (existingFolderJSON) {
+    return false;
+  }
+
+  // Validate icon
+  const requestID = generateIdentifier('r');
+  const materialSymbols = await getMaterialSymbols(requestID);
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  if (materialSymbols.indexOf(icon) < 0) {
+    return false;
+  }
+
+  // Generate folder
+  const newFolder: Folder = {
+    name: name,
+    icon: icon,
+    id: folderID,
+    timestamp: timestamp
+  };
+
+  // Save folder
+  FolderList[folderKey] = newFolder;
+  await lfSetItem(11, folderKey, JSON.stringify(newFolder));
+  await lfSetItem(12, folderKey, JSON.stringify(contentIndex));
+  return true;
+}
+
+export async function exportFolder(folderID: Folder['icon']): Promise<ExportedFolder | false> {
+  const folderKey: string = `f_${folderID}`;
+
+  // Check existence
+  const existingFolderJSON = await lfGetItem(11, folderKey);
+  if (!existingFolderJSON) {
+    return false;
+  }
+  const existingFolderObject = JSON.parse(existingFolderJSON) as Folder;
+
+  // Get content index
+  const thisFolderContentIndexJSON = await lfGetItem(12, folderKey);
+  if (!thisFolderContentIndexJSON) {
+    return false;
+  }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
+
+  const folderObject: ExportedFolder = {
+    name: existingFolderObject.name,
+    icon: existingFolderObject.icon,
+    id: existingFolderObject.id,
+    timestamp: existingFolderObject.timestamp,
+    contentIndex: thisFolderContentIndexArray
+  };
+  return folderObject;
+}
+
 export function getFolder(folderID: Folder['id']): Folder | false {
   const folderKey: string = `f_${folderID}`;
   if (!FolderList.hasOwnProperty(folderKey)) {
@@ -200,12 +267,11 @@ export async function listFolderContent(folderID: Folder['id']): Promise<Array<F
   if (!thisFolderContentIndexJSON) {
     return result;
   }
-  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
   if (thisFolderContentIndexArray.length === 0) {
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
-      id: 0,
-      index: 0
+      id: 0
     };
     result.push(emptyItem);
     return result;
@@ -227,7 +293,7 @@ async function getFolderContentLength(folderID: Folder['id']): Promise<number> {
   if (!thisFolderContentIndexJSON) {
     return 0;
   }
-  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
   return thisFolderContentIndexArray.length;
 }
 
@@ -415,7 +481,7 @@ export async function saveToFolder(folderID: Folder['id'], content: FolderConten
     return false;
   }
 
-  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
   if (thisFolderContentIndexArray.length === 0 || thisFolderContentIndexArray.indexOf(contentKey) < 0) {
     await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray.concat(contentKey)));
     await lfSetItem(13, contentKey, JSON.stringify(content));
@@ -434,7 +500,7 @@ export async function isFolderContentSaved(type: FolderContent['type'], id: Fold
     if (!thisFolderContentIndexJSON) {
       continue;
     }
-    const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+    const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
     if (thisFolderContentIndexArray.indexOf(folderContentKeyToCheck) > -1) {
       return true;
     }
@@ -457,7 +523,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   if (!thisFolderContentIndexJSON) {
     return false;
   }
-  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
   const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
   if (index > -1 && thisFolderContentIndexArray.length > 0) {
     thisFolderContentIndexArray.splice(index, 1);
@@ -548,7 +614,7 @@ export async function updateFolderContentIndex(folderID: Folder['id'], type: Fol
   if (!thisFolderContentIndexJSON) {
     return false;
   }
-  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as FolderContentIndexArray;
 
   const index = thisFolderContentIndexArray.indexOf(thisFolderContentKey);
   if (index > -1 && thisFolderContentIndexArray.length > 1) {
