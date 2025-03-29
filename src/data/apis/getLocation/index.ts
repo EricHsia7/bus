@@ -48,7 +48,7 @@ export interface MergedLocationItem {
 
 export type MergedLocation = { [key: string]: MergedLocationItem };
 
-var LocationAPIVariableCache: object = {
+const LocationAPIVariableCache = {
   merged: {
     available: false,
     data: {}

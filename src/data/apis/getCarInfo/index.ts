@@ -25,7 +25,7 @@ export interface SimplifiedCarInfoItem {
 
 export type SimplifiedCarInfo = { [key: string]: SimplifiedCarInfoItem };
 
-let CarInfoAPIVariableCache: object = {
+const CarInfoAPIVariableCache = {
   raw: {
     data: [],
     available: false
@@ -78,7 +78,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
   const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     const result = await getData();
-    var final_result;
+    let final_result;
     if (simplified) {
       final_result = await simplifyCarInfo(result);
     } else {
@@ -94,7 +94,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
       const result = await getData();
-      var final_result;
+      let final_result;
       if (simplified) {
         final_result = await simplifyCarInfo(result);
       } else {
@@ -105,7 +105,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
       return final_result;
     } else {
       if (!CarInfoAPIVariableCache[cache_type].available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cache_key}`);
         CarInfoAPIVariableCache[cache_type].available = true;
         CarInfoAPIVariableCache[cache_type].data = JSON.parse(cache);
       }
