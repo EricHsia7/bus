@@ -26,10 +26,12 @@ export interface SimplifiedLocationItem {
   n: string; // name
   lo: number; // longitude
   la: number; // latitude
+  g: string; // geohash
   r: Array<number>; // RouteIDs
   s: Array<number>; // StopIDs
   v: Array<[number, number]>; // a set of vectors
   a: Array<string>; // addresses
+  id: number;
 }
 
 export type SimplifiedLocation = { [key: string]: SimplifiedLocationItem };
@@ -38,6 +40,7 @@ export interface MergedLocationItem {
   n: string; // name
   lo: Array<number>; // longitude
   la: Array<number>; // latitude
+  g: Array<string>; // geohash
   r: Array<Array<number>>; // RouteIDs
   s: Array<Array<number>>; // StopIDs
   v: Array<Array<[number, number]>>; // sets of vectors
@@ -116,16 +119,16 @@ export async function getLocation(requestID: string, merged: boolean = false): P
     return result;
   }
 
-  var cache_time: number = 60 * 60 * 24 * 30 * 1000;
-  var cache_type = merged ? 'merged' : 'simplified';
-  var cache_key = `bus_${cache_type}_location_v14_cache`;
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
+  const cache_time: number = 60 * 60 * 24 * 30 * 1000;
+  const cache_type = merged ? 'merged' : 'simplified';
+  const cache_key = `bus_${cache_type}_location_v15_cache`;
+  const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
-    var result = await getData();
-    var final_result = {};
-    var simplified_result = await simplifyLocation(result);
+    const result = await getData();
+    let final_result;
+    const simplified_result = await simplifyLocation(result);
     if (merged) {
-      var merged_result = await mergeLocationByName(simplified_result);
+      const merged_result = await mergeLocationByName(simplified_result);
       final_result = merged_result;
     } else {
       final_result = simplified_result;
@@ -140,11 +143,11 @@ export async function getLocation(requestID: string, merged: boolean = false): P
     return final_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      var result = await getData();
-      var final_result = {};
-      var simplified_result = await simplifyLocation(result);
+      const result = await getData();
+      let final_result;
+      const simplified_result = await simplifyLocation(result);
       if (merged) {
-        var merged_result = await mergeLocationByName(simplified_result);
+        const merged_result = await mergeLocationByName(simplified_result);
         final_result = merged_result;
       } else {
         final_result = simplified_result;
@@ -159,7 +162,7 @@ export async function getLocation(requestID: string, merged: boolean = false): P
       return final_result;
     } else {
       if (!LocationAPIVariableCache[cache_type].available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cache_key}`);
         LocationAPIVariableCache[cache_type].available = true;
         LocationAPIVariableCache[cache_type].data = JSON.parse(cache);
       }
