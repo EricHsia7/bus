@@ -138,7 +138,7 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
 }
 
 /**
- * get location
+ * getLocation
  * @param requestID
  * @param type 0: simplified, 1: merged, 2: indexed
  * @returns SimplifiedLocation, MergedLocation, or IndexedLocation
