@@ -38,7 +38,7 @@ Quickly find routes, locations, and places of interest within the app.
 
 ### Analytics
 
-- **Bus Arrival Time**: This feature requires setting Personal Schedule. After set, it will work in route page.
+- **Bus Arrival Time**: This feature requires setting Personal Schedule. After set, it will work on route and location page.
 - **Data Usage**: See the transferred data quantity.
 - **Storage**: See the drive space used by Bus on your device.
 
