@@ -54,7 +54,7 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
       simplifiedItem.n = item.nameZh;
       simplifiedItem.lo = thisItemLongitude;
       simplifiedItem.la = thisItemLatitude;
-      simplifiedItem.g = geohashEncode(thisItemLatitude, thisItemLongitude, 5);
+      simplifiedItem.g = geohashEncode(thisItemLatitude, thisItemLongitude, 6);
       simplifiedItem.r = [item.routeId];
       simplifiedItem.s = [item.Id];
       simplifiedItem.v = [vector];

@@ -161,7 +161,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
 
   const cache_time: number = 60 * 60 * 24 * 30 * 1000;
   let cache_type = ['simplified', 'merged', 'indexed'][type];
-  const cache_key = `bus_${cache_type}_location_v16_cache`;
+  const cache_key = `bus_${cache_type}_location_v17_cache`;
   const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
     const result = await getData();
