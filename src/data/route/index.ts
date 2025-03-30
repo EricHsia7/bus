@@ -1,3 +1,4 @@
+import { convertPositionsToDistance } from '../../tools/convert';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
@@ -36,6 +37,7 @@ export interface integratedStopItemSegmentBuffer {
 
 export interface integratedStopItemNearbyLocationItem {
   name: string;
+  distance: number;
   hash: string;
 }
 
@@ -188,6 +190,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           const thisMergedLocation = MergedLocation[mergedLocationKey];
           const nearbyLocationItem: integratedStopItemNearbyLocationItem = {
             name: thisMergedLocation.n,
+            distance: convertPositionsToDistance(thisMergedLocation.la, thisMergedLocation.lo, thisSimplifiedLocation.la, thisSimplifiedLocation.lo) | 0,
             hash: thisMergedLocation.hash
           };
           nearbyLocations.push(nearbyLocationItem);
@@ -196,7 +199,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       integratedStopItem.nearbyLocations = nearbyLocations;
 
       // Collect data from 'batchFoundBuses'
-      let buses = []; // as  Array<FormattedBus>
+      let buses = []; // as Array<FormattedBus>
       for (var overlappingStopID of thisSimplifiedLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
         if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
