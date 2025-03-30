@@ -475,7 +475,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
 export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: number): Promise<boolean> {
   const requestID = generateIdentifier('r');
   const Stop = (await getStop(requestID)) as SimplifiedStop;
-  const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
+  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
 
   const thisStop = Stop[`s_${StopID}`];

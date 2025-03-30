@@ -411,7 +411,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
     const requestID = generateIdentifier('r');
     const Stop = (await getStop(requestID)) as SimplifiedStop;
-    const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
+    const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
     const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
 
     deleteDataReceivingProgress(requestID);

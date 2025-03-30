@@ -21,21 +21,25 @@ function processWorkerTask(object: SimplifiedLocation): MergedLocation {
         n: object[key].n,
         lo: [object[key].lo],
         la: [object[key].la],
+        g: [object[key].g],
         r: [object[key].r],
         s: [object[key].s],
         v: [object[key].v],
         a: [mergeAddressesIntoOne(object[key].a)],
-        id: [parseInt(key.split('_')[1])],
+        id: [object[key].id],
         hash: hash
       };
     } else {
-      result[nameKey].id.push(parseInt(key.split('_')[1]));
+      result[nameKey].lo.push(object[key].lo);
+      result[nameKey].la.push(object[key].la);
+      if (result[nameKey].g.indexOf(object[key].g) < 0) {
+        result[nameKey].g.push(object[key].g);
+      }
       result[nameKey].r.push(object[key].r);
       result[nameKey].s.push(object[key].s);
       result[nameKey].v.push(object[key].v);
-      result[nameKey].lo.push(object[key].lo);
-      result[nameKey].la.push(object[key].la);
       result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
+      result[nameKey].id.push(object[key].id);
     }
   }
   return result;

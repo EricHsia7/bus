@@ -1,3 +1,4 @@
+import { geohashEncode } from '../../../tools/geohash';
 import { convertToUnitVector } from '../../../tools/math';
 import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
@@ -23,8 +24,13 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
   }
   let result: SimplifiedLocation = {};
   for (const item of Location) {
+    const thisRouteID = item.routeId;
+    const thisRouteKey = `r_${thisRouteID}`;
+    const thisItemLongitude = parseFloat(item.longitude);
+    const thisItemLatitude = parseFloat(item.latitude);
+
     let vector = [0, 0];
-    const locationsOnThisRoute = locationsByRoute[`r_${item.routeId}`];
+    const locationsOnThisRoute = locationsByRoute[thisRouteKey];
     const locationsOnThisRouteLength = locationsOnThisRoute.length;
     let nextLocation = null;
     for (let i = 0; i < locationsOnThisRouteLength; i++) {
@@ -37,27 +43,29 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
       }
     }
     if (nextLocation) {
-      const x = parseFloat(nextLocation.longitude) - parseFloat(item.longitude);
-      const y = parseFloat(nextLocation.latitude) - parseFloat(item.latitude);
+      const x = parseFloat(nextLocation.longitude) - thisItemLongitude;
+      const y = parseFloat(nextLocation.latitude) - thisItemLatitude;
       vector = convertToUnitVector([x, y]);
     }
 
     const key = `l_${item.stopLocationId}`;
     if (!result.hasOwnProperty(key)) {
-      let simplifiedItem = {} as SimplifiedLocationItem;
+      const simplifiedItem = {} as SimplifiedLocationItem;
       simplifiedItem.n = item.nameZh;
-      simplifiedItem.lo = parseFloat(item.longitude);
-      simplifiedItem.la = parseFloat(item.latitude);
+      simplifiedItem.lo = thisItemLongitude;
+      simplifiedItem.la = thisItemLatitude;
+      simplifiedItem.g = geohashEncode(thisItemLatitude, thisItemLongitude, 6);
       simplifiedItem.r = [item.routeId];
       simplifiedItem.s = [item.Id];
       simplifiedItem.v = [vector];
       simplifiedItem.a = [item.address];
+      simplifiedItem.id = item.stopLocationId;
       result[key] = simplifiedItem;
     } else {
-      if (!(result[key].r.indexOf(item.routeId) > -1)) {
+      if (result[key].r.indexOf(item.routeId) < 0) {
         result[key].r.push(item.routeId);
       }
-      if (!(result[key].s.indexOf(item.Id) > -1)) {
+      if (result[key].s.indexOf(item.Id) < 0) {
         result[key].s.push(item.Id);
         result[key].v.push(vector);
       }

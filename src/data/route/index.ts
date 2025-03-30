@@ -80,7 +80,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const Stop = await getStop(requestID);
-  const Location = (await getLocation(requestID, false)) as SimplifiedLocation;
+  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
   const SegmentBuffers = await getSegmentBuffers(requestID);
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
