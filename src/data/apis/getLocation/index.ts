@@ -146,13 +146,13 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
 
 export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<SimplifiedLocation | MergedLocation | IndexedLocation> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 11],
       [1, 11]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = [];
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getLocation_${api.e[0]}`, 'json');
+    let result = [];
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getLocation_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
@@ -160,33 +160,32 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
   }
 
   const cache_time: number = 60 * 60 * 24 * 30 * 1000;
-  let cache_type = ['simplified', 'merged', 'indexed'][type];
-  const cache_key = `bus_${cache_type}_location_v17_cache`;
+  const cache_type: string = ['simplified', 'merged', 'indexed'][type];
+  const cache_key: string = `bus_${cache_type}_location_cache`;
   const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
   if (cached_time === null) {
-    const result = await getData();
     let final_result;
-    const simplified_result = await simplifyLocation(result);
     switch (type) {
       case 0: {
+        const result = await getData();
+        const simplified_result = await simplifyLocation(result);
         final_result = simplified_result;
         break;
       }
       case 1: {
+        const simplified_result = getLocation(requestID, 0);
         const merged_result = await mergeLocationByName(simplified_result);
         final_result = merged_result;
         break;
       }
       case 2: {
-        const merged_result = await mergeLocationByName(simplified_result);
+        const merged_result = await getLocation(requestID, 1);
         const indexed_result = await indexLocationByGeohash(merged_result);
         final_result = indexed_result;
         break;
       }
-      default: {
-        final_result = simplified_result;
+      default:
         break;
-      }
     }
 
     await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
@@ -198,29 +197,28 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     return final_result;
   } else {
     if (new Date().getTime() - parseInt(cached_time) > cache_time) {
-      const result = await getData();
       let final_result;
-      const simplified_result = await simplifyLocation(result);
       switch (type) {
         case 0: {
+          const result = await getData();
+          const simplified_result = await simplifyLocation(result);
           final_result = simplified_result;
           break;
         }
         case 1: {
+          const simplified_result = await getLocation(requestID, 0);
           const merged_result = await mergeLocationByName(simplified_result);
           final_result = merged_result;
           break;
         }
         case 2: {
-          const merged_result = await mergeLocationByName(simplified_result);
+          const merged_result = await getLocation(requestID, 1);
           const indexed_result = await indexLocationByGeohash(merged_result);
           final_result = indexed_result;
           break;
         }
-        default: {
-          final_result = simplified_result;
+        default:
           break;
-        }
       }
 
       await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
