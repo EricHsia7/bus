@@ -173,7 +173,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
         break;
       }
       case 1: {
-        const simplified_result = getLocation(requestID, 0);
+        const simplified_result = await getLocation(requestID, 0);
         const merged_result = await mergeLocationByName(simplified_result);
         final_result = merged_result;
         break;
