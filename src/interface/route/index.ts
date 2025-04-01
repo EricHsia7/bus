@@ -218,6 +218,7 @@ function setUpRouteFieldSkeletonScreen(): void {
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],
+        nearbyLocations: [],
         sequence: j,
         position: {
           longitude: 0,
