@@ -333,7 +333,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateNearbyLocations(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations').innerHTML = thisItem.nearbyLocations.length === 0 ? '<div class="css_route_group_item_nearby_locations_message">目前沒有地點可顯示</div>' : thisItem.nearbyLocations.map((nearbyLocation) => `<div class="css_route_group_item_nearby_location"><div class="css_route_group_item_nearby_location_title"><div class="css_route_group_item_nearby_location_icon">${getIconHTML('location_on')}</div><div class="css_route_group_item_nearby_location_name">${nearbyLocation.name}</div></div><div class="css_route_group_item_nearby_location_distance">${nearbyLocation.distance}公尺</div></div>`).join('');
+      elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations').innerHTML = thisItem.nearbyLocations.length === 0 ? '<div class="css_route_group_item_nearby_locations_message">目前沒有地點可顯示</div>' : thisItem.nearbyLocations.map((nearbyLocation) => `<div class="css_route_group_item_nearby_location"><div class="css_route_group_item_nearby_location_title"><div class="css_route_group_item_nearby_location_icon">${getIconHTML('location_on')}</div><div class="css_route_group_item_nearby_location_name">${nearbyLocation.name}</div></div><div class="css_route_group_item_nearby_location_distance">${nearbyLocation.distance}公尺</div><div class="css_route_group_item_nearby_location_actions"><div class="css_route_group_item_nearby_location_action_button" onclick="bus.location.openLocation('${nearbyLocation.hash}')">查看地點</div><div class="css_route_group_item_nearby_location_action_button">收藏地點</div></div></div>`).join('');
     }
 
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
@@ -406,6 +406,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       updateBuses(thisItemElement, thisItem);
       updateOverlappingRoutes(thisItemElement, thisItem);
       updateBusArrivalTimes(thisItemElement, thisItem);
+      updateNearbyLocations(thisItemElement, thisItem);
       updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       updateThread(thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);
@@ -437,6 +438,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!(previousItem.id === thisItem.id)) {
         updateName(thisItemElement, thisItem);
         updateOverlappingRoutes(thisItemElement, thisItem);
+        updateNearbyLocations(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
