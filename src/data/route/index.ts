@@ -190,7 +190,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           const thisMergedLocation = MergedLocation[mergedLocationKey];
           const nearbyLocationItem: integratedStopItemNearbyLocationItem = {
             name: thisMergedLocation.n,
-            distance: convertPositionsToDistance(thisMergedLocation.la, thisMergedLocation.lo, thisSimplifiedLocation.la, thisSimplifiedLocation.lo) | 0,
+            distance: convertPositionsToDistance(thisMergedLocation.la, thisMergedLocation.lo, thisSimplifiedLocation.la, thisSimplifiedLocation.lo),
             hash: thisMergedLocation.hash
           };
           nearbyLocations.push(nearbyLocationItem);
