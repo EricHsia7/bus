@@ -190,12 +190,15 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           const thisMergedLocation = MergedLocation[mergedLocationKey];
           const nearbyLocationItem: integratedStopItemNearbyLocationItem = {
             name: thisMergedLocation.n,
-            distance: convertPositionsToDistance(thisMergedLocation.la[0], thisMergedLocation.lo[0], thisSimplifiedLocation.la, thisSimplifiedLocation.lo),
+            distance: convertPositionsToDistance(thisMergedLocation.la[0], thisMergedLocation.lo[0], thisSimplifiedLocation.la, thisSimplifiedLocation.lo) | 0,
             hash: thisMergedLocation.hash
           };
           nearbyLocations.push(nearbyLocationItem);
         }
       }
+      nearbyLocations.sort(function (a, b) {
+        return a.distance - b.distance;
+      });
       integratedStopItem.nearbyLocations = nearbyLocations;
 
       // Collect data from 'batchFoundBuses'
