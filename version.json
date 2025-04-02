@@ -1,7 +1,7 @@
 {
-  "build": 3411,
-  "hash": "04affdd",
-  "full_hash": "04affdd7d9c142bfef5b3dc38a498995e7b7d6fa",
-  "branch_name": "dev-nearby-location",
-  "timestamp": "2025-04-01T10:54:24.008Z"
+  "build": 3412,
+  "hash": "eea0a28",
+  "full_hash": "eea0a283da572f36e14fb5226a34a2860f26bd2f",
+  "branch_name": "dev-event-listener",
+  "timestamp": "2025-04-02T10:35:19.192Z"
 }
