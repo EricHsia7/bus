@@ -1,6 +1,6 @@
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
-import { getDataReceivingProgress } from '../../data/apis/loader';
+import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
@@ -46,7 +46,6 @@ let locationRefreshTimer_nextUpdate: number = 0;
 let locationRefreshTimer_refreshing: boolean = false;
 let locationRefreshTimer_currentRequestID: string = '';
 let locationRefreshTimer_currentProgress: number = -1;
-let locationRefreshTimer_targetProgress: number = -1;
 let locationRefreshTimer_streamStarted: boolean = false;
 let locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -104,21 +103,25 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.7;
   const time = new Date().getTime();
-  if (locationRefreshTimer_refreshing) {
-    locationRefreshTimer_targetProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
-    locationRefreshTimer_currentProgress = (locationRefreshTimer_targetProgress - locationRefreshTimer_currentProgress) * smoothingFactor;
-  } else {
-    locationRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
-    locationRefreshTimer_currentProgress = locationRefreshTimer_targetProgress;
-  }
+  locationRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
   LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', locationRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
-    if (locationRefreshTimer_streaming) {
+    if (locationRefreshTimer_streaming && !locationRefreshTimer_refreshing) {
       updateUpdateTimer();
     }
   });
+}
+
+function handleDataReceivingProgressUpdates(event: Event): void {
+  const CustomEvent = event as DataReceivingProgressEvent;
+  if (locationRefreshTimer_refreshing) {
+    locationRefreshTimer_currentProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
+    LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', locationRefreshTimer_currentProgress.toString());
+  }
+  if (CustomEvent.detail.stage === 'end') {
+    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
+  }
 }
 
 function generateElementOfItem(): GeneratedElement {
@@ -624,6 +627,7 @@ async function refreshLocation() {
   locationRefreshTimer_refreshing = true;
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
+  document.addEventListener(locationRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, locationRefreshTimer_currentRequestID);
   updateLocationField(integration, false, playing_animation);
   let updateRate = 0;
@@ -639,6 +643,7 @@ async function refreshLocation() {
   locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - locationRefreshTimer_lastUpdate);
   locationRefreshTimer_refreshing = false;
   LocationUpdateTimerElement.setAttribute('refreshing', 'false');
+  updateUpdateTimer();
 }
 
 export function streamLocation(): void {
@@ -682,7 +687,6 @@ export function openLocation(hash: string): void {
       refreshLocation();
     }
     locationRefreshTimer_currentProgress = -1;
-    locationRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
   closePreviousPage();
@@ -693,7 +697,6 @@ export function closeLocation(): void {
   LocationField.setAttribute('displayed', 'false');
   locationRefreshTimer_streaming = false;
   locationRefreshTimer_currentProgress = -1;
-  locationRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 
