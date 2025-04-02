@@ -287,7 +287,6 @@ export function openNotificationScheduleManager(): void {
       refreshNotificationScheduleManager();
     }
     notifcationScheduleManagerRefreshTimer_currentProgress = -1;
-    notifcationScheduleManagerRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
   closePreviousPage();
@@ -298,7 +297,6 @@ export function closeNotificationScheduleManager(): void {
   NotificationScheduleManagerField.setAttribute('displayed', 'false');
   notifcationScheduleManagerRefreshTimer_streaming = false;
   notifcationScheduleManagerRefreshTimer_currentProgress = -1;
-  notifcationScheduleManagerRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 
