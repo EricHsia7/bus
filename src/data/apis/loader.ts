@@ -152,7 +152,7 @@ export function broadcastDataReceivingProgress(requestID: string, stage: DataRec
     stage: stage,
     progress: getDataReceivingProgress(requestID)
   };
-  const event = new CustomEvent(requestID, eventDict);
+  const event = new CustomEvent(requestID, { detail: eventDict });
   document.dispatchEvent(event);
 }
 
