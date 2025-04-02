@@ -94,24 +94,6 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
 }
 
-export function getDataReceivingProgress(requestID: string): number {
-  if (dataReceivingProgress.hasOwnProperty(requestID)) {
-    if (typeof dataReceivingProgress[requestID] === 'object') {
-      var total = 0;
-      var received = 0;
-      for (var key in dataReceivingProgress[requestID]) {
-        if (!dataReceivingProgress[requestID][key].expel) {
-          total += dataReceivingProgress[requestID][key].total;
-          received += dataReceivingProgress[requestID][key].progress;
-        }
-      }
-      var progress = Math.min(Math.max(received / total, 0), 1);
-      return progress === Infinity || isNaN(progress) ? 1 : progress;
-    }
-  }
-  return 1;
-}
-
 export function setDataReceivingProgress(requestID: string, tag: string, progress: number, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
@@ -124,15 +106,54 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
       dataReceivingProgress[requestID][key].expel = false;
       dataReceivingProgress[requestID][key].progress = progress;
     }
+    broadcastDataReceivingProgress(requestID, 'run');
   } else {
     dataReceivingProgress[requestID][key] = { expel: false, progress: progress, total: 1 };
+    broadcastDataReceivingProgress(requestID, 'start');
   }
+}
+
+export function getDataReceivingProgress(requestID: string): number {
+  if (dataReceivingProgress.hasOwnProperty(requestID)) {
+    if (typeof dataReceivingProgress[requestID] === 'object') {
+      let total = 0;
+      let received = 0;
+      for (const key in dataReceivingProgress[requestID]) {
+        if (!dataReceivingProgress[requestID][key].expel) {
+          total += dataReceivingProgress[requestID][key].total;
+          received += dataReceivingProgress[requestID][key].progress;
+        }
+      }
+      const progress = Math.min(Math.max(received / total, 0), 1);
+      return progress === Infinity || isNaN(progress) ? 1 : progress;
+    }
+  }
+  return 1;
 }
 
 export function deleteDataReceivingProgress(requestID: string): void {
   if (dataReceivingProgress.hasOwnProperty(requestID)) {
     delete dataReceivingProgress[requestID];
+    broadcastDataReceivingProgress(requestID, 'end');
   }
+}
+
+export interface DataReceivingProgressEventDict {
+  target: string;
+  stage: 'start' | 'run' | 'end';
+  progress: number;
+}
+
+export type DataReceivingProgressEvent = CustomEvent<DataReceivingProgressEventDict>;
+
+export function broadcastDataReceivingProgress(requestID: string, stage: DataReceivingProgressEventDict['stage']): void {
+  const eventDict: DataReceivingProgressEventDict = {
+    target: requestID,
+    stage: stage,
+    progress: getDataReceivingProgress(requestID)
+  };
+  const event = new CustomEvent(requestID, eventDict);
+  document.dispatchEvent(event);
 }
 
 export function setDataUpdateTime(requestID: string, timeStamp: string | number): void {

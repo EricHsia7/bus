@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-nearby-location
+      - dev-event-listener
 
 jobs:
   launch:
