@@ -57,7 +57,7 @@ export interface IndexedLocationItem {
   hash: string;
 }
 
-export type IndexedLocation = { [geohash: string]: IndexedLocationItem };
+export type IndexedLocation = { [geohash: string]: Array<IndexedLocationItem> };
 
 const LocationAPIVariableCache = {
   simplified: {

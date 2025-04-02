@@ -1,8 +1,9 @@
+import { convertPositionsToDistance } from '../../tools/convert';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
+import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop, SimplifiedStopItem } from '../apis/getStop/index';
@@ -34,6 +35,12 @@ export interface integratedStopItemSegmentBuffer {
   isEndingPoint: boolean;
 }
 
+export interface integratedStopItemNearbyLocationItem {
+  name: string;
+  distance: number;
+  hash: string;
+}
+
 export interface integratedStopItem {
   name: string;
   goBack: '0' | '1' | '2';
@@ -41,6 +48,7 @@ export interface integratedStopItem {
   buses: Array<FormattedBus>;
   overlappingRoutes: Array<formattedOverlappingRoute>;
   busArrivalTimes: Array<BusArrivalTime>;
+  nearbyLocations: Array<integratedStopItemNearbyLocationItem>;
   sequence: number;
   position: integratedStopItemPosition;
   nearest: boolean;
@@ -80,7 +88,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const Stop = await getStop(requestID);
-  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
+  const SimplifiedLocation = (await getLocation(requestID, 0)) as SimplifiedLocation;
+  const MergedLocation = (await getLocation(requestID, 1)) as MergedLocation;
+  const IndexedLocation = (await getLocation(requestID, 2)) as IndexedLocation;
   const SegmentBuffers = await getSegmentBuffers(requestID);
   const EstimateTime = await getEstimateTime(requestID);
   const BusEvent = await getBusEvent(requestID);
@@ -106,12 +116,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
     const thisRouteID = item.RouteID;
 
-    // check whether this stop is on this route or not
+    // Check whether this stop is on this route or not
     if ([RouteID, RouteID * 10].includes(thisRouteID) || PathAttributeId.includes(thisRouteID)) {
-      // format status
+      // Parse estimate time
       integratedStopItem.status = parseEstimateTime(item?.EstimateTime, time_formatting_mode);
 
-      // collect data from 'Stop'
+      // Collect data from 'Stop'
       const thisStopKey = `s_${item.StopID}`;
       let thisStop = {} as SimplifiedStopItem;
       if (Stop.hasOwnProperty(thisStopKey)) {
@@ -123,16 +133,16 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       integratedStopItem.sequence = thisStop.seqNo;
       integratedStopItem.goBack = thisStop.goBack;
 
-      // collect data from 'Location'
+      // Collect data from 'SimplifiedLocation'
       const thisLocationKey = `l_${thisStop.stopLocationId}`;
-      let thisLocation = {} as SimplifiedLocationItem;
-      if (Location.hasOwnProperty(thisLocationKey)) {
-        thisLocation = Location[thisLocationKey];
+      let thisSimplifiedLocation = {} as SimplifiedLocationItem;
+      if (SimplifiedLocation.hasOwnProperty(thisLocationKey)) {
+        thisSimplifiedLocation = SimplifiedLocation[thisLocationKey];
       } else {
         continue;
       }
-      integratedStopItem.name = thisLocation.n;
-      integratedStopItem.overlappingRoutes = thisLocation.r
+      integratedStopItem.name = thisSimplifiedLocation.n;
+      integratedStopItem.overlappingRoutes = thisSimplifiedLocation.r
         .filter((id: number) => id !== RouteID)
         .map((id: number) => {
           const overlappingRouteKey = `r_${id}`;
@@ -158,18 +168,42 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           return !(e === null);
         });
       integratedStopItem.position = {
-        longitude: thisLocation.lo,
-        latitude: thisLocation.la
+        longitude: thisSimplifiedLocation.lo,
+        latitude: thisSimplifiedLocation.la
       };
       positions.push({
-        latitude: thisLocation.la,
-        longitude: thisLocation.lo,
+        latitude: thisSimplifiedLocation.la,
+        longitude: thisSimplifiedLocation.lo,
         id: item.StopID
       });
 
-      // collect data from 'batchFoundBuses'
-      let buses = []; // as  Array<FormattedBus>
-      for (var overlappingStopID of thisLocation.s) {
+      // Collect data from 'IndexedLocation' and 'MergedLocation'
+      const thisSimplifiedLocationGeohash = thisSimplifiedLocation.g;
+      let thisIndexedLocationItem: Array<IndexedLocationItem> = [];
+      if (IndexedLocation.hasOwnProperty(thisSimplifiedLocationGeohash)) {
+        thisIndexedLocationItem = IndexedLocation[thisSimplifiedLocationGeohash];
+      }
+      let nearbyLocations: Array<integratedStopItemNearbyLocationItem> = [];
+      for (const item of thisIndexedLocationItem) {
+        const mergedLocationKey = `ml_${item.hash}`;
+        if (MergedLocation.hasOwnProperty(mergedLocationKey)) {
+          const thisMergedLocation = MergedLocation[mergedLocationKey];
+          const nearbyLocationItem: integratedStopItemNearbyLocationItem = {
+            name: thisMergedLocation.n,
+            distance: convertPositionsToDistance(thisMergedLocation.la[0], thisMergedLocation.lo[0], thisSimplifiedLocation.la, thisSimplifiedLocation.lo) | 0,
+            hash: thisMergedLocation.hash
+          };
+          nearbyLocations.push(nearbyLocationItem);
+        }
+      }
+      nearbyLocations.sort(function (a, b) {
+        return a.distance - b.distance;
+      });
+      integratedStopItem.nearbyLocations = nearbyLocations;
+
+      // Collect data from 'batchFoundBuses'
+      let buses = []; // as Array<FormattedBus>
+      for (var overlappingStopID of thisSimplifiedLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
         if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
           buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));
@@ -179,14 +213,14 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         return a.index - b.index;
       });
 
-      // collect data from 'BusArrivalTimes'
+      // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = [];
       if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       integratedStopItem.busArrivalTimes = thisBusArrivalTimes;
 
-      // check whether this stop is segment buffer
+      // Check whether this stop is segment buffer
       let isSegmentBuffer: boolean = false;
       let isStartingPoint: boolean = false;
       let isEndingPoint: boolean = false;
@@ -331,6 +365,6 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  //await recordEstimateTimeForUpdateRate(EstimateTime);
+  // await recordEstimateTimeForUpdateRate(EstimateTime);
   return result2;
 }
