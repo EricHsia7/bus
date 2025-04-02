@@ -31,26 +31,29 @@ let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
 let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
 let notifcationScheduleManagerRefreshTimer_currentProgress: number = -1;
-let notifcationScheduleManagerRefreshTimer_targetProgress: number = -1;
 let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
 let notifcationScheduleManagerRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  if (notifcationScheduleManagerRefreshTimer_refreshing) {
-    notifcationScheduleManagerRefreshTimer_targetProgress = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
-    notifcationScheduleManagerRefreshTimer_currentProgress = (notifcationScheduleManagerRefreshTimer_targetProgress - notifcationScheduleManagerRefreshTimer_currentProgress) * smoothingFactor;
-  } else {
-    notifcationScheduleManagerRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
-    notifcationScheduleManagerRefreshTimer_currentProgress = notifcationScheduleManagerRefreshTimer_targetProgress;
-  }
+  notifcationScheduleManagerRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
   NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', notifcationScheduleManagerRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
-    if (notifcationScheduleManagerRefreshTimer_streaming) {
+    if (notifcationScheduleManagerRefreshTimer_streaming && !notifcationScheduleManagerRefreshTimer_refreshing) {
       updateUpdateTimer();
     }
   });
+}
+
+function handleDataReceivingProgressUpdates(event: Event): void {
+  const CustomEvent = event as DataReceivingProgressEvent;
+  if (notifcationScheduleManagerRefreshTimer_refreshing) {
+    notifcationScheduleManagerRefreshTimer_currentProgress = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
+    NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', notifcationScheduleManagerRefreshTimer_currentProgress.toString());
+  }
+  if (CustomEvent.detail.stage === 'end') {
+    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
+  }
 }
 
 function generateElementOfItem(): GeneratedElement {
@@ -228,7 +231,8 @@ async function refreshNotificationScheduleManager() {
   notifcationScheduleManagerRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   notifcationScheduleManagerRefreshTimer_refreshing = true;
   notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier('r');
-  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
+  NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
+  document.addEventListener(notifcationScheduleManagerRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
   updateNotificationScheduleManagerField(integration, false, playing_animation);
   let updateRate = 0;
@@ -243,7 +247,8 @@ async function refreshNotificationScheduleManager() {
   }
   notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - notifcationScheduleManagerRefreshTimer_lastUpdate);
   notifcationScheduleManagerRefreshTimer_refreshing = false;
-  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
+  NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
+  updateUpdateTimer();
 }
 
 async function streamNotificationScheduleManager() {
