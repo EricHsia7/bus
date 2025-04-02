@@ -1,6 +1,6 @@
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
-import { getDataReceivingProgress } from '../../data/apis/loader';
+import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
@@ -108,21 +108,25 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  if (routeRefreshTimer_refreshing) {
-    routeRefreshTimer_targetProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
-    routeRefreshTimer_currentProgress += (routeRefreshTimer_targetProgress - routeRefreshTimer_currentProgress) * smoothingFactor;
-  } else {
-    routeRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
-    routeRefreshTimer_currentProgress = routeRefreshTimer_targetProgress;
-  }
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
+  routeRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
+  routeRefreshTimer_currentProgress = routeRefreshTimer_targetProgress;
   window.requestAnimationFrame(function () {
-    if (routeRefreshTimer_streaming) {
+    if (routeRefreshTimer_streaming && !routeRefreshTimer_refreshing) {
       updateUpdateTimer();
     }
   });
+}
+
+function handleDataReceivingProgressUpdates(event: Event): void {
+  const CustomEvent = event as DataReceivingProgressEvent;
+  if (routeRefreshTimer_refreshing) {
+    routeRefreshTimer_targetProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
+    routeRefreshTimer_currentProgress += (routeRefreshTimer_targetProgress - routeRefreshTimer_currentProgress) * smoothingFactor;
+  }
+  if (CustomEvent.detail.stage === 'end') {
+    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
+  }
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
@@ -597,6 +601,7 @@ async function refreshRoute() {
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
+  document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
   updateRouteField(integration, false, playing_animation);
   let updateRate = 0;
@@ -612,6 +617,7 @@ async function refreshRoute() {
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - routeRefreshTimer_lastUpdate);
   routeRefreshTimer_refreshing = false;
   RouteUpdateTimerElement.setAttribute('refreshing', 'false');
+  updateUpdateTimer();
 }
 
 export function streamRoute(): void {

@@ -2,12 +2,6 @@ import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
 
-let dataReceivingProgress = {};
-
-export type DataUpdateTime = { [key: string]: number };
-
-export let dataUpdateTime: DataUpdateTime = {};
-
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
   // Create a connection timeout promise
   const connectionTimeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out')), connectionTimeoutDuration));
@@ -94,21 +88,33 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
 }
 
+export type DataReceivingProgress = {
+  [requestID: string]: {
+    [tag: string]: {
+      expel: boolean;
+      progress: number;
+      total: number;
+    };
+  };
+};
+
+const dataReceivingProgress: DataReceivingProgress = {};
+
 export function setDataReceivingProgress(requestID: string, tag: string, progress: number, expel: boolean): void {
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  const key = `u_${tag}`;
-  if (dataReceivingProgress[requestID].hasOwnProperty(key)) {
+  const tagKey = `t_${tag}`;
+  if (dataReceivingProgress[requestID].hasOwnProperty(tagKey)) {
     if (expel) {
-      dataReceivingProgress[requestID][key].expel = true;
+      dataReceivingProgress[requestID][tagKey].expel = true;
     } else {
-      dataReceivingProgress[requestID][key].expel = false;
-      dataReceivingProgress[requestID][key].progress = progress;
+      dataReceivingProgress[requestID][tagKey].expel = false;
+      dataReceivingProgress[requestID][tagKey].progress = progress;
     }
     broadcastDataReceivingProgress(requestID, 'run');
   } else {
-    dataReceivingProgress[requestID][key] = { expel: false, progress: progress, total: 1 };
+    dataReceivingProgress[requestID][tagKey] = { expel: false, progress: progress, total: 1 };
     broadcastDataReceivingProgress(requestID, 'start');
   }
 }
@@ -116,8 +122,8 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
 export function getDataReceivingProgress(requestID: string): number {
   if (dataReceivingProgress.hasOwnProperty(requestID)) {
     if (typeof dataReceivingProgress[requestID] === 'object') {
-      let total = 0;
-      let received = 0;
+      let total: number = 0;
+      let received: number = 0;
       for (const key in dataReceivingProgress[requestID]) {
         if (!dataReceivingProgress[requestID][key].expel) {
           total += dataReceivingProgress[requestID][key].total;
@@ -155,6 +161,10 @@ export function broadcastDataReceivingProgress(requestID: string, stage: DataRec
   const event = new CustomEvent(requestID, { detail: eventDict });
   document.dispatchEvent(event);
 }
+
+export type DataUpdateTime = { [key: string]: number };
+
+export let dataUpdateTime: DataUpdateTime = {};
 
 export function setDataUpdateTime(requestID: string, timeStamp: string | number): void {
   if (!dataUpdateTime.hasOwnProperty(requestID)) {

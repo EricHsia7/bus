@@ -75,7 +75,6 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
-  console.log(CustomEvent.detail);
 }
 
 export function setUpFolderFieldSkeletonScreen(): void {
