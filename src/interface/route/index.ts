@@ -47,7 +47,6 @@ let routeRefreshTimer_nextUpdate: number = 0;
 let routeRefreshTimer_refreshing: boolean = false;
 let routeRefreshTimer_currentRequestID: string = '';
 let routeRefreshTimer_currentProgress: number = -1;
-let routeRefreshTimer_targetProgress: number = -1;
 let routeRefreshTimer_streamStarted: boolean = false;
 var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -109,8 +108,8 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 
 function updateUpdateTimer(): void {
   const time = new Date().getTime();
-  routeRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
-  routeRefreshTimer_currentProgress = routeRefreshTimer_targetProgress;
+  routeRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
     if (routeRefreshTimer_streaming && !routeRefreshTimer_refreshing) {
       updateUpdateTimer();
@@ -121,8 +120,8 @@ function updateUpdateTimer(): void {
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (routeRefreshTimer_refreshing) {
-    routeRefreshTimer_targetProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
-    routeRefreshTimer_currentProgress += (routeRefreshTimer_targetProgress - routeRefreshTimer_currentProgress) * smoothingFactor;
+    routeRefreshTimer_currentProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
+    RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -662,7 +661,6 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
       refreshRoute();
     }
     routeRefreshTimer_currentProgress = -1;
-    routeRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
   closePreviousPage();
@@ -673,14 +671,12 @@ export function closeRoute(): void {
   RouteField.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
   routeRefreshTimer_currentProgress = -1;
-  routeRefreshTimer_targetProgress = -1;
   openPreviousPage();
 }
 
 export function switchRoute(RouteID: number, PathAttributeId: Array<number>): void {
   routeRefreshTimer_streaming = false;
   routeRefreshTimer_currentProgress = -1;
-  routeRefreshTimer_targetProgress = -1;
   openRoute(RouteID, PathAttributeId);
 }
 

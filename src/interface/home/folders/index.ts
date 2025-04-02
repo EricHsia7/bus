@@ -30,7 +30,6 @@ let foldersRefreshTimer_nextUpdate: number = 0;
 let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
 let foldersRefreshTimer_currentProgress: number = -1;
-let foldersRefreshTimer_targetProgress: number = -1;
 let foldersRefreshTimer_streamStarted: boolean = false;
 let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -535,7 +534,6 @@ export function initializeFolders(): void {
       refreshFolders();
     }
     foldersRefreshTimer_currentProgress = -1;
-    foldersRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
 }
