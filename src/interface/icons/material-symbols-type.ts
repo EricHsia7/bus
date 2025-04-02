@@ -1,4 +1,5 @@
 export type MaterialSymbols =
+  | ''
   | '123'
   | '360'
   | '10k'

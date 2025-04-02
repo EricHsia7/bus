@@ -5,7 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { getDataReceivingProgress } from '../../../data/apis/loader';
+import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../../data/apis/loader';
 import { promptMessage } from '../../prompt/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 
@@ -30,7 +30,6 @@ let foldersRefreshTimer_nextUpdate: number = 0;
 let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
 let foldersRefreshTimer_currentProgress: number = -1;
-let foldersRefreshTimer_targetProgress: number = -1;
 let foldersRefreshTimer_streamStarted: boolean = false;
 let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
@@ -56,21 +55,25 @@ function generateElementOfFolder(): GeneratedElement {
 }
 
 function updateUpdateTimer(): void {
-  const smoothingFactor = 0.1;
   const time = new Date().getTime();
-  if (foldersRefreshTimer_refreshing) {
-    foldersRefreshTimer_targetProgress = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
-    foldersRefreshTimer_currentProgress += (foldersRefreshTimer_targetProgress - foldersRefreshTimer_currentProgress) * smoothingFactor;
-  } else {
-    foldersRefreshTimer_targetProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
-    foldersRefreshTimer_currentProgress = foldersRefreshTimer_targetProgress;
-  }
+  foldersRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
   HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
   window.requestAnimationFrame(function () {
-    if (foldersRefreshTimer_streaming) {
+    if (foldersRefreshTimer_streaming && !foldersRefreshTimer_refreshing) {
       updateUpdateTimer();
     }
   });
+}
+
+function handleDataReceivingProgressUpdates(event: Event): void {
+  const CustomEvent = event as DataReceivingProgressEvent;
+  if (foldersRefreshTimer_refreshing) {
+    foldersRefreshTimer_currentProgress = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
+    HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
+  }
+  if (CustomEvent.detail.stage === 'end') {
+    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
+  }
 }
 
 export function setUpFolderFieldSkeletonScreen(): void {
@@ -477,6 +480,7 @@ async function refreshFolders() {
   foldersRefreshTimer_refreshing = true;
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
+  document.addEventListener(foldersRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   updateFoldersElement(integration, false, playing_animation);
   let updateRate = 0;
@@ -492,6 +496,7 @@ async function refreshFolders() {
   foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - foldersRefreshTimer_lastUpdate);
   foldersRefreshTimer_refreshing = false;
   HomeUpdateTimerElement.setAttribute('refreshing', 'false');
+  updateUpdateTimer();
 }
 
 async function streamFolders() {
@@ -529,7 +534,6 @@ export function initializeFolders(): void {
       refreshFolders();
     }
     foldersRefreshTimer_currentProgress = -1;
-    foldersRefreshTimer_targetProgress = -1;
     updateUpdateTimer();
   }
 }
