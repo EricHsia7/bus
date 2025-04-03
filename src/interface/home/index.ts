@@ -1,13 +1,17 @@
 import { getRoute } from '../../data/apis/getRoute/index';
 import { getLocation } from '../../data/apis/getLocation/index';
 import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress, deleteDataUpdateTime, DataReceivingProgressEvent } from '../../data/apis/loader';
-import { documentQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;
-const progressElement: HTMLElement = documentQuerySelector('.css_home_button_right svg#download-svg path[progress="progress"]');
+
+const HomeField = documentQuerySelector('.css_home_field');
+const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
+const homeButtonRightElement = elementQuerySelector(HomeHeadElement, '.css_home_button_right');
+const progressElement = elementQuerySelector(homeButtonRightElement, 'svg#download-svg path[progress="progress"]');
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
@@ -15,8 +19,14 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
+    progressElement.addEventListener(
+      'transitionend',
+      function () {
+        homeButtonRightElement.setAttribute('complete', 'true');
+      },
+      { once: true }
+    );
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
-    documentQuerySelector('.css_home_button_right').setAttribute('complete', 'true');
     dataDownloadCompleted = true;
   }
 }
