@@ -2,10 +2,10 @@ import { switchSearchTypeFilter, updateSearchResult } from './interface/search/i
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { askForPositioningPermission } from './data/user-position/index';
-import { openRoute, closeRoute, switchRoute, stretchRouteItem, initializeRouteSliding, ResizeRouteField, switchRouteBodyTab } from './interface/route/index';
+import { openRoute, closeRoute, switchRoute, stretchRouteItem, initializeRouteSliding, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
+import { openLocation, closeLocation, initializeLocationSliding, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, resizeSearchInputCanvas, updateSearchInput } from './interface/search/index';
@@ -198,19 +198,13 @@ window.bus = {
             if (status === 'ok') {
               initializeRouteSliding();
               initializeLocationSliding();
-              ResizeRouteField();
-              ResizeLocationField();
               resizeSearchInputCanvas();
               window.addEventListener('resize', () => {
-                ResizeRouteField();
-                ResizeLocationField();
                 resizeSearchInputCanvas();
               });
               if (screen) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
-                    ResizeRouteField();
-                    ResizeLocationField();
                     resizeSearchInputCanvas();
                   });
                 }

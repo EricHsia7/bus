@@ -5,8 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-nearby-location
-      - dev-event-listener
+      - dev-css-width-and-height
 
 jobs:
   launch:
