@@ -91,14 +91,6 @@ export function initializeRouteSliding(): void {
   );
 }
 
-export function ResizeRouteField(): void {
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  RouteField.style.setProperty('--b-cssvar-route-field-width', `${FieldWidth}px`);
-  RouteField.style.setProperty('--b-cssvar-route-field-height', `${FieldHeight}px`);
-}
-
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   RouteGroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
   RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
