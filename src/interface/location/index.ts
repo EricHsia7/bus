@@ -87,14 +87,6 @@ export function initializeLocationSliding(): void {
   );
 }
 
-export function ResizeLocationField(): void {
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  LocationField.style.setProperty('--b-cssvar-location-field-width', `${FieldWidth}px`);
-  LocationField.style.setProperty('--b-cssvar-location-field-height', `${FieldHeight}px`);
-}
-
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   LocationGroupsElement.style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
   LocationGroupTabLineElement.style.setProperty('--b-cssvar-location-tab-line-width-scale', (tabLineWidth / 10).toString());

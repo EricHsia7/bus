@@ -5,7 +5,7 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { openRoute, closeRoute, switchRoute, stretchRouteItem, initializeRouteSliding, switchRouteBodyTab } from './interface/route/index';
 import { openRouteDetails, closeRouteDetails } from './interface/route/details/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
-import { openLocation, closeLocation, initializeLocationSliding, ResizeLocationField, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
+import { openLocation, closeLocation, initializeLocationSliding, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { openPermalink } from './tools/permalink';
 import { openSearch, closeSearch } from './interface/search/index';
 import { typeTextIntoInput, deleteCharFromInout, emptyInput, openSystemKeyboard, resizeSearchInputCanvas, updateSearchInput } from './interface/search/index';
@@ -198,16 +198,13 @@ window.bus = {
             if (status === 'ok') {
               initializeRouteSliding();
               initializeLocationSliding();
-              ResizeLocationField();
               resizeSearchInputCanvas();
               window.addEventListener('resize', () => {
-                ResizeLocationField();
                 resizeSearchInputCanvas();
               });
               if (screen) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
-                    ResizeLocationField();
                     resizeSearchInputCanvas();
                   });
                 }

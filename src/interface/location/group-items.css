@@ -591,11 +591,14 @@
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus {
-  width: calc(var(--b-cssvar-location-field-width) * 0.6);
+  width: calc(60% + 18px);
+  /* w = W - 30 → W * 0.6 = (w + 30) * 0.6 = 60% + 18px */
+  /* W = window width */
+  /* w = parent width */
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time {
-  width: calc(var(--b-cssvar-location-field-width) - 30px);
+  width: 100%;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus:last-child,
