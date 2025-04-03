@@ -69,22 +69,24 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   await recordDataUsage(contentLength, now);
 
   // Create a blob from the concatenated Uint8Array
-  const blob = new Blob([uint8Array]);
-  const gzip_blob = new Blob([blob.slice(0, blob.size)], { type: 'application/gzip' });
-  const buffer = await gzip_blob.arrayBuffer();
-  const inflatedData = await pakoInflate(buffer);
+  const blob = new Blob([uint8Array], { type: 'application/gzip' });
+  const arrayBuffer = await blob.arrayBuffer();
+  const inflatedData = await pakoInflate(arrayBuffer);
 
-  if (fileType === 'json') {
-    if (/^\<\!doctype html\>/.test(inflatedData)) {
-      const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType, connectionTimeoutDuration, loadingTimeoutDuration);
-      return alternativeData;
-    } else {
-      return JSON.parse(inflatedData);
-    }
-  }
-
-  if (fileType === 'xml') {
-    return inflatedData;
+  switch (fileType) {
+    case 'json':
+      if (/^\<\!doctype html\>/.test(inflatedData)) {
+        const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType, connectionTimeoutDuration, loadingTimeoutDuration);
+        return alternativeData;
+      } else {
+        return JSON.parse(inflatedData);
+      }
+      break;
+    case 'xml':
+      return inflatedData;
+      break;
+    default:
+      break;
   }
 }
 
