@@ -1,4 +1,4 @@
-import { SimplifiedStop, Stop } from './index';
+import { SimplifiedStop, SimplifiedStopItem, Stop } from './index';
 
 self.onmessage = function (e) {
   const result = processWorkerTask(e.data);
@@ -6,14 +6,14 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(array: Stop): SimplifiedStop {
-  var result: SimplifiedStop = {};
-  for (var item of array) {
-    var key = `s_${item.Id}`;
-    var simplified_item = {};
-    simplified_item.seqNo = item.seqNo;
-    simplified_item.goBack = item.goBack;
-    simplified_item.stopLocationId = item.stopLocationId;
-    result[key] = simplified_item;
+  const result: SimplifiedStop = {};
+  for (const item of array) {
+    const key = `s_${item.Id}`;
+    const simplifiedItem = {} as SimplifiedStopItem;
+    simplifiedItem.seqNo = item.seqNo;
+    simplifiedItem.goBack = item.goBack;
+    simplifiedItem.stopLocationId = item.stopLocationId;
+    result[key] = simplifiedItem;
   }
   return result;
 }

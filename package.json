@@ -47,9 +47,9 @@
   "dependencies": {
     "localforage": "^1.10.0",
     "md5": "^2.3.0",
+    "ngeohash": "^0.6.3",
     "otpauth": "^9.3.6",
     "pako": "^2.1.0",
-    "sha256": "^0.2.0",
-    "ngeohash": "^0.6.3"
+    "sha256": "^0.2.0"
   }
 }
