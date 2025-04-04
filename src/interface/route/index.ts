@@ -543,12 +543,14 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
     const thisGroupElement = RouteGroupElements[i];
+    if (skeletonScreen) {
+      thisGroupElement.scrollTop = 0;
+    }
+
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
-
     const thisGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
     const thisGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
-
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
       const thisItemElement = thisGroupItemElements[j];
       const thisThreadBoxElement = thisGroupThreadElements[j];
