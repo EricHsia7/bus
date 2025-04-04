@@ -22,7 +22,7 @@
   initial-value: 30px;
 }
 
-@property --b-cssvar-route-update-timer-progress {
+@property --b-cssvar-route-update-timer-offset-ratio {
   syntax: '<number>';
   inherits: false;
   initial-value: -1;
@@ -209,7 +209,7 @@
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
-  transform: translateX(calc(var(--b-cssvar-route-update-timer-progress) * 100%));
+  transform: translateX(calc(var(--b-cssvar-route-update-timer-offset-ratio) * 100%));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }

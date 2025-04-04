@@ -41,12 +41,11 @@ let routeRefreshTimer_baseInterval: number = 15 * 1000;
 let routeRefreshTimer_minInterval: number = 5 * 1000;
 let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
 let routeRefreshTimer_dynamic: boolean = true;
-let routeRefreshTimer_streaming: boolean = false;
 let routeRefreshTimer_lastUpdate: number = 0;
 let routeRefreshTimer_nextUpdate: number = 0;
-let routeRefreshTimer_refreshing: boolean = false;
 let routeRefreshTimer_currentRequestID: string = '';
-let routeRefreshTimer_currentProgress: number = -1;
+let routeRefreshTimer_refreshing: boolean = false;
+let routeRefreshTimer_streaming: boolean = false;
 let routeRefreshTimer_streamStarted: boolean = false;
 
 let currentRouteIDSet_RouteID: number = 0;
@@ -112,8 +111,8 @@ function animateUpdateTimer(): void {
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (routeRefreshTimer_refreshing) {
-    routeRefreshTimer_currentProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
-    RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-progress', routeRefreshTimer_currentProgress.toString());
+    const offsetRatio = CustomEvent.detail.progress - 1;
+    RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-offset-ratio', offsetRatio.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -653,7 +652,6 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
     } else {
       refreshRoute();
     }
-    routeRefreshTimer_currentProgress = -1;
   }
   closePreviousPage();
 }
@@ -662,13 +660,11 @@ export function closeRoute(): void {
   // revokePageHistory('Route');
   RouteField.setAttribute('displayed', 'false');
   routeRefreshTimer_streaming = false;
-  routeRefreshTimer_currentProgress = -1;
   openPreviousPage();
 }
 
 export function switchRoute(RouteID: number, PathAttributeId: Array<number>): void {
   routeRefreshTimer_streaming = false;
-  routeRefreshTimer_currentProgress = -1;
   openRoute(RouteID, PathAttributeId);
 }
 
