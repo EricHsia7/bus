@@ -5,7 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../../data/apis/loader';
+import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { promptMessage } from '../../prompt/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 
