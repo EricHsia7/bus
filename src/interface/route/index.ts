@@ -48,7 +48,6 @@ let routeRefreshTimer_refreshing: boolean = false;
 let routeRefreshTimer_currentRequestID: string = '';
 let routeRefreshTimer_currentProgress: number = -1;
 let routeRefreshTimer_streamStarted: boolean = false;
-var routeRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
@@ -98,22 +97,17 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
 
-function updateUpdateTimer(): void {
-  const time = new Date().getTime();
-  routeRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - routeRefreshTimer_lastUpdate) / routeRefreshTimer_dynamicInterval));
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
-  window.requestAnimationFrame(function () {
-    if (routeRefreshTimer_streaming && !routeRefreshTimer_refreshing) {
-      updateUpdateTimer();
-    }
-  });
+function animateUpdateTimer(): void {
+  RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer-interval', `${routeRefreshTimer_dynamicInterval}ms`);
+  RouteUpdateTimerElement.classList.add('css_route_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (routeRefreshTimer_refreshing) {
     routeRefreshTimer_currentProgress = -1 + getDataReceivingProgress(routeRefreshTimer_currentRequestID);
-    RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', routeRefreshTimer_currentProgress.toString());
+    RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-progress', routeRefreshTimer_currentProgress.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -608,14 +602,14 @@ async function refreshRoute() {
   routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - routeRefreshTimer_lastUpdate);
   routeRefreshTimer_refreshing = false;
   RouteUpdateTimerElement.setAttribute('refreshing', 'false');
-  updateUpdateTimer();
+  animateUpdateTimer();
 }
 
 export function streamRoute(): void {
   refreshRoute()
     .then(function () {
       if (routeRefreshTimer_streaming) {
-        routeRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamRoute();
         }, Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
@@ -626,7 +620,7 @@ export function streamRoute(): void {
       console.error(err);
       if (routeRefreshTimer_streaming) {
         promptMessage(`路線網路連線中斷，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
-        routeRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamRoute();
         }, routeRefreshTimer_retryInterval);
       } else {
@@ -642,8 +636,8 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   RouteField.setAttribute('displayed', 'true');
-  elementQuerySelector(RouteField, '.css_route_groups').scrollLeft = 0;
-  setUpRouteFieldSkeletonScreen(RouteField);
+  RouteGroupsElement.scrollLeft = 0;
+  setUpRouteFieldSkeletonScreen();
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {
@@ -653,7 +647,6 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
       refreshRoute();
     }
     routeRefreshTimer_currentProgress = -1;
-    updateUpdateTimer();
   }
   closePreviousPage();
 }

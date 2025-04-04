@@ -22,6 +22,18 @@
   initial-value: 30px;
 }
 
+@property --b-cssvar-route-update-timer-progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: -1;
+}
+
+@property --b-cssvar-update-timer-interval {
+  syntax: '<time>';
+  inherits: false;
+  initial-value: 0ms;
+}
+
 .css_route_field .css_route_head {
   position: absolute;
   top: 0px;
@@ -191,14 +203,21 @@
   background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
   height: 1px;
   width: 100%;
-  transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
-  transition: none;
   -webkit-user-select: none;
   user-select: none;
   contain: layout;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
+  transform: translateX(calc(var(--b-cssvar-route-update-timer-progress) * 100%));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
+}
+
+.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer.css_route_update_timer_slide_rtl {
+  animation-name: slideRTL;
+  animation-timing-function: linear;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  animation-duration: var(--b-cssvar-update-timer-interval);
 }

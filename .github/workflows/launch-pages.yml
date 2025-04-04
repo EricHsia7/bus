@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-css-width-and-height
+      - dev-css-animation-timer
 
 jobs:
   launch:
