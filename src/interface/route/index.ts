@@ -1,6 +1,6 @@
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getIconHTML } from '../icons/index';
-import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../data/apis/loader';
+import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
@@ -97,7 +97,7 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 }
 
 function animateUpdateTimer(): void {
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer-interval', `${routeRefreshTimer_dynamicInterval}ms`);
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${routeRefreshTimer_dynamicInterval}ms`);
   RouteUpdateTimerElement.addEventListener(
     'animationend',
     function () {

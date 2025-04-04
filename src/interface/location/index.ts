@@ -1,6 +1,6 @@
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { getIconHTML } from '../icons/index';
-import { DataReceivingProgressEvent, getDataReceivingProgress } from '../../data/apis/loader';
+import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { getTextWidth } from '../../tools/graphic';
@@ -40,14 +40,12 @@ let locationRefreshTimer_baseInterval: number = 15 * 1000;
 let locationRefreshTimer_minInterval: number = 5 * 1000;
 let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
 let locationRefreshTimer_dynamic: boolean = true;
-let locationRefreshTimer_streaming: boolean = false;
 let locationRefreshTimer_lastUpdate: number = 0;
 let locationRefreshTimer_nextUpdate: number = 0;
-let locationRefreshTimer_refreshing: boolean = false;
 let locationRefreshTimer_currentRequestID: string = '';
-let locationRefreshTimer_currentProgress: number = -1;
+let locationRefreshTimer_refreshing: boolean = false;
+let locationRefreshTimer_streaming: boolean = false;
 let locationRefreshTimer_streamStarted: boolean = false;
-let locationRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 var currentHashSet_hash: string = '';
 
@@ -94,22 +92,23 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
   LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toFixed(5));
 }
 
-function updateUpdateTimer(): void {
-  const time = new Date().getTime();
-  locationRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - locationRefreshTimer_lastUpdate) / locationRefreshTimer_dynamicInterval));
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', locationRefreshTimer_currentProgress.toString());
-  window.requestAnimationFrame(function () {
-    if (locationRefreshTimer_streaming && !locationRefreshTimer_refreshing) {
-      updateUpdateTimer();
-    }
-  });
+function animateUpdateTimer(): void {
+  LocationUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${locationRefreshTimer_dynamicInterval}ms`);
+  LocationUpdateTimerElement.addEventListener(
+    'animationend',
+    function () {
+      LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
+    },
+    { once: true }
+  );
+  LocationUpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (locationRefreshTimer_refreshing) {
-    locationRefreshTimer_currentProgress = -1 + getDataReceivingProgress(locationRefreshTimer_currentRequestID);
-    LocationUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', locationRefreshTimer_currentProgress.toString());
+    const offsetRatio = CustomEvent.detail.progress - 1;
+    LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-offset-ratio', offsetRatio.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -619,6 +618,7 @@ async function refreshLocation() {
   locationRefreshTimer_refreshing = true;
   locationRefreshTimer_currentRequestID = generateIdentifier('r');
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
+  LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
   document.addEventListener(locationRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, locationRefreshTimer_currentRequestID);
   updateLocationField(integration, false, playing_animation);
@@ -635,14 +635,14 @@ async function refreshLocation() {
   locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - locationRefreshTimer_lastUpdate);
   locationRefreshTimer_refreshing = false;
   LocationUpdateTimerElement.setAttribute('refreshing', 'false');
-  updateUpdateTimer();
+  animateUpdateTimer();
 }
 
 export function streamLocation(): void {
   refreshLocation()
     .then(function () {
       if (locationRefreshTimer_streaming) {
-        locationRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamLocation();
         }, Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
@@ -653,7 +653,7 @@ export function streamLocation(): void {
       console.error(err);
       if (locationRefreshTimer_streaming) {
         promptMessage(`地點網路連線中斷，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
-        locationRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamLocation();
         }, locationRefreshTimer_retryInterval);
       } else {
@@ -678,8 +678,6 @@ export function openLocation(hash: string): void {
     } else {
       refreshLocation();
     }
-    locationRefreshTimer_currentProgress = -1;
-    updateUpdateTimer();
   }
   closePreviousPage();
 }
@@ -688,7 +686,6 @@ export function closeLocation(): void {
   // revokePageHistory('Location');
   LocationField.setAttribute('displayed', 'false');
   locationRefreshTimer_streaming = false;
-  locationRefreshTimer_currentProgress = -1;
   openPreviousPage();
 }
 
