@@ -176,13 +176,13 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  var identifier = generateIdentifier('t');
-  var element = document.createElement('div');
+  // const identifier = generateIdentifier('t');
+  const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-  element.id = identifier;
+  // element.id = identifier;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
