@@ -1,6 +1,6 @@
+import { changeSettingOption, getSetting } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
-import { getSetting, changeSettingOption } from '../../data/settings/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 
 function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {

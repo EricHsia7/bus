@@ -1,5 +1,5 @@
-import { generateLetterLabels } from './labels';
 import { areItemsDifferent } from './array';
+import { generateLetterLabels } from './labels';
 
 interface AddressPart {
   suffixes?: string;

@@ -1,4 +1,4 @@
-import { Stop, SimplifiedStop } from './index';
+import { SimplifiedStop, Stop } from './index';
 
 self.onmessage = function (e) {
   const result = processWorkerTask(e.data);

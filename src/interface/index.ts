@@ -4,9 +4,9 @@ import { closeBus, openBus } from './bus/index';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
-import { openRegisterNotification, closeRegisterNotification } from './register-notification/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
+import { closeRegisterNotification, openRegisterNotification } from './register-notification/index';
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 

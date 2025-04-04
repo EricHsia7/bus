@@ -1,9 +1,9 @@
-import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getLocation, MergedLocation } from '../apis/getLocation/index';
-import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
+import { generateIdentifier } from '../../tools/index';
 import { getUnicodes } from '../../tools/text';
 import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
+import { getLocation, MergedLocation } from '../apis/getLocation/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {

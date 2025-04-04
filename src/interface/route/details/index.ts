@@ -1,11 +1,11 @@
+import { isFolderContentSaved } from '../../../data/folder/index';
 import { integrateRouteDetails } from '../../../data/route/details';
-import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
-import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
+import { getSettingOptionValue } from '../../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { isFolderContentSaved } from '../../../data/folder/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
-import { getSettingOptionValue } from '../../../data/settings/index';
+import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
+import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
 
 export const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 export const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');

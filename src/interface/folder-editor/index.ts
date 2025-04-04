@@ -1,8 +1,8 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
-import { documentGetElementByID, documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
+import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');

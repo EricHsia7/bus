@@ -1,7 +1,7 @@
+import { ParsedAddress } from '../../../tools/address';
+import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
-import { lfGetItem, lfSetItem } from '../../storage/index';
-import { ParsedAddress } from '../../../tools/address';
 
 export interface LocationItem {
   Id: number; // StopID

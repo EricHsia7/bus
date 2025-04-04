@@ -7,7 +7,7 @@ import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, Simp
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop, SimplifiedStopItem } from '../apis/getStop/index';
-import { EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime, batchFindBusesForRoute } from '../apis/index';
+import { batchFindBusesForRoute, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getNearestPosition } from '../user-position/index';

@@ -1,8 +1,8 @@
-import { lfSetItem, lfGetItem, lfListItemKeys, isStoragePersistent } from '../storage/index';
-import { dateToRelativeTime, formatTime } from '../../tools/time';
-import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getNotificationClientStatus } from '../notification/index';
+import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
+import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 

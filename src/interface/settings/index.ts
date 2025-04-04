@@ -1,13 +1,13 @@
-import { releaseFile, generateIdentifier } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { listSettings } from '../../data/settings/index';
 import { exportData } from '../../data/export/index';
 import { importData } from '../../data/import/index';
+import { listSettings } from '../../data/settings/index';
+import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
+import { askForPersistentStorage } from '../../data/storage/index';
+import { generateIdentifier, releaseFile } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
-import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
-import { askForPersistentStorage } from '../../data/storage/index';
 
 function generateElementOfItem(item: object): GeneratedElement {
   var identifier = generateIdentifier('i');

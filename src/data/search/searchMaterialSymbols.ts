@@ -1,7 +1,7 @@
-import { generateIdentifier } from '../../tools/index';
 import { getIntersection } from '../../tools/array';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
+import { generateIdentifier } from '../../tools/index';
 import { getUnicodes } from '../../tools/text';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 let searchIndex = {};

@@ -1,17 +1,17 @@
-import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
-import { getIconHTML } from '../icons/index';
-import { DataReceivingProgressEvent } from '../../data/apis/loader';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
-import { getTextWidth } from '../../tools/graphic';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { GeneratedElement, pushPageHistory, openPreviousPage, closePreviousPage, GroupStyles, querySize } from '../index';
-import { promptMessage } from '../prompt/index';
-import { logRecentView } from '../../data/recent-views/index';
-import { indexToDay, timeObjectToString } from '../../tools/time';
+import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { isFolderContentSaved } from '../../data/folder/index';
+import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
+import { logRecentView } from '../../data/recent-views/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { getTextWidth } from '../../tools/graphic';
+import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
+import { indexToDay, timeObjectToString } from '../../tools/time';
+import { getIconHTML } from '../icons/index';
+import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { promptMessage } from '../prompt/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');

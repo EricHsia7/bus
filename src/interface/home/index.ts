@@ -1,9 +1,9 @@
-import { getRoute } from '../../data/apis/getRoute/index';
-import { getLocation } from '../../data/apis/getLocation/index';
-import { setDataReceivingProgress, getDataReceivingProgress, deleteDataReceivingProgress, deleteDataUpdateTime, DataReceivingProgressEvent } from '../../data/apis/loader';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
+import { getLocation } from '../../data/apis/getLocation/index';
+import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
+import { getRoute } from '../../data/apis/getRoute/index';
+import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;

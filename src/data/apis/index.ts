@@ -1,7 +1,7 @@
-import { BusEvent, BusEventItem } from './getBusEvent/index';
-import { BusData, BusDataItem } from './getBusData/index';
-import { SimplifiedRoute } from './getRoute/index';
 import { formatTime } from '../../tools/time';
+import { BusData, BusDataItem } from './getBusData/index';
+import { BusEvent, BusEventItem } from './getBusEvent/index';
+import { SimplifiedRoute } from './getRoute/index';
 
 export interface EstimateTimeStatus {
   code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // 8: loading

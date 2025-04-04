@@ -3,9 +3,8 @@ import { findExtremum } from '../../../tools/math';
 import { WeekDayIndex } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
-import { isInPersonalSchedule, listPersonalSchedules } from '../../personal-schedule/index';
-import { PersonalSchedule } from '../../personal-schedule/index';
-import { lfGetItem, lfListItemKeys, lfSetItem, lfRemoveItem } from '../../storage/index';
+import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule } from '../../personal-schedule/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
 
 const busArrivalTimeData_writeAheadLog_maxDataLength: number = 32;
 let busArrivalTimeData_writeAheadLog_id: string = '';

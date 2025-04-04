@@ -1,15 +1,14 @@
 import { prepareForSearch, searchFor, SearchItem } from '../../data/search/index';
-import { getIconHTML } from '../icons/index';
-import { dataDownloadCompleted } from '../home/index';
-import { promptMessage } from '../prompt/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { containPhoneticSymbols } from '../../tools/text';
-import { getCSSVariableValue } from '../../tools/style';
-import { supportTouch } from '../../tools/index';
 import { drawRoundedRect } from '../../tools/graphic';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { supportTouch } from '../../tools/index';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { getCSSVariableValue } from '../../tools/style';
+import { containPhoneticSymbols } from '../../tools/text';
+import { dataDownloadCompleted } from '../home/index';
+import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { querySize } from '../index';
+import { pushPageHistory, querySize, revokePageHistory } from '../index';
+import { promptMessage } from '../prompt/index';
 
 const searchField = documentQuerySelector('.css_search_field');
 const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');

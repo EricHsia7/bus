@@ -1,5 +1,5 @@
 import { createDateObjectFromDate, dateToString, offsetDate, TimeStampPeriod } from '../../../tools/time';
-import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
 
 export interface DataUsageStatsChunk {
   date: [year: number, month: number, day: number];

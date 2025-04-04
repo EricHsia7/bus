@@ -1,13 +1,13 @@
-import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
-import { GeneratedElement, querySize } from '../../index';
-import { getIconHTML } from '../../icons/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { DataReceivingProgressEvent } from '../../../data/apis/loader';
-import { promptMessage } from '../../prompt/index';
+import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { getIconHTML } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
+import { GeneratedElement, querySize } from '../../index';
+import { promptMessage } from '../../prompt/index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');

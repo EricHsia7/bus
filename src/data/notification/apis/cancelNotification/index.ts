@@ -1,4 +1,4 @@
-import { NotificationClientID, NotificationSecret, NotificationSchedule, removeNotificationSchedule } from '../../index';
+import { NotificationClientID, NotificationSchedule, NotificationSecret, removeNotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
 import { makeNotificationRequest } from '../loader';

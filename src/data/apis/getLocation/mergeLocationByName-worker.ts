@@ -1,6 +1,6 @@
-import { SimplifiedLocation, MergedLocation } from './index';
-import { md5 } from '../../../tools/index';
 import { mergeAddressesIntoOne } from '../../../tools/address';
+import { md5 } from '../../../tools/index';
+import { MergedLocation, SimplifiedLocation } from './index';
 
 self.onmessage = function (e) {
   const result = processWorkerTask(e.data);

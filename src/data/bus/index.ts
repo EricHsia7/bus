@@ -1,12 +1,12 @@
-import { searchRouteByPathAttributeId } from '../search/index';
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getStop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
+import { searchRouteByPathAttributeId } from '../search/index';
 
 export interface integratedBus {
   properties: Array<{

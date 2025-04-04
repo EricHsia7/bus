@@ -1,8 +1,8 @@
-import { GeneratedElement } from '../index';
-import { compareThings } from '../../tools/index';
-import { getIconHTML } from '../icons/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getSettingOptionValue } from '../../data/settings/index';
+import { compareThings } from '../../tools/index';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { getIconHTML } from '../icons/index';
+import { GeneratedElement } from '../index';
 
 let previousProperties = [];
 let previousSkeletonScreen: boolean = false;

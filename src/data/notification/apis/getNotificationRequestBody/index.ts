@@ -1,6 +1,6 @@
 import { sha256 } from '../../../../tools/index';
 import { generateTOTPToken } from '../../../../tools/totp';
-import { NotificationClientID, NotificationSecret, NotificationResponse } from '../../index';
+import { NotificationClientID, NotificationResponse, NotificationSecret } from '../../index';
 
 export function getNotificationRequestBody(method: NotificationResponse['method'], parameters: Array<any>): object | false {
   switch (method) {

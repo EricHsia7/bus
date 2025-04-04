@@ -1,16 +1,16 @@
-import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
-import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../storage/index';
-import { generateIdentifier } from '../../tools/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
-import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { collectUpdateRateData } from '../analytics/update-rate/index';
-import { getStop, SimplifiedStop } from '../apis/getStop/index';
-import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
-import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { generateIdentifier } from '../../tools/index';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
+import { collectUpdateRateData } from '../analytics/update-rate/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
+import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getStop, SimplifiedStop } from '../apis/getStop/index';
+import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
+import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 interface FolderContentRouteEndPoints {
   departure: string;
