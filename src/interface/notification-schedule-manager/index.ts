@@ -1,5 +1,5 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { getDataReceivingProgress } from '../../data/apis/loader';
+import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
@@ -25,31 +25,23 @@ let notifcationScheduleManagerRefreshTimer_baseInterval: number = 15 * 1000;
 let notifcationScheduleManagerRefreshTimer_minInterval: number = 5 * 1000;
 let notifcationScheduleManagerRefreshTimer_dynamicInterval: number = 15 * 1000;
 let notifcationScheduleManagerRefreshTimer_dynamic: boolean = true;
-let notifcationScheduleManagerRefreshTimer_streaming: boolean = false;
 let notifcationScheduleManagerRefreshTimer_lastUpdate: number = 0;
 let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
-let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
 let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
-let notifcationScheduleManagerRefreshTimer_currentProgress: number = -1;
+let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
+let notifcationScheduleManagerRefreshTimer_streaming: boolean = false;
 let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
-let notifcationScheduleManagerRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
-function updateUpdateTimer(): void {
-  const time = new Date().getTime();
-  notifcationScheduleManagerRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - notifcationScheduleManagerRefreshTimer_lastUpdate) / notifcationScheduleManagerRefreshTimer_dynamicInterval));
-  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', notifcationScheduleManagerRefreshTimer_currentProgress.toString());
-  window.requestAnimationFrame(function () {
-    if (notifcationScheduleManagerRefreshTimer_streaming && !notifcationScheduleManagerRefreshTimer_refreshing) {
-      updateUpdateTimer();
-    }
-  });
+function animateUpdateTimer(): void {
+  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${notifcationScheduleManagerRefreshTimer_dynamicInterval}ms`);
+  NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (notifcationScheduleManagerRefreshTimer_refreshing) {
-    notifcationScheduleManagerRefreshTimer_currentProgress = -1 + getDataReceivingProgress(notifcationScheduleManagerRefreshTimer_currentRequestID);
-    NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', notifcationScheduleManagerRefreshTimer_currentProgress.toString());
+    const offsetRatio = CustomEvent.detail.progress - 1;
+    NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-offset-ratio', offsetRatio.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -232,6 +224,7 @@ async function refreshNotificationScheduleManager() {
   notifcationScheduleManagerRefreshTimer_refreshing = true;
   notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier('r');
   NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
+  NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
   document.addEventListener(notifcationScheduleManagerRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
   updateNotificationScheduleManagerField(integration, false, playing_animation);
@@ -248,14 +241,14 @@ async function refreshNotificationScheduleManager() {
   notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - notifcationScheduleManagerRefreshTimer_lastUpdate);
   notifcationScheduleManagerRefreshTimer_refreshing = false;
   NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
-  updateUpdateTimer();
+  animateUpdateTimer();
 }
 
 async function streamNotificationScheduleManager() {
   refreshNotificationScheduleManager()
     .then(function () {
       if (notifcationScheduleManagerRefreshTimer_streaming) {
-        notifcationScheduleManagerRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamNotificationScheduleManager();
         }, Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
@@ -265,7 +258,7 @@ async function streamNotificationScheduleManager() {
     .catch((err) => {
       console.error(err);
       if (notifcationScheduleManagerRefreshTimer_streaming) {
-        notifcationScheduleManagerRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamNotificationScheduleManager();
         }, notifcationScheduleManagerRefreshTimer_retryInterval);
       } else {
@@ -286,8 +279,6 @@ export function openNotificationScheduleManager(): void {
     } else {
       refreshNotificationScheduleManager();
     }
-    notifcationScheduleManagerRefreshTimer_currentProgress = -1;
-    updateUpdateTimer();
   }
   closePreviousPage();
 }
@@ -296,7 +287,6 @@ export function closeNotificationScheduleManager(): void {
   // revokePageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'false');
   notifcationScheduleManagerRefreshTimer_streaming = false;
-  notifcationScheduleManagerRefreshTimer_currentProgress = -1;
   openPreviousPage();
 }
 
