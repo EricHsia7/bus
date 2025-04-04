@@ -1,21 +1,21 @@
 :root {
-  --b-cssvar-main-color: #329CFF;
+  --b-cssvar-main-color: #329cff;
   --b-cssvar-main-color-r: 50;
   --b-cssvar-main-color-g: 156;
   --b-cssvar-main-color-b: 255;
-  --b-cssvar-main-color-opacity-flattened-c: #E7F3FF;
+  --b-cssvar-main-color-opacity-flattened-c: #e7f3ff;
 
-  --b-cssvar-main-color-inflected-to-segment-buffer: #3D7E96;
+  --b-cssvar-main-color-inflected-to-segment-buffer: #3d7e96;
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 61;
   --b-cssvar-main-color-inflected-to-segment-buffer-g: 126;
   --b-cssvar-main-color-inflected-to-segment-buffer-b: 150;
-  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #DFE7ED;
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #dfe7ed;
 
-  --b-cssvar-main-color-inflected-to-user-position: #6354C7;
+  --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
   --b-cssvar-main-color-inflected-to-user-position-g: 84;
   --b-cssvar-main-color-inflected-to-user-position-b: 199;
-  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #D9D7EC;
+  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #d9d7ec;
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
@@ -23,12 +23,12 @@
   --b-cssvar-main-color-opacity-d: 0.15;
   --b-cssvar-main-color-opacity-e: 0.11;
 
-  --b-cssvar-ffffff-normal: #FFFFFF;
+  --b-cssvar-ffffff-normal: #ffffff;
   --b-cssvar-ffffff-normal-r: 255;
   --b-cssvar-ffffff-normal-g: 255;
   --b-cssvar-ffffff-normal-b: 255;
 
-  --b-cssvar-ffffff-blocky: #FFFFFF;
+  --b-cssvar-ffffff-blocky: #ffffff;
   --b-cssvar-ffffff-blocky-r: 255;
   --b-cssvar-ffffff-blocky-g: 255;
   --b-cssvar-ffffff-blocky-b: 255;
@@ -36,22 +36,22 @@
   --b-cssvar-ffffff-opacity-a: 1;
   --b-cssvar-ffffff-opacity-b: 0.7;
 
-  --b-cssvar-f9f9fb-normal: #F9F9FB;
+  --b-cssvar-f9f9fb-normal: #f9f9fb;
   --b-cssvar-f9f9fb-normal-r: 249;
   --b-cssvar-f9f9fb-normal-g: 249;
   --b-cssvar-f9f9fb-normal-b: 251;
 
-  --b-cssvar-f9f9fb-blocky: #F9F9FB;
+  --b-cssvar-f9f9fb-blocky: #f9f9fb;
   --b-cssvar-f9f9fb-blocky-r: 249;
   --b-cssvar-f9f9fb-blocky-g: 249;
   --b-cssvar-f9f9fb-blocky-b: 251;
 
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #F3F5F8;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #f3f5f8;
   --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 243;
   --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 245;
   --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 248;
 
-  --b-cssvar-f9f9fb-inflected-to-user-position: #F2F1F9;
+  --b-cssvar-f9f9fb-inflected-to-user-position: #f2f1f9;
   --b-cssvar-f9f9fb-inflected-to-user-position-r: 242;
   --b-cssvar-f9f9fb-inflected-to-user-position-g: 241;
   --b-cssvar-f9f9fb-inflected-to-user-position-b: 249;
@@ -59,23 +59,23 @@
   --b-cssvar-f9f9fb-opacity-a: 1;
   --b-cssvar-f9f9fb-opacity-b: 0.7;
 
-  --b-cssvar-ededf2: #EDEDF2;
+  --b-cssvar-ededf2: #ededf2;
   --b-cssvar-ededf2-r: 237;
   --b-cssvar-ededf2-g: 237;
   --b-cssvar-ededf2-b: 242;
   --b-cssvar-ededf2-opacity-a: 0.5;
 
-  --b-cssvar-ededf2-inflected-to-segment-buffer: #E7E9EF;
+  --b-cssvar-ededf2-inflected-to-segment-buffer: #e7e9ef;
   --b-cssvar-ededf2-inflected-to-segment-buffer-r: 231;
   --b-cssvar-ededf2-inflected-to-segment-buffer-g: 233;
   --b-cssvar-ededf2-inflected-to-segment-buffer-b: 239;
 
-  --b-cssvar-ededf2-inflected-to-user-position: #E6E6F0;
+  --b-cssvar-ededf2-inflected-to-user-position: #e6e6f0;
   --b-cssvar-ededf2-inflected-to-user-position-r: 230;
   --b-cssvar-ededf2-inflected-to-user-position-g: 230;
   --b-cssvar-ededf2-inflected-to-user-position-b: 240;
 
-  --b-cssvar-aeaeb2: #AEAEB2;
+  --b-cssvar-aeaeb2: #aeaeb2;
   --b-cssvar-aeaeb2-r: 174;
   --b-cssvar-aeaeb2-g: 174;
   --b-cssvar-aeaeb2-b: 178;
@@ -91,17 +91,17 @@
   --b-cssvar-333333-opacity-d: 0.6;
   --b-cssvar-333333-opacity-e: 0.33;
 
-  --b-cssvar-ranking-color-0: #51DB8D;
-  --b-cssvar-ranking-color-0-opacity-flattened-a: #D0F5E0;
+  --b-cssvar-ranking-color-0: #51db8d;
+  --b-cssvar-ranking-color-0-opacity-flattened-a: #d0f5e0;
 
-  --b-cssvar-ranking-color-1: #4FD78A;
-  --b-cssvar-ranking-color-1-opacity-flattened-b: #DCF7E8;
+  --b-cssvar-ranking-color-1: #4fd78a;
+  --b-cssvar-ranking-color-1-opacity-flattened-b: #dcf7e8;
 
-  --b-cssvar-ranking-color-2: #4CD387;
-  --b-cssvar-ranking-color-2-opacity-flattened-c: #E8F9EF;
+  --b-cssvar-ranking-color-2: #4cd387;
+  --b-cssvar-ranking-color-2-opacity-flattened-c: #e8f9ef;
 
-  --b-cssvar-ranking-color-3: #4ACF84;
-  --b-cssvar-ranking-color-3-opacity-flattened-d: #F4FCF8;
+  --b-cssvar-ranking-color-3: #4acf84;
+  --b-cssvar-ranking-color-3-opacity-flattened-d: #f4fcf8;
 
   --b-cssvar-ranking-color-opacity-a: 0.27;
   --b-cssvar-ranking-color-opacity-b: 0.20;
@@ -121,19 +121,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --b-cssvar-main-color: #3EA2FF;
+    --b-cssvar-main-color: #3ea2ff;
     --b-cssvar-main-color-r: 62;
     --b-cssvar-main-color-g: 162;
     --b-cssvar-main-color-b: 255;
-    --b-cssvar-main-color-opacity-flattened-c: #0A1F33;
+    --b-cssvar-main-color-opacity-flattened-c: #0a1f33;
 
-    --b-cssvar-main-color-inflected-to-segment-buffer: #57B5D7;
+    --b-cssvar-main-color-inflected-to-segment-buffer: #57b5d7;
     --b-cssvar-main-color-inflected-to-segment-buffer-r: 87;
     --b-cssvar-main-color-inflected-to-segment-buffer-g: 181;
     --b-cssvar-main-color-inflected-to-segment-buffer-b: 215;
     --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #233742;
 
-    --b-cssvar-main-color-inflected-to-user-position: #7866F1;
+    --b-cssvar-main-color-inflected-to-user-position: #7866f1;
     --b-cssvar-main-color-inflected-to-user-position-r: 120;
     --b-cssvar-main-color-inflected-to-user-position-g: 102;
     --b-cssvar-main-color-inflected-to-user-position-b: 241;
@@ -149,12 +149,12 @@
     --b-cssvar-ffffff-normal-g: 4;
     --b-cssvar-ffffff-normal-b: 6;
 
-    --b-cssvar-ffffff-blocky: #0D0D10;
+    --b-cssvar-ffffff-blocky: #0d0d10;
     --b-cssvar-ffffff-blocky-r: 13;
     --b-cssvar-ffffff-blocky-g: 13;
     --b-cssvar-ffffff-blocky-b: 16;
 
-    --b-cssvar-f9f9fb-normal: #0D0D10;
+    --b-cssvar-f9f9fb-normal: #0d0d10;
     --b-cssvar-f9f9fb-normal-r: 13;
     --b-cssvar-f9f9fb-normal-g: 13;
     --b-cssvar-f9f9fb-normal-b: 16;
@@ -164,7 +164,7 @@
     --b-cssvar-f9f9fb-blocky-g: 4;
     --b-cssvar-f9f9fb-blocky-b: 6;
 
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #0F171B;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #0f171b;
     --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 15;
     --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 23;
     --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 27;
@@ -179,12 +179,12 @@
     --b-cssvar-ededf2-g: 32;
     --b-cssvar-ededf2-b: 38;
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: #1C242B;
+    --b-cssvar-ededf2-inflected-to-segment-buffer: #1c242b;
     --b-cssvar-ededf2-inflected-to-segment-buffer-r: 28;
     --b-cssvar-ededf2-inflected-to-segment-buffer-g: 36;
     --b-cssvar-ededf2-inflected-to-segment-buffer-b: 43;
 
-    --b-cssvar-ededf2-inflected-to-user-position: #201F31;
+    --b-cssvar-ededf2-inflected-to-user-position: #201f31;
     --b-cssvar-ededf2-inflected-to-user-position-r: 32;
     --b-cssvar-ededf2-inflected-to-user-position-g: 31;
     --b-cssvar-ededf2-inflected-to-user-position-b: 49;
@@ -207,11 +207,11 @@
 
     --b-cssvar-ranking-color-0-opacity-flattened-a: #143723;
 
-    --b-cssvar-ranking-color-1-opacity-flattened-b: #102B1C;
+    --b-cssvar-ranking-color-1-opacity-flattened-b: #102b1c;
 
-    --b-cssvar-ranking-color-2-opacity-flattened-c: #0B1F14;
+    --b-cssvar-ranking-color-2-opacity-flattened-c: #0b1f14;
 
-    --b-cssvar-ranking-color-3-opacity-flattened-d: #08150D;
+    --b-cssvar-ranking-color-3-opacity-flattened-d: #08150d;
 
     --b-cssvar-ranking-color-opacity-a: 0.25;
     --b-cssvar-ranking-color-opacity-b: 0.20;
