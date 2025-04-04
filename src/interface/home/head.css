@@ -1,3 +1,27 @@
+@property --b-cssvar-stroke-dashoffset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 189px;
+}
+
+@property --b-cssvar-search-icon-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1.4201187871;
+}
+
+@property --b-cssvar-home-update-timer-offset-ratio {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: -1;
+}
+
+@property --b-cssvar-home-update-timer-interval {
+  syntax: '<time>';
+  inherits: false;
+  initial-value: 0ms;
+}
+
 .css_home_field .css_home_head {
   position: absolute;
   top: 0px;
@@ -74,18 +98,6 @@
   stroke: var(--b-cssvar-333333);
 }
 
-@property --b-cssvar-stroke-dashoffset {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 189px;
-}
-
-@property --b-cssvar-search-icon-scale {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 1.4201187871;
-}
-
 .css_home_field .css_home_head .css_home_button_right svg path[progress="progress"] {
   stroke-dasharray: 189px;
   stroke-dashoffset: var(--b-cssvar-stroke-dashoffset);
@@ -134,17 +146,24 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
-  height: 1px;
   width: 100%;
-  transform: translateX(calc(var(--b-cssvar-update-timer) * 100%));
-  transition: none;
+  height: 1px;
+  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
   -webkit-user-select: none;
   user-select: none;
   contain: layout;
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"] {
+  transform: translateX(calc(var(--b-cssvar-home-update-timer-offset-ratio) * 100%));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
+}
+
+.css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer.css_home_update_timer_slide_rtl {
+  animation-name: slideRTL;
+  animation-timing-function: linear;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  animation-duration: var(--b-cssvar-location-update-timer-interval);
 }

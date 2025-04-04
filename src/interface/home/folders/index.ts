@@ -24,14 +24,12 @@ let foldersRefreshTimer_baseInterval: number = 15 * 1000;
 let foldersRefreshTimer_minInterval: number = 5 * 1000;
 let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
 let foldersRefreshTimer_dynamic: boolean = true;
-let foldersRefreshTimer_streaming: boolean = false;
 let foldersRefreshTimer_lastUpdate: number = 0;
 let foldersRefreshTimer_nextUpdate: number = 0;
-let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_currentRequestID: string = '';
-let foldersRefreshTimer_currentProgress: number = -1;
+let foldersRefreshTimer_refreshing: boolean = false;
+let foldersRefreshTimer_streaming: boolean = false;
 let foldersRefreshTimer_streamStarted: boolean = false;
-let foldersRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
@@ -54,22 +52,23 @@ function generateElementOfFolder(): GeneratedElement {
   };
 }
 
-function updateUpdateTimer(): void {
-  const time = new Date().getTime();
-  foldersRefreshTimer_currentProgress = -1 * Math.min(1, Math.max(0, Math.abs(time - foldersRefreshTimer_lastUpdate) / foldersRefreshTimer_dynamicInterval));
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
-  window.requestAnimationFrame(function () {
-    if (foldersRefreshTimer_streaming && !foldersRefreshTimer_refreshing) {
-      updateUpdateTimer();
-    }
-  });
+function animateUpdateTimer(): void {
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${foldersRefreshTimer_dynamicInterval}ms`);
+  HomeUpdateTimerElement.addEventListener(
+    'animationend',
+    function () {
+      HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
+    },
+    { once: true }
+  );
+  HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (foldersRefreshTimer_refreshing) {
-    foldersRefreshTimer_currentProgress = -1 + getDataReceivingProgress(foldersRefreshTimer_currentRequestID);
-    HomeUpdateTimerElement.style.setProperty('--b-cssvar-update-timer', foldersRefreshTimer_currentProgress.toString());
+    const offsetRatio = CustomEvent.detail.progress - 1;
+    HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-offset-ratio', offsetRatio.toString());
   }
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
@@ -480,6 +479,7 @@ async function refreshFolders() {
   foldersRefreshTimer_refreshing = true;
   foldersRefreshTimer_currentRequestID = generateIdentifier('r');
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
+  HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
   document.addEventListener(foldersRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
   updateFoldersElement(integration, false, playing_animation);
@@ -496,14 +496,14 @@ async function refreshFolders() {
   foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - foldersRefreshTimer_lastUpdate);
   foldersRefreshTimer_refreshing = false;
   HomeUpdateTimerElement.setAttribute('refreshing', 'false');
-  updateUpdateTimer();
+  animateUpdateTimer();
 }
 
 async function streamFolders() {
   refreshFolders()
     .then(function () {
       if (foldersRefreshTimer_streaming) {
-        foldersRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamFolders();
         }, Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
@@ -514,7 +514,7 @@ async function streamFolders() {
       console.error(err);
       if (foldersRefreshTimer_streaming) {
         promptMessage(`資料夾網路連線中斷，將在${foldersRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
-        foldersRefreshTimer_timer = setTimeout(function () {
+        setTimeout(function () {
           streamFolders();
         }, foldersRefreshTimer_retryInterval);
       } else {
@@ -533,7 +533,5 @@ export function initializeFolders(): void {
     } else {
       refreshFolders();
     }
-    foldersRefreshTimer_currentProgress = -1;
-    updateUpdateTimer();
   }
 }
