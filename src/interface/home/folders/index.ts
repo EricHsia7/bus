@@ -57,6 +57,7 @@ function animateUpdateTimer(): void {
   HomeUpdateTimerElement.addEventListener(
     'animationend',
     function () {
+      console.log('animationend');
       HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
     },
     { once: true }
