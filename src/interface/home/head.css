@@ -165,5 +165,5 @@
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;
-  animation-duration: var(--b-cssvar-location-update-timer-interval);
+  animation-duration: var(--b-cssvar-home-update-timer-interval);
 }
