@@ -54,14 +54,6 @@ function generateElementOfFolder(): GeneratedElement {
 
 function animateUpdateTimer(): void {
   HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${foldersRefreshTimer_dynamicInterval}ms`);
-  HomeUpdateTimerElement.addEventListener(
-    'animationend',
-    function () {
-      console.log('animationend');
-      HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
-    },
-    { once: true }
-  );
   HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 

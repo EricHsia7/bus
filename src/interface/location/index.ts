@@ -94,13 +94,6 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 
 function animateUpdateTimer(): void {
   LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${locationRefreshTimer_dynamicInterval}ms`);
-  LocationUpdateTimerElement.addEventListener(
-    'animationend',
-    function () {
-      LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
-    },
-    { once: true }
-  );
   LocationUpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
 }
 

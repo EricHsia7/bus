@@ -34,17 +34,10 @@ let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
 
 function animateUpdateTimer(): void {
   NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${notifcationScheduleManagerRefreshTimer_dynamicInterval}ms`);
-  NotificationScheduleManagerUpdateTimerElement.addEventListener(
-    'animationend',
-    function () {
-      NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
-    },
-    { once: true }
-  );
   NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_slide_rtl');
 }
 
-function handleDataReceivingProgressUpdates(event: Event): void { 
+function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   if (notifcationScheduleManagerRefreshTimer_refreshing) {
     const offsetRatio = CustomEvent.detail.progress - 1;
@@ -255,7 +248,7 @@ async function streamNotificationScheduleManager() {
   refreshNotificationScheduleManager()
     .then(function () {
       if (notifcationScheduleManagerRefreshTimer_streaming) {
-         setTimeout(function () {
+        setTimeout(function () {
           streamNotificationScheduleManager();
         }, Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime()));
       } else {
@@ -265,7 +258,7 @@ async function streamNotificationScheduleManager() {
     .catch((err) => {
       console.error(err);
       if (notifcationScheduleManagerRefreshTimer_streaming) {
-         setTimeout(function () {
+        setTimeout(function () {
           streamNotificationScheduleManager();
         }, notifcationScheduleManagerRefreshTimer_retryInterval);
       } else {
