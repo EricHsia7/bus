@@ -93,7 +93,7 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 }
 
 function animateUpdateTimer(): void {
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${locationRefreshTimer_dynamicInterval}ms`);
+  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${locationRefreshTimer_dynamicInterval}ms`);
   LocationUpdateTimerElement.addEventListener(
     'animationend',
     function () {
