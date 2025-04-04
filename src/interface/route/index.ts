@@ -98,8 +98,14 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 }
 
 function animateUpdateTimer(): void {
-  RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
   RouteUpdateTimerElement.style.setProperty('--b-cssvar-update-timer-interval', `${routeRefreshTimer_dynamicInterval}ms`);
+  RouteUpdateTimerElement.addEventListener(
+    'animationend',
+    function () {
+      RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
+    },
+    { once: true }
+  );
   RouteUpdateTimerElement.classList.add('css_route_update_timer_slide_rtl');
 }
 
