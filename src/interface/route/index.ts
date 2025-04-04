@@ -592,6 +592,7 @@ async function refreshRoute() {
   routeRefreshTimer_refreshing = true;
   routeRefreshTimer_currentRequestID = generateIdentifier('r');
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
+  RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
   document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
   const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
   updateRouteField(integration, false, playing_animation);
