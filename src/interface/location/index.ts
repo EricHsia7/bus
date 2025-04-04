@@ -763,7 +763,6 @@ export function stretchLocationItem(itemElementID: string): void {
 }
 
 export function switchLocationBodyTab(itemID: string, tabCode: number): void {
-  // const itemElement = documentGetElementByID(itemID);
   const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');

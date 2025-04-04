@@ -14,10 +14,6 @@ export function elementQuerySelectorAll(element: HTMLElement, selectorExpression
   return element.querySelectorAll(selectorExpression);
 }
 
-export function documentGetElementByID(id: string): HTMLElement {
-  return document.getElementById(id);
-}
-
 export function getElementsBelow(referenceElement: HTMLElement, className: string): Array<HTMLElement> {
   const elements = [];
   let sibling = referenceElement.nextElementSibling;

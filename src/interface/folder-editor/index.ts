@@ -101,7 +101,6 @@ export function closeFolderEditor(): void {
 }
 
 export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: number): void {
-  // const itemElement = documentGetElementByID(itemID);
   const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
@@ -123,7 +122,6 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
 }
 
 export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): void {
-  // const itemElement = documentGetElementByID(itemID);
   const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {
