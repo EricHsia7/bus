@@ -284,10 +284,6 @@ window.bus = {
   secondlyInitialize: function () {
     if (!bus_secondly_initialized) {
       bus_secondly_initialized = true;
-      /*
-      loadCSS('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400..700&display=swap', 'noto_sans_tc');
-      loadCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0..1,0&display=swap', 'material_symbols');
-      */
       downloadData();
       discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageStats();
