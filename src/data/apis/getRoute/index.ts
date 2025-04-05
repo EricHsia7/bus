@@ -100,25 +100,25 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
   if (simplify === false) {
     return await getData();
   }
-  const cache_time = 60 * 60 * 24 * 1 * 1000;
-  const cache_key = 'bus_route_v2_cache';
-  const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
+  const cacheTimeToLive = 60 * 60 * 24 * 1 * 1000;
+  const cacheKey = 'bus_route_v2_cache';
+  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cacheTimestamp === null) {
     const result = await getData();
     const simplified_result = await simplifyRoute(result);
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
     if (!RouteAPIVariableCache_available) {
       RouteAPIVariableCache_available = true;
       RouteAPIVariableCache_data = simplified_result;
     }
     return simplified_result;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
+    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       const result = await getData();
       const simplified_result = await simplifyRoute(result);
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(simplified_result));
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
       if (!RouteAPIVariableCache_available) {
         RouteAPIVariableCache_available = true;
         RouteAPIVariableCache_data = simplified_result;
@@ -126,7 +126,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
       return simplified_result;
     } else {
       if (!RouteAPIVariableCache_available) {
-        const cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cacheKey}`);
         RouteAPIVariableCache_available = true;
         RouteAPIVariableCache_data = JSON.parse(cache);
       }

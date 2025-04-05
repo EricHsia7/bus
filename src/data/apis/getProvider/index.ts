@@ -34,27 +34,27 @@ export async function getProvider(requestID: string): Promise<Provider> {
     return result;
   }
 
-  var cache_time = 60 * 60 * 24 * 60 * 1000;
-  var cache_key = 'bus_provider_cache';
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
+  var cacheTimeToLive = 60 * 60 * 24 * 60 * 1000;
+  var cacheKey = 'bus_provider_cache';
+  var cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cacheTimestamp === null) {
     var result = await getData();
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
     if (!ProviderAPIVariableCache_available) {
       ProviderAPIVariableCache_available = true;
       ProviderAPIVariableCache_data = result;
     }
     return result;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
+    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       var result = await getData();
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
       return result;
     } else {
       if (!ProviderAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        var cache = await lfGetItem(0, `${cacheKey}`);
         ProviderAPIVariableCache_available = true;
         ProviderAPIVariableCache_data = JSON.parse(cache);
       }

@@ -81,31 +81,31 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
     return result;
   }
 
-  var cache_time = 60 * 60 * 24 * 30 * 1000;
-  var cache_key = 'bus_segment_buffers_v6_cache';
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
+  var cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  var cacheKey = 'bus_segment_buffers_v6_cache';
+  var cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cacheTimestamp === null) {
     var result = await getData();
     var extractedResult = await extractSegmentBuffers(result);
     var simplifiedResult = await simplifySegmentBuffers(extractedResult);
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(simplifiedResult));
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
     if (!SegmentBuffersAPIVariableCache_available) {
       SegmentBuffersAPIVariableCache_available = true;
       SegmentBuffersAPIVariableCache_data = simplifiedResult;
     }
     return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
+    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       var result = await getData();
       var extractedResult = await extractSegmentBuffers(result);
       var simplifiedResult = await simplifySegmentBuffers(extractedResult);
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(simplifiedResult));
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplifiedResult));
       return simplifiedResult;
     } else {
       if (!SegmentBuffersAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        var cache = await lfGetItem(0, `${cacheKey}`);
         SegmentBuffersAPIVariableCache_available = true;
         SegmentBuffersAPIVariableCache_data = JSON.parse(cache);
       }

@@ -20,27 +20,27 @@ export async function getTimeTable(requestID: string): Promise<object> {
     return result;
   }
 
-  var cache_time = 60 * 60 * 24 * 14 * 1000;
-  var cache_key = 'bus_timetable_cache';
-  var cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
+  var cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
+  var cacheKey = 'bus_timetable_cache';
+  var cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cacheTimestamp === null) {
     var result = await getData();
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
     if (!TimetableAPIVariableCache_available) {
       TimetableAPIVariableCache_available = true;
       TimetableAPIVariableCache_data = result;
     }
     return result;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
+    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       var result = await getData();
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(result));
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
       return result;
     } else {
       if (!TimetableAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cache_key}`);
+        var cache = await lfGetItem(0, `${cacheKey}`);
         TimetableAPIVariableCache_available = true;
         TimetableAPIVariableCache_data = JSON.parse(cache);
       }

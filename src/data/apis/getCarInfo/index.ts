@@ -73,10 +73,10 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
   }
 
   const cache_type = simplified ? 'simplified' : 'raw';
-  const cache_key = `bus_${cache_type}_car_info_v6_cache`;
-  const cache_time = 60 * 60 * 24 * 30 * 1000;
-  const cached_time = await lfGetItem(0, `${cache_key}_timestamp`);
-  if (cached_time === null) {
+  const cacheKey = `bus_${cache_type}_car_info_v6_cache`;
+  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  if (cacheTimestamp === null) {
     const result = await getData();
     let final_result;
     if (simplified) {
@@ -84,15 +84,15 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
     } else {
       final_result = result;
     }
-    await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
+    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+    await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
     if (!CarInfoAPIVariableCache[cache_type].available) {
       CarInfoAPIVariableCache[cache_type].available = true;
       CarInfoAPIVariableCache[cache_type].data = final_result;
     }
     return final_result;
   } else {
-    if (new Date().getTime() - parseInt(cached_time) > cache_time) {
+    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       const result = await getData();
       let final_result;
       if (simplified) {
@@ -100,12 +100,12 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
       } else {
         final_result = result;
       }
-      await lfSetItem(0, `${cache_key}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cache_key}`, JSON.stringify(final_result));
+      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
+      await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
       return final_result;
     } else {
       if (!CarInfoAPIVariableCache[cache_type].available) {
-        const cache = await lfGetItem(0, `${cache_key}`);
+        const cache = await lfGetItem(0, `${cacheKey}`);
         CarInfoAPIVariableCache[cache_type].available = true;
         CarInfoAPIVariableCache[cache_type].data = JSON.parse(cache);
       }
