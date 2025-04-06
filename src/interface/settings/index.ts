@@ -1,6 +1,6 @@
 import { exportData } from '../../data/export/index';
 import { importData } from '../../data/import/index';
-import { listSettings } from '../../data/settings/index';
+import { listSettings, Setting } from '../../data/settings/index';
 import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
 import { generateIdentifier, releaseFile } from '../../tools/index';
@@ -13,7 +13,7 @@ const SettingsField = documentQuerySelector('.css_settings_field');
 const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_body');
 const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
 
-function generateElementOfItem(item: object): GeneratedElement {
+function generateElementOfItem(item: Setting): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_setting');
