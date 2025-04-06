@@ -6,7 +6,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(array: SegmentBuffers): SimplifiedSegmentBuffer {
-  let result: SimplifiedSegmentBuffer = {};
+  const result: SimplifiedSegmentBuffer = {};
   for (const item of array) {
     if (item.hasOwnProperty('BufferZones')) {
       const routeKey = `r_${item.RouteID}`;

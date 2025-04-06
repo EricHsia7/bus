@@ -7,13 +7,13 @@ let SemiTimetableAPIVariableCache_data: object = {};
 
 export async function getSemiTimeTable(requestID: string): Promise<object> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 12],
       [1, 12]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = [];
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getSemiTimeTable_${api.e[0]}`, 'json');
+    let result = [];
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getSemiTimeTable_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }

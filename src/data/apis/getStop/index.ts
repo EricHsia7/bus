@@ -55,25 +55,25 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
 
 export async function getStop(requestID: string): Promise<SimplifiedStop> {
   async function getData() {
-    var apis = [
+    const apis = [
       [0, 11],
       [1, 11]
     ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    var result = [];
-    for (var api of apis) {
-      var data = await fetchData(api.url, requestID, `getStop_${api.e[0]}`, 'json');
+    let result = [];
+    for (const api of apis) {
+      const data = await fetchData(api.url, requestID, `getStop_${api.e[0]}`, 'json');
       result = result.concat(data.BusInfo);
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
   }
 
-  var cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
-  var cacheKey = 'bus_stop_cache';
-  var cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  const cacheKey = 'bus_stop_cache';
+  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
-    var result = await getData();
-    var simplified_result = await simplifyStop(result);
+    const result = await getData();
+    const simplified_result = await simplifyStop(result);
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
     await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
     if (!StopAPIVariableCache_available) {
@@ -83,14 +83,14 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
     return simplified_result;
   } else {
     if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
-      var result = await getData();
-      var simplified_result = await simplifyStop(result);
+      const result = await getData();
+      const simplified_result = await simplifyStop(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
       await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
       return simplified_result;
     } else {
       if (!StopAPIVariableCache_available) {
-        var cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, `${cacheKey}`);
         StopAPIVariableCache_available = true;
         StopAPIVariableCache_data = JSON.parse(cache);
       }
