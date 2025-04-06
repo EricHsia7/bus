@@ -1,15 +1,15 @@
-import { changeSettingOption, getSetting } from '../../data/settings/index';
+import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
 const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
-const optionsElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_settings_options');
-const descriptionElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_options_description');
+const SettingsOptionsOptionsElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_settings_options');
+const SettingsOptionsDescriptionElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_options_description');
 const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_head');
-const titleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
+const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
 
-function generateElementOfItem(setting: object, item: object, index: number): GeneratedElement {
+function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): GeneratedElement {
   // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_option');
@@ -22,18 +22,18 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
 }
 
 function initializeSettingsOptionsField(settingKey: string): void {
-  const setting = getSetting(settingKey);
-  titleElement.innerText = setting.name;
-  descriptionElement.innerText = setting.description;
-  optionsElement.innerHTML = '';
+  const setting = getSetting(settingKey) as SettingSelect;
+  SettingsOptionsTitleElement.innerText = setting.name;
+  SettingsOptionsDescriptionElement.innerText = setting.description;
+  SettingsOptionsOptionsElement.innerHTML = '';
   const fragment = new DocumentFragment();
-  let index = 0;
+  let index: number = 0;
   for (const item of setting.options) {
     const thisElement = generateElementOfItem(setting, item, index);
     fragment.appendChild(thisElement.element);
     index += 1;
   }
-  optionsElement.append(fragment);
+  SettingsOptionsOptionsElement.append(fragment);
 }
 
 export function openSettingsOptions(settingKey: string): void {
