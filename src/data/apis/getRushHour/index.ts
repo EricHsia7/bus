@@ -1,7 +1,7 @@
 import { TimePeriod } from '../../../tools/time';
 
 export function getRushHour(period: number): TimePeriod {
-  var rushHours = [
+  const rushHours = [
     [
       {
         start: {

@@ -21,10 +21,11 @@ function processWorkerTask(xml: string): SegmentBuffers {
     const endingTagTest = endingTagRegex.test(line);
     const inlineTest = inlineRegex.test(line);
     if (startingTagTest && !inlineTest && !endingTagTest) {
-      //starting tag
+      // starting tag
       currentTagName = line.match(startingTagRegex)[1];
       currentValue = null;
       switch (currentTagName) {
+        // to prevent the second concatenated data set erase the first one
         /*
         case 'RouteFares':
           result = [];
@@ -47,7 +48,7 @@ function processWorkerTask(xml: string): SegmentBuffers {
     }
 
     if (startingTagTest && inlineTest && !endingTagTest) {
-      //inline tag
+      // inline tag
       currentTagName = line.match(inlineRegex)[1];
       currentValue = line.match(inlineRegex)[2];
       switch (currentTagName) {
@@ -67,10 +68,9 @@ function processWorkerTask(xml: string): SegmentBuffers {
           break;
       }
     }
-
     /*
     if (!startingTagTest && !inlineTest && endingTagTest) {
-      //ending tag
+      // ending tag
       currentTagName = line.match(endingTagRegex)[1];
       currentValue = null
     }
