@@ -258,7 +258,7 @@ export function switchSearchTypeFilter(): void {
 
 function animateCursor(): void {
   const x = performance.now();
-  const alpha = 1 - Math.pow(Math.sin((Math.PI * x) / 800), 4);
+  const alpha = 1 - Math.pow(Math.sin((Math.PI * x) / 960), 4);
   if (selection) {
     searchInputCanvasContext.globalAlpha = alpha;
     searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
