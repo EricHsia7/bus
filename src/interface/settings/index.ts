@@ -9,40 +9,44 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
+const SettingsField = documentQuerySelector('.css_settings_field');
+const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_body');
+const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
+
 function generateElementOfItem(item: object): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  // const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_setting');
-  element.id = identifier;
+  // element.id = identifier;
   element.setAttribute('onclick', item.action);
   element.setAttribute('type', item.type);
   element.innerHTML = /*html*/ `<div class="css_setting_icon">${getIconHTML(item.icon)}</div><div class="css_setting_name">${item.name}</div><div class="css_setting_status">${item.status}</div><div class="css_setting_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
-async function initializeSettingsField(Field: HTMLElement) {
+async function initializeSettingsField() {
   const list = await listSettings();
-  elementQuerySelector(Field, '.css_settings_page_body .css_settings_page_settings').innerHTML = '';
+  SettingsElement.innerHTML = '';
+  const fragment = new DocumentFragment();
   for (const item of list) {
     const thisElement = generateElementOfItem(item);
-    elementQuerySelector(Field, '.css_settings_page_body .css_settings_page_settings').appendChild(thisElement.element);
+    fragment.appendChild(thisElement.element);
   }
+  SettingsElement.append(fragment);
 }
 
 export function openSettings(): void {
   pushPageHistory('Settings');
-  var Field: HTMLElement = documentQuerySelector('.css_settings_page_field');
-  Field.setAttribute('displayed', 'true');
-  initializeSettingsField(Field);
+  SettingsField.setAttribute('displayed', 'true');
+  initializeSettingsField();
 }
 
 export function closeSettings(): void {
   revokePageHistory('Settings');
-  var Field: HTMLElement = documentQuerySelector('.css_settings_page_field');
-  Field.setAttribute('displayed', 'false');
+  SettingsField.setAttribute('displayed', 'false');
 }
 
 export async function downloadExportFile() {
@@ -93,7 +97,7 @@ export function openFileToImportData(): void {
   );
   fileInput.addEventListener(
     'cancel',
-    function (event) {
+    function () {
       documentQuerySelector(`body #${identifier}`).remove();
     },
     { once: true }

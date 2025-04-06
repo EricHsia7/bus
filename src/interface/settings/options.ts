@@ -17,8 +17,8 @@ function generateElementOfItem(setting: object, item: object, index: number): Ge
 
 function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string): void {
   const setting = getSetting(settingKey);
-  const bodyElement = elementQuerySelector(Field, '.css_settings_options_page_body');
-  const optionsElement = elementQuerySelector(bodyElement, '.css_settings_options_page_options');
+  const bodyElement = elementQuerySelector(Field, '.css_settings_options_body');
+  const optionsElement = elementQuerySelector(bodyElement, '.css_settings_options');
   const descriptionElement = elementQuerySelector(bodyElement, '.css_options_description');
   descriptionElement.innerText = setting.description;
   optionsElement.innerHTML = '';
@@ -33,22 +33,22 @@ function initializeSettingsOptionsField(Field: HTMLElement, settingKey: string):
 export function openSettingsOptions(settingKey: string): void {
   pushPageHistory('SettingsOptions');
   var setting = getSetting(settingKey);
-  var Field: HTMLElement = documentQuerySelector('.css_settings_options_page_field');
+  var Field: HTMLElement = documentQuerySelector('.css_settings_options_field');
   Field.setAttribute('displayed', 'true');
-  elementQuerySelector(Field, '.css_settings_options_page_head .css_settings_options_page_title').innerText = setting.name;
+  elementQuerySelector(Field, '.css_settings_options_head .css_settings_options_title').innerText = setting.name;
   initializeSettingsOptionsField(Field, settingKey);
   closePreviousPage();
 }
 
 export function closeSettingsOptions(): void {
   // revokePageHistory('SettingsOptions');
-  var Field = documentQuerySelector('.css_settings_options_page_field');
+  var Field = documentQuerySelector('.css_settings_options_field');
   Field.setAttribute('displayed', 'false');
   openPreviousPage();
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {
-  var checkboxes = documentQuerySelectorAll('.css_settings_options_page_field .css_settings_options_page_body .css_settings_options_page_options .css_option .css_option_checkbox input[type="checkbox"]');
+  var checkboxes = documentQuerySelectorAll('.css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox input[type="checkbox"]');
   for (var checkbox of checkboxes) {
     checkbox.checked = false;
   }
