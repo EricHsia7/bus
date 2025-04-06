@@ -257,7 +257,7 @@ export function switchSearchTypeFilter(): void {
 }
 
 function animateCursor(): void {
-  const period = 400;
+  const period = 800;
   const x = performance.now();
   const alpha = 0.5 - 0.5 * Math.cos((2 * Math.PI * x) / period);
   if (selection) {
