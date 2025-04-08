@@ -85,7 +85,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
       final_result = result;
     }
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
+    await lfSetItem(0, cacheKey, JSON.stringify(final_result));
     if (!CarInfoAPIVariableCache[cache_type].available) {
       CarInfoAPIVariableCache[cache_type].available = true;
       CarInfoAPIVariableCache[cache_type].data = final_result;
@@ -101,11 +101,11 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
         final_result = result;
       }
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
+      await lfSetItem(0, cacheKey, JSON.stringify(final_result));
       return final_result;
     } else {
       if (!CarInfoAPIVariableCache[cache_type].available) {
-        const cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, cacheKey);
         CarInfoAPIVariableCache[cache_type].available = true;
         CarInfoAPIVariableCache[cache_type].data = JSON.parse(cache);
       }

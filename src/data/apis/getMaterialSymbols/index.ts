@@ -19,7 +19,7 @@ export async function getMaterialSymbols(requestID: string): Promise<Array<strin
   if (cacheTimestamp === null) {
     const result = await getData();
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cacheKey}`, result.join(','));
+    await lfSetItem(0, cacheKey, result.join(','));
     if (!MaterialSymbolsAPIVariableCache_available) {
       MaterialSymbolsAPIVariableCache_available = true;
       MaterialSymbolsAPIVariableCache_data = result;
@@ -29,7 +29,7 @@ export async function getMaterialSymbols(requestID: string): Promise<Array<strin
     if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       const result = await getData();
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cacheKey}`, result.join(','));
+      await lfSetItem(0, cacheKey, result.join(','));
       if (!MaterialSymbolsAPIVariableCache_available) {
         MaterialSymbolsAPIVariableCache_available = true;
         MaterialSymbolsAPIVariableCache_data = result;
@@ -37,7 +37,7 @@ export async function getMaterialSymbols(requestID: string): Promise<Array<strin
       return result;
     } else {
       if (!MaterialSymbolsAPIVariableCache_available) {
-        const cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, cacheKey);
         MaterialSymbolsAPIVariableCache_available = true;
         MaterialSymbolsAPIVariableCache_data = cache.split(',');
       }

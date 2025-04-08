@@ -189,7 +189,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     }
 
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
+    await lfSetItem(0, cacheKey, JSON.stringify(final_result));
     if (!LocationAPIVariableCache[cache_type].available) {
       LocationAPIVariableCache[cache_type].available = true;
       LocationAPIVariableCache[cache_type].data = final_result;
@@ -222,7 +222,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
       }
 
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cacheKey}`, JSON.stringify(final_result));
+      await lfSetItem(0, cacheKey, JSON.stringify(final_result));
       if (!LocationAPIVariableCache[cache_type].available) {
         LocationAPIVariableCache[cache_type].available = true;
         LocationAPIVariableCache[cache_type].data = final_result;
@@ -230,7 +230,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
       return final_result;
     } else {
       if (!LocationAPIVariableCache[cache_type].available) {
-        const cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, cacheKey);
         LocationAPIVariableCache[cache_type].available = true;
         LocationAPIVariableCache[cache_type].data = JSON.parse(cache);
       }

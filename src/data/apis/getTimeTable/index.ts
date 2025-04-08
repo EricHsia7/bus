@@ -26,7 +26,7 @@ export async function getTimeTable(requestID: string): Promise<object> {
   if (cacheTimestamp === null) {
     const result = await getData();
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
+    await lfSetItem(0, cacheKey, JSON.stringify(result));
     if (!TimetableAPIVariableCache_available) {
       TimetableAPIVariableCache_available = true;
       TimetableAPIVariableCache_data = result;
@@ -36,11 +36,11 @@ export async function getTimeTable(requestID: string): Promise<object> {
     if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       const result = await getData();
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cacheKey}`, JSON.stringify(result));
+      await lfSetItem(0, cacheKey, JSON.stringify(result));
       return result;
     } else {
       if (!TimetableAPIVariableCache_available) {
-        const cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, cacheKey);
         TimetableAPIVariableCache_available = true;
         TimetableAPIVariableCache_data = JSON.parse(cache);
       }

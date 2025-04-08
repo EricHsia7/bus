@@ -30,7 +30,7 @@ export interface SimplifiedStopItem {
 export type SimplifiedStop = { [key: string]: SimplifiedStopItem };
 
 let StopAPIVariableCache_available: boolean = false;
-let StopAPIVariableCache_data: object = {};
+let StopAPIVariableCache_data: SimplifiedStop = {};
 
 async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
   const worker = new Worker(new URL('./simplifyStop-worker.ts', import.meta.url));
@@ -68,14 +68,14 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  const cacheTimeToLive = 60 * 60 * 24 * 45 * 1000;
   const cacheKey = 'bus_stop_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
     const simplified_result = await simplifyStop(result);
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
+    await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
     if (!StopAPIVariableCache_available) {
       StopAPIVariableCache_available = true;
       StopAPIVariableCache_data = simplified_result;
@@ -86,11 +86,11 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
       const result = await getData();
       const simplified_result = await simplifyStop(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, `${cacheKey}`, JSON.stringify(simplified_result));
+      await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
       return simplified_result;
     } else {
       if (!StopAPIVariableCache_available) {
-        const cache = await lfGetItem(0, `${cacheKey}`);
+        const cache = await lfGetItem(0, cacheKey);
         StopAPIVariableCache_available = true;
         StopAPIVariableCache_data = JSON.parse(cache);
       }
