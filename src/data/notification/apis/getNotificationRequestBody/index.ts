@@ -5,7 +5,7 @@ import { NotificationClientID, NotificationResponse, NotificationSecret } from '
 export function getNotificationRequestBody(method: NotificationResponse['method'], parameters: Array<any>): object | false {
   switch (method) {
     case 'cancel':
-      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 1)) {
+      if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 1) {
         return false;
       } else {
         return {

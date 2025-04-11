@@ -203,7 +203,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // Collect data from 'batchFoundBuses'
       let buses = []; // as Array<FormattedBus>
-      for (var overlappingStopID of thisSimplifiedLocation.s) {
+      for (const overlappingStopID of thisSimplifiedLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
         if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
           buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));

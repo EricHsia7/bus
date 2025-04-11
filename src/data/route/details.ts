@@ -236,7 +236,7 @@ function getTimeTableRules(thisRoute: RouteItem): TimeTableRules {
   const offRushHourWindowOnHoliday = parseTimeCode(thisRoute.holidayOffPeakHeadway, 1);
   // window → the interval/gap between arrivals of buses
 
-  var realSequence = thisRoute.realSequence;
+  const realSequence = thisRoute.realSequence;
   return {
     go: {
       weekday: {

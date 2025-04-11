@@ -539,7 +539,7 @@ export async function initializeSettings(): Promise<boolean> {
   for (const key of userSettings) {
     if (SettingKeys.indexOf(key) > -1) {
       const userSetting = await lfGetItem(1, key);
-      if (!(userSetting === null)) {
+      if (userSetting !== null) {
         if (Settings[key].type === 'select') {
           var userSettingOption = parseInt(userSetting);
           Settings[key].option = userSettingOption;
