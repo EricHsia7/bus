@@ -76,7 +76,13 @@ export function mergePearsonCorrelation(targetXAverage: number, targetYAverage: 
   return mergedCorrelation;
 }
 
-export function convertToUnitVector(vector: Array<number>): Array<number> {
+/**
+ * get the unit vecotr towards the same direction
+ * @param vector [a1, a2, a3, ...]
+ * @returns [b1, b2, b3, ...]
+ */
+
+export function normalizeVector(vector: Array<number>): Array<number> {
   let length = Math.hypot(vector);
   let newVector = [];
   if (length > 0) {

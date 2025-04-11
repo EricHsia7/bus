@@ -2,7 +2,7 @@ import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { convertToUnitVector } from '../../tools/math';
+import { normalizeVector } from '../../tools/math';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
@@ -167,7 +167,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       x += vector[0];
       y += vector[1];
     }
-    const meanVector = convertToUnitVector([x, y]);
+    const meanVector = normalizeVector([x, y]);
     const cardinalDirection = getCardinalDirectionFromVector(meanVector);
     cardinalDirections.push(cardinalDirection);
   }

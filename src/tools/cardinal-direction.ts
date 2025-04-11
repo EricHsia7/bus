@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../interface/icons/material-symbols-type';
-import { convertToUnitVector } from './math';
+import { normalizeVector } from './math';
 
 export type CardinalDirectionVector = [number, number];
 
@@ -87,7 +87,7 @@ export const NorthWestCardinalDirection: CardinalDirection = {
 
 export function getCardinalDirectionFromVector(vector: [number, number]): CardinalDirection {
   const directions: Array<CardinalDirection> = [UnknownCardinalDirection, NorthCardinalDirection, EastCardinalDirection, SouthCardinalDirection, WestCardinalDirection, NorthEastCardinalDirection, SouthEastCardinalDirection, SouthWestCardinalDirection, NorthWestCardinalDirection];
-  const unitVector = convertToUnitVector(vector);
+  const unitVector = normalizeVector(vector);
   let maxDotProduct = -Infinity;
   let bestMatch: CardinalDirection = directions[0];
   for (const direction of directions) {

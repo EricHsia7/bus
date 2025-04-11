@@ -1,5 +1,5 @@
 import { geohashEncode } from '../../../tools/geohash';
-import { convertToUnitVector } from '../../../tools/math';
+import { normalizeVector } from '../../../tools/math';
 import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
 self.onmessage = function (e) {
@@ -45,7 +45,7 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
     if (nextLocation) {
       const x = parseFloat(nextLocation.longitude) - thisItemLongitude;
       const y = parseFloat(nextLocation.latitude) - thisItemLatitude;
-      vector = convertToUnitVector([x, y]);
+      vector = normalizeVector([x, y]);
     }
 
     const key = `l_${item.stopLocationId}`;
