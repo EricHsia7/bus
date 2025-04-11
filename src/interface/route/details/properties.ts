@@ -62,10 +62,10 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
       if (!compareThings(previousProperty, thisProperty)) {
         updateValue(thisElement, thisProperty);
       }
-      if (!(previousAnimation === animation)) {
+      if (previousAnimation !== animation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(previousSkeletonScreen === skeletonScreen)) {
+      if (previousSkeletonScreen !== skeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
@@ -76,7 +76,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   Field.setAttribute('skeleton-screen', skeletonScreen);
 
   const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
-  if (!(propertyQuantity === currentPropertySeatQuantity)) {
+  if (propertyQuantity !== currentPropertySeatQuantity) {
     const capacity = currentPropertySeatQuantity - propertyQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {

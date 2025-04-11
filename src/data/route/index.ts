@@ -165,7 +165,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           }
         })
         .filter((e) => {
-          return !(e === null);
+          return e !== null;
         });
       integratedStopItem.position = {
         longitude: thisSimplifiedLocation.lo,
@@ -325,7 +325,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     }
 
     let isNearest = false;
-    if (!(nearestPosition === null)) {
+    if (nearestPosition !== null) {
       if (nearestPosition.id === item.id) {
         isNearest = true;
       }

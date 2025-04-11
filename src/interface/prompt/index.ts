@@ -6,7 +6,7 @@ import { MaterialSymbols } from '../icons/material-symbols-type';
 
 export function promptMessage(message: string, icon: MaterialSymbols): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
-  if (!(allPromptElements === null)) {
+  if (allPromptElements !== null) {
     for (const promptElement of allPromptElements) {
       promptElement.remove();
     }
@@ -34,7 +34,7 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
   document.body.appendChild(promptElement);
 
   const promptElementInstance = document.getElementById(promptID);
-  if (!(promptElementInstance === null)) {
+  if (promptElementInstance !== null) {
     promptElementInstance.addEventListener(
       'animationend',
       function () {

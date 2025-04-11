@@ -131,7 +131,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (!(thisItem.type === previousItem.type)) {
+      if (thisItem.type !== previousItem.type) {
         updateIcon(thisElement, thisItem);
         updateTitle(thisElement, thisItem);
         updateTime(thisElement, thisItem);
@@ -145,7 +145,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateName(thisElement, thisItem);
             }
-            if (!(previousItem.time === thisItem.time)) {
+            if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.hash, thisItem.hash)) {
@@ -156,7 +156,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateName(thisElement, thisItem);
             }
-            if (!(previousItem.time === thisItem.time)) {
+            if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.id, thisItem.id) || !compareThings(previousItem.pid, thisItem.pid)) {
@@ -167,7 +167,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateName(thisElement, thisItem);
             }
-            if (!(previousItem.time === thisItem.time)) {
+            if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
             if (!compareThings(previousItem.id, thisItem.id)) {
@@ -175,17 +175,17 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
             }
             break;
           case 'empty':
-            if (!(previousItem.time === thisItem.time)) {
+            if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
             break;
           default:
             break;
         }
-        if (!(animation === previousAnimation)) {
+        if (animation !== previousAnimation) {
           updateAnimation(thisElement, animation);
         }
-        if (!(skeletonScreen === previousSkeletonScreen)) {
+        if (skeletonScreen !== previousSkeletonScreen) {
           updateSkeletonScreen(thisElement, skeletonScreen);
         }
       }
@@ -203,7 +203,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
   // Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   const currentItemSeatQuantity = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`).length;
-  if (!(itemQuantity === currentItemSeatQuantity)) {
+  if (itemQuantity !== currentItemSeatQuantity) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
       const RecentViewsContentElement = elementQuerySelector(Field, `.css_home_recent_views_content`);

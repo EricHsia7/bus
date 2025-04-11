@@ -113,10 +113,10 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       updateAnimation(thisItemElement, animation);
       updateSkeletonScreen(thisItemElement, skeletonScreen);
     } else {
-      if (!(thisItem.hours === previousItem.hours)) {
+      if (thisItem.hours !== previousItem.hours) {
         updateHours(thisItemElement, thisItem);
       }
-      if (!(thisItem.minutes === previousItem.minutes)) {
+      if (thisItem.minutes !== previousItem.minutes) {
         updateMinutes(thisItemElement, thisItem);
       }
       if (!compareThings(previousItem.schedule_id, thisItem.schedule_id)) {
@@ -124,16 +124,13 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
         updateContext(thisItemElement, thisItem);
         updateCancel(thisItemElement, thisItem);
       }
-      if (!(previousItem.is_first === thisItem.is_first)) {
+      if (previousItem.is_first !== thisItem.is_first) {
         updateFirst(thisItemElement, thisItem);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
-        updateSkeletonScreen(thisItemElement, skeletonScreen);
-      }
-      if (!(previousAnimation === animation)) {
+      if (previousAnimation !== animation) {
         updateAnimation(thisItemElement, animation);
       }
-      if (!(previousSkeletonScreen === skeletonScreen)) {
+      if (previousSkeletonScreen !== skeletonScreen) {
         updateSkeletonScreen(thisItemElement, skeletonScreen);
       }
     }
@@ -143,7 +140,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   const items = integration.items;
 
   const currentItemSeatQuantity = elementQuerySelectorAll(NotificationScheduleList, `.css_notification_schedule_manager_item`).length;
-  if (!(itemQuantity === currentItemSeatQuantity)) {
+  if (itemQuantity !== currentItemSeatQuantity) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {

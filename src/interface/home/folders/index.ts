@@ -270,7 +270,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (!(thisItem.type === previousItem.type)) {
+      if (thisItem.type !== previousItem.type) {
         updateType(thisElement, thisItem);
         updateIcon(thisElement, thisItem);
         updateStatus(thisElement, thisItem, animation);
@@ -289,7 +289,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateMain(thisElement, thisItem);
             }
-            if (!(thisItem.status.code === previousItem.status.code) || !compareThings(previousItem.status.text, thisItem.status.text)) {
+            if (thisItem.status.code !== previousItem.status.code || !compareThings(previousItem.status.text, thisItem.status.text)) {
               updateStatus(thisElement, thisItem, animation);
             }
             break;
@@ -313,7 +313,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             }
             break;
           case 'empty':
-            if (!(thisItem.type === previousItem.type)) {
+            if (thisItem.type !== previousItem.type) {
               updateContext(thisElement, thisItem);
               updateMain(thisElement, thisItem);
             }
@@ -321,10 +321,10 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           default:
             break;
         }
-        if (!(skeletonScreen === previousSkeletonScreen)) {
+        if (skeletonScreen !== previousSkeletonScreen) {
           updateSkeletonScreen(thisElement, skeletonScreen);
         }
-        if (!(animation === previousAnimation)) {
+        if (animation !== previousAnimation) {
           updateAnimation(thisElement, animation);
         }
       }
@@ -358,16 +358,16 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (!(thisFolder.name === previousFolder.name)) {
+      if (thisFolder.name !== previousFolder.name) {
         updateName(thisElement, thisFolder);
       }
-      if (!(thisFolder.icon === previousFolder.icon)) {
+      if (thisFolder.icon !== previousFolder.icon) {
         updateIcon(thisElement, thisFolder);
       }
-      if (!(animation === previousAnimation)) {
+      if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (skeletonScreen !== previousSkeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }
@@ -377,7 +377,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   const foldersLength = folders.length;
 
   const currentFolderSeatQuantity = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder').length;
-  if (!(foldersLength === currentFolderSeatQuantity)) {
+  if (foldersLength !== currentFolderSeatQuantity) {
     const capacity = currentFolderSeatQuantity - foldersLength;
     if (capacity < 0) {
       const fragment = new DocumentFragment();
@@ -403,7 +403,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     const thisFolderElement = FolderElements[i];
     const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
     const currentItemSeatQuantity = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item').length;
-    if (!(thisFolderContentLength === currentItemSeatQuantity)) {
+    if (thisFolderContentLength !== currentItemSeatQuantity) {
       const capacity = currentItemSeatQuantity - thisFolderContentLength;
       if (capacity < 0) {
         for (let o = 0; o < Math.abs(capacity); o++) {

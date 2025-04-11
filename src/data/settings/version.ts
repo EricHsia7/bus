@@ -70,7 +70,7 @@ export async function checkAppVersion(): Promise<AppVersionStatus> {
       return 'unknownError';
     }
   } else {
-    if (!(getHTMLVersionHash() === appVersion.hash)) {
+    if (getHTMLVersionHash() !== appVersion.hash) {
       refreshPageWithTimeStamp(appVersion.hash, true);
       return 'refreshing';
     } else {

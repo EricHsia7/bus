@@ -20,7 +20,7 @@ let pageHistory: Array<Page> = ['Home'];
 export function pushPageHistory(page: Page): void {
   const pageHistoryLength = pageHistory.length;
   const lastPage = pageHistory[pageHistoryLength - 1];
-  if (!(lastPage === page)) {
+  if (lastPage !== page) {
     pageHistory.push(page);
   }
 }

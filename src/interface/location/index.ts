@@ -483,7 +483,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   // TODO: updateTab
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
-  if (!(groupQuantity === currentGroupSeatQuantity)) {
+  if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
@@ -508,7 +508,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     const groupKey = `g_${i}`;
     const thisLocationGroupElement = LocationGroupElements[i];
     const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`).length;
-    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
+    if (itemQuantity[groupKey] !== currentItemSeatQuantity) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, `.css_location_group_items`);
@@ -527,7 +527,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
     const groupPropertyQuantity = groups[groupKey].properties.length;
-    if (!(groupPropertyQuantity === currentGroupPropertySeatQuantity)) {
+    if (groupPropertyQuantity !== currentGroupPropertySeatQuantity) {
       const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
       if (capacity < 0) {
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');

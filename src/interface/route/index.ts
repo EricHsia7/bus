@@ -404,7 +404,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       updateSaveToFolderButton(thisItemElement, thisItem);
       updateScheduleNotificationButton(thisItemElement, thisItem);
     } else {
-      if (!(thisItem.status.time === previousItem.status.time)) {
+      if (thisItem.status.time !== previousItem.status.time) {
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem, skeletonScreen, animation);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
@@ -417,23 +417,23 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!compareThings(previousItem.segmentBuffer, thisItem.segmentBuffer)) {
         updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
       }
-      if (!(previousItem.nearest === thisItem.nearest)) {
+      if (previousItem.nearest !== thisItem.nearest) {
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
-      if (!(previousItem.progress === thisItem.progress)) {
+      if (previousItem.progress !== thisItem.progress) {
         updateThread(thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);
       }
-      if (!(previousItem.id === thisItem.id)) {
+      if (previousItem.id !== thisItem.id) {
         updateName(thisItemElement, thisItem);
         updateOverlappingRoutes(thisItemElement, thisItem);
         updateNearbyLocations(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
-      if (!(animation === previousAnimation)) {
+      if (previousAnimation !== animation) {
         updateAnimation(thisItemElement, thisThreadBoxElement, animation);
       }
-      if (!(skeletonScreen === previousSkeletonScreen)) {
+      if (previousSkeletonScreen !== skeletonScreen) {
         updateStretch(thisItemElement, thisThreadBoxElement, skeletonScreen);
         updateSkeletonScreen(thisItemElement, thisThreadBoxElement, skeletonScreen);
       }
@@ -476,7 +476,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
 
   const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
-  if (!(groupQuantity === currentGroupSeatQuantity)) {
+  if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
       const newGroupsFragment = new DocumentFragment();
@@ -508,7 +508,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
     const currentItemSeatQuantity = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item').length;
-    if (!(itemQuantity[groupKey] === currentItemSeatQuantity)) {
+    if (itemQuantity[groupKey] !== currentItemSeatQuantity) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
         const newItemsFragment = new DocumentFragment();

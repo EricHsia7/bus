@@ -620,7 +620,7 @@ export async function changeSettingOption(key: string, option: number): Promise<
   if (SettingKeys.indexOf(key) > -1) {
     if (Settings.hasOwnProperty(key)) {
       if (Settings[key].type === 'select') {
-        if (!(Settings[key].options[option] === undefined) && !(Settings[key].options[option] === null)) {
+        if (Settings[key].options[option] !== undefined && Settings[key].options[option] !== null) {
           await lfSetItem(1, key, option);
           Settings[key].option = option;
           return true;

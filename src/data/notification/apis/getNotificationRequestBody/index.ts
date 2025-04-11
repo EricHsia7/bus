@@ -16,7 +16,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       }
       break;
     case 'register':
-      if (!(parameters.length === 1)) {
+      if (parameters.length !== 1) {
         return false;
       } else {
         const currentDate = new Date();
@@ -28,7 +28,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       }
       break;
     case 'schedule':
-      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 9)) {
+      if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 9) {
         return false;
       } else {
         return {
@@ -47,7 +47,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       }
       break;
     case 'rotate':
-      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 0)) {
+      if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 0) {
         return false;
       } else {
         return {
@@ -57,7 +57,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       }
       break;
     case 'reschedule':
-      if (NotificationClientID === '' || NotificationSecret === '' || !(parameters.length === 3)) {
+      if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 3) {
         return false;
       } else {
         return {
