@@ -1,8 +1,8 @@
 export function getThisWeekOrigin(): Date {
-  var today: Date = new Date();
-  var dayOfToday: number = today.getDay();
-  var originDate: number = today.getDate() - dayOfToday;
-  var origin: Date = new Date();
+  const today: Date = new Date();
+  const dayOfToday: number = today.getDay();
+  const originDate: number = today.getDate() - dayOfToday;
+  const origin: Date = new Date();
   origin.setDate(originDate);
   origin.setHours(0);
   origin.setMinutes(0);
@@ -12,7 +12,7 @@ export function getThisWeekOrigin(): Date {
 }
 
 export function offsetDate(origin: Date, date: number, hours: number, minutes: number): Date {
-  var duplicatedOrigin = new Date();
+  const duplicatedOrigin = new Date();
   duplicatedOrigin.setDate(1);
   duplicatedOrigin.setMonth(0);
   duplicatedOrigin.setHours(hours);
@@ -27,16 +27,16 @@ export function offsetDate(origin: Date, date: number, hours: number, minutes: n
 }
 
 export function timeStampToNumber(string: string): number {
-  var regex = /[0-9\.]*/gm;
-  var match = string.match(regex);
+  const regex = /[0-9\.]*/gm;
+  const match = string.match(regex);
   if (match) {
-    var year = parseInt(match[0]);
-    var month = parseInt(match[2]);
-    var date = parseInt(match[4]);
-    var hours = parseInt(match[6]);
-    var minutes = parseInt(match[8]);
-    var seconds = parseInt(match[10]);
-    var date_object = new Date();
+    const year = parseInt(match[0]);
+    const month = parseInt(match[2]);
+    const date = parseInt(match[4]);
+    const hours = parseInt(match[6]);
+    const minutes = parseInt(match[8]);
+    const seconds = parseInt(match[10]);
+    const date_object = new Date();
     date_object.setDate(1);
     date_object.setMonth(0);
     date_object.setFullYear(year);
@@ -184,8 +184,8 @@ export function indexToDay(index: WeekDayIndex): WeekDay {
 }
 
 export function dateValueToDayOfWeek(dateValue: string): WeekDay {
-  var int = parseInt(dateValue);
-  var index = int - 1;
+  const int = parseInt(dateValue);
+  const index = int - 1;
   return indexToDay(index);
 }
 
@@ -209,7 +209,7 @@ export function timeObjectToString(timeObject: TimeObject): string {
 }
 
 export function createDateObjectFromDate(year: number, month: number, date: number): Date {
-  var dateObject = new Date();
+  const dateObject = new Date();
   dateObject.setDate(1); // Set to the first day of the month to prevent date from being clamped
   dateObject.setMonth(0);
   dateObject.setFullYear(year);
