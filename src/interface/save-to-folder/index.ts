@@ -42,12 +42,14 @@ function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, 
 }
 
 async function initializeSaveToFolderField(type: SaveToFolderType, parameters: Array<any>) {
-  SaveToFolderListElement.innerHTML = '';
   const foldersWithContent = await listFoldersWithContent();
+  SaveToFolderListElement.innerHTML = '';
+  const fragment = new DocumentFragment();
   for (const item of foldersWithContent) {
     const newItemElement = generateElementOfItem(item, type, parameters);
-    SaveToFolderListElement.appendChild(newItemElement.element);
+    fragment.appendChild(newItemElement.element);
   }
+  SaveToFolderListElement.append(fragment);
 }
 
 export function openSaveToFolder(type: SaveToFolderType, parameters: Array<any>): void {

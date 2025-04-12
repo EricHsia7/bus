@@ -74,16 +74,18 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
   LeftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
 
   FolderContentElement.innerHTML = '';
-  for (var item of content) {
-    var thisItemElement = generateElementOfItem(folder, item);
-    FolderContentElement.appendChild(thisItemElement.element);
+  const fragment = new DocumentFragment();
+  for (const item of content) {
+    const thisItemElement = generateElementOfItem(folder, item);
+    fragment.appendChild(thisItemElement.element);
   }
+  FolderContentElement.append(fragment);
 }
 
 async function initializeFolderEditorField(folderID: string) {
   //TODO: add skeleton screen
-  var folder = await getFolder(folderID);
-  var content = await listFolderContent(folderID);
+  const folder = await getFolder(folderID);
+  const content = await listFolderContent(folderID);
   updateFolderEditorField(folder, content);
 }
 
