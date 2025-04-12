@@ -47,13 +47,15 @@ async function initializeFolderIconSelectorField() {
 export function updateMaterialSymbolsSearchResult(query: string): void {
   const materialSymbolsSearchResultsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results');
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
-  materialSymbolsSearchResultsElement.innerHTML = '';
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query, 100);
+    const fragment = new DocumentFragment();
     for (const result of searchResults) {
       const symbolElement = generateElementOfSymbol(result.item, currentTarget);
-      materialSymbolsSearchResultsElement.appendChild(symbolElement.element);
+      fragment.appendChild(symbolElement.element);
     }
+    materialSymbolsSearchResultsElement.innerHTML = '';
+    materialSymbolsSearchResultsElement.append(fragment);
     materialSymbolsSearchResultsElement.setAttribute('displayed', searchResults.length > 0 ? 'true' : 'false');
     materialSymbolsElement.setAttribute('displayed', searchResults.length > 0 ? 'false' : 'true');
   }
