@@ -77,6 +77,9 @@ let searchList: Array<SearchItem> = [];
 let readyToSearch: boolean = false;
 
 export async function prepareForSearch() {
+  if (readyToSearch) {
+    return;
+  }
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const mergedLocation = (await getLocation(requestID, 1)) as MergedLocation;
