@@ -32,7 +32,7 @@ function generateElementOfItem(item: ScheduleNotificationOption, type: ScheduleN
   };
 }
 
-async function initializeScheduleNotificationField(type: ScheduleNotificationType, parameters: Array<any>) {
+function initializeScheduleNotificationField(type: ScheduleNotificationType, parameters: Array<any>): void {
   ScheduleNotificationListElement.innerHTML = '';
   const fragment = new DocumentFragment();
   for (const item of scheduleNotificationOptions) {

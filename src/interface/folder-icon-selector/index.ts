@@ -1,4 +1,5 @@
 import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
+import { deleteDataReceivingProgress } from '../../data/apis/loader';
 import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -17,15 +18,15 @@ const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
 
 function generateElementOfSymbol(symbol: string): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
-  element.id = identifier;
+  // const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
+  // element.id = identifier;
   element.classList.add('css_folder_icon_selector_symbol');
   element.setAttribute('onclick', `bus.folder.selectFolderIcon('${symbol}', '${currentTarget}')`);
   element.innerHTML = getIconHTML(symbol);
   return {
     element: element,
-    id: identifier
+    id: ''
   };
 }
 
@@ -34,10 +35,13 @@ async function initializeFolderIconSelectorField() {
   materialSymbolsElement.innerHTML = '';
   const requestID: string = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
+  const fragment = new DocumentFragment();
   for (const symbol of materialSymbols) {
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);
-    materialSymbolsElement.appendChild(symbolElement.element);
+    fragment.appendChild(symbolElement.element);
   }
+  materialSymbolsElement.append(fragment);
+  deleteDataReceivingProgress(requestID);
 }
 
 export function updateMaterialSymbolsSearchResult(query: string): void {
@@ -56,7 +60,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
 }
 
 export function selectFolderIcon(symbol: string): void {
-  var iconInputElement;
+  let iconInputElement;
   switch (currentTarget) {
     case 'editor':
       iconInputElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');

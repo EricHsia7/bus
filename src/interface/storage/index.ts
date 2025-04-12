@@ -19,11 +19,13 @@ function generateElementOfItem(item: StoreSize): GeneratedElement {
 async function initializeStorageStatistics() {
   const statistics = await getStoresSizeStatistics();
   StatisticsElement.innerHTML = '';
+  const fragment = new DocumentFragment();
   for (const key in statistics.categorizedSizes) {
     const item = statistics.categorizedSizes[key];
-    const itemElement = generateElementOfItem(item);
-    StatisticsElement.appendChild(itemElement.element);
+    const newItemElement = generateElementOfItem(item);
+    fragment.appendChild(newItemElement.element);
   }
+  StatisticsElement.append(fragment);
 }
 
 export function openStorage(): void {
