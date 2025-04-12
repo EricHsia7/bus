@@ -80,10 +80,14 @@ export async function prepareForSearch() {
   if (readyToSearch) {
     return;
   }
+
   const requestID = generateIdentifier('r');
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const mergedLocation = (await getLocation(requestID, 1)) as MergedLocation;
   const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+
   let index: SearchIndex = {};
   let list: Array<SearchItem> = [];
   let i: number = 0;
@@ -168,8 +172,6 @@ export async function prepareForSearch() {
   searchIndex = index;
   searchList = list;
   readyToSearch = true;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
 }
 
 function calculateSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {

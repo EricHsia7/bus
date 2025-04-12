@@ -12,7 +12,8 @@ export async function prepareForMaterialSymbolsSearch() {
   if (readyToSearch) {
     return;
   }
-  const requestID: string = generateIdentifier('r');
+
+  const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
 
