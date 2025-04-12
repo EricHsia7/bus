@@ -90,7 +90,6 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }
@@ -136,7 +135,6 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   const requestID = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
   if (materialSymbols.indexOf(icon) < 0) {
     return false;
   }

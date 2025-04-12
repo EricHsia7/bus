@@ -35,13 +35,13 @@ async function initializeFolderIconSelectorField() {
   materialSymbolsElement.innerHTML = '';
   const requestID: string = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
+  deleteDataReceivingProgress(requestID);
   const fragment = new DocumentFragment();
   for (const symbol of materialSymbols) {
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);
     fragment.appendChild(symbolElement.element);
   }
   materialSymbolsElement.append(fragment);
-  deleteDataReceivingProgress(requestID);
 }
 
 export function updateMaterialSymbolsSearchResult(query: string): void {

@@ -2,15 +2,19 @@ import { getIntersection } from '../../tools/array';
 import { generateIdentifier } from '../../tools/index';
 import { getUnicodes } from '../../tools/text';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
+import { deleteDataReceivingProgress } from '../apis/loader';
 
 let searchIndex = {};
 let searchList = [];
 let readyToSearch = false;
 
 export async function prepareForMaterialSymbolsSearch() {
+  if (readyToSearch) {
+    return;
+  }
   const requestID: string = generateIdentifier('r');
   const materialSymbols = await getMaterialSymbols(requestID);
+  deleteDataReceivingProgress(requestID);
 
   let index = {};
   // let list = materialSymbols;
@@ -30,8 +34,6 @@ export async function prepareForMaterialSymbolsSearch() {
   searchList = materialSymbols;
   searchIndex = index;
   readyToSearch = true;
-  deleteDataReceivingProgress(requestID)
-  deleteDataUpdateTime(requestID)
 }
 
 function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
