@@ -39,7 +39,7 @@ export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus | 
 export type RecentViewArray = Array<RecentView>;
 
 export async function listRecentViews(): Promise<RecentViewArray> {
-  let result = [];
+  const result = [];
   const now = new Date().getTime();
   const keys = await lfListItemKeys(8);
   for (const key of keys) {
@@ -78,14 +78,14 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   const requestID = generateIdentifier('r');
   const key = `${type}_${param}`;
   const time = new Date().toISOString();
-  switch (type) {
-    case 'route':
-      const existingRecentViewRoute = await lfGetItem(8, key);
-      if (existingRecentViewRoute) {
-        const existingRecentViewRouteObject = JSON.parse(existingRecentViewRoute);
-        existingRecentViewRouteObject.time = time;
-        await lfSetItem(8, key, JSON.stringify(existingRecentViewRouteObject));
-      } else {
+  const existingJSON = await lfGetItem(8, key);
+  if (existingJSON) {
+    const existingRecentViewObject = JSON.parse(existingJSON) as RecentView;
+    existingRecentViewObject.time = time;
+    await lfSetItem(8, key, JSON.stringify(existingRecentViewObject));
+  } else {
+    switch (type) {
+      case 'route': {
         const Route = await getRoute(requestID, true);
         const routeKey = `r_${param}`;
         if (Route.hasOwnProperty(routeKey)) {
@@ -99,15 +99,9 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
           };
           await lfSetItem(8, key, JSON.stringify(recentViewRouteObject));
         }
+        break;
       }
-      break;
-    case 'location':
-      const existingRecentViewLocation = await lfGetItem(8, key);
-      if (existingRecentViewLocation) {
-        const existingRecentViewLocationObject = JSON.parse(existingRecentViewLocation);
-        existingRecentViewLocationObject.time = time;
-        await lfSetItem(8, key, JSON.stringify(existingRecentViewLocationObject));
-      } else {
+      case 'location': {
         const Location = (await getLocation(requestID, 1)) as MergedLocation;
         const LocationKey = `ml_${param}`;
         if (Location.hasOwnProperty(LocationKey)) {
@@ -121,15 +115,9 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
           };
           await lfSetItem(8, key, JSON.stringify(recentViewLocationObject));
         }
+        break;
       }
-      break;
-    case 'bus':
-      const existingRecentViewBus = await lfGetItem(8, key);
-      if (existingRecentViewBus) {
-        const existingRecentViewBusObject = JSON.parse(existingRecentViewBus);
-        existingRecentViewBusObject.time = time;
-        await lfSetItem(8, key, JSON.stringify(existingRecentViewBusObject));
-      } else {
+      case 'bus': {
         const CarInfo = await getCarInfo(requestID, true);
         const CarKey = `c_${param}`;
         if (CarInfo.hasOwnProperty(CarKey)) {
@@ -143,10 +131,11 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
           };
           await lfSetItem(8, key, JSON.stringify(recentViewBusObject));
         }
+        break;
       }
-      break;
-    default:
-      break;
+      default:
+        break;
+    }
   }
 }
 

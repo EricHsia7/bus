@@ -43,8 +43,8 @@ let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   timestamp: 0,
   id: ''
 };
-let updateRateData_groups: Array<UpdateRateDataGroup> = [];
-let updateRateData_groupsIndex: { [key: string]: number } = {};
+const updateRateData_groups: Array<UpdateRateDataGroup> = [];
+const updateRateData_groupsIndex: { [key: string]: number } = {};
 
 function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGroupStats {
   let sumEstimateTime = 0;
@@ -170,7 +170,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     for (const stopID of updateRateData_trackedStops) {
       const stopKey = `s_${stopID}`;
       const data = updateRateData_writeAheadLog_group.data[stopKey];
-      let dataGroup = {} as UpdateRateDataGroup;
+      const dataGroup = {} as UpdateRateDataGroup;
       const existingData = await lfGetItem(3, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
@@ -210,7 +210,7 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
       if (thisTimestamp > oneWeekAgo) {
         for (const stopKey in object.data) {
           const thisStopData = object.data[stopKey];
-          let dataGroup = {} as UpdateRateDataGroup;
+          const dataGroup = {} as UpdateRateDataGroup;
           const existingData = await lfGetItem(3, stopKey);
           if (existingData) {
             const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
@@ -276,8 +276,8 @@ export async function discardExpiredUpdateRateDataGroups() {
   }
 }
 
-let getUpdateRateWorkerResponses = {};
-var port;
+const getUpdateRateWorkerResponses = {};
+let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {

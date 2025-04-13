@@ -31,12 +31,12 @@ export let NotificationProvider: NotificationClient['provider'] = ''; // base ur
 export let NotificationClientID: NotificationClient['client_id'] = '';
 export let NotificationSecret: NotificationClient['secret'] = '';
 
-let NotifcationSchedules: Array<NotificationSchedule> = [];
-let NotifcationSchedulesIndex: {
-  [key: NotificationSchedule['schedule_id']]: number;
+const NotifcationSchedules: Array<NotificationSchedule> = [];
+const NotifcationSchedulesIndex: {
+  [schedule_id: NotificationSchedule['schedule_id']]: number;
 } = {};
-let NotifcationSchedulesStopIDIndex: {
-  [key: string]: Array<number>;
+const NotifcationSchedulesStopIDIndex: {
+  [stop_key: string]: Array<number>;
 } = {};
 
 export async function saveNotificationClient() {
@@ -182,7 +182,7 @@ export async function removeNotificationSchedule(schedule_id: NotificationSchedu
 
 export function listNotifcationSchedules(): Array<NotificationSchedule> {
   const now = new Date().getTime();
-  let result: Array<NotificationSchedule> = [];
+  const result: Array<NotificationSchedule> = [];
   for (const thisSchedule of NotifcationSchedules) {
     if (thisSchedule !== null) {
       const thisScheduledTime = thisSchedule.scheduled_time;
@@ -195,7 +195,7 @@ export function listNotifcationSchedules(): Array<NotificationSchedule> {
 }
 
 export function listNotifcationSchedulesOfStop(StopID: NotificationSchedule['stop_id']): Array<NotificationSchedule> {
-  let result: Array<NotificationSchedule> = [];
+  const result: Array<NotificationSchedule> = [];
   const now = new Date().getTime();
   const thisStopKey = `s_${StopID}`;
   if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
@@ -277,10 +277,10 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
   const notificationSchedules = listNotifcationSchedules();
   const now = new Date().getTime();
 
-  let items: Array<IntegratedNotificationScheduleItem> = [];
+  const items: Array<IntegratedNotificationScheduleItem> = [];
 
   for (const item of notificationSchedules) {
-    let integratedItem = {} as IntegratedNotificationScheduleItem;
+    const integratedItem = {} as IntegratedNotificationScheduleItem;
     const thisItemName = item.location_name;
     integratedItem.name = thisItemName;
 
@@ -333,10 +333,10 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     return a.scheduled_time - b.scheduled_time;
   });
 
-  let items2: Array<IntegratedNotificationScheduleItem> = [];
+  const items2: Array<IntegratedNotificationScheduleItem> = [];
   let itemQuantity: IntegratedNotificationSchedules['itemQuantity'] = 0;
-  let groups: { [key: string]: true } = {};
-  for (let item of items) {
+  const groups: { [key: string]: true } = {};
+  for (const item of items) {
     const groupKey = `g_${item.date}_${item.hours}`;
     if (!groups.hasOwnProperty(groupKey)) {
       groups[groupKey] = true;

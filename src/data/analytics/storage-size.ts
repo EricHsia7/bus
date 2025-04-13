@@ -99,13 +99,13 @@ function storeIndexToCategory(store: number): StoreCategory {
 }
 
 export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
-  let totalSizeInBytes = 0;
-  let categorizedSizesInBytes: CategorizedSizesInBytes = {};
+  let totalSizeInBytes: number = 0;
+  const categorizedSizesInBytes: CategorizedSizesInBytes = {};
   const storesLength = getStoresLength();
 
   for (let i = 0; i < storesLength; i++) {
     const keysInStore = await lfListItemKeys(i);
-    let thisStoreSizeInBytes = 0;
+    let thisStoreSizeInBytes: number = 0;
     for (const itemKey of keysInStore) {
       const item = await lfGetItem(i, itemKey);
       const itemInString = String(item);

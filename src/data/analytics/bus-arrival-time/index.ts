@@ -124,7 +124,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
       for (const stopID of busArrivalTimeData_trackedStops) {
         const stopKey = `s_${stopID}_${currentDay}`;
         const data = busArrivalTimeData_writeAheadLog_group.data[stopKey];
-        let dataGroup = {} as BusArrivalTimeDataGroup;
+        const dataGroup = {} as BusArrivalTimeDataGroup;
         const existingData = await lfGetItem(6, stopKey);
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
@@ -166,7 +166,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
     const thisID = object.id;
     for (const stopKey in object.data) {
       const thisStopData = object[stopKey];
-      let dataGroup = {} as BusArrivalTimeDataGroup;
+      const dataGroup = {} as BusArrivalTimeDataGroup;
       const existingData = await lfGetItem(6, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
@@ -196,7 +196,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
 
 export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
   const keys = await lfListItemKeys(6);
-  let result: BusArrivalTimeDataGroupArray = [];
+  const result: BusArrivalTimeDataGroupArray = [];
   for (const key of keys) {
     const json = await lfGetItem(6, key);
     if (json) {
@@ -207,8 +207,8 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
   return result;
 }
 
-let getBusArrivalTimesWorkerResponses = {};
-var port;
+const getBusArrivalTimesWorkerResponses = {};
+let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {

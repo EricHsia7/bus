@@ -18,7 +18,7 @@ function processWorkerTask(data: data): DataUsageStats {
 
   const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
 
-  let extremum: Array<number> = [];
+  const extremum: Array<number> = [];
   let sum: number = 0;
   for (const dataUsageStatsChunk of dataUsageStatsChunks) {
     extremum.push(dataUsageStatsChunk.stats.max);

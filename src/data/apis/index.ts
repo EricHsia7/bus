@@ -119,8 +119,8 @@ export interface BatchFoundBus {
 export type BatchFoundBuses = { [key: string]: Array<BatchFoundBus> };
 
 export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): BatchFoundBuses {
-  let result = {} as BatchFoundBuses;
-  let BusDataObj: {
+  const result = {} as BatchFoundBuses;
+  const BusDataObj: {
     [key: string]: BusDataItem;
   } = {};
   for (const BusDataItem of BusData) {
@@ -128,8 +128,8 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
     BusDataObj[thisBusID] = BusDataItem;
   }
 
-  for (let BusEventItem of BusEvent) {
-    let processedItem = {} as BatchFoundBus;
+  for (const BusEventItem of BusEvent) {
+    const processedItem = {} as BatchFoundBus;
 
     // collect data from 'BusEvent'
     processedItem.CarType = BusEventItem.CarType;
@@ -358,7 +358,7 @@ export interface FormattedBus {
 }
 
 export function formatBus(batchFoundBus: BatchFoundBus): FormattedBus {
-  let result = {} as FormattedBus;
+  const result = {} as FormattedBus;
 
   const CarType = batchFoundBus.CarType;
   const type = parseCarType(CarType);

@@ -67,7 +67,7 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
 }
 
 export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
-  let result: PersonalScheduleArray = [];
+  const result: PersonalScheduleArray = [];
   const keys = await lfListItemKeys(7);
   for (const key of keys) {
     const existingPersonalSchedule = await lfGetItem(7, key);
@@ -91,7 +91,7 @@ export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
 export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersonalScheduleTimeline> {
   const personalSchedules = await listPersonalSchedules();
 
-  let result: MergedPersonalScheduleTimeline = {};
+  const result: MergedPersonalScheduleTimeline = {};
 
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
@@ -110,7 +110,7 @@ export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersona
   for (const dayKey in result) {
     const personalSchedulesOfThisDay = result[dayKey];
     const personalSchedulesOfThisDayLength = personalSchedulesOfThisDay.length;
-    let mergedPersonalSchedulesOfThisDay = [];
+    const mergedPersonalSchedulesOfThisDay = [];
     for (let i = 0; i < personalSchedulesOfThisDayLength; i++) {
       const previousPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i - 1] || personalSchedulesOfThisDay[i];
       const currentPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i];

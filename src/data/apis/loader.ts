@@ -75,7 +75,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 
   switch (fileType) {
     case 'json':
-      if (/^\<\!doctype html\>/.test(inflatedData)) {
+      if (/^<!doctype html>/.test(inflatedData)) {
         const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType, connectionTimeoutDuration, loadingTimeoutDuration);
         return alternativeData;
       } else {
@@ -166,7 +166,7 @@ export function broadcastDataReceivingProgress(requestID: string, stage: DataRec
 
 export type DataUpdateTime = { [key: string]: number };
 
-export let dataUpdateTime: DataUpdateTime = {};
+export const dataUpdateTime: DataUpdateTime = {};
 
 export function setDataUpdateTime(requestID: string, timeStamp: string | number): void {
   if (!dataUpdateTime.hasOwnProperty(requestID)) {

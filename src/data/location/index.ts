@@ -22,7 +22,7 @@ type BatchFoundEstimateTime = {
 };
 
 function batchFindEstimateTime(EstimateTime: EstimateTime, StopIDList: Array<number>): BatchFoundEstimateTime {
-  let result = {};
+  const result = {};
   for (const item of EstimateTime) {
     if (StopIDList.indexOf(item.StopID) > -1) {
       const thisStopKey: string = `s_${item.StopID}`;
@@ -38,8 +38,8 @@ type BatchFoundEstimateTimeRanking = {
 
 function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTime, StopIDList: Array<number>): BatchFoundEstimateTimeRanking {
   // StopIDList act as a secondary filter
-  let result: BatchFoundEstimateTimeRanking = {};
-  let rankingArray: Array<[number, number]> = []; // StopID, EstimateTime
+  const result: BatchFoundEstimateTimeRanking = {};
+  const rankingArray: Array<[number, number]> = []; // StopID, EstimateTime
   for (const thisStopKey in batchFoundEstimateTime) {
     const thisBatchFoundEstimateTimeItem = batchFoundEstimateTime[thisStopKey];
     const thisStopID = thisBatchFoundEstimateTimeItem.StopID;
@@ -135,9 +135,9 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const location_labels = getSettingOptionValue('location_labels');
   const display_user_orientation = getSettingOptionValue('display_user_orientation');
 
-  let groupedItems = {} as IntegratedLocation['groupedItems'];
-  let itemQuantity = {} as IntegratedLocation['itemQuantity'];
-  let groups = {} as IntegratedLocation['groups'];
+  const groupedItems = {} as IntegratedLocation['groupedItems'];
+  const itemQuantity = {} as IntegratedLocation['itemQuantity'];
+  const groups = {} as IntegratedLocation['groups'];
 
   const userOrientation = getUserOrientation();
 
@@ -217,7 +217,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     const thisGroupRanking = rankBatchFoundEstimateTime(batchFoundEstimateTime, thisGroupStops);
 
     for (let o = 0; o < stopQuantity; o++) {
-      let integratedItem = {} as IntegratedLocationItem;
+      const integratedItem = {} as IntegratedLocationItem;
       // Collect data from 'Stop'
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
