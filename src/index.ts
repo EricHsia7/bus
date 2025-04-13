@@ -49,11 +49,11 @@ import './interface/home/field.css';
 import './interface/home/head.css';
 import './interface/home/body.css';
 
-import './interface/home/folders/folders.css';
-import './interface/home/folders/item.css';
-
 import './interface/home/recent-views/recent-views.css';
 import './interface/home/recent-views/item.css';
+
+import './interface/home/folders/folders.css';
+import './interface/home/folders/item.css';
 
 import './interface/search/field.css';
 import './interface/search/head.css';
@@ -235,7 +235,7 @@ window.bus = {
                 updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
               });
 
-              const searchMaterialSymbolsInputElement: HTMLElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input');
+              const searchMaterialSymbolsInputElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input') as HTMLInputElement;
               searchMaterialSymbolsInputElement.addEventListener('paste', function () {
                 updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
               });
