@@ -82,7 +82,7 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
-  const cacheKey = 'bus_segment_buffers_v6_cache';
+  const cacheKey = 'bus_segment_buffers_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();

@@ -72,47 +72,47 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
     return result;
   }
 
-  const cache_type = simplified ? 'simplified' : 'raw';
-  const cacheKey = `bus_${cache_type}_car_info_v6_cache`;
+  const cacheType = simplified ? 'simplified' : 'raw';
+  const cacheKey = `bus_${cacheType}_car_info_cache`;
   const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
-    let final_result;
+    let finalResult;
     if (simplified) {
-      final_result = await simplifyCarInfo(result);
+      finalResult = await simplifyCarInfo(result);
     } else {
-      final_result = result;
+      finalResult = result;
     }
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(final_result));
-    if (!CarInfoAPIVariableCache[cache_type].available) {
-      CarInfoAPIVariableCache[cache_type].available = true;
-      CarInfoAPIVariableCache[cache_type].data = final_result;
+    await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
+    if (!CarInfoAPIVariableCache[cacheType].available) {
+      CarInfoAPIVariableCache[cacheType].available = true;
+      CarInfoAPIVariableCache[cacheType].data = finalResult;
     }
-    return final_result;
+    return finalResult;
   } else {
     if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
       const result = await getData();
-      let final_result;
+      let finalResult;
       if (simplified) {
-        final_result = await simplifyCarInfo(result);
+        finalResult = await simplifyCarInfo(result);
       } else {
-        final_result = result;
+        finalResult = result;
       }
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(final_result));
-      return final_result;
+      await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
+      return finalResult;
     } else {
-      if (!CarInfoAPIVariableCache[cache_type].available) {
+      if (!CarInfoAPIVariableCache[cacheType].available) {
         const cache = await lfGetItem(0, cacheKey);
-        CarInfoAPIVariableCache[cache_type].available = true;
-        CarInfoAPIVariableCache[cache_type].data = JSON.parse(cache);
+        CarInfoAPIVariableCache[cacheType].available = true;
+        CarInfoAPIVariableCache[cacheType].data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getCarInfo_0', 0, true);
       setDataReceivingProgress(requestID, 'getCarInfo_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return CarInfoAPIVariableCache[cache_type].data;
+      return CarInfoAPIVariableCache[cacheType].data;
     }
   }
 }

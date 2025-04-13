@@ -1,3 +1,4 @@
+import { MaterialSymbols } from '../../../interface/icons/material-symbols-type';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress } from '../loader';
@@ -5,7 +6,7 @@ import { fetchData, setDataReceivingProgress } from '../loader';
 let MaterialSymbolsAPIVariableCache_available: boolean = false;
 let MaterialSymbolsAPIVariableCache_data: Array<string> = [];
 
-export async function getMaterialSymbols(requestID: string): Promise<Array<string>> {
+export async function getMaterialSymbols(requestID: string): Promise<Array<MaterialSymbols>> {
   async function getData() {
     const apiurl = getMaterialSymbolsAPIURL();
     const data = await fetchData(apiurl, requestID, 'getMaterialSymbols', 'json');
@@ -13,7 +14,7 @@ export async function getMaterialSymbols(requestID: string): Promise<Array<strin
     return result;
   }
 
-  const cacheTimeToLive: number = 60 * 60 * 24 * 30 * 1000;
+  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
   const cacheKey = `bus_material_symbols_cache`;
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {

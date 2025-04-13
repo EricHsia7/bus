@@ -159,29 +159,29 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     return result;
   }
 
-  const cacheTimeToLive: number = 60 * 60 * 24 * 30 * 1000;
-  const cache_type: string = ['simplified', 'merged', 'indexed'][type];
-  const cacheKey: string = `bus_${cache_type}_location_cache`;
+  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  const cacheType = ['simplified', 'merged', 'indexed'][type];
+  const cacheKey = `bus_${cacheType}_location_cache`;
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
-    let final_result;
+    let finalResult;
     switch (type) {
       case 0: {
         const result = await getData();
         const simplified_result = await simplifyLocation(result);
-        final_result = simplified_result;
+        finalResult = simplified_result;
         break;
       }
       case 1: {
         const simplified_result = await getLocation(requestID, 0);
         const merged_result = await mergeLocationByName(simplified_result);
-        final_result = merged_result;
+        finalResult = merged_result;
         break;
       }
       case 2: {
         const merged_result = await getLocation(requestID, 1);
         const indexed_result = await indexLocationByGeohash(merged_result);
-        final_result = indexed_result;
+        finalResult = indexed_result;
         break;
       }
       default:
@@ -189,32 +189,32 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     }
 
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(final_result));
-    if (!LocationAPIVariableCache[cache_type].available) {
-      LocationAPIVariableCache[cache_type].available = true;
-      LocationAPIVariableCache[cache_type].data = final_result;
+    await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
+    if (!LocationAPIVariableCache[cacheType].available) {
+      LocationAPIVariableCache[cacheType].available = true;
+      LocationAPIVariableCache[cacheType].data = finalResult;
     }
-    return final_result;
+    return finalResult;
   } else {
     if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
-      let final_result;
+      let finalResult;
       switch (type) {
         case 0: {
           const result = await getData();
           const simplified_result = await simplifyLocation(result);
-          final_result = simplified_result;
+          finalResult = simplified_result;
           break;
         }
         case 1: {
           const simplified_result = await getLocation(requestID, 0);
           const merged_result = await mergeLocationByName(simplified_result);
-          final_result = merged_result;
+          finalResult = merged_result;
           break;
         }
         case 2: {
           const merged_result = await getLocation(requestID, 1);
           const indexed_result = await indexLocationByGeohash(merged_result);
-          final_result = indexed_result;
+          finalResult = indexed_result;
           break;
         }
         default:
@@ -222,22 +222,22 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
       }
 
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(final_result));
-      if (!LocationAPIVariableCache[cache_type].available) {
-        LocationAPIVariableCache[cache_type].available = true;
-        LocationAPIVariableCache[cache_type].data = final_result;
+      await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
+      if (!LocationAPIVariableCache[cacheType].available) {
+        LocationAPIVariableCache[cacheType].available = true;
+        LocationAPIVariableCache[cacheType].data = finalResult;
       }
-      return final_result;
+      return finalResult;
     } else {
-      if (!LocationAPIVariableCache[cache_type].available) {
+      if (!LocationAPIVariableCache[cacheType].available) {
         const cache = await lfGetItem(0, cacheKey);
-        LocationAPIVariableCache[cache_type].available = true;
-        LocationAPIVariableCache[cache_type].data = JSON.parse(cache);
+        LocationAPIVariableCache[cacheType].available = true;
+        LocationAPIVariableCache[cacheType].data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getLocation_0', 0, true);
       setDataReceivingProgress(requestID, 'getLocation_1', 0, true);
       setDataUpdateTime(requestID, -1);
-      return LocationAPIVariableCache[cache_type].data;
+      return LocationAPIVariableCache[cacheType].data;
     }
   }
 }

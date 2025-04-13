@@ -101,7 +101,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
     return await getData();
   }
   const cacheTimeToLive = 60 * 60 * 24 * 1 * 1000;
-  const cacheKey = 'bus_route_v2_cache';
+  const cacheKey = 'bus_route_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
