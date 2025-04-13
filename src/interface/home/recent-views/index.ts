@@ -9,6 +9,7 @@ import { GeneratedElement, querySize } from '../../index';
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent_views');
+const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
 
 let previousIntegration = {};
 let previousAnimation: boolean = true;
@@ -37,7 +38,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   };
 }
 
-function updateRecentViewsField(Field: HTMLElement, integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
+function updateRecentViewsField(integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
@@ -202,17 +203,17 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
 
   // Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
-  const currentItemSeatQuantity = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`).length;
+  const currentItemSeatQuantity = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`).length;
   if (itemQuantity !== currentItemSeatQuantity) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
-      const RecentViewsContentElement = elementQuerySelector(Field, `.css_home_recent_views_content`);
+      const fragment = new DocumentFragment();
       for (let o = 0; o < Math.abs(capacity); o++) {
-        const thisRecentViewItemElement = generateElementOfRecentViewItem();
-        RecentViewsContentElement.appendChild(thisRecentViewItemElement.element);
+        const newRecentViewItemElement = generateElementOfRecentViewItem();
+        fragment.appendChild(newRecentViewItemElement.element);
       }
+      RecentViewsContentElement.append(fragment);
     } else {
-      const RecentViewsContentElement = elementQuerySelector(Field, `.css_home_recent_views_content`);
       const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`);
       for (let o = 0; o < Math.abs(capacity); o++) {
         const recentViewItemIndex = currentItemSeatQuantity - 1 - o;
@@ -221,9 +222,9 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
     }
   }
 
+  const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`);
   for (let i = 0; i < itemQuantity; i++) {
-    const thisElement = elementQuerySelectorAll(Field, `.css_home_recent_views_content .css_home_recent_views_item`)[i];
-    thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    const thisElement = RecentViewsItemElements[i];
     const thisItem = integration.items[i];
     if (previousIntegration.hasOwnProperty('items')) {
       if (previousIntegration.items[i]) {
@@ -242,7 +243,7 @@ function updateRecentViewsField(Field: HTMLElement, integration: integratedRecen
   previousSkeletonScreen = skeletonScreen;
 }
 
-export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
+export function setUpRecentViewsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
@@ -260,7 +261,6 @@ export function setUpRecentViewsFieldSkeletonScreen(Field: HTMLElement): void {
     });
   }
   updateRecentViewsField(
-    Field,
     {
       items: items,
       itemQuantity: items.length,
@@ -320,7 +320,7 @@ async function streamRecentViews() {
 }
 
 export function initializeRecentViews(): void {
-  setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
+  setUpRecentViewsFieldSkeletonScreen();
   if (!recentViewsRefreshTimer_streaming) {
     recentViewsRefreshTimer_streaming = true;
     if (!recentViewsRefreshTimer_streamStarted) {

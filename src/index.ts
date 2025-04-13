@@ -187,10 +187,8 @@ window.bus = {
       bus_initialized = true;
       setSplashScreenIconOffsetY();
       initializeSettings().then(function () {
-        const RecentViewsField = documentQuerySelector('.css_home_field .css_home_body .css_home_recent_views');
-        setUpRecentViewsFieldSkeletonScreen(RecentViewsField);
-        const FolderField = documentQuerySelector('.css_home_field .css_home_body .css_home_folders');
-        setUpFolderFieldSkeletonScreen(FolderField);
+        setUpRecentViewsFieldSkeletonScreen();
+        setUpFolderFieldSkeletonScreen();
         checkAppVersion()
           .then((status) => {
             if (status === 'ok') {
