@@ -280,7 +280,7 @@ async function refreshRecentViews() {
   recentViewsRefreshTimer_currentRequestID = generateIdentifier('r');
   // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
   const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
-  updateRecentViewsField(RecentViewsField, integration, false, playing_animation);
+  updateRecentViewsField(integration, false, playing_animation);
   let updateRate = 0;
   if (recentViewsRefreshTimer_dynamic) {
     updateRate = await getUpdateRate();
