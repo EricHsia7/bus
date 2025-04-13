@@ -203,7 +203,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
   // Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
-  const currentItemSeatQuantity = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`).length;
+  const currentItemSeatQuantity = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item').length;
   if (itemQuantity !== currentItemSeatQuantity) {
     const capacity = currentItemSeatQuantity - itemQuantity;
     if (capacity < 0) {
@@ -214,7 +214,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       }
       RecentViewsContentElement.append(fragment);
     } else {
-      const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`);
+      const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const recentViewItemIndex = currentItemSeatQuantity - 1 - o;
         RecentViewsItemElements[recentViewItemIndex].remove();
@@ -222,7 +222,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     }
   }
 
-  const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, `.css_home_recent_views_item`);
+  const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item');
   for (let i = 0; i < itemQuantity; i++) {
     const thisElement = RecentViewsItemElements[i];
     const thisItem = integration.items[i];
