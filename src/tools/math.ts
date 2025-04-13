@@ -162,7 +162,7 @@ export function calculateAverage(array: Array<number>): number {
   }
 }
 
-export function findExtremum(array: Array<number>): [number, number] {
+export function findExtremum(array: Array<number>): [minimum: number, maximum: number] {
   const arrayLength = array.length;
   if (arrayLength === 0) {
     return [0, 0];
