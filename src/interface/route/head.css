@@ -211,7 +211,7 @@
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
   transform: translateX(calc(var(--b-cssvar-route-update-timer-offset-ratio) * 100%));
   transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in;
+  transition-timing-function: linear;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer.css_route_update_timer_slide_rtl {
