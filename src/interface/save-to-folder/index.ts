@@ -12,10 +12,9 @@ const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_sa
 const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
 
 function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_save_to_folder_list_item');
-  // element.id = identifier;
+
   switch (type) {
     case 'stop-on-route':
       element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.id}', ${parameters[1]}, ${parameters[2]})`);

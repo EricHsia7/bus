@@ -125,9 +125,7 @@ function generateElementOfItem(): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  // const identifier = generateIdentifier('g');
   const element = document.createElement('div');
-  // element.id = identifier;
   element.classList.add('css_location_group');
   element.innerHTML = /*html*/ `<div class="css_location_group_details"><div class="css_location_group_details_body"></div></div><div class="css_location_group_items"></div>`;
   return {
@@ -137,9 +135,8 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  // const identifier = generateIdentifier('t');
   const element = document.createElement('div');
-  // element.id = identifier;
+
   element.classList.add('css_location_group_tab');
   return {
     element: element,
@@ -148,9 +145,8 @@ function generateElementOfTab(): GeneratedElement {
 }
 
 function generateElementOfGroupDetailsProperty(): GeneratedElement {
-  // const identifier = generateIdentifier('p');
   const element = document.createElement('div');
-  // element.id = identifier;
+
   element.classList.add('css_location_group_details_property');
   element.innerHTML = /*html*/ `<div class="css_location_details_property_icon"></div><div class="css_location_details_property_value"></div>`;
   return {

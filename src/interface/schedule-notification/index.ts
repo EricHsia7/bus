@@ -11,10 +11,9 @@ const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificatio
 type ScheduleNotificationType = 'stop-on-route' | 'stop-on-location';
 
 function generateElementOfItem(item: ScheduleNotificationOption, type: ScheduleNotificationType, parameters: Array): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_schedule_notification_list_item');
-  // element.id = identifier;
+
   switch (type) {
     case 'stop-on-route':
       element.setAttribute('onclick', `bus.notification.scheduleNotificationForStopItemOnRoute('${parameters[0]}', ${parameters[1]}, ${parameters[2]}, ${parameters[3]}, ${item.index})`);

@@ -50,10 +50,9 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
 }
 
 function generateElementOfDay(): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_day');
-  // element.id = identifier;
+
   return {
     element: element,
     id: ''
@@ -61,11 +60,10 @@ function generateElementOfDay(): GeneratedElement {
 }
 
 function generateElementOfEventGroup(): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_event_group');
   element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`;
-  // element.id = identifier;
+
   return {
     element: element,
     id: ''

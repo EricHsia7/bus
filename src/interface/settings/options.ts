@@ -10,10 +10,9 @@ const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.
 const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
 
 function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_option');
-  // element.id = identifier;
+
   element.innerHTML = /*html*/ `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settings.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
   return {
     element: element,

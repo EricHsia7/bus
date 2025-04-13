@@ -18,9 +18,7 @@ const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
 
 function generateElementOfSymbol(symbol: string): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
-  // element.id = identifier;
   element.classList.add('css_folder_icon_selector_symbol');
   element.setAttribute('onclick', `bus.folder.selectFolderIcon('${symbol}', '${currentTarget}')`);
   element.innerHTML = getIconHTML(symbol);

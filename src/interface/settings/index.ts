@@ -14,10 +14,9 @@ const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_b
 const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
 
 function generateElementOfItem(item: Setting): GeneratedElement {
-  // const identifier = generateIdentifier('i');
   const element = document.createElement('div');
   element.classList.add('css_setting');
-  // element.id = identifier;
+
   element.setAttribute('onclick', item.action);
   element.setAttribute('type', item.type);
   element.innerHTML = /*html*/ `<div class="css_setting_icon">${getIconHTML(item.icon)}</div><div class="css_setting_name">${item.name}</div><div class="css_setting_status">${item.status}</div><div class="css_setting_arrow">${getIconHTML('arrow_forward_ios')}</div>`;

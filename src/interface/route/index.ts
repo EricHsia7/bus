@@ -129,8 +129,8 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_route_group_item');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
@@ -145,10 +145,9 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 }
 
 function generateElementOfGroup(): GeneratedElement {
-  // const identifier = generateIdentifier('g');
   const element = document.createElement('div');
   element.classList.add('css_route_group');
-  // element.id = identifier;
+
   const tracksElement = document.createElement('div');
   tracksElement.classList.add('css_route_group_tracks');
 
@@ -176,10 +175,9 @@ function generateElementOfGroup(): GeneratedElement {
 }
 
 function generateElementOfTab(): GeneratedElement {
-  // const identifier = generateIdentifier('t');
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-  // element.id = identifier;
+
   return {
     element: element,
     id: ''
