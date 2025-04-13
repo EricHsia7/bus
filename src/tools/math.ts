@@ -83,10 +83,10 @@ export function mergePearsonCorrelation(targetXAverage: number, targetYAverage: 
  */
 
 export function normalizeVector(vector: Array<number>): Array<number> {
-  let length = Math.hypot(vector);
-  let newVector = [];
+  const length = Math.hypot(vector);
+  const newVector = [];
   if (length > 0) {
-    let scale = 1 / length;
+    const scale = 1 / length;
     for (const x of vector) {
       newVector.push(x * scale);
     }
@@ -98,7 +98,7 @@ export function normalizeVector(vector: Array<number>): Array<number> {
 
 export function smoothArray(array: Array<number>): Array<number> {
   const arrayLength = array.length;
-  let result = [];
+  const result = [];
   for (let i = 1; i < arrayLength; i += 3) {
     const currentItem = array[i];
     const previousItem = array[i - 1] || currentItem;

@@ -200,7 +200,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
     const recentViewType = recentView.type;
     const recentViewTime = new Date(recentView.time);
     switch (recentViewType) {
-      case 'route':
+      case 'route': {
         let integratedRecentViewRoute: integratedRecentViewRoute = {};
         integratedRecentViewRoute.type = 'route';
         const thisRouteName = recentView.name;
@@ -218,7 +218,8 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         items.push(integratedRecentViewRoute);
         itemQuantity += 1;
         break;
-      case 'location':
+      }
+      case 'location': {
         let integratedRecentViewLocation: integratedRecentViewLocation = {};
         integratedRecentViewLocation.type = 'location';
         const thisLocationHash = recentView.hash;
@@ -232,7 +233,8 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         items.push(integratedRecentViewLocation);
         itemQuantity += 1;
         break;
-      case 'bus':
+      }
+      case 'bus': {
         let integratedRecentViewBus: integratedRecentViewBus = {};
         integratedRecentViewBus.type = 'bus';
         const thisBusID = recentView.id;
@@ -246,7 +248,8 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         items.push(integratedRecentViewBus);
         itemQuantity += 1;
         break;
-      case 'empty':
+      }
+      case 'empty': {
         let integratedRecentViewEmpty: integratedRecentViewEmpty = {};
         integratedRecentViewEmpty.type = 'empty';
         const thisEmptyID = recentView.id;
@@ -260,6 +263,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
         items.push(integratedRecentViewEmpty);
         itemQuantity = 1;
         break;
+      }
       default:
         break;
     }
