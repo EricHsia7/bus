@@ -171,16 +171,26 @@
   height: 50px;
   background: var(--b-cssvar-main-color);
   transform-origin: top left;
-  transform: scaleY(var(--b-cssvar-thread-progress-scale-y)) translateY(var(--b-cssvar-thread-progress-translate-y));
+  transform: scaleY(1) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread .css_route_group_thread_progress {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
+/* displayed: false */
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress[displayed="false"] {
+  visibility: hidden;
+}
+
+/* displayed: true */
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress[displayed="true"] {
+  visibility: visible;
+}
+
 /* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress {
-  transform: scaleY(calc(var(--b-cssvar-thread-progress-scale-y) * ((50 + 171) / 50))) translateY(var(--b-cssvar-thread-progress-translate-y));
+  transform: scaleY(calc((50 + 171) / 50)) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
 /* segment buffer: true */
