@@ -113,15 +113,15 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_route_group_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
   element.setAttribute('stretching', 'false');
   element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_thread"></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
