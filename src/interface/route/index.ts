@@ -348,7 +348,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         }
       }
       thisThreadProgressElement.setAttribute('displayed', 'true');
-      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100 * 0.5}%`);
+      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress * 0.5 - 1) * 100}%`);
     }
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
