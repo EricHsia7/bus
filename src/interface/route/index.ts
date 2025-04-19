@@ -335,11 +335,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         if (animation) {
           if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
             thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '100%');
-            thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-scale-y', '0');
             thisThreadProgressElement.addEventListener(
               'transitionend',
               function () {
                 thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '-100%');
+                thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-scale-y', '0');
               },
               { once: true }
             );
