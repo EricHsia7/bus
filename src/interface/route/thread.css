@@ -113,6 +113,18 @@
 }
 
 /* thread box > thread */
+@property --b-cssvar-thread-progress-translate-y {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: -100%;
+}
+
+@property --b-cssvar-thread-progress-scale-y {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
 @property --b-cssvar-thread-progress-a {
   syntax: '<percentage>';
   inherits: false;
@@ -139,26 +151,45 @@
   display: none;
 }
 
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread {
+  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread {
+  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+}
+
+/* thread box > thread > progress */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 2px;
   height: 50px;
+  background: var(--b-cssvar-main-color);
+  transform-origin: top left;
+  transform: scaleY(calc(var(---b-cssvar-thread-progress-scale-y))) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread {
-  transition: --b-cssvar-thread-progress-a var(--b-cssvar-transition-duration), --b-cssvar-thread-progress-b var(--b-cssvar-transition-duration);
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread .css_route_group_thread_progress {
+  transition: transform var(--b-cssvar-transition-duration);
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress {
+  transform: scaleY(calc(var(--b-cssvar-thread-progress-scale-y) * ((50 + 171) / 50))) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
 /* segment buffer: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread {
-  background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-segment-buffer) 0%, var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-segment-buffer) 100%);
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress {
+  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread {
-  background: linear-gradient(180deg, var(--b-cssvar-ededf2-inflected-to-user-position) 0%, var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-a), var(--b-cssvar-main-color-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) var(--b-cssvar-thread-progress-b), var(--b-cssvar-ededf2-inflected-to-user-position) 100%);
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress {
+  background: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* thread box > thread > status */

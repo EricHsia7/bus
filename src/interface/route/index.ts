@@ -330,17 +330,16 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
       const previousProgress = previousItem?.progress || 0;
       const thisProgress = thisItem?.progress || 0;
-      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
+      const thisThreadProgressElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread .css_route_group_thread_progress');
       if (!skeletonScreen) {
         if (animation) {
           if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '100%');
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '100%');
-            thisThreadElement.addEventListener(
+            thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '100%');
+            thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-scale-y', '0');
+            thisThreadProgressElement.addEventListener(
               'transitionend',
               function () {
-                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
-                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '0%');
+                thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '-100%');
               },
               { once: true }
             );
@@ -348,8 +347,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           }
         }
       }
-      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
-      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100}%`);
+      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-scale-y', '1');
     }
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
