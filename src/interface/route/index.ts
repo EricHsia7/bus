@@ -113,15 +113,15 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  var identifier = generateIdentifier('i');
-  var element = document.createElement('div');
+  const identifier = generateIdentifier('i');
+  const element = document.createElement('div');
   element.classList.add('css_route_group_thread_box');
   element.id = identifier;
   element.setAttribute('stretched', 'false');
   element.setAttribute('stretching', 'false');
   element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_thread"></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress" displayed="true"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -330,17 +330,16 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
       const previousProgress = previousItem?.progress || 0;
       const thisProgress = thisItem?.progress || 0;
-      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
+      const thisThreadProgressElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread .css_route_group_thread_progress');
       if (!skeletonScreen) {
         if (animation) {
           if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '100%');
-            thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '100%');
-            thisThreadElement.addEventListener(
+            thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '100%');
+            thisThreadProgressElement.addEventListener(
               'transitionend',
               function () {
-                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
-                thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', '0%');
+                thisThreadProgressElement.setAttribute('displayed', 'false');
+                thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '-100%');
               },
               { once: true }
             );
@@ -348,8 +347,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           }
         }
       }
-      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-a', '0%');
-      thisThreadElement.style.setProperty('--b-cssvar-thread-progress-b', `${thisProgress * 100}%`);
+      thisThreadProgressElement.setAttribute('displayed', 'true');
+      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100}%`);
     }
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
