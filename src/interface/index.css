@@ -60,7 +60,7 @@ body * {
 
 .css_splash_screen_fade_out {
   animation-name: fadeout;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }

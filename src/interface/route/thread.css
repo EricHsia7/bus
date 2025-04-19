@@ -69,7 +69,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="2"] {
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: var(--b-cssvar-transition-timing-function-a);
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
@@ -89,7 +89,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="2"] {
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: var(--b-cssvar-transition-timing-function-a);
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
@@ -102,7 +102,7 @@
 /* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
   transition: height var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: var(--b-cssvar-transition-timing-function-a);
 }
 
 /* segment buffer: true */
@@ -161,7 +161,7 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress {
   transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: var(--b-cssvar-transition-timing-function-a);
 }
 
 /* displayed: false */
@@ -343,7 +343,7 @@
 /* fadeout */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_slide_fade_out {
   animation-name: fadeout;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }

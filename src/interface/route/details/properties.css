@@ -74,7 +74,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property[animation="false"][skeleton-screen="true"] .css_route_details_property_icon,

@@ -155,7 +155,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="false"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon,

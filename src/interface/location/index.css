@@ -13,7 +13,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
 }
 
 .css_location_field .css_location_head .css_location_name[animation="false"][skeleton-screen="true"] span,
