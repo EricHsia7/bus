@@ -117,6 +117,8 @@
   --b-cssvar-border-radius-none: 0px;
 
   --b-cssvar-transition-duration: 0.335s;
+  --b-cssvar-timing-function-ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  /* easeInOutCubic */
 }
 
 @media (prefers-color-scheme: dark) {
