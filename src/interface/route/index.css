@@ -11,7 +11,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
+  animation-timing-function: var(--b-cssvar-transition-timing-function-ease-in-out);
 }
 
 .css_route_field .css_route_head .css_route_name[animation="false"][skeleton-screen="true"] span,

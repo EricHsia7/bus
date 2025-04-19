@@ -74,7 +74,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: var(--b-cssvar-transition-timing-function-a);
+  animation-timing-function: var(--b-cssvar-transition-timing-function-ease-in-out);
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[animation="false"][skeleton-screen="true"] .css_bus_property_icon,
