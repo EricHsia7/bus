@@ -12,7 +12,7 @@
   margin-top: 10px;
   border-radius: var(--b-cssvar-border-radius-normal);
   transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
-  transition-timing-function: var(--b-cssvar-transition-timing-function-custom);
+  transition-timing-function: ease;
   display: flex;
   align-items: center;
   padding-left: 5px;

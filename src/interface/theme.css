@@ -117,9 +117,6 @@
   --b-cssvar-border-radius-none: 0px;
 
   --b-cssvar-transition-duration: 0.32s;
-  --b-cssvar-transition-timing-function-ease: ease;
-  --b-cssvar-transition-timing-function-ease-in-out: ease-in-out;
-  --b-cssvar-transition-timing-function-custom: cubic-bezier(0.403, 0.297, 0.757, 0.867);
 }
 
 @media (prefers-color-scheme: dark) {

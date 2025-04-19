@@ -327,7 +327,7 @@
 /* fadeout */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_slide_fade_out {
   animation-name: fadeout;
-  animation-timing-function: var(--b-cssvar-transition-timing-function-custom);
+  animation-timing-function: ease-in-out;
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }
@@ -344,7 +344,7 @@
   animation: skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
-  animation-timing-function: var(--b-cssvar-transition-timing-function-custom);
+  animation-timing-function: ease-in-out;
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="false"][skeleton-screen="true"] .css_home_folder_item_icon,

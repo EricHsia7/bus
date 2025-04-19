@@ -24,7 +24,7 @@
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[animation="true"] {
   transition: background-color var(--b-cssvar-transition-duration);
-  transition-timing-function: var(--b-cssvar-transition-timing-function-ease);
+  transition-timing-function: ease;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[highlighted="true"] {
@@ -43,7 +43,7 @@
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[animation="true"] span.css_material_symbols_rounded {
   transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
-  transition-timing-function: var(--b-cssvar-transition-timing-function-custom);
+  transition-timing-function: ease;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[highlighted="true"] span.css_material_symbols_rounded {
