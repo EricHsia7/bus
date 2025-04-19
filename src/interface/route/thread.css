@@ -69,6 +69,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="2"] {
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
@@ -88,6 +89,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="2"] {
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
@@ -100,6 +102,7 @@
 /* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
   transition: height var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* segment buffer: true */

@@ -62,6 +62,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[push-direction="1"][push-state="2"] {
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* push-direction: 2 && push-state: 0 */
@@ -79,6 +80,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[push-direction="2"][push-state="2"] {
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* animation: true && skeleton screen: false && stretching: true && push-direction: 0 && push-state: 0 */
@@ -320,6 +322,7 @@
 /* animation: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* stretched: true */
@@ -443,6 +446,7 @@
 /* animation: true && skeleton-screen: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"] .css_location_group_item_body {
   transition: opacity var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* ststretched: true */
@@ -504,6 +508,7 @@
 /* animation: true && stretched: true && skeleton-screen: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button {
   transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* highlighted: true */
@@ -536,6 +541,7 @@
 /* animation: true && stretched: true && skeleton-screen: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button .css_location_group_item_button_icon span.css_material_symbols_rounded {
   transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* highlighted: true */
