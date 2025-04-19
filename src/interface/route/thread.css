@@ -156,7 +156,7 @@
   transform: scaleY(1) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread .css_route_group_thread_progress {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
