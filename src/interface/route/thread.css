@@ -176,6 +176,7 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"] .css_route_group_thread .css_route_group_thread_progress {
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease-out;
 }
 
 /* displayed: false */
