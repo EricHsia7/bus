@@ -173,7 +173,7 @@
 
 /* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress {
-  transform: scaleY(calc((100 + 171) / 100)) translateY(var(--b-cssvar-thread-progress-translate-y));
+  transform: scaleY(calc((50 + 171) / 50)) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
 /* segment buffer: true */
