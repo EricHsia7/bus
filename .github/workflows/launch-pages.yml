@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-transform-based-thread-animation
 
 jobs:
   launch:
