@@ -35,7 +35,7 @@ function generateElementOfItem(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_home_folder_item');
   element.setAttribute('type', 'stop');
-  element.innerHTML = /*html*/ `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div><div class="css_home_folder_item_capsule_separator"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div><div class="css_home_folder_item_capsule_separator"></div></div>`;
   return {
     element: element,
     id: ''
@@ -177,9 +177,11 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
               currentSlideElement.setAttribute('code', thisItem.status.code.toString());
               currentSlideElement.innerText = thisItem.status.text;
               currentSlideElement.classList.remove('css_slide_fade_out');
+              nextSlideElement.setAttribute('displayed', 'false');
             },
             { once: true }
           );
+          nextSlideElement.setAttribute('displayed', 'true');
           currentSlideElement.classList.add('css_slide_fade_out');
         } else {
           currentSlideElement.setAttribute('code', thisItem.status.code.toString());
