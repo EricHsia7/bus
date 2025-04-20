@@ -117,7 +117,7 @@ function generateElementOfItem(): GeneratedElement {
   element.setAttribute('stretching', 'false');
   element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1"></div><div class="css_location_group_item_rank_current_slide" code="-1"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0"></div><div class="css_current_slide" code="0"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItem('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-location', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-location', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_location_group_item_head"><div class="css_location_group_item_rank"><div class="css_location_group_item_rank_next_slide" code="-1" displayed="false"></div><div class="css_location_group_item_rank_current_slide" code="-1" displayed="true"></div></div><div class="css_location_group_item_route_direction"></div><div class="css_location_group_item_route_name"></div><div class="css_location_group_item_capsule"><div class="css_location_group_item_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div><div class="css_location_group_item_stretch" onclick="bus.location.stretchLocationItem('${identifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_location_group_item_capsule_separator"></div></div></div><div class="css_location_group_item_body" displayed="false"><div class="css_location_group_item_buttons"><div class="css_location_group_item_button" highlighted="true" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 0)" code="0"><div class="css_location_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_location_group_item_button" highlighted="false" type="tab" onclick="bus.location.switchLocationBodyTab('${identifier}', 1)" code="1"><div class="css_location_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_location_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-location', ['${identifier}', null, null])"><div class="css_location_group_item_button_icon">${getIconHTML('folder')}</div>儲存至資料夾</div><div class="css_location_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-location', ['${identifier}', null, null, null])" enabled="true"><div class="css_location_group_item_button_icon">${getIconHTML('notifications')}</div>設定到站通知</div></div><div class="css_location_group_item_buses" displayed="true"></div><div class="css_location_group_item_bus_arrival_times" displayed="false"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -254,26 +254,28 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const windowHeight = window.innerHeight;
 
       const thisItemStatusElement = elementQuerySelector(thisElement, '.css_location_group_item_status');
-      const nextSlide = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
-      const currentSlide = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
+      const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
+      const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
-      nextSlide.setAttribute('code', thisItem.status.code.toString());
-      nextSlide.innerText = thisItem.status.text;
+      nextSlideElement.setAttribute('code', thisItem.status.code.toString());
+      nextSlideElement.innerText = thisItem.status.text;
 
       if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        currentSlide.addEventListener(
+        currentSlideElement.addEventListener(
           'animationend',
           function () {
-            currentSlide.setAttribute('code', thisItem.status.code.toString());
-            currentSlide.innerText = thisItem.status.text;
-            currentSlide.classList.remove('css_slide_fade_out');
+            currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+            currentSlideElement.innerText = thisItem.status.text;
+            currentSlideElement.classList.remove('css_slide_fade_out');
+            nextSlideElement.setAttribute('displayed', 'false');
           },
           { once: true }
         );
-        currentSlide.classList.add('css_slide_fade_out');
+        nextSlideElement.setAttribute('displayed', 'true');
+        currentSlideElement.classList.add('css_slide_fade_out');
       } else {
-        currentSlide.setAttribute('code', thisItem.status.code.toString());
-        currentSlide.innerText = thisItem.status.text;
+        currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+        currentSlideElement.innerText = thisItem.status.text;
       }
     }
 
@@ -287,26 +289,28 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const windowHeight = window.innerHeight;
 
       const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
-      const nextSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
-      const currentSlide = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
+      const nextSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
+      const currentSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
 
-      nextSlide.setAttribute('code', thisItem.ranking.code.toString());
-      nextSlide.innerText = thisItem.ranking.text;
+      nextSlideElement.setAttribute('code', thisItem.ranking.code.toString());
+      nextSlideElement.innerText = thisItem.ranking.text;
 
       if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        currentSlide.addEventListener(
+        currentSlideElement.addEventListener(
           'animationend',
           function () {
-            currentSlide.setAttribute('code', thisItem.ranking.code.toString());
-            currentSlide.innerText = thisItem.ranking.text;
-            currentSlide.classList.remove('css_location_group_item_rank_current_slide_fade_out');
+            currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
+            currentSlideElement.innerText = thisItem.ranking.text;
+            currentSlideElement.classList.remove('css_location_group_item_rank_current_slide_fade_out');
+            nextSlideElement.setAttribute('displayed', 'false');
           },
           { once: true }
         );
-        currentSlide.classList.add('css_location_group_item_rank_current_slide_fade_out');
+        nextSlideElement.setAttribute('displayed', 'true');
+        currentSlideElement.classList.add('css_location_group_item_rank_current_slide_fade_out');
       } else {
-        currentSlide.setAttribute('code', thisItem.ranking.code.toString());
-        currentSlide.innerText = thisItem.ranking.text;
+        currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
+        currentSlideElement.innerText = thisItem.ranking.text;
       }
     }
 
