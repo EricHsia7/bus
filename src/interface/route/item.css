@@ -437,18 +437,20 @@
   width: 100%;
   height: 171px;
   opacity: 0;
+  transform: translateY(-10px);
   visibility: inherit;
 }
 
 /* animation: true && skeleton-screen: false && push-direction: 0 && push-state: 0*/
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_item_body {
-  transition: opacity var(--b-cssvar-transition-duration);
+  transition: opacity var(--b-cssvar-transition-duration), transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* ststretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretched="true"] .css_route_group_item_body {
   opacity: 1;
+  transform: translateY(0px);
 }
 
 /* displayed: false */
