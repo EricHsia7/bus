@@ -274,7 +274,7 @@
   user-select: none;
 }
 
-/* skeleton screen: false && displayed: false */
+/* displayed: false */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[displayed="false"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[displayed="false"] {
   visibility: hidden;
