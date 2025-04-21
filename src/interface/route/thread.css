@@ -203,11 +203,6 @@
   user-select: none;
 }
 
-/* skeleton screen: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status {
-  visibility: hidden;
-}
-
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide {
   position: absolute;
@@ -217,6 +212,12 @@
   height: 10px;
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* skeleton screen: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status .css_next_slide,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status .css_current_slide {
+  visibility: hidden;
 }
 
 /* displayed: false */
