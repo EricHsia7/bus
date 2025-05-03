@@ -178,13 +178,13 @@ import './interface/storage/statistics.css';
 
 import './interface/prompt/index.css';
 
-let bus_initialized = false;
-let bus_secondly_initialized = false;
+let busInitialized = false;
+let busSecondlyInitialized = false;
 
 window.bus = {
   initialize: function () {
-    if (bus_initialized === false) {
-      bus_initialized = true;
+    if (busInitialized === false) {
+      busInitialized = true;
       setSplashScreenIconOffsetY();
       initializeSettings().then(function () {
         setUpRecentViewsFieldSkeletonScreen();
@@ -280,8 +280,8 @@ window.bus = {
     }
   },
   secondlyInitialize: function () {
-    if (!bus_secondly_initialized) {
-      bus_secondly_initialized = true;
+    if (!busSecondlyInitialized) {
+      busSecondlyInitialized = true;
       downloadData();
       discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageStats();
