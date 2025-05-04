@@ -28,7 +28,7 @@ port.onerror = function (e) {
 };
 
 export async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
-  const taskID = generateIdentifier('t');
+  const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
     pakoInflateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID

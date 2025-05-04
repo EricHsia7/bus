@@ -109,7 +109,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const element = document.createElement('div');
   element.classList.add('css_location_group_item');
   element.id = identifier;
@@ -609,7 +609,7 @@ async function refreshLocation() {
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
-  locationRefreshTimer_currentRequestID = generateIdentifier('r');
+  locationRefreshTimer_currentRequestID = generateIdentifier();
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
   document.addEventListener(locationRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);

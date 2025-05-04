@@ -130,7 +130,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   if (!updateRateData_writeAheadLog_tracking) {
     updateRateData_writeAheadLog_tracking = true;
     updateRateData_trackedStops = [];
-    updateRateData_writeAheadLog_id = generateIdentifier('u');
+    updateRateData_writeAheadLog_id = generateIdentifier();
     updateRateData_writeAheadLog_group = {
       data: {},
       timestamp: currentTimestamp,
@@ -305,7 +305,7 @@ port.onerror = function (e) {
 
 export async function getUpdateRate(): Promise<number> {
   const dataGroups = await listUpdateRateDataGroups();
-  const taskID = generateIdentifier('t');
+  const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
     getUpdateRateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID

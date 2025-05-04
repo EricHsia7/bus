@@ -7,7 +7,7 @@ import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
@@ -22,7 +22,7 @@ export async function searchRouteByName(query: string): Promise<Array<Simplified
 }
 
 export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedRouteItem | false> {
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   let found: boolean = false;
   let result = {} as SimplifiedRouteItem;
@@ -37,7 +37,7 @@ export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedR
 }
 
 export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
@@ -81,7 +81,7 @@ export async function prepareForSearch() {
     return;
   }
 
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const mergedLocation = (await getLocation(requestID, 1)) as MergedLocation;
   const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;

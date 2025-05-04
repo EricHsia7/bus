@@ -409,7 +409,7 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
 export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<0 | 1 | 2> {
   if (getNotificationClientStatus()) {
     const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-    const requestID = generateIdentifier('r');
+    const requestID = generateIdentifier();
     const Stop = (await getStop(requestID)) as SimplifiedStop;
     const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
     const Route = (await getRoute(requestID, true)) as SimplifiedRoute;

@@ -87,7 +87,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   // Initialize
   if (!busArrivalTimeData_writeAheadLog_tracking) {
     busArrivalTimeData_writeAheadLog_tracking = true;
-    busArrivalTimeData_writeAheadLog_id = generateIdentifier('b');
+    busArrivalTimeData_writeAheadLog_id = generateIdentifier();
     busArrivalTimeData_writeAheadLog_group = {
       id: busArrivalTimeData_writeAheadLog_id,
       timestamp: currentTimestamp,
@@ -235,7 +235,7 @@ port.onerror = function (e) {
 };
 
 export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
-  const taskID = generateIdentifier('t');
+  const taskID = generateIdentifier();
 
   const personalSchedules = await listPersonalSchedules();
   const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();

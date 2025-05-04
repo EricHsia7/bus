@@ -31,7 +31,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
 async function initializeFolderIconSelectorField() {
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsElement.innerHTML = '';
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const materialSymbols = await getMaterialSymbols(requestID);
   deleteDataReceivingProgress(requestID);
   const fragment = new DocumentFragment();

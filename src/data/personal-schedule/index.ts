@@ -14,7 +14,7 @@ export type PersonalScheduleArray = Array<PersonalSchedule>;
 export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
 
 export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
-  const identifier = generateIdentifier('s');
+  const identifier = generateIdentifier();
   if (startHours < 0 || startHours > 23 || startMinutes < 0 || startMinutes > 59 || endHours < 0 || endHours > 23 || endMinutes < 0 || endMinutes > 59) {
     return false;
   }

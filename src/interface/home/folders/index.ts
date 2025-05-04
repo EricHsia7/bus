@@ -472,7 +472,7 @@ async function refreshFolders() {
   foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   foldersRefreshTimer_refreshing = true;
-  foldersRefreshTimer_currentRequestID = generateIdentifier('r');
+  foldersRefreshTimer_currentRequestID = generateIdentifier();
   HomeUpdateTimerElement.setAttribute('refreshing', 'true');
   HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
   document.addEventListener(foldersRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);

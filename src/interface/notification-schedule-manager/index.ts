@@ -49,7 +49,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const element = document.createElement('div');
   element.classList.add('css_notification_schedule_manager_item');
   element.id = identifier;
@@ -219,7 +219,7 @@ async function refreshNotificationScheduleManager() {
   notifcationScheduleManagerRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   notifcationScheduleManagerRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   notifcationScheduleManagerRefreshTimer_refreshing = true;
-  notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier('r');
+  notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier();
   NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
   NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
   document.addEventListener(notifcationScheduleManagerRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);

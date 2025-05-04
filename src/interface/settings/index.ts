@@ -54,7 +54,7 @@ export async function downloadExportFile() {
 }
 
 export function openFileToImportData(): void {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const fileInput = document.createElement('input');
   fileInput.setAttribute('type', 'file');
   fileInput.setAttribute('accept', 'application/json');
