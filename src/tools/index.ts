@@ -40,16 +40,6 @@ export function compareThings(a: any, b: any): boolean {
 }
 
 export function generateIdentifier(prefix: string = ''): string {
-  /*
-  const characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-  let result = `${prefix}_`;
-  const length: number = 16;
-  for (let i = 0; i < length; i++) {
-    const randomNumber = Math.floor(Math.random() * characterSet.length);
-    result += characterSet.substring(randomNumber, randomNumber + 1);
-  }
-  return result;
-  */
   const randomNumber = Math.random();
   const randomNumber2 = Math.random();
   return `${prefix}${randomNumber2.toString(36).substring(2, 9)}${randomNumber.toString(36).substring(2, 9)}`;
@@ -57,7 +47,7 @@ export function generateIdentifier(prefix: string = ''): string {
 
 export function getNoCacheParameter(interval: number): string {
   const time = new Date().getTime();
-  const number = (time / interval).toFixed(0) * interval;
+  const number = ((time / interval) | 0) * interval;
   const string = number.toString(36);
   return string;
 }
