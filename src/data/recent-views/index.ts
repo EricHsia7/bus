@@ -75,7 +75,7 @@ export async function discardExpiredRecentViews() {
 }
 
 export async function logRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']) {
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const key = `${type}_${param}`;
   const time = new Date().toISOString();
   const existingJSON = await lfGetItem(8, key);

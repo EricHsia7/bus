@@ -113,7 +113,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const element = document.createElement('div');
   element.classList.add('css_route_group_thread_box');
   element.id = identifier;
@@ -129,7 +129,7 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const element = document.createElement('div');
   element.classList.add('css_route_group_item');
   element.id = identifier;
@@ -585,7 +585,7 @@ async function refreshRoute() {
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
-  routeRefreshTimer_currentRequestID = generateIdentifier('r');
+  routeRefreshTimer_currentRequestID = generateIdentifier();
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
   document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);

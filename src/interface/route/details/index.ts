@@ -32,7 +32,7 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   getPermalinkActionButton.setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
   setUppropertiesGroupSkeletonScreen(PropertiesGroupElement);
   setUpCalendarGroupSkeletonScreen();
-  const requestID = generateIdentifier('r');
+  const requestID = generateIdentifier();
   const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(PropertiesGroupElement, integration.properties, false, playing_animation);
   updateCalendarGroup(integration.calendar, false, playing_animation);

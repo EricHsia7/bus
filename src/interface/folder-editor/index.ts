@@ -16,7 +16,7 @@ const OpenFolderIconSelectorElement = elementQuerySelector(FolderEditorGroupsEle
 const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   let element = document.createElement('div');
   element.id = identifier;
   element.classList.add('css_folder_editor_folder_item');

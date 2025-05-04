@@ -39,10 +39,32 @@ export function compareThings(a: any, b: any): boolean {
   }
 }
 
-export function generateIdentifier(prefix: string = ''): string {
+export function generateIdentifier(): string {
+  /*
   const randomNumber = Math.random();
   const randomNumber2 = Math.random();
   return `${prefix}${randomNumber2.toString(36).substring(2, 9)}${randomNumber.toString(36).substring(2, 9)}`;
+  */
+  const chars = [
+    [48, 9], // 0-9: 48 - 57
+    [97, 25], // a-z: 97 - 122
+    [65, 25] // A-Z: 65 - 90
+  ];
+
+  let randomNumber1 = (Math.random() * 0x10000000) | 0;
+  let randomNumber2 = (Math.random() * 0x10000000) | 0;
+  let result = '_';
+
+  for (let i = 0; i < 16; i++) {
+    const n = randomNumber2 % 3;
+    const range = chars[n];
+    const code = range[0] + (randomNumber1 % range[1]);
+    result += String.fromCharCode(code);
+    randomNumber1 >>>= 1;
+    randomNumber2 >>>= 1;
+  }
+
+  return result;
 }
 
 export function getNoCacheParameter(interval: number): string {

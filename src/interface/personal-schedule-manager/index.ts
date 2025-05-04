@@ -9,7 +9,7 @@ const PersonalScheduleManagerBodyElement = elementQuerySelector(PersonalSchedule
 const ListElement = elementQuerySelector(PersonalScheduleManagerBodyElement, '.css_personal_schedule_manager_list');
 
 function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
-  const identifier = generateIdentifier('i');
+  const identifier = generateIdentifier();
   const element = document.createElement('div');
   element.classList.add('css_personal_schedule_manager_item');
   element.id = identifier;
