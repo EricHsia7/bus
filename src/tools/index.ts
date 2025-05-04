@@ -54,8 +54,9 @@ export function generateIdentifier(): string {
   let randomNumber1 = (Math.random() * 0x10000000) | 0;
   let randomNumber2 = (Math.random() * 0x10000000) | 0;
 
-  const result = new Uint8Array(16);
-  for (let i = 0; i < 16; i++) {
+  const result = new Uint8Array(17);
+  result[0] = 95;
+  for (let i = 1; i < 17; i++) {
     const n = randomNumber2 % 3;
     const range = chars[n];
     const code = range[0] + (randomNumber1 % range[1]);
