@@ -47,8 +47,8 @@ export function generateIdentifier(prefix: string = ''): string {
 
 export function getNoCacheParameter(interval: number): string {
   const time = new Date().getTime();
-  const number = ((time / interval) | 0) * interval;
-  const string = number.toString(36);
+  const number = (time / interval) | 0;
+  const string = number.toString(16);
   return string;
 }
 
