@@ -53,18 +53,18 @@ export function generateIdentifier(): string {
 
   let randomNumber1 = (Math.random() * 0x10000000) | 0;
   let randomNumber2 = (Math.random() * 0x10000000) | 0;
-  let result = '_';
 
+  const result = new Uint8Array(16);
   for (let i = 0; i < 16; i++) {
     const n = randomNumber2 % 3;
     const range = chars[n];
     const code = range[0] + (randomNumber1 % range[1]);
-    result += String.fromCharCode(code);
+    result[i] = code;
     randomNumber1 >>>= 1;
     randomNumber2 >>>= 1;
   }
 
-  return result;
+  return String.fromCharCode.apply(null, result);
 }
 
 export function getNoCacheParameter(interval: number): string {
