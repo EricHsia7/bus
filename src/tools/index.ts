@@ -46,9 +46,9 @@ export function generateIdentifier(): string {
   return `${prefix}${randomNumber2.toString(36).substring(2, 9)}${randomNumber.toString(36).substring(2, 9)}`;
   */
   const chars = [
-    [48, 9], // 0-9: 48 - 57
-    [97, 25], // a-z: 97 - 122
-    [65, 25] // A-Z: 65 - 90
+    [48, 10], // 0-9: 48 - 57
+    [97, 26], // a-z: 97 - 122
+    [65, 26] // A-Z: 65 - 90
   ];
 
   let randomNumber1 = (Math.random() * 0x10000000) | 0;
