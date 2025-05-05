@@ -91,7 +91,7 @@ export function generateRoundedRectSVG(x: number, y: number, width: number, heig
   }
   if (command.length > 0) {
     const d = command.join(' ');
-    return `<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="0.2" stroke-linejoin="round" />`;
+    return `<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="0.15" stroke-linejoin="round" />`;
   } else {
     return '';
   }

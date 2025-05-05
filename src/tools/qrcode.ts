@@ -1,7 +1,7 @@
 import { generateRoundedRectSVG } from './graphic';
 const { QRCodeRaw } = require('@akamfoad/qrcode');
 
-export function generateRoundedQRCodeSVG(text: string, level: 'L' | 'M' | 'Q' | 'H' = 'L', outerRadius: number = 0.45, innerRadius: number = 0.3, fill: string = '#000000', scale: number = 4): string {
+export function generateRoundedQRCodeSVG(text: string, level: 'L' | 'M' | 'Q' | 'H' = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, fill: string = '#000000', scale: number = 4): string {
   const QRCode = new QRCodeRaw(text, {
     level: level
   });
