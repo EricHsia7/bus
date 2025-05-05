@@ -15,14 +15,14 @@ export function getTextHeight(text: string, weight: number, size: string, fontFa
   return context.measureText(text).actualBoundingBoxDescent;
 }
 
-interface BorderRadius {
+interface CornerRadius {
   tl: number;
   tr: number;
   br: number;
   bl: number;
 }
 
-export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number | BorderRadius, fill: string): void {
+export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number | CornerRadius, fill: string): void {
   // If radius is a single value, treat it as the same for all corners
   if (typeof radius === 'number') {
     radius = { tl: radius, tr: radius, br: radius, bl: radius };
@@ -57,4 +57,42 @@ export function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: num
 
   ctx.fillStyle = fill;
   ctx.fill(); // To fill the shape
+}
+
+export function generateRoundedRectSVG(x: number, y: number, width: number, height: number, radius: number | CornerRadius, fill: string, inverted: boolean): string {
+  // Normalize the radius object
+  if (typeof radius === 'number') {
+    radius = { tl: radius, tr: radius, br: radius, bl: radius };
+  } else {
+    radius = {
+      tl: radius.tl || 0,
+      tr: radius.tr || 0,
+      br: radius.br || 0,
+      bl: radius.bl || 0
+    };
+  }
+  const { tl, tr, br, bl } = radius;
+  const command = [];
+  if (inverted) {
+    if (tl !== 0) {
+      command.push(`M${x},${y + tl}`, `Q${x},${y} ${x + tl},${y}`, `H${x}`, `V${y + tl}`, `Z`);
+    }
+    if (tr !== 0) {
+      command.push(`M${x + width - tr},${y}`, `Q${x + width},${y} ${x + width},${y + tr}`, `V${y}`, `H${x + width - tr}`, `Z`);
+    }
+    if (br !== 0) {
+      command.push(`M${x + width},${y + height - br}`, `Q${x + width},${y + height} ${x + width - br},${y + height}`, `H${x + width}`, `V${y + height - br}`, `Z`);
+    }
+    if (bl !== 0) {
+      command.push(`M${x + bl},${y + height}`, `Q${x},${y + height} ${x},${y + height - bl}`, `V${y + height}`, `H${x + bl}`, `Z`);
+    }
+  } else {
+    command.push(`M${x + tl},${y}`, `H${x + width - tr}`, `Q${x + width},${y} ${x + width},${y + tr}`, `V${y + height - br}`, `Q${x + width},${y + height} ${x + width - br},${y + height}`, `H${x + bl}`, `Q${x},${y + height} ${x},${y + height - bl}`, `V${y + tl}`, `Q${x},${y} ${x + tl},${y}`, `Z`);
+  }
+  if (command.length > 0) {
+    const d = command.join(' ');
+    return `<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="0.2" stroke-linejoin="round" />`;
+  } else {
+    return '';
+  }
 }
