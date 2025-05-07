@@ -23,8 +23,9 @@ import { cancelNotificationOnNotificationScheduleManager, closeNotificationSched
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
+import { closeQRCode, openQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
-import { shareRoutePermalink } from './interface/route/details/actions';
+import { shareRoutePermalink, showRoutePermalinkQRCode } from './interface/route/details/actions';
 import { switchCalendarDay } from './interface/route/details/calendar';
 import { closeRouteDetails, openRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, openRoute, stretchRouteItem, switchRoute, switchRouteBodyTab } from './interface/route/index';
@@ -176,6 +177,11 @@ import './interface/storage/head.css';
 import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
+import './interface/qrcode/field.css';
+import './interface/qrcode/head.css';
+import './interface/qrcode/body.css';
+import './interface/qrcode/qrcode.css';
+
 import './interface/prompt/index.css';
 
 let busInitialized = false;
@@ -303,6 +309,7 @@ window.bus = {
     openRouteDetails,
     closeRouteDetails,
     shareRoutePermalink,
+    showRoutePermalinkQRCode,
     switchCalendarDay
   },
   location: {
@@ -387,6 +394,10 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  qrcode: {
+    openQRCode,
+    closeQRCode
   }
 };
 

@@ -1,0 +1,7 @@
+.css_qrcode_field .css_qrcode_body svg {
+  position: relative;
+  width: clamp(100px, 55%, 300px);
+  aspect-ratio: 1 / 1;
+  user-select: none;
+  -webkit-user-select: none;
+}

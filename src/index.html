@@ -250,6 +250,9 @@
               <div class="css_route_details_action_button" action="get-permalink" onclick="bus.route.shareRoutePermalink(null)">
                 <span class="css_material_symbols_rounded">link</span>
               </div>
+              <div class="css_route_details_action_button" action="show-permalink-qrcode" onclick="bus.route.showRoutePermalinkQRCode(null)">
+                <span class="css_material_symbols_rounded">qr_code_2</span>
+              </div>
             </div>
           </div>
           <div class="css_route_details_group" group="properties">
@@ -740,6 +743,16 @@
           <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
         </div>
         <div class="css_schedule_notification_title">設定到站通知</div>
+      </div>
+    </div>
+
+    <div class="css_qrcode_field" displayed="false">
+      <div class="css_qrcode_body"></div>
+      <div class="css_qrcode_head">
+        <div class="css_qrcode_button_left" onclick="bus.qrcode.closeQRCode()">
+          <span class="css_material_symbols_rounded">arrow_back_ios_new</span>
+        </div>
+        <div class="css_qrcode_title">二維條碼</div>
       </div>
     </div>
 

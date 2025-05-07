@@ -13,7 +13,7 @@ import { closeSettings, openSettings } from './settings/index';
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -88,6 +88,8 @@ export function closePreviousPage(): void {
         break;
       case 'NotificationScheduleManager':
         break;
+      case 'QRCode':
+        break;
       default:
         break;
     }
@@ -148,6 +150,8 @@ export function openPreviousPage(): void {
       case 'ScheduleNotification':
         break;
       case 'NotificationScheduleManager':
+        break;
+      case 'QRCode':
         break;
       default:
         break;
