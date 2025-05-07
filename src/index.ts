@@ -176,6 +176,11 @@ import './interface/storage/head.css';
 import './interface/storage/body.css';
 import './interface/storage/statistics.css';
 
+import './interface/qrcode/field.css';
+import './interface/qrcode/head.css';
+import './interface/qrcode/body.css';
+import './interface/qrcode/qrcode.css';
+
 import './interface/prompt/index.css';
 
 let busInitialized = false;
