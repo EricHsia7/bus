@@ -6,7 +6,7 @@ const QRCodeField = documentQuerySelector('.css_qrcode_field');
 const QRCodeBodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
 
 export function initializeQRCodeField(text: string): void {
-  const svg = generateRoundedQRCodeSVG(text, 'M', 0.4, 0.3, 'var(--b-cssvar-333333)', 4);
+  const svg = generateRoundedQRCodeSVG(text, 'M', 0.5, 0.3, 1, 'var(--b-cssvar-333333)', 4);
   QRCodeBodyElement.innerHTML = svg;
 }
 

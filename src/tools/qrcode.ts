@@ -31,7 +31,7 @@ export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeE
   return matrix;
 }
 
-export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, fill: string = '#000000', scale: number = 4): string {
+export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 1, fill: string = '#000000', scale: number = 4): string {
   const filledNeighborhood = [
     [
       [-1, 0],
@@ -98,8 +98,8 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
         }
         commands = commands.concat(
           generateRoundedRectPath(
-            x * scale,
-            y * scale,
+            (x + padding) * scale,
+            (y + padding) * scale,
             1 * scale,
             1 * scale,
             {
@@ -127,8 +127,8 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
         if (cornerRadius.some((r) => r !== 0)) {
           commands = commands.concat(
             generateRoundedRectPath(
-              x * scale,
-              y * scale,
+              (x + padding) * scale,
+              (y + padding) * scale,
               1 * scale,
               1 * scale,
               {
@@ -145,5 +145,5 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size * scale} ${size * scale}"><path d="${commands.join(' ')}" fill="${fill}" stroke="${fill}" stroke-width="0.1" stroke-linejoin="round" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}"><path d="${commands.join(' ')}" fill="${fill}" stroke="${fill}" stroke-width="0.1" stroke-linejoin="round" fill-rule="nonzero" /></svg>`;
 }
