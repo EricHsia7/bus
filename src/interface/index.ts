@@ -88,6 +88,8 @@ export function closePreviousPage(): void {
         break;
       case 'NotificationScheduleManager':
         break;
+      case 'QRCode':
+        break;
       default:
         break;
     }
@@ -148,6 +150,8 @@ export function openPreviousPage(): void {
       case 'ScheduleNotification':
         break;
       case 'NotificationScheduleManager':
+        break;
+      case 'QRCode':
         break;
       default:
         break;
