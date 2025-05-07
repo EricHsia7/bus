@@ -1,6 +1,6 @@
 import { generateRoundedRectPath } from './graphic';
 
-const QRCode = require('qrcode/lib/core');
+const QRCode = require('qrcode/lib/core/qrcode');
 
 export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
 
@@ -8,10 +8,10 @@ export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
  * Generate a QR code matrix (2D Boolean array)
  * @param text The input text to encode
  * @param errorCorrectionLevel L, M, Q, H
- * @returns 2D array (true = filled, false = blank)
+ * @returns 2D array (1 = filled, 0 = blank)
  */
 
-export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel): Array<Array<boolean>> {
+export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel): Array<Array<0 | 1>> {
   const qrData = QRCode.create(text, {
     errorCorrectionLevel: errorCorrectionLevel
   });
@@ -22,7 +22,8 @@ export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeE
   for (let y = 0; y < size; y++) {
     const row = [];
     for (let x = 0; x < size; x++) {
-      row.push(qrData.modules.get(x, y));
+      const bit = qrData.modules.get(x, y);
+      row.push(bit);
     }
     matrix.push(row);
   }
@@ -75,21 +76,21 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
 
   // [x, y]
 
-  const data = generateQRCodeMatrix(text,errorCorrectionLevel);
+  const data = generateQRCodeMatrix(text, errorCorrectionLevel);
   const size = data.length;
 
   let commands: Array<string> = [];
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
-      if (data[y][x] === true) {
+      if (data[y][x] === 1) {
         // filled
         const cornerRadius = new Uint8Array(4);
         for (let k = 0; k < 4; k++) {
           const neighbors = filledNeighborhood[k];
           let displayed = 1;
           for (const neighbor of neighbors) {
-            if (data[y + neighbor[1]]?.[x + neighbor[0]] === true) {
+            if (data[y + neighbor[1]]?.[x + neighbor[0]] === 1) {
               displayed *= 0;
             }
           }
