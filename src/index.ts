@@ -23,6 +23,7 @@ import { cancelNotificationOnNotificationScheduleManager, closeNotificationSched
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
+import { closeQRCode, openQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { shareRoutePermalink } from './interface/route/details/actions';
 import { switchCalendarDay } from './interface/route/details/calendar';
@@ -392,6 +393,10 @@ window.bus = {
     scheduleNotificationForStopItemOnRoute,
     scheduleNotificationForStopItemOnLocation,
     cancelNotificationOnNotificationScheduleManager
+  },
+  qrcode: {
+    openQRCode,
+    closeQRCode
   }
 };
 
