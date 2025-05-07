@@ -19,6 +19,7 @@ export const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBody
 export const ActionsGroupElememt = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
 export const svaeToFolderActionButtonElement = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
 export const getPermalinkActionButton = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
+export const showPermalinkQRCodeActionButton = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="show-permalink-qrcode"]');
 
 export const PropertiesGroupElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
 
@@ -30,6 +31,8 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   svaeToFolderActionButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);
   getPermalinkActionButton.setAttribute('animation', booleanToString(playing_animation));
   getPermalinkActionButton.setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
+  showPermalinkQRCodeActionButton.setAttribute('animation', booleanToString(playing_animation));
+  showPermalinkQRCodeActionButton.setAttribute('onclick', `bus.route.showRoutePermalinkQRCode(${RouteID})`);
   setUppropertiesGroupSkeletonScreen(PropertiesGroupElement);
   setUpCalendarGroupSkeletonScreen();
   const requestID = generateIdentifier();

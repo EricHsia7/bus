@@ -25,7 +25,7 @@ import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPers
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closeQRCode, openQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
-import { shareRoutePermalink } from './interface/route/details/actions';
+import { shareRoutePermalink, showRoutePermalinkQRCode } from './interface/route/details/actions';
 import { switchCalendarDay } from './interface/route/details/calendar';
 import { closeRouteDetails, openRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, openRoute, stretchRouteItem, switchRoute, switchRouteBodyTab } from './interface/route/index';
@@ -309,6 +309,7 @@ window.bus = {
     openRouteDetails,
     closeRouteDetails,
     shareRoutePermalink,
+    showRoutePermalinkQRCode,
     switchCalendarDay
   },
   location: {
