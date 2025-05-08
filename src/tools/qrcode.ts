@@ -145,5 +145,5 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}"><path d="${commands.join(' ')}" fill="${fill}" stroke="${fill}" stroke-width="0.1" stroke-linejoin="round" fill-rule="nonzero" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}" shape-rendering="geometricPrecision"><path d="${commands.join(' ')}" fill="${fill}" stroke="${fill}" stroke-width="0.1" stroke-linejoin="round" fill-rule="nonzero" /></svg>`;
 }

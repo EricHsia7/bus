@@ -75,19 +75,19 @@ export function generateRoundedRectPath(x: number, y: number, width: number, hei
   const command = [];
   if (inverted) {
     if (tl !== 0) {
-      command.push(`M${x},${y + tl}`, `Q${x},${y} ${x + tl},${y}`, `H${x}`, `V${y + tl}`);
+      command.push(`M${x} ${y + tl}`, `Q${x} ${y} ${x + tl} ${y}`, `H${x}`, `V${y + tl}`);
     }
     if (tr !== 0) {
-      command.push(`M${x + width - tr},${y}`, `Q${x + width},${y} ${x + width},${y + tr}`, `V${y}`, `H${x + width - tr}`);
+      command.push(`M${x + width - tr} ${y}`, `Q${x + width} ${y} ${x + width} ${y + tr}`, `V${y}`, `H${x + width - tr}`);
     }
     if (br !== 0) {
-      command.push(`M${x + width},${y + height - br}`, `Q${x + width},${y + height} ${x + width - br},${y + height}`, `H${x + width}`, `V${y + height - br}`);
+      command.push(`M${x + width} ${y + height - br}`, `Q${x + width} ${y + height} ${x + width - br} ${y + height}`, `H${x + width}`, `V${y + height - br}`);
     }
     if (bl !== 0) {
-      command.push(`M${x + bl},${y + height}`, `Q${x},${y + height} ${x},${y + height - bl}`, `V${y + height}`, `H${x + bl}`);
+      command.push(`M${x + bl} ${y + height}`, `Q${x} ${y + height} ${x} ${y + height - bl}`, `V${y + height}`, `H${x + bl}`);
     }
   } else {
-    command.push(`M${x + tl},${y}`, `H${x + width - tr}`, `Q${x + width},${y} ${x + width},${y + tr}`, `V${y + height - br}`, `Q${x + width},${y + height} ${x + width - br},${y + height}`, `H${x + bl}`, `Q${x},${y + height} ${x},${y + height - bl}`, `V${y + tl}`, `Q${x},${y} ${x + tl},${y}`);
+    command.push(`M${x + tl} ${y}`, `H${x + width - tr}`, `Q${x + width} ${y} ${x + width} ${y + tr}`, `V${y + height - br}`, `Q${x + width} ${y + height} ${x + width - br} ${y + height}`, `H${x + bl}`, `Q${x} ${y + height} ${x} ${y + height - bl}`, `V${y + tl}`, `Q${x} ${y} ${x + tl} ${y}`);
   }
-  return command
+  return command;
 }
