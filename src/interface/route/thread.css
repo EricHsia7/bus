@@ -155,6 +155,7 @@
   width: 2px;
   height: 50px;
   background: var(--b-cssvar-main-color);
+  border-radius: 1px;
   transform-origin: top left;
   transform: scaleY(1) translateY(var(--b-cssvar-thread-progress-translate-y));
 }
