@@ -83,6 +83,7 @@ body * {
   visibility: hidden;
   padding: 50px;
   box-sizing: border-box;
+  text-align: center;
 }
 
 .css_error_message[displayed="true"] {
