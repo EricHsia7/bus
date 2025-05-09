@@ -83,8 +83,8 @@ function processWorkerTask(): void {
       const verticalGridlineGap = chartWidth / verticalGridlineQuantity;
       for (let i = verticalGridlineQuantity - 1; i >= 0; i--) {
         const x = 0.35 / 2 + i * verticalGridlineGap;
-        verticalGridlinePathCommand += ` M${x},0`;
-        verticalGridlinePathCommand += ` L${x},${chartHeight}`;
+        verticalGridlinePathCommand += ` M${x} 0`;
+        verticalGridlinePathCommand += ` L${x} ${chartHeight}`;
         // the stroke alignment is "center"
         const labelTime = startIndex + i * verticalGridlineInterval;
         const labelMinutes = labelTime % 60;
@@ -104,18 +104,18 @@ function processWorkerTask(): void {
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
       // Bottom line
-      const bottomLinePathCommand = `M0,${chartHeight} L${chartWidth},${chartHeight - 0.35 / 2}`;
+      const bottomLinePathCommand = `M0 ${chartHeight} L${chartWidth} ${chartHeight - 0.35 / 2}`;
       const bottomLine = `<path d="${bottomLinePathCommand}" fill="none" stroke-width="0.35" component="bottom-line"/>`;
 
       // Bars
       let barsPathCommand = '';
-      barsPathCommand += `M${chartWidth},${chartHeight}`;
+      barsPathCommand += `M${chartWidth} ${chartHeight}`;
       for (let j = statsArrayLength - 1; j >= 0; j--) {
         const x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
         const y = (1 - statsArray[j] / statsMax) * chartHeight;
-        barsPathCommand += ` L${x},${y}`;
-        barsPathCommand += ` L${x - barWidth},${y}`;
-        barsPathCommand += ` L${x - barWidth},${chartHeight}`;
+        barsPathCommand += ` L${x} ${y}`;
+        barsPathCommand += ` L${x - barWidth} ${y}`;
+        barsPathCommand += ` L${x - barWidth} ${chartHeight}`;
       }
       barsPathCommand += ' Z';
       const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
