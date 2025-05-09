@@ -74,14 +74,15 @@ body * {
   background: var(--b-cssvar-ffffff-normal);
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   font-size: 16px;
-  white-space: nowrap;
-  word-break: keep-all;
+  word-break: break-all;
   display: flex;
   justify-content: center;
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
   visibility: hidden;
+  padding: 50px;
+  box-sizing: border-box;
 }
 
 .css_error_message[displayed="true"] {
