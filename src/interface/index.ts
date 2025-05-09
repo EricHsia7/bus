@@ -10,6 +10,9 @@ import { closeRegisterNotification, openRegisterNotification } from './register-
 import { closeSearch, openSearch } from './search/index';
 import { closeSettings, openSettings } from './settings/index';
 
+const SplashScreenElement = documentQuerySelector('.css_splash_screen');
+const ErrorMessageElement = documentQuerySelector('.css_error_message');
+
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
@@ -169,13 +172,12 @@ export function setSplashScreenIconOffsetY(): void {
 
 export function fadeOutSplashScreen(callback: Function): void {
   function fadeOut() {
-    var element: HTMLElement = documentQuerySelector('.css_splash_screen');
-    element.classList.add('css_splash_screen_fade_out');
-    element.addEventListener(
+    SplashScreenElement.classList.add('css_splash_screen_fade_out');
+    SplashScreenElement.addEventListener(
       'animationend',
       function () {
-        element.setAttribute('displayed', 'false');
-        element.classList.remove('css_splash_screen_fade_out');
+        SplashScreenElement.setAttribute('displayed', 'false');
+        SplashScreenElement.classList.remove('css_splash_screen_fade_out');
         if (typeof callback === 'function') {
           callback();
         }
@@ -189,6 +191,10 @@ export function fadeOutSplashScreen(callback: Function): void {
   } else {
     fadeOut();
   }
+}
+
+export function showErrorMessage(): void {
+  ErrorMessageElement.setAttribute('displayed', 'true');
 }
 
 export interface GeneratedElement {

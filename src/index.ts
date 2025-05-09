@@ -17,7 +17,7 @@ import { closeFolderManager, openFolderManager } from './interface/folder-manage
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { fadeOutSplashScreen, setSplashScreenIconOffsetY } from './interface/index';
+import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
 import { closeLocation, initializeLocationSliding, openLocation, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
@@ -274,11 +274,13 @@ window.bus = {
               });
             }
             if (status === 'fetchError' || status === 'unknownError') {
+              showErrorMessage();
               fadeOutSplashScreen();
               alert(status);
             }
           })
           .catch((error) => {
+            showErrorMessage();
             fadeOutSplashScreen();
             alert(error);
           });
