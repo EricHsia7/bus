@@ -191,6 +191,7 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::before {
   position: absolute;
+  content: "";
   top: 0px;
   left: 0px;
   width: 2px;
@@ -199,6 +200,8 @@
   background: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(-1px);
   transform-origin: top left;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* stretched: true */
@@ -218,6 +221,7 @@
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::after {
   position: absolute;
+  content: "";
   bottom: 0px;
   left: 0px;
   width: 2px;
@@ -226,6 +230,8 @@
   background: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(1px);
   transform-origin: bottom left;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* stretched: true */
