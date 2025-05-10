@@ -121,7 +121,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   element.setAttribute('stretching', 'false');
   element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress" displayed="true"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div>`;
+  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress" displayed="false"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div>`;
   return {
     element: element,
     id: identifier
@@ -351,8 +351,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           }
         }
       }
-      thisThreadProgressElement.setAttribute('displayed', 'true');
-      thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100}%`);
+      if (thisProgress > 0) {
+        thisThreadProgressElement.setAttribute('displayed', 'true');
+        thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100}%`);
+      }
     }
 
     function updateStretch(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, skeletonScreen: boolean): void {
