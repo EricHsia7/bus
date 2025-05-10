@@ -191,7 +191,7 @@ export async function exportAllData(): Promise<dataExport> {
     const keys = await lfListItemKeys(store);
     for (const key of keys) {
       const content = await lfGetItem(store, key);
-      const contentLength = content.length;
+      const contentLength = String(content).length;
 
       if (contentLength > 512) {
         const referenceID = generateIdentifier();
