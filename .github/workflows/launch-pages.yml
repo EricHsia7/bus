@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-universal-data-export-function
 
 jobs:
   launch:

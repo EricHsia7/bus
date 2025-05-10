@@ -37,6 +37,7 @@ import { closeSettingsOptions, openSettingsOptions, settingsOptionsHandler } fro
 import { closeStorage, openStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { documentQuerySelector } from './tools/query-selector';
+import { exportAllData } from './data/storage/index';
 
 import './interface/theme.css';
 
@@ -400,6 +401,9 @@ window.bus = {
   qrcode: {
     openQRCode,
     closeQRCode
+  },
+  test: {
+    exportAllData
   }
 };
 
