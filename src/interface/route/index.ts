@@ -354,6 +354,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (thisProgress > 0) {
         thisThreadProgressElement.setAttribute('displayed', 'true');
         thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', `${(thisProgress - 1) * 100}%`);
+      } else {
+        thisThreadProgressElement.setAttribute('displayed', 'false');
       }
     }
 
