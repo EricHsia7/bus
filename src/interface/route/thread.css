@@ -189,6 +189,60 @@
   background: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::before {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-main-color);
+  transform: scaleY(1) translateY(-1px);
+  transform-origin: top left;
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress::before {
+  transform: scaleY(calc(50 / (50 + 171))) translateY(-1px);
+}
+
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress::before {
+  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress::before {
+  background: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::after {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-main-color);
+  transform: scaleY(1) translateY(1px);
+  transform-origin: bottom left;
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress::after {
+  transform: scaleY(calc(50 / (50 + 171))) translateY(1px);
+}
+
+/* segment buffer: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress::after {
+  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+}
+
+/* nearest: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress::after {
+  background: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
 /* thread box > thread > status */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status {
   position: absolute;
