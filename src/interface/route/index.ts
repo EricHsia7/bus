@@ -187,6 +187,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   busButtonElement.classList.add('css_route_group_item_button');
   busButtonElement.setAttribute('type', 'tab');
   busButtonElement.setAttribute('code', '0');
+  busButtonElement.setAttribute('highlighted', 'true');
 
   const busButtonIconElement = document.createElement('div');
   busButtonIconElement.classList.add('css_route_group_item_button_icon');
@@ -201,6 +202,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   busArrivalTimeButtonElement.classList.add('css_route_group_item_button');
   busArrivalTimeButtonElement.setAttribute('type', 'tab');
   busArrivalTimeButtonElement.setAttribute('code', '1');
+  busButtonElement.setAttribute('highlighted', 'false');
 
   const busArrivalTimeButtonIconElement = document.createElement('div');
   busArrivalTimeButtonIconElement.classList.add('css_route_group_item_button_icon');
@@ -215,6 +217,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   routeButtonElement.classList.add('css_route_group_item_button');
   routeButtonElement.setAttribute('type', 'tab');
   routeButtonElement.setAttribute('code', '2');
+  busButtonElement.setAttribute('highlighted', 'false');
 
   const routeButtonIconElement = document.createElement('div');
   routeButtonIconElement.classList.add('css_route_group_item_button_icon');
@@ -229,6 +232,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   locationButtonElement.classList.add('css_route_group_item_button');
   locationButtonElement.setAttribute('type', 'tab');
   locationButtonElement.setAttribute('code', '3');
+  busButtonElement.setAttribute('highlighted', 'false');
 
   const locationButtonIconElement = document.createElement('div');
   locationButtonIconElement.classList.add('css_route_group_item_button_icon');
@@ -241,12 +245,12 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const saveToFolderButtonElement = document.createElement('div');
   saveToFolderButtonElement.classList.add('css_route_group_item_button');
-  saveToFolderButtonElement.setAttribute('type', 'tab');
-  saveToFolderButtonElement.setAttribute('code', '3');
+  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
+  busButtonElement.setAttribute('highlighted', 'false');
 
   const saveToFolderButtonIconElement = document.createElement('div');
   saveToFolderButtonIconElement.classList.add('css_route_group_item_button_icon');
-  saveToFolderButtonIconElement.innerHTML = getIconHTML('location_on');
+  saveToFolderButtonIconElement.innerHTML = getIconHTML('folder');
 
   const saveToFolderButtonTextElement = document.createTextNode('儲存');
 
@@ -255,12 +259,13 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const notificationButtonElement = document.createElement('div');
   notificationButtonElement.classList.add('css_route_group_item_button');
-  notificationButtonElement.setAttribute('type', 'tab');
-  notificationButtonElement.setAttribute('code', '3');
+  notificationButtonElement.setAttribute('type', 'schedule-notification');
+  busButtonElement.setAttribute('highlighted', 'false');
+  notificationButtonElement.setAttribute('enabled', 'true');
 
   const notificationButtonIconElement = document.createElement('div');
   notificationButtonIconElement.classList.add('css_route_group_item_button_icon');
-  notificationButtonIconElement.innerHTML = getIconHTML('location_on');
+  notificationButtonIconElement.innerHTML = getIconHTML('notifications');
 
   const notificationButtonTextElement = document.createTextNode('通知');
 
