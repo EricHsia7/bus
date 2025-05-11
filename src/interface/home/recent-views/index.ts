@@ -6,6 +6,8 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { openBus } from '../../bus/index';
 import { getIconHTML } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
+import { openLocation } from '../../location/index';
+import { openRoute } from '../../route/index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
