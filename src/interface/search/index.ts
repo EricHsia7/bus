@@ -28,6 +28,7 @@ const cursorWidth: number = 1.8 * searchInputCanvasScale;
 const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
 const selectionHighlightBorderRadius: number = 4 * searchInputCanvasScale;
 const lineHeight: number = 25 * searchInputCanvasScale;
+const fontWeight: string = '400';
 const fontSize: number = 20 * searchInputCanvasScale;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 
@@ -183,7 +184,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
   placeholderTextColor = getCSSVariableValue('--b-cssvar-aeaeb2');
   cursorColor = getCSSVariableValue('--b-cssvar-main-color');
 
-  searchInputCanvasContext.font = `500 ${fontSize}px ${fontFamily}`;
+  searchInputCanvasContext.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   searchInputCanvasContext.textAlign = 'center';
   searchInputCanvasContext.textBaseline = 'middle';
 
