@@ -170,6 +170,7 @@
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
+  position: relative;
   background: var(--b-cssvar-333333);
   width: 1px;
   height: 2px;
@@ -181,6 +182,36 @@
 /* skeleton screen: true */
 .css_route_field .css_route_head .css_route_group_tab_line_track[skeleton-screen="true"] .css_route_group_tab_line {
   display: none;
+}
+
+.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line::before {
+  position: absolute;
+  content: "";
+  top: 0px;
+  left: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-333333);
+  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateY(-1px);
+  transform-origin: top left;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line::after {
+  position: absolute;
+  content: "";
+  top: 0px;
+  right: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-333333);
+  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateY(1px);
+  transform-origin: top right;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box {
