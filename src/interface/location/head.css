@@ -184,7 +184,7 @@
   visibility: hidden;
 }
 
-.css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line::before {
+.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line::before {
   position: absolute;
   content: "";
   top: 0px;
@@ -199,7 +199,7 @@
   -webkit-user-select: none;
 }
 
-.css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line::after {
+.css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line::after {
   position: absolute;
   content: "";
   top: 0px;
