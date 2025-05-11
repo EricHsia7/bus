@@ -71,7 +71,9 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
     OpenFolderIconSelectorElement.setAttribute('disabled', 'false');
   }
 
-  LeftButtonElement.setAttribute('onclick', `bus.folder.saveEditedFolder('${folder.id}')`);
+  LeftButtonElement.onclick = function () {
+    saveEditedFolder(folder.id);
+  };
 
   FolderContentElement.innerHTML = '';
   const fragment = new DocumentFragment();

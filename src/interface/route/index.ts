@@ -12,6 +12,9 @@ import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
+import { openSaveToFolder } from '../save-to-folder/index';
+import { openScheduleNotification } from '../schedule-notification/index';
+import { openRouteDetails } from './details/index';
 
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
@@ -380,7 +383,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
-      saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-route', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
+      saveToFolderButtonElement.onclick = function () {
+        openSaveToFolder('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID]);
+      };
       isFolderContentSaved('stop', thisItem.id).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
@@ -388,7 +393,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop-on-route', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
+      scheduleNotificationButtonElement.onclick = function () {
+        openScheduleNotification('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID, thisItem.status.time]);
+      };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }
@@ -478,8 +485,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
-
+  RouteButtonRightElement.onclick = function () {
+    openRouteDetails(integration.RouteID, integration.PathAttributeId);
+  };
   const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
   if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;

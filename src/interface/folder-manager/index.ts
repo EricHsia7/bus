@@ -1,5 +1,6 @@
 import { FolderWithContent, listFoldersWithContent } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { openFolderEditor } from '../folder-editor/index';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 
@@ -10,7 +11,9 @@ const FolderManagerFolderListElement = elementQuerySelector(FolderManagerBodyEle
 function generateElementOfItem(item: FolderWithContent): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_folder_manager_folder_item');
-  element.setAttribute('onclick', `bus.folder.openFolderEditor('${item.id}')`);
+  element.onclick = function () {
+    openFolderEditor(item.id);
+  };
   element.innerHTML = /*html*/ `<div class="css_folder_manager_folder_item_icon">${getIconHTML(item.icon)}</div><div class="css_folder_manager_folder_item_name">${item.name}</div><div class="css_folder_manager_folder_item_status">${item.contentLength}</div><div class="css_folder_manager_folder_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
   return {
     element: element,

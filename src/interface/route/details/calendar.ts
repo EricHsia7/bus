@@ -120,7 +120,9 @@ export function setUpCalendarGroupSkeletonScreen(): void {
 function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay: number, skeletonScreen: boolean, animation: boolean, index: number): void {
   thisDayElement.innerText = thisDay.name;
   thisDayElement.setAttribute('day', index.toString());
-  thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
+  thisDayElement.onclick = function () {
+    switchCalendarDay(index);
+  };
   thisDayElement.setAttribute('highlighted', currentDay === index ? 'true' : 'false');
   thisDayElement.setAttribute('animation', booleanToString(animation));
   thisDayElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));

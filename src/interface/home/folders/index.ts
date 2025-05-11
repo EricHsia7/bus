@@ -8,6 +8,7 @@ import { getIconHTML } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
 import { promptMessage } from '../../prompt/index';
+import { openRoute } from '../../route/index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
@@ -239,10 +240,14 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       let onclick = '';
       switch (thisItem.type) {
         case 'stop':
-          onclick = `bus.route.openRoute(${thisItem.route.id}, [${thisItem.route.pathAttributeId.join(',')}])`;
+          buttonElement.onclick = function () {
+            openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
+          };
           break;
         case 'route':
-          onclick = `bus.route.openRoute(${thisItem.id}, [${thisItem.pathAttributeId.join(',')}])`;
+          buttonElement.onclick = function () {
+            openRoute(thisItem.id, thisItem.pathAttributeId);
+          };
           break;
         case 'bus':
           break;
@@ -251,7 +256,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         default:
           break;
       }
-      buttonElement.setAttribute('onclick', onclick);
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

@@ -3,6 +3,7 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
 const PersonalScheduleManagerField = documentQuerySelector('.css_personal_schedule_manager_field');
 const PersonalScheduleManagerBodyElement = elementQuerySelector(PersonalScheduleManagerField, '.css_personal_schedule_manager_body');
@@ -13,7 +14,9 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_personal_schedule_manager_item');
   element.id = identifier;
-  element.setAttribute('onclick', `bus.personalSchedule.openPersonalScheduleEditor('${item.id}')`);
+  element.onclick = function () {
+    openPersonalScheduleEditor(item.id);
+  };
   element.innerHTML = /*html*/ `<div class="css_personal_schedule_manager_item_name">${item.name}</div><div class="css_personal_schedule_manager_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
   return {
     element: element,

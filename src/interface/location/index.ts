@@ -12,6 +12,8 @@ import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
+import { openSaveToFolder } from '../save-to-folder/index';
+import { openScheduleNotification } from '../schedule-notification/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
@@ -353,7 +355,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
-      saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}])`);
+      saveToFolderButtonElement.onclick = function () {
+        openSaveToFolder('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId]);
+      };
       isFolderContentSaved('stop', thisItem.stopId).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
@@ -363,7 +367,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="schedule-notification"]');
-      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop-on-location', ['${thisItemElement.id}', ${thisItem.stopId}, ${thisItem.routeId}, ${thisItem.status.time}])`);
+      scheduleNotificationButtonElement.onclick = function () {
+        openScheduleNotification('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId, thisItem.status.time]);
+      };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }

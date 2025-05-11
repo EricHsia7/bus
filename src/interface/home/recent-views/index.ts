@@ -3,6 +3,7 @@ import { integratedRecentView, integratedRecentViews, integrateRecentViews } fro
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { openBus } from '../../bus/index';
 import { getIconHTML } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
 
@@ -95,24 +96,28 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      let onclickScript = '';
       switch (thisItem.type) {
         case 'route':
-          onclickScript = `bus.route.openRoute(${thisItem.id}, [${thisItem.pid.join(',')}])`;
+          thisElement.onclick = function () {
+            openRoute(thisItem.id, thisItem.pid);
+          };
           break;
         case 'location':
-          onclickScript = `bus.location.openLocation('${thisItem.hash}')`;
+          thisElement.onclick = function () {
+            openLocation(thisItem.hash);
+          };
           break;
         case 'bus':
-          onclickScript = `bus.bus.openBus(${thisItem.id})`;
+          thisElement.onclick = function () {
+            openBus(thisItem.id);
+          };
           break;
         case 'empty':
-          onclickScript = '';
+          thisElement.onclick = null;
           break;
         default:
           break;
       }
-      thisElement.setAttribute('onclick', onclickScript);
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

@@ -87,8 +87,10 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
 
     function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
-      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
-      thisItemContextElement.setAttribute('onclick', `bus.notification.cancelNotificationOnNotificationScheduleManager('${thisItemElement.id}', '${thisItem.schedule_id}')`);
+      const thisItemCancelElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
+      thisItemCancelElement.onclick = function () {
+        cancelNotificationOnNotificationScheduleManager(thisItemElement.id, thisItem.schedule_id);
+      };
     }
 
     function updateFirst(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
