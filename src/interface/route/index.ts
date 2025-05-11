@@ -133,16 +133,208 @@ function generateElementOfThreadBox(): GeneratedElement {
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   const identifier = generateIdentifier();
-  const element = document.createElement('div');
-  element.classList.add('css_route_group_item');
-  element.id = identifier;
-  element.setAttribute('stretched', 'false');
-  element.setAttribute('stretching', 'false');
-  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
-  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItem('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body" displayed="false"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 3)" code="3"><div class="css_route_group_item_button_icon">${getIconHTML('location_on')}</div>地點</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div><div class="css_route_group_item_nearby_locations" displayed="false"></div></div>`;
+
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_route_group_item');
+  itemElement.id = identifier;
+  itemElement.setAttribute('stretched', 'false');
+  itemElement.setAttribute('stretching', 'false');
+  itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  itemElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+
+  const headElement = document.createElement('div');
+  headElement.classList.add('css_route_group_item_head');
+
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_route_group_item_name');
+
+  const capsuleElement = document.createElement('div');
+  capsuleElement.classList.add('css_route_group_item_capsule');
+
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('css_route_group_item_status');
+
+  const nextSlideElement = document.createElement('div');
+  nextSlideElement.classList.add('css_next_slide');
+  nextSlideElement.setAttribute('code', '0');
+  nextSlideElement.setAttribute('displayed', 'false');
+
+  const currentSlideElement = document.createElement('div');
+  currentSlideElement.classList.add('css_current_slide');
+  currentSlideElement.setAttribute('code', '0');
+  currentSlideElement.setAttribute('displayed', 'true');
+
+  statusElement.appendChild(nextSlideElement);
+  statusElement.appendChild(currentSlideElement);
+
+  const stretchElement = document.createElement('div');
+  stretchElement.classList.add('.css_route_group_item_stretch');
+  stretchElement.onclick = function () {
+    stretchRouteItem(identifier, threadBoxIdentifier);
+  };
+  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+
+  const capsuleSeparatorElement = document.createElement('div');
+  capsuleSeparatorElement.classList.add('css_route_group_item_capsule_separator');
+
+  const bodyElement = document.createElement('div');
+  bodyElement.classList.add('css_route_group_item_body');
+
+  const buttonsElement = document.createElement('div');
+  buttonsElement.classList.add('css_route_group_item_buttons');
+
+  const busButtonElement = document.createElement('div');
+  busButtonElement.classList.add('css_route_group_item_button');
+  busButtonElement.setAttribute('type', 'tab');
+  busButtonElement.setAttribute('code', '0');
+
+  const busButtonIconElement = document.createElement('div');
+  busButtonIconElement.classList.add('css_route_group_item_button_icon');
+  busButtonIconElement.innerHTML = getIconHTML('directions_bus');
+
+  const busButtonTextElement = document.createTextNode('公車');
+
+  busButtonElement.appendChild(busButtonIconElement);
+  busButtonElement.appendChild(busButtonTextElement);
+
+  const busArrivalTimeButtonElement = document.createElement('div');
+  busArrivalTimeButtonElement.classList.add('css_route_group_item_button');
+  busArrivalTimeButtonElement.setAttribute('type', 'tab');
+  busArrivalTimeButtonElement.setAttribute('code', '1');
+
+  const busArrivalTimeButtonIconElement = document.createElement('div');
+  busArrivalTimeButtonIconElement.classList.add('css_route_group_item_button_icon');
+  busArrivalTimeButtonIconElement.innerHTML = getIconHTML('departure_board');
+
+  const busArrivalTimeButtonTextElement = document.createTextNode('抵達時間');
+
+  busArrivalTimeButtonElement.appendChild(busArrivalTimeButtonIconElement);
+  busArrivalTimeButtonElement.appendChild(busArrivalTimeButtonTextElement);
+
+  const routeButtonElement = document.createElement('div');
+  routeButtonElement.classList.add('css_route_group_item_button');
+  routeButtonElement.setAttribute('type', 'tab');
+  routeButtonElement.setAttribute('code', '2');
+
+  const routeButtonIconElement = document.createElement('div');
+  routeButtonIconElement.classList.add('css_route_group_item_button_icon');
+  routeButtonIconElement.innerHTML = getIconHTML('route');
+
+  const routeButtonTextElement = document.createTextNode('路線');
+
+  routeButtonElement.appendChild(routeButtonIconElement);
+  routeButtonElement.appendChild(routeButtonTextElement);
+
+  const locationButtonElement = document.createElement('div');
+  locationButtonElement.classList.add('css_route_group_item_button');
+  locationButtonElement.setAttribute('type', 'tab');
+  locationButtonElement.setAttribute('code', '3');
+
+  const locationButtonIconElement = document.createElement('div');
+  locationButtonIconElement.classList.add('css_route_group_item_button_icon');
+  locationButtonIconElement.innerHTML = getIconHTML('location_on');
+
+  const locationButtonTextElement = document.createTextNode('地點');
+
+  locationButtonElement.appendChild(locationButtonIconElement);
+  locationButtonElement.appendChild(locationButtonTextElement);
+
+  const saveToFolderButtonElement = document.createElement('div');
+  saveToFolderButtonElement.classList.add('css_route_group_item_button');
+  saveToFolderButtonElement.setAttribute('type', 'tab');
+  saveToFolderButtonElement.setAttribute('code', '3');
+
+  const saveToFolderButtonIconElement = document.createElement('div');
+  saveToFolderButtonIconElement.classList.add('css_route_group_item_button_icon');
+  saveToFolderButtonIconElement.innerHTML = getIconHTML('location_on');
+
+  const saveToFolderButtonTextElement = document.createTextNode('儲存');
+
+  saveToFolderButtonElement.appendChild(saveToFolderButtonIconElement);
+  saveToFolderButtonElement.appendChild(saveToFolderButtonTextElement);
+
+  const notificationButtonElement = document.createElement('div');
+  notificationButtonElement.classList.add('css_route_group_item_button');
+  notificationButtonElement.setAttribute('type', 'tab');
+  notificationButtonElement.setAttribute('code', '3');
+
+  const notificationButtonIconElement = document.createElement('div');
+  notificationButtonIconElement.classList.add('css_route_group_item_button_icon');
+  notificationButtonIconElement.innerHTML = getIconHTML('location_on');
+
+  const notificationButtonTextElement = document.createTextNode('通知');
+
+  notificationButtonElement.appendChild(notificationButtonIconElement);
+  notificationButtonElement.appendChild(notificationButtonTextElement);
+
+  buttonsElement.appendChild(busButtonElement);
+  buttonsElement.appendChild(busArrivalTimeButtonElement);
+  buttonsElement.appendChild(routeButtonElement);
+  buttonsElement.appendChild(locationButtonElement);
+  buttonsElement.appendChild(saveToFolderButtonElement);
+  buttonsElement.appendChild(notificationButtonElement);
+
+  bodyElement.appendChild(buttonsElement);
+
+  capsuleElement.appendChild(statusElement);
+  capsuleElement.appendChild(stretchElement);
+  capsuleElement.appendChild(capsuleSeparatorElement);
+
+  headElement.appendChild(nameElement);
+  headElement.appendChild(capsuleElement);
+
+  /*html*/ `
+<div class="css_route_group_item_head">
+
+  <div class="css_route_group_item_name"></div>
+
+  <div class="css_route_group_item_capsule">
+
+    <div class="css_route_group_item_status">
+      <div class="css_next_slide" code="0" displayed="false"></div>
+      <div class="css_current_slide" code="0" displayed="true"></div>
+    </div>
+
+    <div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItem('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div>
+    <div class="css_route_group_item_capsule_separator"></div>
+
+  </div>
+
+</div>
+<div class="css_route_group_item_body" displayed="false">
+  <div class="css_route_group_item_buttons">
+    <div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">
+      <div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>
+      公車
+    </div>
+    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">
+      <div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>
+      抵達時間
+    </div>
+    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2">
+      <div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>
+      路線
+    </div>
+    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 3)" code="3">
+      <div class="css_route_group_item_button_icon">${getIconHTML('location_on')}</div>
+      地點
+    </div>
+    <div class="css_route_group_item_button" highlighted="false" type="save-to-folder">
+      <div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>
+      儲存
+    </div>
+    <div class="css_route_group_item_button" highlighted="false" type="schedule-notification" enabled="true">
+      <div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>
+      到站通知
+    </div>
+  </div>
+  <div class="css_route_group_item_buses" displayed="true"></div>
+  <div class="css_route_group_item_overlapping_routes" displayed="false"></div>
+  <div class="css_route_group_item_bus_arrival_times" displayed="false"></div>
+  <div class="css_route_group_item_nearby_locations" displayed="false"></div>
+</div>`;
   return {
-    element: element,
+    element: itemElement,
     id: identifier
   };
 }
