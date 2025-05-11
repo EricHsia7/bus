@@ -12,7 +12,7 @@
 
 @property --b-cssvar-route-tab-line-width-scale {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
   initial-value: 1;
 }
 
