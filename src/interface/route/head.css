@@ -193,7 +193,7 @@
   height: 2px;
   border-top-left-radius: 2px;
   background: var(--b-cssvar-333333);
-  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(-1px);
+  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(-2px);
   transform-origin: top left;
   user-select: none;
   -webkit-user-select: none;
@@ -208,7 +208,7 @@
   height: 2px;
   border-top-right-radius: 2px;
   background: var(--b-cssvar-333333);
-  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(1px);
+  transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(2px);
   transform-origin: top right;
   user-select: none;
   -webkit-user-select: none;
