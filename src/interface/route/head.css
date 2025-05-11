@@ -191,7 +191,7 @@
   left: 0px;
   width: 2px;
   height: 2px;
-  border-radius: 1px;
+  border-top-left-radius: 1px;
   background: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(-1px);
   transform-origin: top left;
@@ -206,7 +206,7 @@
   right: 0px;
   width: 2px;
   height: 2px;
-  border-radius: 1px;
+  border-top-right-radius: 1px;
   background: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(1px);
   transform-origin: top right;
