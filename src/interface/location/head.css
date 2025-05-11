@@ -6,7 +6,7 @@
 
 @property --b-cssvar-location-tab-line-width-scale {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
   initial-value: 1;
 }
 
@@ -171,7 +171,7 @@
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
   background: var(--b-cssvar-333333);
-  width: 10px;
+  width: 1px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-location-tab-line-width-scale));
@@ -181,7 +181,37 @@
 }
 
 .css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line {
-  background: rgba(0, 0, 0, 0);
+  visibility: hidden;
+}
+
+.css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line::before {
+  position: absolute;
+  content: "";
+  top: 0px;
+  left: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-333333);
+  transform: scaleX(calc(1 / var(--b-cssvar-location-tab-line-width-scale))) translateX(-1px);
+  transform-origin: top left;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.css_location_field .css_location_head .css_location_group_tab_line_track[skeleton-screen="true"] .css_location_group_tab_line::after {
+  position: absolute;
+  content: "";
+  top: 0px;
+  right: 0px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--b-cssvar-333333);
+  transform: scaleX(calc(1 / var(--b-cssvar-location-tab-line-width-scale))) translateX(1px);
+  transform-origin: top right;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box {

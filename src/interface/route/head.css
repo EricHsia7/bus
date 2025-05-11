@@ -172,7 +172,7 @@
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line {
   position: relative;
   background: var(--b-cssvar-333333);
-  width: 10px;
+  width: 1px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
   transform: scaleX(var(--b-cssvar-route-tab-line-width-scale));
