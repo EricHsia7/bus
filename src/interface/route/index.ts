@@ -91,7 +91,7 @@ export function initializeRouteSliding(): void {
 
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   RouteGroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
-  RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
+  RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', (tabLineWidth / 10).toString());
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
 }
