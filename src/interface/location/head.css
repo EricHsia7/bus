@@ -189,7 +189,7 @@
   content: "";
   top: 0px;
   left: 0px;
-  width: 2px;
+  width: 4px;
   height: 2px;
   border-top-left-radius: 2px;
   background: var(--b-cssvar-333333);
@@ -204,7 +204,7 @@
   content: "";
   top: 0px;
   right: 0px;
-  width: 2px;
+  width: 4px;
   height: 2px;
   border-top-right-radius: 2px;
   background: var(--b-cssvar-333333);
