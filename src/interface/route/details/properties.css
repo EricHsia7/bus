@@ -8,8 +8,6 @@
   position: relative;
   width: 100%;
   height: 30px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"] .css_route_details_group_body .css_route_details_property .css_route_details_property_icon {
@@ -51,8 +49,6 @@
   font-size: 20px;
   line-height: 30px;
   font-weight: 400;
-  user-select: none;
-  -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;

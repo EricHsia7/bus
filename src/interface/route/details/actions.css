@@ -18,8 +18,6 @@
   background-color: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
   vertical-align: top;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[animation="true"] {
@@ -35,8 +33,6 @@
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button span.css_material_symbols_rounded {
   width: 25px;
   height: 25px;
-  user-select: none;
-  -webkit-user-select: none;
   color: var(--b-cssvar-333333);
   font-size: 29px;
 }

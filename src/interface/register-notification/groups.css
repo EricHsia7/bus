@@ -24,8 +24,6 @@
   height: 25px;
   display: flex;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_register_notification_field .css_register_notification_body .css_register_notification_groups .css_register_notification_group .css_register_notification_group_head .css_register_notification_group_icon {
@@ -37,15 +35,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_register_notification_field .css_register_notification_body .css_register_notification_groups .css_register_notification_group .css_register_notification_group_head .css_register_notification_group_icon span.css_material_symbols_rounded {
   height: 15px;
   width: 15px;
-  user-select: none;
-  -webkit-user-select: none;
   color: var(--b-cssvar-333333);
   font-size: 18px;
 }
@@ -61,8 +55,6 @@
   font-size: 15px;
   color: var(--b-cssvar-333333);
   line-height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_register_notification_field .css_register_notification_body .css_register_notification_groups .css_register_notification_group .css_register_notification_group_body {
@@ -72,6 +64,4 @@
   display: inline-block;
   background: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
-  user-select: none;
-  -webkit-user-select: none;
 }

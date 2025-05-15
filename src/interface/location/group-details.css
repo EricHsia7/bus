@@ -27,8 +27,6 @@
   position: relative;
   width: 100%;
   height: 30px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon {
@@ -70,8 +68,6 @@
   font-size: 20px;
   line-height: 30px;
   font-weight: 400;
-  user-select: none;
-  -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;

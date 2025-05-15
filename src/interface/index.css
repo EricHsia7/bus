@@ -18,6 +18,8 @@ body input[type="text"] {
   font-variation-settings: "wdth" 100;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 body * {
@@ -25,6 +27,8 @@ body * {
   -webkit-appearance: none;
   outline: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .css_splash_screen {

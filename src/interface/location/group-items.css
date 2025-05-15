@@ -5,7 +5,6 @@
   initial-value: 0px;
 }
 */
-
 @property --b-cssvar-css-location-group-item-y {
   syntax: '<length>';
   inherits: false;
@@ -32,8 +31,6 @@
   padding: 0px;
   background: var(--b-cssvar-ffffff-normal);
   display: block;
-  -webkit-user-select: none;
-  user-select: none;
   overflow: hidden;
   contain: layout;
 }
@@ -89,7 +86,6 @@
   transition: clip-path var(--b-cssvar-transition-duration);
 }
 */
-
 /* stretched: false && stretching: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="false"] {
   height: 50px;
@@ -128,8 +124,6 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-medium);
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
@@ -144,8 +138,6 @@
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;
-  user-select: none;
-  -webkit-user-select: none;
   visibility: inherit;
 }
 
@@ -232,8 +224,6 @@
   word-break: keep-all;
   overflow: hidden;
   text-overflow: ellipsis;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */
@@ -258,8 +248,6 @@
   word-break: keep-all;
   overflow: hidden;
   text-overflow: ellipsis;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */
@@ -280,8 +268,6 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* items > item > head > capsule > capsule separator */
@@ -309,8 +295,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* skeleton screen: true */
@@ -365,8 +349,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* displayed: false */

@@ -8,8 +8,6 @@
   position: relative;
   width: 100%;
   height: 30px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property .css_bus_property_icon {
@@ -39,8 +37,6 @@
   font-size: 20px;
   display: flex;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;

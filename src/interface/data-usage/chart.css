@@ -16,6 +16,4 @@
 .css_data_usage_field .css_data_usage_body .css_data_usage_chart svg {
   width: 100%;
   position: relative;
-  user-select: none;
-  -webkit-user-select: none;
 }

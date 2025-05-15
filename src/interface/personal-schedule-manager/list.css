@@ -8,6 +8,4 @@
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
   margin-bottom: var(--b-cssvar-safe-area-bottom);
-  user-select: none;
-  -webkit-user-select: none;
 }

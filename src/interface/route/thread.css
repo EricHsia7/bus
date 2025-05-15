@@ -24,8 +24,6 @@
   width: 45px;
   height: 95px;
   background: transparent;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* thread box */
@@ -35,8 +33,6 @@
   height: 50px;
   width: 45px;
   background: var(--b-cssvar-ffffff-normal);
-  user-select: none;
-  -webkit-user-select: none;
   overflow: visible;
   transition: none;
 }
@@ -200,8 +196,6 @@
   background: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(-1px);
   transform-origin: top left;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress::before {
@@ -235,8 +229,6 @@
   background: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(1px);
   transform-origin: bottom left;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress::after {
@@ -269,8 +261,6 @@
   background: var(--b-cssvar-ededf2);
   border-radius: 5px;
   overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide,
@@ -280,8 +270,6 @@
   left: 0px;
   width: 10px;
   height: 10px;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* skeleton screen: true */
