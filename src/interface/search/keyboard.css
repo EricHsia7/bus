@@ -9,8 +9,6 @@
   box-sizing: border-box;
   background: var(--b-cssvar-ffffff-normal);
   border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
-  user-select: none;
-  -webkit-user-select: none;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
@@ -36,8 +34,6 @@
   border: 1px solid var(--b-cssvar-f9f9fb-normal);
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.1);
   */
-  user-select: none;
-  -webkit-user-select: none;
   box-sizing: border-box;
   border: none;
   appearance: none;
@@ -49,7 +45,5 @@
 .css_search_keyboard .css_search_keyboard_key span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
   color: var(--b-cssvar-333333);
 }

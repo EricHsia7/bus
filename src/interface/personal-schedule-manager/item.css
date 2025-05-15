@@ -18,8 +18,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_personal_schedule_manager_field .css_personal_schedule_manager_body .css_personal_schedule_manager_list .css_personal_schedule_manager_item .css_personal_schedule_manager_item_arrow {
@@ -31,15 +29,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_personal_schedule_manager_field .css_personal_schedule_manager_body .css_personal_schedule_manager_list .css_personal_schedule_manager_item .css_personal_schedule_manager_item_arrow span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   font-size: 18px;
-  user-select: none;
-  -webkit-user-select: none;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
 }

@@ -18,8 +18,6 @@
 .css_schedule_notification_field .css_schedule_notification_body .css_schedule_notification_list .css_schedule_notification_list_item .css_schedule_notification_item_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
   color: var(--b-cssvar-333333);
 }
 
@@ -34,6 +32,4 @@
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
-  user-select: none;
-  -webkit-user-select: none;
 }

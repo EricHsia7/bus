@@ -56,8 +56,6 @@
   word-break: keep-all;
   text-overflow: ellipsis;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */
@@ -82,8 +80,6 @@
   word-break: keep-all;
   text-overflow: ellipsis;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */
@@ -105,8 +101,6 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
   display: block;
 }
 
@@ -260,8 +254,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* displayed: false */
@@ -337,7 +329,6 @@
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
 }
-
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_icon,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_capsule,

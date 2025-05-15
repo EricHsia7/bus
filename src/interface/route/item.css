@@ -18,8 +18,6 @@
   width: 100%;
   height: 95px;
   background: transparent;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* item */
@@ -29,8 +27,6 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  -webkit-user-select: none;
-  user-select: none;
   transition: none;
   display: block;
   background: var(--b-cssvar-ffffff-normal);
@@ -110,7 +106,6 @@
   transition: clip-path var(--b-cssvar-transition-duration);
 }
 */
-
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
@@ -149,8 +144,6 @@
   line-height: 30px;
   /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   font-weight: 400;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* skeleton screen: true */
@@ -169,8 +162,6 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule {
@@ -206,8 +197,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
@@ -270,8 +259,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* displayed: false */

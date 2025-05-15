@@ -24,5 +24,5 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="false"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="false"][skeleton-screen="true"] .css_location_details_property_icon,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="false"][skeleton-screen="true"] .css_location_details_property_value {
-   background: var(--b-cssvar-ededf2);
+  background: var(--b-cssvar-ededf2);
 }

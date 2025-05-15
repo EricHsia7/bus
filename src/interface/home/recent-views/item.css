@@ -36,8 +36,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
-  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -73,8 +71,6 @@
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;
-  user-select: none;
-  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -102,8 +98,6 @@
   word-break: keep-all;
   color: var(--b-cssvar-333333);
   opacity: var(--b-cssvar-333333-opacity-d);
-  user-select: none;
-  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -128,8 +122,6 @@
   line-height: 25px;
   font-weight: 400;
   color: var(--b-cssvar-333333);
-  user-select: none;
-  -webkit-user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
   contain: layout;

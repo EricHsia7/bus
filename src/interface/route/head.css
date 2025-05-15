@@ -89,8 +89,6 @@
   word-break: keep-all;
   overflow: hidden;
   text-overflow: ellipsis;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */
@@ -139,8 +137,6 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-cssvar-333333);
-  user-select: none;
-  -webkit-user-select: none;
   vertical-align: top;
   width: var(--b-cssvar-route-tab-width);
   height: 40px;
@@ -195,8 +191,6 @@
   background: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(-2px);
   transform-origin: top left;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line::after {
@@ -210,8 +204,6 @@
   background: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(2px);
   transform-origin: top right;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box {
@@ -222,8 +214,6 @@
   height: 1px;
   overflow: hidden;
   background: var(--b-cssvar-ededf2);
-  -webkit-user-select: none;
-  user-select: none;
   contain: layout;
 }
 
@@ -234,8 +224,6 @@
   width: 100%;
   height: 1px;
   background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
-  -webkit-user-select: none;
-  user-select: none;
   contain: layout;
 }
 

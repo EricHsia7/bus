@@ -18,8 +18,6 @@
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
   color: var(--b-cssvar-333333);
 }
 
@@ -33,8 +31,6 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 55px;
-  user-select: none;
-  -webkit-user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -49,8 +45,6 @@
   align-items: center;
   justify-content: right;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
-  user-select: none;
-  -webkit-user-select: none;
   white-space: nowrap;
   word-break: keep-all;
 }
@@ -64,15 +58,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow span.css_material_symbols_rounded {
   width: 15px;
   height: 15px;
   font-size: 18px;
-  user-select: none;
-  -webkit-user-select: none;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
 }

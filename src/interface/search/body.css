@@ -18,8 +18,6 @@
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  user-select: none;
-  -webkit-user-select: none;
   background: var(--b-cssvar-ffffff-normal);
 }
 
@@ -34,8 +32,6 @@
   height: 50px;
   box-sizing: border-box;
   position: relative;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result:first-child {
@@ -51,8 +47,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type span.css_material_symbols_rounded {
@@ -71,8 +65,6 @@
   font-size: 20px;
   color: var(--b-cssvar-333333);
   font-weight: 400;
-  -webkit-user-select: none;
-  user-select: none;
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;

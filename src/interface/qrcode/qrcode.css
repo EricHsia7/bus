@@ -2,6 +2,4 @@
   position: relative;
   width: clamp(150px, 55%, 350px);
   aspect-ratio: 1 / 1;
-  user-select: none;
-  -webkit-user-select: none;
 }

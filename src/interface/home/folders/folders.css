@@ -42,8 +42,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
   contain: layout;
 }
 
@@ -73,8 +71,6 @@
   font-weight: 400;
   color: var(--b-cssvar-333333);
   line-height: 25px;
-  user-select: none;
-  -webkit-user-select: none;
   contain: layout;
   overflow: hidden;
   text-overflow: ellipsis;

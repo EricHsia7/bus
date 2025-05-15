@@ -5,8 +5,6 @@
   height: 50px;
   overflow: hidden;
   contain: layout;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[first="true"] {
@@ -43,8 +41,6 @@
   visibility: inherit;
   contain: layout;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_notification_schedule_manager_field[displayed="true"] .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[first="true"] .css_notification_schedule_manager_item_hours {
@@ -64,8 +60,6 @@
   width: 30px;
   height: 30px;
   border-radius: var(--b-cssvar-border-radius-medium);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* item > notification-schedule */
@@ -79,8 +73,6 @@
   border-radius: var(--b-cssvar-border-radius-normal);
   contain: layout;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* item > notification-schedule > minutes */
@@ -98,8 +90,6 @@
   align-items: center;
   contain: layout;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton-screen: true */
@@ -111,8 +101,6 @@
   width: 30px;
   height: 30px;
   border-radius: var(--b-cssvar-border-radius-medium);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* item > notification-schedule > context */
@@ -131,8 +119,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton-screen: true */
@@ -154,8 +140,6 @@
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
-  -webkit-user-select: none;
-  user-select: none;
   contain: layout;
   overflow: hidden;
   text-overflow: ellipsis;

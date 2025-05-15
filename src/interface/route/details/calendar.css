@@ -21,8 +21,6 @@
   grid-column-gap: 5px;
   padding: 5px;
   box-sizing: border-box;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* groups > group: calendar > head > body > days > day */
@@ -33,8 +31,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
   font-weight: 500;
 }
 
@@ -92,8 +88,6 @@
   left: 0px;
   width: 100%;
   height: 100%;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[animation="true"][skeleton-screen="true"] {

@@ -27,8 +27,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
@@ -62,8 +60,6 @@
   font-size: 15px;
   color: var(--b-cssvar-333333);
   line-height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* skeleton screen: true */

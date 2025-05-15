@@ -22,8 +22,6 @@ span.css_material_symbols_rounded {
   direction: ltr;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  user-select: none;
-  -webkit-user-select: none;
   position: relative;
   width: 20px;
   height: 20px;
