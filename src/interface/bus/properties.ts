@@ -11,7 +11,16 @@ let previousAnimation: boolean = true;
 function generateElementOfBusProperty(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_bus_property');
-  element.innerHTML = /*html*/ `<div class="css_bus_property_icon"></div><div class="css_bus_property_value"></div>`;
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_bus_property_icon');
+
+  const valueElement = document.createElement('div');
+  valueElement.classList.add('css_bus_property_value');
+
+  element.appendChild(iconElement);
+  element.appendChild(valueElement);
+
   return {
     element: element,
     id: ''

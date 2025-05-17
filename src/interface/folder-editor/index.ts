@@ -1,6 +1,7 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -10,17 +11,25 @@ const FolderEditorHeadElement = elementQuerySelector(FolderEditorField, '.css_fo
 const LeftButtonElement = elementQuerySelector(FolderEditorHeadElement, '.css_folder_editor_button_left');
 const FolderEditorBodyElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_body');
 const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups');
-const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input');
-const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
+const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input') as HTMLInputElement;
+const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input') as HTMLInputElement;
 const OpenFolderIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
 const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
+OpenFolderIconSelectorElement.onclick = function () {
+  openFolderIconSelector('editor');
+};
+
 function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
   const identifier = generateIdentifier();
-  let element = document.createElement('div');
-  element.id = identifier;
-  element.classList.add('css_folder_editor_folder_item');
-  element.setAttribute('type', item.type);
+
+  // Main container
+  const itemElement = document.createElement('div');
+  itemElement.id = identifier;
+  itemElement.classList.add('css_folder_editor_folder_item');
+  itemElement.setAttribute('type', item.type);
+
+  // Icon, context, main text
   let context = '';
   let main = '';
   let icon = '';
@@ -50,9 +59,71 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
       main = 'null';
       break;
   }
-  element.innerHTML = /*html*/ `<div class="css_folder_editor_folder_item_icon">${getIconHTML(icon)}</div><div class="css_folder_editor_folder_item_context">${context}</div><div class="css_folder_editor_folder_item_main">${main}</div><div class="css_folder_editor_folder_item_capsule"><div class="css_folder_editor_folder_item_sort_control_up" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'up')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_item_sort_control_down" onclick="bus.folder.moveItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id}, 'down')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_folder_editor_folder_item_delete" onclick="bus.folder.removeItemOnFolderEditor('${identifier}', '${folder.id}', '${item.type}', ${item.id})">${getIconHTML('delete')}</div><div class="css_folder_editor_folder_item_capsule_separator"></div><div class="css_folder_editor_folder_item_capsule_separator"></div></div>`;
+
+  // Icon element
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_folder_editor_folder_item_icon');
+  iconElement.innerHTML = getIconHTML(icon);
+
+  // Context element
+  const contextElement = document.createElement('div');
+  contextElement.classList.add('css_folder_editor_folder_item_context');
+  contextElement.appendChild(document.createTextNode(context));
+
+  // Main element
+  const mainElement = document.createElement('div');
+  mainElement.classList.add('css_folder_editor_folder_item_main');
+  mainElement.appendChild(document.createTextNode(main));
+
+  // Capsule element
+  const capsuleElement = document.createElement('div');
+  capsuleElement.classList.add('css_folder_editor_folder_item_capsule');
+
+  // Sort up control
+  const sortUpElement = document.createElement('div');
+  sortUpElement.classList.add('css_folder_editor_folder_item_sort_control_up');
+  sortUpElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  sortUpElement.onclick = () => {
+    moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'up');
+  };
+
+  // Sort down control
+  const sortDownElement = document.createElement('div');
+  sortDownElement.classList.add('css_folder_editor_folder_item_sort_control_down');
+  sortDownElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  sortDownElement.onclick = () => {
+    moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'down');
+  };
+
+  // Delete control
+  const deleteElement = document.createElement('div');
+  deleteElement.classList.add('css_folder_editor_folder_item_delete');
+  deleteElement.innerHTML = getIconHTML('delete');
+  deleteElement.onclick = () => {
+    removeItemOnFolderEditor(identifier, folder.id, item.type, item.id);
+  };
+
+  // Capsule separators
+  const separator1Element = document.createElement('div');
+  separator1Element.classList.add('css_folder_editor_folder_item_capsule_separator');
+  const separator2Element = document.createElement('div');
+  separator2Element.classList.add('css_folder_editor_folder_item_capsule_separator');
+
+  // Assemble capsule
+  capsuleElement.appendChild(sortUpElement);
+  capsuleElement.appendChild(sortDownElement);
+  capsuleElement.appendChild(deleteElement);
+  capsuleElement.appendChild(separator1Element);
+  capsuleElement.appendChild(separator2Element);
+
+  // Assemble main item
+  itemElement.appendChild(iconElement);
+  itemElement.appendChild(contextElement);
+  itemElement.appendChild(mainElement);
+  itemElement.appendChild(capsuleElement);
+
   return {
-    element: element,
+    element: itemElement,
     id: identifier
   };
 }
@@ -60,16 +131,6 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
 function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
   NameInputElement.value = folder.name;
   IconInputElement.value = folder.icon;
-
-  if (folder.default) {
-    NameInputElement.setAttribute('readonly', 'readonly');
-    IconInputElement.setAttribute('readonly', 'readonly');
-    OpenFolderIconSelectorElement.setAttribute('disabled', 'true');
-  } else {
-    NameInputElement.removeAttribute('readonly');
-    IconInputElement.removeAttribute('readonly');
-    OpenFolderIconSelectorElement.setAttribute('disabled', 'false');
-  }
 
   LeftButtonElement.onclick = function () {
     saveEditedFolder(folder.id);
