@@ -134,23 +134,29 @@ function generateElementOfThreadBox(): GeneratedElement {
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   const identifier = generateIdentifier();
 
+  // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_route_group_item');
   itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
-  itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
-  itemElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+  itemElement.setAttribute('push-direction', '0');
+  itemElement.setAttribute('push-state', '0');
 
+  // Head
   const headElement = document.createElement('div');
   headElement.classList.add('css_route_group_item_head');
 
+  // Name
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_route_group_item_name');
+  headElement.appendChild(nameElement);
 
+  // Capsule
   const capsuleElement = document.createElement('div');
   capsuleElement.classList.add('css_route_group_item_capsule');
 
+  // Status
   const statusElement = document.createElement('div');
   statusElement.classList.add('css_route_group_item_status');
 
@@ -158,186 +164,176 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   nextSlideElement.classList.add('css_next_slide');
   nextSlideElement.setAttribute('code', '0');
   nextSlideElement.setAttribute('displayed', 'false');
+  statusElement.appendChild(nextSlideElement);
 
   const currentSlideElement = document.createElement('div');
   currentSlideElement.classList.add('css_current_slide');
   currentSlideElement.setAttribute('code', '0');
   currentSlideElement.setAttribute('displayed', 'true');
-
-  statusElement.appendChild(nextSlideElement);
   statusElement.appendChild(currentSlideElement);
 
+  capsuleElement.appendChild(statusElement);
+
+  // Stretch button
   const stretchElement = document.createElement('div');
-  stretchElement.classList.add('.css_route_group_item_stretch');
-  stretchElement.onclick = function () {
+  stretchElement.classList.add('css_route_group_item_stretch');
+  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  stretchElement.onclick = () => {
     stretchRouteItem(identifier, threadBoxIdentifier);
   };
-  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  capsuleElement.appendChild(stretchElement);
 
+  // Capsule separator
   const capsuleSeparatorElement = document.createElement('div');
   capsuleSeparatorElement.classList.add('css_route_group_item_capsule_separator');
+  capsuleElement.appendChild(capsuleSeparatorElement);
 
+  headElement.appendChild(capsuleElement);
+
+  // Body
   const bodyElement = document.createElement('div');
   bodyElement.classList.add('css_route_group_item_body');
+  bodyElement.setAttribute('displayed', 'false');
 
+  // Buttons
   const buttonsElement = document.createElement('div');
   buttonsElement.classList.add('css_route_group_item_buttons');
 
-  const busButtonElement = document.createElement('div');
-  busButtonElement.classList.add('css_route_group_item_button');
-  busButtonElement.setAttribute('type', 'tab');
-  busButtonElement.setAttribute('code', '0');
-  busButtonElement.setAttribute('highlighted', 'true');
+  // Tab: 公車
+  const tabBusElement = document.createElement('div');
+  tabBusElement.classList.add('css_route_group_item_button');
+  tabBusElement.setAttribute('highlighted', 'true');
+  tabBusElement.setAttribute('type', 'tab');
+  tabBusElement.setAttribute('code', '0');
+  tabBusElement.onclick = () => {
+    switchRouteBodyTab(identifier, 0);
+  };
 
-  const busButtonIconElement = document.createElement('div');
-  busButtonIconElement.classList.add('css_route_group_item_button_icon');
-  busButtonIconElement.innerHTML = getIconHTML('directions_bus');
+  const tabBusIconElement = document.createElement('div');
+  tabBusIconElement.classList.add('css_route_group_item_button_icon');
+  tabBusIconElement.innerHTML = getIconHTML('directions_bus');
+  tabBusElement.appendChild(tabBusIconElement);
+  tabBusElement.appendChild(document.createTextNode('公車'));
+  buttonsElement.appendChild(tabBusElement);
 
-  const busButtonTextElement = document.createTextNode('公車');
+  // Tab: 抵達時間
+  const tabArrivalElement = document.createElement('div');
+  tabArrivalElement.classList.add('css_route_group_item_button');
+  tabArrivalElement.setAttribute('highlighted', 'false');
+  tabArrivalElement.setAttribute('type', 'tab');
+  tabArrivalElement.setAttribute('code', '1');
+  tabArrivalElement.onclick = () => {
+    switchRouteBodyTab(identifier, 1);
+  };
 
-  busButtonElement.appendChild(busButtonIconElement);
-  busButtonElement.appendChild(busButtonTextElement);
+  const tabArrivalIconElement = document.createElement('div');
+  tabArrivalIconElement.classList.add('css_route_group_item_button_icon');
+  tabArrivalIconElement.innerHTML = getIconHTML('departure_board');
+  tabArrivalElement.appendChild(tabArrivalIconElement);
+  tabArrivalElement.appendChild(document.createTextNode('抵達時間'));
+  buttonsElement.appendChild(tabArrivalElement);
 
-  const busArrivalTimeButtonElement = document.createElement('div');
-  busArrivalTimeButtonElement.classList.add('css_route_group_item_button');
-  busArrivalTimeButtonElement.setAttribute('type', 'tab');
-  busArrivalTimeButtonElement.setAttribute('code', '1');
-  busButtonElement.setAttribute('highlighted', 'false');
+  // Tab: 路線
+  const tabRouteElement = document.createElement('div');
+  tabRouteElement.classList.add('css_route_group_item_button');
+  tabRouteElement.setAttribute('highlighted', 'false');
+  tabRouteElement.setAttribute('type', 'tab');
+  tabRouteElement.setAttribute('code', '2');
+  tabRouteElement.onclick = () => {
+    switchRouteBodyTab(identifier, 2);
+  };
 
-  const busArrivalTimeButtonIconElement = document.createElement('div');
-  busArrivalTimeButtonIconElement.classList.add('css_route_group_item_button_icon');
-  busArrivalTimeButtonIconElement.innerHTML = getIconHTML('departure_board');
+  const tabRouteIconElement = document.createElement('div');
+  tabRouteIconElement.classList.add('css_route_group_item_button_icon');
+  tabRouteIconElement.innerHTML = getIconHTML('route');
+  tabRouteElement.appendChild(tabRouteIconElement);
+  tabRouteElement.appendChild(document.createTextNode('路線'));
+  buttonsElement.appendChild(tabRouteElement);
 
-  const busArrivalTimeButtonTextElement = document.createTextNode('抵達時間');
+  // Tab: 地點
+  const tabLocationElement = document.createElement('div');
+  tabLocationElement.classList.add('css_route_group_item_button');
+  tabLocationElement.setAttribute('highlighted', 'false');
+  tabLocationElement.setAttribute('type', 'tab');
+  tabLocationElement.setAttribute('code', '3');
+  tabLocationElement.onclick = () => {
+    switchRouteBodyTab(identifier, 3);
+  };
 
-  busArrivalTimeButtonElement.appendChild(busArrivalTimeButtonIconElement);
-  busArrivalTimeButtonElement.appendChild(busArrivalTimeButtonTextElement);
+  const tabLocationIconElement = document.createElement('div');
+  tabLocationIconElement.classList.add('css_route_group_item_button_icon');
+  tabLocationIconElement.innerHTML = getIconHTML('location_on');
+  tabLocationElement.appendChild(tabLocationIconElement);
+  tabLocationElement.appendChild(document.createTextNode('地點'));
+  buttonsElement.appendChild(tabLocationElement);
 
-  const routeButtonElement = document.createElement('div');
-  routeButtonElement.classList.add('css_route_group_item_button');
-  routeButtonElement.setAttribute('type', 'tab');
-  routeButtonElement.setAttribute('code', '2');
-  busButtonElement.setAttribute('highlighted', 'false');
+  // Save to folder
+  const saveToFolderElement = document.createElement('div');
+  saveToFolderElement.classList.add('css_route_group_item_button');
+  saveToFolderElement.setAttribute('highlighted', 'false');
+  saveToFolderElement.setAttribute('type', 'save-to-folder');
+  /*
+  saveToFolderElement.onclick = () => {
+    openSaveToFolder('stop-on-route', [identifier, null, null]);
+  };
+  */
 
-  const routeButtonIconElement = document.createElement('div');
-  routeButtonIconElement.classList.add('css_route_group_item_button_icon');
-  routeButtonIconElement.innerHTML = getIconHTML('route');
+  const saveToFolderIconElement = document.createElement('div');
+  saveToFolderIconElement.classList.add('css_route_group_item_button_icon');
+  saveToFolderIconElement.innerHTML = getIconHTML('folder');
+  saveToFolderElement.appendChild(saveToFolderIconElement);
+  saveToFolderElement.appendChild(document.createTextNode('儲存'));
+  buttonsElement.appendChild(saveToFolderElement);
 
-  const routeButtonTextElement = document.createTextNode('路線');
+  // Schedule notification
+  const scheduleNotificationElement = document.createElement('div');
+  scheduleNotificationElement.classList.add('css_route_group_item_button');
+  scheduleNotificationElement.setAttribute('highlighted', 'false');
+  scheduleNotificationElement.setAttribute('type', 'schedule-notification');
+  scheduleNotificationElement.setAttribute('enabled', 'true');
+  /*
+  scheduleNotificationElement.onclick = () => {
+    openScheduleNotification('stop-on-route', [identifier, null, null, null]);
+  };
+  */
 
-  routeButtonElement.appendChild(routeButtonIconElement);
-  routeButtonElement.appendChild(routeButtonTextElement);
-
-  const locationButtonElement = document.createElement('div');
-  locationButtonElement.classList.add('css_route_group_item_button');
-  locationButtonElement.setAttribute('type', 'tab');
-  locationButtonElement.setAttribute('code', '3');
-  busButtonElement.setAttribute('highlighted', 'false');
-
-  const locationButtonIconElement = document.createElement('div');
-  locationButtonIconElement.classList.add('css_route_group_item_button_icon');
-  locationButtonIconElement.innerHTML = getIconHTML('location_on');
-
-  const locationButtonTextElement = document.createTextNode('地點');
-
-  locationButtonElement.appendChild(locationButtonIconElement);
-  locationButtonElement.appendChild(locationButtonTextElement);
-
-  const saveToFolderButtonElement = document.createElement('div');
-  saveToFolderButtonElement.classList.add('css_route_group_item_button');
-  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
-  busButtonElement.setAttribute('highlighted', 'false');
-
-  const saveToFolderButtonIconElement = document.createElement('div');
-  saveToFolderButtonIconElement.classList.add('css_route_group_item_button_icon');
-  saveToFolderButtonIconElement.innerHTML = getIconHTML('folder');
-
-  const saveToFolderButtonTextElement = document.createTextNode('儲存');
-
-  saveToFolderButtonElement.appendChild(saveToFolderButtonIconElement);
-  saveToFolderButtonElement.appendChild(saveToFolderButtonTextElement);
-
-  const notificationButtonElement = document.createElement('div');
-  notificationButtonElement.classList.add('css_route_group_item_button');
-  notificationButtonElement.setAttribute('type', 'schedule-notification');
-  busButtonElement.setAttribute('highlighted', 'false');
-  notificationButtonElement.setAttribute('enabled', 'true');
-
-  const notificationButtonIconElement = document.createElement('div');
-  notificationButtonIconElement.classList.add('css_route_group_item_button_icon');
-  notificationButtonIconElement.innerHTML = getIconHTML('notifications');
-
-  const notificationButtonTextElement = document.createTextNode('通知');
-
-  notificationButtonElement.appendChild(notificationButtonIconElement);
-  notificationButtonElement.appendChild(notificationButtonTextElement);
-
-  buttonsElement.appendChild(busButtonElement);
-  buttonsElement.appendChild(busArrivalTimeButtonElement);
-  buttonsElement.appendChild(routeButtonElement);
-  buttonsElement.appendChild(locationButtonElement);
-  buttonsElement.appendChild(saveToFolderButtonElement);
-  buttonsElement.appendChild(notificationButtonElement);
+  const scheduleNotificationIconElement = document.createElement('div');
+  scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
+  scheduleNotificationIconElement.innerHTML = getIconHTML('notifications');
+  scheduleNotificationElement.appendChild(scheduleNotificationIconElement);
+  scheduleNotificationElement.appendChild(document.createTextNode('到站通知'));
+  buttonsElement.appendChild(scheduleNotificationElement);
 
   bodyElement.appendChild(buttonsElement);
 
-  capsuleElement.appendChild(statusElement);
-  capsuleElement.appendChild(stretchElement);
-  capsuleElement.appendChild(capsuleSeparatorElement);
+  // Buses
+  const busesElement = document.createElement('div');
+  busesElement.classList.add('css_route_group_item_buses');
+  busesElement.setAttribute('displayed', 'true');
+  bodyElement.appendChild(busesElement);
 
-  headElement.appendChild(nameElement);
-  headElement.appendChild(capsuleElement);
+  // Overlapping routes
+  const overlappingRoutesElement = document.createElement('div');
+  overlappingRoutesElement.classList.add('css_route_group_item_overlapping_routes');
+  overlappingRoutesElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(overlappingRoutesElement);
 
-  /*html*/ `
-<div class="css_route_group_item_head">
+  // Bus arrival times
+  const busArrivalTimesElement = document.createElement('div');
+  busArrivalTimesElement.classList.add('css_route_group_item_bus_arrival_times');
+  busArrivalTimesElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(busArrivalTimesElement);
 
-  <div class="css_route_group_item_name"></div>
+  // Nearby locations
+  const nearbyLocationsElement = document.createElement('div');
+  nearbyLocationsElement.classList.add('css_route_group_item_nearby_locations');
+  nearbyLocationsElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(nearbyLocationsElement);
 
-  <div class="css_route_group_item_capsule">
+  // Assemble
+  itemElement.appendChild(headElement);
+  itemElement.appendChild(bodyElement);
 
-    <div class="css_route_group_item_status">
-      <div class="css_next_slide" code="0" displayed="false"></div>
-      <div class="css_current_slide" code="0" displayed="true"></div>
-    </div>
-
-    <div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItem('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div>
-    <div class="css_route_group_item_capsule_separator"></div>
-
-  </div>
-
-</div>
-<div class="css_route_group_item_body" displayed="false">
-  <div class="css_route_group_item_buttons">
-    <div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0">
-      <div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>
-      公車
-    </div>
-    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1">
-      <div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>
-      抵達時間
-    </div>
-    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2">
-      <div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>
-      路線
-    </div>
-    <div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 3)" code="3">
-      <div class="css_route_group_item_button_icon">${getIconHTML('location_on')}</div>
-      地點
-    </div>
-    <div class="css_route_group_item_button" highlighted="false" type="save-to-folder">
-      <div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>
-      儲存
-    </div>
-    <div class="css_route_group_item_button" highlighted="false" type="schedule-notification" enabled="true">
-      <div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>
-      到站通知
-    </div>
-  </div>
-  <div class="css_route_group_item_buses" displayed="true"></div>
-  <div class="css_route_group_item_overlapping_routes" displayed="false"></div>
-  <div class="css_route_group_item_bus_arrival_times" displayed="false"></div>
-  <div class="css_route_group_item_nearby_locations" displayed="false"></div>
-</div>`;
   return {
     element: itemElement,
     id: identifier
