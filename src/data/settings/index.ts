@@ -1,4 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { openSettingsOptions } from '../../interface/settings/options';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getNotificationClientStatus } from '../notification/index';
 import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
@@ -43,7 +44,7 @@ export interface SettingSelect {
   name: string;
   icon: MaterialSymbols;
   status: string;
-  action: string;
+  action: Function;
   type: 'select';
   default_option: number;
   option: number;
@@ -57,7 +58,7 @@ export interface SettingPage {
   icon: MaterialSymbols;
   status: string;
   type: 'page';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -67,7 +68,7 @@ export interface SettingInfo {
   icon: MaterialSymbols;
   status: string;
   type: 'info';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -77,7 +78,7 @@ export interface SettingAction {
   icon: MaterialSymbols;
   status: string;
   type: 'action';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -102,7 +103,9 @@ let Settings: SettingsObject = {
     name: '預估時間格式',
     icon: 'glyphs',
     status: '',
-    action: `bus.settings.openSettingsOptions('time_formatting_mode')`,
+    action: function () {
+      openSettingsOptions('time_formatting_mode');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -151,7 +154,9 @@ let Settings: SettingsObject = {
     name: '預估時間更新頻率',
     icon: 'pace',
     status: '',
-    action: `bus.settings.openSettingsOptions('refresh_interval')`,
+    action: function () {
+      openSettingsOptions('refresh_interval');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -234,7 +239,9 @@ let Settings: SettingsObject = {
     name: '顯示所在位置',
     icon: 'near_me',
     status: '',
-    action: `bus.settings.openSettingsOptions('display_user_location')`,
+    action: function () {
+      openSettingsOptions('display_user_location');
+    },
     type: 'select',
     default_option: 1,
     option: 1,
@@ -265,7 +272,9 @@ let Settings: SettingsObject = {
     name: '顯示裝置指向',
     icon: 'explore',
     status: '',
-    action: `bus.settings.openSettingsOptions('display_user_orientation')`,
+    action: function () {
+      openSettingsOptions('display_user_orientation');
+    },
     type: 'select',
     default_option: 1,
     option: 1,
@@ -296,7 +305,9 @@ let Settings: SettingsObject = {
     name: '站牌位置標籤',
     icon: 'tag',
     status: '',
-    action: `bus.settings.openSettingsOptions('location_labels')`,
+    action: function () {
+      openSettingsOptions('location_labels');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -336,7 +347,9 @@ let Settings: SettingsObject = {
     name: '網路代理',
     icon: 'router',
     status: '',
-    action: `bus.settings.openSettingsOptions('proxy')`,
+    action: function () {
+      openSettingsOptions('proxy');
+    },
     type: 'select',
     default_option: 1,
     option: 1,

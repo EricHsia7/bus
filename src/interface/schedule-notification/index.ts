@@ -10,23 +10,43 @@ const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificatio
 
 type ScheduleNotificationType = 'stop-on-route' | 'stop-on-location';
 
-function generateElementOfItem(item: ScheduleNotificationOption, type: ScheduleNotificationType, parameters: Array): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_schedule_notification_list_item');
+function generateElementOfItem(item: ScheduleNotificationOption, type: ScheduleNotificationType, parameters: Array<any>): GeneratedElement {
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_schedule_notification_list_item');
 
+  // Icon element
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_schedule_notification_item_icon');
+  const iconSpanElement = document.createElement('span');
+  iconSpanElement.innerHTML = getIconHTML(item.icon);
+  iconElement.appendChild(iconSpanElement);
+
+  // Name element
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_schedule_notification_item_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+
+  // Event handler
   switch (type) {
     case 'stop-on-route':
-      element.setAttribute('onclick', `bus.notification.scheduleNotificationForStopItemOnRoute('${parameters[0]}', ${parameters[1]}, ${parameters[2]}, ${parameters[3]}, ${item.index})`);
+      itemElement.onclick = function () {
+        scheduleNotificationForStopItemOnRoute(parameters[0], parameters[1], parameters[2], parameters[3], item.index);
+      };
       break;
     case 'stop-on-location':
-      element.setAttribute('onclick', `bus.notification.scheduleNotificationForStopItemOnLocation('${parameters[0]}', ${parameters[1]}, ${parameters[2]}, ${parameters[3]}, ${item.index})`);
+      itemElement.onclick = function () {
+        scheduleNotificationForStopItemOnLocation(parameters[0], parameters[1], parameters[2], parameters[3], item.index);
+      };
       break;
     default:
       break;
   }
-  element.innerHTML = /*html*/ `<div class="css_schedule_notification_item_icon">${getIconHTML(item.icon)}</div><div class="css_schedule_notification_item_name">${item.name}</div>`;
+
+  itemElement.appendChild(iconElement);
+  itemElement.appendChild(nameElement);
+
   return {
-    element: element,
+    element: itemElement,
     id: ''
   };
 }
