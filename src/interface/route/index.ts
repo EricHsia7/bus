@@ -117,16 +117,50 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 
 function generateElementOfThreadBox(): GeneratedElement {
   const identifier = generateIdentifier();
-  const element = document.createElement('div');
-  element.classList.add('css_route_group_thread_box');
-  element.id = identifier;
-  element.setAttribute('stretched', 'false');
-  element.setAttribute('stretching', 'false');
-  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
-  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress" displayed="false"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div>`;
+
+  // Main thread box element
+  const threadBoxElement = document.createElement('div');
+  threadBoxElement.classList.add('css_route_group_thread_box');
+  threadBoxElement.id = identifier;
+  threadBoxElement.setAttribute('stretched', 'false');
+  threadBoxElement.setAttribute('stretching', 'false');
+  threadBoxElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+
+  // Thread container
+  const threadElement = document.createElement('div');
+  threadElement.classList.add('css_route_group_thread');
+
+  // Thread progress
+  const threadProgressElement = document.createElement('div');
+  threadProgressElement.classList.add('css_route_group_thread_progress');
+  threadProgressElement.setAttribute('displayed', 'false');
+  threadElement.appendChild(threadProgressElement);
+
+  // Thread status container
+  const threadStatusElement = document.createElement('div');
+  threadStatusElement.classList.add('css_route_group_thread_status');
+
+  // Next slide
+  const nextSlideElement = document.createElement('div');
+  nextSlideElement.classList.add('css_next_slide');
+  nextSlideElement.setAttribute('code', '0');
+  nextSlideElement.setAttribute('displayed', 'false');
+  threadStatusElement.appendChild(nextSlideElement);
+
+  // Current slide
+  const currentSlideElement = document.createElement('div');
+  currentSlideElement.classList.add('css_current_slide');
+  currentSlideElement.setAttribute('code', '0');
+  currentSlideElement.setAttribute('displayed', 'true');
+  threadStatusElement.appendChild(currentSlideElement);
+
+  // Assemble
+  threadBoxElement.appendChild(threadElement);
+  threadBoxElement.appendChild(threadStatusElement);
+
   return {
-    element: element,
+    element: threadBoxElement,
     id: identifier
   };
 }
@@ -140,8 +174,8 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
-  itemElement.setAttribute('push-direction', '0');
-  itemElement.setAttribute('push-state', '0');
+  itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  itemElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
 
   // Head
   const headElement = document.createElement('div');
@@ -373,7 +407,6 @@ function generateElementOfGroup(): GeneratedElement {
 function generateElementOfTab(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-
   return {
     element: element,
     id: ''

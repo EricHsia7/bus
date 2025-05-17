@@ -60,12 +60,17 @@ function generateElementOfDay(): GeneratedElement {
 }
 
 function generateElementOfEventGroup(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_route_details_calendar_event_group');
-  element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`;
+  // Main event group element
+  const eventGroupElement = document.createElement('div');
+  eventGroupElement.classList.add('css_route_details_calendar_event_group');
+
+  // Canvas element
+  const canvasElement = document.createElement('canvas');
+  canvasElement.classList.add('css_route_details_calendar_event_group_canvas');
+  eventGroupElement.appendChild(canvasElement);
 
   return {
-    element: element,
+    element: eventGroupElement,
     id: ''
   };
 }
