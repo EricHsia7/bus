@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
     "babel-loader": "^10.0.0",
-    "babel-preset-modules": "^0.1.6",
+    "babel-preset-modules": "^0.0.2",
     "canvas": "^3.0.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
