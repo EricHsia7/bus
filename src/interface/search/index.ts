@@ -19,7 +19,7 @@ const searchField = documentQuerySelector('.css_search_field');
 const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
 const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
 const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input') as HTMLInputElement;
-const searchInputCanvasElement = elementQuerySelector(searchHeadElement, '.css_search_search_input canvas');
+const searchInputCanvasElement = elementQuerySelector(searchHeadElement, '.css_search_search_input canvas') as HTMLCanvasElement;
 const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
@@ -246,7 +246,6 @@ export function updateSearchResult(): void {
 
     function updateName(item: SearchResult, element: HTMLElement): void {
       const nameElement = elementQuerySelector(element, '.css_search_search_result_route_name');
-
       nameElement.innerText = item.item.n;
     }
 
@@ -310,10 +309,11 @@ export function updateSearchResult(): void {
       searchResultsElement.appendChild(fragment);
     }
 
+    const searchResultElements2 = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
     for (let i = 0; i < searchResultLength; i++) {
       const previousItem = previousSearchResults[i];
       const currentItem = searchResults[i];
-      const thisItemElement = searchResultElements[i];
+      const thisItemElement = searchResultElements2[i];
       if (previousItem) {
         updateItem(thisItemElement, currentItem, previousItem);
       } else {
