@@ -90,38 +90,67 @@ function initializeKeyboard(): void {
     ['橘', '小', '7', '8', '9'],
     ['鍵盤', '幹線', '清空', '0', '刪除']
   ];
-  const result: Array<string> = [];
+  // Clear previous content
+  searchKeyboardElement.innerHTML = '';
+  const fragment = new DocumentFragment();
   for (const row of keyboardKeys) {
     for (const column of row) {
-      let eventScript = '';
-      let eventType = 'onmousedown';
-      let html = '';
+      const buttonElement = document.createElement('div');
+      buttonElement.classList.add('css_search_keyboard_key');
       switch (column) {
         case '刪除':
-          eventScript = 'bus.search.deleteCharFromInout()';
-          html = getIconHTML('backspace');
+          buttonElement.innerHTML = getIconHTML('backspace');
+          if (supportTouch()) {
+            buttonElement.ontouchstart = () => {
+              deleteCharFromInout();
+            };
+          } else {
+            buttonElement.onclick = () => {
+              deleteCharFromInout();
+            };
+          }
           break;
         case '清空':
-          eventScript = 'bus.search.emptyInput()';
-          html = column;
+          buttonElement.appendChild(document.createTextNode(column));
+          if (supportTouch()) {
+            buttonElement.ontouchstart = () => {
+              emptyInput();
+            };
+          } else {
+            buttonElement.onclick = () => {
+              emptyInput();
+            };
+          }
           break;
         case '鍵盤':
-          eventScript = 'bus.search.openSystemKeyboard(event)';
-          html = getIconHTML('keyboard');
+          buttonElement.innerHTML = getIconHTML('keyboard');
+          if (supportTouch()) {
+            buttonElement.ontouchstart = (event) => {
+              openSystemKeyboard(event);
+            };
+          } else {
+            buttonElement.onclick = (event) => {
+              openSystemKeyboard(event);
+            };
+          }
           break;
         default:
-          eventScript = `bus.search.typeTextIntoInput('${column}')`;
-          html = column;
+          buttonElement.appendChild(document.createTextNode(column));
+          if (supportTouch()) {
+            buttonElement.ontouchstart = () => {
+              typeTextIntoInput(column);
+            };
+          } else {
+            buttonElement.onclick = () => {
+              typeTextIntoInput(column);
+            };
+          }
           break;
       }
-
-      if (supportTouch()) {
-        eventType = 'ontouchstart';
-      }
-      result.push(`<button class="css_search_keyboard_key" ${eventType}="${eventScript}">${html}</button>`);
+      fragment.appendChild(buttonElement);
     }
   }
-  searchKeyboardElement.innerHTML = result.join('');
+  searchKeyboardElement.appendChild(fragment);
 }
 
 export function openKeyboard(): void {
