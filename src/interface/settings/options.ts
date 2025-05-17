@@ -10,12 +10,29 @@ const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.
 const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
 
 function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_option');
+  const optionElement = document.createElement('div');
+  optionElement.classList.add('css_option');
 
-  element.innerHTML = /*html*/ `<div class="css_option_name">${item.name}</div><div class="css_option_checkbox"><input type="checkbox" onclick="bus.settings.settingsOptionsHandler(event, '${setting.key}', ${index})" ${setting.option === index ? 'checked' : ''}/></div>`;
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_option_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+
+  const checkboxContainerElement = document.createElement('div');
+  checkboxContainerElement.classList.add('css_option_checkbox');
+
+  const checkboxElement = document.createElement('input');
+  checkboxElement.type = 'checkbox';
+  checkboxElement.checked = setting.option === index;
+  checkboxElement.onclick = (event) => {
+    settingsOptionsHandler(event, setting.key, index);
+  };
+
+  checkboxContainerElement.appendChild(checkboxElement);
+  optionElement.appendChild(nameElement);
+  optionElement.appendChild(checkboxContainerElement);
+
   return {
-    element: element,
+    element: optionElement,
     id: ''
   };
 }
@@ -49,10 +66,11 @@ export function closeSettingsOptions(): void {
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {
-  const checkboxes = documentQuerySelectorAll('.css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox input[type="checkbox"]');
+  const checkboxes = documentQuerySelectorAll('.css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
   for (const checkbox of checkboxes) {
     checkbox.checked = false;
   }
-  event.target.checked = true;
+  const target = event.target as HTMLInputElement;
+  target.checked = true;
   changeSettingOption(settingKey, index);
 }
