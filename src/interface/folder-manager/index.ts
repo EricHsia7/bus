@@ -9,14 +9,41 @@ const FolderManagerBodyElement = elementQuerySelector(FolderManagerField, '.css_
 const FolderManagerFolderListElement = elementQuerySelector(FolderManagerBodyElement, '.css_folder_manager_folder_list');
 
 function generateElementOfItem(item: FolderWithContent): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_folder_manager_folder_item');
-  element.onclick = function () {
+  // Main container
+  const folderItemElement = document.createElement('div');
+  folderItemElement.classList.add('css_folder_manager_folder_item');
+  folderItemElement.onclick = () => {
     openFolderEditor(item.id);
   };
-  element.innerHTML = /*html*/ `<div class="css_folder_manager_folder_item_icon">${getIconHTML(item.icon)}</div><div class="css_folder_manager_folder_item_name">${item.name}</div><div class="css_folder_manager_folder_item_status">${item.contentLength}</div><div class="css_folder_manager_folder_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
+
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_folder_manager_folder_item_icon');
+  iconElement.innerHTML = getIconHTML(item.icon);
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_folder_manager_folder_item_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+
+  // Status
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('css_folder_manager_folder_item_status');
+  statusElement.appendChild(document.createTextNode(String(item.contentLength)));
+
+  // Arrow
+  const arrowElement = document.createElement('div');
+  arrowElement.classList.add('css_folder_manager_folder_item_arrow');
+  arrowElement.innerHTML = getIconHTML('arrow_forward_ios');
+
+  // Assemble
+  folderItemElement.appendChild(iconElement);
+  folderItemElement.appendChild(nameElement);
+  folderItemElement.appendChild(statusElement);
+  folderItemElement.appendChild(arrowElement);
+
   return {
-    element: element,
+    element: folderItemElement,
     id: ''
   };
 }

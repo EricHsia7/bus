@@ -32,11 +32,41 @@ let recentViewsRefreshTimer_streamStarted: boolean = false;
 let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function generateElementOfRecentViewItem(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_home_recent_views_item');
-  element.innerHTML = /*html*/ `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
+  // Main container
+  const recentViewsItemElement = document.createElement('div');
+  recentViewsItemElement.classList.add('css_home_recent_views_item');
+
+  // Head
+  const headElement = document.createElement('div');
+  headElement.classList.add('css_home_recent_views_item_head');
+
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_home_recent_views_item_icon');
+
+  // Title
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_home_recent_views_item_title');
+
+  // Time
+  const timeElement = document.createElement('div');
+  timeElement.classList.add('css_home_recent_views_item_time');
+
+  // Assemble head
+  headElement.appendChild(iconElement);
+  headElement.appendChild(titleElement);
+  headElement.appendChild(timeElement);
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_home_recent_views_item_name');
+
+  // Assemble item
+  recentViewsItemElement.appendChild(headElement);
+  recentViewsItemElement.appendChild(nameElement);
+
   return {
-    element: element,
+    element: recentViewsItemElement,
     id: ''
   };
 }
