@@ -31,7 +31,7 @@ import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, openRoute, stretchRouteItem, switchRoute, switchRouteBodyTab } from './interface/route/index';
 import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteOnRoute, saveStopItemOnLocation, saveStopItemOnRoute } from './interface/save-to-folder/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
-import { closeSearch, deleteCharFromInout, emptyInput, openSearch, openSystemKeyboard, resizeSearchInputCanvas, switchSearchTypeFilter, typeTextIntoInput, updateSearchInput, updateSearchResult } from './interface/search/index';
+import { closeSearch, deleteCharFromInput, emptyInput, openSearch, openSystemKeyboard, resizeSearchInputCanvas, switchSearchTypeFilter, typeTextIntoInput, updateSearchInput, updateSearchResult } from './interface/search/index';
 import { closeSettings, downloadExportFile, openFileToImportData, openSettings, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion } from './interface/settings/index';
 import { closeSettingsOptions, openSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
 import { closeStorage, openStorage } from './interface/storage/index';
@@ -344,7 +344,7 @@ window.bus = {
     openSearch,
     closeSearch,
     typeTextIntoInput,
-    deleteCharFromInout,
+    deleteCharFromInput,
     emptyInput,
     openSystemKeyboard,
     switchSearchTypeFilter
