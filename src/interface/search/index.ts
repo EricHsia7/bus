@@ -292,35 +292,37 @@ export function updateSearchResult(): void {
   const currentValue = getSearchInputValue();
   if (!containPhoneticSymbols(currentValue)) {
     const searchResults = searchFor(currentValue, currentType, 30);
-    const searchResultElements = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
-    const currentCapacity = searchResultElements.length;
     const searchResultLength = searchResults.length;
-    if (currentCapacity > searchResultLength) {
-      for (let i = currentCapacity; i > searchResultLength; i--) {
-        const element = searchResultElements[i - 1];
-        element.remove();
+    const currentItemSeatQuantity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
+    if (searchResultLength !== currentItemSeatQuantity) {
+      const capacity = currentItemSeatQuantity - searchResultLength;
+      if (capacity < 0) {
+        const fragment = new DocumentFragment();
+        for (let o = 0; o < Math.abs(capacity); o++) {
+          const newElement = generateElementOfSearchResultItem();
+          fragment.appendChild(newElement.element);
+        }
+        searchResultsElement.appendChild(fragment);
+      } else {
+        const searchResultElements2 = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
+        for (let o = 0; o < Math.abs(capacity); o++) {
+          const itemIndex = currentItemSeatQuantity - 1 - o;
+          searchResultElements2[itemIndex].remove();
+        }
       }
-    } else if (currentCapacity < searchResultLength) {
-      const fragment = new DocumentFragment();
-      for (let i = currentCapacity; i < searchResultLength; i++) {
-        const newElement = generateElementOfSearchResultItem();
-        fragment.appendChild(newElement.element);
-      }
-      searchResultsElement.appendChild(fragment);
     }
 
-    const searchResultElements2 = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
+    const searchResultElements = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
     for (let i = 0; i < searchResultLength; i++) {
       const previousItem = previousSearchResults[i];
       const currentItem = searchResults[i];
-      const thisItemElement = searchResultElements2[i];
+      const thisItemElement = searchResultElements[i];
       if (previousItem) {
         updateItem(thisItemElement, currentItem, previousItem);
       } else {
         updateItem(thisItemElement, currentItem, null);
       }
     }
-
     previousSearchResults = searchResults;
   }
 }
