@@ -98,7 +98,7 @@ function initializeKeyboard(): void {
       let html = '';
       switch (column) {
         case '刪除':
-          eventScript = 'bus.search.deleteCharFromInout()';
+          eventScript = 'bus.search.deleteCharFromInput()';
           html = getIconHTML('backspace');
           break;
         case '清空':
@@ -147,7 +147,7 @@ export function typeTextIntoInput(value): void {
   updateSearchInput(-1, -1);
 }
 
-export function deleteCharFromInout(): void {
+export function deleteCharFromInput(): void {
   const currentValue = getSearchInputValue();
   const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
