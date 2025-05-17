@@ -1,14 +1,19 @@
-import { prepareForSearch, searchFor, SearchItem } from '../../data/search/index';
+import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
 import { drawRoundedRect } from '../../tools/graphic';
 import { supportTouch } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { getCSSVariableValue } from '../../tools/style';
 import { containPhoneticSymbols } from '../../tools/text';
+import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { pushPageHistory, querySize, revokePageHistory } from '../index';
+import { GeneratedElement, pushPageHistory, querySize, revokePageHistory } from '../index';
+import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
+import { openRoute } from '../route/index';
+
+let previousSearchResults: Array<SearchResult> = [];
 
 const searchField = documentQuerySelector('.css_search_field');
 const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
@@ -212,33 +217,111 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
   }
 }
 
+function generateElementOfSearchResultItem(): GeneratedElement {
+  const searchResultItemElement = document.createElement('div');
+  searchResultItemElement.classList.add('css_search_search_result');
+
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_search_search_result_route_name');
+
+  const typeElement = document.createElement('div');
+  typeElement.classList.add('css_search_search_result_type');
+
+  searchResultItemElement.appendChild(typeElement);
+  searchResultItemElement.appendChild(nameElement);
+  return {
+    element: searchResultItemElement,
+    id: ''
+  };
+}
+
 export function updateSearchResult(): void {
-  const currentType = getSearchTypeFilterValue();
-  const currentValue = getSearchInputValue();
-  if (!containPhoneticSymbols(currentValue)) {
-    const typeToIcon: Array<MaterialSymbols> = ['route', 'location_on', 'directions_bus'];
-    const html: Array<string> = [];
-    const searchResults = searchFor(currentValue, currentType, 30);
-    for (const result of searchResults) {
-      const name = result.item.n;
-      const typeIcon = getIconHTML(typeToIcon[result.item.type]);
-      let onclickScript = '';
-      switch (result.item.type) {
+  const typeToIcon: Array<MaterialSymbols> = ['route', 'location_on', 'directions_bus'];
+
+  function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
+    function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
+      const typeElement = elementQuerySelector(element, '.css_search_search_result_type');
+      typeElement.innerHTML = getIconHTML(typeToIcon[item.item.type]);
+    }
+
+    function updateName(item: SearchResult, element: HTMLElement): void {
+      const nameElement = elementQuerySelector(element, '.css_search_search_result_route_name');
+
+      nameElement.innerText = item.item.n;
+    }
+
+    function updateClickHandler(item: SearchResult, element: HTMLElement): void {
+      switch (item.item.type) {
         case 0:
-          onclickScript = `bus.route.openRoute(${result.item.id}, [${result.item.pid.join(',')}])`;
+          element.onclick = function () {
+            openRoute(item.item.id as number, item.item.pid);
+          };
           break;
         case 1:
-          onclickScript = `bus.location.openLocation('${result.item.hash}')`;
+          element.onclick = function () {
+            openLocation(item.item.hash);
+          };
           break;
         case 2:
-          onclickScript = `bus.bus.openBus(${result.item.id})`;
+          element.onclick = function () {
+            openBus(item.item.id as number);
+          };
           break;
         default:
           break;
       }
-      html.push(`<div class="css_search_search_result" onclick="${onclickScript}"><div class="css_search_search_result_type">${typeIcon}</div><div class="css_search_search_result_route_name">${name}</div></div>`);
     }
-    searchResultsElement.innerHTML = html.join('');
+    // compare the current item with the previous item
+    if (previousItem) {
+      if (currentItem.item.type !== previousItem.item.type) {
+        updateTypeIcon(currentItem, element);
+      }
+      if (currentItem.item.id !== previousItem.item.id) {
+        updateName(currentItem, element);
+        updateClickHandler(currentItem, element);
+      }
+    }
+    // if the previous item is null, it means this is a new item
+    else {
+      updateTypeIcon(currentItem, element);
+      updateName(currentItem, element);
+      updateClickHandler(currentItem, element);
+    }
+  }
+
+  const currentType = getSearchTypeFilterValue();
+  const currentValue = getSearchInputValue();
+  if (!containPhoneticSymbols(currentValue)) {
+    const searchResults = searchFor(currentValue, currentType, 30);
+    const searchResultElements = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
+    const currentCapacity = searchResultElements.length;
+    const searchResultLength = searchResults.length;
+    if (currentCapacity > searchResultLength) {
+      for (let i = currentCapacity; i > searchResultLength; i--) {
+        const element = searchResultElements[i - 1];
+        element.remove();
+      }
+    } else if (currentCapacity < searchResultLength) {
+      const fragment = new DocumentFragment();
+      for (let i = currentCapacity; i < searchResultLength; i++) {
+        const newElement = generateElementOfSearchResultItem();
+        fragment.appendChild(newElement.element);
+      }
+      searchResultsElement.appendChild(fragment);
+    }
+
+    for (let i = 0; i < searchResultLength; i++) {
+      const previousItem = previousSearchResults[i];
+      const currentItem = searchResults[i];
+      const thisItemElement = searchResultElements[i];
+      if (previousItem) {
+        updateItem(thisItemElement, currentItem, previousItem);
+      } else {
+        updateItem(thisItemElement, currentItem, null);
+      }
+    }
+
+    previousSearchResults = searchResults;
   }
 }
 
