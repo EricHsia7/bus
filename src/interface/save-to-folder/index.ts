@@ -5,37 +5,62 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
-type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'bus';
+type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-on-route' | 'bus';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
 const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
 const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
 
 function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_save_to_folder_list_item');
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_save_to_folder_list_item');
 
+  // Icon element
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_save_to_folder_item_icon');
+  const iconSpanElement = document.createElement('span');
+  iconSpanElement.innerHTML = getIconHTML(item.icon);
+  iconElement.appendChild(iconSpanElement);
+
+  // Name element
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_save_to_folder_item_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+
+  // Event handler
   switch (type) {
     case 'stop-on-route':
-      element.setAttribute('onclick', `bus.folder.saveStopItemOnRoute('${parameters[0]}', '${item.id}', ${parameters[1]}, ${parameters[2]})`);
+      itemElement.onclick = function () {
+        saveStopItemOnRoute(parameters[0], item.id, parameters[1], parameters[2]);
+      };
       break;
     case 'stop-on-location':
-      element.setAttribute('onclick', `bus.folder.saveStopItemOnLocation('${parameters[0]}', '${item.id}', ${parameters[1]}, ${parameters[2]})`);
+      itemElement.onclick = function () {
+        saveStopItemOnLocation(parameters[0], item.id, parameters[1], parameters[2]);
+      };
       break;
     case 'route':
-      element.setAttribute('onclick', `bus.folder.saveRouteOnDetailsPage('${item.id}', ${parameters[0]})`);
+      itemElement.onclick = function () {
+        saveRouteOnDetailsPage(item.id, parameters[0]);
+      };
       break;
     case 'route-on-route':
-      element.setAttribute('onclick', `bus.folder.saveRouteOnRoute('${item.id}', ${parameters[0]})`);
+      itemElement.onclick = function () {
+        saveRouteOnRoute(item.id, parameters[0]);
+      };
       break;
     case 'bus':
+      // No action
       break;
     default:
       break;
   }
-  element.innerHTML = /*html*/ `<div class="css_save_to_folder_item_icon">${getIconHTML(item.icon)}</div><div class="css_save_to_folder_item_name">${item.name}</div>`;
+
+  itemElement.appendChild(iconElement);
+  itemElement.appendChild(nameElement);
+
   return {
-    element: element,
+    element: itemElement,
     id: ''
   };
 }

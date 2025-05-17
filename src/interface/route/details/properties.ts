@@ -9,19 +9,27 @@ let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
 function generateElementOfProperty(): GeneratedElement {
-  var element = document.createElement('div');
-  element.classList.add('css_route_details_property');
-  element.innerHTML = /*html*/ `<div class="css_route_details_property_icon"></div><div class="css_route_details_property_value"></div>`;
+  const propertyElement = document.createElement('div');
+  propertyElement.classList.add('css_route_details_property');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_details_property_icon');
+  propertyElement.appendChild(iconElement);
+
+  const valueElement = document.createElement('div');
+  valueElement.classList.add('css_route_details_property_value');
+  propertyElement.appendChild(valueElement);
+
   return {
-    element: element,
+    element: propertyElement,
     id: ''
   };
 }
 
 export function setUppropertiesGroupSkeletonScreen(Field: HTMLElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  var defaultPropertyQuantity = 5;
-  var properties = [];
+  const defaultPropertyQuantity = 5;
+  const properties = [];
   for (let i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
       key: i,
@@ -73,7 +81,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
 
   var propertyQuantity = properties.length;
 
-  Field.setAttribute('skeleton-screen', skeletonScreen);
+  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 
   const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
   if (propertyQuantity !== currentPropertySeatQuantity) {
@@ -81,7 +89,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
     if (capacity < 0) {
       for (let o = 0; o < Math.abs(capacity); o++) {
         // const propertyIndex = currentPropertySeatQuantity + o;
-        const newPropertyElement = generateElementOfProperty(skeletonScreen);
+        const newPropertyElement = generateElementOfProperty();
         elementQuerySelector(Field, '.css_route_details_group_body').appendChild(newPropertyElement.element);
       }
     } else {

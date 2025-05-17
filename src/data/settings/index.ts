@@ -1,8 +1,15 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { openSettingsOptions } from '../../interface/settings/options';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getNotificationClientStatus } from '../notification/index';
 import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
+import { openFolderManager } from '../../interface/folder-manager/index';
+import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
+import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
+import { openDataUsage } from '../../interface/data-usage/index';
+import { openStorage } from '../../interface/storage/index';
+import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion } from '../../interface/settings/index';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 
@@ -43,7 +50,7 @@ export interface SettingSelect {
   name: string;
   icon: MaterialSymbols;
   status: string;
-  action: string;
+  action: Function;
   type: 'select';
   default_option: number;
   option: number;
@@ -57,7 +64,7 @@ export interface SettingPage {
   icon: MaterialSymbols;
   status: string;
   type: 'page';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -67,7 +74,7 @@ export interface SettingInfo {
   icon: MaterialSymbols;
   status: string;
   type: 'info';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -77,7 +84,7 @@ export interface SettingAction {
   icon: MaterialSymbols;
   status: string;
   type: 'action';
-  action: string;
+  action: Function;
   description: string;
 }
 
@@ -102,7 +109,9 @@ let Settings: SettingsObject = {
     name: '預估時間格式',
     icon: 'glyphs',
     status: '',
-    action: `bus.settings.openSettingsOptions('time_formatting_mode')`,
+    action: function () {
+      openSettingsOptions('time_formatting_mode');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -151,7 +160,9 @@ let Settings: SettingsObject = {
     name: '預估時間更新頻率',
     icon: 'pace',
     status: '',
-    action: `bus.settings.openSettingsOptions('refresh_interval')`,
+    action: function () {
+      openSettingsOptions('refresh_interval');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -234,7 +245,9 @@ let Settings: SettingsObject = {
     name: '顯示所在位置',
     icon: 'near_me',
     status: '',
-    action: `bus.settings.openSettingsOptions('display_user_location')`,
+    action: function () {
+      openSettingsOptions('display_user_location');
+    },
     type: 'select',
     default_option: 1,
     option: 1,
@@ -265,7 +278,9 @@ let Settings: SettingsObject = {
     name: '顯示裝置指向',
     icon: 'explore',
     status: '',
-    action: `bus.settings.openSettingsOptions('display_user_orientation')`,
+    action: function () {
+      openSettingsOptions('display_user_orientation');
+    },
     type: 'select',
     default_option: 1,
     option: 1,
@@ -296,7 +311,9 @@ let Settings: SettingsObject = {
     name: '站牌位置標籤',
     icon: 'tag',
     status: '',
-    action: `bus.settings.openSettingsOptions('location_labels')`,
+    action: function () {
+      openSettingsOptions('location_labels');
+    },
     type: 'select',
     default_option: 0,
     option: 0,
@@ -336,7 +353,9 @@ let Settings: SettingsObject = {
     name: '網路代理',
     icon: 'router',
     status: '',
-    action: `bus.settings.openSettingsOptions('proxy')`,
+    action: function () {
+      openSettingsOptions('proxy');
+    },
     type: 'select',
     default_option: 1,
     option: 1,
@@ -368,7 +387,7 @@ let Settings: SettingsObject = {
     icon: 'folder',
     status: '',
     type: 'page',
-    action: 'bus.folder.openFolderManager()',
+    action: openFolderManager,
     description: ''
   },
   personal_schedule: {
@@ -376,7 +395,7 @@ let Settings: SettingsObject = {
     name: '個人化行程',
     icon: 'calendar_view_day',
     status: '',
-    action: `bus.personalSchedule.openPersonalScheduleManager()`,
+    action: openPersonalScheduleManager,
     type: 'page',
     description: ''
   },
@@ -385,7 +404,7 @@ let Settings: SettingsObject = {
     name: '通知',
     icon: 'notifications',
     status: '',
-    action: `bus.notification.openNotificationScheduleManager()`,
+    action: openNotificationScheduleManager,
     type: 'page',
     description: ''
   },
@@ -396,7 +415,9 @@ let Settings: SettingsObject = {
     description: '是否在介面中播放動畫。',
     status: '',
     type: 'select',
-    action: `bus.settings.openSettingsOptions('playing_animation')`,
+    action: function () {
+      openSettingsOptions('playing_animation');
+    },
     default_option: 0,
     option: 0,
     options: [
@@ -427,7 +448,9 @@ let Settings: SettingsObject = {
     description: '暫停使用耗電功能來節省電力。',
     status: '',
     type: 'select',
-    action: `bus.settings.openSettingsOptions('power_saving')`,
+    action: function () {
+      openSettingsOptions('power_saving');
+    },
     default_option: 1,
     option: 1,
     options: [
@@ -457,7 +480,7 @@ let Settings: SettingsObject = {
     icon: 'bigtop_updates',
     status: '',
     type: 'page',
-    action: 'bus.dataUsage.openDataUsage()',
+    action: openDataUsage,
     description: ''
   },
   storage: {
@@ -466,7 +489,7 @@ let Settings: SettingsObject = {
     icon: 'database',
     status: '',
     type: 'page',
-    action: 'bus.storage.openStorage()',
+    action: openStorage,
     description: ''
   },
   persistent_storage: {
@@ -474,7 +497,7 @@ let Settings: SettingsObject = {
     name: '永久儲存',
     icon: 'storage',
     status: '',
-    action: `bus.settings.showPromptToAskForPersistentStorage()`,
+    action: showPromptToAskForPersistentStorage,
     type: 'action',
     description: '開啟此選項以避免瀏覽器自動刪除重要資料。'
   },
@@ -484,7 +507,7 @@ let Settings: SettingsObject = {
     icon: 'upload',
     status: '',
     type: 'action',
-    action: 'bus.settings.downloadExportFile()',
+    action: downloadExportFile,
     description: ''
   },
   import: {
@@ -493,7 +516,7 @@ let Settings: SettingsObject = {
     icon: 'download',
     status: '',
     type: 'action',
-    action: 'bus.settings.openFileToImportData()',
+    action: openFileToImportData,
     description: ''
   },
   version: {
@@ -502,7 +525,7 @@ let Settings: SettingsObject = {
     icon: 'commit',
     status: '',
     type: 'info',
-    action: 'bus.settings.viewCommitOfCurrentVersion()',
+    action: viewCommitOfCurrentVersion,
     description: ''
   },
   branch: {
@@ -511,7 +534,7 @@ let Settings: SettingsObject = {
     icon: 'rebase',
     status: '',
     type: 'info',
-    action: '',
+    action: function () {},
     description: ''
   },
   last_update_date: {
@@ -520,7 +543,7 @@ let Settings: SettingsObject = {
     icon: 'update',
     status: '',
     type: 'info',
-    action: '',
+    action: function () {},
     description: ''
   },
   github: {
@@ -529,7 +552,7 @@ let Settings: SettingsObject = {
     icon: 'book_2',
     status: '@EricHsia7/bus',
     type: 'info',
-    action: '',
+    action: function () {},
     description: ''
   }
 };

@@ -1,26 +1,43 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
-import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
 const PersonalScheduleManagerField = documentQuerySelector('.css_personal_schedule_manager_field');
 const PersonalScheduleManagerBodyElement = elementQuerySelector(PersonalScheduleManagerField, '.css_personal_schedule_manager_body');
 const ListElement = elementQuerySelector(PersonalScheduleManagerBodyElement, '.css_personal_schedule_manager_list');
 
 function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
-  const identifier = generateIdentifier();
-  const element = document.createElement('div');
-  element.classList.add('css_personal_schedule_manager_item');
-  element.id = identifier;
-  element.setAttribute('onclick', `bus.personalSchedule.openPersonalScheduleEditor('${item.id}')`);
-  element.innerHTML = /*html*/ `<div class="css_personal_schedule_manager_item_name">${item.name}</div><div class="css_personal_schedule_manager_item_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
+  // const identifier = generateIdentifier();
+
+  // Main item element
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_personal_schedule_manager_item');
+  // itemElement.id = identifier;
+  itemElement.onclick = function () {
+    openPersonalScheduleEditor(item.id);
+  };
+
+  // Name element
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_personal_schedule_manager_item_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+  itemElement.appendChild(nameElement);
+
+  // Arrow element
+  const arrowElement = document.createElement('div');
+  arrowElement.classList.add('css_personal_schedule_manager_item_arrow');
+  const iconElement = document.createElement('span');
+  iconElement.innerHTML = getIconHTML('arrow_forward_ios');
+  arrowElement.appendChild(iconElement);
+  itemElement.appendChild(arrowElement);
+
   return {
-    element: element,
-    id: identifier
+    element: itemElement,
+    id: ''
   };
 }
-
 async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
   const personalSchedules = await listPersonalSchedules();

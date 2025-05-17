@@ -3,8 +3,11 @@ import { integratedRecentView, integratedRecentViews, integrateRecentViews } fro
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { openBus } from '../../bus/index';
 import { getIconHTML } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
+import { openLocation } from '../../location/index';
+import { openRoute } from '../../route/index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
@@ -29,11 +32,41 @@ let recentViewsRefreshTimer_streamStarted: boolean = false;
 let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function generateElementOfRecentViewItem(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_home_recent_views_item');
-  element.innerHTML = /*html*/ `<div class="css_home_recent_views_item_head"><div class="css_home_recent_views_item_icon"></div><div class="css_home_recent_views_item_title"></div><div class="css_home_recent_views_item_time"></div></div><div class="css_home_recent_views_item_name"></div>`;
+  // Main container
+  const recentViewsItemElement = document.createElement('div');
+  recentViewsItemElement.classList.add('css_home_recent_views_item');
+
+  // Head
+  const headElement = document.createElement('div');
+  headElement.classList.add('css_home_recent_views_item_head');
+
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_home_recent_views_item_icon');
+
+  // Title
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_home_recent_views_item_title');
+
+  // Time
+  const timeElement = document.createElement('div');
+  timeElement.classList.add('css_home_recent_views_item_time');
+
+  // Assemble head
+  headElement.appendChild(iconElement);
+  headElement.appendChild(titleElement);
+  headElement.appendChild(timeElement);
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_home_recent_views_item_name');
+
+  // Assemble item
+  recentViewsItemElement.appendChild(headElement);
+  recentViewsItemElement.appendChild(nameElement);
+
   return {
-    element: element,
+    element: recentViewsItemElement,
     id: ''
   };
 }
@@ -95,24 +128,28 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      let onclickScript = '';
       switch (thisItem.type) {
         case 'route':
-          onclickScript = `bus.route.openRoute(${thisItem.id}, [${thisItem.pid.join(',')}])`;
+          thisElement.onclick = function () {
+            openRoute(thisItem.id, thisItem.pid);
+          };
           break;
         case 'location':
-          onclickScript = `bus.location.openLocation('${thisItem.hash}')`;
+          thisElement.onclick = function () {
+            openLocation(thisItem.hash);
+          };
           break;
         case 'bus':
-          onclickScript = `bus.bus.openBus(${thisItem.id})`;
+          thisElement.onclick = function () {
+            openBus(thisItem.id);
+          };
           break;
         case 'empty':
-          onclickScript = '';
+          thisElement.onclick = null;
           break;
         default:
           break;
       }
-      thisElement.setAttribute('onclick', onclickScript);
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

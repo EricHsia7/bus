@@ -62,7 +62,9 @@ async function initializePersonalScheduleEditorField(personalScheduleID: string)
       thisDayElement.setAttribute('highlighted', 'false');
     }
   }
-  leftButtonElement.setAttribute('onclick', `bus.personalSchedule.saveEditedPersonalSchedule('${personalScheduleID}')`);
+  leftButtonElement.onclick = function () {
+    saveEditedPersonalSchedule(personalScheduleID);
+  };
 }
 
 export function openPersonalScheduleEditor(personalScheduleID: string): void {

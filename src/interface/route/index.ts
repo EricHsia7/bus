@@ -12,6 +12,9 @@ import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
+import { openSaveToFolder } from '../save-to-folder/index';
+import { openScheduleNotification } from '../schedule-notification/index';
+import { openRouteDetails } from './details/index';
 
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
@@ -114,32 +117,259 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 
 function generateElementOfThreadBox(): GeneratedElement {
   const identifier = generateIdentifier();
-  const element = document.createElement('div');
-  element.classList.add('css_route_group_thread_box');
-  element.id = identifier;
-  element.setAttribute('stretched', 'false');
-  element.setAttribute('stretching', 'false');
-  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
-  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_thread"><div class="css_route_group_thread_progress" displayed="false"></div></div><div class="css_route_group_thread_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div>`;
+
+  // Main thread box element
+  const threadBoxElement = document.createElement('div');
+  threadBoxElement.classList.add('css_route_group_thread_box');
+  threadBoxElement.id = identifier;
+  threadBoxElement.setAttribute('stretched', 'false');
+  threadBoxElement.setAttribute('stretching', 'false');
+  threadBoxElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+
+  // Thread container
+  const threadElement = document.createElement('div');
+  threadElement.classList.add('css_route_group_thread');
+
+  // Thread progress
+  const threadProgressElement = document.createElement('div');
+  threadProgressElement.classList.add('css_route_group_thread_progress');
+  threadProgressElement.setAttribute('displayed', 'false');
+  threadElement.appendChild(threadProgressElement);
+
+  // Thread status container
+  const threadStatusElement = document.createElement('div');
+  threadStatusElement.classList.add('css_route_group_thread_status');
+
+  // Next slide
+  const nextSlideElement = document.createElement('div');
+  nextSlideElement.classList.add('css_next_slide');
+  nextSlideElement.setAttribute('code', '0');
+  nextSlideElement.setAttribute('displayed', 'false');
+  threadStatusElement.appendChild(nextSlideElement);
+
+  // Current slide
+  const currentSlideElement = document.createElement('div');
+  currentSlideElement.classList.add('css_current_slide');
+  currentSlideElement.setAttribute('code', '0');
+  currentSlideElement.setAttribute('displayed', 'true');
+  threadStatusElement.appendChild(currentSlideElement);
+
+  // Assemble
+  threadBoxElement.appendChild(threadElement);
+  threadBoxElement.appendChild(threadStatusElement);
+
   return {
-    element: element,
+    element: threadBoxElement,
     id: identifier
   };
 }
 
 function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   const identifier = generateIdentifier();
-  const element = document.createElement('div');
-  element.classList.add('css_route_group_item');
-  element.id = identifier;
-  element.setAttribute('stretched', 'false');
-  element.setAttribute('stretching', 'false');
-  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
-  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
-  element.innerHTML = /*html*/ `<div class="css_route_group_item_head"><div class="css_route_group_item_name"></div><div class="css_route_group_item_capsule"><div class="css_route_group_item_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div><div class="css_route_group_item_stretch" onclick="bus.route.stretchRouteItem('${identifier}', '${threadBoxIdentifier}')">${getIconHTML('keyboard_arrow_down')}</div><div class="css_route_group_item_capsule_separator"></div></div></div><div class="css_route_group_item_body" displayed="false"><div class="css_route_group_item_buttons"><div class="css_route_group_item_button" highlighted="true" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 0)" code="0"><div class="css_route_group_item_button_icon">${getIconHTML('directions_bus')}</div>公車</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 1)" code="1"><div class="css_route_group_item_button_icon">${getIconHTML('departure_board')}</div>抵達時間</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 2)" code="2"><div class="css_route_group_item_button_icon">${getIconHTML('route')}</div>路線</div><div class="css_route_group_item_button" highlighted="false" type="tab" onclick="bus.route.switchRouteBodyTab('${identifier}', 3)" code="3"><div class="css_route_group_item_button_icon">${getIconHTML('location_on')}</div>地點</div><div class="css_route_group_item_button" highlighted="false" type="save-to-folder" onclick="bus.folder.openSaveToFolder('stop-on-route', ['${identifier}', null, null])"><div class="css_route_group_item_button_icon">${getIconHTML('folder')}</div>儲存</div><div class="css_route_group_item_button" highlighted="false" type="schedule-notification" onclick="bus.notification.openScheduleNotification('stop-on-route', ['${identifier}', null, null, null])" enabled="true"><div class="css_route_group_item_button_icon">${getIconHTML('notifications')}</div>到站通知</div></div><div class="css_route_group_item_buses" displayed="true"></div><div class="css_route_group_item_overlapping_routes" displayed="false"></div><div class="css_route_group_item_bus_arrival_times" displayed="false"></div><div class="css_route_group_item_nearby_locations" displayed="false"></div></div>`;
+
+  // Main item element
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_route_group_item');
+  itemElement.id = identifier;
+  itemElement.setAttribute('stretched', 'false');
+  itemElement.setAttribute('stretching', 'false');
+  itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  itemElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+
+  // Head
+  const headElement = document.createElement('div');
+  headElement.classList.add('css_route_group_item_head');
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_route_group_item_name');
+  headElement.appendChild(nameElement);
+
+  // Capsule
+  const capsuleElement = document.createElement('div');
+  capsuleElement.classList.add('css_route_group_item_capsule');
+
+  // Status
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('css_route_group_item_status');
+
+  const nextSlideElement = document.createElement('div');
+  nextSlideElement.classList.add('css_next_slide');
+  nextSlideElement.setAttribute('code', '0');
+  nextSlideElement.setAttribute('displayed', 'false');
+  statusElement.appendChild(nextSlideElement);
+
+  const currentSlideElement = document.createElement('div');
+  currentSlideElement.classList.add('css_current_slide');
+  currentSlideElement.setAttribute('code', '0');
+  currentSlideElement.setAttribute('displayed', 'true');
+  statusElement.appendChild(currentSlideElement);
+
+  capsuleElement.appendChild(statusElement);
+
+  // Stretch button
+  const stretchElement = document.createElement('div');
+  stretchElement.classList.add('css_route_group_item_stretch');
+  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  stretchElement.onclick = () => {
+    stretchRouteItem(identifier, threadBoxIdentifier);
+  };
+  capsuleElement.appendChild(stretchElement);
+
+  // Capsule separator
+  const capsuleSeparatorElement = document.createElement('div');
+  capsuleSeparatorElement.classList.add('css_route_group_item_capsule_separator');
+  capsuleElement.appendChild(capsuleSeparatorElement);
+
+  headElement.appendChild(capsuleElement);
+
+  // Body
+  const bodyElement = document.createElement('div');
+  bodyElement.classList.add('css_route_group_item_body');
+  bodyElement.setAttribute('displayed', 'false');
+
+  // Buttons
+  const buttonsElement = document.createElement('div');
+  buttonsElement.classList.add('css_route_group_item_buttons');
+
+  // Tab: 公車
+  const tabBusElement = document.createElement('div');
+  tabBusElement.classList.add('css_route_group_item_button');
+  tabBusElement.setAttribute('highlighted', 'true');
+  tabBusElement.setAttribute('type', 'tab');
+  tabBusElement.setAttribute('code', '0');
+  tabBusElement.onclick = () => {
+    switchRouteBodyTab(identifier, 0);
+  };
+
+  const tabBusIconElement = document.createElement('div');
+  tabBusIconElement.classList.add('css_route_group_item_button_icon');
+  tabBusIconElement.innerHTML = getIconHTML('directions_bus');
+  tabBusElement.appendChild(tabBusIconElement);
+  tabBusElement.appendChild(document.createTextNode('公車'));
+  buttonsElement.appendChild(tabBusElement);
+
+  // Tab: 抵達時間
+  const tabArrivalElement = document.createElement('div');
+  tabArrivalElement.classList.add('css_route_group_item_button');
+  tabArrivalElement.setAttribute('highlighted', 'false');
+  tabArrivalElement.setAttribute('type', 'tab');
+  tabArrivalElement.setAttribute('code', '1');
+  tabArrivalElement.onclick = () => {
+    switchRouteBodyTab(identifier, 1);
+  };
+
+  const tabArrivalIconElement = document.createElement('div');
+  tabArrivalIconElement.classList.add('css_route_group_item_button_icon');
+  tabArrivalIconElement.innerHTML = getIconHTML('departure_board');
+  tabArrivalElement.appendChild(tabArrivalIconElement);
+  tabArrivalElement.appendChild(document.createTextNode('抵達時間'));
+  buttonsElement.appendChild(tabArrivalElement);
+
+  // Tab: 路線
+  const tabRouteElement = document.createElement('div');
+  tabRouteElement.classList.add('css_route_group_item_button');
+  tabRouteElement.setAttribute('highlighted', 'false');
+  tabRouteElement.setAttribute('type', 'tab');
+  tabRouteElement.setAttribute('code', '2');
+  tabRouteElement.onclick = () => {
+    switchRouteBodyTab(identifier, 2);
+  };
+
+  const tabRouteIconElement = document.createElement('div');
+  tabRouteIconElement.classList.add('css_route_group_item_button_icon');
+  tabRouteIconElement.innerHTML = getIconHTML('route');
+  tabRouteElement.appendChild(tabRouteIconElement);
+  tabRouteElement.appendChild(document.createTextNode('路線'));
+  buttonsElement.appendChild(tabRouteElement);
+
+  // Tab: 地點
+  const tabLocationElement = document.createElement('div');
+  tabLocationElement.classList.add('css_route_group_item_button');
+  tabLocationElement.setAttribute('highlighted', 'false');
+  tabLocationElement.setAttribute('type', 'tab');
+  tabLocationElement.setAttribute('code', '3');
+  tabLocationElement.onclick = () => {
+    switchRouteBodyTab(identifier, 3);
+  };
+
+  const tabLocationIconElement = document.createElement('div');
+  tabLocationIconElement.classList.add('css_route_group_item_button_icon');
+  tabLocationIconElement.innerHTML = getIconHTML('location_on');
+  tabLocationElement.appendChild(tabLocationIconElement);
+  tabLocationElement.appendChild(document.createTextNode('地點'));
+  buttonsElement.appendChild(tabLocationElement);
+
+  // Save to folder
+  const saveToFolderElement = document.createElement('div');
+  saveToFolderElement.classList.add('css_route_group_item_button');
+  saveToFolderElement.setAttribute('highlighted', 'false');
+  saveToFolderElement.setAttribute('type', 'save-to-folder');
+  /*
+  saveToFolderElement.onclick = () => {
+    openSaveToFolder('stop-on-route', [identifier, null, null]);
+  };
+  */
+
+  const saveToFolderIconElement = document.createElement('div');
+  saveToFolderIconElement.classList.add('css_route_group_item_button_icon');
+  saveToFolderIconElement.innerHTML = getIconHTML('folder');
+  saveToFolderElement.appendChild(saveToFolderIconElement);
+  saveToFolderElement.appendChild(document.createTextNode('儲存'));
+  buttonsElement.appendChild(saveToFolderElement);
+
+  // Schedule notification
+  const scheduleNotificationElement = document.createElement('div');
+  scheduleNotificationElement.classList.add('css_route_group_item_button');
+  scheduleNotificationElement.setAttribute('highlighted', 'false');
+  scheduleNotificationElement.setAttribute('type', 'schedule-notification');
+  scheduleNotificationElement.setAttribute('enabled', 'true');
+  /*
+  scheduleNotificationElement.onclick = () => {
+    openScheduleNotification('stop-on-route', [identifier, null, null, null]);
+  };
+  */
+
+  const scheduleNotificationIconElement = document.createElement('div');
+  scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
+  scheduleNotificationIconElement.innerHTML = getIconHTML('notifications');
+  scheduleNotificationElement.appendChild(scheduleNotificationIconElement);
+  scheduleNotificationElement.appendChild(document.createTextNode('到站通知'));
+  buttonsElement.appendChild(scheduleNotificationElement);
+
+  bodyElement.appendChild(buttonsElement);
+
+  // Buses
+  const busesElement = document.createElement('div');
+  busesElement.classList.add('css_route_group_item_buses');
+  busesElement.setAttribute('displayed', 'true');
+  bodyElement.appendChild(busesElement);
+
+  // Overlapping routes
+  const overlappingRoutesElement = document.createElement('div');
+  overlappingRoutesElement.classList.add('css_route_group_item_overlapping_routes');
+  overlappingRoutesElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(overlappingRoutesElement);
+
+  // Bus arrival times
+  const busArrivalTimesElement = document.createElement('div');
+  busArrivalTimesElement.classList.add('css_route_group_item_bus_arrival_times');
+  busArrivalTimesElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(busArrivalTimesElement);
+
+  // Nearby locations
+  const nearbyLocationsElement = document.createElement('div');
+  nearbyLocationsElement.classList.add('css_route_group_item_nearby_locations');
+  nearbyLocationsElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(nearbyLocationsElement);
+
+  // Assemble
+  itemElement.appendChild(headElement);
+  itemElement.appendChild(bodyElement);
+
   return {
-    element: element,
+    element: itemElement,
     id: identifier
   };
 }
@@ -177,7 +407,6 @@ function generateElementOfGroup(): GeneratedElement {
 function generateElementOfTab(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-
   return {
     element: element,
     id: ''
@@ -380,7 +609,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
-      saveToFolderButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('stop-on-route', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}])`);
+      saveToFolderButtonElement.onclick = function () {
+        openSaveToFolder('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID]);
+      };
       isFolderContentSaved('stop', thisItem.id).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
       });
@@ -388,7 +619,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-      scheduleNotificationButtonElement.setAttribute('onclick', `bus.notification.openScheduleNotification('stop-on-route', ['${thisItemElement.id}', ${thisItem.id}, ${integration.RouteID}, ${thisItem.status.time}])`);
+      scheduleNotificationButtonElement.onclick = function () {
+        openScheduleNotification('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID, thisItem.status.time]);
+      };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }
@@ -478,8 +711,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  RouteButtonRightElement.setAttribute('onclick', `bus.route.openRouteDetails(${integration.RouteID}, [${integration.PathAttributeId.join(',')}])`);
-
+  RouteButtonRightElement.onclick = function () {
+    openRouteDetails(integration.RouteID, integration.PathAttributeId);
+  };
   const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
   if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;

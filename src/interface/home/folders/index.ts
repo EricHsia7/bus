@@ -8,6 +8,7 @@ import { getIconHTML } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
 import { promptMessage } from '../../prompt/index';
+import { openRoute } from '../../route/index';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
@@ -32,22 +33,102 @@ let foldersRefreshTimer_streaming: boolean = false;
 let foldersRefreshTimer_streamStarted: boolean = false;
 
 function generateElementOfItem(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_home_folder_item');
-  element.setAttribute('type', 'stop');
-  element.innerHTML = /*html*/ `<div class="css_home_folder_item_icon"></div><div class="css_home_folder_item_context"></div><div class="css_home_folder_item_main"></div><div class="css_home_folder_item_capsule"><div class="css_home_folder_item_status"><div class="css_next_slide" code="0" displayed="false"></div><div class="css_current_slide" code="0" displayed="true"></div></div><div class="css_home_folder_item_button">${getIconHTML('keyboard_arrow_right')}</div><div class="css_home_folder_item_capsule_separator"></div></div>`;
+  // Main container
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('css_home_folder_item');
+  itemElement.setAttribute('type', 'stop');
+
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_home_folder_item_icon');
+  iconElement.innerHTML = getIconHTML('location_on');
+
+  // Context
+  const contextElement = document.createElement('div');
+  contextElement.classList.add('css_home_folder_item_context');
+
+  // Main
+  const mainElement = document.createElement('div');
+  mainElement.classList.add('css_home_folder_item_main');
+
+  // Capsule
+  const capsuleElement = document.createElement('div');
+  capsuleElement.classList.add('css_home_folder_item_capsule');
+
+  // Status
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('css_home_folder_item_status');
+
+  const nextSlideElement = document.createElement('div');
+  nextSlideElement.classList.add('css_next_slide');
+  nextSlideElement.setAttribute('code', '0');
+  nextSlideElement.setAttribute('displayed', 'false');
+
+  const currentSlideElement = document.createElement('div');
+  currentSlideElement.classList.add('css_current_slide');
+  currentSlideElement.setAttribute('code', '0');
+  currentSlideElement.setAttribute('displayed', 'true');
+
+  statusElement.appendChild(nextSlideElement);
+  statusElement.appendChild(currentSlideElement);
+
+  // Button
+  const buttonElement = document.createElement('div');
+  buttonElement.classList.add('css_home_folder_item_button');
+  buttonElement.innerHTML = getIconHTML('keyboard_arrow_right');
+
+  // Capsule separator
+  const capsuleSeparatorElement = document.createElement('div');
+  capsuleSeparatorElement.classList.add('css_home_folder_item_capsule_separator');
+
+  // Assemble capsule
+  capsuleElement.appendChild(statusElement);
+  capsuleElement.appendChild(buttonElement);
+  capsuleElement.appendChild(capsuleSeparatorElement);
+
+  // Assemble item
+  itemElement.appendChild(iconElement);
+  itemElement.appendChild(contextElement);
+  itemElement.appendChild(mainElement);
+  itemElement.appendChild(capsuleElement);
+
   return {
-    element: element,
+    element: itemElement,
     id: ''
   };
 }
 
 function generateElementOfFolder(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_home_folder');
-  element.innerHTML = /*html*/ `<div class="css_home_folder_head"><div class="css_home_folder_icon"></div><div class="css_home_folder_name"></div></div><div class="css_home_folder_content"></div>`;
+  // Main container
+  const folderElement = document.createElement('div');
+  folderElement.classList.add('css_home_folder');
+
+  // Head
+  const headElement = document.createElement('div');
+  headElement.classList.add('css_home_folder_head');
+
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_home_folder_icon');
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_home_folder_name');
+
+  // Assemble head
+  headElement.appendChild(iconElement);
+  headElement.appendChild(nameElement);
+
+  // Content
+  const contentElement = document.createElement('div');
+  contentElement.classList.add('css_home_folder_content');
+
+  // Assemble folder
+  folderElement.appendChild(headElement);
+  folderElement.appendChild(contentElement);
+
   return {
-    element: element,
+    element: folderElement,
     id: ''
   };
 }
@@ -236,13 +317,16 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
     function updateButton(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       const buttonElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_button');
-      let onclick = '';
       switch (thisItem.type) {
         case 'stop':
-          onclick = `bus.route.openRoute(${thisItem.route.id}, [${thisItem.route.pathAttributeId.join(',')}])`;
+          buttonElement.onclick = function () {
+            openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
+          };
           break;
         case 'route':
-          onclick = `bus.route.openRoute(${thisItem.id}, [${thisItem.pathAttributeId.join(',')}])`;
+          buttonElement.onclick = function () {
+            openRoute(thisItem.id, thisItem.pathAttributeId);
+          };
           break;
         case 'bus':
           break;
@@ -251,7 +335,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         default:
           break;
       }
-      buttonElement.setAttribute('onclick', onclick);
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

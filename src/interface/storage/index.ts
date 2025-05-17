@@ -7,11 +7,26 @@ const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body
 const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
 
 function generateElementOfItem(item: StoreSize): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_storage_statistics_item');
-  element.innerHTML = /*html*/ `<div class="css_storage_statistics_item_name">${item.category.name}</div><div class="css_storage_statistics_item_value">${item.size}</div>`;
+  // Create root element
+  const statisticsItemElement = document.createElement('div');
+  statisticsItemElement.classList.add('css_storage_statistics_item');
+
+  // Create name element
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_storage_statistics_item_name');
+  nameElement.appendChild(document.createTextNode(item.category.name));
+
+  // Create value element
+  const valueElement = document.createElement('div');
+  valueElement.classList.add('css_storage_statistics_item_value');
+  valueElement.appendChild(document.createTextNode(String(item.size)));
+
+  // Append children
+  statisticsItemElement.appendChild(nameElement);
+  statisticsItemElement.appendChild(valueElement);
+
   return {
-    element: element,
+    element: statisticsItemElement,
     id: ''
   };
 }

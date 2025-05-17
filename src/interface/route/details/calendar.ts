@@ -60,12 +60,17 @@ function generateElementOfDay(): GeneratedElement {
 }
 
 function generateElementOfEventGroup(): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_route_details_calendar_event_group');
-  element.innerHTML = `<canvas class="css_route_details_calendar_event_group_canvas"></canvas>`;
+  // Main event group element
+  const eventGroupElement = document.createElement('div');
+  eventGroupElement.classList.add('css_route_details_calendar_event_group');
+
+  // Canvas element
+  const canvasElement = document.createElement('canvas');
+  canvasElement.classList.add('css_route_details_calendar_event_group_canvas');
+  eventGroupElement.appendChild(canvasElement);
 
   return {
-    element: element,
+    element: eventGroupElement,
     id: ''
   };
 }
@@ -120,7 +125,9 @@ export function setUpCalendarGroupSkeletonScreen(): void {
 function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay: number, skeletonScreen: boolean, animation: boolean, index: number): void {
   thisDayElement.innerText = thisDay.name;
   thisDayElement.setAttribute('day', index.toString());
-  thisDayElement.setAttribute('onclick', `bus.route.switchCalendarDay(${index})`);
+  thisDayElement.onclick = function () {
+    switchCalendarDay(index);
+  };
   thisDayElement.setAttribute('highlighted', currentDay === index ? 'true' : 'false');
   thisDayElement.setAttribute('animation', booleanToString(animation));
   thisDayElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));

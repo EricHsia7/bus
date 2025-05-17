@@ -4,6 +4,8 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { pushPageHistory, revokePageHistory } from '../../index';
+import { openSaveToFolder } from '../../save-to-folder/index';
+import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';
 import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
 import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
 
@@ -28,11 +30,17 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   const existence = await isFolderContentSaved('route', RouteID);
   svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));
   svaeToFolderActionButtonElement.setAttribute('highlighted', booleanToString(existence));
-  svaeToFolderActionButtonElement.setAttribute('onclick', `bus.folder.openSaveToFolder('route', [${RouteID}])`);
+  svaeToFolderActionButtonElement.onclick = function () {
+    openSaveToFolder('route', [RouteID]);
+  };
   getPermalinkActionButton.setAttribute('animation', booleanToString(playing_animation));
-  getPermalinkActionButton.setAttribute('onclick', `bus.route.shareRoutePermalink(${RouteID})`);
+  getPermalinkActionButton.onclick = function () {
+    shareRoutePermalink(RouteID);
+  };
   showPermalinkQRCodeActionButton.setAttribute('animation', booleanToString(playing_animation));
-  showPermalinkQRCodeActionButton.setAttribute('onclick', `bus.route.showRoutePermalinkQRCode(${RouteID})`);
+  showPermalinkQRCodeActionButton.onclick = function () {
+    showRoutePermalinkQRCode(RouteID);
+  };
   setUppropertiesGroupSkeletonScreen(PropertiesGroupElement);
   setUpCalendarGroupSkeletonScreen();
   const requestID = generateIdentifier();

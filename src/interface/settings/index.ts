@@ -14,14 +14,51 @@ const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_b
 const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
 
 function generateElementOfItem(item: Setting): GeneratedElement {
-  const element = document.createElement('div');
-  element.classList.add('css_setting');
+  const settingElement = document.createElement('div');
+  settingElement.classList.add('css_setting');
+  settingElement.setAttribute('type', item.type);
 
-  element.setAttribute('onclick', item.action);
-  element.setAttribute('type', item.type);
-  element.innerHTML = /*html*/ `<div class="css_setting_icon">${getIconHTML(item.icon)}</div><div class="css_setting_name">${item.name}</div><div class="css_setting_status">${item.status}</div><div class="css_setting_arrow">${getIconHTML('arrow_forward_ios')}</div>`;
+  // Icon
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_setting_icon');
+  const iconSpanElement = document.createElement('span');
+  iconSpanElement.innerHTML = getIconHTML(item.icon);
+  iconElement.appendChild(iconSpanElement);
+
+  // Name
+  const nameElement = document.createElement('div');
+  nameElement.classList.add('css_setting_name');
+  nameElement.appendChild(document.createTextNode(item.name));
+
+  // Status
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('css_setting_status');
+  statusElement.appendChild(document.createTextNode(item.status));
+
+  // Arrow
+  const arrowElement = document.createElement('div');
+  arrowElement.classList.add('css_setting_arrow');
+  const arrowSpanElement = document.createElement('span');
+  arrowSpanElement.innerHTML = getIconHTML('arrow_forward_ios');
+  arrowElement.appendChild(arrowSpanElement);
+
+  // Event handler (lambda)
+  if (typeof item.action === 'function') {
+    settingElement.onclick = function () {
+      item.action();
+    };
+  } else if (typeof item.action === 'string') {
+    settingElement.setAttribute('onclick', item.action);
+  }
+
+  // Assemble
+  settingElement.appendChild(iconElement);
+  settingElement.appendChild(nameElement);
+  settingElement.appendChild(statusElement);
+  settingElement.appendChild(arrowElement);
+
   return {
-    element: element,
+    element: settingElement,
     id: ''
   };
 }
