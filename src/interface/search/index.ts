@@ -97,7 +97,7 @@ function initializeKeyboard(): void {
     keyboardInitialized = true;
     const fragment = new DocumentFragment();
     for (const row of keyboardRows) {
-      for (const item of row) {
+      for (let item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
         const eventName = supportTouch() ? 'touchstart' : 'mousedown';
