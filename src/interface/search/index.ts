@@ -103,10 +103,9 @@ function initializeKeyboard(): void {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
         const eventName = supportTouch() ? 'touchstart' : 'mousedown';
-
         switch (item) {
           case '刪除': {
-            //  newButtonElement.addEventListener(eventName, deleteCharFromInput);
+            newButtonElement.addEventListener(eventName, deleteCharFromInput);
             newButtonElement.innerHTML = getIconHTML('backspace');
             break;
           }
