@@ -101,26 +101,30 @@ function initializeKeyboard(): void {
       for (const item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
-        const event = supportTouch() ? 'touchstart' : 'mousedown';
+        const eventName = supportTouch() ? 'touchstart' : 'mousedown';
         switch (item) {
-          case '刪除':
-            newButtonElement.addEventListener(event, deleteCharFromInput);
+          case '刪除': {
+            newButtonElement.addEventListener(eventName, deleteCharFromInput);
             newButtonElement.innerHTML = getIconHTML('backspace');
             break;
-          case '清空':
-            newButtonElement.addEventListener(event, emptyInput);
+          }
+          case '清空': {
+            newButtonElement.addEventListener(eventName, emptyInput);
             newButtonElement.appendChild(document.createTextNode(item));
             break;
-          case '鍵盤':
-            newButtonElement.addEventListener(event, openSystemKeyboard);
+          }
+          case '鍵盤': {
+            newButtonElement.addEventListener(eventName, openSystemKeyboard);
             newButtonElement.innerHTML = getIconHTML('keyboard');
             break;
-          default:
-            newButtonElement.addEventListener(event, function () {
+          }
+          default: {
+            newButtonElement.addEventListener(eventName, function () {
               typeTextIntoInput(item);
             });
             newButtonElement.appendChild(document.createTextNode(item));
             break;
+          }
         }
         fragment.appendChild(newButtonElement);
       }
