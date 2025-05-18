@@ -84,7 +84,7 @@ export function resizeSearchInputCanvas(): void {
   updateSearchInput(-1, -1);
 }
 
-const keyboardRows: Array<[string, string, string, string, string]> = [
+let keyboardRows: Array<[string, string, string, string, string]> = [
   ['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
@@ -97,7 +97,7 @@ function initializeKeyboard(): void {
     keyboardInitialized = true;
     const fragment = new DocumentFragment();
     for (const row of keyboardRows) {
-      for (let item of row) {
+      for (const item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
         const eventName = supportTouch() ? 'touchstart' : 'mousedown';
