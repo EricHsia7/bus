@@ -40,6 +40,7 @@
   -webkit-appearance: none;
   padding: 0px;
   margin: 0px;
+  touch-action: manipulation;
 }
 
 .css_search_keyboard .css_search_keyboard_key span.css_material_symbols_rounded {
