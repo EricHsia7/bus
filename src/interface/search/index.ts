@@ -84,21 +84,19 @@ export function resizeSearchInputCanvas(): void {
   updateSearchInput(-1, -1);
 }
 
+const keyboardRows: Array<[string, string, string, string, string]> = [
+  ['紅', '藍', '1', '2', '3'],
+  ['綠', '棕', '4', '5', '6'],
+  ['橘', '小', '7', '8', '9'],
+  ['鍵盤', '幹線', '清空', '0', '刪除']
+];
 let keyboardInitialized = false;
 
 function initializeKeyboard(): void {
   if (!keyboardInitialized) {
     keyboardInitialized = true;
-
-    const rows: Array<[string, string, string, string, string]> = [
-      ['紅', '藍', '1', '2', '3'],
-      ['綠', '棕', '4', '5', '6'],
-      ['橘', '小', '7', '8', '9'],
-      ['鍵盤', '幹線', '清空', '0', '刪除']
-    ];
-
     const fragment = new DocumentFragment();
-    for (const row of rows) {
+    for (const row of keyboardRows) {
       for (const item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
@@ -110,12 +108,12 @@ function initializeKeyboard(): void {
             break;
           }
           case '清空': {
-            // newButtonElement.addEventListener(eventName, emptyInput);
+            newButtonElement.addEventListener(eventName, emptyInput);
             newButtonElement.appendChild(document.createTextNode(item));
             break;
           }
           case '鍵盤': {
-            //  newButtonElement.addEventListener(eventName, openSystemKeyboard);
+            newButtonElement.addEventListener(eventName, openSystemKeyboard);
             newButtonElement.innerHTML = getIconHTML('keyboard');
             break;
           }
