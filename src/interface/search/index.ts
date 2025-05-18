@@ -84,54 +84,56 @@ export function resizeSearchInputCanvas(): void {
   updateSearchInput(-1, -1);
 }
 
-function initializeKeyboard(): void {
-  const keyboardKeys: Array<[string, string, string, string, string]> = [
-    ['紅', '藍', '1', '2', '3'],
-    ['綠', '棕', '4', '5', '6'],
-    ['橘', '小', '7', '8', '9'],
-    ['鍵盤', '幹線', '清空', '0', '刪除']
-  ];
-  const result: Array<string> = [];
-  for (const row of keyboardKeys) {
-    for (const column of row) {
-      let eventScript = '';
-      let eventType = 'onmousedown';
-      let html = '';
-      switch (column) {
-        case '刪除':
-          eventScript = 'bus.search.deleteCharFromInput()';
-          html = getIconHTML('backspace');
-          break;
-        case '清空':
-          eventScript = 'bus.search.emptyInput()';
-          html = column;
-          break;
-        case '鍵盤':
-          eventScript = 'bus.search.openSystemKeyboard(event)';
-          html = getIconHTML('keyboard');
-          break;
-        default:
-          eventScript = `bus.search.typeTextIntoInput('${column}')`;
-          html = column;
-          break;
-      }
+let keyboardInitialized = false;
 
-      if (supportTouch()) {
-        eventType = 'ontouchstart';
+function initializeKeyboard(): void {
+  if (!keyboardInitialized) {
+    keyboardInitialized = true;
+
+    const rows: Array<[string, string, string, string, string]> = [
+      ['紅', '藍', '1', '2', '3'],
+      ['綠', '棕', '4', '5', '6'],
+      ['橘', '小', '7', '8', '9'],
+      ['鍵盤', '幹線', '清空', '0', '刪除']
+    ];
+    const fragment = new DocumentFragment();
+    for (const row of rows) {
+      for (const item of row) {
+        const newButtonElement = document.createElement('button');
+        newButtonElement.classList.add('css_search_keyboard_key');
+        const event = supportTouch() ? 'touchstart' : 'mousedown';
+        switch (item) {
+          case '刪除':
+            newButtonElement.addEventListener(event, deleteCharFromInput);
+            newButtonElement.innerHTML = getIconHTML('backspace');
+            break;
+          case '清空':
+            newButtonElement.addEventListener(event, emptyInput);
+            newButtonElement.appendChild(document.createTextNode(item));
+            break;
+          case '鍵盤':
+            newButtonElement.addEventListener(event, openSystemKeyboard);
+            newButtonElement.innerHTML = getIconHTML('keyboard');
+            break;
+          default:
+            newButtonElement.addEventListener(event, function () {
+              typeTextIntoInput(item);
+            });
+            newButtonElement.appendChild(document.createTextNode(item));
+            break;
+        }
+        fragment.appendChild(newButtonElement);
       }
-      result.push(`<button class="css_search_keyboard_key" ${eventType}="${eventScript}">${html}</button>`);
     }
+    searchKeyboardElement.append(fragment);
   }
-  searchKeyboardElement.innerHTML = result.join('');
 }
 
 export function openKeyboard(): void {
   initializeKeyboard();
   searchKeyboardElement.setAttribute('displayed', 'true');
-
   playingCursorAnimation = true;
   animateCursor();
-
   updateSearchInput(-1, -1);
 }
 
