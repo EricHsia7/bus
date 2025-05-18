@@ -84,7 +84,7 @@ export function resizeSearchInputCanvas(): void {
   updateSearchInput(-1, -1);
 }
 
-let keyboardRows: Array<[string, string, string, string, string]> = [
+const keyboardRows: Array<[string, string, string, string, string]> = [
   ['紅', '藍', '1', '2', '3'],
   ['綠', '棕', '4', '5', '6'],
   ['橘', '小', '7', '8', '9'],
@@ -102,28 +102,29 @@ function initializeKeyboard(): void {
         newButtonElement.classList.add('css_search_keyboard_key');
         const eventName = supportTouch() ? 'touchstart' : 'mousedown';
         switch (item) {
-          case '刪除': {
+          case '刪除':
             newButtonElement.addEventListener(eventName, deleteCharFromInput);
             newButtonElement.innerHTML = getIconHTML('backspace');
             break;
-          }
-          case '清空': {
+          case '清空':
             newButtonElement.addEventListener(eventName, emptyInput);
             newButtonElement.appendChild(document.createTextNode(item));
             break;
-          }
-          case '鍵盤': {
+          case '鍵盤':
             newButtonElement.addEventListener(eventName, openSystemKeyboard);
             newButtonElement.innerHTML = getIconHTML('keyboard');
             break;
-          }
-          default: {
-            newButtonElement.addEventListener(eventName, function () {
-              typeTextIntoInput(item);
-            });
+          default:
+            newButtonElement.addEventListener(
+              eventName,
+              (function (currentItem) {
+                return function () {
+                  typeTextIntoInput(currentItem);
+                };
+              })(item)
+            );
             newButtonElement.appendChild(document.createTextNode(item));
             break;
-          }
         }
 
         fragment.appendChild(newButtonElement);
