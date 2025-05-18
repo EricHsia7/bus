@@ -96,6 +96,7 @@ function initializeKeyboard(): void {
       ['橘', '小', '7', '8', '9'],
       ['鍵盤', '幹線', '清空', '0', '刪除']
     ];
+    /*
     const fragment = new DocumentFragment();
     for (const row of rows) {
       for (const item of row) {
@@ -130,6 +131,7 @@ function initializeKeyboard(): void {
       }
     }
     searchKeyboardElement.append(fragment);
+    */
   }
 }
 
