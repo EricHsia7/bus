@@ -115,6 +115,7 @@ function initializeKeyboard(): void {
             newButtonElement.innerHTML = getIconHTML('keyboard');
             break;
           default:
+            // Use an IIFE (Immediately Invoked Function Expression) to create a new scope for each item value. This ensures that the item variable is captured by value rather than by reference.
             newButtonElement.addEventListener(
               eventName,
               (function (currentItem) {
