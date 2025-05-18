@@ -8,7 +8,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconHTML } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { GeneratedElement, pushPageHistory, querySize, revokePageHistory } from '../index';
+import { GeneratedElement, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -37,6 +37,13 @@ const fontWeight: string = '400';
 const fontSize: number = 20 * searchInputCanvasScale;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 
+const keyboardRows: Array<[string, string, string, string, string]> = [
+  ['紅', '藍', '1', '2', '3'],
+  ['綠', '棕', '4', '5', '6'],
+  ['橘', '小', '7', '8', '9'],
+  ['鍵盤', '幹線', '清空', '0', '刪除']
+];
+
 let textColor: string = getCSSVariableValue('--b-cssvar-333333');
 let placeholderTextColor: string = getCSSVariableValue('--b-cssvar-aeaeb2');
 let cursorColor: string = getCSSVariableValue('--b-cssvar-main-color');
@@ -49,48 +56,38 @@ let size = querySize('head-two-button');
 let width = size.width * searchInputCanvasScale;
 let height = size.height * searchInputCanvasScale;
 let playingCursorAnimation: boolean = false;
-
-export function getSearchInputValue(): string {
-  return String(searchInputElement.value);
-}
-
-export function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
-  return parseInt(searchTypeFilterButtonElement.getAttribute('type'));
-}
-
-export function openSearch(): void {
-  if (dataDownloadCompleted) {
-    pushPageHistory('Search');
-    searchField.setAttribute('displayed', 'true');
-    openKeyboard();
-    prepareForSearch();
-  } else {
-    promptMessage('資料還在下載中', 'download_for_offline');
-  }
-}
-
-export function closeSearch(): void {
-  revokePageHistory('Search');
-  closeKeyboard();
-  searchField.setAttribute('displayed', 'false');
-}
-
-export function resizeSearchInputCanvas(): void {
-  size = querySize('head-two-button');
-  width = size.width;
-  height = size.height;
-  searchInputCanvasElement.width = width * searchInputCanvasScale;
-  searchInputCanvasElement.height = height * searchInputCanvasScale;
-  updateSearchInput(-1, -1);
-}
-
-const keyboardRows: Array<[string, string, string, string, string]> = [
-  ['紅', '藍', '1', '2', '3'],
-  ['綠', '棕', '4', '5', '6'],
-  ['橘', '小', '7', '8', '9'],
-  ['鍵盤', '幹線', '清空', '0', '刪除']
-];
 let keyboardInitialized = false;
+
+export function typeTextIntoInput(value): void {
+  const currentValue = getSearchInputValue();
+  const newValue = `${currentValue}${value}`;
+  searchInputElement.value = newValue;
+  updateSearchResult();
+  updateSearchInput(-1, -1);
+  scrollDocumentToTop();
+}
+
+export function deleteCharFromInput(): void {
+  const currentValue = getSearchInputValue();
+  const newValue = currentValue.substring(0, currentValue.length - 1);
+  searchInputElement.value = newValue;
+  updateSearchResult();
+  updateSearchInput(-1, -1);
+  scrollDocumentToTop();
+}
+
+export function emptyInput(): void {
+  searchInputElement.value = '';
+  updateSearchResult();
+  updateSearchInput(-1, -1);
+  scrollDocumentToTop();
+}
+
+export function openSystemKeyboard(event: Event): void {
+  event.preventDefault();
+  searchInputElement.focus();
+  scrollDocumentToTop();
+}
 
 function initializeKeyboard(): void {
   if (!keyboardInitialized) {
@@ -148,31 +145,12 @@ export function closeKeyboard(): void {
   playingCursorAnimation = false;
 }
 
-export function typeTextIntoInput(value): void {
-  const currentValue = getSearchInputValue();
-  const newValue = `${currentValue}${value}`;
-  searchInputElement.value = newValue;
-  updateSearchResult();
-  updateSearchInput(-1, -1);
+export function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
+  return parseInt(searchTypeFilterButtonElement.getAttribute('type'));
 }
 
-export function deleteCharFromInput(): void {
-  const currentValue = getSearchInputValue();
-  const newValue = currentValue.substring(0, currentValue.length - 1);
-  searchInputElement.value = newValue;
-  updateSearchResult();
-  updateSearchInput(-1, -1);
-}
-
-export function emptyInput(): void {
-  searchInputElement.value = '';
-  updateSearchResult();
-  updateSearchInput(-1, -1);
-}
-
-export function openSystemKeyboard(event: Event): void {
-  event.preventDefault();
-  searchInputElement.focus();
+export function getSearchInputValue(): string {
+  return String(searchInputElement.value);
 }
 
 export function updateSearchInput(cursorStart: number, cursorEnd: number): void {
@@ -223,6 +201,28 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
     searchInputCanvasContext.globalAlpha = 0.08;
     drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
+  }
+}
+
+export function resizeSearchInputCanvas(): void {
+  size = querySize('head-two-button');
+  width = size.width;
+  height = size.height;
+  searchInputCanvasElement.width = width * searchInputCanvasScale;
+  searchInputCanvasElement.height = height * searchInputCanvasScale;
+  updateSearchInput(-1, -1);
+}
+
+function animateCursor(): void {
+  const x = performance.now();
+  const alpha = 1 - Math.pow(Math.sin((Math.PI * x) / 960), 4);
+  if (selection) {
+    searchInputCanvasContext.globalAlpha = alpha;
+    searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
+    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+  }
+  if (playingCursorAnimation) {
+    window.requestAnimationFrame(animateCursor);
   }
 }
 
@@ -350,15 +350,19 @@ export function switchSearchTypeFilter(): void {
   updateSearchResult();
 }
 
-function animateCursor(): void {
-  const x = performance.now();
-  const alpha = 1 - Math.pow(Math.sin((Math.PI * x) / 960), 4);
-  if (selection) {
-    searchInputCanvasContext.globalAlpha = alpha;
-    searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
+export function openSearch(): void {
+  if (dataDownloadCompleted) {
+    pushPageHistory('Search');
+    searchField.setAttribute('displayed', 'true');
+    openKeyboard();
+    prepareForSearch();
+  } else {
+    promptMessage('資料還在下載中', 'download_for_offline');
   }
-  if (playingCursorAnimation) {
-    window.requestAnimationFrame(animateCursor);
-  }
+}
+
+export function closeSearch(): void {
+  revokePageHistory('Search');
+  closeKeyboard();
+  searchField.setAttribute('displayed', 'false');
 }

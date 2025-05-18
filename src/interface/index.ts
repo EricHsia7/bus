@@ -260,3 +260,10 @@ export function querySize(type: SizeType): Size {
     height
   };
 }
+
+export function scrollDocumentToTop(): void {
+  window.scrollTo({
+    top: 0,
+    behavior: 'instant'
+  });
+}
