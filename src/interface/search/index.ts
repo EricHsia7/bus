@@ -118,11 +118,9 @@ function initializeKeyboard(): void {
             break;
           }
           default: {
-            /*
             newButtonElement.addEventListener(eventName, function () {
               typeTextIntoInput(item);
             });
-            */
             newButtonElement.appendChild(document.createTextNode(item));
             break;
           }
