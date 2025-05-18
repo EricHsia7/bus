@@ -9,30 +9,30 @@ import { checkAppVersion } from './data/settings/version';
 import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus, openBus } from './interface/bus/index';
-import { closeDataUsage, openDataUsage } from './interface/data-usage/index';
+import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
-import { closeFolderEditor, moveItemOnFolderEditor, openFolderEditor, removeItemOnFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
-import { closeFolderIconSelector, openFolderIconSelector, selectFolderIcon, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
-import { closeFolderManager, openFolderManager } from './interface/folder-manager/index';
+import { closeFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
+import { closeFolderIconSelector, openFolderIconSelector, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
+import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
-import { closeLocation, initializeLocationSliding, openLocation, stretchLocationItem, switchLocationBodyTab } from './interface/location/index';
+import { closeLocation, initializeLocationSliding, openLocation } from './interface/location/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
-import { closePersonalScheduleManager, openPersonalScheduleManager } from './interface/personal-schedule-manager/index';
+import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closeQRCode, openQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, switchRoute } from './interface/route/index';
-import { closeSaveToFolder, openSaveToFolder, saveRouteOnDetailsPage, saveRouteOnRoute, saveStopItemOnLocation, saveStopItemOnRoute } from './interface/save-to-folder/index';
+import { closeSaveToFolder, openSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
 import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
 import { closeSettings, downloadExportFile, openFileToImportData, openSettings, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion } from './interface/settings/index';
 import { closeSettingsOptions, openSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
-import { closeStorage, openStorage } from './interface/storage/index';
+import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { documentQuerySelector } from './tools/query-selector';
 
@@ -307,30 +307,19 @@ window.bus = {
   },
   location: {
     openLocation,
-    closeLocation,
-    stretchLocationItem,
-    switchLocationBodyTab
+    closeLocation
   },
   folder: {
     openSaveToFolder,
     closeSaveToFolder,
-    openFolderManager,
     closeFolderManager,
-    openFolderEditor,
     closeFolderEditor,
     openFolderIconSelector,
     closeFolderIconSelector,
     openFolderCreator,
     closeFolderCreator,
     createFormulatedFolder,
-    saveEditedFolder,
-    selectFolderIcon,
-    saveStopItemOnRoute,
-    saveStopItemOnLocation,
-    saveRouteOnDetailsPage,
-    saveRouteOnRoute,
-    removeItemOnFolderEditor,
-    moveItemOnFolderEditor
+    saveEditedFolder
   },
   search: {
     openSearch,
@@ -338,15 +327,12 @@ window.bus = {
     switchSearchTypeFilter
   },
   storage: {
-    openStorage,
     closeStorage
   },
   dataUsage: {
-    openDataUsage,
     closeDataUsage
   },
   personalSchedule: {
-    openPersonalScheduleManager,
     closePersonalScheduleManager,
     openPersonalScheduleCreator,
     closePersonalScheduleCreator,

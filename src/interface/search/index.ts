@@ -231,7 +231,7 @@ function generateElementOfSearchResultItem(): GeneratedElement {
   searchResultItemElement.classList.add('css_search_search_result');
 
   const nameElement = document.createElement('div');
-  nameElement.classList.add('css_search_search_result_route_name');
+  nameElement.classList.add('css_search_search_result_name');
 
   const typeElement = document.createElement('div');
   typeElement.classList.add('css_search_search_result_type');
@@ -254,7 +254,7 @@ export function updateSearchResult(): void {
     }
 
     function updateName(item: SearchResult, element: HTMLElement): void {
-      const nameElement = elementQuerySelector(element, '.css_search_search_result_route_name');
+      const nameElement = elementQuerySelector(element, '.css_search_search_result_name');
       nameElement.innerText = item.item.n;
     }
 

@@ -55,7 +55,7 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_route_name {
+.css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_name {
   position: absolute;
   top: 0px;
   left: 55px;
