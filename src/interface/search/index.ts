@@ -96,13 +96,14 @@ function initializeKeyboard(): void {
       ['橘', '小', '7', '8', '9'],
       ['鍵盤', '幹線', '清空', '0', '刪除']
     ];
-    /*
+
     const fragment = new DocumentFragment();
     for (const row of rows) {
       for (const item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
         const eventName = supportTouch() ? 'touchstart' : 'mousedown';
+        /*
         switch (item) {
           case '刪除': {
             newButtonElement.addEventListener(eventName, deleteCharFromInput);
@@ -127,11 +128,11 @@ function initializeKeyboard(): void {
             break;
           }
         }
+          */
         fragment.appendChild(newButtonElement);
       }
     }
     searchKeyboardElement.append(fragment);
-    */
   }
 }
 
