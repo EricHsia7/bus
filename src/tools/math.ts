@@ -84,13 +84,14 @@ export function mergePearsonCorrelation(targetXAverage: number, targetYAverage: 
 
 export function normalizeVector(vector: Array<number>): Array<number> {
   const length = Math.hypot(vector);
-  const newVector = [];
+  const componentQuantity = vector.length;
+  const newVector = new Float32Array(componentQuantity);
   if (length > 0) {
     const scale = 1 / length;
-    for (const x of vector) {
-      newVector.push(x * scale);
+    for (let i = componentQuantity; i > 0; i--) {
+      newVector[i] = vector[i] * scale;
     }
-    return newVector;
+    return Array.from(newVector);
   } else {
     return vector;
   }
