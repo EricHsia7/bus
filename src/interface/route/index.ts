@@ -19,6 +19,7 @@ import { openRouteDetails } from './details/index';
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
 const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
+const RouteNameSpanElement = elementQuerySelector(RouteNameElement, 'span');
 const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
 const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
 const RouteGroupTabsElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs');
@@ -707,16 +708,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
 
-  RouteNameElement.innerHTML = /*html*/ `<span>${integration.RouteName}</span>`;
-  RouteNameElement.setAttribute('animation', booleanToString(animation));
-  RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  RouteGroupTabsElement.setAttribute('animation', booleanToString(animation));
-  RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
-  RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  RouteButtonRightElement.onclick = function () {
-    openRouteDetails(integration.RouteID, integration.PathAttributeId);
-  };
+  if (previousSkeletonScreen !== skeletonScreen) {
+    RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  }
+
+  if (previousAnimation !== animation) {
+    RouteNameElement.setAttribute('animation', booleanToString(animation));
+    RouteGroupTabsElement.setAttribute('animation', booleanToString(animation));
+    RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
+  }
+
+  if (previousIntegration?.RouteID !== integration.RouteID) {
+    RouteNameSpanElement.innerText = integration.RouteName;
+    RouteButtonRightElement.onclick = function () {
+      openRouteDetails(integration.RouteID, integration.PathAttributeId);
+    };
+  }
+
   const currentGroupSeatQuantity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
   if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
