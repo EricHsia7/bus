@@ -703,6 +703,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
   }
 
+  console.log(0, previousSkeletonScreen, skeletonScreen);
+  console.log(1, previousAnimation, animation);
+  console.log(2, previousIntegration.RouteID, integration.RouteID);
+
   if (previousSkeletonScreen !== skeletonScreen) {
     RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
@@ -715,7 +719,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   }
 
-  if (previousIntegration?.RouteID !== integration.RouteID || skeletonScreen) {
+  if (previousIntegration?.RouteID !== integration.RouteID) {
     RouteNameSpanElement.innerText = integration.RouteName;
     RouteButtonRightElement.onclick = function () {
       openRouteDetails(integration.RouteID, integration.PathAttributeId);
