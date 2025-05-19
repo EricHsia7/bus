@@ -136,11 +136,17 @@
   border-radius: var(--b-cssvar-border-radius-small);
 }
 
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon,
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_title,
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
+.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_name {
+  background: var(--b-cssvar-ededf2);
+}
+
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_title,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_name {
-  background: var(--b-cssvar-ededf2);
   background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
@@ -148,11 +154,4 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-}
-
-.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="false"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon,
-.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="false"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_title,
-.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="false"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
-.css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="false"][skeleton-screen="true"] .css_home_recent_views_item_name {
-  background: var(--b-cssvar-ededf2);
 }

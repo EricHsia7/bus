@@ -17,8 +17,8 @@ const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_fold
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
 let previousIntegration = {} as integratedFolders;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
-let previousAnimation: boolean = true;
 
 let foldersRefreshTimer_retryInterval: number = 10 * 1000;
 let foldersRefreshTimer_baseInterval: number = 15 * 1000;

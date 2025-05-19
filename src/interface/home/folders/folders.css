@@ -96,6 +96,11 @@
   contain: layout;
 }
 
+.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
+.css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
+  background: var(--b-cssvar-ededf2);
+}
+
 .css_home_field .css_home_body .css_home_folders .css_home_folder[animation="true"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
 .css_home_field .css_home_body .css_home_folders .css_home_folder[animation="true"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
   background: var(--b-cssvar-ededf2);
@@ -106,9 +111,4 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-}
-
-.css_home_field .css_home_body .css_home_folders .css_home_folder[animation="false"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_name,
-.css_home_field .css_home_body .css_home_folders .css_home_folder[animation="false"][skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
-  background: var(--b-cssvar-ededf2);
 }

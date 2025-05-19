@@ -15,7 +15,7 @@ const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent
 const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
 
 let previousIntegration = {};
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 let recentViewsRefreshTimer_retryInterval: number = 10 * 1000;
