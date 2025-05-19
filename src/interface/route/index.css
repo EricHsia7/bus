@@ -1,3 +1,12 @@
+.css_route_field .css_route_head .css_route_name[skeleton-screen="true"] span,
+.css_route_field .css_route_head .css_route_group_tabs[skeleton-screen="true"] .css_route_group_tabs_tray .css_route_group_tab span,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[skeleton-screen="true"] .css_route_group_thread_status {
+  background: var(--b-cssvar-ededf2);
+}
+
 .css_route_field .css_route_head .css_route_name[animation="true"][skeleton-screen="true"] span,
 .css_route_field .css_route_head .css_route_group_tabs[animation="true"][skeleton-screen="true"] .css_route_group_tabs_tray .css_route_group_tab span,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name,
@@ -12,13 +21,4 @@
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-}
-
-.css_route_field .css_route_head .css_route_name[animation="false"][skeleton-screen="true"] span,
-.css_route_field .css_route_head .css_route_group_tabs[animation="false"][skeleton-screen="true"] .css_route_group_tabs_tray .css_route_group_tab span,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="false"][skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_name,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="false"][skeleton-screen="true"] .css_route_group_item_head .css_route_group_item_capsule,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="false"][skeleton-screen="true"] .css_route_group_thread,
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="false"][skeleton-screen="true"] .css_route_group_thread_status {
-  background: var(--b-cssvar-ededf2);
 }
