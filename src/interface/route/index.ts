@@ -653,11 +653,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
       }
-      /*
-      if (!compareThings(previousItem.segmentBuffer, thisItem.segmentBuffer)) {
-
-      }
-      */
       if (previousItem.nearest !== thisItem.nearest) {
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
@@ -720,7 +715,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   }
 
-  if (previousIntegration?.RouteID !== integration.RouteID) {
+  if (previousIntegration?.RouteID !== integration.RouteID || skeletonScreen) {
     RouteNameSpanElement.innerText = integration.RouteName;
     RouteButtonRightElement.onclick = function () {
       openRouteDetails(integration.RouteID, integration.PathAttributeId);
