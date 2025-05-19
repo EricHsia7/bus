@@ -29,7 +29,7 @@ const RouteGroupTabLineElement = elementQuerySelector(RouteGroupTabLineTrackElem
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
 let previousIntegration = {} as IntegratedRoute;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 let routeSliding_initialIndex: number = 0;
