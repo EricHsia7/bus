@@ -669,7 +669,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         updateOverlappingRoutes(thisItemElement, thisItem);
         updateNearbyLocations(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
-        updateScheduleNotificationButton(thisItemElement, 
+        updateScheduleNotificationButton(thisItemElement, thisItem);
       }
       if (previousAnimation !== animation) {
         updateAnimation(thisItemElement, thisThreadBoxElement, animation);
