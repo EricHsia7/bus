@@ -652,9 +652,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
       }
+      /*
       if (!compareThings(previousItem.segmentBuffer, thisItem.segmentBuffer)) {
-        updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
+
       }
+      */
       if (previousItem.nearest !== thisItem.nearest) {
         updateNearest(thisItemElement, thisThreadBoxElement, thisItem);
       }
@@ -663,10 +665,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       }
       if (previousItem.id !== thisItem.id) {
         updateName(thisItemElement, thisItem);
+        updateSegmentBuffer(thisItemElement, thisThreadBoxElement, thisItem);
         updateOverlappingRoutes(thisItemElement, thisItem);
         updateNearbyLocations(thisItemElement, thisItem);
         updateSaveToFolderButton(thisItemElement, thisItem);
-        updateScheduleNotificationButton(thisItemElement, thisItem);
+        updateScheduleNotificationButton(thisItemElement, 
       }
       if (previousAnimation !== animation) {
         updateAnimation(thisItemElement, thisThreadBoxElement, animation);
