@@ -86,6 +86,7 @@
   transition: clip-path var(--b-cssvar-transition-duration);
 }
 */
+
 /* stretched: false && stretching: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="false"] {
   height: 50px;
@@ -147,6 +148,12 @@
   visibility: hidden;
 }
 
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
+  visibility: hidden;
+}
+
 /* code: -1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="-1"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="-1"] {
@@ -192,12 +199,6 @@
   color: var(--b-cssvar-ranking-color-3);
   font-weight: 500;
   font-size: 15px;
-}
-
-/* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide {
-  visibility: hidden;
 }
 
 /* fadeout */
@@ -332,11 +333,6 @@
   visibility: inherit;
 }
 
-/* skeleton screen: true */
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status {
-  visibility: hidden;
-}
-
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide {
   position: absolute;
@@ -354,6 +350,12 @@
 /* displayed: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[displayed="false"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[displayed="false"] {
+  visibility: hidden;
+}
+
+/* skeleton screen: true */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide,
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide {
   visibility: hidden;
 }
 
