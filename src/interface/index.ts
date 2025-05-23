@@ -240,7 +240,7 @@ export function querySize(type: SizeType): Size {
       break;
     case 'route-details-canvas':
       width = windowWidth - 10 * 2 - 10 * 2;
-      height = 24 * 80;
+      height = 24 * 70;
       break;
     case 'route-bus-arrival-time-chart':
       width = windowWidth - 45 - 15 - 20;
