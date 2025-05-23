@@ -17,8 +17,8 @@ const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css
 const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 */
 
-const calendar_ratio = 60;
-const scaleLimit = Math.floor(3072 / (calendar_ratio * 24));
+const calendarRatio = 80;
+const scaleLimit = Math.floor(3072 / (calendarRatio * 24));
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
@@ -136,7 +136,7 @@ function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay
 function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, currentDay: number, mainColor: string, mainColorR: string, mainColorG: string, mainColorB: string, mainColorA: string, gridColor: string, index: number): void {
   function drawGridline(thisContext: CanvasRenderingContext2D, hours: number, gridColor: string): void {
     const boxX = 0;
-    const boxY = hours * calendar_ratio;
+    const boxY = hours * calendarRatio;
 
     // Cache the color value once
     thisContext.fillStyle = gridColor;
@@ -168,9 +168,9 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
     thisDayStart.setMilliseconds(0);
 
     const boxX = gridlineLabelWidthLimit;
-    const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+    const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendarRatio;
     const boxWidth = canvasWidth - gridlineLabelWidthLimit;
-    const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendar_ratio;
+    const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendarRatio;
 
     // Draw background with rounded rectangle
     drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${mainColorR}, ${mainColorG}, ${mainColorB}, ${mainColorA})`);
