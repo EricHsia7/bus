@@ -148,6 +148,11 @@ export function viewCommitOfCurrentVersion(): void {
   window.open(url);
 }
 
+export function viewGitHubRepository(): void {
+  const url = 'https://github.com/EricHsia7/bus';
+  window.open(url);
+}
+
 export function showPromptToAskForPersistentStorage(): void {
   askForPersistentStorage().then((e) => {
     switch (e) {

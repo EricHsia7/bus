@@ -1,15 +1,15 @@
+import { openDataUsage } from '../../interface/data-usage/index';
+import { openFolderManager } from '../../interface/folder-manager/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
+import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
+import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
 import { openSettingsOptions } from '../../interface/settings/options';
+import { openStorage } from '../../interface/storage/index';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getNotificationClientStatus } from '../notification/index';
 import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
-import { openFolderManager } from '../../interface/folder-manager/index';
-import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
-import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
-import { openDataUsage } from '../../interface/data-usage/index';
-import { openStorage } from '../../interface/storage/index';
-import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion } from '../../interface/settings/index';
 
 type SettingType = 'select' | 'page' | 'info' | 'action';
 
@@ -552,7 +552,7 @@ let Settings: SettingsObject = {
     icon: 'book_2',
     status: '@EricHsia7/bus',
     type: 'info',
-    action: function () {},
+    action: viewGitHubRepository,
     description: ''
   }
 };
