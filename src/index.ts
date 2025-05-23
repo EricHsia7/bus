@@ -274,13 +274,11 @@ window.bus = {
             if (status === 'fetchError' || status === 'unknownError') {
               showErrorMessage();
               fadeOutSplashScreen();
-              // alert(status);
             }
           })
-          .catch((error) => {
+          .catch(() => {
             showErrorMessage();
             fadeOutSplashScreen();
-            // alert(error);
           });
       });
     }

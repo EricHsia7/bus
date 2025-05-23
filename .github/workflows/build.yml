@@ -1,4 +1,4 @@
-name: Launch Pages
+name: Build
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  launch:
+  build:
     runs-on: ubuntu-latest
 
     steps:
