@@ -18,7 +18,7 @@ const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement
 */
 
 const calendarRatio = 70;
-const scaleLimit = 3072 / (calendarRatio * 24);
+const scaleLimit = 3150 / (calendarRatio * 24);
 const gridlineBoxHeight = 10;
 const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
