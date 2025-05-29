@@ -186,13 +186,6 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
     result[StopKey].push(processedItem);
     // Handle multiple buses (of the same route) on a stop
   }
-  /*
-  for (var key in result) {
-    result[key] = result[key].sort(function (a, b) {
-      return a.index - b.index;
-    });
-  }
-  */
   return result;
 }
 
@@ -260,13 +253,6 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
     }
     result[StopKey].push(processedItem);
   }
-  /*
-  for (var key in result) {
-    result[key] = result[key].sort(function (a, b) {
-      return a.index - b.index;
-    });
-  }
-  */
   return result;
 }
 

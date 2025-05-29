@@ -68,8 +68,8 @@ export function getUserPosition(): position {
 }
 
 export function isNearUserPosition(latitude: number, longitude: number, radius: number = 450): boolean {
-  var currentUserPosition: position = getUserPosition();
-  var distance: number = convertPositionsToDistance(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
+  const currentUserPosition = getUserPosition();
+  const distance = convertPositionsToDistance(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
   if (distance <= radius) {
     return true;
   } else {
@@ -78,20 +78,22 @@ export function isNearUserPosition(latitude: number, longitude: number, radius: 
 }
 
 export function getNearestPosition(positions: Array<position>, radius: number = 450): position | null {
-  var currentUserPosition: position = getUserPosition();
-  var result = [];
-  for (var position of positions) {
-    var distance: number = convertPositionsToDistance(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
+  const currentUserPosition = getUserPosition();
+  let shortestDistance = Infinity;
+  let nearestIndex = -1;
+  for (let i = positions.length - 1; i > 0; i++) {
+    const position = positions[i];
+    const distance = convertPositionsToDistance(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
     if (distance <= radius) {
-      result.push({ position, distance });
+      if (distance < shortestDistance) {
+        nearestIndex = i;
+        shortestDistance = distance;
+      }
     }
   }
 
-  if (result.length > 0) {
-    result = result.sort(function (a, b) {
-      return a.distance - b.distance;
-    });
-    return result[0].position;
+  if (nearestIndex > 0) {
+    return positions[nearestIndex];
   } else {
     return null;
   }
