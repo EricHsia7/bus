@@ -153,7 +153,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
               RouteEndPoints: {
                 RouteDeparture: overlappingRoute.dep,
                 RouteDestination: overlappingRoute.des,
-                text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, //u2194 -> '↔'
+                text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, // u2194 -> '↔'
                 html: `<span>${overlappingRoute.dep}</span><span>\u2194</span><span>${overlappingRoute.des}</span>`
               },
               RouteID: overlappingRoute.id,

@@ -10,7 +10,7 @@ export function openPermalink(): void {
     if (/^[0-1]\@(.*)(\~.*){0,1}/.test(permalinkString)) {
       const values = permalinkString.split(/[\@\~]/);
       const type = parseInt(values[0]);
-      //route
+      // route
       switch (type) {
         case 0:
           searchRouteByRouteID(parseInt(values[1], 16)).then((result) => {
