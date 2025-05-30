@@ -110,6 +110,7 @@ export interface IntegratedLocation {
   };
   LocationName: string;
   dataUpdateTime: number;
+  hash: string
 }
 
 export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedLocation> {
@@ -306,6 +307,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     groupQuantity: stopLocationQuantity,
     itemQuantity: itemQuantity,
     LocationName: thisLocationName,
+    hash: hash,
     dataUpdateTime: getDataUpdateTime(requestID)
   };
   deleteDataReceivingProgress(requestID);

@@ -3,7 +3,7 @@ import { generateIdentifier } from '../../tools/index';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
@@ -40,6 +40,13 @@ export interface FolderContentRoute {
   endPoints: FolderContentRouteEndPoints;
 }
 
+export interface FolderContentLocation {
+  type: 'location';
+  hash: string;
+  timestamp: number;
+  name: string;
+}
+
 export interface FolderContentBus {
   type: 'bus';
   id: number; // CarID
@@ -52,7 +59,7 @@ export interface FolderContentEmpty {
   id: number;
 }
 
-export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
+export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentLocation | FolderContentBus | FolderContentEmpty;
 
 export interface Folder {
   name: string;
@@ -527,6 +534,29 @@ export async function saveRoute(folderID: Folder['id'], RouteID: number): Promis
       departure: thisRoute.dep,
       destination: thisRoute.des
     }
+  };
+  const save = await saveToFolder(folderID, newContent);
+  return save;
+}
+
+export async function saveLocation(folderID: Folder['id'], hash: string): Promise<boolean> {
+  const requestID = generateIdentifier();
+  const Location = (await getLocation(requestID, 1)) as MergedLocation;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  const thisLocationKey = `ml_${hash}`;
+  let thisLocation = {} as MergedLocationItem;
+  if (Location.hasOwnProperty(thisLocationKey)) {
+    thisLocation = Location[thisLocationKey];
+  } else {
+    return false;
+  }
+
+  const newContent: FolderContentLocation = {
+    type: 'location',
+    hash: hash,
+    timestamp: new Date().getTime(),
+    name: thisLocation.n
   };
   const save = await saveToFolder(folderID, newContent);
   return save;

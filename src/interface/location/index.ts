@@ -14,10 +14,12 @@ import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pus
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
+import { openLocationDetails } from './details/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
 const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
+const LocationButtonRightElement = elementQuerySelector(LocationHeadElement, '.css_location_button_right');
 const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
 const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
 const LocationGroupTabsTrayElement = elementQuerySelector(LocationGroupTabsElement, '.css_location_group_tabs_tray');
@@ -674,6 +676,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
   LocationNameElement.setAttribute('animation', booleanToString(animation));
   LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  LocationButtonRightElement.onclick = function () {
+    openLocationDetails(integration.hash);
+  };
   LocationGroupTabsElement.setAttribute('animation', booleanToString(animation));
   LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));

@@ -286,7 +286,7 @@
       </div>
     </div>
 
-    <!-- location -->
+    <!-- location, location details -->
     <div class="css_location_field" displayed="false">
       <div class="css_location_groups"></div>
       <div class="css_location_head">
@@ -294,7 +294,9 @@
           <span class="css_material_symbols_rounded">arrow_back</span>
         </div>
         <div class="css_location_name"></div>
-        <div class="css_location_button_right"></div>
+        <div class="css_location_button_right">
+          <span class="css_material_symbols_rounded">dashboard</span>
+        </div>
         <div class="css_location_group_tabs">
           <div class="css_location_group_tabs_tray"></div>
         </div>
@@ -304,6 +306,41 @@
         <div class="css_location_update_timer_box">
           <div class="css_location_update_timer" refreshing="true"></div>
         </div>
+      </div>
+    </div>
+
+    <div class="css_location_details_field" displayed="false">
+      <div class="css_location_details_body">
+        <div class="css_location_details_groups">
+          <div class="css_location_details_group" group="actions">
+            <div class="css_location_details_group_body">
+              <div class="css_location_details_action_button" action="save-to-folder" highlighted="false">
+                <span class="css_material_symbols_rounded">folder</span>
+              </div>
+              <div class="css_location_details_action_button" action="get-permalink">
+                <span class="css_material_symbols_rounded">link</span>
+              </div>
+              <div class="css_location_details_action_button" action="show-permalink-qrcode">
+                <span class="css_material_symbols_rounded">qr_code_2</span>
+              </div>
+            </div>
+          </div>
+          <div class="css_location_details_group" group="addresses">
+            <div class="css_location_details_group_head">
+              <div class="css_location_details_group_icon">
+                <span class="css_material_symbols_rounded">list</span>
+              </div>
+              <div class="css_location_details_group_name">原始地址</div>
+            </div>
+            <div class="css_location_details_group_body"></div>
+          </div>
+        </div>
+      </div>
+      <div class="css_location_details_head">
+        <div class="css_location_details_button_left" onclick="bus.location.closeLocationDetails()">
+          <span class="css_material_symbols_rounded">arrow_back</span>
+        </div>
+        <div class="css_location_details_title">更多</div>
       </div>
     </div>
 

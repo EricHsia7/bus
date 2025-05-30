@@ -1,11 +1,11 @@
-import { FolderWithContent, isFolderContentSaved, listFoldersWithContent, saveRoute, saveStop } from '../../data/folder/index';
+import { FolderWithContent, isFolderContentSaved, listFoldersWithContent, saveLocation, saveRoute, saveStop } from '../../data/folder/index';
 import { booleanToString } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
-type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-on-route' | 'bus';
+type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-on-route' | 'bus' | 'location';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
 const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
@@ -49,6 +49,10 @@ function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, 
         saveRouteOnRoute(item.id, parameters[0]);
       };
       break;
+    case 'location':
+      itemElement.onclick = function () {
+        saveLocationOnDetailsPage(item.id, parameters[0])
+      };
     case 'bus':
       // No action
       break;
@@ -145,6 +149,23 @@ export function saveRouteOnRoute(folderID: string, RouteID: number): void {
     if (e) {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
+          promptMessage('已儲存至資料夾', 'folder');
+          closeSaveToFolder();
+        }
+      });
+    } else {
+      promptMessage('無法儲存', 'warning');
+    }
+  });
+}
+
+export function saveLocationOnDetailsPage(folderID: string, hash: string): void {
+  const actionButtonElement = documentQuerySelector('.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[action="save-to-folder"]');
+  saveLocation(folderID, hash).then((e) => {
+    if (e) {
+      isFolderContentSaved('location', hash).then((k) => {
+        if (k) {
+          actionButtonElement.setAttribute('highlighted', 'true');
           promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }
