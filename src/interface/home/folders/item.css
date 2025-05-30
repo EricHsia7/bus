@@ -115,6 +115,12 @@
   width: 30px;
 }
 
+/* type: location */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="location"] .css_home_folder_item_capsule {
+  visibility: visible;
+  width: 30px;
+}
+
 /* type: bus */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="bus"] .css_home_folder_item_capsule {
   visibility: hidden;
@@ -144,6 +150,11 @@
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_button {
+  visibility: visible;
+}
+
+/* type: location */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="location"] .css_home_folder_item_capsule .css_home_folder_item_button {
   visibility: visible;
 }
 
@@ -187,6 +198,11 @@
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
+  visibility: hidden;
+}
+
+/* type: location */
+.css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="location"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
   visibility: hidden;
 }
 
