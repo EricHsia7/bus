@@ -42,7 +42,7 @@ export interface FolderContentRoute {
 
 export interface FolderContentLocation {
   type: 'location';
-  hash: string;
+  id: string; // hash
   timestamp: number;
   name: string;
 }
@@ -554,7 +554,7 @@ export async function saveLocation(folderID: Folder['id'], hash: string): Promis
 
   const newContent: FolderContentLocation = {
     type: 'location',
-    hash: hash,
+    id: hash,
     timestamp: new Date().getTime(),
     name: thisLocation.n
   };
