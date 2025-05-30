@@ -51,8 +51,9 @@ function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, 
       break;
     case 'location':
       itemElement.onclick = function () {
-        saveLocationOnDetailsPage(item.id, parameters[0])
+        saveLocationOnDetailsPage(item.id, parameters[0]);
       };
+      break;
     case 'bus':
       // No action
       break;
