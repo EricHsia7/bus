@@ -290,11 +290,13 @@ export interface integratedFolderContentRoute extends FolderContentRoute {
   pathAttributeId: Array<number>;
 }
 
+export interface integratedFolderContentLocation extends FolderContentLocation {}
+
 export interface integratedFolderContentBus extends FolderContentBus {}
 
 export interface integratedFolderContentEmpty extends FolderContentEmpty {}
 
-export type integratedFolderContent = integratedFolderContentStop | integratedFolderContentRoute | integratedFolderContentBus | integratedFolderContentEmpty;
+export type integratedFolderContent = integratedFolderContentStop | integratedFolderContentRoute | integratedFolderContentLocation | integratedFolderContentBus | integratedFolderContentEmpty;
 
 export interface integratedFolder extends Folder {
   content: Array<integratedFolderContent>;
@@ -376,6 +378,8 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
           integratedItem.pathAttributeId = thisRoute.pid;
           break;
         }
+        case 'location':
+          break
         case 'bus':
           break;
         case 'empty':

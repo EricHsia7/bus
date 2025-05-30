@@ -7,6 +7,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { getIconHTML } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
+import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
 import { openRoute } from '../../route/index';
 
@@ -221,6 +222,9 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         case 'route':
           icon = 'route';
           break;
+        case 'location':
+          icon = 'location_on';
+          break;
         case 'bus':
           icon = 'directions_bus';
           break;
@@ -280,6 +284,9 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         case 'route':
           main = thisItem.name;
           break;
+        case 'location':
+          main = thisItem.name;
+          break;
         case 'bus':
           main = thisItem.busID;
           break;
@@ -301,6 +308,9 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           break;
         case 'route':
           context = `${thisItem.endPoints.departure} \u2194 ${thisItem.endPoints.destination}`;
+          break;
+        case 'location':
+          context = '地點';
           break;
         case 'bus':
           // context = thisItem.currentRoute.name; // TODO: integration
@@ -326,6 +336,11 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         case 'route':
           buttonElement.onclick = function () {
             openRoute(thisItem.id, thisItem.pathAttributeId);
+          };
+          break;
+        case 'location':
+          buttonElement.onclick = function () {
+            openLocation(thisItem.id);
           };
           break;
         case 'bus':
@@ -384,6 +399,14 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             }
             if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
               updateContext(thisElement, thisItem);
+            }
+            if (!compareThings(previousItem.name, thisItem.name)) {
+              updateMain(thisElement, thisItem);
+            }
+            break;
+          case 'location':
+            if (!compareThings(previousItem.id, thisItem.id)) {
+              updateButton(thisElement, thisItem);
             }
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateMain(thisElement, thisItem);
