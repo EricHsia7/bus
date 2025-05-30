@@ -411,6 +411,9 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateMain(thisElement, thisItem);
             }
+            if (!compareThings(previousItem.labels, thisItem.labels)) {
+              updateContext(thisElement, thisItem);
+            }
             break;
           case 'bus':
             if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {

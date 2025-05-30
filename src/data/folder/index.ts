@@ -419,7 +419,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
             default:
               break;
           }
-          integratedItem.labels = labels.join('|');
+          integratedItem.labels = labels.join(' - ');
           break;
         }
         case 'bus':
