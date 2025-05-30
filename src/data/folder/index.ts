@@ -295,7 +295,7 @@ export interface integratedFolderContentRoute extends FolderContentRoute {
 }
 
 export interface integratedFolderContentLocation extends FolderContentLocation {
-  labels: string;
+  // labels: string;
 }
 
 export interface integratedFolderContentBus extends FolderContentBus {}
@@ -387,6 +387,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
           break;
         }
         case 'location': {
+          /*
           const thisLocationKey = `ml_${integratedItem.id}`;
           const thisLocation = Location[thisLocationKey] as MergedLocationItem;
           let labels: Array<string> = [];
@@ -420,6 +421,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
               break;
           }
           integratedItem.labels = labels.join(' - ');
+          */
           break;
         }
         case 'bus':

@@ -310,7 +310,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           context = `${thisItem.endPoints.departure} \u2194 ${thisItem.endPoints.destination}`;
           break;
         case 'location':
-          context = thisItem.labels;
+          context = '地點';
           break;
         case 'bus':
           // context = thisItem.currentRoute.name; // TODO: integration
@@ -411,9 +411,11 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (!compareThings(previousItem.name, thisItem.name)) {
               updateMain(thisElement, thisItem);
             }
+            /*
             if (!compareThings(previousItem.labels, thisItem.labels)) {
               updateContext(thisElement, thisItem);
             }
+            */
             break;
           case 'bus':
             if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
