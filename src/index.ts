@@ -18,6 +18,7 @@ import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/h
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
+import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding, openLocation } from './interface/location/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
@@ -35,7 +36,6 @@ import { closeSettingsOptions, openSettingsOptions, settingsOptionsHandler } fro
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { documentQuerySelector } from './tools/query-selector';
-import { closeLocationDetails } from './interface/location/details/index';
 
 import './interface/theme.css';
 
