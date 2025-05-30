@@ -41,7 +41,7 @@ export function openLocationDetails(hash: string): void {
   initializeLocationDetailsField(hash);
 }
 
-export function closeRouteDetails(): void {
+export function closeLocationDetails(): void {
   revokePageHistory('LocationDetails');
   LocationDetailsField.setAttribute('displayed', 'false');
 }
