@@ -322,12 +322,12 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 
   const EstimateTime = await getEstimateTime(requestID);
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
+  // const Location = (await getLocation(requestID, 1)) as MergedLocation;
 
   const foldersWithContent = await listFoldersWithContent();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const location_labels = getSettingOptionValue('location_labels');
+  // const location_labels = getSettingOptionValue('location_labels');
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
