@@ -310,7 +310,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           context = `${thisItem.endPoints.departure} \u2194 ${thisItem.endPoints.destination}`;
           break;
         case 'location':
-          context = '地點';
+          context = thisItem.labels;
           break;
         case 'bus':
           // context = thisItem.currentRoute.name; // TODO: integration

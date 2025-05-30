@@ -173,7 +173,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     cardinalDirections.push(cardinalDirection);
   }
 
-  let labels = [];
+  let labels: Array<string> = [];
   switch (location_labels) {
     case 'address':
       labels = generateLabelFromAddresses(thisLocation.a);
