@@ -85,9 +85,6 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
     }
   }
 
-  LocationDetailsActionsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  LocationDetailsActionsElement.setAttribute('animation', booleanToString(animation));
-
   const actions = integration.actions;
   const actionsQuantity = integration.actionsQuantity;
 
@@ -102,7 +99,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
       }
       LocationDetailsActionsElement.append(fragment);
     } else {
-      const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, `.css_location_group`);
+      const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const itemIndex = currentActionsSeatQuantity - 1 - o;
         LocationActionElements[itemIndex].remove();
@@ -110,7 +107,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
     }
   }
 
-  const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, `.css_location_group`);
+  const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action');
 
   for (let j = 0; j < actionsQuantity; j++) {
     const thisElement = LocationActionElements[j];
