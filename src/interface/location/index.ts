@@ -321,6 +321,10 @@ function generateElementOfGroup(): GeneratedElement {
 function generateElementOfTab(): GeneratedElement {
   const element = document.createElement('div');
   element.classList.add('css_location_group_tab');
+
+  const span = document.createElement('span');
+  element.appendChild(span);
+
   return {
     element: element,
     id: ''
@@ -761,7 +765,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisTabElement = tabElements[i];
-    thisTabElement.innerHTML = /*html*/ `<span>${groups[groupKey].name}</span>`;
+    const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
+    thisTabSpanElement.innerText = groups[groupKey].name;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
     const thisGroupElement = groupElements[i];
