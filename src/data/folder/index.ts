@@ -1,9 +1,13 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { generateLabelFromAddresses } from '../../tools/address';
+import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateIdentifier } from '../../tools/index';
+import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
+import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
@@ -40,6 +44,13 @@ export interface FolderContentRoute {
   endPoints: FolderContentRouteEndPoints;
 }
 
+export interface FolderContentLocation {
+  type: 'location';
+  id: string; // hash
+  timestamp: number;
+  name: string;
+}
+
 export interface FolderContentBus {
   type: 'bus';
   id: number; // CarID
@@ -52,7 +63,7 @@ export interface FolderContentEmpty {
   id: number;
 }
 
-export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentBus | FolderContentEmpty;
+export type FolderContent = FolderContentStop | FolderContentRoute | FolderContentLocation | FolderContentBus | FolderContentEmpty;
 
 export interface Folder {
   name: string;
@@ -283,11 +294,15 @@ export interface integratedFolderContentRoute extends FolderContentRoute {
   pathAttributeId: Array<number>;
 }
 
+export interface integratedFolderContentLocation extends FolderContentLocation {
+  // labels: string;
+}
+
 export interface integratedFolderContentBus extends FolderContentBus {}
 
 export interface integratedFolderContentEmpty extends FolderContentEmpty {}
 
-export type integratedFolderContent = integratedFolderContentStop | integratedFolderContentRoute | integratedFolderContentBus | integratedFolderContentEmpty;
+export type integratedFolderContent = integratedFolderContentStop | integratedFolderContentRoute | integratedFolderContentLocation | integratedFolderContentBus | integratedFolderContentEmpty;
 
 export interface integratedFolder extends Folder {
   content: Array<integratedFolderContent>;
@@ -307,10 +322,12 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 
   const EstimateTime = await getEstimateTime(requestID);
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  // const Location = (await getLocation(requestID, 1)) as MergedLocation;
 
   const foldersWithContent = await listFoldersWithContent();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
+  // const location_labels = getSettingOptionValue('location_labels');
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
@@ -367,6 +384,44 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
           const thisRouteKey = `r_${integratedItem.id}`;
           const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
           integratedItem.pathAttributeId = thisRoute.pid;
+          break;
+        }
+        case 'location': {
+          /*
+          const thisLocationKey = `ml_${integratedItem.id}`;
+          const thisLocation = Location[thisLocationKey] as MergedLocationItem;
+          let labels: Array<string> = [];
+          switch (location_labels) {
+            case 'address':
+              labels = generateLabelFromAddresses(thisLocation.a);
+              break;
+            case 'letters':
+              const stopLocationIds = thisLocation.id;
+              const stopLocationQuantity = stopLocationIds.length;
+              labels = generateLetterLabels(stopLocationQuantity);
+              break;
+            case 'directions':
+              const setsOfVectors = thisLocation.v;
+              const cardinalDirections: Array<CardinalDirection> = [];
+              for (const vectorSet of setsOfVectors) {
+                let x: number = 0;
+                let y: number = 0;
+                for (const vector of vectorSet) {
+                  x += vector[0];
+                  y += vector[1];
+                }
+                const meanVector = normalizeVector([x, y]) as [number, number];
+                const cardinalDirection = getCardinalDirectionFromVector(meanVector);
+                cardinalDirections.push(cardinalDirection);
+              }
+
+              labels = generateDirectionLabels(cardinalDirections);
+              break;
+            default:
+              break;
+          }
+          integratedItem.labels = labels.join(' - ');
+          */
           break;
         }
         case 'bus':
@@ -527,6 +582,29 @@ export async function saveRoute(folderID: Folder['id'], RouteID: number): Promis
       departure: thisRoute.dep,
       destination: thisRoute.des
     }
+  };
+  const save = await saveToFolder(folderID, newContent);
+  return save;
+}
+
+export async function saveLocation(folderID: Folder['id'], hash: string): Promise<boolean> {
+  const requestID = generateIdentifier();
+  const Location = (await getLocation(requestID, 1)) as MergedLocation;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  const thisLocationKey = `ml_${hash}`;
+  let thisLocation = {} as MergedLocationItem;
+  if (Location.hasOwnProperty(thisLocationKey)) {
+    thisLocation = Location[thisLocationKey];
+  } else {
+    return false;
+  }
+
+  const newContent: FolderContentLocation = {
+    type: 'location',
+    id: hash,
+    timestamp: new Date().getTime(),
+    name: thisLocation.n
   };
   const save = await saveToFolder(folderID, newContent);
   return save;

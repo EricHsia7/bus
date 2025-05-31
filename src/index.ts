@@ -18,6 +18,7 @@ import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/h
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
+import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding, openLocation } from './interface/location/index';
 import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
@@ -80,6 +81,12 @@ import './interface/location/groups.css';
 import './interface/location/group-details.css';
 import './interface/location/group-items.css';
 import './interface/location/index.css';
+
+import './interface/location/details/field.css';
+import './interface/location/details/head.css';
+import './interface/location/details/body.css';
+import './interface/location/details/actions.css';
+import './interface/location/details/index.css';
 
 import './interface/bus/field.css';
 import './interface/bus/head.css';
@@ -305,7 +312,8 @@ window.bus = {
   },
   location: {
     openLocation,
-    closeLocation
+    closeLocation,
+    closeLocationDetails
   },
   folder: {
     openSaveToFolder,

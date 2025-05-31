@@ -16,7 +16,7 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -56,6 +56,8 @@ export function closePreviousPage(): void {
         closeFolderManager();
         break;
       case 'Location':
+        break;
+      case 'LocationDetails':
         break;
       case 'Route':
         break;
@@ -119,6 +121,8 @@ export function openPreviousPage(): void {
         openFolderManager();
         break;
       case 'Location':
+        break;
+      case 'LocationDetails':
         break;
       case 'Route':
         break;

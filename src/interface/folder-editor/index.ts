@@ -3,6 +3,7 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { getIconHTML } from '../icons/index';
+import { MaterialSymbols } from '../icons/material-symbols-type';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -32,7 +33,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   // Icon, context, main text
   let context = '';
   let main = '';
-  let icon = '';
+  let icon: MaterialSymbols = '';
   switch (item.type) {
     case 'stop':
       icon = 'location_on';
@@ -42,6 +43,11 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
     case 'route':
       icon = 'route';
       context = `${item.endPoints.departure} \u2194 ${item.endPoints.destination}`;
+      main = item.name;
+      break;
+    case 'location':
+      icon = 'location_on';
+      context = '地點';
       main = item.name;
       break;
     case 'bus':
@@ -176,6 +182,9 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
           break;
         case 'route':
           promptMessage('已移除路線', 'delete');
+          break;
+        case 'location':
+          promptMessage('已移除地點', 'delete');
           break;
         default:
           break;
