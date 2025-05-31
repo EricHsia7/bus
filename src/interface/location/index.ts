@@ -430,6 +430,7 @@ function setUpLocationFieldSkeletonScreen(): void {
       },
       itemQuantity: defaultItemQuantity,
       LocationName: '載入中',
+      hash: '',
       dataUpdateTime: 0
     },
     true,

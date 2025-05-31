@@ -8,6 +8,7 @@ import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loade
 export interface IntegratedLocationDetailsAction {
   icon: MaterialSymbols;
   action: Function;
+  key: string,
   name: string;
 }
 
@@ -15,11 +16,11 @@ export type IntegratedLocationDetailsActionArray = Array<IntegratedLocationDetai
 
 export interface IntegratedLocationDetails {
   actions: IntegratedLocationDetailsActionArray;
+  actionsQuantity: number
   hash: string;
 }
 
-async function integrateLocationDetails(hash: string): Promise<IntegratedLocationDetails> {
-  const requestID = generateIdentifier();
+export async function integrateLocationDetails(hash: string, requestID: string): Promise<IntegratedLocationDetails> {
   const Location = (await getLocation(requestID, 1)) as MergedLocation;
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
@@ -28,12 +29,17 @@ async function integrateLocationDetails(hash: string): Promise<IntegratedLocatio
   if (Location.hasOwnProperty(thisLocationKey)) {
     thisLocation = Location[thisLocationKey];
   } else {
-    return;
+    return {
+      actions: [],
+      actionsQuantity: 0,
+      hash: hash
+    };
   }
   const actions: IntegratedLocationDetailsActionArray = [
     {
       icon: 'folder',
       name: '儲存',
+      key: 'save-to-folder',
       action: function () {
         openSaveToFolder('location', [hash]);
       }
@@ -41,6 +47,7 @@ async function integrateLocationDetails(hash: string): Promise<IntegratedLocatio
     {
       icon: 'link',
       name: '連結',
+      key: 'permalink',
       action: function () {
         shareLocationPermalink(hash);
       }
@@ -48,6 +55,7 @@ async function integrateLocationDetails(hash: string): Promise<IntegratedLocatio
     {
       icon: 'qr_code_2',
       name: '二維條碼',
+      key: 'permalink-qr-code',
       action: function () {
         showLocationPermalinkQRCode(hash);
       }
@@ -55,6 +63,7 @@ async function integrateLocationDetails(hash: string): Promise<IntegratedLocatio
   ];
   const result: IntegratedLocationDetails = {
     actions: actions,
+    actionsQuantity: actions.length,
     hash: hash
   };
   return result;
