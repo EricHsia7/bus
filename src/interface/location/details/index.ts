@@ -8,7 +8,7 @@ import { pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
 
-let previousIntegration = {} as IntegratedLocation;
+let previousIntegration = {} as IntegratedLocationDetails;
 let previousAnimation: boolean = true;
 let previousSkeletonScreen: boolean = false;
 
