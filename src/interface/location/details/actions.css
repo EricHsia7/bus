@@ -1,48 +1,52 @@
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body {
-  height: 60px;
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow-y: hidden;
-  overflow-x: scroll;
-  background: rgba(0, 0, 0, 0);
+/* actions */
+.css_location_details_field .css_location_details_body .css_location_details_actions {
+  position: relative;
+  width: calc(100% - 20px);
+  left: 10px;
+  display: inline-block;
+  background: var(--b-cssvar-ffffff-blocky);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  margin-top: calc(10px + 55px);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button {
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  display: inline-flex;
+/* actions > action */
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action {
+  position: relative;
+  width: 100%;
+  height: 55px;
+}
+
+/* actions > action > icon */
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action .css_location_details_action_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 55px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
-  background-color: var(--b-cssvar-ffffff-blocky);
-  border-radius: var(--b-cssvar-border-radius-normal);
-  vertical-align: top;
 }
 
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[animation="true"] {
-  transition: background-color var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
-}
-
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
-  color: var(--b-cssvar-main-color);
-}
-
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button span.css_material_symbols_rounded {
-  width: 25px;
-  height: 25px;
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action .css_location_details_action_icon span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
   color: var(--b-cssvar-333333);
-  font-size: 29px;
 }
 
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[animation="true"] span.css_material_symbols_rounded {
-  transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
-}
-
-.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[highlighted="true"] span.css_material_symbols_rounded {
-  color: var(--b-cssvar-main-color);
-  --b-cssvar-font-variation-settings-fill: 1;
+/* actions > action > name */
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action .css_location_details_action_name {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: calc(100% - 55px - 45px - 60px);
+  height: 55px;
+  display: flex;
+  align-items: center;
+  color: var(--b-cssvar-333333);
+  font-size: 18px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
 }

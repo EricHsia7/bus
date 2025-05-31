@@ -85,7 +85,6 @@ import './interface/location/index.css';
 import './interface/location/details/field.css';
 import './interface/location/details/head.css';
 import './interface/location/details/body.css';
-import './interface/location/details/groups.css';
 import './interface/location/details/actions.css';
 
 import './interface/bus/field.css';

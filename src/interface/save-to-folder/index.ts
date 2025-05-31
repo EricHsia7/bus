@@ -161,12 +161,10 @@ export function saveRouteOnRoute(folderID: string, RouteID: number): void {
 }
 
 export function saveLocationOnDetailsPage(folderID: string, hash: string): void {
-  const actionButtonElement = documentQuerySelector('.css_location_details_field .css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"] .css_location_details_group_body .css_location_details_action_button[action="save-to-folder"]');
   saveLocation(folderID, hash).then((e) => {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
         if (k) {
-          actionButtonElement.setAttribute('highlighted', 'true');
           promptMessage('已儲存至資料夾', 'folder');
           closeSaveToFolder();
         }

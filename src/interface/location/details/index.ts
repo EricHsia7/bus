@@ -1,47 +1,72 @@
-import { isFolderContentSaved } from '../../../data/folder/index';
-import { getSettingOptionValue } from '../../../data/settings/index';
-import { booleanToString } from '../../../tools/index';
+import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/apis/getLocation/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
+import { IntegratedLocationDetails } from '../../../data/location/details';
+import { generateIdentifier } from '../../../tools/index';
+import { getPermalink } from '../../../tools/permalink';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
 import { pushPageHistory, revokePageHistory } from '../../index';
-import { openSaveToFolder } from '../../save-to-folder/index';
-import { shareLocationPermalink, showLocationPermalinkQRCode } from './actions';
+import { promptMessage } from '../../prompt/index';
+import { openQRCode } from '../../qrcode/index';
 
-export const LocationDetailsField = documentQuerySelector('.css_location_details_field');
-export const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
-export const LocationDetailsGroupsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_groups');
+let previousIntegration = {} as IntegratedLocation;
+let previousAnimation: boolean = true;
+let previousSkeletonScreen: boolean = false;
 
-export const LocationActionsGroupElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body .css_location_details_groups .css_location_details_group[group="actions"]');
-export const LocationSaveToFolderActionButton = elementQuerySelector(LocationActionsGroupElement, '.css_location_details_group_body .css_location_details_action_button[action="save-to-folder"]');
-export const LocationGetPermalinkActionButton = elementQuerySelector(LocationActionsGroupElement, '.css_location_details_group_body .css_location_details_action_button[action="get-permalink"]');
-export const LocationShowPermalinkQRCodeActionButton = elementQuerySelector(LocationActionsGroupElement, '.css_location_details_group_body .css_location_details_action_button[action="show-permalink-qrcode"]');
+const LocationDetailsField = documentQuerySelector('.css_location_details_field');
+const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
+const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
 
-// export const PropertiesGroupElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body .css_location_details_groups .css_location_details_group[group="properties"]');
-
-async function initializeLocationDetailsField(hash: string) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const existence = await isFolderContentSaved('location', hash);
-  LocationSaveToFolderActionButton.setAttribute('animation', booleanToString(playing_animation));
-  LocationSaveToFolderActionButton.setAttribute('highlighted', booleanToString(existence));
-  LocationSaveToFolderActionButton.onclick = function () {
-    openSaveToFolder('location', [hash]);
-  };
-  LocationGetPermalinkActionButton.setAttribute('animation', booleanToString(playing_animation));
-  LocationGetPermalinkActionButton.onclick = function () {
-    shareLocationPermalink(hash);
-  };
-  LocationShowPermalinkQRCodeActionButton.setAttribute('animation', booleanToString(playing_animation));
-  LocationShowPermalinkQRCodeActionButton.onclick = function () {
-    showLocationPermalinkQRCode(hash);
-  };
-}
+function updateLocationDetailsField(integration: IntegratedLocationDetails, skeletonScreen: boolean, animation: boolean) {}
 
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
   LocationDetailsField.setAttribute('displayed', 'true');
-  initializeLocationDetailsField(hash);
+  updateLocationDetailsField(hash);
 }
 
 export function closeLocationDetails(): void {
   revokePageHistory('LocationDetails');
   LocationDetailsField.setAttribute('displayed', 'false');
+}
+
+export async function shareLocationPermalink(hash: string) {
+  const requestID = generateIdentifier();
+  const Location = (await getLocation(requestID, 1)) as MergedLocation;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  const thisLocationKey = `ml_${hash}`;
+  if (Location.hasOwnProperty(thisLocationKey)) {
+    const thisLocation = Location[thisLocationKey] as MergedLocationItem;
+    const link = getPermalink(1, {
+      hash: hash
+    });
+    if (navigator.share) {
+      navigator
+        .share({
+          title: thisLocation.n,
+          url: link
+        })
+        .then(() => {
+          promptMessage('已分享地點連結', 'link');
+        })
+        .catch((e) => {
+          promptMessage('已取消分享連結', 'cancel');
+          console.error(e);
+        });
+    }
+  }
+}
+
+export async function showLocationPermalinkQRCode(hash: string) {
+  const requestID = generateIdentifier();
+  const Location = (await getLocation(requestID, 1)) as MergedLocation;
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+  const thisLocationKey = `ml_${hash}`;
+  if (Location.hasOwnProperty(thisLocationKey)) {
+    const link = getPermalink(1, {
+      hash: hash
+    });
+    openQRCode(link);
+  }
 }
