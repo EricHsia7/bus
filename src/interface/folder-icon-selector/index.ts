@@ -92,14 +92,12 @@ export function openFolderIconSelector(target: Target): void {
     default:
       break;
   }
-  if (openFolderIconSelectorElement.getAttribute('disabled') === 'false') {
-    if (dataDownloadCompleted) {
-      folderIconSelectorField.setAttribute('displayed', 'true');
-      initializeFolderIconSelectorField(currentTarget);
-      prepareForMaterialSymbolsSearch();
-    } else {
-      promptMessage('資料還在下載中', 'download_for_offline');
-    }
+  if (dataDownloadCompleted) {
+    folderIconSelectorField.setAttribute('displayed', 'true');
+    initializeFolderIconSelectorField(currentTarget);
+    prepareForMaterialSymbolsSearch();
+  } else {
+    promptMessage('資料還在下載中', 'download_for_offline');
   }
 }
 
