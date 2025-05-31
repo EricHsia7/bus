@@ -1,9 +1,10 @@
 import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/apis/getLocation/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
-import { IntegratedLocationDetails } from '../../../data/location/details';
+import { IntegratedLocationDetails, IntegratedLocationDetailsAction } from '../../../data/location/details';
 import { generateIdentifier } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
 import { documentQuerySelector, elementQuerySelector } from '../../../tools/query-selector';
+import { getIconHTML } from '../../icons/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
@@ -16,7 +17,23 @@ const LocationDetailsField = documentQuerySelector('.css_location_details_field'
 const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
 const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
 
-function updateLocationDetailsField(integration: IntegratedLocationDetails, skeletonScreen: boolean, animation: boolean) {}
+function updateLocationDetailsField(integration: IntegratedLocationDetails, skeletonScreen: boolean, animation: boolean) {
+  function updateItem(itemElement: HTMLElement, thisItem: IntegratedLocationDetailsAction, previousItem: IntegratedLocationDetailsAction): void {
+    function updateIcon(itemElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
+      const iconElement = elementQuerySelector(itemElement, '.css_location_details_action_icon');
+      iconElement.innerHTML = getIconHTML(thisItem.icon);
+    }
+
+    function updateName(itemElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
+      const nameElement = elementQuerySelector(itemElement, '.css_location_details_action_name');
+      nameElement.innerText = thisItem.name;
+    }
+
+    function updateOnclick(itemElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
+      itemElement.onclick = thisItem.action;
+    }
+  }
+}
 
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
