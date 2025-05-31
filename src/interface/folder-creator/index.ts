@@ -12,7 +12,7 @@ const IconInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_
 const OpenFolderIconSelectorElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector');
 
 OpenFolderIconSelectorElement.onclick = function () {
-  openFolderIconSelector('editor');
+  openFolderIconSelector('creator');
 };
 
 export function createFormulatedFolder(): void {
