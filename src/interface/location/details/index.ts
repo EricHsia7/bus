@@ -109,12 +109,12 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 
   const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action');
 
-  for (let j = 0; j < actionsQuantity; j++) {
-    const thisElement = LocationActionElements[j];
-    const thisItem = actions[j];
+  for (let i = 0; i < actionsQuantity; i++) {
+    const thisElement = LocationActionElements[i];
+    const thisItem = actions[i];
     if (previousIntegration.hasOwnProperty('actions')) {
-      if (previousIntegration.actions[j]) {
-        const previousItem = previousIntegration.actions[j];
+      if (previousIntegration.actions[i]) {
+        const previousItem = previousIntegration.actions[i];
         updateItem(thisElement, thisItem, previousItem);
       } else {
         updateItem(thisElement, thisItem, null);
