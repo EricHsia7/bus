@@ -51,9 +51,9 @@ let locationRefreshTimer_refreshing: boolean = false;
 let locationRefreshTimer_streaming: boolean = false;
 let locationRefreshTimer_streamStarted: boolean = false;
 
-var currentHashSet_hash: string = '';
+let currentHashSet_hash: string = '';
 
-var tabPadding: number = 20;
+let tabPadding: number = 20;
 
 export function initializeLocationSliding(): void {
   LocationGroupsElement.addEventListener(
@@ -689,14 +689,18 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
     if (capacity < 0) {
+      const groupsFragment = new DocumentFragment();
+      const tabsFragment = new DocumentFragment();
       for (let o = 0; o < Math.abs(capacity); o++) {
         const newGroupElement = generateElementOfGroup();
-        LocationGroupsElement.appendChild(newGroupElement.element);
+        groupsFragment.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
-        LocationGroupTabsTrayElement.appendChild(newTabElement.element);
+        tabsFragment.appendChild(newTabElement.element);
       }
+      LocationGroupsElement.append(groupsFragment);
+      LocationGroupTabsTrayElement.append(tabsFragment);
     } else {
-      const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
+      const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
       const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
       for (let o = 0; o < Math.abs(capacity); o++) {
         const groupIndex = currentGroupSeatQuantity - 1 - o;
@@ -706,21 +710,21 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
-  const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, `.css_location_group`);
+  const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisLocationGroupElement = LocationGroupElements[i];
-    const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`).length;
+    const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item').length;
     if (itemQuantity[groupKey] !== currentItemSeatQuantity) {
       const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
       if (capacity < 0) {
-        const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, `.css_location_group_items`);
+        const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const newItemElement = generateElementOfItem();
           LocationGroupItemsElement.appendChild(newItemElement.element);
         }
       } else {
-        const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, `.css_location_group_items .css_location_group_item`);
+        const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item');
         for (let o = 0; o < Math.abs(capacity); o++) {
           const itemIndex = currentItemSeatQuantity - 1 - o;
           LocationGroupItemElements[itemIndex].remove();
@@ -728,7 +732,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       }
     }
 
-    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`).length;
+    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], '.css_location_group_details .css_location_group_details_body .css_location_group_details_property').length;
     const groupPropertyQuantity = groups[groupKey].properties.length;
     if (groupPropertyQuantity !== currentGroupPropertySeatQuantity) {
       const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
@@ -752,18 +756,22 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
+  const tabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
+  const groupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const thisTabElement = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab')[i];
+    const thisTabElement = tabElements[i];
     thisTabElement.innerHTML = /*html*/ `<span>${groups[groupKey].name}</span>`;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
-    const thisGroupElement = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i];
-    const groupPropertyQuantity = groups[groupKey].properties.length;
+    const thisGroupElement = groupElements[i];
+    const propertyElements = elementQuerySelectorAll(thisGroupElement, `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`);
+    const itemElements = elementQuerySelectorAll(thisGroupElement, `.css_location_group_items .css_location_group_item`);
 
+    const groupPropertyQuantity = groups[groupKey].properties.length; // TODO: propertyQuantity
     for (let k = 0; k < groupPropertyQuantity; k++) {
       const thisProperty = groups[groupKey].properties[k];
-      const thisElement = elementQuerySelectorAll(thisGroupElement, `.css_location_group_details .css_location_group_details_body .css_location_group_details_property`)[k];
+      const thisElement = propertyElements[k];
       if (previousIntegration.hasOwnProperty('groups')) {
         if (previousIntegration.groups.hasOwnProperty(groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
@@ -781,7 +789,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
 
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisElement = elementQuerySelectorAll(thisGroupElement, `.css_location_group_items .css_location_group_item`)[j];
+      const thisElement = itemElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (previousIntegration.hasOwnProperty('groupedItems')) {
         if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {

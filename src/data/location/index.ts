@@ -99,18 +99,18 @@ export interface IntegratedLocationItem {
 
 export interface IntegratedLocation {
   groupedItems: {
-    [key: string]: Array<IntegratedLocationItem>;
+    [g_index: string]: Array<IntegratedLocationItem>;
   };
   groups: {
-    [key: string]: LocationGroup;
+    [g_index: string]: LocationGroup;
   };
   groupQuantity: number;
   itemQuantity: {
-    [key: string]: number;
+    [g_index: string]: number;
   };
   LocationName: string;
   dataUpdateTime: number;
-  hash: string
+  hash: string;
 }
 
 export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedLocation> {
