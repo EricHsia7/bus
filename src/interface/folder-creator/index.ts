@@ -1,5 +1,6 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -8,6 +9,11 @@ const FolderCreatorBodyElement = elementQuerySelector(FolderCreatorField, '.css_
 const FolderCreatorGroupsElement = elementQuerySelector(FolderCreatorBodyElement, '.css_folder_creator_groups');
 const NameInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input');
 const IconInputElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
+const OpenFolderIconSelectorElement = elementQuerySelector(FolderCreatorGroupsElement, '.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector');
+
+OpenFolderIconSelectorElement.onclick = function () {
+  openFolderIconSelector('editor');
+};
 
 export function createFormulatedFolder(): void {
   const name = NameInputElement.value;
