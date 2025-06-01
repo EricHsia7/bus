@@ -5,7 +5,7 @@ import { getIconHTML } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
-type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-on-route' | 'bus' | 'location';
+type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-on-route' | 'bus' | 'location' | 'location-on-route';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
 const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
@@ -54,6 +54,11 @@ function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, 
         saveLocationOnDetailsPage(item.id, parameters[0]);
       };
       break;
+    case 'location-on-route':
+      itemElement.onclick = function () {
+        saveLocationOnRoute(item.id, parameters[0]);
+      };
+      break;
     case 'bus':
       // No action
       break;
@@ -92,7 +97,7 @@ export function closeSaveToFolder(): void {
   SaveToFolderField.setAttribute('displayed', 'false');
 }
 
-export function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
+function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
@@ -110,7 +115,7 @@ export function saveStopItemOnRoute(itemElementID: string, folderID: string, Sto
   });
 }
 
-export function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
+function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID: number, RouteID: number): void {
   const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const saveToFolderButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="save-to-folder"]');
   saveStop(folderID, StopID, RouteID).then((e) => {
@@ -128,7 +133,7 @@ export function saveStopItemOnLocation(itemElementID: string, folderID: string, 
   });
 }
 
-export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
+function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
   const actionButtonElement = documentQuerySelector('.css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
@@ -145,7 +150,7 @@ export function saveRouteOnDetailsPage(folderID: string, RouteID: number): void 
   });
 }
 
-export function saveRouteOnRoute(folderID: string, RouteID: number): void {
+function saveRouteOnRoute(folderID: string, RouteID: number): void {
   saveRoute(folderID, RouteID).then((e) => {
     if (e) {
       isFolderContentSaved('route', RouteID).then((k) => {
@@ -160,7 +165,22 @@ export function saveRouteOnRoute(folderID: string, RouteID: number): void {
   });
 }
 
-export function saveLocationOnDetailsPage(folderID: string, hash: string): void {
+function saveLocationOnDetailsPage(folderID: string, hash: string): void {
+  saveLocation(folderID, hash).then((e) => {
+    if (e) {
+      isFolderContentSaved('location', hash).then((k) => {
+        if (k) {
+          promptMessage('已儲存至資料夾', 'folder');
+          closeSaveToFolder();
+        }
+      });
+    } else {
+      promptMessage('無法儲存', 'warning');
+    }
+  });
+}
+
+function saveLocationOnRoute(folderID: string, hash: string): void {
   saveLocation(folderID, hash).then((e) => {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
