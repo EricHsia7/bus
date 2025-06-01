@@ -31,8 +31,8 @@
 
 /* skeleton-screen: true */
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_icon {
-  top: 10px;
-  left: 10px;
+  top: 12.5px;
+  left: 12.5px;
   width: 30px;
   height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
@@ -54,8 +54,8 @@
   position: absolute;
   top: 0px;
   left: 55px;
-  width: calc(100% - 55px - 10px);
-  /* icon: 55px + padding: 10px */
+  width: calc(100% - 55px - 12.5px);
+  /* icon: 55px + padding: 12.5px */
   height: 55px;
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@
 
 /* skeleton-screen: true */
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_name {
-  top: 10px;
+  top: 12.5px;
   height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
