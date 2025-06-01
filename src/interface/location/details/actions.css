@@ -31,10 +31,10 @@
 
 /* skeleton-screen: true */
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_icon {
-  top: 17.5px;
-  left: 17.5px;
-  width: 20px;
-  height: 20px;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
@@ -66,9 +66,11 @@
 }
 
 /* skeleton-screen: true */
-.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_name {
-  left: 75px;
-  width: calc(100% - 75px - 45px - 60px);
-  height: 20px;
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_name {  top: 10px;
+  left: 65px;
+  width: calc(100% - 55px - 10px - 10px);
+  /* icon: 55px + padding: 10px + padding: 10px */
+  height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
+  color: rgba(0, 0, 0, 0);
 }
