@@ -137,10 +137,10 @@
 .css_settings_field .css_settings_body .css_settings .css_setting .css_setting_name,
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_name {
   position: absolute;
-  top: 0px;
+  top: 12.5px;
   left: 55px;
   width: calc(100% - 55px - 45px - 60px);
-  height: 55px;
+  height: 30px;
   display: flex;
   align-items: center;
   color: var(--b-cssvar-333333);
