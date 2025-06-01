@@ -240,9 +240,11 @@ function generateElementOfItem(): GeneratedElement {
   saveButtonIconElement.innerHTML = getIconHTML('folder');
   saveButtonElement.appendChild(saveButtonIconElement);
   saveButtonElement.appendChild(document.createTextNode('儲存'));
+  /*
   saveButtonElement.onclick = () => {
     openSaveToFolder('stop-on-location', [identifier, null, null]);
   };
+  */
 
   // Button: 到站通知
   const notifyButtonElement = document.createElement('div');
@@ -255,9 +257,11 @@ function generateElementOfItem(): GeneratedElement {
   notifyButtonIconElement.innerHTML = getIconHTML('notifications');
   notifyButtonElement.appendChild(notifyButtonIconElement);
   notifyButtonElement.appendChild(document.createTextNode('到站通知'));
+  /*
   notifyButtonElement.onclick = () => {
     openScheduleNotification('stop-on-location', [identifier, null, null, null]);
   };
+  */
 
   // Assemble buttons
   buttonsElement.appendChild(busTabButtonElement);
