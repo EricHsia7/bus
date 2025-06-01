@@ -54,7 +54,8 @@
   position: absolute;
   top: 0px;
   left: 55px;
-  width: calc(100% - 55px - 45px - 60px);
+  width: calc(100% - 55px - 10px);
+  /* icon: 55px + padding: 10px */
   height: 55px;
   display: flex;
   align-items: center;
@@ -66,10 +67,8 @@
 }
 
 /* skeleton-screen: true */
-.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_name {  top: 10px;
-  left: 65px;
-  width: calc(100% - 55px - 10px - 10px);
-  /* icon: 55px + padding: 10px + padding: 10px */
+.css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_name {
+  top: 10px;
   height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
   color: rgba(0, 0, 0, 0);
