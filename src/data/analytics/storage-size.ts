@@ -15,7 +15,7 @@ type CategorizedSizesInBytes = { [key: string]: StoreSizeInBytes };
 
 export interface StoreSize {
   category: StoreCategory;
-  size: number;
+  size: string;
 }
 
 export type CategorizedSizes = { [key: string]: StoreSize };
