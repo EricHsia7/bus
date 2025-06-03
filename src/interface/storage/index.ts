@@ -1,7 +1,7 @@
 import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../data/analytics/storage-size';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
 import { GeneratedElement, querySize } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
