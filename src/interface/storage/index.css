@@ -1,0 +1,16 @@
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[skeleton-screen="true"] .css_storage_statistics_item_name,
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[skeleton-screen="true"] .css_storage_statistics_item_value {
+  background: var(--b-cssvar-ededf2);
+}
+
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[animation="true"][skeleton-screen="true"] .css_storage_statistics_item_name,
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[animation="true"][skeleton-screen="true"] .css_storage_statistics_item_value {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background-size: 400% 400%;
+  background-position-x: 0% 0%;
+  animation: skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}

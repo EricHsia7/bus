@@ -24,32 +24,44 @@
 }
 
 /* body > statistics > item > name */
-.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item_name {
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item .css_storage_statistics_item_name {
   position: absolute;
+  top: 12.5px;
   left: 17.5px;
-  display: inline-flex;
-  align-items: center;
-  width: calc(100% - 55px - 17.5px);
-  height: 55px;
-  top: 0px;
+  width: calc(100% - 17.5px - 80px - 17.5px);
+  /* padding: 17.5px + value: 80px + padding: 17.5px */
+  height: 30px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
   word-break: keep-all;
   overflow: hidden;
 }
 
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[skeleton-screen="true"] .css_storage_statistics_item_name {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  width: calc(100% - 17.5px - 10px - 80px - 17.5px);
+}
+
 /* body > statistics > item > value */
-.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item_value {
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item .css_storage_statistics_item_value {
   position: absolute;
-  top: 0px;
+  top: 12.5px;
   right: 17.5px;
   width: 80px;
-  height: 55px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: right;
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
   white-space: nowrap;
   word-break: keep-all;
+}
+
+.css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[skeleton-screen="true"] .css_storage_statistics_item_value {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-normal);
 }

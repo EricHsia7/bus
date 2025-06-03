@@ -181,6 +181,7 @@ import './interface/storage/field.css';
 import './interface/storage/head.css';
 import './interface/storage/body.css';
 import './interface/storage/statistics.css';
+import './interface/storage/index.css';
 
 import './interface/qrcode/field.css';
 import './interface/qrcode/head.css';
