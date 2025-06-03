@@ -14,7 +14,7 @@ export async function getMaterialSymbols(requestID: string): Promise<Array<Mater
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
+  const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
   const cacheKey = `bus_material_symbols_cache`;
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
