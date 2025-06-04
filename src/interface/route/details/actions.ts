@@ -17,7 +17,7 @@ export async function shareRoutePermalink(RouteID: number) {
           url: link
         })
         .then(() => {
-          promptMessage('已分享路線', 'ios_share');
+          promptMessage('已分享路線', 'check_circle');
         })
         .catch((e) => {
           promptMessage('已取消分享', 'cancel');
