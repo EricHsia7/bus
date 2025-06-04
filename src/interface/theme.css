@@ -219,6 +219,8 @@
     --b-cssvar-ranking-color-opacity-b: 0.20;
     --b-cssvar-ranking-color-opacity-c: 0.15;
     --b-cssvar-ranking-color-opacity-d: 0.10;
+
+    --b-cssvar-backdrop-filter: saturate(100%) blur(15px);
   }
 }
 
