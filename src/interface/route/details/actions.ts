@@ -17,10 +17,10 @@ export async function shareRoutePermalink(RouteID: number) {
           url: link
         })
         .then(() => {
-          promptMessage('已分享路線連結', 'link');
+          promptMessage('已分享路線', 'ios_share');
         })
         .catch((e) => {
-          promptMessage('已取消分享連結', 'cancel');
+          promptMessage('已取消分享', 'cancel');
           console.error(e);
         });
     }

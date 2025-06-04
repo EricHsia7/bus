@@ -45,8 +45,8 @@ export async function integrateLocationDetails(hash: string, requestID: string):
       }
     },
     {
-      icon: 'link',
-      name: '連結',
+      icon: 'ios_share',
+      name: '分享',
       key: 'permalink',
       action: function () {
         shareLocationPermalink(hash);

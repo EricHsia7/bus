@@ -195,10 +195,10 @@ export async function shareLocationPermalink(hash: string) {
           url: link
         })
         .then(() => {
-          promptMessage('已分享地點連結', 'link');
+          promptMessage('已分享地點', 'ios_share');
         })
         .catch((e) => {
-          promptMessage('已取消分享連結', 'cancel');
+          promptMessage('已取消分享', 'cancel');
           console.error(e);
         });
     }
