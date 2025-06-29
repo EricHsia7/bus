@@ -51,7 +51,7 @@ export function generateIdentifier(): string {
 
   const result = new Uint8Array(17);
   result[0] = 95;
-  for (let i = 1; i < 17; i++) {
+  for (let i = 16; i > 0; i--) {
     const n = randomNumber2 % 3;
     const range = chars[n];
     const code = range[0] + (randomNumber1 % range[1]);
