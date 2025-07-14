@@ -372,8 +372,8 @@ export function extractCommonFeaturesFromAddresses(addresses: Array<string>): st
 }
 
 export function generateLabelFromAddresses(addresses: Array<ParsedAddress>): Array<string> {
-  let result = [];
-  let filledProperties = {};
+  const result = [];
+  const filledProperties = {};
   for (const address of addresses) {
     for (const key in address) {
       if (!filledProperties.hasOwnProperty(key)) {
@@ -397,17 +397,23 @@ export function generateLabelFromAddresses(addresses: Array<ParsedAddress>): Arr
   if (commonProperties.length > 0) {
     for (const commonProperty of commonProperties) {
       let components = [];
+      let len = -Infinity;
       for (const address of addresses) {
-        components.push(address[commonProperty.key].join(''));
+        const component = address[commonProperty.key].join('');
+        components.push(component);
+        const componentLen = component.length;
+        if (componentLen > len) {
+          len = componentLen;
+        }
       }
       if (areItemsDifferent(components)) {
-        result.push({ components: components, len: Math.max(...components.map((e) => e.length)) });
+        result.push({ components: components, len: len });
       }
     }
   }
 
   if (result.length > 0) {
-    result = result.sort(function (a, b) {
+    result.sort(function (a, b) {
       return a.len - b.len;
     });
     return result[0].components;
