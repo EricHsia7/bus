@@ -9,6 +9,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body * {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
 body input[type="text"] {
   font-family: "Noto Sans TC", sans-serif;
   font-optical-sizing: auto;
@@ -20,16 +30,7 @@ body input[type="text"] {
   text-rendering: optimizeLegibility;
   user-select: text;
   -webkit-user-select: text;
-}
-
-body * {
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: default;
+  cursor: text;
 }
 
 .css_splash_screen {
