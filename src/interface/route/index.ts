@@ -885,6 +885,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   routeSliding_initialIndex = 0;
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
+  RouteGroupsElement.focus();
   setUpRouteFieldSkeletonScreen();
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;

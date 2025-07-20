@@ -882,6 +882,7 @@ export function openLocation(hash: string): void {
   locationSliding_initialIndex = 0;
   LocationField.setAttribute('displayed', 'true');
   LocationGroupsElement.scrollLeft = 0;
+  LocationGroupsElement.focus();
   setUpLocationFieldSkeletonScreen();
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
