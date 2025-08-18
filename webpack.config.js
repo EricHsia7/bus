@@ -89,7 +89,7 @@ module.exports = (env, argv) => {
           collapseWhitespace: true,
           keepClosingSlash: true,
           removeComments: true,
-          removeRedundantAttributes: true,
+          removeRedundantAttributes: false,
           removeScriptTypeAttributes: false,
           removeStyleLinkTypeAttributes: false,
           useShortDoctype: false,
