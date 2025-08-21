@@ -1,4 +1,4 @@
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
+import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../../data/apis/loader';
 import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
 import { generateIdentifier } from '../../tools/index';
@@ -34,10 +34,10 @@ async function initializeFolderIconSelectorField() {
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   materialSymbolsElement.innerHTML = '';
   const requestID = generateIdentifier();
-  const materialSymbols = await getMaterialSymbols(requestID);
+  const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
   const fragment = new DocumentFragment();
-  for (const symbol of materialSymbols) {
+  for (const symbol in materialSymbols.symbols) {
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);
     fragment.appendChild(symbolElement.element);
   }
@@ -48,7 +48,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
   const materialSymbolsSearchResultsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results');
   const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
   if (!containPhoneticSymbols(query)) {
-    const searchResults = searchForMaterialSymbols(query, 100);
+    const searchResults = searchForMaterialSymbols(query);
     const fragment = new DocumentFragment();
     for (const result of searchResults) {
       const symbolElement = generateElementOfSymbol(result.item, currentTarget);

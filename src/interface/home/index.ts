@@ -1,6 +1,6 @@
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
 import { getLocation } from '../../data/apis/getLocation/index';
-import { getMaterialSymbols } from '../../data/apis/getMaterialSymbols/index';
+import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { getRoute } from '../../data/apis/getRoute/index';
 import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
@@ -41,12 +41,12 @@ export async function downloadData() {
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_1', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbols', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSearchIndex', 0, false);
   document.addEventListener(dataDownloadRequestID, handleDataReceivingProgressUpdates);
   await getRoute(dataDownloadRequestID, true);
   await getLocation(dataDownloadRequestID, 1);
   await getCarInfo(dataDownloadRequestID, true);
-  await getMaterialSymbols(dataDownloadRequestID);
+  await getMaterialSymbolsSearchIndex(dataDownloadRequestID);
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }

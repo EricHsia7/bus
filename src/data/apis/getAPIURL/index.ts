@@ -28,5 +28,5 @@ export function getAPIURL(city: number, api: number, alternative: boolean = fals
 }
 
 export function getMaterialSymbolsAPIURL(interval: number = 5000): string {
-  return `https://erichsia7.github.io/material-symbols-list/index.gz?_=${getNoCacheParameter(interval)}`;
+  return `https://erichsia7.github.io/material-symbols-list/search-index.gz?_=${getNoCacheParameter(interval)}`;
 }

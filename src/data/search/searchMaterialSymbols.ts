@@ -1,112 +1,115 @@
+import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
 import { generateIdentifier } from '../../tools/index';
-import { getUnicodes } from '../../tools/text';
-import { getMaterialSymbols } from '../apis/getMaterialSymbols/index';
+import { levenshtein } from '../../tools/levenshtein';
+import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../apis/loader';
 
-let searchIndex = {};
-let searchList = [];
+let searchStructure = {};
 let readyToSearch = false;
 
 export async function prepareForMaterialSymbolsSearch() {
-  if (readyToSearch) {
-    return;
-  }
+  if (readyToSearch) return;
 
   const requestID = generateIdentifier();
-  const materialSymbols = await getMaterialSymbols(requestID);
+  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
 
-  let index = {};
-  // let list = materialSymbols;
+  const dictionary = materialSymbolsSearchIndex.dictionary.split(',');
+  const symbols = materialSymbolsSearchIndex.symbols;
+  const names = [];
+  const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
 
-  let i = 0;
-  for (const materialSymbol of materialSymbols) {
-    const unicodes = getUnicodes(materialSymbol, true);
-    for (const unicode of unicodes) {
-      const key = `u_${unicode}`;
-      if (!index.hasOwnProperty(key)) {
-        index[key] = [];
+  let nameIndex = 0;
+  for (const symbol in symbols) {
+    // Create list of symbol names
+    names.push(symbol);
+    // Build wordIndex → nameIndex mapping
+    for (const wordIndex of symbols[symbol]) {
+      const wordIndexKey = `w${wordIndex}`;
+      if (!wordToSymbols.hasOwnProperty(wordIndexKey)) {
+        wordToSymbols[wordIndexKey] = [];
       }
-      index[key].push(i);
+      wordToSymbols[wordIndexKey].push(nameIndex);
     }
-    i += 1;
+    nameIndex++;
   }
-  searchList = materialSymbols;
-  searchIndex = index;
+
+  searchStructure = { dictionary, names, wordToSymbols };
   readyToSearch = true;
 }
 
-function calculateMaterialSymbolsSearchResultScore(queryUnicodes: Array<number>, resultUnicodes: Array<number>): number {
-  // 1. The exact matches are highly prioritized here
-  // 2. The penalty mechanism is for missing matches
-  // 3. It might "outlet" partially relevant results
-  let score = 0;
-  let i = 0;
-  for (const unicode of resultUnicodes) {
-    const indexOfUnicode = queryUnicodes.indexOf(unicode, i);
-    if (indexOfUnicode > -1) {
-      score += indexOfUnicode;
-    } else {
-      score -= i;
-    }
-    i += 1;
-  }
-  if (queryUnicodes === resultUnicodes) {
-    score = Math.abs(score) * 10;
-  }
-  return score;
-}
+export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): Array<{ item: MaterialSymbols; score: number }> {
+  if (!readyToSearch) return [];
 
-export function searchForMaterialSymbols(query: string, limit: number): Array<string> {
-  if (!readyToSearch) {
-    return [];
-  }
-  const caseInsensitiveQuery = String(query).toLowerCase();
-  const queryUnicodes = getUnicodes(caseInsensitiveQuery, true);
-  const asIsQueryUnicodes = getUnicodes(caseInsensitiveQuery, false);
-  let unicodeGroups = [];
-  for (const unicode of queryUnicodes) {
-    const key = `u_${unicode}`;
-    if (searchIndex.hasOwnProperty(key)) {
-      unicodeGroups.push(searchIndex[key]);
-    }
-  }
-  unicodeGroups.sort(function (a, b) {
-    return a.length - b.length;
-  });
-  const unicodeGroupsLength1 = unicodeGroups.length - 1;
-  let intersection = [];
-  if (unicodeGroupsLength1 === 0) {
-    intersection = unicodeGroups[0];
-  }
-  if (unicodeGroupsLength1 > 0) {
-    for (let i = 0; i < unicodeGroupsLength1; i++) {
-      const currentGroup = unicodeGroups[i];
-      const nextGroup = unicodeGroups[i + 1];
-      if (i === 0) {
-        intersection = getIntersection(currentGroup, nextGroup);
-      } else {
-        intersection = getIntersection(intersection, nextGroup);
+  const { dictionary, names, wordToSymbols } = searchStructure;
+  const broadLength = Math.round(names.length * broadThreshold);
+
+  // Split query
+  const queryWords = Array.from(
+    new Set(
+      query
+        .trim()
+        .toLowerCase()
+        .split(/[\s_-]+/)
+    )
+  );
+  const queryWordsLength = queryWords.length;
+
+  // Fuzzy match words to dictionary indices
+  const minDistances = new Uint8Array(queryWordsLength);
+  const matchedWordIndexes = new Int16Array(queryWordsLength).fill(-1);
+
+  for (let j = searchFrom; j < queryWordsLength; j++) {
+    minDistances[j] = queryWords[j].length;
+    for (let i = 0, l = dictionary.length; i < l; i++) {
+      const distance = levenshtein(queryWords[j], dictionary[i]);
+      if (distance <= minDistances[j]) {
+        minDistances[j] = distance;
+        matchedWordIndexes[j] = i;
       }
     }
   }
-  let result = [];
-  let quantity = 0;
-  for (const j of intersection) {
-    let thisItem = searchList[j];
-    if (quantity < limit) {
-      const score = calculateMaterialSymbolsSearchResultScore(asIsQueryUnicodes, getUnicodes(thisItem, false));
-      result.push({
-        item: thisItem,
-        score: score
-      });
-    } else {
-      break;
-    }
+
+  // Pair words with symbols
+  let indexArrays = [];
+  for (let i = queryWordsLength - 1; i >= 0; i--) {
+    if (matchedWordIndexes[i] < 0) continue;
+    const arr = wordToSymbols[`w${matchedWordIndexes[i]}`] || [];
+    if (skipBroadTerms && arr.length > broadLength) continue;
+    indexArrays.push(arr);
   }
-  result.sort(function (a, b) {
-    return b.score - a.score;
-  });
-  return result;
+
+  const indexArraysLength = indexArrays.length;
+
+  if (indexArraysLength === 0) return [];
+
+  // Sort by length (shortest → longest)
+  indexArrays.sort((a, b) => a.length - b.length);
+
+  // Intersect
+  let candidates = indexArrays[0];
+  for (let i = 1; i < indexArraysLength; i++) {
+    candidates = getIntersection(candidates, indexArrays[i]);
+  }
+
+  // Rank candidates
+  const scored = [];
+  for (let i = 0, l = candidates.length; i < l; i++) {
+    let score = 0;
+    for (let j = queryWordsLength - 1; j >= 0; j--) {
+      if (matchedWordIndexes[j] < 0) continue;
+      const symbolWordIndexes = wordToSymbols[`w${matchedWordIndexes[j]}`] || [];
+      if (symbolWordIndexes.indexOf(candidates[i]) > -1) {
+        score -= j; // earlier query words = higher weight
+      }
+    }
+    scored.push({
+      item: names[candidates[i]],
+      score: score
+    });
+  }
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored;
 }
