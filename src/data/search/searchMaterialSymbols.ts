@@ -42,6 +42,7 @@ export async function prepareForMaterialSymbolsSearch() {
 }
 
 export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): Array<{ item: MaterialSymbols; score: number }> {
+  if (!readyToSearch) return [];
   const { dictionary, names, wordToSymbols } = searchStructure;
   const broadLength = Math.round(names.length * broadThreshold);
 
