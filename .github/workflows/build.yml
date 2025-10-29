@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy things to ./dist/
         run: |
-          cp -r ./pwaicons/ ./dist/pwaicons/
+          cp -r ./icons/ ./dist/icons/
           cp -r ./manifest.json ./dist/manifest.json
           cp -r ./splash-screen/ ./dist/splash-screen/
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
