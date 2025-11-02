@@ -32,8 +32,8 @@ jobs:
           cp -r ./splash-screen/ ./dist/splash-screen/
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
 
-      - name: Generate splash screen
-        run: node generate-splash-screen.js
+      # - name: Generate splash screen
+      #   run: node generate-splash-screen.js
 
       - name: Deploy with gh-pages
         run: |
