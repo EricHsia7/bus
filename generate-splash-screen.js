@@ -4,7 +4,19 @@ const md5 = require('md5');
 
 // Array of device data containing information about various devices and their dimensions
 const deviceData = [
+  { name: `iPhone 17`, width: 393, height: 852, scale: 3 },
+  { name: `iPhone 17 Air`, width: 391, height: 844, scale: 3 },
+  { name: `iPhone 17 Pro`, width: 402, height: 874, scale: 3 },
+  { name: `iPhone 17 Pro Max`, width: 440, height: 954, scale: 3 },
+  { name: `iPad 11th gen`, width: 810, height: 1180, scale: 2 },
+  { name: `iPad Air (11-inch, 7th gen)`, width: 820, height: 1180, scale: 2 },
+  { name: `iPad Air (13-inch, 7th gen)`, width: 920, height: 1290, scale: 2 },
+  { name: `iPad Pro (11-inch, 5th gen)`, width: 834, height: 1194, scale: 2 },
+  { name: `iPad Pro (13-inch, 5th gen)`, width: 1032, height: 1376, scale: 2 },
+  { name: `iPad Pro (11-inch, 6th gen)`, width: 834, height: 1194, scale: 2 },
+  { name: `iPad Pro (13-inch, 6th gen)`, width: 1032, height: 1376, scale: 2 },
   { name: `iPad Mini (7th gen)`, width: 744, height: 1133, scale: 2 },
+  { name: 'iPhone 16e', width: 375, height: 812, scale: 2 },
   { name: `iPhone 16 Pro Max`, width: 440, height: 956, scale: 3 },
   { name: `iPhone 16 Pro`, width: 402, height: 874, scale: 3 },
   { name: `iPhone 16 Plus`, width: 430, height: 932, scale: 3 },
@@ -85,7 +97,7 @@ const deviceData = [
   { name: `Apple Watch Series 1 Large`, width: 156, height: 195, scale: 2 },
   { name: `Apple Watch Series 1 Small`, width: 156, height: 170, scale: 2 },
   { name: `iPhone SE 1st gen`, width: 320, height: 568, scale: 2 },
-  { name: `iPad Pro (1st gen 9.7”)`, width: 768, height: 1024, scale: 2 },
+  { name: `iPad Pro (1st gen 9.7')`, width: 768, height: 1024, scale: 2 },
   { name: `iPad Pro (1st gen 12.9")`, width: 1024, height: 1366, scale: 2 },
   { name: `iPhone 6s Plus`, width: 414, height: 736, scale: 3 },
   { name: `iPhone 6s`, width: 375, height: 667, scale: 2 },
