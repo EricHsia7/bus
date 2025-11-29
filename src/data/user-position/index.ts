@@ -25,7 +25,8 @@ export function askForPositioningPermission(): void {
     userPosition.current.longitude = position.coords.longitude;
   }
   function errorHandler(error: any): void {
-    var message = '';
+    /*
+    let message = '';
     // Check for known errors
     switch (error.code) {
       case error.PERMISSION_DENIED:
@@ -39,10 +40,11 @@ export function askForPositioningPermission(): void {
         break;
     }
     if (message == '') {
-      var strErrorCode = error.code.toString();
+      const strErrorCode = error.code.toString();
       message = 'The position could not be determined due to ' + 'an unknown error (Code: ' + strErrorCode + ').';
     }
     console.log(message);
+    */
   }
   if (userPosition.permission.asked === false && getSettingOptionValue('display_user_location')) {
     userPosition.permission.asked = true;
