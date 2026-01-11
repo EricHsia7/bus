@@ -25,7 +25,7 @@ function processWorkerTask(xml: string): SegmentBuffers {
       currentTagName = line.match(startingTagRegex)[1];
       currentValue = null;
       switch (currentTagName) {
-        // to prevent the second concatenated data set erase the first one
+        // To prevent the second concatenated dataset erasing the first one, ignore RouteFares
         /*
         case 'RouteFares':
           result = [];

@@ -79,7 +79,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
     }
   }
 
-  var propertyQuantity = properties.length;
+  const propertyQuantity = properties.length;
 
   Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 

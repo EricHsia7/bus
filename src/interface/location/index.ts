@@ -677,9 +677,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     };
     cumulativeOffset += width;
   }
-  var offset = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width * 0.5;
+  const initialGroupKey = `g_${locationSliding_initialIndex}`;
+  const offset = locationSliding_groupStyles[initialGroupKey].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[initialGroupKey].width * 0.5;
   if (!locationSliding_sliding) {
-    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[`g_${locationSliding_initialIndex}`].width - tabPadding, locationSliding_initialIndex);
+    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[initialGroupKey].width - tabPadding, locationSliding_initialIndex);
   }
 
   LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
