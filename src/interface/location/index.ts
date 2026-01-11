@@ -457,7 +457,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const thisItemStatusElement = elementQuerySelector(thisElement, '.css_location_group_item_status');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
+      const thisItemStatusElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_status');
       const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
       const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
@@ -492,7 +493,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const thisRankElement = elementQuerySelector(thisElement, '.css_location_group_item_rank');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
+      const thisRankElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_rank');
       const nextSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
       const currentSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
 
@@ -519,23 +521,26 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
 
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      const thisRouteDirectionElement = elementQuerySelector(thisElement, '.css_location_group_item_route_direction');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
+      const thisRouteDirectionElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_direction');
       thisRouteDirectionElement.innerText = thisItem.route_direction;
     }
 
     function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      const thisRouteNameElement = elementQuerySelector(thisElement, '.css_location_group_item_route_name');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
+      const thisRouteNameElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_name');
       thisRouteNameElement.innerText = thisItem.route_name;
-      // TODO: selector
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      const thisBusesElement = elementQuerySelector(thisElement, '.css_location_group_item_buses');
+      const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
+      const thisBusesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buses');
       thisBusesElement.innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
     }
 
-    function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {
-      const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_location_group_item_bus_arrival_times');
+    function updateBusArrivalTimes(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
+      const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
+      const thisBusArrivalTimesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_bus_arrival_times');
       thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_location_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
     }
 
