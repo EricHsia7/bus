@@ -13,6 +13,8 @@ function processWorkerTask(xml: string): SegmentBuffers {
   const lines = xml.split(/\n/m);
 
   let result = [];
+  let resultLastIndex = -1;
+  let bufferZoneLastIndex = -1;
   let currentTagName = '';
   var currentValue;
 
@@ -29,18 +31,22 @@ function processWorkerTask(xml: string): SegmentBuffers {
         /*
         case 'RouteFares':
           result = [];
+          resultLastIndex = -1;
           break;
         */
         case 'RouteFare':
           result.push({});
+          resultLastIndex++;
           break;
         case 'BufferZones':
-          if (!result[result.length - 1].hasOwnProperty('BufferZones')) {
-            result[result.length - 1]['BufferZones'] = [];
+          if (!result[resultLastIndex].hasOwnProperty('BufferZones')) {
+            result[resultLastIndex]['BufferZones'] = [];
+            bufferZoneLastIndex = -1;
           }
           break;
         case 'BufferZone':
-          result[result.length - 1]['BufferZones'].push({});
+          result[resultLastIndex]['BufferZones'].push({});
+          bufferZoneLastIndex++;
           break;
         default:
           break;
@@ -53,16 +59,16 @@ function processWorkerTask(xml: string): SegmentBuffers {
       currentValue = line.match(inlineRegex)[2];
       switch (currentTagName) {
         case 'RouteID':
-          result[result.length - 1]['RouteID'] = parseInt(line.match(inlineRegex)[2]);
+          result[resultLastIndex]['RouteID'] = parseInt(line.match(inlineRegex)[2], 10);
           break;
         case 'OriginStopID':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['OriginStopID'] = parseInt(currentValue);
+          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['OriginStopID'] = parseInt(currentValue, 10);
           break;
         case 'DestinationStopID':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['DestinationStopID'] = parseInt(currentValue);
+          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['DestinationStopID'] = parseInt(currentValue, 10);
           break;
         case 'Direction':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['Direction'] = parseInt(currentValue);
+          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['Direction'] = parseInt(currentValue, 10);
           break;
         default:
           break;
