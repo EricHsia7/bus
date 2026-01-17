@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../tools/index';
 import { documentQuerySelectorAll } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
 export function promptMessage(message: string, icon: MaterialSymbols): void {
@@ -23,7 +23,7 @@ export function promptMessage(message: string, icon: MaterialSymbols): void {
 
   const promptIconElement = document.createElement('div');
   promptIconElement.classList.add('css_prompt_icon');
-  promptIconElement.innerHTML = getIconHTML(icon);
+  promptIconElement.appendChild(getIconElement(icon));
   promptElement.appendChild(promptIconElement);
 
   const promptMessageElement = document.createElement('div');

@@ -1,6 +1,6 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -18,7 +18,7 @@ function generateElementOfItem(item: ScheduleNotificationOption, type: ScheduleN
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_schedule_notification_item_icon');
   const iconSpanElement = document.createElement('span');
-  iconSpanElement.innerHTML = getIconHTML(item.icon);
+  iconSpanElement.appendChild(getIconElement(item.icon));
   iconElement.appendChild(iconSpanElement);
 
   // Name element

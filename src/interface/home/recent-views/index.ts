@@ -4,7 +4,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { openBus } from '../../bus/index';
-import { getIconHTML } from '../../icons/index';
+import { getIconElement } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
@@ -92,7 +92,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      iconElement.innerHTML = getIconHTML(icon);
+      iconElement.appendChild(getIconElement(icon));
     }
 
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {

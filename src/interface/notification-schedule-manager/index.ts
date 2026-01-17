@@ -5,7 +5,7 @@ import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, in
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -85,7 +85,7 @@ function generateElementOfItem(): GeneratedElement {
   cancelElement.classList.add('css_notification_schedule_manager_item_notification_schedule_cancel');
   // Set icon using DOM
   const iconElement = document.createElement('span');
-  iconElement.innerHTML = getIconHTML('close');
+  iconElement.appendChild(getIconElement('close'));
   cancelElement.appendChild(iconElement);
 
   notificationScheduleElement.appendChild(cancelElement);

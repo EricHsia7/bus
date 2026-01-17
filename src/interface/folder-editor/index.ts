@@ -2,7 +2,7 @@ import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, 
 import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -69,7 +69,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   // Icon element
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_folder_editor_folder_item_icon');
-  iconElement.innerHTML = getIconHTML(icon);
+  iconElement.appendChild(getIconElement(icon));
 
   // Context element
   const contextElement = document.createElement('div');
@@ -88,7 +88,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   // Sort up control
   const sortUpElement = document.createElement('div');
   sortUpElement.classList.add('css_folder_editor_folder_item_sort_control_up');
-  sortUpElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortUpElement.onclick = () => {
     moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'up');
   };
@@ -96,7 +96,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   // Sort down control
   const sortDownElement = document.createElement('div');
   sortDownElement.classList.add('css_folder_editor_folder_item_sort_control_down');
-  sortDownElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortDownElement.onclick = () => {
     moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'down');
   };
@@ -104,7 +104,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   // Delete control
   const deleteElement = document.createElement('div');
   deleteElement.classList.add('css_folder_editor_folder_item_delete');
-  deleteElement.innerHTML = getIconHTML('delete');
+  deleteElement.appendChild(getIconElement('delete'));
   deleteElement.onclick = () => {
     removeItemOnFolderEditor(identifier, folder.id, item.type, item.id);
   };

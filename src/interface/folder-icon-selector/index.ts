@@ -5,7 +5,7 @@ import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { containPhoneticSymbols } from '../../tools/text';
 import { dataDownloadCompleted } from '../home/index';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -23,7 +23,7 @@ function generateElementOfSymbol(symbol: string): GeneratedElement {
   element.onclick = function () {
     selectFolderIcon(symbol, currentTarget);
   };
-  element.innerHTML = getIconHTML(symbol);
+  element.appendChild(getIconElement(symbol));
   return {
     element: element,
     id: ''

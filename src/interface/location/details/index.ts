@@ -5,7 +5,7 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { getIconHTML } from '../../icons/index';
+import { getIconElement } from '../../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
@@ -42,7 +42,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction, previousItem: IntegratedLocationDetailsAction | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
       const iconElement = elementQuerySelector(thisElement, '.css_location_details_action_icon');
-      iconElement.innerHTML = getIconHTML(thisItem.icon);
+      iconElement.appendChild(getIconElement(thisItem.icon));
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {

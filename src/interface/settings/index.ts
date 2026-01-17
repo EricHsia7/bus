@@ -5,7 +5,7 @@ import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
 import { generateIdentifier, releaseFile } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -22,7 +22,7 @@ function generateElementOfItem(item: Setting): GeneratedElement {
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_setting_icon');
   const iconSpanElement = document.createElement('span');
-  iconSpanElement.innerHTML = getIconHTML(item.icon);
+  iconSpanElement.appendChild(getIconElement(item.icon));
   iconElement.appendChild(iconSpanElement);
 
   // Name
@@ -39,7 +39,7 @@ function generateElementOfItem(item: Setting): GeneratedElement {
   const arrowElement = document.createElement('div');
   arrowElement.classList.add('css_setting_arrow');
   const arrowSpanElement = document.createElement('span');
-  arrowSpanElement.innerHTML = getIconHTML('arrow_forward_ios');
+  arrowSpanElement.appendChild(getIconElement('arrow_forward_ios'));
   arrowElement.appendChild(arrowSpanElement);
 
   // Event handler (lambda)

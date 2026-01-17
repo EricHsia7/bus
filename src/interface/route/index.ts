@@ -9,7 +9,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getIconHTML } from '../icons/index';
+import { getIconElement, getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -212,7 +212,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   // Stretch button
   const stretchElement = document.createElement('div');
   stretchElement.classList.add('css_route_group_item_stretch');
-  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
     stretchRouteItem(identifier, threadBoxIdentifier);
   };
@@ -246,7 +246,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const tabBusIconElement = document.createElement('div');
   tabBusIconElement.classList.add('css_route_group_item_button_icon');
-  tabBusIconElement.innerHTML = getIconHTML('directions_bus');
+  tabBusIconElement.appendChild(getIconElement('directions_bus'));
   tabBusElement.appendChild(tabBusIconElement);
   tabBusElement.appendChild(document.createTextNode('公車'));
   buttonsElement.appendChild(tabBusElement);
@@ -263,7 +263,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const tabArrivalIconElement = document.createElement('div');
   tabArrivalIconElement.classList.add('css_route_group_item_button_icon');
-  tabArrivalIconElement.innerHTML = getIconHTML('departure_board');
+  tabArrivalIconElement.appendChild(getIconElement('departure_board'));
   tabArrivalElement.appendChild(tabArrivalIconElement);
   tabArrivalElement.appendChild(document.createTextNode('抵達時間'));
   buttonsElement.appendChild(tabArrivalElement);
@@ -280,7 +280,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const tabRouteIconElement = document.createElement('div');
   tabRouteIconElement.classList.add('css_route_group_item_button_icon');
-  tabRouteIconElement.innerHTML = getIconHTML('route');
+  tabRouteIconElement.appendChild(getIconElement('route'));
   tabRouteElement.appendChild(tabRouteIconElement);
   tabRouteElement.appendChild(document.createTextNode('路線'));
   buttonsElement.appendChild(tabRouteElement);
@@ -297,7 +297,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const tabLocationIconElement = document.createElement('div');
   tabLocationIconElement.classList.add('css_route_group_item_button_icon');
-  tabLocationIconElement.innerHTML = getIconHTML('location_on');
+  tabLocationIconElement.appendChild(getIconElement('location_on'));
   tabLocationElement.appendChild(tabLocationIconElement);
   tabLocationElement.appendChild(document.createTextNode('地點'));
   buttonsElement.appendChild(tabLocationElement);
@@ -315,7 +315,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const saveToFolderIconElement = document.createElement('div');
   saveToFolderIconElement.classList.add('css_route_group_item_button_icon');
-  saveToFolderIconElement.innerHTML = getIconHTML('folder');
+  saveToFolderIconElement.appendChild(getIconElement('folder'));
   saveToFolderElement.appendChild(saveToFolderIconElement);
   saveToFolderElement.appendChild(document.createTextNode('儲存'));
   buttonsElement.appendChild(saveToFolderElement);
@@ -334,7 +334,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
 
   const scheduleNotificationIconElement = document.createElement('div');
   scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
-  scheduleNotificationIconElement.innerHTML = getIconHTML('notifications');
+  scheduleNotificationIconElement.appendChild(getIconElement('notifications'));
   scheduleNotificationElement.appendChild(scheduleNotificationIconElement);
   scheduleNotificationElement.appendChild(document.createTextNode('到站通知'));
   buttonsElement.appendChild(scheduleNotificationElement);
