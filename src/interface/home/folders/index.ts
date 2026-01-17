@@ -454,6 +454,9 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
       const thisIconElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
+      if (thisIconElememt.firstChild !== null) {
+        thisIconElememt.removeChild(thisIconElememt.firstChild);
+      }
       thisIconElememt.appendChild(getIconElement(thisFolder.icon));
     }
 
@@ -609,9 +612,12 @@ async function streamFolders() {
   refreshFolders()
     .then(function () {
       if (foldersRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamFolders();
-        }, Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamFolders();
+          },
+          Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         foldersRefreshTimer_streamStarted = false;
       }
