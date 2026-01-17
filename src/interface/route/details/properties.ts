@@ -1,6 +1,6 @@
 import { GeneratedElement } from '../../index';
 import { booleanToString, compareThings } from '../../../tools/index';
-import { getIconHTML } from '../../icons/index';
+import { getIconElement } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 
@@ -43,7 +43,11 @@ export function setUppropertiesGroupSkeletonScreen(Field: HTMLElement): void {
 export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_route_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
+      const thisIconElement = elementQuerySelector(thisElement, '.css_route_details_property_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(thisProperty.icon));
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {

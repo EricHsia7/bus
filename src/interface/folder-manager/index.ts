@@ -1,7 +1,7 @@
 import { FolderWithContent, listFoldersWithContent } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
 import { openFolderEditor } from '../folder-editor/index';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
@@ -19,7 +19,7 @@ function generateElementOfItem(item: FolderWithContent): GeneratedElement {
   // Icon
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_folder_manager_folder_item_icon');
-  iconElement.innerHTML = getIconHTML(item.icon);
+  iconElement.appendChild(getIconElement(item.icon));
 
   // Name
   const nameElement = document.createElement('div');
@@ -34,7 +34,7 @@ function generateElementOfItem(item: FolderWithContent): GeneratedElement {
   // Arrow
   const arrowElement = document.createElement('div');
   arrowElement.classList.add('css_folder_manager_folder_item_arrow');
-  arrowElement.innerHTML = getIconHTML('arrow_forward_ios');
+  arrowElement.appendChild(getIconElement('arrow_forward_ios'));
 
   // Assemble
   folderItemElement.appendChild(iconElement);

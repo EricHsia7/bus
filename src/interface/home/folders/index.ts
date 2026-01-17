@@ -4,7 +4,7 @@ import { Folder, integratedFolder, integratedFolderContent, integratedFolders, i
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
-import { getIconHTML } from '../../icons/index';
+import { getIconElement } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
 import { openLocation } from '../../location/index';
@@ -42,7 +42,7 @@ function generateElementOfItem(): GeneratedElement {
   // Icon
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_home_folder_item_icon');
-  iconElement.innerHTML = getIconHTML('location_on');
+  iconElement.appendChild(getIconElement('location_on'));
 
   // Context
   const contextElement = document.createElement('div');
@@ -76,7 +76,7 @@ function generateElementOfItem(): GeneratedElement {
   // Button
   const buttonElement = document.createElement('div');
   buttonElement.classList.add('css_home_folder_item_button');
-  buttonElement.innerHTML = getIconHTML('keyboard_arrow_right');
+  buttonElement.appendChild(getIconElement('keyboard_arrow_right'));
 
   // Capsule separator
   const capsuleSeparatorElement = document.createElement('div');
@@ -213,7 +213,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     }
 
     function updateIcon(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
+      const thisIconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
       let icon = '' as MaterialSymbols;
       switch (thisItem.type) {
         case 'stop':
@@ -235,7 +235,10 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           icon = '';
           break;
       }
-      iconElement.innerHTML = getIconHTML(icon);
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(icon));
     }
 
     function updateStatus(thisElement: HTMLElement, thisItem: integratedFolderContent, animation: boolean): void {
@@ -447,14 +450,17 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   function updateFolder(thisElement: HTMLElement, thisFolder: Folder, previousFolder: Folder | null): void {
     function updateName(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
-      const thisNameElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
-      thisNameElememt.innerText = thisFolder.name;
+      const thisNameElement = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
+      thisNameElement.innerText = thisFolder.name;
     }
 
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
-      const thisIconElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
-      thisIconElememt.innerHTML = getIconHTML(thisFolder.icon);
+      const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(thisFolder.icon));
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
@@ -609,9 +615,12 @@ async function streamFolders() {
   refreshFolders()
     .then(function () {
       if (foldersRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamFolders();
-        }, Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamFolders();
+          },
+          Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         foldersRefreshTimer_streamStarted = false;
       }

@@ -18,10 +18,10 @@ export const CalendarGroupBodyElement = elementQuerySelector(CalendarGroupElemen
 export const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_days');
 export const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
 
-export const ActionsGroupElememt = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
-export const svaeToFolderActionButtonElement = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
-export const getPermalinkActionButton = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
-export const showPermalinkQRCodeActionButton = elementQuerySelector(ActionsGroupElememt, '.css_route_details_group_body .css_route_details_action_button[action="show-permalink-qrcode"]');
+export const ActionsGroupElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"]');
+export const svaeToFolderActionButtonElement = elementQuerySelector(ActionsGroupElement, '.css_route_details_group_body .css_route_details_action_button[action="save-to-folder"]');
+export const getPermalinkActionButton = elementQuerySelector(ActionsGroupElement, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
+export const showPermalinkQRCodeActionButton = elementQuerySelector(ActionsGroupElement, '.css_route_details_group_body .css_route_details_action_button[action="show-permalink-qrcode"]');
 
 export const PropertiesGroupElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
 

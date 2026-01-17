@@ -6,7 +6,7 @@ import { getCSSVariableValue } from '../../tools/style';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 import { GeneratedElement, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
@@ -101,7 +101,7 @@ function initializeKeyboard(): void {
         switch (item) {
           case '刪除':
             newButtonElement.addEventListener(eventName, deleteCharFromInput);
-            newButtonElement.innerHTML = getIconHTML('backspace');
+            newButtonElement.appendChild(getIconElement('backspace'));
             break;
           case '清空':
             newButtonElement.addEventListener(eventName, emptyInput);
@@ -109,7 +109,7 @@ function initializeKeyboard(): void {
             break;
           case '鍵盤':
             newButtonElement.addEventListener(eventName, openSystemKeyboard);
-            newButtonElement.innerHTML = getIconHTML('keyboard');
+            newButtonElement.appendChild(getIconElement('keyboard'));
             break;
           default:
             // Use an IIFE (Immediately Invoked Function Expression) to create a new scope for each item value. This ensures that the item variable is captured by value rather than by reference.
@@ -250,7 +250,10 @@ export function updateSearchResult(): void {
   function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
     function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
       const typeElement = elementQuerySelector(element, '.css_search_search_result_type');
-      typeElement.innerHTML = getIconHTML(typeToIcon[item.item.type]);
+      if (typeElement.firstChild !== null) {
+        typeElement.removeChild(typeElement.firstChild);
+      }
+      typeElement.appendChild(getIconElement(typeToIcon[item.item.type]));
     }
 
     function updateName(item: SearchResult, element: HTMLElement): void {
@@ -345,7 +348,7 @@ export function switchSearchTypeFilter(): void {
     newType = -1;
   }
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
-  searchTypeFilterButtonElement.innerHTML = getIconHTML(icons[newType + 1]);
+  searchTypeFilterButtonElement.appendChild(getIconElement(icons[newType + 1]));
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();
 }

@@ -9,7 +9,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/query-selector';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getIconHTML } from '../icons/index';
+import { getIconElement, getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -171,7 +171,7 @@ function generateElementOfItem(): GeneratedElement {
   // Stretch button
   const stretchElement = document.createElement('div');
   stretchElement.classList.add('css_location_group_item_stretch');
-  stretchElement.innerHTML = getIconHTML('keyboard_arrow_down');
+  stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
     stretchLocationItem(identifier);
   };
@@ -208,7 +208,7 @@ function generateElementOfItem(): GeneratedElement {
   busTabButtonElement.setAttribute('code', '0');
   const busTabIconElement = document.createElement('div');
   busTabIconElement.classList.add('css_location_group_item_button_icon');
-  busTabIconElement.innerHTML = getIconHTML('directions_bus');
+  busTabIconElement.appendChild(getIconElement('directions_bus'));
   busTabButtonElement.appendChild(busTabIconElement);
   busTabButtonElement.appendChild(document.createTextNode('公車'));
   busTabButtonElement.onclick = () => {
@@ -223,7 +223,7 @@ function generateElementOfItem(): GeneratedElement {
   arrivalTabButtonElement.setAttribute('code', '1');
   const arrivalTabIconElement = document.createElement('div');
   arrivalTabIconElement.classList.add('css_location_group_item_button_icon');
-  arrivalTabIconElement.innerHTML = getIconHTML('departure_board');
+  arrivalTabIconElement.appendChild(getIconElement('departure_board'));
   arrivalTabButtonElement.appendChild(arrivalTabIconElement);
   arrivalTabButtonElement.appendChild(document.createTextNode('抵達時間'));
   arrivalTabButtonElement.onclick = () => {
@@ -237,7 +237,7 @@ function generateElementOfItem(): GeneratedElement {
   saveButtonElement.setAttribute('type', 'save-to-folder');
   const saveButtonIconElement = document.createElement('div');
   saveButtonIconElement.classList.add('css_location_group_item_button_icon');
-  saveButtonIconElement.innerHTML = getIconHTML('folder');
+  saveButtonIconElement.appendChild(getIconElement('folder'));
   saveButtonElement.appendChild(saveButtonIconElement);
   saveButtonElement.appendChild(document.createTextNode('儲存'));
   /*
@@ -254,7 +254,7 @@ function generateElementOfItem(): GeneratedElement {
   notifyButtonElement.setAttribute('enabled', 'true');
   const notifyButtonIconElement = document.createElement('div');
   notifyButtonIconElement.classList.add('css_location_group_item_button_icon');
-  notifyButtonIconElement.innerHTML = getIconHTML('notifications');
+  notifyButtonIconElement.appendChild(getIconElement('notifications'));
   notifyButtonElement.appendChild(notifyButtonIconElement);
   notifyButtonElement.appendChild(document.createTextNode('到站通知'));
   /*
@@ -624,7 +624,11 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
-      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
+      const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_property_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(thisProperty.icon));
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
@@ -861,9 +865,12 @@ export function streamLocation(): void {
   refreshLocation()
     .then(function () {
       if (locationRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamLocation();
-        }, Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamLocation();
+          },
+          Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         locationRefreshTimer_streamStarted = false;
       }

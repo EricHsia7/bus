@@ -1,6 +1,6 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
@@ -29,7 +29,7 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
   const arrowElement = document.createElement('div');
   arrowElement.classList.add('css_personal_schedule_manager_item_arrow');
   const iconElement = document.createElement('span');
-  iconElement.innerHTML = getIconHTML('arrow_forward_ios');
+  iconElement.appendChild(getIconElement('arrow_forward_ios'));
   arrowElement.appendChild(iconElement);
   itemElement.appendChild(arrowElement);
 
