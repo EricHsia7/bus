@@ -153,7 +153,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
 
 async function initializeFolderEditorField(folderID: string) {
   // TODO: add skeleton screen
-  const folder = await getFolder(folderID);
+  const folder = getFolder(folderID);
   const content = await listFolderContent(folderID);
   updateFolderEditorField(folder, content);
 }
