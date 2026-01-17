@@ -83,7 +83,6 @@ function generateElementOfItem(): GeneratedElement {
   // Cancel button element
   const cancelElement = document.createElement('div');
   cancelElement.classList.add('css_notification_schedule_manager_item_notification_schedule_cancel');
-  // Set icon using DOM
   const iconElement = document.createElement('span');
   iconElement.appendChild(getIconElement('close'));
   cancelElement.appendChild(iconElement);
