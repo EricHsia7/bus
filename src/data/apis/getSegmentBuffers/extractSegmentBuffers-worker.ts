@@ -57,21 +57,10 @@ function processWorkerTask(xml: string): SegmentBuffers {
       // inline tag
       currentTagName = line.match(inlineRegex)[1];
       currentValue = line.match(inlineRegex)[2];
-      switch (currentTagName) {
-        case 'RouteID':
-          result[resultLastIndex]['RouteID'] = parseInt(line.match(inlineRegex)[2], 10);
-          break;
-        case 'OriginStopID':
-          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['OriginStopID'] = parseInt(currentValue, 10);
-          break;
-        case 'DestinationStopID':
-          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['DestinationStopID'] = parseInt(currentValue, 10);
-          break;
-        case 'Direction':
-          result[resultLastIndex]['BufferZones'][bufferZoneLastIndex]['Direction'] = parseInt(currentValue, 10);
-          break;
-        default:
-          break;
+      if (currentTagName === 'RouteID') {
+        result[resultLastIndex]['RouteID'] = parseInt(currentValue, 10);
+      } else if (currentTagName === 'OriginStopID' || currentTagName === 'DestinationStopID' || currentTagName === 'Direction') {
+        result[resultLastIndex]['BufferZones'][bufferZoneLastIndex][currentTagName] = parseInt(currentValue, 10);
       }
     }
     /*
