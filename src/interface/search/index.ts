@@ -250,6 +250,9 @@ export function updateSearchResult(): void {
   function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
     function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
       const typeElement = elementQuerySelector(element, '.css_search_search_result_type');
+      if (typeElement.firstChild !== null) {
+        typeElement.removeChild(typeElement.firstChild);
+      }
       typeElement.appendChild(getIconElement(typeToIcon[item.item.type]));
     }
 
