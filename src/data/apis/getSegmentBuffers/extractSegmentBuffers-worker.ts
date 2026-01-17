@@ -13,6 +13,8 @@ function processWorkerTask(xml: string): SegmentBuffers {
   const lines = xml.split(/\n/m);
 
   let result = [];
+  let resultLastIndex = -1;
+  let bufferZoneLastIndex = -1;
   let currentTagName = '';
   var currentValue;
 
@@ -29,18 +31,22 @@ function processWorkerTask(xml: string): SegmentBuffers {
         /*
         case 'RouteFares':
           result = [];
+          resultLastIndex = -1;
           break;
         */
         case 'RouteFare':
           result.push({});
+          resultLastIndex++;
           break;
         case 'BufferZones':
-          if (!result[result.length - 1].hasOwnProperty('BufferZones')) {
-            result[result.length - 1]['BufferZones'] = [];
+          if (!result[resultLastIndex].hasOwnProperty('BufferZones')) {
+            result[resultLastIndex]['BufferZones'] = [];
+            bufferZoneLastIndex = -1;
           }
           break;
         case 'BufferZone':
-          result[result.length - 1]['BufferZones'].push({});
+          result[resultLastIndex]['BufferZones'].push({});
+          bufferZoneLastIndex++;
           break;
         default:
           break;
@@ -51,21 +57,10 @@ function processWorkerTask(xml: string): SegmentBuffers {
       // inline tag
       currentTagName = line.match(inlineRegex)[1];
       currentValue = line.match(inlineRegex)[2];
-      switch (currentTagName) {
-        case 'RouteID':
-          result[result.length - 1]['RouteID'] = parseInt(line.match(inlineRegex)[2]);
-          break;
-        case 'OriginStopID':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['OriginStopID'] = parseInt(currentValue);
-          break;
-        case 'DestinationStopID':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['DestinationStopID'] = parseInt(currentValue);
-          break;
-        case 'Direction':
-          result[result.length - 1]['BufferZones'][result[result.length - 1]['BufferZones'].length - 1]['Direction'] = parseInt(currentValue);
-          break;
-        default:
-          break;
+      if (currentTagName === 'RouteID') {
+        result[resultLastIndex]['RouteID'] = parseInt(currentValue, 10);
+      } else if (currentTagName === 'OriginStopID' || currentTagName === 'DestinationStopID' || currentTagName === 'Direction') {
+        result[resultLastIndex]['BufferZones'][bufferZoneLastIndex][currentTagName] = parseInt(currentValue, 10);
       }
     }
     /*
