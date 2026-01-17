@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings } from '../../tools/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
-import { getIconHTML } from '../icons/index';
+import { getIconElement, getIconHTML } from '../icons/index';
 import { GeneratedElement } from '../index';
 
 let previousProperties = [];
@@ -44,7 +44,11 @@ export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
 export function updateBusPropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
-      elementQuerySelector(thisElement, '.css_bus_property_icon').innerHTML = getIconHTML(thisProperty.icon);
+      const thisPropertyIconElement = elementQuerySelector(thisElement, '.css_bus_property_icon');
+      if (thisPropertyIconElement.firstChild !== null) {
+        thisPropertyIconElement.removeChild(thisPropertyIconElement.firstChild);
+      }
+      thisPropertyIconElement.appendChild(getIconElement(thisProperty.icon));
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {

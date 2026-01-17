@@ -41,8 +41,11 @@ function generateElementOfItem(): GeneratedElement {
 function updateLocationDetailsField(integration: IntegratedLocationDetails, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction, previousItem: IntegratedLocationDetailsAction | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_location_details_action_icon');
-      iconElement.appendChild(getIconElement(thisItem.icon));
+      const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_action_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(thisItem.icon));
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {

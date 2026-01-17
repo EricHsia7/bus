@@ -213,7 +213,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     }
 
     function updateIcon(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
+      const thisIconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
       let icon = '' as MaterialSymbols;
       switch (thisItem.type) {
         case 'stop':
@@ -235,7 +235,10 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           icon = '';
           break;
       }
-      iconElement.appendChild(getIconElement(icon));
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(icon));
     }
 
     function updateStatus(thisElement: HTMLElement, thisItem: integratedFolderContent, animation: boolean): void {
@@ -447,17 +450,17 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   function updateFolder(thisElement: HTMLElement, thisFolder: Folder, previousFolder: Folder | null): void {
     function updateName(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
-      const thisNameElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
-      thisNameElememt.innerText = thisFolder.name;
+      const thisNameElement = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
+      thisNameElement.innerText = thisFolder.name;
     }
 
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
-      const thisIconElememt = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
-      if (thisIconElememt.firstChild !== null) {
-        thisIconElememt.removeChild(thisIconElememt.firstChild);
+      const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
       }
-      thisIconElememt.appendChild(getIconElement(thisFolder.icon));
+      thisIconElement.appendChild(getIconElement(thisFolder.icon));
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

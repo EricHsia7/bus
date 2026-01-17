@@ -481,12 +481,12 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
       const thisItemStatusElement = elementQuerySelector(thisItemElement, '.css_route_group_item_status');
       const currentItemSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
-      const nextItemSlideElememt = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
+      const nextItemSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
 
       nextThreadSlideElement.setAttribute('code', thisItem.status.code.toString());
 
-      nextItemSlideElememt.setAttribute('code', thisItem.status.code.toString());
-      nextItemSlideElememt.innerText = thisItem.status.text;
+      nextItemSlideElement.setAttribute('code', thisItem.status.code.toString());
+      nextItemSlideElement.innerText = thisItem.status.text;
 
       if (!skeletonScreen) {
         if (animation) {
@@ -513,11 +513,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
                 currentItemSlideElement.setAttribute('code', thisItem.status.code.toString());
                 currentItemSlideElement.innerText = thisItem.status.text;
                 currentItemSlideElement.classList.remove('css_slide_fade_out');
-                nextItemSlideElememt.setAttribute('displayed', 'false');
+                nextItemSlideElement.setAttribute('displayed', 'false');
               },
               { once: true }
             );
-            nextItemSlideElememt.setAttribute('displayed', 'true');
+            nextItemSlideElement.setAttribute('displayed', 'true');
             nextThreadSlideElement.setAttribute('displayed', 'true');
             currentThreadSlideElement.classList.add('css_slide_fade_out');
             currentItemSlideElement.classList.add('css_slide_fade_out');

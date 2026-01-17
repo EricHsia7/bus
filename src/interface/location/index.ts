@@ -624,7 +624,11 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
-      elementQuerySelector(thisElement, '.css_location_details_property_icon').innerHTML = getIconHTML(thisProperty.icon);
+      const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_property_icon');
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(thisProperty.icon));
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
@@ -861,9 +865,12 @@ export function streamLocation(): void {
   refreshLocation()
     .then(function () {
       if (locationRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamLocation();
-        }, Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamLocation();
+          },
+          Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         locationRefreshTimer_streamStarted = false;
       }

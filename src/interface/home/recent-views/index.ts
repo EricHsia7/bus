@@ -74,7 +74,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
 function updateRecentViewsField(integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
+      const thisIconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
       let icon = '';
       switch (thisItem.type) {
         case 'route':
@@ -92,7 +92,10 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      iconElement.appendChild(getIconElement(icon));
+      if (thisIconElement.firstChild !== null) {
+        thisIconElement.removeChild(thisIconElement.firstChild);
+      }
+      thisIconElement.appendChild(getIconElement(icon));
     }
 
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {
@@ -337,9 +340,12 @@ async function streamRecentViews() {
   refreshRecentViews()
     .then(function () {
       if (recentViewsRefreshTimer_streaming) {
-        recentViewsRefreshTimer_timer = setTimeout(function () {
-          streamRecentViews();
-        }, Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - new Date().getTime()));
+        recentViewsRefreshTimer_timer = setTimeout(
+          function () {
+            streamRecentViews();
+          },
+          Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         recentViewsRefreshTimer_streamStarted = false;
       }
