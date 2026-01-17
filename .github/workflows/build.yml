@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-get-icon-element
 
 jobs:
   build:
