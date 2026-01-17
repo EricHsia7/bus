@@ -1,6 +1,6 @@
 import { GeneratedElement } from '../../index';
 import { booleanToString, compareThings } from '../../../tools/index';
-import { getIconElement, getIconHTML } from '../../icons/index';
+import { getIconElement } from '../../icons/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
 import { getSettingOptionValue } from '../../../data/settings/index';
 
