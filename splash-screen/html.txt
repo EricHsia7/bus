@@ -91,7 +91,7 @@
 <link rel="apple-touch-startup-image" href="./splash-screen/9dc79920c1f2370694f1adfe6b1495d3@2x.png" media="(device-width: 156px) and (device-height: 195px) and (-webkit-device-pixel-ratio: 2)">
 <link rel="apple-touch-startup-image" href="./splash-screen/b6c8b901f5236fc9ba24a62afd3ecf1b@2x.png" media="(device-width: 156px) and (device-height: 170px) and (-webkit-device-pixel-ratio: 2)">
 <link rel="apple-touch-startup-image" href="./splash-screen/79cf43fb43b8c14262e524eb3e2cdaa6@2x.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)">
-<link rel="apple-touch-startup-image" href="./splash-screen/3b1c35e09eca76e5cd1770159d375890@2x.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
+<link rel="apple-touch-startup-image" href="./splash-screen/6ab1494a6b7e5f71293781567734f6dd@2x.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
 <link rel="apple-touch-startup-image" href="./splash-screen/c3722dafa5b5997711f8ff8c8b2d3ebd@2x.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
 <link rel="apple-touch-startup-image" href="./splash-screen/128cb0111e409ff600763d09027b2fc8@3x.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
 <link rel="apple-touch-startup-image" href="./splash-screen/5621da63a23ddb0e3e98276a9bdc1a02@2x.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
