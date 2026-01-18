@@ -72,7 +72,7 @@ async function main() {
   const outputDirCreation = await makeDirectory(outputDir);
   if (outputDirCreation === 1) {
     for (const deviceInfo of deviceData.data) {
-      const iconSize = Math.max(Math.min(deviceInfo.width * 0.4, 160), 50);
+      const iconSize = Math.max(Math.min(deviceInfo.width * 0.45, 160), 50);
       const width = deviceInfo.width;
       const height = deviceInfo.height;
       const scale = deviceInfo.scale;
