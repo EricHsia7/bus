@@ -348,6 +348,9 @@ export function switchSearchTypeFilter(): void {
     newType = -1;
   }
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
+  if (searchTypeFilterButtonElement.firstChild !== null) {
+    searchTypeFilterButtonElement.removeChild(searchTypeFilterButtonElement.firstChild);
+  }
   searchTypeFilterButtonElement.appendChild(getIconElement(icons[newType + 1]));
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();
