@@ -62,7 +62,7 @@ async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
   // Wait for the image to finish writing, then add a link to the HTML links array
   await new Promise((resolve) => {
     outputStream.on('finish', () => {
-      htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${deviceInfo.width}px) and (device-height: ${deviceInfo.height}px) and (-webkit-device-pixel-ratio: ${deviceInfo.scale})">`);
+      htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${deviceInfo.width}px) and (device-height: ${deviceInfo.height}px) and (-webkit-device-pixel-ratio: ${deviceInfo.scale})"/>`);
       resolve();
     });
   });
