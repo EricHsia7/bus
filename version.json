@@ -1,7 +1,7 @@
 {
-  "build": 118,
-  "hash": "fa2ba9d",
-  "full_hash": "fa2ba9d976b70d6433f28ee28b226a42e59ec783",
-  "branch_name": "main",
-  "timestamp": "2026-01-18T09:26:29.019Z"
+  "build": 119,
+  "hash": "4d12ee4",
+  "full_hash": "4d12ee4e7989770453b40620035b13a616efd96a",
+  "branch_name": "dev-fix-blinking-on-safari-26",
+  "timestamp": "2026-01-18T11:32:14.081Z"
 }
