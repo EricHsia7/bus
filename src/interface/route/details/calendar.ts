@@ -1,5 +1,5 @@
 import { GeneratedElement, querySize } from '../../index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { getCSSVariableValue } from '../../../tools/style';
 import { drawRoundedRect } from '../../../tools/graphic';

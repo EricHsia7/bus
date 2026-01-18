@@ -1,5 +1,5 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
-import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');

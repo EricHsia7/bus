@@ -1,4 +1,4 @@
-import { documentQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector } from '../../tools/elements';
 
 function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL

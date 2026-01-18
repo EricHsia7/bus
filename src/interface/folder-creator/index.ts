@@ -1,5 +1,5 @@
 import { createFolder } from '../../data/folder/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';

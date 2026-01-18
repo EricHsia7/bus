@@ -3,7 +3,7 @@ import { getLocation } from '../../data/apis/getLocation/index';
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { getRoute } from '../../data/apis/getRoute/index';
 import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;

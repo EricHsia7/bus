@@ -1,5 +1,5 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
