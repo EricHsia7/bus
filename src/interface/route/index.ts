@@ -690,17 +690,23 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   routeSliding_fieldHeight = FieldHeight;
 
   let cumulativeOffset = 0;
+  const groupNames = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, '未知'].map((e) => `往${e}`);
   for (let i = 0; i < groupQuantity; i++) {
-    const width = getTextWidth([integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `往${e}`)[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    routeSliding_groupStyles[`g_${i}`] = {
+    const groupKey = `g_${i}`;
+    const width = getTextWidth(groupNames[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    routeSliding_groupStyles[groupKey] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  const offset = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].offset * -1 + routeSliding_fieldWidth * 0.5 - routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width * 0.5;
+
   if (!routeSliding_sliding) {
-    updateRouteCSS(routeSliding_groupQuantity, offset, routeSliding_groupStyles[`g_${routeSliding_initialIndex}`].width - tabPadding, routeSliding_initialIndex);
+    const initialGroupKey = `g_${routeSliding_initialIndex}`;
+    const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+    const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
+    const tabLineWidth = initialGroupStyle.width - tabPadding;
+    updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
   }
 
   if (previousSkeletonScreen !== skeletonScreen) {
@@ -857,9 +863,12 @@ export function streamRoute(): void {
   refreshRoute()
     .then(function () {
       if (routeRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamRoute();
-        }, Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamRoute();
+          },
+          Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         routeRefreshTimer_streamStarted = false;
       }

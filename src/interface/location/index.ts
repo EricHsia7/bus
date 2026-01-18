@@ -19,6 +19,7 @@ import { openLocationDetails } from './details/index';
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
 const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
+const LocationNameSpanElement = elementQuerySelector(LocationNameElement, 'span');
 const LocationButtonRightElement = elementQuerySelector(LocationHeadElement, '.css_location_button_right');
 const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
 const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
@@ -679,30 +680,42 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
-    const width = getTextWidth(groups[`g_${i}`].name, 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    locationSliding_groupStyles[`g_${i}`] = {
+    const groupKey = `g_${i}`;
+    const width = getTextWidth(groups[groupKey].name, 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    locationSliding_groupStyles[groupKey] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  const initialGroupKey = `g_${locationSliding_initialIndex}`;
-  const offset = locationSliding_groupStyles[initialGroupKey].offset * -1 + locationSliding_fieldWidth * 0.5 - locationSliding_groupStyles[initialGroupKey].width * 0.5;
+
   if (!locationSliding_sliding) {
-    updateLocationCSS(locationSliding_groupQuantity, offset, locationSliding_groupStyles[initialGroupKey].width - tabPadding, locationSliding_initialIndex);
+    const initialGroupKey = `g_${locationSliding_initialIndex}`;
+    const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
+    const offset = initialGroupStyle.offset * -1 + locationSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
+    const tabLineWidth = initialGroupStyle.width - tabPadding;
+    updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);
   }
 
-  LocationNameElement.innerHTML = /*html*/ `<span>${integration.LocationName}</span>`;
-  LocationNameElement.setAttribute('animation', booleanToString(animation));
-  LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  LocationButtonRightElement.onclick = function () {
-    openLocationDetails(integration.hash);
-  };
-  LocationGroupTabsElement.setAttribute('animation', booleanToString(animation));
-  LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-  // TODO: updateTab
+  if (previousIntegration?.hash !== integration.hash) {
+    LocationNameSpanElement.innerText = integration.LocationName;
+    LocationButtonRightElement.onclick = function () {
+      openLocationDetails(integration.hash);
+    };
+  }
 
+  if (previousAnimation !== animation) {
+    LocationNameElement.setAttribute('animation', booleanToString(animation));
+    LocationGroupTabsElement.setAttribute('animation', booleanToString(animation));
+  }
+
+  if (previousSkeletonScreen !== skeletonScreen) {
+    LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  }
+
+  // TODO: updateTab
   const currentGroupSeatQuantity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
   if (groupQuantity !== currentGroupSeatQuantity) {
     const capacity = currentGroupSeatQuantity - groupQuantity;
