@@ -87,6 +87,7 @@ async function main() {
       const fileName = shortenHex(md5(`${deviceInfo.name}@${deviceInfo.scale}x`));
       const outputFilePath = `${outputDir}/${fileName}.png`;
       await rasterize(svgText, outputFilePath, width * scale, height * scale, 3); // supersampling: 3x
+      console.log(`Successfully generated splash screen for ${deviceInfo.name}.`);
     }
     await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
     console.log('Successfully generated splash screens and HTML code.');
