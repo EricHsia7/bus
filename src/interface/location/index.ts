@@ -29,7 +29,7 @@ const LocationGroupTabLineElement = elementQuerySelector(LocationGroupTabLineTra
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
 
 let previousIntegration = {} as IntegratedLocation;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 let locationSliding_initialIndex: number = 0;
@@ -439,7 +439,7 @@ function setUpLocationFieldSkeletonScreen(): void {
       },
       itemQuantity: defaultItemQuantity,
       LocationName: '載入中',
-      hash: '',
+      hash: 'loading',
       dataUpdateTime: 0
     },
     true,
