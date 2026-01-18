@@ -22,6 +22,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Restore cached splash screen
+        id: restore-cached-splash-screen
+        uses: actions/cache/restore@v5
+        with:
+          path: ./dist/splash-screen
+          key: bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+          restore-keys: |
+            bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+
+      - name: Generate splash screen
+        run: node generate-splash-screen.js
+      
+      - name: Cache Splash Screen
+        id: cache-splash-screen
+        uses: actions/cache/save@v5
+        with:
+          path: ./dist/splash-screen
+          key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
+
       - name: Build project
         run: npm run build
 
@@ -29,11 +48,8 @@ jobs:
         run: |
           cp -r ./icons/ ./dist/icons/
           cp -r ./manifest.json ./dist/manifest.json
-          cp -r ./splash-screen/ ./dist/splash-screen/
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
-
-      # - name: Generate splash screen
-      #   run: node generate-splash-screen.js
+        # cp -r ./splash-screen/ ./dist/splash-screen/
 
       - name: Deploy with gh-pages
         run: |

@@ -12,6 +12,7 @@ const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const splashScreenHTML = require('./dist/splash-screen/html.json');
 
 async function makeDirectory(path) {
   // Check if the path already exists
@@ -79,7 +80,8 @@ module.exports = (env, argv) => {
           HASH: JSON.stringify(thisVersion.hash),
           FULL_HASH: JSON.stringify(thisVersion.full_hash),
           BRANCH_NAME: JSON.stringify(thisVersion.branch_name),
-          TIME_STAMP: JSON.stringify(thisVersion.timestamp)
+          TIME_STAMP: JSON.stringify(thisVersion.timestamp),
+          SPLASH_SCREEN_HTML: JSON.stringify(splashScreenHTML.html)
         }
       }),
       new HtmlWebpackPlugin({
