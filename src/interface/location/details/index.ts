@@ -2,9 +2,9 @@ import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/a
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../../data/location/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getIconElement } from '../../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
@@ -42,9 +42,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction, previousItem: IntegratedLocationDetailsAction | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_action_icon');
-      if (thisIconElement.firstChild !== null) {
-        thisIconElement.removeChild(thisIconElement.firstChild);
-      }
+      removeFirstChild(thisIconElement);
       thisIconElement.appendChild(getIconElement(thisItem.icon));
     }
 
