@@ -86,7 +86,8 @@ async function main() {
 </svg>`;
       const fileName = shortenHex(md5(`${deviceInfo.name}@${deviceInfo.scale}x`));
       const outputFilePath = `${outputDir}/${fileName}.png`;
-      await rasterize(svgText, outputFilePath, width * scale, height * scale, 3); // supersampling: 3x
+      await rasterize(svgText, outputFilePath, width * scale, height * scale, 2); // supersampling: 2x
+      htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale})"/>`);
       console.log(`Successfully generated splash screen for ${deviceInfo.name}.`);
     }
     await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
