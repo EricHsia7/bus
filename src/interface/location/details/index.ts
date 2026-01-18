@@ -4,7 +4,7 @@ import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLo
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getIconElement } from '../../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';

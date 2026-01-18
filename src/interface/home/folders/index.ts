@@ -3,7 +3,7 @@ import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
 import { getIconElement } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
@@ -235,9 +235,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           icon = '';
           break;
       }
-      if (thisIconElement.firstChild !== null) {
-        thisIconElement.removeChild(thisIconElement.firstChild);
-      }
+      removeFirstChild(thisIconElement);
       thisIconElement.appendChild(getIconElement(icon));
     }
 
@@ -457,9 +455,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
       const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
-      if (thisIconElement.firstChild !== null) {
-        thisIconElement.removeChild(thisIconElement.firstChild);
-      }
+      removeFirstChild(thisIconElement);
       thisIconElement.appendChild(getIconElement(thisFolder.icon));
     }
 

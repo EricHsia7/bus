@@ -1,5 +1,5 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { timeObjectToString, WeekDayIndex } from '../../tools/time';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 

@@ -1,6 +1,6 @@
 import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
 import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
 

@@ -1,5 +1,5 @@
 import { isRunningStandalone } from '../tools/index';
-import { documentQuerySelector } from '../tools/query-selector';
+import { documentQuerySelector } from '../tools/elements';
 import { closeBus, openBus } from './bus/index';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';

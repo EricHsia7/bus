@@ -27,3 +27,10 @@ export function getElementsBelow(referenceElement: HTMLElement, className: strin
 
   return elements;
 }
+
+export function removeFirstChild(element: HTMLElement): void {
+  const firstChild = element.firstChild;
+  if (firstChild !== null) {
+    element.removeChild(firstChild);
+  }
+}

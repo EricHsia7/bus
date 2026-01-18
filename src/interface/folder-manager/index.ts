@@ -1,5 +1,5 @@
 import { FolderWithContent, listFoldersWithContent } from '../../data/folder/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';

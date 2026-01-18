@@ -2,7 +2,7 @@ import { integrateBus } from '../../data/bus/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { generateIdentifier } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { setUpBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 

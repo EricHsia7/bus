@@ -2,7 +2,7 @@ import { isFolderContentSaved } from '../../../data/folder/index';
 import { integrateRouteDetails } from '../../../data/route/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { openSaveToFolder } from '../../save-to-folder/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';

@@ -1,5 +1,5 @@
 import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { pushPageHistory, revokePageHistory } from '../index';
 
 const QRCodeField = documentQuerySelector('.css_qrcode_field');

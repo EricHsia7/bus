@@ -1,7 +1,7 @@
 import { GeneratedElement } from '../../index';
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getIconElement } from '../../icons/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
 import { getSettingOptionValue } from '../../../data/settings/index';
 
 let previousProperties = [];
@@ -44,9 +44,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_route_details_property_icon');
-      if (thisIconElement.firstChild !== null) {
-        thisIconElement.removeChild(thisIconElement.firstChild);
-      }
+      removeFirstChild(thisIconElement);
       thisIconElement.appendChild(getIconElement(thisProperty.icon));
     }
 

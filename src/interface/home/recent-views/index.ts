@@ -2,7 +2,7 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
 import { openBus } from '../../bus/index';
 import { getIconElement } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
@@ -92,9 +92,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      if (thisIconElement.firstChild !== null) {
-        thisIconElement.removeChild(thisIconElement.firstChild);
-      }
+      removeFirstChild(thisIconElement);
       thisIconElement.appendChild(getIconElement(icon));
     }
 

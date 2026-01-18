@@ -1,7 +1,7 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
 import { drawRoundedRect } from '../../tools/graphic';
 import { supportTouch } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../tools/elements';
 import { getCSSVariableValue } from '../../tools/style';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
@@ -249,11 +249,9 @@ export function updateSearchResult(): void {
 
   function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
     function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
-      const typeElement = elementQuerySelector(element, '.css_search_search_result_type');
-      if (typeElement.firstChild !== null) {
-        typeElement.removeChild(typeElement.firstChild);
-      }
-      typeElement.appendChild(getIconElement(typeToIcon[item.item.type]));
+      const thisSearchResultTypeElement = elementQuerySelector(element, '.css_search_search_result_type');
+      removeFirstChild(thisSearchResultTypeElement);
+      thisSearchResultTypeElement.appendChild(getIconElement(typeToIcon[item.item.type]));
     }
 
     function updateName(item: SearchResult, element: HTMLElement): void {
@@ -348,9 +346,7 @@ export function switchSearchTypeFilter(): void {
     newType = -1;
   }
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
-  if (searchTypeFilterButtonElement.firstChild !== null) {
-    searchTypeFilterButtonElement.removeChild(searchTypeFilterButtonElement.firstChild);
-  }
+  removeFirstChild(searchTypeFilterButtonElement);
   searchTypeFilterButtonElement.appendChild(getIconElement(icons[newType + 1]));
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();

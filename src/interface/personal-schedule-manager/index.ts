@@ -1,5 +1,5 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/query-selector';
+import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
