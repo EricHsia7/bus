@@ -40,7 +40,7 @@ export interface SettingSelectOption {
   name: string;
   value: SettingSelectOptionValue;
   resourceIntensive: boolean;
-  powerSavingAlternative: -1 | number; // index of an option
+  powerSavingAlternative: -1 | number; // index of the option to redirect to when power saving mode is enabled
 }
 
 export type SettingSelectOptions = Array<SettingSelectOption>;

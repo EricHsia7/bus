@@ -94,6 +94,10 @@ import './interface/bus/body.css';
 import './interface/bus/groups.css';
 import './interface/bus/properties.css';
 
+import './interface/settings/field.css';
+import './interface/settings/head.css';
+import './interface/settings/body.css';
+import './interface/settings/items.css';
 import './interface/settings/index.css';
 
 import './interface/save-to-folder/field.css';
