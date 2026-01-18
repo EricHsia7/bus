@@ -1,7 +1,7 @@
 import { generateIdentifier } from '../../../tools/index';
-import { lfSetItem, lfGetItem, lfListItemKeys, lfRemoveItem } from '../../storage/index';
-import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';
+import { EstimateTime } from '../../apis/getEstimateTime/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
 
 export type UpdateRateData = [estimateTime: number, timestamp: number]; // EstimateTime (seconds), timestamp (seconds)
 
@@ -43,8 +43,8 @@ let updateRateData_writeAheadLog_group: UpdateRateDataWriteAheadLogGroup = {
   timestamp: 0,
   id: ''
 };
-let updateRateData_groups: Array<UpdateRateDataGroup> = [];
-let updateRateData_groupsIndex: { [key: string]: number } = {};
+const updateRateData_groups: Array<UpdateRateDataGroup> = [];
+const updateRateData_groupsIndex: { [key: string]: number } = {};
 
 function getUpdateRateDataStats(data: Array<UpdateRateData>): UpdateRateDataGroupStats {
   let sumEstimateTime = 0;
@@ -125,11 +125,12 @@ function mergeUpdateRateDataStats(targetStats: UpdateRateDataGroupStats, sourceS
 export async function collectUpdateRateData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTimestamp: number = now.getTime();
+  let needToReset = false;
   // Initialize
   if (!updateRateData_writeAheadLog_tracking) {
     updateRateData_writeAheadLog_tracking = true;
     updateRateData_trackedStops = [];
-    updateRateData_writeAheadLog_id = generateIdentifier('u');
+    updateRateData_writeAheadLog_id = generateIdentifier();
     updateRateData_writeAheadLog_group = {
       data: {},
       timestamp: currentTimestamp,
@@ -156,17 +157,20 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     }
   }
 
+  updateRateData_writeAheadLog_currentDataLength += 1;
+  if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
+    needToReset = true;
+  }
+
   if (updateRateData_writeAheadLog_currentDataLength % 5 === 0) {
     await lfSetItem(4, updateRateData_writeAheadLog_id, JSON.stringify(updateRateData_writeAheadLog_group));
   }
 
-  updateRateData_writeAheadLog_currentDataLength += 1;
-
-  if (updateRateData_writeAheadLog_currentDataLength > updateRateData_writeAheadLog_maxDataLength) {
+  if (needToReset) {
     for (const stopID of updateRateData_trackedStops) {
       const stopKey = `s_${stopID}`;
       const data = updateRateData_writeAheadLog_group.data[stopKey];
-      let dataGroup = {} as UpdateRateDataGroup;
+      const dataGroup = {} as UpdateRateDataGroup;
       const existingData = await lfGetItem(3, stopKey);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
@@ -199,34 +203,36 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
   const keys = await lfListItemKeys(4);
   for (const key of keys) {
     const json = await lfGetItem(4, key);
-    const object = JSON.parse(json) as UpdateRateDataWriteAheadLogGroup;
-    const thisTimestamp = object.timestamp;
-    const thisID = object.id;
-    if (thisTimestamp > oneWeekAgo) {
-      for (const stopKey in object.data) {
-        const thisStopData = object[stopKey];
-        let dataGroup = {} as UpdateRateDataGroup;
-        const existingData = await lfGetItem(3, stopKey);
-        if (existingData) {
-          const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
-          dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
-          dataGroup.timestamp = existingDataObject.timestamp;
-          dataGroup.id = stopID;
-        } else {
-          dataGroup.stats = getUpdateRateDataStats(thisStopData);
-          dataGroup.timestamp = currentTimestamp;
-          dataGroup.id = stopID;
+    if (json) {
+      const object = JSON.parse(json) as UpdateRateDataWriteAheadLogGroup;
+      const thisTimestamp = object.timestamp;
+      const thisID = object.id;
+      if (thisTimestamp > oneWeekAgo) {
+        for (const stopKey in object.data) {
+          const thisStopData = object.data[stopKey];
+          const dataGroup = {} as UpdateRateDataGroup;
+          const existingData = await lfGetItem(3, stopKey);
+          if (existingData) {
+            const existingDataObject = JSON.parse(existingData) as UpdateRateDataGroup;
+            dataGroup.stats = mergeUpdateRateDataStats(existingDataObject.stats, getUpdateRateDataStats(thisStopData));
+            dataGroup.timestamp = existingDataObject.timestamp;
+            dataGroup.id = existingDataObject.id;
+          } else {
+            dataGroup.stats = getUpdateRateDataStats(thisStopData);
+            dataGroup.timestamp = thisTimestamp;
+            dataGroup.id = parseInt(stopKey.split('_')[1]);
+          }
+          await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
+          if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+            const existingIndex = updateRateData_groupsIndex[stopKey];
+            updateRateData_groups.splice(existingIndex, 1, dataGroup);
+          } else {
+            updateRateData_groups[stopKey] = updateRateData_groups.length;
+            updateRateData_groups.push(dataGroup);
+          }
         }
-        await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
-        if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
-          const existingIndex = updateRateData_groupsIndex[stopKey];
-          updateRateData_groups.splice(existingIndex, 1, dataGroup);
-        } else {
-          updateRateData_groups[stopKey] = updateRateData_groups.length;
-          updateRateData_groups.push(dataGroup);
-        }
-        await lfRemoveItem(4, thisID);
       }
+      await lfRemoveItem(4, thisID);
     }
   }
 }
@@ -253,7 +259,7 @@ export async function initializeUpdateRateDataGroups() {
 export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
   const now = new Date().getTime();
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
-  return updateRateData_groups.filter((item) => item.timestamp > oneWeekAgo && typeof item.stats.correlation === 'number');
+  return updateRateData_groups.filter((item) => item.timestamp > oneWeekAgo);
 }
 
 export async function discardExpiredUpdateRateDataGroups() {
@@ -264,15 +270,14 @@ export async function discardExpiredUpdateRateDataGroups() {
     const json = await lfGetItem(3, key);
     const object = JSON.parse(json) as UpdateRateDataGroup;
     const thisTimestamp = object.timestamp;
-    const thisCorrelation = object.stats.correlation;
-    if (thisTimestamp <= oneWeekAgo || typeof thisCorrelation !== 'number') {
+    if (thisTimestamp <= oneWeekAgo) {
       await lfRemoveItem(3, key);
     }
   }
 }
 
-let getUpdateRateWorkerResponses = {};
-var port;
+const getUpdateRateWorkerResponses = {};
+let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
@@ -300,7 +305,7 @@ port.onerror = function (e) {
 
 export async function getUpdateRate(): Promise<number> {
   const dataGroups = await listUpdateRateDataGroups();
-  const taskID = generateIdentifier('t');
+  const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
     getUpdateRateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
@@ -314,39 +319,3 @@ export async function getUpdateRate(): Promise<number> {
 
   return result;
 }
-
-/*
-export async function getUpdateRateInTime(): Promise<string> {
-  let totalWeight: number = 0;
-  let totalAverageChange: number = 0;
-  let weightedAverageChange: number = 0;
-  const dataGroup = await listUpdateRateDataGroups();
-  for (const dataSet of dataGroup) {
-    const groups = splitDataByDelta(dataSet);
-    for (const group of groups) {
-      const firstColumn: Array<number> = group.map((item) => item[0]);
-      const secondColumn: Array<number> = group.map((item) => item[1]);
-      const rowCount: number = firstColumn.length;
-      let timeStampUponChanges: Array<number> = [];
-      for (let i = 1; i < rowCount; i++) {
-        const change: number = Math.abs(firstColumn[i] - firstColumn[i - 1]);
-        if (change > 0) {
-          timeStampUponChanges.push(secondColumn[i]);
-        }
-      }
-      const timeStampUponChangesLength: number = timeStampUponChanges.length;
-      let totalChange: number = 0;
-      let average: number = 0;
-      for (let i = 1; i < timeStampUponChangesLength; i++) {
-        const change: number = Math.abs(timeStampUponChanges[i] - timeStampUponChanges[i - 1]); // measured in seconds
-        totalChange += change;
-      }
-      average = totalChange / (timeStampUponChangesLength - 1);
-      totalAverageChange += isNaN(average) ? 0 : average * rowCount;
-      totalWeight += isNaN(average) ? 0 : rowCount;
-    }
-  }
-  weightedAverageChange = totalAverageChange / totalWeight;
-  return isNaN(weightedAverageChange) ? '!' : formatTime(weightedAverageChange, 0);
-}
-*/

@@ -109,11 +109,11 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
         }
         busArrivalTimeData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp]);
+        busArrivalTimeData_writeAheadLog_currentDataLength += 1;
+        if (busArrivalTimeData_writeAheadLog_currentDataLength > busArrivalTimeData_writeAheadLog_maxDataLength) {
+          needToReset = true;
+        }
       }
-    }
-    busArrivalTimeData_writeAheadLog_currentDataLength += 1;
-    if (busArrivalTimeData_writeAheadLog_currentDataLength > busArrivalTimeData_writeAheadLog_maxDataLength) {
-      needToReset = true;
     }
     if (needToReset || busArrivalTimeData_writeAheadLog_currentDataLength % 8 === 0) {
       await lfSetItem(5, busArrivalTimeData_writeAheadLog_id, JSON.stringify(busArrivalTimeData_writeAheadLog_group));

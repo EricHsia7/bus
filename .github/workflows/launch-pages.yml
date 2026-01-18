@@ -1,40 +1,75 @@
-name: Launch Pages
+name: Build
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - dev-dedicated-data-export-function
 
 jobs:
-  launch:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: 24
+
+      - name: Restore cached dependencies
+        id: restore-cached-dependencies
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ./node_modules
+            package-lock.json
+          key: dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
+          restore-keys: |
+            dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Install dependencies
         run: npm install
+
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            ./node_modules
+            package-lock.json
+          key: ${{ steps.restore-cached-dependencies.outputs.cache-primary-key }}
+
+      - name: Restore cached splash screen
+        id: restore-cached-splash-screen
+        uses: actions/cache/restore@v5
+        with:
+          path: ./dist/splash-screen
+          key: bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+          restore-keys: |
+            bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+
+      - name: Generate splash screen
+        run: node generate-splash-screen.js
+      
+      - name: Cache splash screen
+        id: cache-splash-screen
+        uses: actions/cache/save@v5
+        with:
+          path: ./dist/splash-screen
+          key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
 
       - name: Build project
         run: npm run build
 
       - name: Copy things to ./dist/
         run: |
-          cp -r ./pwaicons/ ./dist/pwaicons/
+          cp -r ./icons/ ./dist/icons/
           cp -r ./manifest.json ./dist/manifest.json
-          cp -r ./splash-screen/ ./dist/splash-screen/
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
-
-      #- name: Generate splash screen
-      #  run: node generate-splash-screen.js
+        # cp -r ./splash-screen/ ./dist/splash-screen/
 
       - name: Deploy with gh-pages
         run: |
