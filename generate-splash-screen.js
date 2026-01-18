@@ -34,6 +34,20 @@ async function writeTextFile(path, content) {
   }
 }
 
+function shortenHex(hex) {
+  const CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const BASE = 62n;
+  let num = BigInt('0x' + hex);
+  if (num === 0n) return '0';
+  let result = '';
+  while (num > 0n) {
+    const remainder = num % BASE;
+    result = CHARSET[Number(remainder)] + result;
+    num = num / BASE;
+  }
+  return result;
+}
+
 // Array to store HTML code for the links to splash screen images
 const htmlLinks = [];
 
@@ -42,7 +56,7 @@ async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
   const canvasWidth = deviceInfo.width * deviceInfo.scale;
   const canvasHeight = deviceInfo.height * deviceInfo.scale;
   const iconWidth = Math.max(Math.min(canvasWidth * 0.45, 160), 50) * deviceInfo.scale;
-  const fileName = `${md5(deviceInfo.name)}@${deviceInfo.scale}x`;
+  const fileName = shortenHex(md5(`${deviceInfo.name}@${deviceInfo.scale}x`));
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
