@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-reduce-transparency
+      - dev-reduce-transparency-2
 
 jobs:
   build:

@@ -41,16 +41,9 @@
   width: 100%;
   height: 95px;
   box-sizing: border-box;
-  background: var(--b-cssvar-large-head-background-transparent);
+  background: var(--b-cssvar-large-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-}
-
-/* reduce-transparency: true */
-.css_location_field .css_location_head[reduce-transparency="true"] {
-  background-color: var(--b-cssvar-ffffff-normal);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
 .css_location_field .css_location_head .css_location_button_left,

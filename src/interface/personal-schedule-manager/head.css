@@ -6,16 +6,9 @@
   height: 55px;
   border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: var(--b-cssvar-head-background-transparent);
+  background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-}
-
-/* reduce-transparency: true */
-.css_personal_schedule_manager_field .css_personal_schedule_manager_head[reduce-transparency="true"] {
-  background-color: var(--b-cssvar-ffffff-normal);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
 .css_personal_schedule_manager_field .css_personal_schedule_manager_head .css_personal_schedule_manager_button_left,

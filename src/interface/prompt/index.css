@@ -42,13 +42,6 @@
   will-change: transform, opacity;
 }
 
-/* reduce-transparency: true */
-.css_prompt[reduce-transparency="true"] {
-  background-color: var(--b-cssvar-f9f9fb-normal);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
 .css_prompt .css_prompt_icon {
   position: absolute;
   top: 0px;
