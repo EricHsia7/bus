@@ -55,7 +55,7 @@ const htmlLinks = [];
 async function processDeviceImage(deviceInfo, iconImage, backgroundImage) {
   const canvasWidth = deviceInfo.width * deviceInfo.scale;
   const canvasHeight = deviceInfo.height * deviceInfo.scale;
-  const iconWidth = Math.max(Math.min(canvasWidth * 0.45, 160), 50) * deviceInfo.scale;
+  const iconWidth = Math.max(Math.min(canvasWidth * 0.45, 160), 30) * deviceInfo.scale;
   const fileName = shortenHex(md5(`${deviceInfo.name}@${deviceInfo.scale}x`));
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
