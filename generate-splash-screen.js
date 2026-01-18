@@ -78,7 +78,7 @@ async function main() {
     for (const deviceInfo of deviceData.data) {
       await processDeviceImage(deviceInfo, iconImage, backgroundImage);
     }
-    await writeTextFile(`${outputDir}/html.txt`, htmlLinks.join('\n'));
+    await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
     console.log('Successfully generated splash screens and HTML code.');
   } else if (outputDirCreation === 0) {
     console.log('Using cached splash screens and HTML code.');

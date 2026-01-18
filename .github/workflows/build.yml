@@ -23,16 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: npm run build
-
-      - name: Copy things to ./dist/
-        run: |
-          cp -r ./icons/ ./dist/icons/
-          cp -r ./manifest.json ./dist/manifest.json
-          cp -r ./open-graph-image.png ./dist/open-graph-image.png
-        # cp -r ./splash-screen/ ./dist/splash-screen/
-
       - name: Restore cached splash screen
         id: restore-cached-splash-screen
         uses: actions/cache/restore@v5
@@ -51,6 +41,16 @@ jobs:
         with:
           path: ./dist/splash-screen
           key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
+
+      - name: Build project
+        run: npm run build
+
+      - name: Copy things to ./dist/
+        run: |
+          cp -r ./icons/ ./dist/icons/
+          cp -r ./manifest.json ./dist/manifest.json
+          cp -r ./open-graph-image.png ./dist/open-graph-image.png
+        # cp -r ./splash-screen/ ./dist/splash-screen/
 
       - name: Deploy with gh-pages
         run: |
