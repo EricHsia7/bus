@@ -18,9 +18,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-      
-      - name: Generate package-lock.json
-        run: npm install --package-lock-only
 
       - name: Restore cached dependencies
         id: restore-cached-dependencies
@@ -28,10 +25,10 @@ jobs:
         with:
           path: |
             ./node_modules
-          key: dependencies-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('package.json') }}
+            package-lock.json
+          key: dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
           restore-keys: |
-            dependencies-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('package.json') }}
-            dependencies-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Install dependencies
         run: npm install
@@ -42,6 +39,7 @@ jobs:
         with:
           path: |
             ./node_modules
+            package-lock.json
           key: ${{ steps.restore-cached-dependencies.outputs.cache-primary-key }}
 
       - name: Restore cached splash screen
