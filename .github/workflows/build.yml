@@ -42,9 +42,6 @@ jobs:
             package-lock.json
           key: ${{ steps.restore-cached-dependencies.outputs.cache-primary-key }}
 
-      - name: Install Dependencies
-        run: npm install
-
       - name: Restore cached splash screen
         id: restore-cached-splash-screen
         uses: actions/cache/restore@v5
@@ -57,7 +54,7 @@ jobs:
       - name: Generate splash screen
         run: node generate-splash-screen.js
       
-      - name: Cache Splash Screen
+      - name: Cache splash screen
         id: cache-splash-screen
         uses: actions/cache/save@v5
         with:
