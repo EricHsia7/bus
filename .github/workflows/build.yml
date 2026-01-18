@@ -18,10 +18,32 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+
+      - name: Restore cached dependencies
+        id: restore-cached-dependencies
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ./node_modules
+            package-lock.json
+          key: dependencies-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            dependencies-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            ./node_modules
+            package-lock.json
+          key: ${{ steps.restore-cached-dependencies.outputs.cache-primary-key }}
+
+      - name: Install Dependencies
+        run: npm install
 
       - name: Restore cached splash screen
         id: restore-cached-splash-screen
