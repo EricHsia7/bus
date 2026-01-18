@@ -22,6 +22,13 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
+/* reduce-transparency: true */
+.css_notification_schedule_manager_field .css_notification_schedule_manager_head[reduce-transparency="true"] {
+  background-color: var(--b-cssvar-ffffff-normal);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left,
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right {
   width: 55px;

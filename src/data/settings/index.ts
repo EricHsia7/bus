@@ -40,7 +40,7 @@ export interface SettingSelectOption {
   name: string;
   value: SettingSelectOptionValue;
   resourceIntensive: boolean;
-  powerSavingAlternative: -1 | number; // index of an option
+  powerSavingAlternative: -1 | number; // index of the option to redirect to when power saving mode is enabled
 }
 
 export type SettingSelectOptions = Array<SettingSelectOption>;
@@ -101,7 +101,7 @@ export interface SettingWithOption {
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
-const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
+const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'reduce_transparency', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
 let Settings: SettingsObject = {
   time_formatting_mode: {
@@ -420,6 +420,39 @@ let Settings: SettingsObject = {
     },
     default_option: 0,
     option: 0,
+    options: [
+      {
+        name: '開啟',
+        value: {
+          type: 2,
+          boolean: true
+        },
+        resourceIntensive: true,
+        powerSavingAlternative: 1
+      },
+      {
+        name: '關閉',
+        value: {
+          type: 2,
+          boolean: false
+        },
+        resourceIntensive: false,
+        powerSavingAlternative: -1
+      }
+    ]
+  },
+  reduce_transparency: {
+    key: 'reduce_transparency',
+    name: '減少透明度',
+    icon: 'opacity',
+    description: '是否減少介面透明度。',
+    status: '',
+    type: 'select',
+    action: function () {
+      openSettingsOptions('reduce_transparency');
+    },
+    default_option: 1,
+    option: 1,
     options: [
       {
         name: '開啟',

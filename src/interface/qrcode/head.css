@@ -11,6 +11,13 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
+/* reduce-transparency: true */
+.css_qrcode_field .css_qrcode_head[reduce-transparency="true"] {
+  background-color: var(--b-cssvar-ffffff-normal);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left,
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_right {
   width: 55px;

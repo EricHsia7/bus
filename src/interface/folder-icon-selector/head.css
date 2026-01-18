@@ -11,6 +11,13 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
+/* reduce-transparency: true */
+.css_folder_icon_selector_field .css_folder_icon_selector_head[reduce-transparency="true"] {
+  background-color: var(--b-cssvar-ffffff-normal);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input {
   position: absolute;
   top: 0px;

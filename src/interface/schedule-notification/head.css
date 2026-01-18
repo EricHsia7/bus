@@ -11,6 +11,13 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
+/* reduce-transparency: true */
+.css_schedule_notification_field .css_schedule_notification_head[reduce-transparency="true"] {
+  background-color: var(--b-cssvar-ffffff-normal);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .css_schedule_notification_field .css_schedule_notification_head .css_schedule_notification_button_left {
   position: absolute;
   top: 0px;

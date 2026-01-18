@@ -13,6 +13,13 @@
   contain: layout;
 }
 
+/* reduce-transparency: true */
+.css_search_field .css_search_head[reduce-transparency="true"] {
+  background-color: var(--b-cssvar-ffffff-normal);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .css_search_field .css_search_head .css_search_search_input {
   position: absolute;
   top: 0px;
