@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-version-json-2
 
 jobs:
   build:
@@ -60,9 +61,12 @@ jobs:
         with:
           path: ./dist/splash-screen
           key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
+      
+      - name: Generate version.json
+        run: node version.js
 
       - name: Build project
-        run: npm run build
+        run: npx webpack --mode=production
 
       - name: Copy things to ./dist/
         run: |

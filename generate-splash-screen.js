@@ -1,39 +1,12 @@
-const fs = require('fs');
 const { Resvg } = require('@resvg/resvg-js');
 const { Jimp } = require('jimp');
 const md5 = require('md5');
+const { writeTextFile, makeDirectory } = require('./files');
 
-// Array of device data containing information about various devices and their dimensions
 const deviceData = require('./splash-screen-device-data.json');
+
 const assetName = 'splash-screen';
 const outputDir = `./dist/${assetName}`;
-
-async function makeDirectory(path) {
-  // Check if the path already exists
-  try {
-    await fs.promises.access(path);
-    return 0;
-  } catch (error) {
-    // If there is an error, it means the path does not exist
-    // Try to create the directory
-    try {
-      await fs.promises.mkdir(path, { recursive: true });
-      return 1;
-    } catch (error) {
-      process.exit(1);
-      return -1;
-    }
-  }
-}
-
-async function writeTextFile(path, content) {
-  try {
-    await fs.promises.writeFile(path, content, { encoding: 'utf8' });
-    return `File "${path}" created successfully!`;
-  } catch (err) {
-    throw new Error(`Error creating file: ${err.message}`);
-  }
-}
 
 function shortenHex(hex) {
   const CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';

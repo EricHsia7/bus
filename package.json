@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "private": false,
-  "scripts": {
-    "build": "webpack --mode=production",
-    "deploy": "gh-pages -d dist"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/EricHsia7/bus.git"

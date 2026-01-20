@@ -8,59 +8,11 @@ const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { execSync } = require('child_process');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
-
-async function makeDirectory(path) {
-  // Check if the path already exists
-  try {
-    await fs.promises.access(path);
-    // If there is no error, it means the path already exists
-    console.log('Given directory already exists!');
-  } catch (error) {
-    // If there is an error, it means the path does not exist
-    // Try to create the directory
-    try {
-      await fs.promises.mkdir(path, { recursive: true });
-      // If there is no error, log a success message
-      console.log('New directory created successfully!');
-    } catch (error) {
-      // If there is an error, log it
-      console.error(error);
-      process.exit(1);
-    }
-  }
-}
-
-async function createTextFile(filePath, data, encoding = 'utf-8') {
-  try {
-    await fs.promises.writeFile(filePath, data, { encoding });
-    return `Text file '${filePath}' has been created successfully with ${encoding} encoding!`;
-  } catch (err) {
-    throw new Error(`Error writing to file: ${err}`);
-  }
-}
-
-const workflowRunNumber = parseInt(execSync('echo $GITHUB_RUN_NUMBER').toString().trim());
-const commitHash = execSync('git rev-parse HEAD').toString().trim();
-const branchName = execSync('git branch --show-current').toString().trim();
-const thisVersion = {
-  build: workflowRunNumber,
-  hash: commitHash.substring(0, 7),
-  full_hash: commitHash,
-  branch_name: branchName,
-  timestamp: new Date().toISOString()
-};
-
-async function outputVersionJSON() {
-  await makeDirectory('dist');
-  await createTextFile('./dist/version.json', JSON.stringify(thisVersion, null, 2));
-}
-
-outputVersionJSON();
+const thisVersion = require('./dist/version.json');
 
 module.exports = (env, argv) => {
   return {
