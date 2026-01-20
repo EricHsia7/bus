@@ -47,7 +47,8 @@ export async function makeNotificationRequest(method: NotificationResponse['meth
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      credentials: 'omit'
     };
 
     // Send the request
