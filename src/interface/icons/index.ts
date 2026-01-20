@@ -10,3 +10,9 @@ export function getIconElement(identifier: MaterialSymbols): HTMLSpanElement {
   iconElement.appendChild(document.createTextNode(identifier));
   return iconElement;
 }
+
+export function getBlankIconElement(): HTMLSpanElement {
+  const iconElement = document.createElement('span');
+  iconElement.classList.add('css_material_symbols_rounded');
+  return iconElement;
+}
