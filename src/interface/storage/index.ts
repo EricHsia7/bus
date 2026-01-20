@@ -131,7 +131,7 @@ function setUpStorageFieldSkeletonScreen(): void {
   const FieldSize = querySize('window');
   // const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const defaultCategoriesQuantity = Math.floor(FieldHeight / 50 / 3) + 2;
+  const defaultCategoriesQuantity = Math.min(7, Math.floor(FieldHeight / 55) + 2);
   const statistics: StoreSizeStatistics = {
     categorizedSizes: {},
     totalSize: 0
