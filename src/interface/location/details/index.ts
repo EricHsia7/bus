@@ -63,7 +63,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousItem === null) {
+    if (previousItem === null || previousItem === undefined) {
       updateIcon(thisElement, thisItem);
       updateName(thisElement, thisItem);
       updateOnclick(thisElement, thisItem);

@@ -61,7 +61,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
       thisElement.setAttribute('skeleton-screen', skeletonScreen);
     }
 
-    if (previousProperty === null) {
+    if (previousProperty === null || previousProperty === undefined) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateSkeletonScreen(thisElement, skeletonScreen);

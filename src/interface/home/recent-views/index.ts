@@ -161,7 +161,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousItem === null) {
+    if (previousItem === null || previousItem === undefined) {
       updateIcon(thisElement, thisItem);
       updateTitle(thisElement, thisItem);
       updateTime(thisElement, thisItem);

@@ -582,7 +582,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }
 
-    if (previousItem === null) {
+    if (previousItem === null || previousItem === undefined) {
       updateStatus(thisElement, thisItem, animation);
       updateRank(thisElement, thisItem, animation);
       updateRouteDirection(thisElement, thisItem);
@@ -642,7 +642,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousProperty === null) {
+    if (previousProperty === null || previousProperty === undefined) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateAnimation(thisElement, animation);

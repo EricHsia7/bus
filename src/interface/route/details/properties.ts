@@ -60,7 +60,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousProperty === null) {
+    if (previousProperty === null || previousProperty === undefined) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateAnimation(thisElement, animation);

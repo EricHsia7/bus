@@ -143,7 +143,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       thisItemElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousItem === null) {
+    if (previousItem === null || previousItem === undefined) {
       updateHours(thisItemElement, thisItem);
       updateMinutes(thisItemElement, thisItem);
       updateMain(thisItemElement, thisItem);

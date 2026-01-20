@@ -361,7 +361,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousItem === null) {
+    if (previousItem === null || previousItem === undefined) {
       updateType(thisElement, thisItem);
       updateIcon(thisElement, thisItem);
       updateStatus(thisElement, thisItem, animation);
@@ -467,7 +467,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousFolder === null) {
+    if (previousFolder === null || previousFolder === undefined) {
       updateName(thisElement, thisFolder);
       updateIcon(thisElement, thisFolder);
       updateAnimation(thisElement, animation);
