@@ -6,7 +6,7 @@ import { getCSSVariableValue } from '../../tools/style';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
-import { getBlankIconElement, getIconElement } from '../icons/index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 import { GeneratedElement, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
@@ -251,8 +251,7 @@ export function updateSearchResult(): void {
   function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
     function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
       const thisSearchResultTypeElement = elementQuerySelector(element, '.css_search_search_result_type');
-      const thisSpanElement = elementQuerySelector(thisSearchResultTypeElement, 'span.css_material_symbols_rounded');
-      thisSpanElement.innerText = typeToIcon[item.item.type];
+      setIcon(thisSearchResultTypeElement, typeToIcon[item.item.type]);
     }
 
     function updateName(item: SearchResult, element: HTMLElement): void {

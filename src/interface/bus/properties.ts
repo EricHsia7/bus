@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { compareThings } from '../../tools/index';
 import { elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../tools/elements';
-import { getIconElement } from '../icons/index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GeneratedElement } from '../index';
 
 let previousProperties = [];
@@ -14,6 +14,7 @@ function generateElementOfBusProperty(): GeneratedElement {
 
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_bus_property_icon');
+  iconElement.appendChild(getBlankIconElement());
 
   const valueElement = document.createElement('div');
   valueElement.classList.add('css_bus_property_value');
@@ -45,8 +46,7 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisPropertyIconElement = elementQuerySelector(thisElement, '.css_bus_property_icon');
-      removeFirstChild(thisPropertyIconElement);
-      thisPropertyIconElement.appendChild(getIconElement(thisProperty.icon));
+      setIcon(thisPropertyIconElement, thisProperty.icon);
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {
