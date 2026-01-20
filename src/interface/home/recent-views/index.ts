@@ -94,7 +94,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      setIcon(thisIconElement);
+      setIcon(thisIconElement, icon);
     }
 
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {
