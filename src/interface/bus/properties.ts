@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { compareThings } from '../../tools/index';
-import { elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../tools/elements';
-import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
+import { getBlankIconElement, setIcon } from '../icons/index';
 import { GeneratedElement } from '../index';
 
 let previousProperties = [];
