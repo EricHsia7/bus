@@ -1,6 +1,6 @@
 import { sha256 } from '../../../../tools/index';
-import { generateToken } from '../../../../tools/token';
 import { NotificationClientID, NotificationResponse, NotificationSecret } from '../../index';
+import { getNotificationToken } from '../getNotificationToken/index';
 
 export function getNotificationRequestBody(method: NotificationResponse['method'], parameters: Array<any>): object | false {
   switch (method) {
@@ -10,7 +10,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       } else {
         return {
           client_id: NotificationClientID,
-          token: generateToken(NotificationClientID, NotificationSecret, { schedule_id: parameters[0] }),
+          token: getNotificationToken(NotificationClientID, NotificationSecret, { schedule_id: parameters[0] }),
           schedule_id: parameters[0]
         };
       }
@@ -33,7 +33,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       } else {
         return {
           client_id: NotificationClientID,
-          token: generateToken(NotificationClientID, NotificationSecret, { stop_id: parameters[0], location_name: parameters[1], route_id: parameters[2], route_name: parameters[3], direction: parameters[4], estimate_time: parameters[5], time_formatting_mode: parameters[6], time_offset: parameters[7], scheduled_time: parameters[8] }),
+          token: getNotificationToken(NotificationClientID, NotificationSecret, { stop_id: parameters[0], location_name: parameters[1], route_id: parameters[2], route_name: parameters[3], direction: parameters[4], estimate_time: parameters[5], time_formatting_mode: parameters[6], time_offset: parameters[7], scheduled_time: parameters[8] }),
           stop_id: parameters[0],
           location_name: parameters[1],
           route_id: parameters[2],
@@ -52,7 +52,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       } else {
         return {
           client_id: NotificationClientID,
-          token: generateToken(NotificationClientID, NotificationSecret, {})
+          token: getNotificationToken(NotificationClientID, NotificationSecret, {})
         };
       }
       break;
@@ -62,7 +62,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
       } else {
         return {
           client_id: NotificationClientID,
-          token: generateToken(NotificationClientID, NotificationSecret, { schedule_id: parameters[0], estimate_time: parameters[1], scheduled_time: parameters[2] }),
+          token: getNotificationToken(NotificationClientID, NotificationSecret, { schedule_id: parameters[0], estimate_time: parameters[1], scheduled_time: parameters[2] }),
           schedule_id: parameters[0],
           estimate_time: parameters[1],
           scheduled_time: parameters[2]
