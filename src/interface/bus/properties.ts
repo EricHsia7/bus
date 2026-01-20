@@ -6,7 +6,7 @@ import { GeneratedElement } from '../index';
 
 let previousProperties = [];
 let previousSkeletonScreen: boolean = false;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 
 function generateElementOfBusProperty(): GeneratedElement {
   const element = document.createElement('div');
@@ -35,7 +35,7 @@ export function setUpBusPropertiesFieldSkeletonScreen(Field: HTMLElement) {
   for (let i = 0; i < defaultPropertyQuantity; i++) {
     properties.push({
       key: i,
-      icon: 'none',
+      icon: '',
       value: ''
     });
   }
