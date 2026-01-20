@@ -8,7 +8,7 @@ export function getIconHTML(identifier: MaterialSymbols): string {
 export function getIconElement(identifier: MaterialSymbols): HTMLSpanElement {
   const iconElement = document.createElement('span');
   iconElement.classList.add('css_material_symbols_rounded');
-  iconElement.appendChild(document.createTextNode(identifier));
+  iconElement.innerText = identifier;
   return iconElement;
 }
 
