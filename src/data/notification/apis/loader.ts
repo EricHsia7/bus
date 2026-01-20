@@ -45,7 +45,7 @@ export async function makeNotificationRequest(method: NotificationResponse['meth
     const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'content-type': 'application/json'
       },
       body: JSON.stringify(body)
     };
