@@ -5,6 +5,6 @@ export function generateToken(client_id: NotificationClient['client_id'], secret
   const now = new Date().getTime();
   const window = 10 * 1000;
   const i = (now - (now % window)) / window;
-  const result = sha256(`${client_id} ${secret} ${(i - 1).toString(16)} ${JSON.stringify(payload)}`);
+  const result = sha256(`${client_id} ${secret} ${i.toString(16)} ${JSON.stringify(payload)}`);
   return result;
 }
