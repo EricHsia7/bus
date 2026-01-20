@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-version-json-2
 
 jobs:
   build:
@@ -73,7 +72,6 @@ jobs:
           cp -r ./icons/ ./dist/icons/
           cp -r ./manifest.json ./dist/manifest.json
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
-        # cp -r ./splash-screen/ ./dist/splash-screen/
 
       - name: Deploy with gh-pages
         run: |
@@ -81,4 +79,4 @@ jobs:
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # -d: directory, -b: branch, -u: user
+      # -d: directory, -b: branch, -u: user, -a: add
