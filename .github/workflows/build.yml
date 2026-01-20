@@ -60,16 +60,18 @@ jobs:
         with:
           path: ./dist/splash-screen
           key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
+      
+      - name: Generate version.json
+        run: node version.js
 
       - name: Build project
-        run: npm run build
+        run: npx webpack --mode=production
 
       - name: Copy things to ./dist/
         run: |
           cp -r ./icons/ ./dist/icons/
           cp -r ./manifest.json ./dist/manifest.json
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
-        # cp -r ./splash-screen/ ./dist/splash-screen/
 
       - name: Deploy with gh-pages
         run: |
@@ -77,4 +79,4 @@ jobs:
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # -d: directory, -b: branch, -u: user
+      # -d: directory, -b: branch, -u: user, -a: add
