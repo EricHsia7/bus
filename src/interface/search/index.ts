@@ -1,7 +1,7 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { drawRoundedRect } from '../../tools/graphic';
 import { supportTouch } from '../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../tools/elements';
 import { getCSSVariableValue } from '../../tools/style';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
@@ -346,8 +346,7 @@ export function switchSearchTypeFilter(): void {
     newType = -1;
   }
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
-  removeFirstChild(searchTypeFilterButtonElement);
-  searchTypeFilterButtonElement.appendChild(getIconElement(icons[newType + 1]));
+  setIcon(searchTypeFilterButtonElement, icons[newType + 1]);
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();
 }

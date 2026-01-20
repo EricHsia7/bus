@@ -2,16 +2,16 @@ import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/a
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../../data/location/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
-import { getIconElement } from '../../icons/index';
+import { getBlankIconElement, setIcon } from '../../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const LocationDetailsField = documentQuerySelector('.css_location_details_field');
@@ -25,6 +25,7 @@ function generateElementOfItem(): GeneratedElement {
   // Icon
   const icon = document.createElement('div');
   icon.classList.add('css_location_details_action_icon');
+  icon.appendChild(getBlankIconElement());
   element.appendChild(icon);
 
   // Name
@@ -42,8 +43,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction, previousItem: IntegratedLocationDetailsAction | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_action_icon');
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(thisItem.icon));
+      setIcon(thisIconElement, thisItem.icon);
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {

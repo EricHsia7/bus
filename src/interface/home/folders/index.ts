@@ -3,8 +3,8 @@ import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
-import { getIconElement } from '../../icons/index';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { GeneratedElement, querySize } from '../../index';
 import { openLocation } from '../../location/index';
@@ -111,6 +111,7 @@ function generateElementOfFolder(): GeneratedElement {
   // Icon
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_home_folder_icon');
+  iconElement.appendChild(getBlankIconElement());
 
   // Name
   const nameElement = document.createElement('div');
@@ -235,8 +236,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           icon = '';
           break;
       }
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(icon));
+      setIcon(thisIconElement, icon);
     }
 
     function updateStatus(thisElement: HTMLElement, thisItem: integratedFolderContent, animation: boolean): void {
@@ -447,16 +447,15 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
   function updateFolder(thisElement: HTMLElement, thisFolder: Folder, previousFolder: Folder | null): void {
     function updateName(thisElement: HTMLElement, thisFolder: Folder): void {
-      const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_home_folder_head');
       const thisNameElement = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
       thisNameElement.innerText = thisFolder.name;
     }
 
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {
-      const thisHeadElement = elementQuerySelector(thisElement, `.css_home_folder_head`);
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_home_folder_head');
       const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_folder_icon');
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(thisFolder.icon));
+      setIcon(thisIconElement, thisFolder.icon);
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

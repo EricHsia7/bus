@@ -1,8 +1,8 @@
-import { GeneratedElement } from '../../index';
-import { booleanToString, compareThings } from '../../../tools/index';
-import { getIconElement } from '../../icons/index';
-import { elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
 import { getSettingOptionValue } from '../../../data/settings/index';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { booleanToString, compareThings } from '../../../tools/index';
+import { getBlankIconElement, setIcon } from '../../icons/index';
+import { GeneratedElement } from '../../index';
 
 let previousProperties = [];
 let previousAnimation: boolean = true;
@@ -14,6 +14,7 @@ function generateElementOfProperty(): GeneratedElement {
 
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_route_details_property_icon');
+  iconElement.appendChild(getBlankIconElement());
   propertyElement.appendChild(iconElement);
 
   const valueElement = document.createElement('div');
@@ -44,8 +45,7 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_route_details_property_icon');
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(thisProperty.icon));
+      setIcon(thisIconElement, thisProperty.icon);
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: object): void {

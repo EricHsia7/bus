@@ -2,9 +2,9 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, removeFirstChild } from '../../../tools/elements';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { openBus } from '../../bus/index';
-import { getIconElement } from '../../icons/index';
+import { getBlankIconElement, setIcon } from '../../icons/index';
 import { GeneratedElement, querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
@@ -43,6 +43,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   // Icon
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_home_recent_views_item_icon');
+  iconElement.appendChild(getBlankIconElement());
 
   // Title
   const titleElement = document.createElement('div');
@@ -74,7 +75,8 @@ function generateElementOfRecentViewItem(): GeneratedElement {
 function updateRecentViewsField(integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
   function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const thisIconElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_icon');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
+      const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_icon');
       let icon = '';
       switch (thisItem.type) {
         case 'route':
@@ -92,8 +94,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(icon));
+      setIcon(thisIconElement);
     }
 
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {

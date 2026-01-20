@@ -5,11 +5,11 @@ import { IntegratedLocation, IntegratedLocationItem, integrateLocation, Location
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow, removeFirstChild } from '../../tools/elements';
+import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getIconElement, getIconHTML } from '../icons/index';
+import { getBlankIconElement, getIconElement, getIconHTML, setIcon } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -344,6 +344,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   // Icon
   const iconElement = document.createElement('div');
   iconElement.classList.add('css_location_details_property_icon');
+  iconElement.appendChild(getBlankIconElement());
 
   // Value
   const valueElement = document.createElement('div');
@@ -626,8 +627,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   function updateProperty(thisElement: HTMLElement, thisProperty: LocationGroupProperty, previousProperty: LocationGroupProperty | null): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_location_details_property_icon');
-      removeFirstChild(thisIconElement);
-      thisIconElement.appendChild(getIconElement(thisProperty.icon));
+      setIcon(thisIconElement, thisProperty.icon);
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
