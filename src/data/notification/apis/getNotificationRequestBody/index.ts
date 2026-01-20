@@ -1,4 +1,4 @@
-import { sha256 } from '../../../../tools/index';
+import { sha512 } from '../../../../tools/index';
 import { NotificationClientID, NotificationResponse, NotificationSecret } from '../../index';
 import { getNotificationToken } from '../getNotificationToken/index';
 
@@ -23,7 +23,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
         currentDate.setMilliseconds(0);
         currentDate.setSeconds(0);
         return {
-          hash: sha256(`${parameters[0]}${currentDate.getTime()}`)
+          hash: sha512(`${sha512(parameters[0])}${currentDate.getTime()}`)
         };
       }
       break;

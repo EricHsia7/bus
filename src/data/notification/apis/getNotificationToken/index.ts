@@ -1,10 +1,10 @@
-import { sha256 } from '../../../../tools/index';
+import { sha512 } from '../../../../tools/index';
 import { NotificationClient } from '../../index';
 
 export function getNotificationToken(client_id: NotificationClient['client_id'], secret: NotificationClient['secret'], payload: object): string {
   const now = new Date().getTime();
   const window = 10 * 1000;
   const i = (now - (now % window)) / window;
-  const result = sha256(`${client_id} ${secret} ${i.toString(16)} ${JSON.stringify(payload)}`);
+  const result = sha512(sha512(`${client_id} ${secret} ${i.toString(16)} ${sha512(JSON.stringify(payload))}`));
   return result;
 }
