@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-fix-write-ahead-log
 
 jobs:
   build:
