@@ -2,7 +2,7 @@ import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
-import { stopHasNotifcationSchedules } from '../../data/notification/index';
+import { rescheduleNotifcationSchedulesOfStop, stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
@@ -581,6 +581,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
+      if (havingNotifcationSchedules) {
+        rescheduleNotifcationSchedulesOfStop(thisItem.stopId, thisItem.status.time);
+      }
     }
 
     if (previousItem === null || previousItem === undefined) {
