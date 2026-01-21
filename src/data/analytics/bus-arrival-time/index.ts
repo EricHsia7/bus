@@ -172,8 +172,9 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
         const newStats = getBusArrivalTimeDataStats(thisStopData);
-        dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
-        const newExtremum = findGlobalExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
+        const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
+        dataGroup.stats = mergedStats;
+        const newExtremum = findGlobalExtremum(mergedStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
         dataGroup.day = existingDataObject.day;
