@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-reschedule-notifications
 
 jobs:
   build:

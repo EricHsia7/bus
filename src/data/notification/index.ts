@@ -1,11 +1,13 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { generateIdentifier, isValidURL } from '../../tools/index';
+import { EstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
+import { rescheduleNotification } from './apis/rescheduleNotification/index';
 import { scheduleNotification } from './apis/scheduleNotification/index';
 
 export interface NotificationClient {
@@ -229,6 +231,15 @@ export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_i
     }
   }
   return false;
+}
+
+export async function rescheduleNotifcationSchedulesOfStop(StopID: NotificationSchedule['stop_id'], EstimateTime: number) {
+  const now = new Date().getTime();
+  const schedules = await listNotifcationSchedulesOfStop(StopID);
+  for (const schedule of schedules) {
+    const scheduled_time = now + EstimateTime * 1000 + schedule.time_offset * 60 * 1000;
+    await rescheduleNotification(schedule.schedule_id, schedule.estimate_time, scheduled_time);
+  }
 }
 
 export async function discardExpiredNotificationSchedules() {
