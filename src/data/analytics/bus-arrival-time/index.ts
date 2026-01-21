@@ -131,9 +131,9 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const newStats = getBusArrivalTimeDataStats(data);
           const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
           dataGroup.stats = mergedStats;
-          const newExtremum = findGlobalExtremum(mergedStats);
-          dataGroup.min = newExtremum[0];
-          dataGroup.max = newExtremum[1];
+          const mergedExtremum = findGlobalExtremum(mergedStats);
+          dataGroup.min = mergedExtremum[0];
+          dataGroup.max = mergedExtremum[1];
           dataGroup.day = currentDay;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
