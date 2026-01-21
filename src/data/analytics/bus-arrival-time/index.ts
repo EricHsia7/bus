@@ -189,8 +189,8 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }
+      await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
     }
-    await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
     await lfRemoveItem(5, thisID);
   }
 }
