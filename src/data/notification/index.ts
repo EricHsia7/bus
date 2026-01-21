@@ -237,7 +237,7 @@ export async function rescheduleNotifcationSchedulesOfStop(StopID: NotificationS
   const now = new Date().getTime();
   const schedules = listNotifcationSchedulesOfStop(StopID);
   for (const schedule of schedules) {
-    if (EstimateTime - schedule.estimate_time >= 60) {
+    if (EstimateTime - schedule.estimate_time >= 10) {
       const scheduled_time = now + EstimateTime * 1000 + schedule.time_offset * 60 * 1000;
       await rescheduleNotification(schedule.schedule_id, EstimateTime, scheduled_time);
     }
