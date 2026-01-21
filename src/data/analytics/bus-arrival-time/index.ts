@@ -156,42 +156,71 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
 }
 
 export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
+  console.log(0);
   const now = new Date();
+  console.log(1);
   const currentTimestamp = now.getTime();
+  console.log(2);
   const currentDay = now.getDay();
+  console.log(3);
   const keys = await lfListItemKeys(5);
+  console.log(4);
   for (const key of keys) {
+    console.log(5);
     const json = await lfGetItem(5, key);
+    console.log(6);
     const object = JSON.parse(json) as BusArrivalTimeDataWriteAheadLog;
+    console.log(7);
     const thisID = object.id;
+    console.log(8);
     for (const stopKey in object.data) {
+      console.log(9);
       const thisStopData = object[stopKey];
+      console.log(10);
       const dataGroup = {} as BusArrivalTimeDataGroup;
+      console.log(11);
       const existingData = await lfGetItem(6, stopKey);
+      console.log(12);
       if (existingData) {
+        console.log(13);
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
+        console.log(14);
         const newStats = getBusArrivalTimeDataStats(thisStopData);
+        console.log(15);
         dataGroup.stats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
+        console.log(16);
         const newExtremum = findGlobalExtremum(newStats.concat(existingDataObject.max, existingDataObject.min));
+        console.log(17);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
         dataGroup.day = existingDataObject.day;
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
+        console.log(18);
       } else {
+        console.log(19);
         const newStats = getBusArrivalTimeDataStats(thisStopData);
+        console.log(20);
         dataGroup.stats = newStats;
+        console.log(21);
         const newExtremum = findGlobalExtremum(newStats);
+        console.log(22);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
         dataGroup.day = currentDay;
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
+        console.log(23);
       }
+      console.log(24);
       await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
+      console.log(25);
       await lfRemoveItem(5, thisID);
+      console.log(26);
     }
+    console.log(27);
   }
+  console.log(28);
 }
 
 export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
