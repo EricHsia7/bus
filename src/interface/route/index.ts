@@ -15,7 +15,6 @@ import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
 import { openRouteDetails } from './details/index';
-import { rescheduleNotification } from '../../data/notification/apis/rescheduleNotification/index';
 
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
@@ -621,8 +620,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
+      console.log(0)
       if (havingNotifcationSchedules) {
+        console.log(1)
         rescheduleNotifcationSchedulesOfStop(thisItem.id, thisItem.status.time);
+                console.log(2)
       }
     }
 
