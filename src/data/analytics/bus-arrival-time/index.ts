@@ -165,9 +165,10 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
     const object = JSON.parse(json) as BusArrivalTimeDataWriteAheadLog;
     const thisID = object.id;
     for (const stopKey in object.data) {
-      const thisStopData = object[stopKey];
+      const thisStopData = object.data[stopKey];
       const dataGroup = {} as BusArrivalTimeDataGroup;
       const existingData = await lfGetItem(6, stopKey);
+      const stopID = parseInt(stopKey.split('_')[1]);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
         const newStats = getBusArrivalTimeDataStats(thisStopData);
@@ -188,9 +189,9 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         dataGroup.timestamp = currentTimestamp;
         dataGroup.id = stopID;
       }
-      await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
-      await lfRemoveItem(5, thisID);
     }
+    await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
+    await lfRemoveItem(5, thisID);
   }
 }
 
