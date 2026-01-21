@@ -247,7 +247,7 @@ function generateElementOfItem(): GeneratedElement {
   };
   */
 
-  // Button: 到站通知
+  // Button: 通知
   const notifyButtonElement = document.createElement('div');
   notifyButtonElement.classList.add('css_location_group_item_button');
   notifyButtonElement.setAttribute('highlighted', 'false');
@@ -257,7 +257,7 @@ function generateElementOfItem(): GeneratedElement {
   notifyButtonIconElement.classList.add('css_location_group_item_button_icon');
   notifyButtonIconElement.appendChild(getIconElement('notifications'));
   notifyButtonElement.appendChild(notifyButtonIconElement);
-  notifyButtonElement.appendChild(document.createTextNode('到站通知'));
+  notifyButtonElement.appendChild(document.createTextNode('通知'));
   /*
   notifyButtonElement.onclick = () => {
     openScheduleNotification('stop-on-location', [identifier, null, null, null]);

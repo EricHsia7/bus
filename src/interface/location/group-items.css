@@ -472,7 +472,6 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;
   border-radius: var(--b-cssvar-border-radius-large);
@@ -499,7 +498,6 @@
   transition: none;
   overflow: hidden;
   vertical-align: top;
-  scroll-snap-align: end;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button:last-child {

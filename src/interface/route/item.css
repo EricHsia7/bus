@@ -467,7 +467,6 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;
   border-radius: var(--b-cssvar-border-radius-large);
@@ -494,7 +493,6 @@
   transition: none;
   overflow: hidden;
   vertical-align: top;
-  scroll-snap-align: end;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button:last-child {

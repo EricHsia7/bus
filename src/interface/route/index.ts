@@ -326,17 +326,12 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   scheduleNotificationElement.setAttribute('highlighted', 'false');
   scheduleNotificationElement.setAttribute('type', 'schedule-notification');
   scheduleNotificationElement.setAttribute('enabled', 'true');
-  /*
-  scheduleNotificationElement.onclick = () => {
-    openScheduleNotification('stop-on-route', [identifier, null, null, null]);
-  };
-  */
 
   const scheduleNotificationIconElement = document.createElement('div');
   scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
   scheduleNotificationIconElement.appendChild(getIconElement('notifications'));
   scheduleNotificationElement.appendChild(scheduleNotificationIconElement);
-  scheduleNotificationElement.appendChild(document.createTextNode('到站通知'));
+  scheduleNotificationElement.appendChild(document.createTextNode('通知'));
   buttonsElement.appendChild(scheduleNotificationElement);
 
   bodyElement.appendChild(buttonsElement);
