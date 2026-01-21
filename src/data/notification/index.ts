@@ -235,11 +235,11 @@ export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_i
 
 export async function rescheduleNotifcationSchedulesOfStop(StopID: NotificationSchedule['stop_id'], EstimateTime: number) {
   const now = new Date().getTime();
-  const schedules = await listNotifcationSchedulesOfStop(StopID);
+  const schedules = listNotifcationSchedulesOfStop(StopID);
   for (const schedule of schedules) {
-    if (EstimateTime - schedule.estimate_time > 60) {
+    if (EstimateTime - schedule.estimate_time >= 60) {
       const scheduled_time = now + EstimateTime * 1000 + schedule.time_offset * 60 * 1000;
-      await rescheduleNotification(schedule.schedule_id, schedule.estimate_time, scheduled_time);
+      await rescheduleNotification(schedule.schedule_id, EstimateTime, scheduled_time);
     }
   }
 }
