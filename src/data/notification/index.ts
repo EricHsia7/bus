@@ -240,7 +240,7 @@ export async function rescheduleNotifcationSchedulesOfStop(StopID: NotificationS
   console.log(5);
   for (const schedule of schedules) {
     console.log(6);
-    if (EstimateTime - schedule.estimate_time >= 10) {
+    if (Math.abs(EstimateTime - schedule.estimate_time) >= 10) {
       console.log(7);
       const scheduled_time = now + EstimateTime * 1000 + schedule.time_offset * 60 * 1000;
       console.log(8);
