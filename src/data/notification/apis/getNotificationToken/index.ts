@@ -5,6 +5,6 @@ export function getNotificationToken(client_id: NotificationClient['client_id'],
   const now = new Date().getTime();
   const window = 10 * 1000;
   const i = (now - (now % window)) / window;
-  const result = sha512(sha512(`${client_id} ${secret} ${i.toString(16)} ${sha512(JSON.stringify(payload))}`));
+  const result = sha512(sha512(`${client_id}\n${secret}\n${i}\n${sha512(`${client_id}\n${secret}\n${sha512(JSON.stringify(payload))}`)}`));
   return result;
 }
