@@ -175,7 +175,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
     console.log(8);
     for (const stopKey in object.data) {
       console.log(9);
-      const thisStopData = object[stopKey];
+      const thisStopData = object.data[stopKey];
       console.log(10);
       const dataGroup = {} as BusArrivalTimeDataGroup;
       console.log(11);
