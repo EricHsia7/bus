@@ -233,23 +233,14 @@ export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_i
 }
 
 export async function rescheduleNotifcationSchedulesOfStop(StopID: NotificationSchedule['stop_id'], EstimateTime: number) {
-  console.log(3);
   const now = new Date().getTime();
-  console.log(4);
   const schedules = listNotifcationSchedulesOfStop(StopID);
-  console.log(5);
   for (const schedule of schedules) {
-    console.log(6);
-    if (Math.abs(EstimateTime - schedule.estimate_time) >= 10) {
-      console.log(7);
+    if (Math.abs(EstimateTime - schedule.estimate_time) >= 60) {
       const scheduled_time = now + EstimateTime * 1000 + schedule.time_offset * 60 * 1000;
-      console.log(8);
       await rescheduleNotification(schedule.schedule_id, EstimateTime, scheduled_time);
-      console.log(9);
     }
-    console.log(10);
   }
-  console.log(11);
 }
 
 export async function discardExpiredNotificationSchedules() {

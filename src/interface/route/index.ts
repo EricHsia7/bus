@@ -620,11 +620,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
-      console.log(0)
       if (havingNotifcationSchedules) {
-        console.log(1)
         rescheduleNotifcationSchedulesOfStop(thisItem.id, thisItem.status.time);
-                console.log(2)
       }
     }
 
