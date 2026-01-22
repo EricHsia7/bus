@@ -57,6 +57,7 @@ async function main() {
         htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName_portrait}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale}) and (orientation: portrait)"/>`);
       }
 
+      /*
       const fileName_landscape = shortenHex(md5(`${height}x${width}@${scale}x`)).substring(0, 8);
       if (!map.has(fileName_landscape)) {
         map.set(fileName_landscape, true);
@@ -65,6 +66,7 @@ async function main() {
         await rasterize(svgText_landscape, outputFilePath, height * scale, width * scale, 2); // supersampling: 2x
         htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName_portrait}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale}) and (orientation: landscape)"/>`);
       }
+      */
       console.log(`Successfully generated splash screen for ${deviceInfo.name}.`);
     }
     await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
