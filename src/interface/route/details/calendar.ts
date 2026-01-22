@@ -1,10 +1,10 @@
-import { GeneratedElement, querySize } from '../../index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
-import { getSettingOptionValue } from '../../../data/settings/index';
-import { getCSSVariableValue } from '../../../tools/style';
-import { drawRoundedRect } from '../../../tools/graphic';
 import { Calendar, CalendarDay, CalendarEvent, CalendarEventGroup } from '../../../data/route/details';
+import { getSettingOptionValue } from '../../../data/settings/index';
+import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { drawRoundedRect } from '../../../tools/graphic';
 import { booleanToString } from '../../../tools/index';
+import { getCSSVariableValue } from '../../../tools/style';
+import { GeneratedElement, querySize } from '../../index';
 import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
 const calendarRatio = 70;

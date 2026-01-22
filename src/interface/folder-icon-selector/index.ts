@@ -1,8 +1,8 @@
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../../data/apis/loader';
 import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
-import { generateIdentifier } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconElement } from '../icons/index';
