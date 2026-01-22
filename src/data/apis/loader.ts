@@ -98,7 +98,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     default:
       break;
   }
-  const now = new Date();
+  const now = new Date().getTime();
   await recordDataUsage(contentLength, now);
   if (result) {
     tasks[url].result = result;
