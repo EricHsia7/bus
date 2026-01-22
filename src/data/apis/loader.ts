@@ -113,7 +113,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     tasks[url].result = result;
     tasks[url].timestamp = now + TTL;
     tasks[url].cached = true;
-    discardExpiredFetchTasks();
+    // discardExpiredFetchTasks();
     return result;
   } else {
     let request = tasks[url].requests.shift();
@@ -123,7 +123,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       request = tasks[url].requests.shift();
     }
     tasks[url].failed = true;
-    discardExpiredFetchTasks();
+    // discardExpiredFetchTasks();
     throw FetchError;
   }
 }
