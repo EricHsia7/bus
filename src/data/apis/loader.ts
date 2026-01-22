@@ -2,13 +2,16 @@ import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
 
-const tasks: {
-  [url: string]: {
-    processing: boolean;
-    resolves: Array<Function>;
-    rejects: Array<Function>;
-  };
-} = {};
+type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string, tag: string];
+
+interface FetchTask {
+  processing: boolean;
+  requests: Array<FetchTaskRequest>;
+}
+
+type FetchTasks = { [url: string]: FetchTask };
+
+const tasks: FetchTasks = {};
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   const FetchError = new Error('FetchError');
@@ -18,8 +21,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   if (tasks.hasOwnProperty(url)) {
     if (tasks[url].processing) {
       return await new Promise((resolve, reject) => {
-        tasks[url].resolves.push(resolve);
-        tasks[url].rejects.push(reject);
+        tasks[url].requests.push([resolve, reject, requestID]);
       });
     }
   } else {
@@ -84,20 +86,23 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   await recordDataUsage(contentLength, now);
   if (result) {
     if (tasks.hasOwnProperty(url)) {
-      let resolve = tasks[url].resolves.shift();
-      while (resolve) {
-        resolve(result);
-        resolve = tasks[url].resolves.shift();
+      const progress = receivedLength / contentLength;
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[0](result);
+        setDataReceivingProgress(request[2], request[3], progress, false);
+        request = tasks[url].requests.shift();
       }
       delete tasks[url];
     }
     return result;
   } else {
     if (tasks.hasOwnProperty(url)) {
-      let reject = tasks[url].rejects.shift();
-      while (reject) {
-        reject(FetchError);
-        reject = tasks[url].rejects.shift();
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[1](FetchError);
+        setDataReceivingProgress(request[2], request[3], 0, true);
+        request = tasks[url].requests.shift();
       }
       delete tasks[url];
     }
