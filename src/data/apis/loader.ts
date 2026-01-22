@@ -101,9 +101,6 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const now = new Date().getTime();
   await recordDataUsage(contentLength, now);
   if (result) {
-    tasks[url].result = result;
-    tasks[url].cached = true;
-    tasks[url].timestamp = now + TTL;
     const progress = receivedLength / contentLength;
     let request = tasks[url].requests.shift();
     while (request) {
@@ -112,6 +109,9 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       request = tasks[url].requests.shift();
     }
     tasks[url].processing = false;
+    tasks[url].result = result;
+    tasks[url].timestamp = now + TTL;
+    tasks[url].cached = true;
     return result;
   } else {
     let request = tasks[url].requests.shift();
