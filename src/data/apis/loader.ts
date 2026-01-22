@@ -7,7 +7,6 @@ type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string,
 interface FetchTask {
   processing: boolean;
   requests: Array<FetchTaskRequest>;
-  cached: boolean;
   failed: boolean;
   timestamp: number;
   result: any;
@@ -26,16 +25,13 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       return await new Promise((resolve, reject) => {
         tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
-    } else if (tasks[url].cached) {
-      if (new Date().getTime() <= tasks[url].timestamp) {
-        return tasks[url].result;
-      }
+    } else if (tasks[url].result !== null && new Date().getTime() <= tasks[url].timestamp) {
+      return tasks[url].result;
     }
   } else {
     tasks[url] = {
       processing: true,
       requests: [],
-      cached: false,
       failed: false,
       timestamp: -1,
       result: null
@@ -112,7 +108,6 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       }
       tasks[url].result = result;
       tasks[url].timestamp = now.getTime() + TTL;
-      tasks[url].cached = true;
       tasks[url].processing = false;
     }
     discardExpiredFetchTasks();
