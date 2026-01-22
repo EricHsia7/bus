@@ -135,8 +135,7 @@ function discardExpiredFetchTasks(): void {
         if (now - tasks[url].timestamp > 5000) {
           delete tasks[url];
         }
-      }
-      if (tasks[url].failed) {
+      } else if (tasks[url].failed) {
         delete tasks[url];
       }
     }
