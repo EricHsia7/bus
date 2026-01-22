@@ -86,9 +86,6 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 
   const now = new Date();
   await recordDataUsage(contentLength, now);
-  await new Promise((resolve, reject) => {
-    setTimeout(resolve, 1000 / 60);
-  });
   if (result) {
     if (tasks.hasOwnProperty(url)) {
       const progress = receivedLength / contentLength;
