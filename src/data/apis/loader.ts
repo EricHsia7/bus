@@ -7,15 +7,19 @@ type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string,
 interface FetchTask {
   processing: boolean;
   requests: Array<FetchTaskRequest>;
+  cached: boolean;
+  timestamp: number;
+  result: any;
 }
 
 type FetchTasks = { [url: string]: FetchTask };
 
 const tasks: FetchTasks = {};
+const TTL = 5000;
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
+  discardExpiredFetchTasks();
   const FetchError = new Error('FetchError');
-  const now = new Date();
 
   // Check concurrency
   if (tasks.hasOwnProperty(url)) {
@@ -23,11 +27,18 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       return await new Promise((resolve, reject) => {
         tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
+    } else if (tasks[url].cached) {
+      if (new Date().getTime() - tasks[url].timestamp <= TTL) {
+        return tasks[url].result;
+      }
     }
   } else {
     tasks[url] = {
       processing: true,
-      requests: []
+      requests: [],
+      cached: false,
+      timestamp: -1,
+      result: null
     };
   }
 
@@ -86,8 +97,12 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     default:
       break;
   }
+  const now = new Date();
   await recordDataUsage(contentLength, now);
   if (result) {
+    tasks[url].result = result;
+    tasks[url].cached = true;
+    tasks[url].timestamp = now + TTL;
     const progress = receivedLength / contentLength;
     let request = tasks[url].requests.shift();
     while (request) {
@@ -95,7 +110,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       setDataReceivingProgress(request[2], request[3], progress, false);
       request = tasks[url].requests.shift();
     }
-    delete tasks[url];
+    tasks[url].processing = false;
     return result;
   } else {
     let request = tasks[url].requests.shift();
@@ -104,8 +119,21 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       setDataReceivingProgress(request[2], request[3], 0, true);
       request = tasks[url].requests.shift();
     }
-    delete tasks[url];
+    tasks[url].processing = false;
     throw FetchError;
+  }
+}
+
+function discardExpiredFetchTasks(): void {
+  const now = new Date().getTime();
+  for (const url in tasks) {
+    if (!tasks[url].processing) {
+      if (tasks[url].cached && now - tasks[url].timestamp > TTL) {
+        delete tasks[url];
+      } else if (tasks[url].timestamp === -1) {
+        delete tasks[url];
+      }
+    }
   }
 }
 
