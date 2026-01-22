@@ -26,7 +26,7 @@ async function rasterize(svgText, outputPath, width, height, scale) {
   await resizedImage.write(outputPath);
 }
 
-async function getSVGText(width, height) {
+function getSVGText(width, height) {
   const iconSize = Math.max(Math.min(width * 0.45, 160), 50);
   return `<svg stroke-miterlimit="10" style="fill-rule: nonzero; clip-rule: evenodd; stroke-linecap: round; stroke-linejoin: round" version="1.1" viewBox="0 0 ${width} ${height}" xml:space="preserve"
   xmlns="http://www.w3.org/2000/svg"
