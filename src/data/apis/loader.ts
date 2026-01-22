@@ -26,6 +26,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
         tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
     } else if (tasks[url].result !== null && new Date().getTime() <= tasks[url].timestamp) {
+      setDataReceivingProgress(requestID, tag, 0, true);
       return tasks[url].result;
     }
   } else {
