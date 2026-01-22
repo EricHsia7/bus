@@ -17,7 +17,7 @@ export function convertBytes(contentLength: number): string {
     i++;
   }
 
-  return `${contentLength.toFixed(2)} ${units[i]}`;
+  return `${Math.floor(contentLength * 100) / 100} ${units[i]}`;
 }
 
 export function convertNumberToLetters(number: number): string {
