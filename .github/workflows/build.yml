@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-custom-hash-function
 
 jobs:
   build:

@@ -11,6 +11,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const { Hasher } = require('./hasher');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -74,7 +75,7 @@ module.exports = (env, argv) => {
         ]
       }),
       new SubresourceIntegrityPlugin({
-        hashFuncNames: ['sha256', 'sha384'], // Hash algorithms you want to use
+        hashFuncNames: ['sha512'], // Hash algorithms
         enabled: true
       }),
       new ESLintPlugin({
@@ -91,6 +92,7 @@ module.exports = (env, argv) => {
     entry: './src/index.ts', // Entry point of your application
     output: {
       filename: '[contenthash].js', // Output bundle filename
+      hashFunction: () => new Hasher(),
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
       crossOriginLoading: 'anonymous', // Required for SRI
