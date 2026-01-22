@@ -1,11 +1,8 @@
 const crypto = require('crypto');
-const { shortenHex } = require('./shorten-hex');
 
-// The Hasher wrapper
 class Hasher {
   constructor() {
-    // Initialize the standard MD5 hash
-    this.hash = crypto.createHash('md5');
+    this.hash = crypto.createHash('sha256');
   }
 
   update(data) {
@@ -16,12 +13,7 @@ class Hasher {
   }
 
   digest() {
-    // Get the standard hex result from MD5
-    const hex = this.hash.digest('hex');
-    // Shorten hex
-    const shortened = shortenHex(hex);
-    // Truncate to 8 characters
-    return shortened.substring(0, 8);
+    return this.hash.digest('hex');
   }
 }
 
