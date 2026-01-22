@@ -79,13 +79,14 @@ export function initializeLocationSliding(): void {
       const indexDifference = currentIndex - locationSliding_initialIndex;
       let delta = Math.abs(indexDifference);
       if (delta > 1) {
-        if (indexDifference >= 0) {
+        if (indexDifference > 0) {
           locationSliding_initialIndex = Math.floor(currentIndex);
           locationSliding_targetIndex = locationSliding_initialIndex + 1;
         } else {
           locationSliding_initialIndex = Math.ceil(currentIndex);
           locationSliding_targetIndex = locationSliding_initialIndex - 1;
         }
+        delta = 0;
       }
       const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
