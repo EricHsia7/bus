@@ -133,9 +133,12 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     return result;
   } else {
     if (tasks.hasOwnProperty(url)) {
-      for (const reject of tasks[url].rejects) {
+      let reject = tasks[url].rejects.shift();
+      while (reject) {
         reject(FetchError);
+        reject = tasks[url].rejects.shift();
       }
+      delete tasks[url];
     }
     throw FetchError;
   }
