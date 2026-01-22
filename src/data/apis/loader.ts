@@ -7,13 +7,19 @@ type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string,
 interface FetchTask {
   processing: boolean;
   requests: Array<FetchTaskRequest>;
+  cached: boolean;
+  failed: boolean;
+  timestamp: number;
+  result: any;
 }
 
 type FetchTasks = { [url: string]: FetchTask };
 
 const tasks: FetchTasks = {};
 
+const TTL = 10 * 1000;
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
+  discardExpiredFetchTasks();
   const FetchError = new Error('FetchError');
   // Check concurrency
   if (tasks.hasOwnProperty(url)) {
@@ -21,11 +27,19 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       return await new Promise((resolve, reject) => {
         tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
+    } else if (tasks[url].cached) {
+      if (new Date().getTime() <= tasks[url].timestamp) {
+        return tasks[url].result;
+      }
     }
   } else {
     tasks[url] = {
       processing: true,
-      requests: []
+      requests: [],
+      cached: false,
+      failed: false,
+      timestamp: -1,
+      result: null
     };
   }
 
@@ -50,8 +64,10 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     receivedLength += value.length;
     const progress = receivedLength / contentLength;
     setDataReceivingProgress(requestID, tag, progress, false);
-    for (const request of tasks[url].requests) {
-      setDataReceivingProgress(request[2], request[3], progress, false);
+    if (tasks.hasOwnProperty(url)) {
+      for (const request of tasks[url].requests) {
+        setDataReceivingProgress(request[2], request[3], progress, false);
+      }
     }
   }
 
@@ -95,7 +111,10 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
         setDataReceivingProgress(request[2], request[3], progress, false);
         request = tasks[url].requests.shift();
       }
-      delete tasks[url];
+      tasks[url].result = result;
+      tasks[url].timestamp = now.getTime() + TTL;
+      tasks[url].cached = true;
+      tasks[url].processing = false;
     }
     return result;
   } else {
@@ -106,9 +125,23 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
         setDataReceivingProgress(request[2], request[3], 0, true);
         request = tasks[url].requests.shift();
       }
-      delete tasks[url];
+      tasks[url].failed = true;
     }
     throw FetchError;
+  }
+}
+
+function discardExpiredFetchTasks(): void {
+  const now = new Date().getTime();
+  for (const url in tasks) {
+    if (!tasks[url].processing) {
+      if (tasks[url].cached && tasks[url].timestamp < now) {
+        delete tasks[url];
+      }
+    }
+    if (tasks[url].failed) {
+      delete tasks[url];
+    }
   }
 }
 
