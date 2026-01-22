@@ -51,7 +51,11 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     }
     chunks.push(value);
     receivedLength += value.length;
-    setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
+    const progress = receivedLength / contentLength;
+    setDataReceivingProgress(requestID, tag, progress, false);
+    for (const request of tasks[url].requests) {
+      setDataReceivingProgress(request[2], request[3], progress, false);
+    }
   }
 
   // Concatenate all the chunks into a single Uint8Array
@@ -84,27 +88,23 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
   await recordDataUsage(contentLength, now);
   if (result) {
-    if (tasks.hasOwnProperty(url)) {
-      const progress = receivedLength / contentLength;
-      let request = tasks[url].requests.shift();
-      while (request) {
-        request[0](result);
-        setDataReceivingProgress(request[2], request[3], progress, false);
-        request = tasks[url].requests.shift();
-      }
-      delete tasks[url];
+    const progress = receivedLength / contentLength;
+    let request = tasks[url].requests.shift();
+    while (request) {
+      request[0](result);
+      setDataReceivingProgress(request[2], request[3], progress, false);
+      request = tasks[url].requests.shift();
     }
+    delete tasks[url];
     return result;
   } else {
-    if (tasks.hasOwnProperty(url)) {
-      let request = tasks[url].requests.shift();
-      while (request) {
-        request[1](FetchError);
-        setDataReceivingProgress(request[2], request[3], 0, true);
-        request = tasks[url].requests.shift();
-      }
-      delete tasks[url];
+    let request = tasks[url].requests.shift();
+    while (request) {
+      request[1](FetchError);
+      setDataReceivingProgress(request[2], request[3], 0, true);
+      request = tasks[url].requests.shift();
     }
+    delete tasks[url];
     throw FetchError;
   }
 }
