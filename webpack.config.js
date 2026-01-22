@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].css'
+        filename: '[contenthash:8].css'
         // Output CSS filename
       }),
       new MangleCssClassPlugin({
