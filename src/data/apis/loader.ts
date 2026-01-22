@@ -130,13 +130,15 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 function discardExpiredFetchTasks(): void {
   const now = new Date().getTime();
   for (const url in tasks) {
-    if (!tasks[url].processing) {
-      if (now - tasks[url].timestamp > 5000) {
+    if (tasks.hasOwnProperty(url)) {
+      if (!tasks[url].processing) {
+        if (now - tasks[url].timestamp > 5000) {
+          delete tasks[url];
+        }
+      }
+      if (tasks[url].failed) {
         delete tasks[url];
       }
-    }
-    if (tasks[url].failed) {
-      delete tasks[url];
     }
   }
 }
