@@ -124,7 +124,8 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       break;
   }
   console.log(24);
-  const now = new Date().getTime();
+  const now = new Date();
+
   console.log(25);
   await recordDataUsage(contentLength, now);
   console.log(26);
@@ -141,7 +142,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     console.log(29);
     tasks[url].processing = false;
     tasks[url].result = result;
-    tasks[url].timestamp = now + TTL;
+    tasks[url].timestamp = now.getTime() + TTL;
     tasks[url].cached = true;
     console.log(30);
     // discardExpiredFetchTasks();
