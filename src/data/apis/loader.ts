@@ -19,6 +19,7 @@ const tasks: FetchTasks = {};
 
 const TTL = 10 * 1000;
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
+  discardExpiredFetchTasks();
   const FetchError = new Error('FetchError');
   // Check concurrency
   if (tasks.hasOwnProperty(url)) {
@@ -113,12 +114,12 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
         setDataReceivingProgress(request[2], request[3], progress, false);
         request = tasks[url].requests.shift();
       }
-      tasks[url].processing = false;
+
       tasks[url].result = result;
       tasks[url].timestamp = now.getTime() + TTL;
       tasks[url].cached = true;
+      tasks[url].processing = false;
     }
-    discardExpiredFetchTasks();
     return result;
   } else {
     if (tasks.hasOwnProperty(url)) {
@@ -130,7 +131,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       }
       tasks[url].failed = true;
     }
-    discardExpiredFetchTasks();
+
     throw FetchError;
   }
 }
