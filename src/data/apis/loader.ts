@@ -17,7 +17,7 @@ type FetchTasks = { [url: string]: FetchTask };
 
 const tasks: FetchTasks = {};
 
-const TTL = 10 * 1000;
+const TTL = 30000;
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   discardExpiredFetchTasks();
   const FetchError = new Error('FetchError');
