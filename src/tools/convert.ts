@@ -12,8 +12,8 @@ export function convertBytes(contentLength: number): string {
   const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   let i = 0;
 
-  while (contentLength >= 1024 && i < units.length - 1) {
-    contentLength /= 1024;
+  while (contentLength >= 1000 && i < units.length - 1) {
+    contentLength /= 1000;
     i++;
   }
 
