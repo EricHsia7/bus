@@ -10,6 +10,7 @@ class Hasher {
 
   update(data) {
     // Webpack passes chunks of data here
+    if (data === undefined || data === null) return this;
     this.hash.update(data);
     return this;
   }
