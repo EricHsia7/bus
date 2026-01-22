@@ -17,8 +17,9 @@ type FetchTasks = { [url: string]: FetchTask };
 const tasks: FetchTasks = {};
 
 const TTL = 30000;
+const FetchError = new Error('FetchError');
+
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
-  const FetchError = new Error('FetchError');
   // Check concurrency
   if (tasks.hasOwnProperty(url)) {
     if (tasks[url].processing) {
@@ -96,9 +97,12 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       break;
   }
 
+  // Record data usage
   const now = new Date();
   await recordDataUsage(contentLength, now);
+
   if (result) {
+    // Resolve promises
     if (tasks.hasOwnProperty(url)) {
       const progress = receivedLength / contentLength;
       let request = tasks[url].requests.shift();
@@ -114,6 +118,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     discardExpiredFetchTasks();
     return result;
   } else {
+    // Reject promises
     if (tasks.hasOwnProperty(url)) {
       let request = tasks[url].requests.shift();
       while (request) {
