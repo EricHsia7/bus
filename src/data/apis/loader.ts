@@ -132,7 +132,7 @@ function discardExpiredFetchTasks(): void {
   for (const url in tasks) {
     if (tasks.hasOwnProperty(url)) {
       if (!tasks[url].processing) {
-        if (now - tasks[url].timestamp > 5000) {
+        if (now > tasks[url].timestamp) {
           delete tasks[url];
           continue;
         }
