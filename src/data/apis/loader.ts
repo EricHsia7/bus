@@ -27,8 +27,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   } else {
     tasks[url] = {
       processing: true,
-      resolves: [],
-      rejects: []
+      requests: []
     };
   }
 
