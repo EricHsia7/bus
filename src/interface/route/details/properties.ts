@@ -39,10 +39,10 @@ export function setUppropertiesGroupSkeletonScreen(): void {
       value: ''
     });
   }
-  updatePropertiesPropertiesGroupElement(properties, true, playing_animation);
+  updatePropertiesField(properties, true, playing_animation);
 }
 
-export function updatePropertiesPropertiesGroupElement(properties: Array, skeletonScreen: boolean, animation: boolean): void {
+export function updatePropertiesField(properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_route_details_property_icon');
