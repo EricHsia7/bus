@@ -686,6 +686,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     };
     cumulativeOffset += width;
   }
+  locationSliding_groupStyles[`g_${groupQuantity}`] = {
+    width: 0,
+    offset: cumulativeOffset
+  };
 
   if (!locationSliding_sliding) {
     const initialGroupKey = `g_${locationSliding_initialIndex}`;

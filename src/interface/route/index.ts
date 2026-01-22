@@ -695,6 +695,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     };
     cumulativeOffset += width;
   }
+  routeSliding_groupStyles[`g_${groupQuantity}`] = {
+    width: 0,
+    offset: cumulativeOffset
+  };
 
   if (!routeSliding_sliding) {
     const initialGroupKey = `g_${routeSliding_initialIndex}`;
