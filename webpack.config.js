@@ -92,7 +92,7 @@ module.exports = (env, argv) => {
     entry: './src/index.ts', // Entry point of your application
     output: {
       filename: '[contenthash].js', // Output bundle filename
-      hashFunction: new Hasher(),
+      hashFunction: Hasher,
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
       crossOriginLoading: 'anonymous', // Required for SRI
