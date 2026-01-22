@@ -76,9 +76,15 @@ export function initializeLocationSliding(): void {
       } else {
         locationSliding_targetIndex = locationSliding_initialIndex - 1;
       }
-      let delta = Math.abs(currentIndex - locationSliding_initialIndex);
+      const indexDifference = currentIndex - locationSliding_initialIndex;
+      let delta = Math.abs(indexDifference);
       if (delta > 1) {
         locationSliding_initialIndex = currentIndex;
+        if (indexDifference > 0) {
+          locationSliding_targetIndex = currentIndex + 1;
+        } else {
+          locationSliding_targetIndex = currentIndex - 1;
+        }
         delta = 0;
       }
       const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
