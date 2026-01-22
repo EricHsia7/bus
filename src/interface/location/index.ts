@@ -86,7 +86,7 @@ export function initializeLocationSliding(): void {
           locationSliding_initialIndex = Math.ceil(currentIndex);
           locationSliding_targetIndex = locationSliding_initialIndex - 1;
         }
-        delta = 0;
+        delta = Math.abs(currentIndex - locationSliding_initialIndex);
       }
       const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
