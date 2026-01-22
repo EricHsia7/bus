@@ -131,7 +131,7 @@ function discardExpiredFetchTasks(): void {
   const now = new Date().getTime();
   for (const url in tasks) {
     if (!tasks[url].processing) {
-      if (tasks[url].cached && tasks[url].timestamp < now) {
+      if (now - tasks[url].timestamp > 5000) {
         delete tasks[url];
       }
     }
