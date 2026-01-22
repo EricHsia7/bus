@@ -21,7 +21,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   if (tasks.hasOwnProperty(url)) {
     if (tasks[url].processing) {
       return await new Promise((resolve, reject) => {
-        tasks[url].requests.push([resolve, reject, requestID]);
+        tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
     }
   } else {
