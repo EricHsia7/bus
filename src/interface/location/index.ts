@@ -76,10 +76,15 @@ export function initializeLocationSliding(): void {
       } else {
         locationSliding_targetIndex = locationSliding_initialIndex - 1;
       }
+      let delta = Math.abs(currentIndex - locationSliding_initialIndex);
+      if (delta > 1) {
+        locationSliding_initialIndex = currentIndex;
+        delta = 0;
+      }
       const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
-      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - locationSliding_initialIndex);
-      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - locationSliding_initialIndex)) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
       if (currentIndex === locationSliding_targetIndex) {
         locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
