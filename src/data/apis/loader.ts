@@ -162,17 +162,16 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
   if (!dataReceivingProgress.hasOwnProperty(requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  const tagKey = `t_${tag}`;
-  if (dataReceivingProgress[requestID].hasOwnProperty(tagKey)) {
+  if (dataReceivingProgress[requestID].hasOwnProperty(tag)) {
     if (expel) {
-      dataReceivingProgress[requestID][tagKey].expel = true;
+      dataReceivingProgress[requestID][tag].expel = true;
     } else {
-      dataReceivingProgress[requestID][tagKey].expel = false;
-      dataReceivingProgress[requestID][tagKey].progress = progress;
+      dataReceivingProgress[requestID][tag].expel = false;
+      dataReceivingProgress[requestID][tag].progress = progress;
     }
     broadcastDataReceivingProgress(requestID, 'run');
   } else {
-    dataReceivingProgress[requestID][tagKey] = { expel: false, progress: progress, total: 1 };
+    dataReceivingProgress[requestID][tag] = { expel: false, progress: progress, total: 1 };
     broadcastDataReceivingProgress(requestID, 'start');
   }
 }
