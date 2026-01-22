@@ -41,10 +41,12 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
 async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
   const personalSchedules = await listPersonalSchedules();
+  const fragment = new DocumentFragment();
   for (const item of personalSchedules) {
     const thisElement = generateElementOfItem(item);
-    ListElement.appendChild(thisElement.element);
+    fragment.appendChild(thisElement.element);
   }
+  ListElement.append(fragment);
 }
 
 export function openPersonalScheduleManager(): void {
