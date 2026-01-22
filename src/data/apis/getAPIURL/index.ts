@@ -10,7 +10,7 @@ import { getSettingOptionValue } from '../../settings/index';
  * @returns The direct link to a gzip file.
  */
 
-export function getAPIURL(city: number, api: number, alternative: boolean = false, interval: number = 5000): string {
+export function getAPIURL(city: number, api: number, alternative: boolean = false, interval: number = 10000): string {
   const cities = ['blobbus', 'ntpcbus'];
   // blobbus → Taipei City
   // ntpcbus → New Taipei City
