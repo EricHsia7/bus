@@ -63,8 +63,10 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     receivedLength += value.length;
     const progress = receivedLength / contentLength;
     setDataReceivingProgress(requestID, tag, progress, false);
-    for (const request of tasks[url].requests) {
-      setDataReceivingProgress(request[2], request[3], progress, false);
+    if (tasks.hasOwnProperty(url)) {
+      for (const request of tasks[url].requests) {
+        setDataReceivingProgress(request[2], request[3], progress, false);
+      }
     }
   }
 
@@ -103,30 +105,31 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 
   await recordDataUsage(contentLength, now);
   if (result) {
-    const progress = receivedLength / contentLength;
-    let request = tasks[url].requests.shift();
-    while (request) {
-      request[0](result);
-      setDataReceivingProgress(request[2], request[3], progress, false);
-      request = tasks[url].requests.shift();
+    if (tasks.hasOwnProperty(url)) {
+      const progress = receivedLength / contentLength;
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[0](result);
+        setDataReceivingProgress(request[2], request[3], progress, false);
+        request = tasks[url].requests.shift();
+      }
+      tasks[url].processing = false;
+      tasks[url].result = result;
+      tasks[url].timestamp = now.getTime() + TTL;
+      tasks[url].cached = true;
     }
-
-    tasks[url].processing = false;
-    tasks[url].result = result;
-    tasks[url].timestamp = now.getTime() + TTL;
-    tasks[url].cached = true;
-
     discardExpiredFetchTasks();
     return result;
   } else {
-    let request = tasks[url].requests.shift();
-    while (request) {
-      request[1](FetchError);
-      setDataReceivingProgress(request[2], request[3], 0, true);
-      request = tasks[url].requests.shift();
+    if (tasks.hasOwnProperty(url)) {
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[1](FetchError);
+        setDataReceivingProgress(request[2], request[3], 0, true);
+        request = tasks[url].requests.shift();
+      }
+      tasks[url].failed = true;
     }
-
-    tasks[url].failed = true;
     discardExpiredFetchTasks();
     throw FetchError;
   }
