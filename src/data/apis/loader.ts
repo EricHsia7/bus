@@ -8,6 +8,7 @@ interface FetchTask {
   processing: boolean;
   requests: Array<FetchTaskRequest>;
   cached: boolean;
+  failed: boolean;
   timestamp: number;
   result: any;
 }
@@ -38,6 +39,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       processing: true,
       requests: [],
       cached: false,
+      failed: false,
       timestamp: -1,
       result: null
     };
@@ -120,7 +122,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       setDataReceivingProgress(request[2], request[3], 0, true);
       request = tasks[url].requests.shift();
     }
-    tasks[url].processing = false;
+    tasks[url].failed = true;
     throw FetchError;
   }
 }
@@ -131,9 +133,10 @@ function discardExpiredFetchTasks(): void {
     if (!tasks[url].processing) {
       if (tasks[url].cached && now - tasks[url].timestamp > TTL) {
         delete tasks[url];
-      } else if (tasks[url].timestamp === -1) {
-        delete tasks[url];
       }
+    }
+    if (tasks[url].failed) {
+      delete tasks[url];
     }
   }
 }
