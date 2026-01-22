@@ -48,25 +48,14 @@ async function main() {
       const height = deviceInfo.height;
       const scale = deviceInfo.scale;
 
-      const fileName_portrait = shortenHex(md5(`${width}x${height}@${scale}x`)).substring(0, 8);
-      if (!map.has(fileName_portrait)) {
-        map.set(fileName_portrait, true);
-        const svgText_portrait = getSVGText(width, height);
-        const outputFilePath = `${outputDir}/${fileName_portrait}.png`;
-        await rasterize(svgText_portrait, outputFilePath, width * scale, height * scale, 2); // supersampling: 2x
-        htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName_portrait}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale}) and (orientation: portrait)"/>`);
+      const fileName = shortenHex(md5(`${width}x${height}@${scale}x`)).substring(0, 5);
+      if (!map.has(fileName)) {
+        map.set(fileName, true);
+        const svgText = getSVGText(width, height);
+        const outputFilePath = `${outputDir}/${fileName}.png`;
+        await rasterize(svgText, outputFilePath, width * scale, height * scale, 2); // supersampling: 2x
+        htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale})"/>`);
       }
-
-      /*
-      const fileName_landscape = shortenHex(md5(`${height}x${width}@${scale}x`)).substring(0, 8);
-      if (!map.has(fileName_landscape)) {
-        map.set(fileName_landscape, true);
-        const svgText_landscape = getSVGText(height, width);
-        const outputFilePath = `${outputDir}/${fileName_landscape}.png`;
-        await rasterize(svgText_landscape, outputFilePath, height * scale, width * scale, 2); // supersampling: 2x
-        htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName_portrait}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale}) and (orientation: landscape)"/>`);
-      }
-      */
       console.log(`Successfully generated splash screen for ${deviceInfo.name}.`);
     }
     await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
