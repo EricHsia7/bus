@@ -77,13 +77,23 @@ export function initializeRouteSliding(): void {
       } else {
         routeSliding_targetIndex = routeSliding_initialIndex - 1;
       }
+      const indexDifference = currentIndex - routeSliding_initialIndex;
+      let delta = Math.abs(indexDifference);
+      if (delta > 1) {
+        if (indexDifference > 0) {
+          routeSliding_initialIndex = Math.floor(currentIndex);
+          routeSliding_targetIndex = routeSliding_initialIndex + 1;
+        } else {
+          routeSliding_initialIndex = Math.ceil(currentIndex);
+          routeSliding_targetIndex = routeSliding_initialIndex - 1;
+        }
+        delta = Math.abs(currentIndex - routeSliding_initialIndex);
+      }
       const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
-      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * Math.abs(currentIndex - routeSliding_initialIndex);
-      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * Math.abs(currentIndex - routeSliding_initialIndex)) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
-
+      const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
-
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
         routeSliding_sliding = false;
