@@ -6,7 +6,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(object: MergedLocation): IndexedLocation {
-  let result: IndexedLocation = {};
+  const result: IndexedLocation = {};
   for (const key in object) {
     const indexedLocationItem = {} as IndexedLocationItem;
     const thisItem = object[key];

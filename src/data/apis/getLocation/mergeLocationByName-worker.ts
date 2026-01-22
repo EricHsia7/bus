@@ -8,7 +8,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(object: SimplifiedLocation): MergedLocation {
-  let result: MergedLocation = {};
+  const result: MergedLocation = {};
   for (const key in object) {
     const hash = md5(
       String(object[key].n)

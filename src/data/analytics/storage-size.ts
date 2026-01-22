@@ -126,7 +126,7 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
 
   const totalSize = convertBytes(totalSizeInBytes);
 
-  let categorizedSizes: CategorizedSizes = {};
+  const categorizedSizes: CategorizedSizes = {};
   for (const key in categorizedSizesInBytes) {
     const thisCategory = categorizedSizesInBytes[key].category;
     const thisCategorySize = categorizedSizesInBytes[key].size;

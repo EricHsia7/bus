@@ -190,17 +190,17 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
 }
 
 export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, StopIDList: Array<number>): BatchFoundBuses {
-  let result = {} as BatchFoundBuses;
-  let BusDataObj: {
-    [key: string]: BusDataItem;
+  const result = {} as BatchFoundBuses;
+  const BusDataObj: {
+    [BusID: string]: BusDataItem;
   } = {};
   for (const BusDataItem of BusData) {
     const thisBusID = BusDataItem.BusID;
     BusDataObj[thisBusID] = BusDataItem;
   }
 
-  for (let BusEventItem of BusEvent) {
-    let processedItem = {} as BatchFoundBus;
+  for (const BusEventItem of BusEvent) {
+    const processedItem = {} as BatchFoundBus;
 
     const thisStopID = parseInt(BusEventItem.StopID);
     const thisRouteID = parseInt(BusEventItem.RouteID);

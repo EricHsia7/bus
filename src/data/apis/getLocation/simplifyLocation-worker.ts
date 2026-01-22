@@ -8,7 +8,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(Location: Location): SimplifiedLocation {
-  let locationsByRoute = {};
+  const locationsByRoute = {};
   for (const item of Location) {
     const thisRouteID = item.routeId;
     const thisRouteKey = `r_${thisRouteID}`;
@@ -18,11 +18,11 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
     locationsByRoute[thisRouteKey].push(item);
   }
   for (const key in locationsByRoute) {
-    locationsByRoute[key] = locationsByRoute[key].sort(function (a, b) {
+    locationsByRoute[key].sort(function (a, b) {
       return a.seqNo - b.seqNo;
     });
   }
-  let result: SimplifiedLocation = {};
+  const result: SimplifiedLocation = {};
   for (const item of Location) {
     const thisRouteID = item.routeId;
     const thisRouteKey = `r_${thisRouteID}`;
