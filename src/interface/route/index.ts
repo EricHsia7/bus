@@ -107,7 +107,7 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
   RouteGroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
   RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toFixed(5));
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toString());
 }
 
 function animateUpdateTimer(): void {
