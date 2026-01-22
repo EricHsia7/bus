@@ -29,11 +29,11 @@ export function closeBus(): void {
 }
 
 async function initializeBusPage(id: number) {
-  setUpBusPropertiesFieldSkeletonScreen(BusPropertiesGroupElement);
+  setUpBusPropertiesFieldSkeletonScreen();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
   const integration = await integrateBus(id, requestID);
-  updateBusPropertiesField(BusPropertiesGroupElement, integration.properties, false, playing_animation);
+  updateBusPropertiesField(integration.properties, false, playing_animation);
 }
 
 function updateBusField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
