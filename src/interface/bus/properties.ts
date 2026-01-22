@@ -86,18 +86,18 @@ export function updateBusPropertiesField(Field: HTMLElement, properties: Array, 
 
   // Field.setAttribute('skeleton-screen', skeletonScreen);
 
-  const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
-  if (propertyQuantity !== currentPropertySeatQuantity) {
-    const capacity = currentPropertySeatQuantity - propertyQuantity;
-    if (capacity < 0) {
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        // const propertyIndex = currentPropertySeatQuantity + o;
+  const currentPropertyCapacity = elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`).length;
+  if (propertyQuantity !== currentPropertyCapacity) {
+    const difference = currentPropertyCapacity - propertyQuantity;
+    if (difference < 0) {
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        // const propertyIndex = currentPropertyCapacity + o;
         const newPropertyElement = generateElementOfBusProperty(skeletonScreen);
         elementQuerySelector(Field, '.css_bus_group_body').appendChild(newPropertyElement.element);
       }
     } else {
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const propertyIndex = currentPropertySeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const propertyIndex = currentPropertyCapacity - 1 - o;
         elementQuerySelectorAll(Field, `.css_bus_group_body .css_bus_property`)[propertyIndex].remove();
       }
     }

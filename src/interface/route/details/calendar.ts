@@ -7,16 +7,6 @@ import { Calendar, CalendarDay, CalendarEvent, CalendarEventGroup } from '../../
 import { booleanToString } from '../../../tools/index';
 import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
-/*
-const RouteDetailsField = documentQuerySelector('.css_route_details_field');
-const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
-const RouteDetailsGroupsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_groups');
-const CalendarGroupElement = elementQuerySelector(RouteDetailsGroupsElement, '.css_route_details_group[group="calendar"]');
-const CalendarGroupBodyElement = elementQuerySelector(CalendarGroupElement, '.css_route_details_group_body');
-const CalendarDaysElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_days');
-const CalendarEventGroupsElement = elementQuerySelector(CalendarGroupBodyElement, '.css_route_details_calendar_event_groups');
-*/
-
 const calendarRatio = 70;
 const scaleLimit = 3150 / (calendarRatio * 24);
 const gridlineBoxHeight = 10;
@@ -30,7 +20,7 @@ let canvasHeight = canvasSize.height;
 let canvasScale = Math.min(window.devicePixelRatio, scaleLimit) || 1;
 
 let previousCalendar = {} as Calendar;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
@@ -242,23 +232,27 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   const calendarEventGroups = calendar.calendarEventGroups;
   const eventQuantity = calendar.calendarEventQuantity;
 
-  const currentEventGroupSeatQuantity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
-  if (eventGroupQuantity !== currentEventGroupSeatQuantity) {
-    const capacity = currentEventGroupSeatQuantity - eventGroupQuantity;
-    if (capacity < 0) {
+  const currentEventGroupCapacity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
+  if (eventGroupQuantity !== currentEventGroupCapacity) {
+    const difference = currentEventGroupCapacity - eventGroupQuantity;
+    if (difference < 0) {
       // Add missing day and event group elements.
-      for (let o = 0; o < Math.abs(capacity); o++) {
+      const calendarDaysFragment = new DocumentFragment();
+      const calendarEventGroupsFragment = new DocumentFragment();
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newDayElement = generateElementOfDay();
-        CalendarDaysElement.appendChild(newDayElement.element);
+        calendarDaysFragment.appendChild(newDayElement.element);
         const newEventGroupElement = generateElementOfEventGroup();
-        CalendarEventGroupsElement.appendChild(newEventGroupElement.element);
+        calendarEventGroupsFragment.appendChild(newEventGroupElement.element);
       }
+      CalendarDaysElement.append(calendarDaysFragment);
+      CalendarEventGroupsElement.append(calendarEventGroupsFragment);
     } else {
       // Remove extra elements.
       const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
       const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const eventGroupIndex = currentEventGroupSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const eventGroupIndex = currentEventGroupCapacity - 1 - o;
         CalendarDayElements[eventGroupIndex].remove();
         CalendarEventGroupElements[eventGroupIndex].remove();
       }

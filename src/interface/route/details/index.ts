@@ -23,7 +23,8 @@ export const svaeToFolderActionButtonElement = elementQuerySelector(ActionsGroup
 export const getPermalinkActionButton = elementQuerySelector(ActionsGroupElement, '.css_route_details_group_body .css_route_details_action_button[action="get-permalink"]');
 export const showPermalinkQRCodeActionButton = elementQuerySelector(ActionsGroupElement, '.css_route_details_group_body .css_route_details_action_button[action="show-permalink-qrcode"]');
 
-export const PropertiesGroupElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body .css_route_details_groups .css_route_details_group[group="properties"]');
+export const PropertiesGroupElement = elementQuerySelector(RouteDetailsGroupsElement, '.css_route_details_group[group="properties"]');
+export const PropertiesGroupBodyElement = elementQuerySelector(PropertiesGroupElement, '.css_route_details_group_body');
 
 async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Array<number>) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;

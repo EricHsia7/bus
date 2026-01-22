@@ -90,20 +90,20 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
   }
 
   const categoriesQuantity = categories.length;
-  const currentItemSeatQuantity = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item').length;
-  if (categoriesQuantity !== currentItemSeatQuantity) {
-    const capacity = currentItemSeatQuantity - categoriesQuantity;
-    if (capacity < 0) {
+  const currentItemCapacity = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item').length;
+  if (categoriesQuantity !== currentItemCapacity) {
+    const difference = currentItemCapacity - categoriesQuantity;
+    if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newElement = generateElementOfItem();
         fragment.appendChild(newElement.element);
       }
       StatisticsElement.appendChild(fragment);
     } else {
       const statisticsItemElements2 = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const itemIndex = currentItemSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const itemIndex = currentItemCapacity - 1 - o;
         statisticsItemElements2[itemIndex].remove();
       }
     }

@@ -179,18 +179,20 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   const itemQuantity = integration.itemQuantity;
   const items = integration.items;
 
-  const currentItemSeatQuantity = elementQuerySelectorAll(NotificationScheduleList, `.css_notification_schedule_manager_item`).length;
-  if (itemQuantity !== currentItemSeatQuantity) {
-    const capacity = currentItemSeatQuantity - itemQuantity;
-    if (capacity < 0) {
-      for (let o = 0; o < Math.abs(capacity); o++) {
+  const currentItemCapacity = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item').length;
+  if (itemQuantity !== currentItemCapacity) {
+    const difference = currentItemCapacity - itemQuantity;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newItemElement = generateElementOfItem();
-        NotificationScheduleList.appendChild(newItemElement.element);
+        fragment.appendChild(newItemElement.element);
       }
+      NotificationScheduleList.append(fragment);
     } else {
       const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const itemIndex = currentItemSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const itemIndex = currentItemCapacity - 1 - o;
         NotificationScheduleItemElements[itemIndex].remove();
       }
     }
@@ -285,9 +287,12 @@ async function streamNotificationScheduleManager() {
   refreshNotificationScheduleManager()
     .then(function () {
       if (notifcationScheduleManagerRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamNotificationScheduleManager();
-        }, Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime()));
+        setTimeout(
+          function () {
+            streamNotificationScheduleManager();
+          },
+          Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime())
+        );
       } else {
         notifcationScheduleManagerRefreshTimer_streamStarted = false;
       }

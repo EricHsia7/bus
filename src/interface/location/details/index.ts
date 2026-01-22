@@ -89,20 +89,20 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   const actions = integration.actions;
   const actionsQuantity = integration.actionsQuantity;
 
-  const currentActionsSeatQuantity = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action').length;
-  if (actionsQuantity !== currentActionsSeatQuantity) {
-    const capacity = currentActionsSeatQuantity - actionsQuantity;
-    if (capacity < 0) {
+  const currentActionsCapacity = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action').length;
+  if (actionsQuantity !== currentActionsCapacity) {
+    const difference = currentActionsCapacity - actionsQuantity;
+    if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newItemElement = generateElementOfItem();
         fragment.appendChild(newItemElement.element);
       }
       LocationDetailsActionsElement.append(fragment);
     } else {
       const LocationActionElements = elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const itemIndex = currentActionsSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const itemIndex = currentActionsCapacity - 1 - o;
         LocationActionElements[itemIndex].remove();
       }
     }

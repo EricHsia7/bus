@@ -490,20 +490,20 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   const folders = integration.folders;
   const foldersLength = folders.length;
 
-  const currentFolderSeatQuantity = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder').length;
-  if (foldersLength !== currentFolderSeatQuantity) {
-    const capacity = currentFolderSeatQuantity - foldersLength;
-    if (capacity < 0) {
+  const currentFolderCapacity = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder').length;
+  if (foldersLength !== currentFolderCapacity) {
+    const difference = currentFolderCapacity - foldersLength;
+    if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newFolderElement = generateElementOfFolder();
         fragment.appendChild(newFolderElement.element);
       }
       HomeFoldersElement.append(fragment);
     } else {
       const FolderElements = elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const folderIndex = currentFolderSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const folderIndex = currentFolderCapacity - 1 - o;
         FolderElements[folderIndex].remove();
       }
     }
@@ -516,18 +516,18 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     const thisFolderContentLength = thisFolderContent.length;
     const thisFolderElement = FolderElements[i];
     const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
-    const currentItemSeatQuantity = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item').length;
-    if (thisFolderContentLength !== currentItemSeatQuantity) {
-      const capacity = currentItemSeatQuantity - thisFolderContentLength;
-      if (capacity < 0) {
-        for (let o = 0; o < Math.abs(capacity); o++) {
+    const currentItemCapacity = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item').length;
+    if (thisFolderContentLength !== currentItemCapacity) {
+      const difference = currentItemCapacity - thisFolderContentLength;
+      if (difference < 0) {
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newItemElement = generateElementOfItem();
           thisFolderContentElement.appendChild(newItemElement.element);
         }
       } else {
         const FolderContentItemElements = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item');
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          const itemIndex = currentItemSeatQuantity - 1 - o;
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+          const itemIndex = currentItemCapacity - 1 - o;
           FolderContentItemElements[itemIndex].remove();
         }
       }

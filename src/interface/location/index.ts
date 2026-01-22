@@ -730,13 +730,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   }
 
   // TODO: updateTab
-  const currentGroupSeatQuantity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
-  if (groupQuantity !== currentGroupSeatQuantity) {
-    const capacity = currentGroupSeatQuantity - groupQuantity;
-    if (capacity < 0) {
+  const currentGroupCapacity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
+  if (groupQuantity !== currentGroupCapacity) {
+    const difference = currentGroupCapacity - groupQuantity;
+    if (difference < 0) {
       const groupsFragment = new DocumentFragment();
       const tabsFragment = new DocumentFragment();
-      for (let o = 0; o < Math.abs(capacity); o++) {
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newGroupElement = generateElementOfGroup();
         groupsFragment.appendChild(newGroupElement.element);
         const newTabElement = generateElementOfTab();
@@ -747,8 +747,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     } else {
       const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
       const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const groupIndex = currentGroupSeatQuantity - 1 - o;
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const groupIndex = currentGroupCapacity - 1 - o;
         LocationGroupElements[groupIndex].remove();
         LocationGroupTabElements[groupIndex].remove();
       }
@@ -759,33 +759,33 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisLocationGroupElement = LocationGroupElements[i];
-    const currentItemSeatQuantity = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item').length;
-    if (itemQuantity[groupKey] !== currentItemSeatQuantity) {
-      const capacity = currentItemSeatQuantity - itemQuantity[groupKey];
-      if (capacity < 0) {
+    const currentItemCapacity = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item').length;
+    if (itemQuantity[groupKey] !== currentItemCapacity) {
+      const difference = currentItemCapacity - itemQuantity[groupKey];
+      if (difference < 0) {
         const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
-        for (let o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newItemElement = generateElementOfItem();
           LocationGroupItemsElement.appendChild(newItemElement.element);
         }
       } else {
         const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item');
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          const itemIndex = currentItemSeatQuantity - 1 - o;
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+          const itemIndex = currentItemCapacity - 1 - o;
           LocationGroupItemElements[itemIndex].remove();
         }
       }
     }
 
-    const currentGroupPropertySeatQuantity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], '.css_location_group_details .css_location_group_details_body .css_location_group_details_property').length;
+    const currentGroupPropertyCapacity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], '.css_location_group_details .css_location_group_details_body .css_location_group_details_property').length;
     const groupPropertyQuantity = groups[groupKey].properties.length;
-    if (groupPropertyQuantity !== currentGroupPropertySeatQuantity) {
-      const capacity = currentGroupPropertySeatQuantity - groupPropertyQuantity;
-      if (capacity < 0) {
+    if (groupPropertyQuantity !== currentGroupPropertyCapacity) {
+      const difference = currentGroupPropertyCapacity - groupPropertyQuantity;
+      if (difference < 0) {
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
         const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          // var propertyIndex = currentGroupPropertySeatQuantity + o;
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+          // var propertyIndex = currentGroupPropertyCapacity + o;
           const newPropertyElement = generateElementOfGroupDetailsProperty();
           thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement.element);
         }
@@ -793,8 +793,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
         const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
         const propertyElements = elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property');
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          const propertyIndex = currentGroupPropertySeatQuantity - 1 - o;
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+          const propertyIndex = currentGroupPropertyCapacity - 1 - o;
           propertyElements[propertyIndex].remove();
         }
       }

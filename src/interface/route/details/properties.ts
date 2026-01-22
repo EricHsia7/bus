@@ -3,9 +3,10 @@ import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/el
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { GeneratedElement } from '../../index';
+import { PropertiesGroupBodyElement, PropertiesGroupElement } from './index';
 
 let previousProperties = [];
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 function generateElementOfProperty(): GeneratedElement {
@@ -27,7 +28,7 @@ function generateElementOfProperty(): GeneratedElement {
   };
 }
 
-export function setUppropertiesGroupSkeletonScreen(Field: HTMLElement): void {
+export function setUppropertiesGroupSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const defaultPropertyQuantity = 5;
   const properties = [];
@@ -38,10 +39,10 @@ export function setUppropertiesGroupSkeletonScreen(Field: HTMLElement): void {
       value: ''
     });
   }
-  updatePropertiesField(Field, properties, true, playing_animation);
+  updatePropertiesPropertiesGroupElement(properties, true, playing_animation);
 }
 
-export function updatePropertiesField(Field: HTMLElement, properties: Array, skeletonScreen: boolean, animation: boolean): void {
+export function updatePropertiesPropertiesGroupElement(properties: Array, skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_route_details_property_icon');
@@ -83,27 +84,33 @@ export function updatePropertiesField(Field: HTMLElement, properties: Array, ske
 
   const propertyQuantity = properties.length;
 
-  Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  if (skeletonScreen !== previousSkeletonScreen) {
+    PropertiesGroupElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+  }
 
-  const currentPropertySeatQuantity = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`).length;
-  if (propertyQuantity !== currentPropertySeatQuantity) {
-    const capacity = currentPropertySeatQuantity - propertyQuantity;
-    if (capacity < 0) {
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        // const propertyIndex = currentPropertySeatQuantity + o;
+  const currentPropertyCapacity = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property').length;
+  if (propertyQuantity !== currentPropertyCapacity) {
+    const difference = currentPropertyCapacity - propertyQuantity;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        // const propertyIndex = currentPropertyCapacity + o;
         const newPropertyElement = generateElementOfProperty();
-        elementQuerySelector(Field, '.css_route_details_group_body').appendChild(newPropertyElement.element);
+        fragment.appendChild(newPropertyElement.element);
       }
+      PropertiesGroupBodyElement.append(fragment);
     } else {
-      for (let o = 0; o < Math.abs(capacity); o++) {
-        const propertyIndex = currentPropertySeatQuantity - 1 - o;
-        elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[propertyIndex].remove();
+      const propertyElements = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property');
+      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const propertyIndex = currentPropertyCapacity - 1 - o;
+        propertyElements[propertyIndex].remove();
       }
     }
   }
 
+  const propertyElements = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property');
   for (let i = 0; i < propertyQuantity; i++) {
-    const thisPropertyElement = elementQuerySelectorAll(Field, `.css_route_details_group_body .css_route_details_property`)[i];
+    const thisPropertyElement = propertyElements[i];
     const thisProperty = properties[i];
     if (previousProperties.length === 0) {
       updateProperty(thisPropertyElement, thisProperty, null);

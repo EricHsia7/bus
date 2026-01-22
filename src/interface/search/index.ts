@@ -303,20 +303,20 @@ export function updateSearchResult(): void {
   if (!containPhoneticSymbols(currentValue)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
-    const currentItemSeatQuantity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
-    if (searchResultLength !== currentItemSeatQuantity) {
-      const capacity = currentItemSeatQuantity - searchResultLength;
-      if (capacity < 0) {
+    const currentItemCapacity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
+    if (searchResultLength !== currentItemCapacity) {
+      const difference = currentItemCapacity - searchResultLength;
+      if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let o = 0; o < Math.abs(capacity); o++) {
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newElement = generateElementOfSearchResultItem();
           fragment.appendChild(newElement.element);
         }
         searchResultsElement.appendChild(fragment);
       } else {
         const searchResultElements2 = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
-        for (let o = 0; o < Math.abs(capacity); o++) {
-          const itemIndex = currentItemSeatQuantity - 1 - o;
+        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+          const itemIndex = currentItemCapacity - 1 - o;
           searchResultElements2[itemIndex].remove();
         }
       }
