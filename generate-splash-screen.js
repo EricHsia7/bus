@@ -1,26 +1,14 @@
 const { Resvg } = require('@resvg/resvg-js');
 const { Jimp } = require('jimp');
 const md5 = require('md5');
+
+const { shortenHex } = require('./shorten-hex');
 const { writeTextFile, makeDirectory } = require('./files');
 
 const deviceData = require('./splash-screen-device-data.json');
 
 const assetName = 'splash-screen';
 const outputDir = `./dist/${assetName}`;
-
-function shortenHex(hex) {
-  const CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const BASE = 62n;
-  let num = BigInt('0x' + hex);
-  if (num === 0n) return '0';
-  let result = '';
-  while (num > 0n) {
-    const remainder = num % BASE;
-    result = CHARSET[Number(remainder)] + result;
-    num = num / BASE;
-  }
-  return result;
-}
 
 // Array to store HTML code for the links to splash screen images
 const htmlLinks = [];

@@ -11,6 +11,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const { Hasher } = require('./hasher');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -18,7 +19,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].css'
+        filename: '[contenthash:8].css'
         // Output CSS filename
       }),
       new MangleCssClassPlugin({
@@ -74,7 +75,7 @@ module.exports = (env, argv) => {
         ]
       }),
       new SubresourceIntegrityPlugin({
-        hashFuncNames: ['sha256', 'sha384'], // Hash algorithms you want to use
+        hashFuncNames: ['sha512'], // Hash algorithms
         enabled: true
       }),
       new ESLintPlugin({
@@ -90,7 +91,8 @@ module.exports = (env, argv) => {
     mode: 'production', // Set the mode to 'production' or 'development'
     entry: './src/index.ts', // Entry point of your application
     output: {
-      filename: '[contenthash].js', // Output bundle filename
+      filename: '[contenthash:8].js', // Output bundle filename
+      hashFunction: Hasher,
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
       crossOriginLoading: 'anonymous', // Required for SRI
