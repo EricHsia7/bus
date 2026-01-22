@@ -2,59 +2,57 @@ import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
 
-export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml', connectionTimeoutDuration: number = 15 * 1000, loadingTimeoutDuration: number = 60 * 1000): Promise<object> {
-  // Create a connection timeout promise
-  const connectionTimeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out')), connectionTimeoutDuration));
+type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string, tag: string];
 
-  // Race between fetch and connection timeout
-  const response = await Promise.race([fetch(url), connectionTimeoutPromise]).catch((error) => {
-    // Handle connection timeout error
-    setDataReceivingProgress(requestID, tag, 0, true);
-    throw error;
-  });
+interface FetchTask {
+  processing: boolean;
+  requests: Array<FetchTaskRequest>;
+}
 
+type FetchTasks = { [url: string]: FetchTask };
+
+const tasks: FetchTasks = {};
+
+export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
+  const FetchError = new Error('FetchError');
+  // Check concurrency
+  if (tasks.hasOwnProperty(url)) {
+    if (tasks[url].processing) {
+      return await new Promise((resolve, reject) => {
+        tasks[url].requests.push([resolve, reject, requestID, tag]);
+      });
+    }
+  } else {
+    tasks[url] = {
+      processing: true,
+      requests: []
+    };
+  }
+
+  // Fetch data
+  const response = await fetch(url);
   if (!response.ok) {
+    setDataReceivingProgress(requestID, tag, 0, true);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
+  // Read chunks
   const contentLength = parseInt(String(response.headers.get('content-length')));
-  let receivedLength = 0;
   const reader = response.body.getReader();
   const chunks = [];
-
-  // A utility function to read chunks with loading timeout
-  const readChunk = () => {
-    return new Promise(async (resolve, reject) => {
-      const loadingTimeout = setTimeout(() => {
-        reject(new Error('Loading timed out'));
-      }, loadingTimeoutDuration);
-
-      const { done, value } = await reader.read();
-      clearTimeout(loadingTimeout);
-
-      if (done) {
-        resolve({ done });
-      } else {
-        resolve({ done, value });
-      }
-    });
-  };
-
-  // Loop to read chunks with loading timeout for each chunk
+  let receivedLength = 0;
   while (true) {
-    const { done, value } = await readChunk().catch((error) => {
-      // Handle loading timeout error
-      setDataReceivingProgress(requestID, tag, receivedLength / contentLength, true);
-      throw error;
-    });
-
+    const { done, value } = await reader.read();
     if (done) {
       break;
     }
-
     chunks.push(value);
     receivedLength += value.length;
-    setDataReceivingProgress(requestID, tag, receivedLength / contentLength, false);
+    const progress = receivedLength / contentLength;
+    setDataReceivingProgress(requestID, tag, progress, false);
+    for (const request of tasks[url].requests) {
+      setDataReceivingProgress(request[2], request[3], progress, false);
+    }
   }
 
   // Concatenate all the chunks into a single Uint8Array
@@ -65,28 +63,52 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  const now = new Date();
-  await recordDataUsage(contentLength, now);
-
   // Create a blob from the concatenated Uint8Array
   const blob = new Blob([uint8Array], { type: 'application/gzip' });
   const arrayBuffer = await blob.arrayBuffer();
   const inflatedData = await pakoInflate(arrayBuffer);
 
+  let result;
   switch (fileType) {
     case 'json':
       if (/^<!doctype html>/.test(inflatedData)) {
-        const alternativeData = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType, connectionTimeoutDuration, loadingTimeoutDuration);
-        return alternativeData;
+        result = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType);
       } else {
-        return JSON.parse(inflatedData);
+        result = JSON.parse(inflatedData);
       }
       break;
     case 'xml':
-      return inflatedData;
+      result = inflatedData;
       break;
     default:
       break;
+  }
+
+  const now = new Date();
+  await recordDataUsage(contentLength, now);
+  if (result) {
+    if (tasks.hasOwnProperty(url)) {
+      const progress = receivedLength / contentLength;
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[0](result);
+        setDataReceivingProgress(request[2], request[3], progress, false);
+        request = tasks[url].requests.shift();
+      }
+      delete tasks[url];
+    }
+    return result;
+  } else {
+    if (tasks.hasOwnProperty(url)) {
+      let request = tasks[url].requests.shift();
+      while (request) {
+        request[1](FetchError);
+        setDataReceivingProgress(request[2], request[3], 0, true);
+        request = tasks[url].requests.shift();
+      }
+      delete tasks[url];
+    }
+    throw FetchError;
   }
 }
 
