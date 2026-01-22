@@ -908,6 +908,7 @@ export function openLocation(hash: string): void {
   logRecentView('location', hash);
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
+  locationSliding_groupStyles = {};
   LocationField.setAttribute('displayed', 'true');
   LocationGroupsElement.scrollLeft = 0;
   LocationGroupsElement.focus();

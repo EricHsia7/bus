@@ -891,6 +891,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
+  routeSliding_groupStyles = {};
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
