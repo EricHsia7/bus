@@ -10,45 +10,6 @@ const tasks: {
   };
 } = {};
 
-async function fetchData(url: string) {
-  if (tasks.hasOwnProperty(url)) {
-    if (tasks[url].processing) {
-      return await new Promise((resolve, reject) => {
-        tasks[url].resolves.push(resolve);
-        tasks[url].rejects.push(reject);
-      });
-    }
-  } else {
-    tasks[url] = {
-      processing: true,
-      resolves: [],
-      rejects: []
-    };
-  }
-
-  // fetch data
-
-  // if successful
-  const result = {};
-  if (tasks.hasOwnProperty(url)) {
-    let resolve = tasks[url].resolves.shift();
-    while (resolve) {
-      resolve(result);
-      resolve = tasks[url].resolves.shift();
-    }
-    tasks[url].processing = false;
-  }
-  // return result;
-  // else
-  if (tasks.hasOwnProperty(url)) {
-    for (const reject of tasks[url].rejects) {
-      reject(false);
-    }
-  }
-
-  return false;
-}
-
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   const FetchError = new Error('FetchError');
   const now = new Date();
