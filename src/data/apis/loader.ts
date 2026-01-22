@@ -18,31 +18,20 @@ type FetchTasks = { [url: string]: FetchTask };
 const tasks: FetchTasks = {};
 
 const TTL = 10 * 1000;
-
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
-  console.log(0);
   const FetchError = new Error('FetchError');
-  console.log(1);
-
   // Check concurrency
   if (tasks.hasOwnProperty(url)) {
-    console.log(2);
     if (tasks[url].processing) {
-      console.log(3);
       return await new Promise((resolve, reject) => {
-        console.log(4);
         tasks[url].requests.push([resolve, reject, requestID, tag]);
       });
     } else if (tasks[url].cached) {
-      console.log(5);
       if (new Date().getTime() - tasks[url].timestamp <= TTL) {
-        console.log(6);
         return tasks[url].result;
       }
     }
-    console.log(7);
   } else {
-    console.log(8);
     tasks[url] = {
       processing: true,
       requests: [],
@@ -53,42 +42,31 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     };
   }
 
-  console.log(9);
   // Fetch data
   const response = await fetch(url);
   if (!response.ok) {
-    console.log(10);
     setDataReceivingProgress(requestID, tag, 0, true);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-  console.log(11);
 
+  // Read chunks
   const contentLength = parseInt(String(response.headers.get('content-length')));
   const reader = response.body.getReader();
   const chunks = [];
-  console.log(12);
-
-  // Loop to read chunks
   let receivedLength = 0;
   while (true) {
     const { done, value } = await reader.read();
-    console.log(13);
     if (done) {
       break;
     }
     chunks.push(value);
     receivedLength += value.length;
     const progress = receivedLength / contentLength;
-    console.log(14);
     setDataReceivingProgress(requestID, tag, progress, false);
-    console.log(15);
     for (const request of tasks[url].requests) {
-      console.log(16);
       setDataReceivingProgress(request[2], request[3], progress, false);
-      console.log(17);
     }
   }
-  console.log(18);
 
   // Concatenate all the chunks into a single Uint8Array
   const uint8Array = new Uint8Array(receivedLength);
@@ -102,63 +80,54 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   const blob = new Blob([uint8Array], { type: 'application/gzip' });
   const arrayBuffer = await blob.arrayBuffer();
   const inflatedData = await pakoInflate(arrayBuffer);
-  console.log(19);
 
   let result;
   switch (fileType) {
     case 'json':
-      console.log(20);
       if (/^<!doctype html>/.test(inflatedData)) {
         result = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType);
       } else {
         result = JSON.parse(inflatedData);
       }
-      console.log(21);
+
       break;
     case 'xml':
-      console.log(22);
       result = inflatedData;
-      console.log(23);
+
       break;
     default:
       break;
   }
-  console.log(24);
+
   const now = new Date();
 
-  console.log(25);
   await recordDataUsage(contentLength, now);
-  console.log(26);
   if (result) {
-    console.log(27);
     const progress = receivedLength / contentLength;
     let request = tasks[url].requests.shift();
     while (request) {
-      console.log(28);
       request[0](result);
       setDataReceivingProgress(request[2], request[3], progress, false);
       request = tasks[url].requests.shift();
     }
-    console.log(29);
+
     tasks[url].processing = false;
     tasks[url].result = result;
     tasks[url].timestamp = now.getTime() + TTL;
     tasks[url].cached = true;
-    console.log(30);
-    // discardExpiredFetchTasks();
+
+    discardExpiredFetchTasks();
     return result;
   } else {
-    console.log(31);
     let request = tasks[url].requests.shift();
     while (request) {
-      console.log(32);
       request[1](FetchError);
       setDataReceivingProgress(request[2], request[3], 0, true);
       request = tasks[url].requests.shift();
     }
-    console.log(33);
+
     tasks[url].failed = true;
-    // discardExpiredFetchTasks();
+    discardExpiredFetchTasks();
     throw FetchError;
   }
 }
