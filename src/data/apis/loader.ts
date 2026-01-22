@@ -20,7 +20,6 @@ const tasks: FetchTasks = {};
 const TTL = 10 * 1000;
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
-  discardExpiredFetchTasks();
   const FetchError = new Error('FetchError');
 
   // Check concurrency
@@ -114,6 +113,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     tasks[url].result = result;
     tasks[url].timestamp = now + TTL;
     tasks[url].cached = true;
+    discardExpiredFetchTasks();
     return result;
   } else {
     let request = tasks[url].requests.shift();
@@ -123,6 +123,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
       request = tasks[url].requests.shift();
     }
     tasks[url].failed = true;
+    discardExpiredFetchTasks();
     throw FetchError;
   }
 }
