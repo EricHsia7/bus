@@ -36,7 +36,7 @@ async function initializeBusPage(id: number) {
   updateBusPropertiesField(integration.properties, false, playing_animation);
 }
 
-function updateBusField(Field: HTMLElement, integration: object, skeletonScreen: boolean): void {
+function updateBusField(integration: object, skeletonScreen: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisItem: object): void {}
   function updateLocation(thisElement: HTMLElement, thisItem: object): void {}
 }
