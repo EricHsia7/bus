@@ -1,3 +1,4 @@
+import { integratedBus } from '../../data/bus/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { compareThings } from '../../tools/index';
@@ -43,7 +44,7 @@ export function setUpBusPropertiesFieldSkeletonScreen() {
   updateBusPropertiesField(properties, true, playing_animation);
 }
 
-export function updateBusPropertiesField(properties: Array, skeletonScreen: boolean, animation: boolean): void {
+export function updateBusPropertiesField(properties: integratedBus['properties'], skeletonScreen: boolean, animation: boolean): void {
   function updateProperty(thisElement: HTMLElement, thisProperty: object, previousProperty: object): void {
     function updateIcon(thisElement: HTMLElement, thisProperty: object): void {
       const thisPropertyIconElement = elementQuerySelector(thisElement, '.css_bus_property_icon');
