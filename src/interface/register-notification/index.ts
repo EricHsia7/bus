@@ -1,7 +1,7 @@
 import { registerNotificationClient } from '../../data/notification/apis/registerNotificationClient/index';
 import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
-import { isValidURL } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { isValidURL } from '../../tools/index';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 

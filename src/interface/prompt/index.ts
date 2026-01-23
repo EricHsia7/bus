@@ -1,6 +1,6 @@
 import { getSettingOptionValue } from '../../data/settings/index';
-import { booleanToString, generateIdentifier } from '../../tools/index';
 import { documentQuerySelectorAll } from '../../tools/elements';
+import { booleanToString, generateIdentifier } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 

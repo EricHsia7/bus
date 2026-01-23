@@ -1,7 +1,6 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location/details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
-import { generateIdentifier } from '../../tools/index';
 import { getLocation, MergedLocation, MergedLocationItem } from '../apis/getLocation/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
