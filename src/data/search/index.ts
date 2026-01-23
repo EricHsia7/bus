@@ -24,16 +24,15 @@ export async function searchRouteByName(query: string): Promise<Array<Simplified
 export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedRouteItem | false> {
   const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  let found: boolean = false;
   let result = {} as SimplifiedRouteItem;
   const routeKey = `r_${RouteID}`;
-  if (Route.hasOwnProperty(routeKey)) {
-    result = Route[routeKey];
-    found = true;
+  if (!Route.hasOwnProperty(routeKey)) {
+    return false;
   }
+  result = Route[routeKey];
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  return found ? result : false;
+  return result;
 }
 
 export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
