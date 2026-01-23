@@ -50,25 +50,44 @@ export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
 }
 
-function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): BusArrivalTimeDataGroupStats {
-  const statsArray = new Uint32Array(60 * 24); // one day in minutes
-  const dataLength = data.length;
-  for (let i = dataLength - 1; i >= 0; i--) {
-    const item = data[i];
-    let time = 0;
-    let offset = 0;
-    if (item[0] >= 0) {
-      time = item[1] + item[0] * 1000;
-      offset = 1;
-    } else {
-      time = item[1];
-      offset = 0;
-    }
-    const date = new Date(time);
-    const index = date.getHours() * 60 + date.getMinutes();
-    statsArray[index] += offset;
+const getBusArrivalTimeDataStatsWorkerTasks = {};
+let getBusArrivalTimeDataStatsPort;
+
+// Check if SharedWorker is supported, and fall back to Worker if not
+if (typeof SharedWorker !== 'undefined') {
+  const getBusArrivalTimeDataStatsWorker = new SharedWorker(new URL('./getBusArrivalTimeDataStats-worker.ts', import.meta.url)); // Reusable shared worker
+  getBusArrivalTimeDataStatsPort = getBusArrivalTimeDataStatsWorker.port; // Access the port for communication
+  getBusArrivalTimeDataStatsPort.start(); // Start the port (required by some browsers)
+} else {
+  const getBusArrivalTimeDataStatsWorker = new Worker(new URL('./getBusArrivalTimeDataStats-worker.ts', import.meta.url)); // Fallback to standard worker
+  getBusArrivalTimeDataStatsPort = getBusArrivalTimeDataStatsWorker; // Use Worker directly for communication
+}
+
+// Handle messages from the worker
+getBusArrivalTimeDataStatsPort.onmessage = function (e) {
+  const [result, taskID] = e.data;
+  if (getBusArrivalTimeDataStatsWorkerTasks[taskID]) {
+    getBusArrivalTimeDataStatsWorkerTasks[taskID][0](result); // resolve
+    delete getBusArrivalTimeDataStatsWorkerTasks[taskID];
   }
-  return Array.from(statsArray);
+};
+
+// Handle errors
+getBusArrivalTimeDataStatsPort.onerror = function (e) {
+  if (getBusArrivalTimeDataStatsWorkerTasks[taskID]) {
+    getBusArrivalTimeDataStatsWorkerTasks[taskID][1](e.message); // reject
+    delete getBusArrivalTimeDataStatsWorkerTasks[taskID];
+  }
+};
+
+async function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): Promise<BusArrivalTimeDataGroupStats> {
+  const taskID = generateIdentifier();
+
+  const result = await new Promise((resolve, reject) => {
+    getBusArrivalTimeDataStatsWorkerTasks[taskID] = [resolve, reject]; // Store the resolve function for this taskID
+    getBusArrivalTimeDataStatsPort.postMessage([data, taskID]); // Send the task to the worker
+  });
+  return result;
 }
 
 function mergeBusArrivalTimeDataStats(targetStats: BusArrivalTimeDataGroupStats, sourceStats: BusArrivalTimeDataGroupStats): BusArrivalTimeDataGroupStats {
@@ -210,20 +229,20 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
 }
 
 const getBusArrivalTimesWorkerResponses = {};
-let port;
+let getBusArrivalTimesPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
   const getUpdateRateSharedWorker = new SharedWorker(new URL('./getBusArrivalTimes-worker.ts', import.meta.url)); // Reusable shared worker
-  port = getUpdateRateSharedWorker.port; // Access the port for communication
-  port.start(); // Start the port (required by some browsers)
+  getBusArrivalTimesPort = getUpdateRateSharedWorker.port; // Access the port for communication
+  getBusArrivalTimesPort.start(); // Start the port (required by some browsers)
 } else {
   const getUpdateRateWorker = new Worker(new URL('./getBusArrivalTimes-worker.ts', import.meta.url)); // Fallback to standard worker
-  port = getUpdateRateWorker; // Use Worker directly for communication
+  getBusArrivalTimesPort = getUpdateRateWorker; // Use Worker directly for communication
 }
 
 // Handle messages from the worker
-port.onmessage = function (e) {
+getBusArrivalTimesPort.onmessage = function (e) {
   const [result, taskID] = e.data;
   if (getBusArrivalTimesWorkerResponses[taskID]) {
     getBusArrivalTimesWorkerResponses[taskID](result); // Resolve the correct promise
@@ -232,7 +251,7 @@ port.onmessage = function (e) {
 };
 
 // Handle errors
-port.onerror = function (e) {
+getBusArrivalTimesPort.onerror = function (e) {
   console.error(e.message);
 };
 
@@ -244,10 +263,10 @@ export async function getBusArrivalTimes(chartWidth: number, chartHeight: number
 
   const result = await new Promise((resolve, reject) => {
     getBusArrivalTimesWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
-    port.onerror = function (e) {
+    getBusArrivalTimesPort.onerror = function (e) {
       reject(e.message);
     };
-    port.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID]); // Send the task to the worker
+    getBusArrivalTimesPort.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID]); // Send the task to the worker
   });
   return result;
 }
