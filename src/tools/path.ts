@@ -59,13 +59,13 @@ export function segmentsToPath(segments: Segments): string {
   if (segmentsLength1 < 0) {
     return '';
   }
-  const pathCommand = [`M${segments[0][0]},${segments[0][1]}`];
+  const pathCommand = [`M${segments[0][0]} ${segments[0][1]}`];
   for (let i = 1; i < segmentsLength1; i++) {
     const current = segments[i];
     const next = segments[i + 1] || current;
-    pathCommand.push(`Q${current[0]},${current[1]},${(current[0] + next[0]) / 2},${(current[1] + next[1]) / 2}`);
+    pathCommand.push(`Q${current[0]} ${current[1]} ${(current[0] + next[0]) / 2} ${(current[1] + next[1]) / 2}`);
   }
   const lastPoint = segments[segmentsLength1];
-  pathCommand.push(`L${lastPoint[0]},${lastPoint[1]}`);
+  pathCommand.push(`L${lastPoint[0]} ${lastPoint[1]}`);
   return pathCommand.join(' ');
 }
