@@ -372,7 +372,7 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   };
 }
 
-function setUpLocationFieldSkeletonScreen(): void {
+function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -452,7 +452,7 @@ function setUpLocationFieldSkeletonScreen(): void {
       },
       itemQuantity: defaultItemQuantity,
       LocationName: '載入中',
-      hash: 'loading',
+      hash: hash,
       dataUpdateTime: 0
     },
     true,
@@ -712,10 +712,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   }
 
   if (previousIntegration?.hash !== integration.hash) {
-    LocationNameSpanElement.innerText = integration.LocationName;
     LocationButtonRightElement.onclick = function () {
       openLocationDetails(integration.hash);
     };
+  }
+
+  if (previousIntegration?.LocationName !== integration.LocationName) {
+    LocationNameSpanElement.innerText = integration.LocationName;
   }
 
   if (previousAnimation !== animation) {
@@ -915,7 +918,7 @@ export function streamLocation(): void {
     });
 }
 
-export function openLocation(hash: string): void {
+export function openLocation(hash: IntegratedLocation['hash']): void {
   pushPageHistory('Location');
   logRecentView('location', hash);
   currentHashSet_hash = hash;
@@ -924,7 +927,7 @@ export function openLocation(hash: string): void {
   LocationField.setAttribute('displayed', 'true');
   LocationGroupsElement.scrollLeft = 0;
   LocationGroupsElement.focus();
-  setUpLocationFieldSkeletonScreen();
+  setUpLocationFieldSkeletonScreen(hash);
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
     if (!locationRefreshTimer_streamStarted) {
