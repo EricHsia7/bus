@@ -419,7 +419,7 @@ function generateElementOfTab(): GeneratedElement {
   };
 }
 
-function setUpRouteFieldSkeletonScreen(): void {
+function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -468,8 +468,8 @@ function setUpRouteFieldSkeletonScreen(): void {
         RouteDeparture: '載入中',
         RouteDestination: '載入中'
       },
-      RouteID: 0,
-      PathAttributeId: [],
+      RouteID: RouteID,
+      PathAttributeId: PathAttributeId,
       dataUpdateTime: 0
     },
     true,
@@ -895,7 +895,7 @@ export function streamRoute(): void {
     });
 }
 
-export function openRoute(RouteID: number, PathAttributeId: Array<number>): void {
+export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   pushPageHistory('Route');
   logRecentView('route', RouteID);
   currentRouteIDSet_RouteID = RouteID;
@@ -905,7 +905,7 @@ export function openRoute(RouteID: number, PathAttributeId: Array<number>): void
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
-  setUpRouteFieldSkeletonScreen();
+  setUpRouteFieldSkeletonScreen(RouteID, PathAttributeId);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {
@@ -925,7 +925,7 @@ export function closeRoute(): void {
   openPreviousPage();
 }
 
-export function switchRoute(RouteID: number, PathAttributeId: Array<number>): void {
+export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   routeRefreshTimer_streaming = false;
   openRoute(RouteID, PathAttributeId);
 }
