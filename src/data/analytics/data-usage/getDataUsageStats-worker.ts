@@ -43,15 +43,15 @@ function processWorkerTask(data: data): DataUsageStats {
       const x1 = padding + (i / (DataUsagePeriod + 1)) * width;
       const x2 = padding + ((i + (minutesPerDay - 1) / minutesPerDay) / (DataUsagePeriod + 1)) * width;
       const y = padding + height;
-      points.push({ x: x1, y });
-      points.push({ x: x2, y });
+      points.push([x1, y]);
+      points.push([x2, y]);
       continue;
     }
     const data = dataUsageStatsChunk.data;
     for (let j = 0; j < minutesPerDay; j++) {
       const x = padding + ((i + j / minutesPerDay) / (DataUsagePeriod + 1)) * width;
       const y = padding + (1 - data[j] / max) * height;
-      points.push({ x, y });
+      points.push([x, y]);
     }
   }
 
@@ -67,7 +67,7 @@ function processWorkerTask(data: data): DataUsageStats {
 
   // Paths
   const simplifiedPath = simplifyPath(points, 1.1);
-  const pathData = segmentsToPath(simplifiedPath, 1);
+  const pathData = segmentsToPath(simplifiedPath);
   const fillingPathData = `M${padding},${height + padding}${pathData}L${padding + width},${height + padding}L${padding},${height + padding}`;
   const path = `<path d="${pathData}" fill="none" stroke="var(--b-cssvar-main-color)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" opacity="1"></path>`;
   const fillingPath = `<path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)"></path>`;
