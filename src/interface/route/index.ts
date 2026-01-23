@@ -731,10 +731,13 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   if (previousIntegration?.RouteID !== integration.RouteID) {
-    RouteNameSpanElement.innerText = integration.RouteName;
     RouteButtonRightElement.onclick = function () {
       openRouteDetails(integration.RouteID, integration.PathAttributeId);
     };
+  }
+
+  if (previousIntegration?.RouteName !== integration.RouteName) {
+    RouteNameSpanElement.innerText = integration.RouteName;
   }
 
   const currentGroupCapacity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
