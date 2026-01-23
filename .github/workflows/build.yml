@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-get-bus-arrival-time-data-stats-worker
 
 jobs:
   build:

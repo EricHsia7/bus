@@ -17,7 +17,7 @@ const NotificationScheduleManagerBody = elementQuerySelector(NotificationSchedul
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
 let previousIntegration = {} as IntegratedNotificationSchedules;
-let previousAnimation: boolean = true;
+let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 let notifcationScheduleManagerRefreshTimer_retryInterval: number = 10 * 1000;

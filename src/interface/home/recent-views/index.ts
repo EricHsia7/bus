@@ -240,8 +240,6 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
   const itemQuantity = integration.itemQuantity;
 
-  // Field.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-
   const currentItemCapacity = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item').length;
   if (itemQuantity !== currentItemCapacity) {
     const difference = currentItemCapacity - itemQuantity;
