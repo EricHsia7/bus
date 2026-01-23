@@ -50,7 +50,7 @@ export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
 }
 
-const getBusArrivalTimeDataStatsWorkerResponses = {};
+const getBusArrivalTimeDataStatsWorkerTasks = {};
 let getBusArrivalTimeDataStatsPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -66,25 +66,25 @@ if (typeof SharedWorker !== 'undefined') {
 // Handle messages from the worker
 getBusArrivalTimeDataStatsPort.onmessage = function (e) {
   const [result, taskID] = e.data;
-  if (getBusArrivalTimeDataStatsWorkerResponses[taskID]) {
-    getBusArrivalTimeDataStatsWorkerResponses[taskID](result); // Resolve the correct promise
-    delete getBusArrivalTimeDataStatsWorkerResponses[taskID]; // Clean up the response handler
+  if (getBusArrivalTimeDataStatsWorkerTasks[taskID]) {
+    getBusArrivalTimeDataStatsWorkerTasks[taskID][0](result); // resolve
+    delete getBusArrivalTimeDataStatsWorkerTasks[taskID];
   }
 };
 
 // Handle errors
 getBusArrivalTimeDataStatsPort.onerror = function (e) {
-  console.error(e.message);
+  if (getBusArrivalTimeDataStatsWorkerTasks[taskID]) {
+    getBusArrivalTimeDataStatsWorkerTasks[taskID][1](e.message); // reject
+    delete getBusArrivalTimeDataStatsWorkerTasks[taskID];
+  }
 };
 
 async function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): Promise<BusArrivalTimeDataGroupStats> {
   const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
-    getBusArrivalTimeDataStatsWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
-    getBusArrivalTimeDataStatsPort.onerror = function (e) {
-      reject(e.message);
-    };
+    getBusArrivalTimeDataStatsWorkerTasks[taskID] = [resolve, reject]; // Store the resolve function for this taskID
     getBusArrivalTimeDataStatsPort.postMessage([data, taskID]); // Send the task to the worker
   });
   return result;
