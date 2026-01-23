@@ -1,6 +1,6 @@
 import { FolderWithContent, isFolderContentSaved, listFoldersWithContent, saveLocation, saveRoute, saveStop } from '../../data/folder/index';
-import { booleanToString } from '../../tools/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -10,6 +10,9 @@ type SaveToFolderType = 'stop-on-route' | 'stop-on-location' | 'route' | 'route-
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
 const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
 const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
+
+const successfulSaveMessage = '已儲存至資料夾';
+const failedSaveMessage = '無法儲存';
 
 function generateElementOfItem(item: FolderWithContent, type: SaveToFolderType, parameters: Array<any>): GeneratedElement {
   const itemElement = document.createElement('div');
@@ -105,12 +108,12 @@ function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: nu
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
@@ -123,12 +126,12 @@ function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID:
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
@@ -140,12 +143,12 @@ function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
@@ -155,12 +158,12 @@ function saveRouteOnRoute(folderID: string, RouteID: number): void {
     if (e) {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
@@ -170,12 +173,12 @@ function saveLocationOnDetailsPage(folderID: string, hash: string): void {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
         if (k) {
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
@@ -185,12 +188,12 @@ function saveLocationOnRoute(folderID: string, hash: string): void {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
         if (k) {
-          promptMessage('已儲存至資料夾', 'folder');
+          promptMessage(successfulSaveMessage, 'folder');
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage('無法儲存', 'warning');
+      promptMessage(failedSaveMessage, 'warning');
     }
   });
 }
