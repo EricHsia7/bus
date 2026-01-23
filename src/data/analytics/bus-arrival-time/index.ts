@@ -77,7 +77,7 @@ getBusArrivalTimeDataStatsPort.onerror = function (e) {
   console.error(e.message);
 };
 
-function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): BusArrivalTimeDataGroupStats {
+async function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): Promise<BusArrivalTimeDataGroupStats> {
   const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
