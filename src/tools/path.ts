@@ -15,7 +15,7 @@ function distanceToSegment(point: Segment, start: Segment, end: Segment): number
     dx = point[0] - end[0];
     dy = point[1] - end[1];
   } else {
-    const closestPoint = [start.x + t * dx, start.y + t * dy];
+    const closestPoint = [start[0] + t * dx, start[1] + t * dy];
     dx = point[0] - closestPoint[0];
     dy = point[1] - closestPoint[1];
   }
