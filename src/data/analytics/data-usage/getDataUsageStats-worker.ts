@@ -37,6 +37,7 @@ function processWorkerTask(data: data): DataUsageStats {
 
   const points: Segments = [];
   let cumulative = 0;
+  let lastX = 0;
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
     if (dataUsageStatsChunk.stats.sum === 0) {
@@ -45,6 +46,7 @@ function processWorkerTask(data: data): DataUsageStats {
       const y = padding + height;
       points.push([x1, y]);
       points.push([x2, y]);
+      lastX = x2;
       continue;
     }
     const data = dataUsageStatsChunk.data;
@@ -53,6 +55,7 @@ function processWorkerTask(data: data): DataUsageStats {
       const x = padding + ((i + j / minutesPerDay) / (DataUsagePeriod + 1)) * width;
       const y = padding + (1 - cumulative / sum) * height;
       points.push([x, y]);
+      lastX = x;
     }
   }
 
@@ -64,12 +67,12 @@ function processWorkerTask(data: data): DataUsageStats {
 
   // Axis Labels
   const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)">時間</text>`;
-  const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding * 0.7}, ${padding + height / 2})">傳輸量</text>`;
+  const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" fill="var(--b-cssvar-333333)" transform="rotate(-90, ${padding * 0.7}, ${padding + height / 2})">累計傳輸量</text>`;
 
   // Paths
   const simplifiedPath = simplifyPath(points, 1.1);
   const pathData = segmentsToPath(simplifiedPath);
-  const fillingPathData = `M${padding},${height + padding} ${pathData} L${padding + width},${height + padding} L${padding},${height + padding}`;
+  const fillingPathData = `M${padding},${height + padding} ${pathData} L${lastX},${height + padding} L${padding},${height + padding}`;
   const path = `<path d="${pathData}" fill="none" stroke="var(--b-cssvar-main-color)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" opacity="1"></path>`;
   const fillingPath = `<path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)"></path>`;
   const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.3);" /><stop offset="73%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.09);" /><stop offset="100%" style="stop-color:rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0);" /></linearGradient>`;
