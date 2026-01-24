@@ -36,6 +36,7 @@ function processWorkerTask(data: data): DataUsageStats {
   const endDate = createDateObjectFromDate(end[0], end[1], end[2]);
 
   const points: Segments = [];
+  let cumulative = 0;
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
     const sum = dataUsageStatsChunk.stats.sum;
@@ -49,8 +50,9 @@ function processWorkerTask(data: data): DataUsageStats {
     }
     const data = dataUsageStatsChunk.data;
     for (let j = 0; j < minutesPerDay; j++) {
+      cumulative += data[j];
       const x = padding + ((i + j / minutesPerDay) / (DataUsagePeriod + 1)) * width;
-      const y = padding + (1 - data[j] / max) * height;
+      const y = padding + (1 - cumulative / sum) * height;
       points.push([x, y]);
     }
   }
