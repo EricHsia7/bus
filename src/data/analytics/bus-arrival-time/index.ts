@@ -1,5 +1,5 @@
 import { generateIdentifier } from '../../../tools/index';
-import { findGlobalExtremum } from '../../../tools/math';
+import { findGlobalExtrema } from '../../../tools/math';
 import { WeekDayIndex } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
@@ -150,18 +150,18 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const newStats = getBusArrivalTimeDataStats(data);
           const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
           dataGroup.stats = mergedStats;
-          const mergedExtremum = findGlobalExtremum(mergedStats);
-          dataGroup.min = mergedExtremum[0];
-          dataGroup.max = mergedExtremum[1];
+          const mergedExtrema = findGlobalExtrema(mergedStats);
+          dataGroup.min = mergedExtrema[0];
+          dataGroup.max = mergedExtrema[1];
           dataGroup.day = currentDay;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
           const newStats = getBusArrivalTimeDataStats(data);
           dataGroup.stats = newStats;
-          const newExtremum = findGlobalExtremum(newStats);
-          dataGroup.min = newExtremum[0];
-          dataGroup.max = newExtremum[1];
+          const newExtrema = findGlobalExtrema(newStats);
+          dataGroup.min = newExtrema[0];
+          dataGroup.max = newExtrema[1];
           dataGroup.day = currentDay;
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
@@ -193,7 +193,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         const newStats = getBusArrivalTimeDataStats(thisStopData);
         const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
         dataGroup.stats = mergedStats;
-        const newExtremum = findGlobalExtremum(mergedStats);
+        const newExtremum = findGlobalExtrema(mergedStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
         dataGroup.day = existingDataObject.day;
@@ -202,7 +202,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       } else {
         const newStats = getBusArrivalTimeDataStats(thisStopData);
         dataGroup.stats = newStats;
-        const newExtremum = findGlobalExtremum(newStats);
+        const newExtremum = findGlobalExtrema(newStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
         dataGroup.day = currentDay;

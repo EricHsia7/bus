@@ -1,4 +1,4 @@
-import { findGlobalExtremum } from '../../../tools/math';
+import { findGlobalExtrema } from '../../../tools/math';
 import { Segments, segmentsToPath, simplifyPath } from '../../../tools/path';
 import { createDateObjectFromDate } from '../../../tools/time';
 import { DataUsagePeriod, DataUsageStats, DataUsageStatsChunkArray } from './index';
@@ -25,9 +25,9 @@ function processWorkerTask(data: data): DataUsageStats {
     sum += dataUsageStatsChunk.stats.sum;
   }
 
-  const globalExtremum = findGlobalExtremum(extrema);
-  const max = globalExtremum[1] === 0 ? 1 : globalExtremum[1]; // prevent division by zero
-  const min = globalExtremum[0] === 0 ? 1 : globalExtremum[0]; // prevent division by zero
+  const globalExtrema = findGlobalExtrema(extrema);
+  const max = globalExtrema[1];
+  const min = globalExtrema[0];
 
   const start = dataUsageStatsChunks[0].date;
   const end = dataUsageStatsChunks[dataUsageStatsChunksLength - 1].date;
