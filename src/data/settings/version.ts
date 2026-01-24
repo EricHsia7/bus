@@ -50,9 +50,9 @@ export function getHTMLVersionBranchName(): string {
   return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content');
 }
 
-export function getCommitURLOfCurrentVersion(): string {
+export function getTreeURLOfCurrentVersion(): string {
   const currentFullHash = getHTMLVersionFullHash();
-  return `https://github.com/EricHsia7/bus/commit/${currentFullHash}`;
+  return `https://github.com/EricHsia7/bus/tree/${currentFullHash}`;
 }
 
 export function getHTMLVersionTimeStamp(): string {

@@ -3,7 +3,7 @@ import { openFolderManager } from '../../interface/folder-manager/index';
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
 import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
-import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
+import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewSourceCodeOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
 import { openSettingsOptions } from '../../interface/settings/options';
 import { openStorage } from '../../interface/storage/index';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
@@ -525,7 +525,7 @@ let Settings: SettingsObject = {
     icon: 'commit',
     status: '',
     type: 'info',
-    action: viewCommitOfCurrentVersion,
+    action: viewSourceCodeOfCurrentVersion,
     description: ''
   },
   branch: {

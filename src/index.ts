@@ -11,8 +11,7 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus, openBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
-import { closeFolderEditor, saveEditedFolder } from './interface/folder-editor/index';
-import { closeFolderIconSelector, openFolderIconSelector, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
+import { closeFolderIconSelector, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
 import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
@@ -20,7 +19,7 @@ import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './in
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding, openLocation } from './interface/location/index';
-import { cancelNotificationOnNotificationScheduleManager, closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
@@ -29,10 +28,10 @@ import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegi
 import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, switchRoute } from './interface/route/index';
 import { closeSaveToFolder, openSaveToFolder } from './interface/save-to-folder/index';
-import { closeScheduleNotification, openScheduleNotification, scheduleNotificationForStopItemOnLocation, scheduleNotificationForStopItemOnRoute } from './interface/schedule-notification/index';
+import { closeScheduleNotification } from './interface/schedule-notification/index';
 import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
-import { closeSettings, downloadExportFile, openFileToImportData, openSettings, showPromptToAskForPersistentStorage, viewCommitOfCurrentVersion } from './interface/settings/index';
-import { closeSettingsOptions, openSettingsOptions, settingsOptionsHandler } from './interface/settings/options';
+import { closeSettings, openSettings } from './interface/settings/index';
+import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { documentQuerySelector } from './tools/elements';
@@ -324,13 +323,10 @@ window.bus = {
     openSaveToFolder,
     closeSaveToFolder,
     closeFolderManager,
-    closeFolderEditor,
-    openFolderIconSelector,
     closeFolderIconSelector,
     openFolderCreator,
     closeFolderCreator,
-    createFormulatedFolder,
-    saveEditedFolder
+    createFormulatedFolder
   },
   search: {
     openSearch,
@@ -357,13 +353,7 @@ window.bus = {
   settings: {
     openSettings,
     closeSettings,
-    openSettingsOptions,
-    closeSettingsOptions,
-    settingsOptionsHandler,
-    downloadExportFile,
-    openFileToImportData,
-    viewCommitOfCurrentVersion,
-    showPromptToAskForPersistentStorage
+    closeSettingsOptions
   },
   bus: {
     openBus,
@@ -375,11 +365,7 @@ window.bus = {
     openRegisterNotification,
     closeRegisterNotification,
     saveFormulatedRegisterNotification,
-    openScheduleNotification,
-    closeScheduleNotification,
-    scheduleNotificationForStopItemOnRoute,
-    scheduleNotificationForStopItemOnLocation,
-    cancelNotificationOnNotificationScheduleManager
+    closeScheduleNotification
   },
   qrcode: {
     openQRCode,

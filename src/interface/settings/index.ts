@@ -1,7 +1,7 @@
 import { exportData } from '../../data/export/index';
 import { importData } from '../../data/import/index';
 import { listSettings, Setting } from '../../data/settings/index';
-import { getCommitURLOfCurrentVersion } from '../../data/settings/version';
+import { getTreeURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier, releaseFile } from '../../tools/index';
@@ -143,8 +143,8 @@ export function openFileToImportData(): void {
   documentQuerySelector(`body #${identifier}`).click();
 }
 
-export function viewCommitOfCurrentVersion(): void {
-  const url = getCommitURLOfCurrentVersion();
+export function viewSourceCodeOfCurrentVersion(): void {
+  const url = getTreeURLOfCurrentVersion();
   window.open(url);
 }
 
