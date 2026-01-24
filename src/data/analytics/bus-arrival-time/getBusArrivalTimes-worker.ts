@@ -110,12 +110,14 @@ function processWorkerTask(): void {
       // Bars
       let barsPathCommand = '';
       barsPathCommand += `M${chartWidth} ${chartHeight}`;
-      for (let j = statsArrayLength - 1; j >= 0; j--) {
-        const x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
-        const y = (1 - statsArray[j] / statsMax) * chartHeight;
-        barsPathCommand += ` L${x} ${y}`;
-        barsPathCommand += ` L${x - barWidth} ${y}`;
-        barsPathCommand += ` L${x - barWidth} ${chartHeight}`;
+      if (statsMax !== 0) {
+        for (let j = statsArrayLength - 1; j >= 0; j--) {
+          const x = ((j + 1) / statsArrayLength) * chartWidth; // Shift right for correct alignment
+          const y = (1 - statsArray[j] / statsMax) * chartHeight;
+          barsPathCommand += ` L${x} ${y}`;
+          barsPathCommand += ` L${x - barWidth} ${y}`;
+          barsPathCommand += ` L${x - barWidth} ${chartHeight}`;
+        }
       }
       barsPathCommand += ' Z';
       const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
