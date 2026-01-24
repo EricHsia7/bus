@@ -18,15 +18,14 @@ function processWorkerTask(data: data): DataUsageStats {
 
   const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
 
-  const extremum: Array<number> = [];
+  const extrema: Array<number> = [];
   let sum: number = 0;
   for (const dataUsageStatsChunk of dataUsageStatsChunks) {
-    extremum.push(dataUsageStatsChunk.stats.max);
-    extremum.push(dataUsageStatsChunk.stats.min);
+    extrema.push(dataUsageStatsChunk.stats.max, dataUsageStatsChunk.stats.min);
     sum += dataUsageStatsChunk.stats.sum;
   }
 
-  const globalExtremum = findGlobalExtremum(extremum);
+  const globalExtremum = findGlobalExtremum(extrema);
   const max = globalExtremum[1] === 0 ? 1 : globalExtremum[1]; // prevent division by zero
   const min = globalExtremum[0] === 0 ? 1 : globalExtremum[0]; // prevent division by zero
 
