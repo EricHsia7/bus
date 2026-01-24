@@ -232,12 +232,6 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     }
   }
 
-  /*
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  */
-
   const itemQuantity = integration.itemQuantity;
 
   const currentItemCapacity = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item').length;
