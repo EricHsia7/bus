@@ -1,5 +1,5 @@
 import { convertBytes } from '../../tools/convert';
-import { getStoreKey, getStoresLength, lfGetItem, lfListItemKeys } from '../storage/index';
+import { getStoresLength, lfGetItem, lfListItemKeys } from '../storage/index';
 
 interface StoreCategory {
   name: string;
@@ -26,71 +26,22 @@ export interface StoreSizeStatistics {
 }
 
 function storeIndexToCategory(store: number): StoreCategory {
-  const storeKey = getStoreKey(store);
-  let name = '';
-  let key = '';
-  switch (storeKey) {
-    case 'cacheStore':
-      name = '快取';
-      key = 'cache';
-      break;
-    case 'settingsStore':
-      name = '設定';
-      key = 'settings';
-      break;
-    case 'dataUsageStatsStore':
-      name = '分析';
-      key = 'analytics';
-      break;
-    case 'updateRateDataStore':
-      name = '分析';
-      key = 'analytics';
-      break;
-    case 'updateRateDataWriteAheadLogStore':
-      name = '分析';
-      key = 'analytics';
-      break;
-    case 'busArrivalTimeDataWriteAheadLogStore':
-      name = '分析';
-      key = 'analytics';
-      break;
-    case 'busArrivalTimeDataStore':
-      name = '分析';
-      key = 'analytics';
-      break;
-    case 'personalScheduleStore':
-      name = '個人化行程';
-      key = 'personalSchedule';
-      break;
-    case 'recentViewsStore':
-      name = '最近檢視';
-      key = 'recentViews';
-      break;
-    case 'folderListStore':
-      name = '資料夾';
-      key = 'folders';
-      break;
-    case 'folderContentIndexStore':
-      name = '資料夾';
-      key = 'folders';
-      break;
-    case 'folderContentStore':
-      name = '資料夾';
-      key = 'folders';
-      break;
-    case 'notificationStore':
-      name = '通知';
-      key = 'notification';
-      break;
-    case 'notificationScheduleStore':
-      name = '通知';
-      key = 'notification';
-      break;
-    default:
-      name = '其他';
-      key = 'others';
-      break;
-  }
+  const [name, key] = [
+    ['快取', 'cache'],
+    ['設定', 'settings'],
+    ['分析', 'analytics'],
+    ['分析', 'analytics'],
+    ['分析', 'analytics'],
+    ['分析', 'analytics'],
+    ['分析', 'analytics'],
+    ['個人化行程', 'personalSchedule'],
+    ['最近檢視', 'recentViews'],
+    ['通知', 'notification'],
+    ['通知', 'notification'],
+    ['資料夾', 'folders'],
+    ['資料夾', 'folders'],
+    ['資料夾', 'folders']
+  ][store] || ['其他', 'others'];
   const result = {
     name,
     key
