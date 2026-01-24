@@ -28,7 +28,7 @@ if ('onconnect' in self) {
   };
 }
 
-function processWorkerTask(): BusArrivalTimeDataGroupStats {
+function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
   
   isProcessing = true;
