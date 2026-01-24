@@ -36,8 +36,8 @@ function processWorkerTask(data: data): DataUsageStats {
   const endDate = createDateObjectFromDate(end[0], end[1], end[2]);
 
   const points: Segments = [];
-  let cumulative = 0;
-  let lastX = 0;
+  let cumulative: number = 0;
+  let lastX: number = 0;
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
     if (dataUsageStatsChunk.stats.sum === 0) {
