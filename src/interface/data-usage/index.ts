@@ -9,6 +9,8 @@ const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usa
 const chartElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_chart');
 const statisticsElement = elementQuerySelector(dataUsageBodyElement, '.css_data_usage_statistics');
 const totalDataUsageElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="total-data-usage"] .css_data_usage_statistics_item_value');
+const maxDataUsagePerMinuteElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="max-data-usage-per-minute"] .css_data_usage_statistics_item_value');
+const minDataUsagePerMinuteElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="min-data-usage-per-minute"] .css_data_usage_statistics_item_value');
 const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="start-time"] .css_data_usage_statistics_item_value');
 const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
 
@@ -18,6 +20,8 @@ async function initializeDataUsage() {
   const graphHeight = Math.min((5 / 18) * graphWidth, WindowSize.height * 0.33);
   const stats = await getDataUsageStats(graphWidth, graphHeight, 20);
   totalDataUsageElement.innerText = convertBytes(stats.stats.sum);
+  maxDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.max);
+  minDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.min);
   startTimeElement.innerText = dateToString(stats.period.start, 'YYYY-MM-DD');
   endTimeElement.innerText = dateToString(stats.period.end, 'YYYY-MM-DD');
   chartElement.innerHTML = stats.chart;
