@@ -39,8 +39,7 @@ function processWorkerTask(data: data): DataUsageStats {
   let cumulative = 0;
   for (let i = 0; i < dataUsageStatsChunksLength; i++) {
     const dataUsageStatsChunk = dataUsageStatsChunks[i];
-    const sum = dataUsageStatsChunk.stats.sum;
-    if (sum === 0) {
+    if (dataUsageStatsChunk.stats.sum === 0) {
       const x1 = padding + (i / (DataUsagePeriod + 1)) * width;
       const x2 = padding + ((i + (minutesPerDay - 1) / minutesPerDay) / (DataUsagePeriod + 1)) * width;
       const y = padding + height;
