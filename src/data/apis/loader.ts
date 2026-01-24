@@ -228,13 +228,13 @@ export type DataUpdateTime = { [key: string]: number };
 
 export const dataUpdateTime: DataUpdateTime = {};
 
-export function setDataUpdateTime(requestID: string, timeStamp: string | number): void {
+export function setDataUpdateTime(requestID: string, timestamp: string | number): void {
   if (!dataUpdateTime.hasOwnProperty(requestID)) {
     dataUpdateTime[requestID] = 0;
   }
   let timeNumber = 0;
-  if (typeof timeStamp === 'string') {
-    timeNumber = timeStampToNumber(timeStamp);
+  if (typeof timestamp === 'string') {
+    timeNumber = timeStampToNumber(timestamp);
   }
   if (timeNumber > dataUpdateTime[requestID]) {
     dataUpdateTime[requestID] = timeNumber;
