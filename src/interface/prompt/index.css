@@ -112,6 +112,7 @@
   text-decoration: underline;
   word-break: keep-all;
   white-space: nowrap;
+  text-align: right;
   display: flex;
   align-items: center;
   overflow: hidden;
