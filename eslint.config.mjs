@@ -7,7 +7,6 @@ export default defineConfig(
   tseslint.configs.recommended,
   {
     rules: {
-      // --- Original Rules ---
       'no-const-assign': 'warn',
 
       // Object Methods

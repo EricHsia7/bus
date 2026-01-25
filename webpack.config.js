@@ -79,7 +79,7 @@ module.exports = (env, argv) => {
         enabled: true
       }),
       new ESLintPlugin({
-        extensions: ['js', 'jsx', 'ts', 'tsx'], // Adjust based on your project
+        extensions: ['js', 'jsx', 'ts', 'tsx'],
         failOnError: false
       }),
       new BundleAnalyzerPlugin({
