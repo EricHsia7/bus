@@ -113,7 +113,6 @@
   word-break: keep-all;
   white-space: nowrap;
   text-align: right;
-  display: flex;
-  align-items: center;
+  line-height: 45px;
   overflow: hidden;
 }
