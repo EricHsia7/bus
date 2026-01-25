@@ -37,14 +37,15 @@ export function promptMessage(icon: MaterialSymbols, message: string, button: Pr
     if (typeof button.action === 'function') {
       const promptButtonElement = document.createElement('div');
       promptButtonElement.classList.add('css_prompt_button');
-      promptMessageElement.innerText = button.text;
-      promptMessageElement.addEventListener(
+      promptButtonElement.innerText = button.text;
+      promptButtonElement.addEventListener(
         'click',
         function () {
           button.action();
         },
         { once: true }
       );
+      promptElement.appendChild(promptButtonElement);
     }
   }
 

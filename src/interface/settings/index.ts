@@ -86,6 +86,7 @@ export function closeSettings(): void {
 }
 
 export async function downloadExportFile() {
+  promptMessage('manufacturing', '資料匯出中');
   const content = await exportData();
   releaseFile(content, 'application/json', 'bus-export.json');
 }
