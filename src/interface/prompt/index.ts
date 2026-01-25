@@ -33,7 +33,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, button: Pr
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
 
-  if (button !== null) {
+  if (typeof button === 'object' && button !== null && button !== undefined) {
     if (typeof button.action === 'function') {
       const promptButtonElement = document.createElement('div');
       promptButtonElement.classList.add('css_prompt_button');
