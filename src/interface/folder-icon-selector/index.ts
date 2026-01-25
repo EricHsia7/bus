@@ -97,7 +97,7 @@ export function openFolderIconSelector(target: Target): void {
     initializeFolderIconSelectorField(currentTarget);
     prepareForMaterialSymbolsSearch();
   } else {
-    promptMessage('資料還在下載中', 'download_for_offline');
+    promptMessage('download_for_offline', '資料還在下載中');
   }
 }
 

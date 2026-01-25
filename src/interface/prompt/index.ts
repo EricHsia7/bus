@@ -4,7 +4,7 @@ import { booleanToString, generateIdentifier } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(message: string, icon: MaterialSymbols): void {
+export function promptMessage(icon: MaterialSymbols, message: string): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (allPromptElements !== null) {
     for (const promptElement of allPromptElements) {

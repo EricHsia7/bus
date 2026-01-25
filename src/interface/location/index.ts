@@ -908,7 +908,7 @@ export function streamLocation(): void {
     .catch((err) => {
       console.error(err);
       if (locationRefreshTimer_streaming) {
-        promptMessage(`地點網路連線中斷，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`, 'error');
+        promptMessage('error', `地點網路連線中斷，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`);
         setTimeout(function () {
           streamLocation();
         }, locationRefreshTimer_retryInterval);

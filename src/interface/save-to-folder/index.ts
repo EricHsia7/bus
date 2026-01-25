@@ -108,12 +108,12 @@ function saveStopItemOnRoute(itemElementID: string, folderID: string, StopID: nu
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }
@@ -126,12 +126,12 @@ function saveStopItemOnLocation(itemElementID: string, folderID: string, StopID:
       isFolderContentSaved('stop', StopID).then((k) => {
         if (k) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(k));
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }
@@ -143,12 +143,12 @@ function saveRouteOnDetailsPage(folderID: string, RouteID: number): void {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
           actionButtonElement.setAttribute('highlighted', 'true');
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }
@@ -158,12 +158,12 @@ function saveRouteOnRoute(folderID: string, RouteID: number): void {
     if (e) {
       isFolderContentSaved('route', RouteID).then((k) => {
         if (k) {
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }
@@ -173,12 +173,12 @@ function saveLocationOnDetailsPage(folderID: string, hash: string): void {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
         if (k) {
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }
@@ -188,12 +188,12 @@ function saveLocationOnRoute(folderID: string, hash: string): void {
     if (e) {
       isFolderContentSaved('location', hash).then((k) => {
         if (k) {
-          promptMessage(successfulSaveMessage, 'folder');
+          promptMessage('folder', successfulSaveMessage);
           closeSaveToFolder();
         }
       });
     } else {
-      promptMessage(failedSaveMessage, 'warning');
+      promptMessage('warning', failedSaveMessage);
     }
   });
 }

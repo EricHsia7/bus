@@ -31,21 +31,21 @@ export function closeRegisterNotification(): void {
 }
 
 export async function saveFormulatedRegisterNotification() {
-  promptMessage('處理中', 'manufacturing');
+  promptMessage('manufacturing', '處理中');
   const provider = ProviderInputElement.value;
   const registrationKey = RgistrationKeyInputElement.value;
   if (!isValidURL(provider)) {
-    promptMessage('無效的提供者', 'error');
+    promptMessage('error', '無效的提供者');
     return;
   }
   // register
   setNotificationProvider(provider);
   const registering = await registerNotificationClient(registrationKey);
   if (registering) {
-    promptMessage('註冊成功', 'check_circle');
+    promptMessage('check_circle', '註冊成功');
     return;
   } else {
-    promptMessage('註冊失敗', 'error');
+    promptMessage('error', '註冊失敗');
     return;
   }
 }

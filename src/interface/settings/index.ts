@@ -117,9 +117,9 @@ export function openFileToImportData(): void {
           // Import the data
           importData(fileTextContent).then((f) => {
             if (f) {
-              promptMessage('已匯入資料', 'check_circle');
+              promptMessage('check_circle', '已匯入資料');
             } else {
-              promptMessage('無法匯入資料', 'error');
+              promptMessage('error', '無法匯入資料');
             }
             documentQuerySelector(`body #${identifier}`).remove();
           });
@@ -157,16 +157,16 @@ export function showPromptToAskForPersistentStorage(): void {
   askForPersistentStorage().then((e) => {
     switch (e) {
       case 'granted':
-        promptMessage('已開啟永久儲存', 'check_circle');
+        promptMessage('check_circle', '已開啟永久儲存');
         break;
       case 'denied':
-        promptMessage('永久儲存權限已被拒絕', 'cancel');
+        promptMessage('cancel', '永久儲存權限已被拒絕');
         break;
       case 'unsupported':
-        promptMessage('此瀏覽器不支援永久儲存', 'warning');
+        promptMessage('warning', '此瀏覽器不支援永久儲存');
         break;
       default:
-        promptMessage('發生錯誤', 'error');
+        promptMessage('error', '發生錯誤');
         break;
     }
   });
