@@ -1,3 +1,5 @@
+import { promptMessage } from '../interface/prompt/index';
+
 export const md5 = require('md5');
 export const { sha512 } = require('js-sha512');
 
@@ -70,6 +72,20 @@ export function getNoCacheParameter(interval: number): string {
   return string;
 }
 
+export function downloadBlobFile(blob: Blob, fileName: string, timeout: number = 32 * 1000): string {
+  const blobURL = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = blobURL;
+  downloadLink.download = fileName;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  setTimeout(() => {
+    URL.revokeObjectURL(blobURL);
+  }, timeout);
+  return blobURL;
+}
+
 export function releaseFile(content: string, type: string = 'application/json', fileName: string): void {
   const blob = new Blob([content], { type: type });
   const fileObj = new File([blob], fileName, { type: type });
@@ -78,18 +94,16 @@ export function releaseFile(content: string, type: string = 'application/json', 
       .share({
         files: [fileObj]
       })
-      .catch((error) => {});
+      .catch((error) => {
+        promptMessage('download', '下載資料', {
+          text: '下載',
+          action: function () {
+            downloadBlobFile(blob, fileName);
+          }
+        });
+      });
   } else {
-    const blobURL = URL.createObjectURL(blob);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = blobURL;
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    downloadLink.remove();
-    setTimeout(() => {
-      URL.revokeObjectURL(blobURL);
-    }, 10 * 1000);
+    downloadBlobFile(blob, fileName);
   }
 }
 

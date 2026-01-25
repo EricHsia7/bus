@@ -196,10 +196,10 @@ export async function shareLocationPermalink(hash: string) {
           url: link
         })
         .then(() => {
-          promptMessage('已分享地點', 'check_circle');
+          promptMessage('check_circle', '已分享地點');
         })
         .catch((e) => {
-          promptMessage('已取消分享', 'cancel');
+          promptMessage('cancel', '已取消分享');
           console.error(e);
         });
     }

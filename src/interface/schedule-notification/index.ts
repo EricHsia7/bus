@@ -75,22 +75,22 @@ export function closeScheduleNotification(): void {
 export function scheduleNotificationForStopItemOnRoute(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
   const itemElement = documentQuerySelector(`.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
   const scheduleNotificationButtonElement = elementQuerySelector(itemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
-  promptMessage('處理中', 'manufacturing');
+  promptMessage('manufacturing', '處理中');
   scheduleNotificationButtonElement.setAttribute('enabled', 'false');
   closeScheduleNotification();
   scheduleNotificationForStop(StopID, RouteID, EstimateTime, index).then((result) => {
     switch (result) {
       case 0:
-        promptMessage('設定失敗', 'error');
+        promptMessage('error', '設定失敗');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       case 1:
-        promptMessage('設定成功', 'check_circle');
+        promptMessage('check_circle', '設定成功');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         scheduleNotificationButtonElement.setAttribute('highlighted', 'true');
         break;
       case 2:
-        promptMessage('在設定中註冊後才可設定到站通知', 'warning');
+        promptMessage('warning', '在設定中註冊後才可設定到站通知');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       default:
@@ -102,22 +102,22 @@ export function scheduleNotificationForStopItemOnRoute(itemElementID: string, St
 export function scheduleNotificationForStopItemOnLocation(itemElementID: string, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
   const itemElement = documentQuerySelector(`.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
   const scheduleNotificationButtonElement = elementQuerySelector(itemElement, '.css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[type="schedule-notification"]');
-  promptMessage('處理中', 'manufacturing');
+  promptMessage('manufacturing', '處理中');
   scheduleNotificationButtonElement.setAttribute('enabled', 'false');
   closeScheduleNotification();
   scheduleNotificationForStop(StopID, RouteID, EstimateTime, index).then((result) => {
     switch (result) {
       case 0:
-        promptMessage('設定失敗', 'error');
+        promptMessage('error', '設定失敗');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       case 1:
-        promptMessage('設定成功', 'check_circle');
+        promptMessage('check_circle', '設定成功');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         scheduleNotificationButtonElement.setAttribute('highlighted', 'true');
         break;
       case 2:
-        promptMessage('在設定中註冊後才可設定到站通知', 'warning');
+        promptMessage('warning', '在設定中註冊後才可設定到站通知');
         scheduleNotificationButtonElement.setAttribute('enabled', 'true');
         break;
       default:

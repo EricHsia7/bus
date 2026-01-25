@@ -333,18 +333,18 @@ export function closeNotificationScheduleManager(): void {
 }
 
 export async function cancelNotificationOnNotificationScheduleManager(identifier: string, schedule_id: NotificationSchedule['schedule_id']) {
-  promptMessage('處理中', 'manufacturing');
+  promptMessage('manufacturing', '處理中');
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
     const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_item#${identifier}`);
     itemElement.remove();
-    promptMessage('已取消通知', 'check_circle');
+    promptMessage('check_circle', '已取消通知');
     if (!notifcationScheduleManagerRefreshTimer_refreshing) {
       const playing_animation = getSettingOptionValue('playing_animation') as boolean;
       const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
       updateNotificationScheduleManagerField(integration, false, playing_animation);
     }
   } else {
-    promptMessage('取消失敗', 'error');
+    promptMessage('error', '取消失敗');
   }
 }

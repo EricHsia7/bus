@@ -21,9 +21,9 @@ export function createFormulatedFolder(): void {
   createFolder(name, icon).then((e) => {
     if (e) {
       closeFolderCreator();
-      promptMessage('已建立資料夾', 'folder');
+      promptMessage('folder', '已建立資料夾');
     } else {
-      promptMessage('無法建立資料夾', 'error');
+      promptMessage('error', '無法建立資料夾');
     }
   });
 }
