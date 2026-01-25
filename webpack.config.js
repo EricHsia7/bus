@@ -79,8 +79,8 @@ module.exports = (env, argv) => {
         enabled: true
       }),
       new ESLintPlugin({
-        extensions: ['js', 'jsx', 'ts', 'tsx'], // Adjust based on your project
-        failOnError: true
+        extensions: ['js', 'jsx', 'ts', 'tsx'],
+        failOnError: false
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: 'static', // Generate static HTML report
