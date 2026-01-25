@@ -90,10 +90,26 @@
   position: absolute;
   top: 0px;
   left: 45px;
-  width: calc(100% - 45px);
+  width: calc(100% - 45px - 90px);
   height: 45px;
   color: var(--b-cssvar-333333);
   font-size: 17px;
+  word-break: keep-all;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.css_prompt .css_prompt_button {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  width: calc(90px - 15px);
+  height: 45px;
+  color: var(--b-cssvar-main-color);
+  font-size: 17px;
+  text-decoration: underline;
   word-break: keep-all;
   white-space: nowrap;
   display: flex;

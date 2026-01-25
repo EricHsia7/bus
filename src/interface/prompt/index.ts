@@ -1,10 +1,15 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelectorAll } from '../../tools/elements';
-import { booleanToString, generateIdentifier } from '../../tools/index';
+import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
-export function promptMessage(icon: MaterialSymbols, message: string): void {
+export interface PromptButton {
+  text: string;
+  action: Function;
+}
+
+export function promptMessage(icon: MaterialSymbols, message: string, button: PromptButton | null): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (allPromptElements !== null) {
     for (const promptElement of allPromptElements) {
@@ -14,10 +19,7 @@ export function promptMessage(icon: MaterialSymbols, message: string): void {
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
-  const promptID: string = generateIdentifier();
-
   const promptElement = document.createElement('div');
-  promptElement.id = promptID;
   promptElement.classList.add('css_prompt');
   promptElement.setAttribute('animation', booleanToString(playing_animation));
 
@@ -31,16 +33,30 @@ export function promptMessage(icon: MaterialSymbols, message: string): void {
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
 
-  document.body.appendChild(promptElement);
-
-  const promptElementInstance = document.getElementById(promptID);
-  if (promptElementInstance !== null) {
-    promptElementInstance.addEventListener(
-      'animationend',
-      function () {
-        promptElementInstance.remove();
-      },
-      { once: true }
-    );
+  if (button !== null) {
+    if (typeof button.action === 'function') {
+      const promptButtonElement = document.createElement('div');
+      promptButtonElement.classList.add('css_prompt_button');
+      promptMessageElement.innerText = button.text;
+      promptMessageElement.addEventListener(
+        'click',
+        function () {
+          button.action();
+        },
+        { once: true }
+      );
+    }
   }
+
+  promptElement.addEventListener(
+    'animationend',
+    function (event) {
+      if (event?.target) {
+        event.target.remove();
+      }
+    },
+    { once: true }
+  );
+
+  document.body.appendChild(promptElement);
 }

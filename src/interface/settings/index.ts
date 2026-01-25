@@ -85,9 +85,9 @@ export function closeSettings(): void {
   SettingsField.setAttribute('displayed', 'false');
 }
 
-export async function downloadExportFile() {
-  const exportedData = await exportData();
-  releaseFile(exportedData, 'application/json', 'bus-export.json');
+export function downloadExportFile(): void {
+  const content = await exportData();
+  releaseFile(content, 'application/json', 'bus-export.json');
 }
 
 export function openFileToImportData(): void {
