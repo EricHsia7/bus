@@ -387,29 +387,29 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
               updateContext(thisElement, thisItem);
               updateButton(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.name, thisItem.name)) {
+            if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
             }
-            if (thisItem.status.code !== previousItem.status.code || !compareThings(previousItem.status.text, thisItem.status.text)) {
+            if (previousItem.status.time !== thisItem.status.time) {
               updateStatus(thisElement, thisItem, animation);
             }
             break;
           case 'route':
-            if (!compareThings(previousItem.id, thisItem.id)) {
+            if (previousItem.id !== thisItem.id) {
               updateButton(thisElement, thisItem);
             }
             if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
               updateContext(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.name, thisItem.name)) {
+            if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
             }
             break;
           case 'location':
-            if (!compareThings(previousItem.id, thisItem.id)) {
+            if (previousItem.id !== thisItem.id) {
               updateButton(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.name, thisItem.name)) {
+            if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
             }
             /*
@@ -419,12 +419,14 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             */
             break;
           case 'bus':
+            /*
             if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
               updateContext(thisElement, thisItem);
             }
             if (!compareThings(previousItem.busID, thisItem.busID)) {
               updateMain(thisElement, thisItem);
             }
+            */
             break;
           case 'empty':
             if (thisItem.type !== previousItem.type) {
