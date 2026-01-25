@@ -29,21 +29,9 @@ jobs:
           key: dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
           restore-keys: |
             dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
-      
-      - name: Snapshot before
-        run: |
-          echo "node_modules_hash=${{ hashFiles('./node_modules') }}"
-          echo "package_lock_hash=${{ hashFiles('package-lock.json') }}"
-          cp -r ./node_modules ./node_modules_before
 
       - name: Install dependencies
         run: npm install
-      
-      - name: Calculate hashes
-        run: |
-          echo "node_modules_hash=${{ hashFiles('./node_modules') }}"
-          echo "package_lock_hash=${{ hashFiles('package-lock.json') }}"
-          diff -r ./node_modules_before ./node_modules
 
       - name: Cache dependencies
         id: cache-dependencies
