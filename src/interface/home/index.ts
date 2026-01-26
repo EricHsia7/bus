@@ -50,3 +50,13 @@ export async function downloadData() {
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }
+
+export function openHome(): void {
+  pushPageHistory('QRCode');
+  HomeField.setAttribute('displayed', 'true');
+}
+
+export function closeHome(): void {
+  revokePageHistory('Home');
+  HomeField.setAttribute('displayed', 'false');
+}

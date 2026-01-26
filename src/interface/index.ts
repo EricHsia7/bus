@@ -4,6 +4,7 @@ import { closeBus, openBus } from './bus/index';
 import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
 import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
 import { closeFolderManager, openFolderManager } from './folder-manager/index';
+import { closeHome, openHome } from './home/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
 import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
 import { closeRegisterNotification, openRegisterNotification } from './register-notification/index';
@@ -43,6 +44,7 @@ export function closePreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
+        closeHome();
         break;
       case 'FolderCreator':
         closeFolderCreator();
@@ -108,6 +110,7 @@ export function openPreviousPage(): void {
     pageHistory.pop();
     switch (previousPage) {
       case 'Home':
+        openHome();
         break;
       case 'FolderCreator':
         openFolderCreator();
