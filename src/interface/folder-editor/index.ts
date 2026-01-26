@@ -226,6 +226,7 @@ export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], t
 export function saveEditedFolder(folderID: string): void {
   const name = NameInputElement.value;
   const icon = IconInputElement.value;
-  updateFolder(folderID, name, icon);
-  closeFolderEditor();
+  updateFolder(folderID, name, icon).then(function () {
+    closeFolderEditor();
+  });
 }
