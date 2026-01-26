@@ -112,7 +112,7 @@ module.exports = (env, argv) => {
             loader: 'babel-loader',
             options: {
               presets: [['@babel/preset-env', { exclude: ['@babel/plugin-transform-regenerator', '@babel/plugin-transform-template-literals'] }], '@babel/preset-flow', 'babel-preset-modules', '@babel/preset-typescript'],
-              plugins: ['@babel/plugin-syntax-flow', /*'@babel/plugin-transform-runtime'*/]
+              plugins: ['@babel/plugin-syntax-flow', '@babel/plugin-transform-runtime']
             }
           }
         },

@@ -12,6 +12,7 @@
   "bugs": {
     "url": "https://github.com/erichsia7/bus/issues"
   },
+  "sideEffects": false,
   "homepage": "https://erichsia7.github.io/bus/",
   "devDependencies": {
     "@babel/core": "7.28.6",
