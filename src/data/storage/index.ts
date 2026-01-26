@@ -1,3 +1,5 @@
+import { generateIdentifier } from '../../tools/index';
+
 const localforage = require('localforage');
 
 let storage = {
@@ -30,7 +32,11 @@ async function dropInstance(store: number): Promise<any> {
   return operation;
 }
 
-export async function lfSetItem(store: number, key: string, value: any): Promise<any> {
+const lfSetItemTasks = [];
+let lfSetItemProcessing: boolean = false;
+
+async function processSetItemTask() {
+  const [store, key, value, resolve, reject] = lfSetItemTasks.shift();
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
@@ -39,12 +45,23 @@ export async function lfSetItem(store: number, key: string, value: any): Promise
       });
     }
     const operation = await storage[storeKey].setItem(key, value);
-    return operation;
-  } catch (err) {
-    console.error(err);
+    lfSetItemProcessing = false;
+    resolve(operation);
+    processSetItemTask();
+  } catch (e) {
+    console.error(e);
+    lfSetItemProcessing = false;
     // await dropInstance(store);
-    return null;
+    reject(e.message);
+    processSetItemTask();
   }
+}
+
+export async function lfSetItem(store: number, key: string, value: any) {
+  return new Promise((resolve, reject) => {
+    lfSetItemTasks.push([store, key, value, resolve, reject]);
+    processSetItemTask();
+  });
 }
 
 export async function lfGetItem(store: number, key: string): Promise<any> {
