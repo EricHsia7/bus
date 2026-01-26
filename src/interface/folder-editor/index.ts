@@ -226,7 +226,12 @@ export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], t
 export function saveEditedFolder(folderID: string): void {
   const name = NameInputElement.value;
   const icon = IconInputElement.value;
-  updateFolder(folderID, name, icon).then(function () {
-    closeFolderEditor();
+  updateFolder(folderID, name, icon).then(function (e) {
+    if (e) {
+      closeFolderEditor();
+      promptMessage('check_circle', '已儲存變更');
+    } else {
+      promptMessage('error', '無法儲存');
+    }
   });
 }
