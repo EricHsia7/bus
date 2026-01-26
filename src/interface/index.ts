@@ -105,7 +105,7 @@ export function closePreviousPage(): void {
 
 export function openPreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
-  if (pageHistoryLength > 1) {
+  if (pageHistoryLength >= 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
     pageHistory.pop();
     switch (previousPage) {
