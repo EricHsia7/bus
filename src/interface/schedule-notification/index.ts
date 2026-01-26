@@ -56,7 +56,7 @@ function initializeScheduleNotificationField(type: ScheduleNotificationType, par
   const fragment = new DocumentFragment();
   for (const item of scheduleNotificationOptions) {
     const newElement = generateElementOfItem(item, type, parameters);
-    fragment.append(newElement.element);
+    fragment.appendChild(newElement.element);
   }
   ScheduleNotificationListElement.append(fragment);
 }
