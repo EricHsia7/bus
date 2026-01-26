@@ -1,9 +1,9 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { generateLabelFromAddresses } from '../../tools/address';
-import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
+// import { generateLabelFromAddresses } from '../../tools/address';
+// import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateIdentifier } from '../../tools/index';
-import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { normalizeVector } from '../../tools/math';
+// import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
+// import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
@@ -259,7 +259,7 @@ export async function listAllFolderContent(types: Array<FolderContent['type']>):
   if (typeof types !== 'object' || !Array.isArray(types)) {
     useFilter = false;
   }
-  let result: Array<FolderContent> = [];
+  const result: Array<FolderContent> = [];
   const keys = await lfListItemKeys(13);
   for (const key of keys) {
     const json = await lfGetItem(13, key);
@@ -334,11 +334,11 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
         .filter((m) => {
           return m.type === 'stop' ? true : false;
         })
-        .map((e) => e.id)
+        .map((e) => e.id as number)
     );
   }
 
-  let batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
+  const batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
   for (const EstimateTimeItem of EstimateTime) {
     if (StopIDs.indexOf(EstimateTimeItem.StopID) > -1) {
       const thisStopKey: string = `s_${EstimateTimeItem.StopID}`;
@@ -346,7 +346,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
     }
   }
 
-  let folders: integratedFolders['folders'] = [];
+  const folders: integratedFolders['folders'] = [];
 
   for (const folderWithContent2 of foldersWithContent) {
     // Initialize integratedFolder
@@ -359,8 +359,8 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
       contentLength: folderWithContent2.contentLength
     };
 
-    for (let item of folderWithContent2.content) {
-      let integratedItem = item as integratedFolderContent;
+    for (const item of folderWithContent2.content) {
+      const integratedItem = item as integratedFolderContent;
       switch (integratedItem.type) {
         case 'stop': {
           const thisStopKey = `s_${integratedItem.id}`;

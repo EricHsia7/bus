@@ -6,7 +6,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(CarInfo: CarInfo): SimplifiedCarInfo {
-  let result: SimplifiedCarInfo = {};
+  const result: SimplifiedCarInfo = {};
   for (const item of CarInfo) {
     const simplifiedItem: SimplifiedCarInfoItem = {};
     simplifiedItem.BusId = item.BusId;

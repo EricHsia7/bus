@@ -12,7 +12,7 @@ function processWorkerTask(xml: string): SegmentBuffers {
 
   const lines = xml.split(/\n/m);
 
-  let result = [];
+  const result = [];
   let resultLastIndex = -1;
   let bufferZoneLastIndex = -1;
   let currentTagName = '';
@@ -30,7 +30,7 @@ function processWorkerTask(xml: string): SegmentBuffers {
         // To prevent the second concatenated dataset erasing the first one, ignore RouteFares
         /*
         case 'RouteFares':
-          result = [];
+          result = []; // [NOTE] L15: const
           resultLastIndex = -1;
           break;
         */

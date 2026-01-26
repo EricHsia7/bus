@@ -6,7 +6,7 @@ self.onmessage = function (e) {
 };
 
 function processWorkerTask(Route: Route): SimplifiedRoute {
-  let result = {};
+  const result: SimplifiedRoute = {};
   for (const item of Route) {
     const simplifiedItem = {};
     simplifiedItem.pd = item.providerId;

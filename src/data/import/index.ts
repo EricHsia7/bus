@@ -57,24 +57,27 @@ export async function importPersonalSchedules(data: PersonalScheduleArray): Prom
 export async function importRecentViews(data: RecentViewArray): Promise<boolean> {
   for (const RecentView of data) {
     switch (RecentView.type) {
-      case 'route':
+      case 'route': {
         const existingRecentViewRoute = await getRecentView('route', RecentView.id);
         if (!existingRecentViewRoute) {
           await logRecentView(RecentView.type, RecentView.id);
         }
         break;
-      case 'location':
+      }
+      case 'location': {
         const existingRecentViewLocation = await getRecentView('location', RecentView.hash);
         if (!existingRecentViewLocation) {
           await logRecentView(RecentView.type, RecentView.hash);
         }
         break;
-      case 'bus':
+      }
+      case 'bus': {
         const existingRecentViewBus = await getRecentView('bus', RecentView.id);
         if (!existingRecentViewBus) {
           await logRecentView(RecentView.type, RecentView.id);
         }
         break;
+      }
       default:
         break;
     }
