@@ -36,7 +36,12 @@ const lfSetItemTasks = [];
 let lfSetItemProcessing: boolean = false;
 
 async function processSetItemTask() {
+  if (lfSetItemProcessing || lfSetItemTasks.length === 0) return;
+
+  lfSetItemProcessing = true;
+
   const [store, key, value, resolve, reject] = lfSetItemTasks.shift();
+
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
