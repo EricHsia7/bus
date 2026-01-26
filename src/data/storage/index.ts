@@ -32,7 +32,8 @@ async function dropInstance(store: number): Promise<any> {
   return operation;
 }
 
-const lfSetItemTasks = [];
+type lfSetItemTask = [store: number, key: string, value: any, resolve: Function, reject: Function];
+const lfSetItemTasks: Array<lfSetItemTask> = [];
 let lfSetItemProcessing: boolean = false;
 
 async function processSetItemTask() {
