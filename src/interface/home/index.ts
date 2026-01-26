@@ -4,7 +4,6 @@ import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbol
 import { getRoute } from '../../data/apis/getRoute/index';
 import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { revokePageHistory } from '../index';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;
@@ -50,14 +49,4 @@ export async function downloadData() {
   await getMaterialSymbolsSearchIndex(dataDownloadRequestID);
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
-}
-
-export function openHome(): void {
-  pushPageHistory('QRCode');
-  HomeField.setAttribute('displayed', 'true');
-}
-
-export function closeHome(): void {
-  revokePageHistory('Home');
-  HomeField.setAttribute('displayed', 'false');
 }

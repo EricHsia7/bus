@@ -6,9 +6,4 @@
   height: 100%;
   background: var(--b-cssvar-f9f9fb-blocky);
   display: block;
-  visibility: hidden;
-}
-
-.css_home_field[displayed="true"] {
-  visibility: visible;
 }
