@@ -2,6 +2,7 @@ const { Compilation, sources } = require('webpack');
 const acorn = require('acorn');
 const MagicString = require('magic-string');
 const path = require('path');
+const { SourceMapSource } = require('webpack-sources');
 
 class ErrorCodePlugin {
   constructor(options = {}) {
@@ -22,10 +23,16 @@ class ErrorCodePlugin {
           for (const [pathname, source] of Object.entries(assets)) {
             if (!pathname.endsWith('.js')) continue;
 
+            const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+
             const code = source.source();
             const s = new MagicString(code);
             const ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
-
+            const newMap = s.generateMap({
+              source: pathname,
+              includeContent: true,
+              hires: true
+            });
             this.walk(ast, (node) => {
               if (this.isErrorThrow(node)) {
                 const arg = node.argument.arguments[0];
@@ -45,7 +52,18 @@ class ErrorCodePlugin {
             });
 
             // Replace the asset with the modified version
-            compilation.updateAsset(pathname, new sources.RawSource(s.toString()));
+
+            compilation.updateAsset(
+              pathname,
+              new SourceMapSource(
+                s.toString(), // The modified code
+                pathname, // The filename
+                newMap, // The map for specific changes
+                originalSource, // The code before changes
+                originalMap, // The map before changes
+                true // Remove original source from the map? (usually true for production)
+              )
+            );
 
             // Output the mapping
             this.saveManifest(compilation, pathname);
