@@ -1,5 +1,5 @@
 import { mergeAddressesIntoOne } from '../../../tools/address';
-import { md5 } from '../../../tools/index';
+import { hasOwnProperty, md5 } from '../../../tools/index';
 import { MergedLocation, SimplifiedLocation } from './index';
 
 self.onmessage = function (e) {
@@ -16,7 +16,7 @@ function processWorkerTask(object: SimplifiedLocation): MergedLocation {
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
     );
     const nameKey = `ml_${hash}`;
-    if (!result.hasOwnProperty(nameKey)) {
+    if (!hasOwnProperty(result, nameKey)) {
       result[nameKey] = {
         n: object[key].n,
         lo: [object[key].lo],

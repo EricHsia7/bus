@@ -1,6 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
+import { hasOwnProperty } from '../../tools/index';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { normalizeVector } from '../../tools/math';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
@@ -223,7 +224,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
       let thisStop: SimplifiedStopItem = {};
-      if (Stop.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(Stop, thisStopKey)) {
         thisStop = Stop[thisStopKey];
       } else {
         continue;
@@ -232,7 +233,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
 
       // Collect data from 'thisGroupRanking'
       let thisItemRanking = { number: 0, text: '--', code: -1 } as IntegratedLocationItemRanking;
-      if (thisGroupRanking.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(thisGroupRanking, thisStopKey)) {
         thisItemRanking = thisGroupRanking[thisStopKey];
       }
       integratedItem.ranking = thisItemRanking;
@@ -241,7 +242,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       const thisRouteID: number = thisLocation.r[i][o];
       const thisRouteKey = `r_${thisRouteID}`;
       let thisRoute: SimplifiedRouteItem = {};
-      if (Route.hasOwnProperty(thisRouteKey)) {
+      if (hasOwnProperty(Route, thisRouteKey)) {
         thisRoute = Route[thisRouteKey];
       } else {
         continue;
@@ -252,7 +253,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
 
       // Collect data from 'batchFoundEstimateTime'
       let thisEstimateTime = {} as EstimateTimeItem;
-      if (batchFoundEstimateTime.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(batchFoundEstimateTime, thisStopKey)) {
         thisEstimateTime = batchFoundEstimateTime[thisStopKey];
       } else {
         continue;
@@ -262,14 +263,14 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
 
       // Collect data from 'batchFoundBuses'
       let buses = [];
-      if (batchFoundBuses.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(batchFoundBuses, thisStopKey)) {
         buses = batchFoundBuses[thisStopKey].map((e) => formatBus(e));
       }
       integratedItem.buses = buses;
 
       // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = [];
-      if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(BusArrivalTimes, thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       integratedItem.busArrivalTimes = thisBusArrivalTimes;

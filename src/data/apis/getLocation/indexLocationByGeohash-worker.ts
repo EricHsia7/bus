@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { IndexedLocation, IndexedLocationItem, MergedLocation } from './index';
 
 self.onmessage = function (e) {
@@ -26,7 +27,7 @@ function processWorkerTask(object: MergedLocation): IndexedLocation {
     indexedLocationItem.la = latitude;
     indexedLocationItem.hash = hash;
     for (const geohash of thisItem.g) {
-      if (!result.hasOwnProperty(geohash)) {
+      if (!hasOwnProperty(result, geohash)) {
         result[geohash] = [];
       }
       result[geohash].push(indexedLocationItem);

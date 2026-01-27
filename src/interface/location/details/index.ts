@@ -3,7 +3,7 @@ import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../../data/location/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
-import { booleanToString, generateIdentifier } from '../../../tools/index';
+import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
@@ -113,7 +113,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   for (let i = 0; i < actionsQuantity; i++) {
     const thisElement = LocationActionElements[i];
     const thisItem = actions[i];
-    if (previousIntegration.hasOwnProperty('actions')) {
+    if (hasOwnProperty(previousIntegration, 'actions')) {
       if (previousIntegration.actions[i]) {
         const previousItem = previousIntegration.actions[i];
         updateItem(thisElement, thisItem, previousItem);
@@ -184,7 +184,7 @@ export async function shareLocationPermalink(hash: string) {
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   const thisLocationKey = `ml_${hash}`;
-  if (Location.hasOwnProperty(thisLocationKey)) {
+  if (hasOwnProperty(Location, thisLocationKey)) {
     const thisLocation = Location[thisLocationKey] as MergedLocationItem;
     const link = getPermalink(1, {
       hash: hash
@@ -212,7 +212,7 @@ export async function showLocationPermalinkQRCode(hash: string) {
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   const thisLocationKey = `ml_${hash}`;
-  if (Location.hasOwnProperty(thisLocationKey)) {
+  if (hasOwnProperty(Location, thisLocationKey)) {
     const link = getPermalink(1, {
       hash: hash
     });

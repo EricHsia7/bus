@@ -1,4 +1,5 @@
 import { convertBytes } from '../../tools/convert';
+import { hasOwnProperty } from '../../tools/index';
 import { getStoresLength, lfGetItem, lfListItemKeys } from '../storage/index';
 
 interface StoreCategory {
@@ -66,7 +67,7 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
     }
     const thisCategory = storeIndexToCategory(i);
     const thisCategoryKey = thisCategory.key;
-    if (!categorizedSizesInBytes.hasOwnProperty(thisCategoryKey)) {
+    if (!hasOwnProperty(categorizedSizesInBytes, thisCategoryKey)) {
       categorizedSizesInBytes[thisCategoryKey] = {
         category: thisCategory,
         size: 0

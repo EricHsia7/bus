@@ -1,7 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 // import { generateLabelFromAddresses } from '../../tools/address';
 // import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 // import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 // import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
@@ -89,7 +89,7 @@ export async function initializeFolderList() {
     const thisFolderJSON = await lfGetItem(11, folderKey);
     if (thisFolderJSON) {
       const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
-      if (!FolderList.hasOwnProperty(folderKey)) {
+      if (!hasOwnProperty(FolderList, folderKey)) {
         FolderList[folderKey] = thisFolderObject;
       }
     }
@@ -101,12 +101,12 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   const requestID = generateIdentifier();
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!materialSymbolsSearchIndex.symbols.hasOwnProperty(icon)) return false;
+  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
 
   // Check existence
   const folderID = generateIdentifier();
   const folderKey = `f_${folderID}`;
-  if (FolderList.hasOwnProperty(folderKey)) {
+  if (hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
   const existingFolder = await lfGetItem(11, folderKey);
@@ -144,7 +144,7 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   const requestID = generateIdentifier();
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!materialSymbolsSearchIndex.symbols.hasOwnProperty(icon)) return false;
+  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
 
   // Generate folder
   const modifiedFolder: Folder = {
@@ -162,7 +162,7 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
 
 export function getFolder(folderID: Folder['id']): Folder | false {
   const folderKey: string = `f_${folderID}`;
-  if (!FolderList.hasOwnProperty(folderKey)) {
+  if (!hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
   const folderObject: Folder = {
@@ -365,7 +365,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
         case 'stop': {
           const thisStopKey = `s_${integratedItem.id}`;
           let thisEstimateTime = {} as EstimateTimeItem;
-          if (batchFoundEstimateTime.hasOwnProperty(thisStopKey)) {
+          if (hasOwnProperty(batchFoundEstimateTime, thisStopKey)) {
             thisEstimateTime = batchFoundEstimateTime[thisStopKey];
           } else {
             break;
@@ -563,7 +563,7 @@ export async function saveRoute(folderID: Folder['id'], RouteID: number): Promis
   deleteDataUpdateTime(requestID);
   const thisRouteKey = `r_${RouteID}`;
   let thisRoute = {} as SimplifiedRouteItem;
-  if (Route.hasOwnProperty(thisRouteKey)) {
+  if (hasOwnProperty(Route, thisRouteKey)) {
     thisRoute = Route[thisRouteKey];
   } else {
     return false;
@@ -590,7 +590,7 @@ export async function saveLocation(folderID: Folder['id'], hash: string): Promis
   deleteDataUpdateTime(requestID);
   const thisLocationKey = `ml_${hash}`;
   let thisLocation = {} as MergedLocationItem;
-  if (Location.hasOwnProperty(thisLocationKey)) {
+  if (hasOwnProperty(Location, thisLocationKey)) {
     thisLocation = Location[thisLocationKey];
   } else {
     return false;

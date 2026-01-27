@@ -4,7 +4,7 @@ import { cancelNotification } from '../../data/notification/apis/cancelNotificat
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
-import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -202,7 +202,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   for (let j = 0; j < itemQuantity; j++) {
     const thisItemElement = NotificationScheduleItemElements[j];
     const thisItem = items[j];
-    if (previousIntegration.hasOwnProperty('items')) {
+    if (hasOwnProperty(previousIntegration, 'items')) {
       if (previousIntegration.items[j]) {
         const previousItem = previousIntegration.items[j];
         updateItem(thisItemElement, thisItem, previousItem);

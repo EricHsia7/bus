@@ -7,7 +7,7 @@ import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement, getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
@@ -820,8 +820,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const thisItemElement = thisGroupItemElements[j];
       const thisThreadBoxElement = thisGroupThreadElements[j];
       const thisItem = groupedItems[groupKey][j];
-      if (previousIntegration.hasOwnProperty('groupedItems')) {
-        if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
+      if (hasOwnProperty(previousIntegration, 'groupedItems')) {
+        if (hasOwnProperty(previousIntegration.groupedItems, groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisItemElement, thisThreadBoxElement, thisItem, previousItem, skeletonScreen, animation);

@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-fix-document-undefined-3
 
 jobs:
   build:

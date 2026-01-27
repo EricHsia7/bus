@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { SegmentBuffers, SimplifiedSegmentBuffer } from './index';
 
 self.onmessage = function (e) {
@@ -8,15 +9,15 @@ self.onmessage = function (e) {
 function processWorkerTask(array: SegmentBuffers): SimplifiedSegmentBuffer {
   const result: SimplifiedSegmentBuffer = {};
   for (const item of array) {
-    if (item.hasOwnProperty('BufferZones')) {
+    if (hasOwnProperty(item, 'BufferZones')) {
       const routeKey = `r_${item.RouteID}`;
-      if (!result.hasOwnProperty(routeKey)) {
+      if (!hasOwnProperty(result, routeKey)) {
         result[routeKey] = {};
       }
       const thisBufferZones = item.BufferZones;
       for (const thisBufferZone of thisBufferZones) {
         const groupKey = `g_${thisBufferZone.Direction}`;
-        if (!result[routeKey].hasOwnProperty(groupKey)) {
+        if (!hasOwnProperty(result[routeKey], groupKey)) {
           result[routeKey][groupKey] = [];
         }
         result[routeKey][groupKey].push(thisBufferZone);

@@ -6,6 +6,7 @@ import { openPersonalScheduleManager } from '../../interface/personal-schedule-m
 import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewSourceCodeOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
 import { openSettingsOptions } from '../../interface/settings/options';
 import { openStorage } from '../../interface/storage/index';
+import { hasOwnProperty } from '../../tools/index';
 import { dateToRelativeTime, formatTime } from '../../tools/time';
 import { getNotificationClientStatus } from '../notification/index';
 import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
@@ -625,7 +626,7 @@ export function listSettingsWithOptions(): SettingsWithOptionsArray {
   let result: SettingsWithOptionsArray = [];
   for (const key in Settings) {
     if (SettingKeys.indexOf(key) > -1) {
-      if (Settings.hasOwnProperty(key)) {
+      if (hasOwnProperty(Settings, key)) {
         if (Settings[key].type === 'select') {
           const item: SettingWithOption = {
             key: key,
@@ -641,7 +642,7 @@ export function listSettingsWithOptions(): SettingsWithOptionsArray {
 
 export async function changeSettingOption(key: string, option: number): Promise<boolean> {
   if (SettingKeys.indexOf(key) > -1) {
-    if (Settings.hasOwnProperty(key)) {
+    if (hasOwnProperty(Settings, key)) {
       if (Settings[key].type === 'select') {
         if (Settings[key].options[option] !== undefined && Settings[key].options[option] !== null) {
           await lfSetItem(1, key, option);
@@ -656,7 +657,7 @@ export async function changeSettingOption(key: string, option: number): Promise<
 
 export function getSetting(key: string): Setting | undefined {
   if (SettingKeys.indexOf(key) > -1) {
-    if (Settings.hasOwnProperty(key)) {
+    if (hasOwnProperty(Settings, key)) {
       return Settings[key];
     }
   }
@@ -664,7 +665,7 @@ export function getSetting(key: string): Setting | undefined {
 
 export function getSettingOptionValue(key: string): SettingSelectOptionStringValue['string'] | SettingSelectOptionNumberValue['number'] | SettingSelectOptionBooleanValue['boolean'] | SettingSelectOptionRefreshIntervalValue {
   if (SettingKeys.indexOf(key) > -1) {
-    if (Settings.hasOwnProperty(key)) {
+    if (hasOwnProperty(Settings, key)) {
       const powerSavingSetting = Settings['power_saving'] as SettingSelect;
       const powerSavingSettingValue = powerSavingSetting.options[powerSavingSetting.option].value as SettingSelectOptionBooleanValue;
       const powerSavingSettingValueBoolean = powerSavingSettingValue.boolean;

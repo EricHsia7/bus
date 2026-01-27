@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../tools/index';
 import { formatTime } from '../../tools/time';
 import { BusData, BusDataItem } from './getBusData/index';
 import { BusEvent, BusEventItem } from './getBusEvent/index';
@@ -154,7 +155,7 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
 
     // collect data from 'BusData'
     let thisBusData = {} as BusDataItem;
-    if (BusDataObj.hasOwnProperty(thisBusID)) {
+    if (hasOwnProperty(BusDataObj, thisBusID)) {
       thisBusData = BusDataObj[thisBusID];
     } else {
       continue;
@@ -180,7 +181,7 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
     processedItem.RouteID = isRouteSearched ? searchedRoute.id : null;
 
     const StopKey = `s_${BusEventItem.StopID}`;
-    if (!result.hasOwnProperty(StopKey)) {
+    if (!hasOwnProperty(result, StopKey)) {
       result[StopKey] = [];
     }
     result[StopKey].push(processedItem);
@@ -222,7 +223,7 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
 
     // Collect data from 'BusData'
     let thisBusData = {} as BusDataItem;
-    if (BusDataObj.hasOwnProperty(thisBusID)) {
+    if (hasOwnProperty(BusDataObj, thisBusID)) {
       thisBusData = BusDataObj[thisBusID];
     } else {
       continue;
@@ -248,7 +249,7 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
     processedItem.RouteID = isRouteSearched ? searchedRoute.id : null;
 
     const StopKey = `s_${thisStopID}`;
-    if (!result.hasOwnProperty(StopKey)) {
+    if (!hasOwnProperty(result, StopKey)) {
       result[StopKey] = [];
     }
     result[StopKey].push(processedItem);

@@ -1,4 +1,5 @@
 import { geohashEncode } from '../../../tools/geohash';
+import { hasOwnProperty } from '../../../tools/index';
 import { normalizeVector } from '../../../tools/math';
 import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
@@ -12,7 +13,7 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
   for (const item of Location) {
     const thisRouteID = item.routeId;
     const thisRouteKey = `r_${thisRouteID}`;
-    if (!locationsByRoute.hasOwnProperty(thisRouteKey)) {
+    if (!hasOwnProperty(locationsByRoute, thisRouteKey)) {
       locationsByRoute[thisRouteKey] = [];
     }
     locationsByRoute[thisRouteKey].push(item);
@@ -49,7 +50,7 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
     }
 
     const key = `l_${item.stopLocationId}`;
-    if (!result.hasOwnProperty(key)) {
+    if (!hasOwnProperty(result, key)) {
       const simplifiedItem = {} as SimplifiedLocationItem;
       simplifiedItem.n = item.nameZh;
       simplifiedItem.lo = thisItemLongitude;

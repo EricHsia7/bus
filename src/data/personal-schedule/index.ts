@@ -1,4 +1,4 @@
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 
@@ -96,7 +96,7 @@ export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersona
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
       const dayKey = `d_${day}`;
-      if (!result.hasOwnProperty(dayKey)) {
+      if (!hasOwnProperty(result, dayKey)) {
         result[dayKey] = [];
       }
       const object = {
@@ -139,7 +139,7 @@ export async function isInPersonalSchedule(date: Date): boolean {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  if (timeline.hasOwnProperty(dayKey)) {
+  if (hasOwnProperty(timeline, dayKey)) {
     const personalSchedulesOfTheDay = timeline[dayKey];
     for (const personalScheduleOfTheDay of personalSchedulesOfTheDay) {
       if (hours * 60 + minutes >= personalScheduleOfTheDay.start.hours * 60 + personalScheduleOfTheDay.start.minutes && hours * 60 + minutes <= personalScheduleOfTheDay.end.hours * 60 + personalScheduleOfTheDay.end.minutes) {

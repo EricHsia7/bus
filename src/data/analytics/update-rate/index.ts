@@ -1,4 +1,4 @@
-import { generateIdentifier } from '../../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { mergePearsonCorrelation, mergeStandardDeviation } from '../../../tools/math';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
@@ -150,7 +150,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
     const stopID = item.StopID;
     const stopKey = `s_${stopID}`;
     if (updateRateData_trackedStops.indexOf(stopID) > -1) {
-      if (!updateRateData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
+      if (!hasOwnProperty(updateRateData_writeAheadLog_group.data, stopKey)) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
       updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
@@ -183,7 +183,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         dataGroup.id = stopID;
       }
       await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
-      if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+      if (hasOwnProperty(updateRateData_groupsIndex, stopKey)) {
         const existingIndex = updateRateData_groupsIndex[stopKey];
         updateRateData_groups.splice(existingIndex, 1, dataGroup);
       } else {
@@ -223,7 +223,7 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
             dataGroup.id = parseInt(stopKey.split('_')[1]);
           }
           await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
-          if (updateRateData_groupsIndex.hasOwnProperty(stopKey)) {
+          if (hasOwnProperty(updateRateData_groupsIndex, stopKey)) {
             const existingIndex = updateRateData_groupsIndex[stopKey];
             updateRateData_groups.splice(existingIndex, 1, dataGroup);
           } else {

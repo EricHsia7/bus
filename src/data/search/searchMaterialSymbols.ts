@@ -1,6 +1,6 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { levenshtein } from '../../tools/levenshtein';
 import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../apis/loader';
@@ -27,7 +27,7 @@ export async function prepareForMaterialSymbolsSearch() {
     // Build wordIndex → nameIndex mapping
     for (const wordIndex of symbols[symbol]) {
       const wordIndexKey = `w${wordIndex}`;
-      if (!wordToSymbols.hasOwnProperty(wordIndexKey)) {
+      if (!hasOwnProperty(wordToSymbols, wordIndexKey)) {
         wordToSymbols[wordIndexKey] = [];
       }
       wordToSymbols[wordIndexKey].push(nameIndex);

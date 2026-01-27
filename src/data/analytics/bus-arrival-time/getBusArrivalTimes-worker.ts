@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { PersonalScheduleArray } from '../../personal-schedule/index';
 import { BusArrivalTimeDataGroupArray, BusArrivalTimes } from './index';
 
@@ -124,7 +125,7 @@ function processWorkerTask(): void {
 
       const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${verticalGridlineLabels}${bottomLine}${bars}</svg>`;
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
-      if (!result.hasOwnProperty(stopKey)) {
+      if (!hasOwnProperty(result, stopKey)) {
         result[stopKey] = [];
       }
       result[stopKey].push({

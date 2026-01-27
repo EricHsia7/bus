@@ -2,7 +2,7 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
@@ -543,7 +543,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     const thisFolderContentLength = thisFolderContent.length; // the actual length (including 'empty content')
     const thisFolderElement = FolderElements2[i];
     const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
-    if (previousIntegration.hasOwnProperty('folders')) {
+    if (hasOwnProperty(previousIntegration, 'folders')) {
       if (previousIntegration.folders[i]) {
         const previousFolder = previousIntegration.folders[i];
         updateFolder(thisFolderElement, thisFolder, previousFolder);
@@ -558,7 +558,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     for (let j = 0; j < thisFolderContentLength; j++) {
       const thisElement = thisFolderItemElements[j];
       const thisItem = thisFolderContent[j];
-      if (previousIntegration.hasOwnProperty('folders')) {
+      if (hasOwnProperty(previousIntegration, 'folders')) {
         if (previousIntegration.folders[i]) {
           if (previousIntegration.folders[i].content[j]) {
             const previousItem = previousIntegration.folders[i].content[j];
