@@ -1,6 +1,7 @@
 const { Compilation, sources } = require('webpack');
 const acorn = require('acorn');
 const MagicString = require('magic-string');
+const path = require('path');
 
 class ErrorCodePlugin {
   constructor(options = {}) {
@@ -18,8 +19,8 @@ class ErrorCodePlugin {
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
         (assets) => {
-          for (const [name, source] of Object.entries(assets)) {
-            if (!name.endsWith('.js')) continue;
+          for (const [pathname, source] of Object.entries(assets)) {
+            if (!pathname.endsWith('.js')) continue;
 
             const code = source.source();
             const s = new MagicString(code);
@@ -44,11 +45,11 @@ class ErrorCodePlugin {
             });
 
             // Replace the asset with the modified version
-            compilation.updateAsset(name, new sources.RawSource(s.toString()));
-          }
+            compilation.updateAsset(pathname, new sources.RawSource(s.toString()));
 
-          // Output the mapping for your logs/Sentry
-          this.saveManifest(compilation, name);
+            // Output the mapping
+            this.saveManifest(compilation, pathname);
+          }
         }
       );
     });
@@ -71,9 +72,13 @@ class ErrorCodePlugin {
     }
   }
 
-  saveManifest(compilation, name) {
+  saveManifest(compilation, pathname) {
     const json = JSON.stringify(Object.fromEntries(this.mapping), null, 2);
-    compilation.emitAsset(`${name}.errormap.json`, new sources.RawSource(json));
+    const extension = path.extname(pathname);
+    const base = path.basename(pathname, extension);
+    const dir = path.dirname(pathname);
+    const fullPath = path.join(dir, `${base}.error.map`);
+    compilation.emitAsset(fullPath, new sources.RawSource(json));
   }
 }
 
