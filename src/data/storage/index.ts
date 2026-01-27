@@ -19,15 +19,15 @@ let storage = {
 
 const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
-async function dropInstance(store: number): Promise<any> {
-  const storeKey = stores[store];
-  if (storage[storeKey] === false) {
-    storage[storeKey] = await localforage.createInstance({
-      name: storeKey
+let dummyStorage = false;
+async function lfDummyOpen() {
+  if (dummyStorage === false) {
+    dummyStorage = await localforage.createInstance({
+      name: 'dummyStorage'
     });
   }
-  const operation = await storage[storeKey].dropInstance();
-  return operation;
+  await dummyStorage.dropInstance();
+  dummyStorage = false;
 }
 
 export async function lfSetItem(store: number, key: string, value: any): Promise<any> {
@@ -42,7 +42,7 @@ export async function lfSetItem(store: number, key: string, value: any): Promise
     return operation;
   } catch (err) {
     console.error(err);
-    // await dropInstance(store);
+    await lfDummyOpen();
     return null;
   }
 }
@@ -59,7 +59,7 @@ export async function lfGetItem(store: number, key: string): Promise<any> {
     return operation;
   } catch (err) {
     console.error(err);
-    // await dropInstance(store);
+    await lfDummyOpen();
     return null;
   }
 }
@@ -76,7 +76,7 @@ export async function lfRemoveItem(store: number, key: string): Promise<any> {
     return operation;
   } catch (err) {
     console.error(err);
-    // await dropInstance(store);
+    await lfDummyOpen(store);
     return null;
   }
 }
@@ -93,6 +93,7 @@ export async function lfListItemKeys(store: number): Promise<Array<string>> {
     return keys;
   } catch (err) {
     console.error(err);
+    await lfDummyOpen(store);
     return [];
   }
 }
