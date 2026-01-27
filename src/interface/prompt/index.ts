@@ -9,7 +9,7 @@ export interface PromptButton {
   action: Function;
 }
 
-export function promptMessage(icon: MaterialSymbols, message: string, button: PromptButton | null): void {
+export function promptMessage(icon: MaterialSymbols, message: string, button?: PromptButton | null): void {
   const allPromptElements = documentQuerySelectorAll('.css_prompt');
   if (allPromptElements !== null) {
     for (const promptElement of allPromptElements) {

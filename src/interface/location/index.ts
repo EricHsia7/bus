@@ -253,11 +253,6 @@ function generateElementOfItem(): GeneratedElement {
   saveButtonIconElement.appendChild(getIconElement('folder'));
   saveButtonElement.appendChild(saveButtonIconElement);
   saveButtonElement.appendChild(document.createTextNode('儲存'));
-  /*
-  saveButtonElement.onclick = () => {
-    openSaveToFolder('stop-on-location', [identifier, null, null]);
-  };
-  */
 
   // Button: 通知
   const notifyButtonElement = document.createElement('div');
@@ -270,11 +265,6 @@ function generateElementOfItem(): GeneratedElement {
   notifyButtonIconElement.appendChild(getIconElement('notifications'));
   notifyButtonElement.appendChild(notifyButtonIconElement);
   notifyButtonElement.appendChild(document.createTextNode('通知'));
-  /*
-  notifyButtonElement.onclick = () => {
-    openScheduleNotification('stop-on-location', [identifier, null, null, null]);
-  };
-  */
 
   // Assemble buttons
   buttonsElement.appendChild(busTabButtonElement);
