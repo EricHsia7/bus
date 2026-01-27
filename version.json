@@ -1,7 +1,7 @@
 {
-  "build": 337,
-  "hash": "e48bef5",
-  "full_hash": "e48bef5cacd3e96375e86d15665a215f699ff50c",
-  "branch_name": "dev-fix-indexed-db-hanging",
-  "timestamp": "2026-01-27T01:38:06.609Z"
+  "build": 348,
+  "hash": "a31526f",
+  "full_hash": "a31526f9da99bc9d18a61e67e4383c1d3b74b7a4",
+  "branch_name": "dev-error-code-plugin",
+  "timestamp": "2026-01-27T11:23:21.188Z"
 }
