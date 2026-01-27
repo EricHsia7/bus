@@ -1,7 +1,7 @@
 {
-  "build": 335,
-  "hash": "92a3cf0",
-  "full_hash": "92a3cf087aff78a122d9c37978fb5e28ea607d31",
-  "branch_name": "dev-has-own-property",
-  "timestamp": "2026-01-27T01:06:29.448Z"
+  "build": 337,
+  "hash": "e48bef5",
+  "full_hash": "e48bef5cacd3e96375e86d15665a215f699ff50c",
+  "branch_name": "dev-fix-indexed-db-hanging",
+  "timestamp": "2026-01-27T01:38:06.609Z"
 }
