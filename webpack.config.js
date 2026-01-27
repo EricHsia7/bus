@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
         skipWaiting: true,
-        exclude: [/\.map$/, /LICENSE\.txt$/],
+        exclude: [/\.map$/, /error\.map\.json$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
