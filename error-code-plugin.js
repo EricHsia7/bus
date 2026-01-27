@@ -34,7 +34,7 @@ class ErrorCodePlugin {
               hires: true
             });
             this.walk(ast, (node) => {
-              if (this.isErrorThrow(node)) {
+              if (this.isErrorThrow(node) || this.isTypeErrorThrow(node)) {
                 const arg = node.argument.arguments[0];
                 const originalText = code.slice(arg.start, arg.end);
 
@@ -75,6 +75,10 @@ class ErrorCodePlugin {
 
   isErrorThrow(node) {
     return node.type === 'ThrowStatement' && node.argument.type === 'NewExpression' && node.argument.callee.name === 'Error';
+  }
+
+  isTypeErrorThrow(node) {
+    return node.type === 'ThrowStatement' && node.argument.type === 'NewExpression' && node.argument.callee.name === 'TypeError';
   }
 
   walk(node, callback) {
