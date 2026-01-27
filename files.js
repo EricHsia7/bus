@@ -26,7 +26,7 @@ async function writeTextFile(path, content) {
     await fs.promises.writeFile(path, content, { encoding: 'utf8' });
     return `File "${path}" created successfully!`;
   } catch (err) {
-    throw new Error(`Error creating file: ${err.message}`);
+    throw new Error(`\x1b[31mError\x1b[0m creating file: ${err.message}`);
   }
 }
 
@@ -43,7 +43,7 @@ async function renameFile(filePath, newName) {
     await fs.renameSync(filePath, newPath);
 
     // log a success message
-    console.log('Successfully renamed file!');
+    console.log('\x1b[32mSuccessfully\x1b[0m renamed file!');
   } catch (error) {
     // handle any errors
     console.error(error);
@@ -115,7 +115,7 @@ async function moveFile(source, destination) {
   var path2 = path.join(destination, name);
   await fs.promises.rename(source, path2, (err) => {
     if (err) throw err;
-    console.log('File moved successfully!');
+    console.log('\x1b[32mSuccessfully\x1b[0m moved file');
   });
 }
 

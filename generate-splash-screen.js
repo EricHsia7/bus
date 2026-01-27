@@ -56,12 +56,12 @@ async function main() {
         await rasterize(svgText, outputFilePath, width * scale, height * scale, 2); // supersampling: 2x
         htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale})"/>`);
       }
-      console.log(`Successfully generated splash screen for ${deviceInfo.name}.`);
+      console.log(`\x1b[32mSuccessfully\x1b[0m generated splash screen for \x1b[1m${deviceInfo.name}\x1b[0m.`);
     }
     await writeTextFile(`${outputDir}/html.json`, JSON.stringify({ html: htmlLinks.join('\n') }));
-    console.log('Successfully generated splash screens and HTML code.');
+    console.log('\x1b[32mSuccessfully\x1b[0m generated splash screens and HTML code.');
   } else if (outputDirCreation === 0) {
-    console.log('Using cached splash screens and HTML code.');
+    console.log('Using \x1b[1mcached\x1b[0m splash screens and HTML code.');
   } else {
     process.exit(1);
   }
