@@ -21,11 +21,16 @@ export async function prepareForMaterialSymbolsSearch() {
   const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
 
   let nameIndex = 0;
-  for (const symbol in symbols) {
+  for (const symbolKey in symbols) {
     // Create list of symbol names
+    const symbolNameComponents = symbolKey.split('_');
+    for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
+      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
+    }
+    const symbol = symbolNameComponents.join('_');
     names.push(symbol);
     // Build wordIndex → nameIndex mapping
-    for (const wordIndex of symbols[symbol]) {
+    for (const wordIndex of symbols[symbolKey]) {
       const wordIndexKey = `w${wordIndex}`;
       if (!hasOwnProperty(wordToSymbols, wordIndexKey)) {
         wordToSymbols[wordIndexKey] = [];

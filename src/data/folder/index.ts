@@ -101,7 +101,13 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   const requestID = generateIdentifier();
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
+  const iconComponents = icon.split('_');
+  const dictionary = materialSymbolsSearchIndex.dictionary.split(',');
+  for (let i = iconComponents.length - 1; i >= 0; i--) {
+    iconComponents.splice(i, 1, dictionary.indexOf(iconComponents[i]).toString());
+  }
+  const symbolKey = iconComponents.join('_');
+  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, symbolKey)) return false;
 
   // Check existence
   const folderID = generateIdentifier();
@@ -144,7 +150,13 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   const requestID = generateIdentifier();
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
+  const iconComponents = icon.split('_');
+  const dictionary = materialSymbolsSearchIndex.dictionary.split(',');
+  for (let i = iconComponents.length - 1; i >= 0; i--) {
+    iconComponents.splice(i, 1, dictionary.indexOf(iconComponents[i]).toString());
+  }
+  const symbolKey = iconComponents.join('_');
+  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, symbolKey)) return false;
 
   // Generate folder
   const modifiedFolder: Folder = {

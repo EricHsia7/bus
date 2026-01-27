@@ -37,7 +37,13 @@ async function initializeFolderIconSelectorField() {
   const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
   deleteDataReceivingProgress(requestID);
   const fragment = new DocumentFragment();
-  for (const symbol in materialSymbols.symbols) {
+  const dictionary = materialSymbols.dictionary.split(',');
+  for (const symbolKey in materialSymbols.symbols) {
+    const symbolNameComponents = symbolKey.split('_');
+    for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
+      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
+    }
+    const symbol = symbolNameComponents.join('_');
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);
     fragment.appendChild(symbolElement.element);
   }
