@@ -105,21 +105,6 @@ export function getStoresLength(): number {
   return stores.length;
 }
 
-/*
-export async function registerStore(id: string): Promise<number> {
-  const storeKey = `F${id}Store`;
-  if (!storage.hasOwnProperty(storeKey) && stores.indexOf(storeKey) < 0) {
-    storage[storeKey] = await localforage.createInstance({
-      name: storeKey
-    });
-    stores.push(storeKey);
-    return stores.length - 1;
-  } else {
-    return stores.indexOf(storeKey);
-  }
-}
-*/
-
 export async function isStoragePersistent(): Promise<boolean> {
   // Check if site's storage has been marked as persistent
   if (navigator.storage) {

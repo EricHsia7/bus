@@ -1,4 +1,5 @@
 import { areItemsDifferent } from './array';
+import { hasOwnProperty } from './index';
 import { generateLetterLabels } from './labels';
 
 interface AddressPart {
@@ -255,7 +256,7 @@ export function mergeAddressesIntoOne(addresses: Array<string>): ParsedAddress |
     for (var address of addresses) {
       var parsedAddress = parseAddress(address);
       for (var part of parts) {
-        if (!result.hasOwnProperty(part.key)) {
+        if (!hasOwnProperty(result, part.key)) {
           result[part.key] = [];
         }
         result[part.key] = result[part.key].concat(parsedAddress[part.key]);
@@ -376,7 +377,7 @@ export function generateLabelFromAddresses(addresses: Array<ParsedAddress>): Arr
   const filledProperties = {};
   for (const address of addresses) {
     for (const key in address) {
-      if (!filledProperties.hasOwnProperty(key)) {
+      if (!hasOwnProperty(filledProperties, key)) {
         filledProperties[key] = 0;
       }
       if (address[key].length > 0) {

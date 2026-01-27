@@ -1,3 +1,5 @@
+import { hasOwnProperty } from './index';
+
 export type ColorScheme = 'light' | 'dark';
 
 export function getColorScheme(): ColorScheme {
@@ -16,7 +18,7 @@ const CssVariableValueCache = {
 
 export function getCSSVariableValue(property: string): string {
   const CurrentColorScheme = getColorScheme();
-  if (CssVariableValueCache[CurrentColorScheme].hasOwnProperty(property)) {
+  if (hasOwnProperty(CssVariableValueCache[CurrentColorScheme], property)) {
     return CssVariableValueCache[CurrentColorScheme][property];
   }
   const value = getComputedStyle(document.documentElement).getPropertyValue(property);

@@ -1,4 +1,4 @@
-import { generateIdentifier } from '../../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { findGlobalExtrema } from '../../../tools/math';
 import { WeekDayIndex } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
@@ -123,7 +123,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
       const stopID = item.StopID;
       const stopKey = `s_${stopID}_${currentDay}`;
       if (busArrivalTimeData_trackedStops.indexOf(stopID) > -1) {
-        if (!busArrivalTimeData_writeAheadLog_group.data.hasOwnProperty(stopKey)) {
+        if (!hasOwnProperty(busArrivalTimeData_writeAheadLog_group.data, stopKey)) {
           busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
         }
         busArrivalTimeData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp]);

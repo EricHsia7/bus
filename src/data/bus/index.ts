@@ -1,4 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { hasOwnProperty } from '../../tools/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
@@ -33,7 +34,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   // Collect data from CarInfo
   let thisCar = {};
-  if (CarInfo.hasOwnProperty(carKey)) {
+  if (hasOwnProperty(CarInfo, carKey)) {
     thisCar = CarInfo[carKey];
   } else {
     return result;
@@ -114,7 +115,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   // Collect data from Stop
   const StopKey = `s_${thisBusEventItemStopID}`;
   let thisStopItem = {};
-  if (Stop.hasOwnProperty(StopKey)) {
+  if (hasOwnProperty(Stop, StopKey)) {
     thisStopItem = Stop[StopKey];
   } else {
     return result;

@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { Route, SimplifiedRoute } from './index';
 
 self.onmessage = function (e) {
@@ -16,7 +17,7 @@ function processWorkerTask(Route: Route): SimplifiedRoute {
     simplifiedItem.des = item.destinationZh;
     simplifiedItem.id = item.Id;
     const routeKey = `r_${item.Id}`;
-    if (!result.hasOwnProperty(routeKey)) {
+    if (!hasOwnProperty(result, routeKey)) {
       result[routeKey] = simplifiedItem;
     } else {
       result[routeKey]['pid'].push(item.pathAttributeId);

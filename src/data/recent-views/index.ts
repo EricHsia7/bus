@@ -1,4 +1,4 @@
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { dateToRelativeTime } from '../../tools/time';
 import { getCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
@@ -88,7 +88,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       case 'route': {
         const Route = await getRoute(requestID, true);
         const routeKey = `r_${param}`;
-        if (Route.hasOwnProperty(routeKey)) {
+        if (hasOwnProperty(Route, routeKey)) {
           const thisRoute = Route[routeKey];
           const name = thisRoute.n;
           const recentViewRouteObject: RecentViewRoute = {
@@ -104,7 +104,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       case 'location': {
         const Location = (await getLocation(requestID, 1)) as MergedLocation;
         const LocationKey = `ml_${param}`;
-        if (Location.hasOwnProperty(LocationKey)) {
+        if (hasOwnProperty(Location, LocationKey)) {
           const thisLocation = Location[LocationKey];
           const name = thisLocation.n;
           const recentViewLocationObject: RecentViewLocation = {
@@ -120,7 +120,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       case 'bus': {
         const CarInfo = await getCarInfo(requestID, true);
         const CarKey = `c_${param}`;
-        if (CarInfo.hasOwnProperty(CarKey)) {
+        if (hasOwnProperty(CarInfo, CarKey)) {
           const thisCar = CarInfo[CarKey];
           const name = thisCar.CarNum;
           const recentViewBusObject: RecentViewBus = {

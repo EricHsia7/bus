@@ -1,4 +1,5 @@
 import { convertPositionsToDistance } from '../../tools/convert';
+import { hasOwnProperty } from '../../tools/index';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
@@ -101,7 +102,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
-  if (SegmentBuffers.hasOwnProperty(`r_${RouteID}`)) {
+  if (hasOwnProperty(SegmentBuffers, `r_${RouteID}`)) {
     hasSegmentBuffers = true;
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
@@ -124,7 +125,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       // Collect data from 'Stop'
       const thisStopKey = `s_${item.StopID}`;
       let thisStop = {} as SimplifiedStopItem;
-      if (Stop.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(Stop, thisStopKey)) {
         thisStop = Stop[thisStopKey];
       } else {
         continue;
@@ -136,7 +137,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       // Collect data from 'SimplifiedLocation'
       const thisLocationKey = `l_${thisStop.stopLocationId}`;
       let thisSimplifiedLocation = {} as SimplifiedLocationItem;
-      if (SimplifiedLocation.hasOwnProperty(thisLocationKey)) {
+      if (hasOwnProperty(SimplifiedLocation, thisLocationKey)) {
         thisSimplifiedLocation = SimplifiedLocation[thisLocationKey];
       } else {
         continue;
@@ -146,7 +147,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         .filter((id: number) => id !== RouteID)
         .map((id: number) => {
           const overlappingRouteKey = `r_${id}`;
-          if (Route.hasOwnProperty(overlappingRouteKey)) {
+          if (hasOwnProperty(Route, overlappingRouteKey)) {
             const overlappingRoute = Route[overlappingRouteKey] as SimplifiedRouteItem;
             const formattedOverlappingRoute = {
               name: overlappingRoute.n,
@@ -180,13 +181,13 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       // Collect data from 'IndexedLocation' and 'MergedLocation'
       const thisSimplifiedLocationGeohash = thisSimplifiedLocation.g;
       let thisIndexedLocationItem: Array<IndexedLocationItem> = [];
-      if (IndexedLocation.hasOwnProperty(thisSimplifiedLocationGeohash)) {
+      if (hasOwnProperty(IndexedLocation, thisSimplifiedLocationGeohash)) {
         thisIndexedLocationItem = IndexedLocation[thisSimplifiedLocationGeohash];
       }
       let nearbyLocations: Array<integratedStopItemNearbyLocationItem> = [];
       for (const item of thisIndexedLocationItem) {
         const mergedLocationKey = `ml_${item.hash}`;
-        if (MergedLocation.hasOwnProperty(mergedLocationKey)) {
+        if (hasOwnProperty(MergedLocation, mergedLocationKey)) {
           const thisMergedLocation = MergedLocation[mergedLocationKey];
           const nearbyLocationItem: integratedStopItemNearbyLocationItem = {
             name: thisMergedLocation.n,
@@ -205,7 +206,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let buses = []; // as Array<FormattedBus>
       for (const overlappingStopID of thisSimplifiedLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
-        if (batchFoundBuses.hasOwnProperty(overlappingStopKey)) {
+        if (hasOwnProperty(batchFoundBuses, overlappingStopKey)) {
           buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));
         }
       }
@@ -215,7 +216,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
       // Collect data from 'BusArrivalTimes'
       let thisBusArrivalTimes = [];
-      if (BusArrivalTimes.hasOwnProperty(thisStopKey)) {
+      if (hasOwnProperty(BusArrivalTimes, thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       integratedStopItem.busArrivalTimes = thisBusArrivalTimes;
@@ -229,7 +230,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         const groupKey = `g_${integratedStopItem.goBack}`;
         let segmentBufferGroup = [];
 
-        if (thisSegmentBuffers.hasOwnProperty(groupKey)) {
+        if (hasOwnProperty(thisSegmentBuffers, groupKey)) {
           segmentBufferGroup = thisSegmentBuffers[groupKey];
         } else {
           if (integratedStopItem.goBack === '1') {
@@ -334,7 +335,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
     const groupKey = `g_${item.goBack}` || 'g_0';
 
-    if (!groupedItems.hasOwnProperty(groupKey)) {
+    if (!hasOwnProperty(groupedItems, groupKey)) {
       groupedItems[groupKey] = [];
       itemQuantity[groupKey] = 0;
       groupQuantity += 1;

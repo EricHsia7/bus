@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../tools/index';
 import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
@@ -21,7 +22,7 @@ const FetchError = new Error('FetchError');
 
 export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   // Check concurrency
-  if (tasks.hasOwnProperty(url)) {
+  if (hasOwnProperty(tasks, url)) {
     if (tasks[url].processing) {
       return await new Promise((resolve, reject) => {
         tasks[url].requests.push([resolve, reject, requestID, tag]);
@@ -61,7 +62,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     receivedLength += value.length;
     const progress = receivedLength / contentLength;
     setDataReceivingProgress(requestID, tag, progress, false);
-    if (tasks.hasOwnProperty(url)) {
+    if (hasOwnProperty(tasks, url)) {
       for (const request of tasks[url].requests) {
         setDataReceivingProgress(request[2], request[3], progress, false);
       }
@@ -103,7 +104,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 
   if (result) {
     // Resolve promises
-    if (tasks.hasOwnProperty(url)) {
+    if (hasOwnProperty(tasks, url)) {
       const progress = receivedLength / contentLength;
       let request = tasks[url].requests.shift();
       while (request) {
@@ -119,7 +120,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     return result;
   } else {
     // Reject promises
-    if (tasks.hasOwnProperty(url)) {
+    if (hasOwnProperty(tasks, url)) {
       let request = tasks[url].requests.shift();
       while (request) {
         request[1](FetchError);
@@ -136,7 +137,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
 function discardExpiredFetchTasks(): void {
   const now = new Date().getTime();
   for (const url in tasks) {
-    if (tasks.hasOwnProperty(url)) {
+    if (hasOwnProperty(tasks, url)) {
       if (!tasks[url].processing) {
         if (now > tasks[url].timestamp) {
           delete tasks[url];
@@ -164,10 +165,10 @@ export type DataReceivingProgress = {
 const dataReceivingProgress: DataReceivingProgress = {};
 
 export function setDataReceivingProgress(requestID: string, tag: string, progress: number, expel: boolean): void {
-  if (!dataReceivingProgress.hasOwnProperty(requestID)) {
+  if (!hasOwnProperty(dataReceivingProgress, requestID)) {
     dataReceivingProgress[requestID] = {};
   }
-  if (dataReceivingProgress[requestID].hasOwnProperty(tag)) {
+  if (hasOwnProperty(dataReceivingProgress[requestID], tag)) {
     if (expel) {
       dataReceivingProgress[requestID][tag].expel = true;
     } else {
@@ -182,7 +183,7 @@ export function setDataReceivingProgress(requestID: string, tag: string, progres
 }
 
 export function getDataReceivingProgress(requestID: string): number {
-  if (dataReceivingProgress.hasOwnProperty(requestID)) {
+  if (hasOwnProperty(dataReceivingProgress, requestID)) {
     if (typeof dataReceivingProgress[requestID] === 'object') {
       let total: number = 0;
       let received: number = 0;
@@ -200,7 +201,7 @@ export function getDataReceivingProgress(requestID: string): number {
 }
 
 export function deleteDataReceivingProgress(requestID: string): void {
-  if (dataReceivingProgress.hasOwnProperty(requestID)) {
+  if (hasOwnProperty(dataReceivingProgress, requestID)) {
     delete dataReceivingProgress[requestID];
     broadcastDataReceivingProgress(requestID, 'end');
   }
@@ -229,7 +230,7 @@ export type DataUpdateTime = { [key: string]: number };
 export const dataUpdateTime: DataUpdateTime = {};
 
 export function setDataUpdateTime(requestID: string, timestamp: string | number): void {
-  if (!dataUpdateTime.hasOwnProperty(requestID)) {
+  if (!hasOwnProperty(dataUpdateTime, requestID)) {
     dataUpdateTime[requestID] = 0;
   }
   let timeNumber = 0;
@@ -242,7 +243,7 @@ export function setDataUpdateTime(requestID: string, timestamp: string | number)
 }
 
 export function getDataUpdateTime(requestID: string): number {
-  if (dataUpdateTime.hasOwnProperty(requestID)) {
+  if (hasOwnProperty(dataUpdateTime, requestID)) {
     return dataUpdateTime[requestID] * 1;
   } else {
     return 0;
@@ -250,7 +251,7 @@ export function getDataUpdateTime(requestID: string): number {
 }
 
 export function deleteDataUpdateTime(requestID: string): void {
-  if (dataUpdateTime.hasOwnProperty(requestID)) {
+  if (hasOwnProperty(dataUpdateTime, requestID)) {
     delete dataUpdateTime[requestID];
   }
 }

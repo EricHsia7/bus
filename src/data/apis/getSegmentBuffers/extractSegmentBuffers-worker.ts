@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { SegmentBuffers } from './index';
 
 self.onmessage = function (e) {
@@ -39,7 +40,7 @@ function processWorkerTask(xml: string): SegmentBuffers {
           resultLastIndex++;
           break;
         case 'BufferZones':
-          if (!result[resultLastIndex].hasOwnProperty('BufferZones')) {
+          if (!hasOwnProperty(result[resultLastIndex], 'BufferZones')) {
             result[resultLastIndex]['BufferZones'] = [];
             bufferZoneLastIndex = -1;
           }

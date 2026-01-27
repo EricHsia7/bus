@@ -1,6 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location/details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
+import { hasOwnProperty } from '../../tools/index';
 import { getLocation, MergedLocation, MergedLocationItem } from '../apis/getLocation/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
@@ -25,7 +26,7 @@ export async function integrateLocationDetails(hash: string, requestID: string):
   deleteDataUpdateTime(requestID);
   const thisLocationKey = `ml_${hash}`;
   let thisLocation = {} as MergedLocationItem;
-  if (Location.hasOwnProperty(thisLocationKey)) {
+  if (hasOwnProperty(Location, thisLocationKey)) {
     thisLocation = Location[thisLocationKey];
   } else {
     return {

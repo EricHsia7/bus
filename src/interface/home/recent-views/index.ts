@@ -1,7 +1,7 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier } from '../../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
@@ -257,7 +257,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
   for (let i = 0; i < itemQuantity; i++) {
     const thisElement = RecentViewsItemElements[i];
     const thisItem = integration.items[i];
-    if (previousIntegration.hasOwnProperty('items')) {
+    if (hasOwnProperty(previousIntegration, 'items')) {
       if (previousIntegration.items[i]) {
         const previousItem = previousIntegration.items[i];
         updateItem(thisElement, thisItem, previousItem);

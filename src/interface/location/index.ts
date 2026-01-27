@@ -7,7 +7,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, getIconHTML, setIcon } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
@@ -821,8 +821,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     for (let k = 0; k < groupPropertyQuantity; k++) {
       const thisProperty = groups[groupKey].properties[k];
       const thisElement = propertyElements[k];
-      if (previousIntegration.hasOwnProperty('groups')) {
-        if (previousIntegration.groups.hasOwnProperty(groupKey)) {
+      if (hasOwnProperty(previousIntegration, 'groups')) {
+        if (hasOwnProperty(previousIntegration.groups, groupKey)) {
           if (previousIntegration.groups[groupKey].properties[k]) {
             const previousProperty = previousIntegration.groups[groupKey].properties[k];
             updateProperty(thisElement, thisProperty, previousProperty);
@@ -840,8 +840,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
       const thisElement = itemElements[j];
       const thisItem = groupedItems[groupKey][j];
-      if (previousIntegration.hasOwnProperty('groupedItems')) {
-        if (previousIntegration.groupedItems.hasOwnProperty(groupKey)) {
+      if (hasOwnProperty(previousIntegration, 'groupedItems')) {
+        if (hasOwnProperty(previousIntegration.groupedItems, groupKey)) {
           if (previousIntegration.groupedItems[groupKey][j]) {
             const previousItem = previousIntegration.groupedItems[groupKey][j];
             updateItem(thisElement, thisItem, previousItem);

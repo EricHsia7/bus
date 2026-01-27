@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { generateIdentifier, isValidURL } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty, isValidURL } from '../../tools/index';
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
@@ -105,7 +105,7 @@ export async function initializeNotificationSchedules() {
     const thisScheduleStopKey = `s_${thisScheduleStopID}`;
     NotifcationSchedules.push(thisSchedule);
     NotifcationSchedulesIndex[thisScheduleID] = index;
-    if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisScheduleStopKey)) {
+    if (!hasOwnProperty(NotifcationSchedulesStopIDIndex, thisScheduleStopKey)) {
       NotifcationSchedulesStopIDIndex[thisScheduleStopKey] = [];
     }
     NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(index);
@@ -131,7 +131,7 @@ export async function saveNotificationSchedule(schedule_id: NotificationSchedule
   const thisNotificationScheduleIndex = NotifcationSchedules.length; // length - 1 + 1
   NotifcationSchedules.push(thisNotificationSchedule);
   NotifcationSchedulesIndex[schedule_id] = thisNotificationScheduleIndex;
-  if (!NotifcationSchedulesStopIDIndex.hasOwnProperty(thisNotificationScheduleStopKey)) {
+  if (!hasOwnProperty(NotifcationSchedulesStopIDIndex, thisNotificationScheduleStopKey)) {
     NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey] = [];
   }
   NotifcationSchedulesStopIDIndex[thisNotificationScheduleStopKey].push(thisNotificationScheduleIndex);
@@ -139,7 +139,7 @@ export async function saveNotificationSchedule(schedule_id: NotificationSchedule
 }
 
 export function getNotificationSchedule(schedule_id: NotificationSchedule['schedule_id']): NotificationSchedule | false {
-  if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
+  if (hasOwnProperty(NotifcationSchedulesIndex, schedule_id)) {
     const thisScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const thisSchedule = NotifcationSchedules[thisScheduleIndex];
     const thisScheduledTime = thisSchedule.scheduled_time;
@@ -155,7 +155,7 @@ export function getNotificationSchedule(schedule_id: NotificationSchedule['sched
 }
 
 export async function updateNotificationSchedule(schedule_id: NotificationSchedule['schedule_id'], estimate_time: NotificationSchedule['estimate_time'], scheduled_time: NotificationSchedule['scheduled_time']) {
-  if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
+  if (hasOwnProperty(NotifcationSchedulesIndex, schedule_id)) {
     const existingScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const existingSchedule = NotifcationSchedules[existingScheduleIndex];
     const updatedSchedule: NotificationSchedule = Object.assign(existingSchedule, {
@@ -168,7 +168,7 @@ export async function updateNotificationSchedule(schedule_id: NotificationSchedu
 }
 
 export async function removeNotificationSchedule(schedule_id: NotificationSchedule['schedule_id']) {
-  if (NotifcationSchedulesIndex.hasOwnProperty(schedule_id)) {
+  if (hasOwnProperty(NotifcationSchedulesIndex, schedule_id)) {
     const existingScheduleIndex = NotifcationSchedulesIndex[schedule_id];
     const existingSchedule = NotifcationSchedules[existingScheduleIndex];
     const thisScheduleStopID = existingSchedule.stop_id;
@@ -198,7 +198,7 @@ export function listNotifcationSchedulesOfStop(StopID: NotificationSchedule['sto
   const result: Array<NotificationSchedule> = [];
   const now = new Date().getTime();
   const thisStopKey = `s_${StopID}`;
-  if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
+  if (hasOwnProperty(NotifcationSchedulesStopIDIndex, thisStopKey)) {
     const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
     for (const index of indexes) {
       const thisSchedule = NotifcationSchedules[index];
@@ -216,7 +216,7 @@ export function listNotifcationSchedulesOfStop(StopID: NotificationSchedule['sto
 export function stopHasNotifcationSchedules(StopID: NotificationSchedule['stop_id']): boolean {
   const now = new Date().getTime();
   const thisStopKey = `s_${StopID}`;
-  if (NotifcationSchedulesStopIDIndex.hasOwnProperty(thisStopKey)) {
+  if (hasOwnProperty(NotifcationSchedulesStopIDIndex, thisStopKey)) {
     const indexes = NotifcationSchedulesStopIDIndex[thisStopKey];
     for (const index of indexes) {
       const thisSchedule = NotifcationSchedules[index];
@@ -318,7 +318,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     const thisNotificationScheduleRouteID = item.route_id;
     const thisNotificationScheduleRouteKey = `r_${thisNotificationScheduleRouteID}`;
     let thisNotificationScheduleRoute = {} as SimplifiedRouteItem;
-    if (Route.hasOwnProperty(thisNotificationScheduleRouteKey)) {
+    if (hasOwnProperty(Route, thisNotificationScheduleRouteKey)) {
       thisNotificationScheduleRoute = Route[thisNotificationScheduleRouteKey];
     } else {
       continue;
@@ -338,7 +338,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
   const groups: { [key: string]: true } = {};
   for (const item of items) {
     const groupKey = `g_${item.date}_${item.hours}`;
-    if (!groups.hasOwnProperty(groupKey)) {
+    if (!hasOwnProperty(groups, groupKey)) {
       groups[groupKey] = true;
       item.is_first = true;
     } else {
@@ -420,7 +420,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     // Collect data from Stop
     const StopKey = `s_${StopID}`;
     let thisStop = {} as SimplifiedStopItem;
-    if (Stop.hasOwnProperty(StopKey)) {
+    if (hasOwnProperty(Stop, StopKey)) {
       thisStop = Stop[StopKey];
     } else {
       return 0;
@@ -431,7 +431,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     // Collect data from Location
     const thisLocationKey = `l_${thisStopLocationId}`;
     let thisLocation = {} as SimplifiedLocationItem;
-    if (Location.hasOwnProperty(thisLocationKey)) {
+    if (hasOwnProperty(Location, thisLocationKey)) {
       thisLocation = Location[thisLocationKey];
     } else {
       return 0;
@@ -441,7 +441,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     // Collect data from Route
     const RouteKey = `r_${RouteID}`;
     let thisRoute = {} as SimplifiedRouteItem;
-    if (Route.hasOwnProperty(RouteKey)) {
+    if (hasOwnProperty(Route, RouteKey)) {
       thisRoute = Route[RouteKey];
     } else {
       return 0;

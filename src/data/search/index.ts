@@ -1,5 +1,5 @@
 import { getIntersection } from '../../tools/array';
-import { generateIdentifier } from '../../tools/index';
+import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getUnicodes } from '../../tools/text';
 import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
@@ -26,7 +26,7 @@ export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedR
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   let result = {} as SimplifiedRouteItem;
   const routeKey = `r_${RouteID}`;
-  if (!Route.hasOwnProperty(routeKey)) {
+  if (!hasOwnProperty(Route, routeKey)) {
     return false;
   }
   result = Route[routeKey];
@@ -109,7 +109,7 @@ export async function prepareForSearch() {
     const unicodes = getUnicodes(`${thisItem.n.toLowerCase()}${thisItem.dep.toLowerCase()}${thisItem.des.toLowerCase()}`, true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
-      if (!index.hasOwnProperty(key)) {
+      if (!hasOwnProperty(index, key)) {
         index[key] = [];
       }
       index[key].push(i);
@@ -135,7 +135,7 @@ export async function prepareForSearch() {
     const unicodes = getUnicodes(thisItem.n.toLowerCase(), true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
-      if (!index.hasOwnProperty(key)) {
+      if (!hasOwnProperty(index, key)) {
         index[key] = [];
       }
       index[key].push(i);
@@ -161,7 +161,7 @@ export async function prepareForSearch() {
     const unicodes = getUnicodes(thisItem.n.toLowerCase(), true);
     for (const unicode of unicodes) {
       const key = `u_${unicode}`;
-      if (!index.hasOwnProperty(key)) {
+      if (!hasOwnProperty(index, key)) {
         index[key] = [];
       }
       index[key].push(i);
@@ -202,7 +202,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
 
   for (const unicode of queryUnicodes) {
     const key = `u_${unicode}`;
-    if (searchIndex.hasOwnProperty(key)) {
+    if (hasOwnProperty(searchIndex, key)) {
       unicodeGroups.push(searchIndex[key]);
     }
   }

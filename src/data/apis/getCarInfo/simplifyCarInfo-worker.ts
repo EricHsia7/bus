@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '../../../tools/index';
 import { CarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from './index';
 
 self.onmessage = function (e) {
@@ -14,7 +15,7 @@ function processWorkerTask(CarInfo: CarInfo): SimplifiedCarInfo {
     simplifiedItem.CarType = item.CarType;
     simplifiedItem.PathAttributeId = item.PathAttributeId;
     const carKey = `c_${item.BusId}`;
-    if (!result.hasOwnProperty(carKey)) {
+    if (!hasOwnProperty(result, carKey)) {
       result[carKey] = simplifiedItem;
     }
   }
