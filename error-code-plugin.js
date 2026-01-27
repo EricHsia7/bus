@@ -45,7 +45,7 @@ class ErrorCodePlugin {
 
                 const errorCode = this.mapping.get(originalText);
 
-                // Overwrite only the argument part: keep 'throw new Error()' intact
+                // Overwrite only the argument part
                 // We keep original arguments if they are variables
                 s.overwrite(arg.start, arg.end, `'${errorCode}'`);
               }
@@ -99,7 +99,7 @@ class ErrorCodePlugin {
     const extension = path.extname(pathname);
     const base = path.basename(pathname, extension);
     const dir = path.dirname(pathname);
-    const fullPath = path.join(dir, `${base}.error.map`);
+    const fullPath = path.join(dir, `${base}.error.map.json`);
     compilation.emitAsset(fullPath, new sources.RawSource(json));
   }
 }
