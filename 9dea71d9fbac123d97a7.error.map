@@ -1,0 +1,7 @@
+{
+  "'Arrays must have the same length'": "E0",
+  "'string notation required for auto precision.'": "E1",
+  "'Illegal argument ' + message": "E2",
+  "INPUT_ERROR": "E3",
+  "FINALIZE_ERROR": "E4"
+}
