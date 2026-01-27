@@ -73,7 +73,7 @@ class ErrorCodePlugin {
 
   saveManifest(compilation) {
     const json = JSON.stringify(Object.fromEntries(this.mapping), null, 2);
-    compilation.emitAsset('error-map.json', new sources.RawSource(json));
+    compilation.emitAsset(`${compilation.name}.errormap.json`, new sources.RawSource(json));
   }
 }
 
