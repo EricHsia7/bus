@@ -24,5 +24,16 @@
   "`HTTP error! status: ${response.status}`": "E22",
   "'Invalid JSON response from server'": "E23",
   "'The provider is not valid.'": "E24",
-  "'Network response was not ok'": "E25"
+  "'Network response was not ok'": "E25",
+  "msg[status]": "E26",
+  "source + 'must be non-object'": "E27",
+  "'bad maskPattern:' + maskPattern": "E28",
+  "'log(' + n + ')'": "E29",
+  "'Invalid SJIS character: ' + this.data[i] + '\\n' +\n        'Make sure your charset is UTF-8'": "E30",
+  "msg": "E31",
+  "'BitMatrix size must be defined and greater than 0'": "E32",
+  "'Unknown EC Level: ' + string": "E33",
+  "'resolver must be a function'": "E34",
+  "\"Cannot call a class as a function\"": "E35",
+  "'Unkown type: ' + type": "E36"
 }
