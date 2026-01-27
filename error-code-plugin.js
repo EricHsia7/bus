@@ -48,7 +48,7 @@ class ErrorCodePlugin {
           }
 
           // Output the mapping for your logs/Sentry
-          this.saveManifest(compilation);
+          this.saveManifest(compilation, name);
         }
       );
     });
@@ -71,9 +71,9 @@ class ErrorCodePlugin {
     }
   }
 
-  saveManifest(compilation) {
+  saveManifest(compilation, name) {
     const json = JSON.stringify(Object.fromEntries(this.mapping), null, 2);
-    compilation.emitAsset(`${compilation.name}.errormap.json`, new sources.RawSource(json));
+    compilation.emitAsset(`${name}.errormap.json`, new sources.RawSource(json));
   }
 }
 
