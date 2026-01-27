@@ -12,6 +12,7 @@ const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { Hasher } = require('./hasher');
+const { ErrorCodePlugin } = require('./error-code-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -129,6 +130,7 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: true,
       minimizer: [
+        new ErrorCodePlugin(),
         new TerserPlugin({
           terserOptions: {
             compress: {
