@@ -175,9 +175,6 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
 }
 
 export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
-  const now = new Date();
-  const currentTimestamp = now.getTime();
-  const currentDay = now.getDay();
   const keys = await lfListItemKeys(5);
   for (const key of keys) {
     const json = await lfGetItem(5, key);
@@ -187,7 +184,9 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       const thisStopData = object.data[stopKey];
       const dataGroup = {} as BusArrivalTimeDataGroup;
       const existingData = await lfGetItem(6, stopKey);
-      const stopID = parseInt(stopKey.split('_')[1]);
+      const stopKeyComponents = stopKey.split('_');
+      const stopID = parseInt(stopKeyComponents[1]);
+      const day = parseInt(stopKeyComponents[2]);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
         const newStats = await getBusArrivalTimeDataStats(thisStopData);
@@ -205,8 +204,8 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         const newExtremum = findGlobalExtrema(newStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
-        dataGroup.day = currentDay;
-        dataGroup.timestamp = currentTimestamp;
+        dataGroup.day = day;
+        dataGroup.timestamp = object.timestamp;
         dataGroup.id = stopID;
       }
       await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
