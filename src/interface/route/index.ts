@@ -783,13 +783,15 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         routeNameElement.innerText = overlappingRouteItem.name;
         routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
+        const thisOverlappingRouteID = overlappingRouteItem.RouteID;
+        const thisOverlappingRoutePathAttributeID = overlappingRouteItem.PathAttributeId;
         viewRouteButtonElement.onclick = function () {
-          switchRoute(overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+          switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
         };
         saveToFolderButtonElement.onclick = function () {
-          openSaveToFolder('route-on-route', [overlappingRouteItem.RouteID]); // TODO: update attribute 'highlighted'
+          openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
         };
-        isFolderContentSaved('route', overlappingRouteItem.RouteID).then(function (e) {
+        isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
         });
       }
