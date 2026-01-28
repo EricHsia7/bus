@@ -53,6 +53,7 @@ jobs:
             bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
 
       - name: Generate splash screen
+        if: steps.restore-cached-splash-screen.outputs.cache-hit != 'true'
         run: node generate-splash-screen.js
       
       - name: Cache splash screen
