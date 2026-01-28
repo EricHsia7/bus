@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-html-element-as-parameter
+      - dev-deprecate-generated-element
 
 jobs:
   build:
