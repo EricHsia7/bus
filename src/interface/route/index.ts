@@ -11,6 +11,7 @@ import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } fr
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement, getIconHTML } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -795,7 +796,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
             openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
           };
           isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
-            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
           });
         })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
       }
@@ -804,11 +805,92 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_route_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
+      const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times');
+      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
+      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
+      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
+          fragment.appendChild(newBusArrivalTimeElement.element);
+        }
+        thisBusArrivalTimesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
+          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
+      for (let i = 0; i < busArrivalTimesQuantity; i++) {
+        const busArrivalTimeItem = thisItem.busArrivalTimes[i];
+        const busArrivalTimeElement = busArrivalTimeElements[i];
+        const titleElement = elementQuerySelector(busArrivalTimeElement, '.css_route_group_item_bus_arrival_time_title');
+        const personalScheduleNameElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_arrival_time_personal_schedule_name');
+        const personalScheduleTimeElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_arrival_time_personal_schedule_time');
+        const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_route_group_item_bus_arrival_time_chart');
+        personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
+        personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
+        chartElement.innerHTML = busArrivalTimeItem.chart;
+      }
+
+      thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));
     }
 
     function updateNearbyLocations(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations').innerHTML = thisItem.nearbyLocations.length === 0 ? '<div class="css_route_group_item_nearby_locations_message">目前沒有地點可顯示</div>' : thisItem.nearbyLocations.map((nearbyLocation) => `<div class="css_route_group_item_nearby_location"><div class="css_route_group_item_nearby_location_title"><div class="css_route_group_item_nearby_location_icon">${getIconHTML('location_on')}</div><div class="css_route_group_item_nearby_location_name">${nearbyLocation.name}</div></div><div class="css_route_group_item_nearby_location_distance">${nearbyLocation.distance}公尺</div><div class="css_route_group_item_nearby_location_actions"><div class="css_route_group_item_nearby_location_action_button" onclick="bus.location.openLocation('${nearbyLocation.hash}')">查看地點</div><div class="css_route_group_item_nearby_location_action_button" onclick="bus.folder.openSaveToFolder('location-on-route', ['${nearbyLocation.hash}'])">儲存地點</div></div></div>`).join('');
+      const thisNearbyLocationsElement = elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations');
+      const currentNearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
+      const currentNearbyLocationElementsQuantity = currentNearbyLocationElements.length;
+      const nearbyLocationsQuantity = thisItem.nearbyLocations.length;
+      const difference = currentNearbyLocationElementsQuantity - nearbyLocationsQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newOverlappingRouteElement = generateElementOfNearbyLocation();
+          fragment.appendChild(newOverlappingRouteElement.element);
+        }
+        thisNearbyLocationsElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentNearbyLocationElementsQuantity - 1 - p;
+          currentNearbyLocationElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const nearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
+      for (let i = 0; i < nearbyLocationsQuantity; i++) {
+        const nearbyLocationItem = thisItem.nearbyLocations[i];
+        const nearbyLocationElement = nearbyLocationElements[i];
+        const titleElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_title');
+        const locationNameElement = elementQuerySelector(titleElement, '.css_route_group_item_nearby_location_name');
+        const distanceElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_distance');
+        const actionsElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_actions');
+        const viewLocationButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_nearby_location_action_button[type="view-location"]');
+        const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_nearby_location_action_button[type="save-to-folder"]');
+
+        locationNameElement.innerText = nearbyLocationItem.name;
+        distanceElement.innerText = `${nearbyLocationItem.distance}公尺`; // TODO: html
+
+        (function (thisViewLocationButtonElement, thisNearbyLocationHash) {
+          thisViewLocationButtonElement.onclick = function () {
+            openLocation(thisNearbyLocationHash);
+          };
+        })(viewLocationButtonElement, nearbyLocationItem.hash);
+
+        (function (thisSaveToFolderButtonElement, thisNearbyLocationHash) {
+          thisSaveToFolderButtonElement.onclick = function () {
+            openSaveToFolder('location-on-route', [thisNearbyLocationHash]); // TODO: update attribute 'highlighted'
+          };
+          isFolderContentSaved('location', thisNearbyLocationHash).then(function (e) {
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
+          });
+        })(saveToFolderButtonElement, nearbyLocationItem.hash);
+      }
+
+      thisNearbyLocationsElement.setAttribute('empty', booleanToString(nearbyLocationsQuantity === 0));
     }
 
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
