@@ -932,13 +932,20 @@
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
+}
+
+/* highlighted: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
+  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  color: var(--b-cssvar-main-color);
 }
 
 /* highlighted: true && segment buffer: true */
