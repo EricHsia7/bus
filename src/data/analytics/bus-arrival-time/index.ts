@@ -147,7 +147,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         const existingData = await lfGetItem(6, stopKey);
         if (existingData) {
           const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-          const newStats = getBusArrivalTimeDataStats(data);
+          const newStats = await getBusArrivalTimeDataStats(data);
           const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
           dataGroup.stats = mergedStats;
           const mergedExtrema = findGlobalExtrema(mergedStats);
@@ -157,7 +157,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
-          const newStats = getBusArrivalTimeDataStats(data);
+          const newStats = await getBusArrivalTimeDataStats(data);
           dataGroup.stats = newStats;
           const newExtrema = findGlobalExtrema(newStats);
           dataGroup.min = newExtrema[0];
@@ -190,7 +190,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       const stopID = parseInt(stopKey.split('_')[1]);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-        const newStats = getBusArrivalTimeDataStats(thisStopData);
+        const newStats = await getBusArrivalTimeDataStats(thisStopData);
         const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
         dataGroup.stats = mergedStats;
         const newExtremum = findGlobalExtrema(mergedStats);
@@ -200,7 +200,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         dataGroup.timestamp = existingDataObject.timestamp;
         dataGroup.id = stopID;
       } else {
-        const newStats = getBusArrivalTimeDataStats(thisStopData);
+        const newStats = await getBusArrivalTimeDataStats(thisStopData);
         dataGroup.stats = newStats;
         const newExtremum = findGlobalExtrema(newStats);
         dataGroup.min = newExtremum[0];
