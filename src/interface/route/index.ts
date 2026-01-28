@@ -1083,7 +1083,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newThreadsFragment = new DocumentFragment();
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
-          const newItemElement = generateElementOfItem(newThreadBoxElement.element);
+          const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
           newThreadsFragment.appendChild(newThreadBoxElement);
         }
