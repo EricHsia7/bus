@@ -228,7 +228,6 @@ export async function listFolderContent(folderID: Folder['id']): Promise<Array<F
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
       id: 0,
-      index: 0
     };
     result.push(emptyItem);
     return result;
