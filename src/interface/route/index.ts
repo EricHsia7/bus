@@ -784,16 +784,16 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         routeNameElement.innerText = overlappingRouteItem.name;
         routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
 
-        (function (thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
-          viewRouteButtonElement.onclick = function () {
+        (function (thisViewRouteButtonElement, thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
+          thisViewRouteButtonElement.onclick = function () {
             switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
           };
-        })(overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
-        (function (thisOverlappingRouteID) {
-          saveToFolderButtonElement.onclick = function () {
+        })(viewRouteButtonElement, overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+        (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
+          thisSaveToFolderButtonElement.onclick = function () {
             openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
           };
-        })(overlappingRouteItem.RouteID);
+        })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
 
         isFolderContentSaved('route', overlappingRouteItem.RouteID).then(function (e) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
