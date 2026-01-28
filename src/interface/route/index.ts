@@ -536,6 +536,54 @@ function generateElementOfBusArrivalTime(): GeneratedElement {
   };
 }
 
+function generateElementOfNearbyLocation(): GeneratedElement {
+  const nearbyLocationElement = document.createElement('div');
+  nearbyLocationElement.classList.add('css_route_group_item_nearby_location');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_nearby_location_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_nearby_location_icon');
+  iconElement.appendChild(getIconElement('location_on'));
+
+  const locationNameElement = document.createElement('div');
+  locationNameElement.classList.add('css_route_group_item_nearby_location_name');
+
+  const distanceElement = document.createElement('div');
+  distanceElement.classList.add('css_route_group_item_nearby_location_distance');
+
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('css_route_group_item_nearby_location_actions');
+
+  const viewLocationButtonElement = document.createElement('div');
+  viewLocationButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
+  viewLocationButtonElement.setAttribute('type', 'view-location');
+  viewLocationButtonElement.innerText = '查看地點';
+
+  const saveToFolderButtonElement = document.createElement('div');
+  saveToFolderButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
+  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
+  saveToFolderButtonElement.setAttribute('highlighted', 'false');
+  saveToFolderButtonElement.innerText = '儲存地點';
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(locationNameElement);
+  nearbyLocationElement.appendChild(titleElement);
+
+  nearbyLocationElement.appendChild(distanceElement);
+
+  actionsElement.appendChild(viewLocationButtonElement);
+  actionsElement.appendChild(saveToFolderButtonElement);
+
+  nearbyLocationElement.appendChild(actionsElement);
+
+  return {
+    element: nearbyLocationElement,
+    id: ''
+  };
+}
+
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
@@ -663,7 +711,40 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_route_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_route_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_route_group_item_bus_title"><div class="css_route_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_route_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_route_group_item_bus_attributes"><div class="css_route_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_route_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_route_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const thisBusesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_buses');
+      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
+      const currentBusElementsQuantity = currentBusElements.length;
+      const busesQuantity = thisItem.buses.length;
+      const difference = currentBusElementsQuantity - busesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusElement = generateElementOfBus();
+          fragment.appendChild(newBusElement.element);
+        }
+        thisBusesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const busIndex = currentGroupCapacity - 1 - p;
+          currentBusElements[busIndex].remove();
+        }
+      }
+      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
+      for (let i = 0; i < busesQuantity; i++) {
+        const busItem = thisItem.buses[i];
+        const busElement = busElements[i];
+        const titleElement = elementQuerySelector(busElement, '.css_route_group_item_bus_title');
+        const carNumberElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_car_number');
+        const attributesElement = elementQuerySelector(busElement, '.css_route_group_item_bus_attributes');
+        const routeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_route');
+        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_route');
+        const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_car_type');
+        busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
+        carNumberElement.innerText = busItem.carNumber;
+        routeAttributeElement.innerText = `路線：${busItem.RouteName}`;
+        carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
+        carTypeAttributeElement.innerText = `類型：${busItem.type}`;
+      }
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
