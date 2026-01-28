@@ -414,6 +414,128 @@ function generateElementOfTab(): GeneratedElement {
   };
 }
 
+function generateElementOfBus(): GeneratedElement {
+  const busElement = document.createElement('div');
+  busElement.classList.add('css_route_group_item_bus');
+  busElement.setAttribute('on-this-route', 'false');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_bus_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_bus_icon');
+  iconElement.appendChild(getIconElement('directions_bus'));
+
+  const carNumberElement = document.createElement('div');
+  carNumberElement.classList.add('css_route_group_item_bus_car_number');
+
+  const attributesElement = document.createElement('div');
+  attributesElement.classList.add('css_route_group_item_bus_attributes');
+
+  const routeAttributeElement = document.createElement('div');
+  routeAttributeElement.classList.add('css_route_group_item_bus_route');
+
+  const carStatusAttributeElement = document.createElement('div');
+  carStatusAttributeElement.classList.add('css_route_group_item_bus_car_status');
+
+  const carTypeAttributeElement = document.createElement('div');
+  carTypeAttributeElement.classList.add('css_route_group_item_bus_car_type');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(carNumberElement);
+  busElement.appendChild(titleElement);
+
+  attributesElement.appendChild(routeAttributeElement);
+  attributesElement.appendChild(carStatusAttributeElement);
+  attributesElement.appendChild(carTypeAttributeElement);
+  busElement.appendChild(attributesElement);
+
+  return {
+    element: busElement,
+    id: ''
+  };
+}
+
+function generateElementOfOverlappingRoute(): GeneratedElement {
+  const overlappingRouteElement = document.createElement('div');
+  overlappingRouteElement.classList.add('css_route_group_item_overlapping_route');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_overlapping_route_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_overlapping_route_icon');
+  iconElement.appendChild(getIconElement('route'));
+
+  const routeNameElement = document.createElement('div');
+  routeNameElement.classList.add('css_route_group_item_overlapping_route_name');
+
+  const routeEndPoindsElement = document.createElement('div');
+  routeEndPoindsElement.classList.add('css_route_group_item_overlapping_route_endpoints');
+
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('css_route_group_item_overlapping_route_actions');
+
+  const viewRouteButtonElement = document.createElement('div');
+  viewRouteButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
+  viewRouteButtonElement.setAttribute('type', 'view-route');
+  viewRouteButtonElement.innerText = '查看路線';
+
+  const saveToFolderButtonElement = document.createElement('div');
+  saveToFolderButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
+  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
+  saveToFolderButtonElement.setAttribute('highlighted', 'false');
+  saveToFolderButtonElement.innerText = '儲存路線';
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(routeNameElement);
+  overlappingRouteElement.appendChild(titleElement);
+
+  overlappingRouteElement.appendChild(routeEndPoindsElement);
+
+  actionsElement.appendChild(viewRouteButtonElement);
+  actionsElement.appendChild(saveToFolderButtonElement);
+
+  overlappingRouteElement.appendChild(actionsElement);
+
+  return {
+    element: overlappingRouteElement,
+    id: ''
+  };
+}
+
+function generateElementOfBusArrivalTime(): GeneratedElement {
+  const busArrivalTimeElement = document.createElement('div');
+  busArrivalTimeElement.classList.add('css_route_group_item_bus_arrival_time');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_bus_arrival_time_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_bus_arrival_time_icon');
+  iconElement.appendChild(getIconElement('calendar_view_day'));
+
+  const personalScheduleNameElement = document.createElement('div');
+  personalScheduleNameElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_name');
+
+  const personalScheduleTimeElement = document.createElement('div');
+  personalScheduleTimeElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_time');
+
+  const chartElement = document.createElement('css_route_group_item_bus_arrival_time_chart');
+  chartElement.classList.add('css_route_group_item_bus_arrival_time_chart');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(personalScheduleNameElement);
+  titleElement.appendChild(personalScheduleTimeElement);
+  busArrivalTimeElement.appendChild(titleElement);
+  busArrivalTimeElement.appendChild(chartElement);
+
+  return {
+    element: busArrivalTimeElement,
+    id: ''
+  };
+}
+
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
