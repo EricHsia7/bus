@@ -751,7 +751,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      /*
       const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
       const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
       const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
@@ -790,19 +789,18 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
             switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
           };
         })(viewRouteButtonElement, overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+
         (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
           thisSaveToFolderButtonElement.onclick = function () {
             openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
           };
+          isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+          });
         })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
-
-        isFolderContentSaved('route', overlappingRouteItem.RouteID).then(function (e) {
-          saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-        });
       }
 
       thisOverlappingRoutesElement.setAttribute('empty', booleanToString(overlappingRoutesQuantity === 0));
-      */
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
