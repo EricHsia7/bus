@@ -128,12 +128,9 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfThreadBox(): GeneratedElement {
-  const identifier = generateIdentifier();
-
   // Main thread box element
   const threadBoxElement = document.createElement('div');
   threadBoxElement.classList.add('css_route_group_thread_box');
-  threadBoxElement.id = identifier;
   threadBoxElement.setAttribute('stretched', 'false');
   threadBoxElement.setAttribute('stretching', 'false');
   threadBoxElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
@@ -173,17 +170,15 @@ function generateElementOfThreadBox(): GeneratedElement {
 
   return {
     element: threadBoxElement,
-    id: identifier
+    id: ''
   };
 }
 
 function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement {
-  const identifier = generateIdentifier();
 
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_route_group_item');
-  itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
   itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
@@ -372,7 +367,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
 
   return {
     element: itemElement,
-    id: identifier
+    id: ''
   };
 }
 

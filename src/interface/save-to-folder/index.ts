@@ -26,7 +26,7 @@ function generateElementOfItem(item: FolderWithContent, type: FolderContent['typ
   // Name element
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_save_to_folder_item_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
 
   itemElement.appendChild(iconElement);
   itemElement.appendChild(nameElement);

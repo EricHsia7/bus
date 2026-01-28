@@ -126,12 +126,9 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfItem(): GeneratedElement {
-  const identifier = generateIdentifier();
-
   // Main container
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_location_group_item');
-  itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
   itemElement.setAttribute('push-direction', '0');
@@ -293,7 +290,7 @@ function generateElementOfItem(): GeneratedElement {
 
   return {
     element: itemElement,
-    id: identifier
+    id: ''
   };
 }
 
