@@ -729,6 +729,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           currentBusElements[busIndex].remove();
         }
       }
+
       const busElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
       for (let i = 0; i < busesQuantity; i++) {
         const busItem = thisItem.buses[i];
@@ -737,7 +738,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const carNumberElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_car_number');
         const attributesElement = elementQuerySelector(busElement, '.css_route_group_item_bus_attributes');
         const routeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_route');
-        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_route');
+        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_car_status');
         const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_car_type');
         busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
         carNumberElement.innerText = busItem.carNumber;
