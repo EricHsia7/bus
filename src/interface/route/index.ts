@@ -751,7 +751,50 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes').innerHTML = thisItem.overlappingRoutes.length === 0 ? '<div class="css_route_group_item_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_route_group_item_overlapping_route"><div class="css_route_group_item_overlapping_route_title"><div class="css_route_group_item_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_route_group_item_overlapping_route_name">${route.name}</div></div><div class="css_route_group_item_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_route_group_item_overlapping_route_actions"><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.folder.openSaveToFolder('route-on-route', [${route.RouteID}])">儲存路線</div></div></div>`).join('');
+      const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
+      const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
+      const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
+      const overlappingRoutesQuantity = thisItem.overlappingRoutes.length;
+      const difference = currentOverlappingRouteElementsQuantity - overlappingRoutesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newOverlappingRouteElement = generateElementOfOverlappingRoute();
+          fragment.appendChild(newOverlappingRouteElement.element);
+        }
+        thisOverlappingRoutesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentOverlappingRouteElementsQuantity - 1 - p;
+          currentOverlappingRouteElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const overlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
+      for (let i = 0; i < overlappingRoutesQuantity; i++) {
+        const overlappingRouteItem = thisItem.overlappingRoutes[i];
+        const overlappingRouteElement = overlappingRouteElements[i];
+        const titleElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_title');
+        const routeNameElement = elementQuerySelector(titleElement, '.css_route_group_item_overlapping_route_name');
+        const routeEndPoindsElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_endpoints');
+        const actionsElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_actions');
+        const viewRouteButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_overlapping_route_action_button[type="view-route"]');
+        const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_overlapping_route_action_button[type="save-to-folder"]');
+
+        routeNameElement.innerText = overlappingRouteItem.name;
+        routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
+        viewRouteButtonElement.onclick = function () {
+          switchRoute(overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+        };
+        saveToFolderButtonElement.onclick = function () {
+          openSaveToFolder('route-on-route', [overlappingRouteItem.RouteID]); // TODO: update attribute 'highlighted'
+        };
+        isFolderContentSaved('route', overlappingRouteItem.RouteID).then(function (e) {
+          saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+        });
+      }
+
+      thisOverlappingRoutesElement.setAttribute('empty', booleanToString(overlappingRoutesQuantity === 0));
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
