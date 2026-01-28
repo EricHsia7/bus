@@ -186,7 +186,7 @@ function generateElementOfItem(): GeneratedElement {
   stretchElement.classList.add('css_location_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
-    stretchLocationItem(identifier);
+    stretchLocationItem(itemElement);
   };
 
   // Capsule separator
@@ -937,31 +937,30 @@ export function closeLocation(): void {
   openPreviousPage();
 }
 
-export function stretchLocationItem(itemElementID: string): void {
-  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
-  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
+export function stretchLocationItem(thisItemElement: HTMLElement): void {
+  const itemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
 
-  const itemsElement = itemElement.parentElement as HTMLElement;
+  const itemsElement = thisItemElement.parentElement as HTMLElement;
 
-  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_location_group_item');
+  const elementsBelowItemElement = getElementsBelow(thisItemElement, 'css_location_group_item');
   const elementsBelowLength = elementsBelowItemElement.length;
 
   const itemsElementRect = itemsElement.getBoundingClientRect();
-  const itemElementRect = itemElement.getBoundingClientRect();
+  const itemElementRect = thisItemElement.getBoundingClientRect();
 
   // const itemElementX = itemElementRect.left - itemsElementRect.left;
   const itemElementY = itemElementRect.top - itemsElementRect.top;
 
-  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+  const stretched = thisItemElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = thisItemElement.getAttribute('animation') === 'true' ? true : false;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
 
     // Separate the elements from the document flow while keeping its position
-    itemElement.setAttribute('stretching', 'true');
+    thisItemElement.setAttribute('stretching', 'true');
     // itemElement.style.setProperty('--b-cssvar-css-location-group-item-x', `${itemElementX}px`);
-    itemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
+    thisItemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
     for (let i = 0; i < elementsBelowLength; i++) {
@@ -970,7 +969,7 @@ export function stretchLocationItem(itemElementID: string): void {
       thisItemElement.setAttribute('push-state', '1');
     }
 
-    itemElement.addEventListener(
+    thisItemElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
@@ -980,12 +979,12 @@ export function stretchLocationItem(itemElementID: string): void {
           thisItemElement.setAttribute('push-state', '0');
         }
         // Deposit the element
-        itemElement.setAttribute('stretching', 'false');
+        thisItemElement.setAttribute('stretching', 'false');
       },
       { once: true }
     );
 
-    itemElement.addEventListener(
+    thisItemElement.addEventListener(
       'transitionstart',
       function () {
         // Transition the elements below
@@ -1010,10 +1009,10 @@ export function stretchLocationItem(itemElementID: string): void {
     } else {
       itemBodyElement.setAttribute('displayed', 'false');
     }
-    itemElement.setAttribute('stretched', 'false');
+    thisItemElement.setAttribute('stretched', 'false');
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
-    itemElement.setAttribute('stretched', 'true');
+    thisItemElement.setAttribute('stretched', 'true');
   }
 }
 
