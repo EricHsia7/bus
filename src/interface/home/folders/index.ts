@@ -6,7 +6,7 @@ import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } fr
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
-import { GeneratedElement, querySize } from '../../index';
+import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
 import { openRoute } from '../../route/index';
@@ -33,7 +33,7 @@ let foldersRefreshTimer_refreshing: boolean = false;
 let foldersRefreshTimer_streaming: boolean = false;
 let foldersRefreshTimer_streamStarted: boolean = false;
 
-function generateElementOfItem(): GeneratedElement {
+function generateElementOfItem(): HTMLElement {
   // Main container
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_home_folder_item');
@@ -93,13 +93,10 @@ function generateElementOfItem(): GeneratedElement {
   itemElement.appendChild(mainElement);
   itemElement.appendChild(capsuleElement);
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 
-function generateElementOfFolder(): GeneratedElement {
+function generateElementOfFolder(): HTMLElement {
   // Main container
   const folderElement = document.createElement('div');
   folderElement.classList.add('css_home_folder');
@@ -129,10 +126,7 @@ function generateElementOfFolder(): GeneratedElement {
   folderElement.appendChild(headElement);
   folderElement.appendChild(contentElement);
 
-  return {
-    element: folderElement,
-    id: ''
-  };
+  return folderElement;
 }
 
 function animateUpdateTimer(): void {
@@ -499,7 +493,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       const fragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newFolderElement = generateElementOfFolder();
-        fragment.appendChild(newFolderElement.element);
+        fragment.appendChild(newFolderElement);
       }
       HomeFoldersElement.append(fragment);
     } else {
@@ -524,7 +518,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       if (difference < 0) {
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newItemElement = generateElementOfItem();
-          thisFolderContentElement.appendChild(newItemElement.element);
+          thisFolderContentElement.appendChild(newItemElement);
         }
       } else {
         const FolderContentItemElements = elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item');

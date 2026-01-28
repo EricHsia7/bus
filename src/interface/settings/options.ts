@@ -1,6 +1,6 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
 const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
@@ -9,7 +9,7 @@ const SettingsOptionsDescriptionElement = elementQuerySelector(SettingsOptionsBo
 const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_head');
 const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
 
-function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): GeneratedElement {
+function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): HTMLElement {
   const optionElement = document.createElement('div');
   optionElement.classList.add('css_option');
 
@@ -31,10 +31,7 @@ function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption
   optionElement.appendChild(nameElement);
   optionElement.appendChild(checkboxContainerElement);
 
-  return {
-    element: optionElement,
-    id: ''
-  };
+  return optionElement;
 }
 
 function initializeSettingsOptionsField(settingKey: string): void {
@@ -46,7 +43,7 @@ function initializeSettingsOptionsField(settingKey: string): void {
   let index: number = 0;
   for (const item of setting.options) {
     const thisElement = generateElementOfItem(setting, item, index);
-    fragment.appendChild(thisElement.element);
+    fragment.appendChild(thisElement);
     index += 1;
   }
   SettingsOptionsOptionsElement.append(fragment);

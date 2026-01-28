@@ -6,7 +6,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
@@ -48,13 +48,10 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfItem(): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfItem(): HTMLElement {
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_notification_schedule_manager_item');
-  itemElement.id = identifier;
 
   // Hours element
   const hoursElement = document.createElement('div');
@@ -92,10 +89,7 @@ function generateElementOfItem(): GeneratedElement {
   // Assemble
   itemElement.appendChild(notificationScheduleElement);
 
-  return {
-    element: itemElement,
-    id: identifier
-  };
+  return itemElement;
 }
 
 function updateNotificationScheduleManagerField(integration: IntegratedNotificationSchedules, skeletonScreen: boolean, animation: boolean): void {
@@ -186,7 +180,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       const fragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newItemElement = generateElementOfItem();
-        fragment.appendChild(newItemElement.element);
+        fragment.appendChild(newItemElement);
       }
       NotificationScheduleList.append(fragment);
     } else {

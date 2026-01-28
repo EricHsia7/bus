@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -127,7 +127,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfThreadBox(): GeneratedElement {
+function generateElementOfThreadBox(): HTMLElement {
   // Main thread box element
   const threadBoxElement = document.createElement('div');
   threadBoxElement.classList.add('css_route_group_thread_box');
@@ -168,13 +168,10 @@ function generateElementOfThreadBox(): GeneratedElement {
   threadBoxElement.appendChild(threadElement);
   threadBoxElement.appendChild(threadStatusElement);
 
-  return {
-    element: threadBoxElement,
-    id: ''
-  };
+  return threadBoxElement;
 }
 
-function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement {
+function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_route_group_item');
@@ -364,13 +361,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   itemElement.appendChild(headElement);
   itemElement.appendChild(bodyElement);
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 
-function generateElementOfGroup(): GeneratedElement {
+function generateElementOfGroup(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group');
 
@@ -394,22 +388,17 @@ function generateElementOfGroup(): GeneratedElement {
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
-  return {
-    element: element,
-    id: ''
-  };
+
+  return element;
 }
 
-function generateElementOfTab(): GeneratedElement {
+function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
-function generateElementOfBus(): GeneratedElement {
+function generateElementOfBus(): HTMLElement {
   const busElement = document.createElement('div');
   busElement.classList.add('css_route_group_item_bus');
   busElement.setAttribute('on-this-route', 'false');
@@ -445,13 +434,10 @@ function generateElementOfBus(): GeneratedElement {
   attributesElement.appendChild(carTypeAttributeElement);
   busElement.appendChild(attributesElement);
 
-  return {
-    element: busElement,
-    id: ''
-  };
+  return busElement;
 }
 
-function generateElementOfOverlappingRoute(): GeneratedElement {
+function generateElementOfOverlappingRoute(): HTMLElement {
   const overlappingRouteElement = document.createElement('div');
   overlappingRouteElement.classList.add('css_route_group_item_overlapping_route');
 
@@ -493,13 +479,10 @@ function generateElementOfOverlappingRoute(): GeneratedElement {
 
   overlappingRouteElement.appendChild(actionsElement);
 
-  return {
-    element: overlappingRouteElement,
-    id: ''
-  };
+  return overlappingRouteElement;
 }
 
-function generateElementOfBusArrivalTime(): GeneratedElement {
+function generateElementOfBusArrivalTime(): HTMLElement {
   const busArrivalTimeElement = document.createElement('div');
   busArrivalTimeElement.classList.add('css_route_group_item_bus_arrival_time');
 
@@ -525,13 +508,10 @@ function generateElementOfBusArrivalTime(): GeneratedElement {
   busArrivalTimeElement.appendChild(titleElement);
   busArrivalTimeElement.appendChild(chartElement);
 
-  return {
-    element: busArrivalTimeElement,
-    id: ''
-  };
+  return busArrivalTimeElement;
 }
 
-function generateElementOfNearbyLocation(): GeneratedElement {
+function generateElementOfNearbyLocation(): HTMLElement {
   const nearbyLocationElement = document.createElement('div');
   nearbyLocationElement.classList.add('css_route_group_item_nearby_location');
 
@@ -573,10 +553,7 @@ function generateElementOfNearbyLocation(): GeneratedElement {
 
   nearbyLocationElement.appendChild(actionsElement);
 
-  return {
-    element: nearbyLocationElement,
-    id: ''
-  };
+  return nearbyLocationElement;
 }
 
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
@@ -715,7 +692,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newBusElement = generateElementOfBus();
-          fragment.appendChild(newBusElement.element);
+          fragment.appendChild(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
@@ -755,7 +732,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newOverlappingRouteElement = generateElementOfOverlappingRoute();
-          fragment.appendChild(newOverlappingRouteElement.element);
+          fragment.appendChild(newOverlappingRouteElement);
         }
         thisOverlappingRoutesElement.append(fragment);
       } else {
@@ -808,7 +785,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
-          fragment.appendChild(newBusArrivalTimeElement.element);
+          fragment.appendChild(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
@@ -844,7 +821,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newOverlappingRouteElement = generateElementOfNearbyLocation();
-          fragment.appendChild(newOverlappingRouteElement.element);
+          fragment.appendChild(newOverlappingRouteElement);
         }
         thisNearbyLocationsElement.append(fragment);
       } else {
@@ -1074,9 +1051,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const newTabsFragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newGroupElement = generateElementOfGroup();
-        newGroupsFragment.appendChild(newGroupElement.element);
+        newGroupsFragment.appendChild(newGroupElement);
         const newTabElement = generateElementOfTab();
-        newTabsFragment.appendChild(newTabElement.element);
+        newTabsFragment.appendChild(newTabElement);
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
@@ -1107,8 +1084,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
           const newItemElement = generateElementOfItem(newThreadBoxElement.element);
-          newItemsFragment.appendChild(newItemElement.element);
-          newThreadsFragment.appendChild(newThreadBoxElement.element);
+          newItemsFragment.appendChild(newItemElement);
+          newThreadsFragment.appendChild(newThreadBoxElement);
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadsFragment);

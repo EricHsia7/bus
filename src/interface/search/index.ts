@@ -8,7 +8,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { GeneratedElement, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
+import { pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -226,7 +226,7 @@ function animateCursor(): void {
   }
 }
 
-function generateElementOfSearchResultItem(): GeneratedElement {
+function generateElementOfSearchResultItem(): HTMLElement {
   const searchResultItemElement = document.createElement('div');
   searchResultItemElement.classList.add('css_search_search_result');
 
@@ -239,10 +239,7 @@ function generateElementOfSearchResultItem(): GeneratedElement {
 
   searchResultItemElement.appendChild(typeElement);
   searchResultItemElement.appendChild(nameElement);
-  return {
-    element: searchResultItemElement,
-    id: ''
-  };
+  return searchResultItemElement;
 }
 
 export function updateSearchResult(): void {
@@ -310,7 +307,7 @@ export function updateSearchResult(): void {
         const fragment = new DocumentFragment();
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newElement = generateElementOfSearchResultItem();
-          fragment.appendChild(newElement.element);
+          fragment.appendChild(newElement);
         }
         searchResultsElement.appendChild(fragment);
       } else {

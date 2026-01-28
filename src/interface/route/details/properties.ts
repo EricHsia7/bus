@@ -2,14 +2,13 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { GeneratedElement } from '../../index';
 import { PropertiesGroupBodyElement, PropertiesGroupElement } from './index';
 
 let previousProperties = [];
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-function generateElementOfProperty(): GeneratedElement {
+function generateElementOfProperty(): HTMLElement {
   const propertyElement = document.createElement('div');
   propertyElement.classList.add('css_route_details_property');
 
@@ -22,10 +21,7 @@ function generateElementOfProperty(): GeneratedElement {
   valueElement.classList.add('css_route_details_property_value');
   propertyElement.appendChild(valueElement);
 
-  return {
-    element: propertyElement,
-    id: ''
-  };
+  return propertyElement;
 }
 
 export function setUppropertiesGroupSkeletonScreen(): void {
@@ -96,7 +92,7 @@ export function updatePropertiesField(properties: Array, skeletonScreen: boolean
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         // const propertyIndex = currentPropertyCapacity + o;
         const newPropertyElement = generateElementOfProperty();
-        fragment.appendChild(newPropertyElement.element);
+        fragment.appendChild(newPropertyElement);
       }
       PropertiesGroupBodyElement.append(fragment);
     } else {
