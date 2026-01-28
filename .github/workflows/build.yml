@@ -36,6 +36,7 @@ jobs:
       - name: Cache dependencies
         id: cache-dependencies
         uses: actions/cache/save@v5
+        if: steps.restore-cached-dependencies.outputs.cache-hit != 'true'
         with:
           path: |
             ./node_modules
@@ -57,6 +58,7 @@ jobs:
       - name: Cache splash screen
         id: cache-splash-screen
         uses: actions/cache/save@v5
+        if: steps.restore-cached-splash-screen.outputs.cache-hit != 'true'
         with:
           path: ./dist/splash-screen
           key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
