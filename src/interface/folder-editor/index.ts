@@ -1,10 +1,9 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { generateIdentifier } from '../../tools/index';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
@@ -21,12 +20,9 @@ OpenFolderIconSelectorElement.onclick = function () {
   openFolderIconSelector('editor');
 };
 
-function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement {
   // Main container
   const itemElement = document.createElement('div');
-  itemElement.id = identifier;
   itemElement.classList.add('css_folder_editor_folder_item');
   itemElement.setAttribute('type', item.type);
 
@@ -128,10 +124,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   itemElement.appendChild(mainElement);
   itemElement.appendChild(capsuleElement);
 
-  return {
-    element: itemElement,
-    id: identifier
-  };
+  return itemElement;
 }
 
 function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
@@ -146,7 +139,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
   const fragment = new DocumentFragment();
   for (const item of content) {
     const thisItemElement = generateElementOfItem(folder, item);
-    fragment.appendChild(thisItemElement.element);
+    fragment.appendChild(thisItemElement);
   }
   FolderContentElement.append(fragment);
 }

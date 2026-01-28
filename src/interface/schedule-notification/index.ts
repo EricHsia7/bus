@@ -1,14 +1,14 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
 const ScheduleNotificationBodyElement = elementQuerySelector(ScheduleNotificationField, '.css_schedule_notification_body');
 const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificationBodyElement, '.css_schedule_notification_list');
 
-function generateElementOfItem(item: ScheduleNotificationOption, thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): GeneratedElement {
+function generateElementOfItem(item: ScheduleNotificationOption, thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): HTMLElement {
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_schedule_notification_list_item');
 
@@ -33,10 +33,7 @@ function generateElementOfItem(item: ScheduleNotificationOption, thisButtonEleme
   itemElement.appendChild(iconElement);
   itemElement.appendChild(nameElement);
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 
 function initializeScheduleNotificationField(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): void {
@@ -44,7 +41,7 @@ function initializeScheduleNotificationField(thisButtonElement: HTMLElement, Sto
   const fragment = new DocumentFragment();
   for (const item of scheduleNotificationOptions) {
     const newElement = generateElementOfItem(item, thisButtonElement, StopID, RouteID, EstimateTime);
-    fragment.appendChild(newElement.element);
+    fragment.appendChild(newElement);
   }
   ScheduleNotificationListElement.append(fragment);
 }

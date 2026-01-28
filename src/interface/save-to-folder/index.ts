@@ -2,7 +2,7 @@ import { FolderContent, FolderWithContent, isFolderContentSaved, listFoldersWith
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
@@ -12,7 +12,7 @@ const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.
 const successfulSaveMessage = '已儲存至資料夾';
 const failedSaveMessage = '無法儲存';
 
-function generateElementOfItem(item: FolderWithContent, type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): GeneratedElement {
+function generateElementOfItem(item: FolderWithContent, type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): HTMLElement {
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_save_to_folder_list_item');
 
@@ -103,10 +103,7 @@ function generateElementOfItem(item: FolderWithContent, type: FolderContent['typ
       break;
   }
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 
 async function initializeSaveToFolderField(type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined) {
@@ -115,7 +112,7 @@ async function initializeSaveToFolderField(type: FolderContent['type'], paramete
   const fragment = new DocumentFragment();
   for (const item of foldersWithContent) {
     const newItemElement = generateElementOfItem(item, type, parameters, saveToFolderButtonElement);
-    fragment.appendChild(newItemElement.element);
+    fragment.appendChild(newItemElement);
   }
   SaveToFolderListElement.append(fragment);
 }

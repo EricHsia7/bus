@@ -6,14 +6,14 @@ import { askForPersistentStorage } from '../../data/storage/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier, releaseFile } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SettingsField = documentQuerySelector('.css_settings_field');
 const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_body');
 const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
 
-function generateElementOfItem(item: Setting): GeneratedElement {
+function generateElementOfItem(item: Setting): HTMLElement {
   const settingElement = document.createElement('div');
   settingElement.classList.add('css_setting');
   settingElement.setAttribute('type', item.type);
@@ -57,10 +57,7 @@ function generateElementOfItem(item: Setting): GeneratedElement {
   settingElement.appendChild(statusElement);
   settingElement.appendChild(arrowElement);
 
-  return {
-    element: settingElement,
-    id: ''
-  };
+  return settingElement;
 }
 
 async function initializeSettingsField() {
@@ -69,7 +66,7 @@ async function initializeSettingsField() {
   const fragment = new DocumentFragment();
   for (const item of list) {
     const thisElement = generateElementOfItem(item);
-    fragment.appendChild(thisElement.element);
+    fragment.appendChild(thisElement);
   }
   SettingsElement.append(fragment);
 }

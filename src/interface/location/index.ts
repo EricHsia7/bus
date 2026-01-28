@@ -9,8 +9,8 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, g
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getBlankIconElement, getIconElement, getIconHTML, setIcon } from '../icons/index';
-import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -125,7 +125,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfItem(): GeneratedElement {
+function generateElementOfItem(): HTMLElement {
   // Main container
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_location_group_item');
@@ -288,13 +288,10 @@ function generateElementOfItem(): GeneratedElement {
   itemElement.appendChild(headElement);
   itemElement.appendChild(bodyElement);
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 
-function generateElementOfGroup(): GeneratedElement {
+function generateElementOfGroup(): HTMLElement {
   // Main container
   const groupElement = document.createElement('div');
   groupElement.classList.add('css_location_group');
@@ -316,26 +313,20 @@ function generateElementOfGroup(): GeneratedElement {
   groupElement.appendChild(detailsElement);
   groupElement.appendChild(itemsElement);
 
-  return {
-    element: groupElement,
-    id: ''
-  };
+  return groupElement;
 }
 
-function generateElementOfTab(): GeneratedElement {
+function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_location_group_tab');
 
   const span = document.createElement('span');
   element.appendChild(span);
 
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
-function generateElementOfGroupDetailsProperty(): GeneratedElement {
+function generateElementOfGroupDetailsProperty(): HTMLElement {
   // Main container
   const propertyElement = document.createElement('div');
   propertyElement.classList.add('css_location_group_details_property');
@@ -353,13 +344,10 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   propertyElement.appendChild(iconElement);
   propertyElement.appendChild(valueElement);
 
-  return {
-    element: propertyElement,
-    id: ''
-  };
+  return propertyElement;
 }
 
-function generateElementOfBus(): GeneratedElement {
+function generateElementOfBus(): HTMLElement {
   const busElement = document.createElement('div');
   busElement.classList.add('css_location_group_item_bus');
   busElement.setAttribute('on-this-route', 'false');
@@ -395,13 +383,10 @@ function generateElementOfBus(): GeneratedElement {
   attributesElement.appendChild(carTypeAttributeElement);
   busElement.appendChild(attributesElement);
 
-  return {
-    element: busElement,
-    id: ''
-  };
+  return busElement;
 }
 
-function generateElementOfBusArrivalTime(): GeneratedElement {
+function generateElementOfBusArrivalTime(): HTMLElement {
   const busArrivalTimeElement = document.createElement('div');
   busArrivalTimeElement.classList.add('css_location_group_item_bus_arrival_time');
 
@@ -427,10 +412,7 @@ function generateElementOfBusArrivalTime(): GeneratedElement {
   busArrivalTimeElement.appendChild(titleElement);
   busArrivalTimeElement.appendChild(chartElement);
 
-  return {
-    element: busArrivalTimeElement,
-    id: ''
-  };
+  return busArrivalTimeElement;
 }
 
 function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
@@ -618,7 +600,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newBusElement = generateElementOfBus();
-          fragment.appendChild(newBusElement.element);
+          fragment.appendChild(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
@@ -659,7 +641,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const fragment = new DocumentFragment();
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
-          fragment.appendChild(newBusArrivalTimeElement.element);
+          fragment.appendChild(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
@@ -868,9 +850,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const tabsFragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newGroupElement = generateElementOfGroup();
-        groupsFragment.appendChild(newGroupElement.element);
+        groupsFragment.appendChild(newGroupElement);
         const newTabElement = generateElementOfTab();
-        tabsFragment.appendChild(newTabElement.element);
+        tabsFragment.appendChild(newTabElement);
       }
       LocationGroupsElement.append(groupsFragment);
       LocationGroupTabsTrayElement.append(tabsFragment);
@@ -896,7 +878,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newItemElement = generateElementOfItem();
-          LocationGroupItemsElement.appendChild(newItemElement.element);
+          LocationGroupItemsElement.appendChild(newItemElement);
         }
       } else {
         const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item');
@@ -917,7 +899,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           // var propertyIndex = currentGroupPropertyCapacity + o;
           const newPropertyElement = generateElementOfGroupDetailsProperty();
-          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement.element);
+          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement);
         }
       } else {
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');

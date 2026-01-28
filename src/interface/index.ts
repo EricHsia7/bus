@@ -201,11 +201,6 @@ export function showErrorMessage(): void {
   ErrorMessageElement.setAttribute('displayed', 'true');
 }
 
-export interface GeneratedElement {
-  element: HTMLElement;
-  id: string;
-}
-
 export type GroupStyles = {
   [key: string]: {
     width: number;

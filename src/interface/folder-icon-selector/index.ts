@@ -6,7 +6,7 @@ import { generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { dataDownloadCompleted } from '../home/index';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 type Target = 'editor' | 'creator' | '';
@@ -17,17 +17,14 @@ const folderEditorField = documentQuerySelector('.css_folder_editor_field');
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
 
-function generateElementOfSymbol(symbol: string): GeneratedElement {
+function generateElementOfSymbol(symbol: string): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_folder_icon_selector_symbol');
   element.onclick = function () {
     selectFolderIcon(symbol, currentTarget);
   };
   element.appendChild(getIconElement(symbol));
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
 async function initializeFolderIconSelectorField() {
@@ -45,7 +42,7 @@ async function initializeFolderIconSelectorField() {
     }
     const symbol = symbolNameComponents.join('_');
     const symbolElement = generateElementOfSymbol(symbol, currentTarget);
-    fragment.appendChild(symbolElement.element);
+    fragment.appendChild(symbolElement);
   }
   materialSymbolsElement.append(fragment);
 }
@@ -58,7 +55,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
     const fragment = new DocumentFragment();
     for (const result of searchResults) {
       const symbolElement = generateElementOfSymbol(result.item, currentTarget);
-      fragment.appendChild(symbolElement.element);
+      fragment.appendChild(symbolElement);
     }
     materialSymbolsSearchResultsElement.innerHTML = '';
     materialSymbolsSearchResultsElement.append(fragment);

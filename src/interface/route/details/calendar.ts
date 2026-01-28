@@ -4,7 +4,7 @@ import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/el
 import { drawRoundedRect } from '../../../tools/graphic';
 import { booleanToString } from '../../../tools/index';
 import { getCSSVariableValue } from '../../../tools/style';
-import { GeneratedElement, querySize } from '../../index';
+import { querySize } from '../../index';
 import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
 const calendarRatio = 70;
@@ -39,17 +39,14 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
   context.scale(canvasScale, canvasScale);
 }
 
-function generateElementOfDay(): GeneratedElement {
+function generateElementOfDay(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_details_calendar_day');
 
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
-function generateElementOfEventGroup(): GeneratedElement {
+function generateElementOfEventGroup(): HTMLElement {
   // Main event group element
   const eventGroupElement = document.createElement('div');
   eventGroupElement.classList.add('css_route_details_calendar_event_group');
@@ -59,10 +56,7 @@ function generateElementOfEventGroup(): GeneratedElement {
   canvasElement.classList.add('css_route_details_calendar_event_group_canvas');
   eventGroupElement.appendChild(canvasElement);
 
-  return {
-    element: eventGroupElement,
-    id: ''
-  };
+  return eventGroupElement;
 }
 
 export function setUpCalendarGroupSkeletonScreen(): void {
@@ -241,9 +235,9 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
       const calendarEventGroupsFragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newDayElement = generateElementOfDay();
-        calendarDaysFragment.appendChild(newDayElement.element);
+        calendarDaysFragment.appendChild(newDayElement);
         const newEventGroupElement = generateElementOfEventGroup();
-        calendarEventGroupsFragment.appendChild(newEventGroupElement.element);
+        calendarEventGroupsFragment.appendChild(newEventGroupElement);
       }
       CalendarDaysElement.append(calendarDaysFragment);
       CalendarEventGroupsElement.append(calendarEventGroupsFragment);
