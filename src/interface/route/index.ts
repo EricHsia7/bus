@@ -751,6 +751,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
+      /*
       const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
       const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
       const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
@@ -801,6 +802,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       }
 
       thisOverlappingRoutesElement.setAttribute('empty', booleanToString(overlappingRoutesQuantity === 0));
+      */
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
