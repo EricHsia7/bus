@@ -125,6 +125,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
+  setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
   const EstimateTime = await getEstimateTime(requestID);
   const Location = (await getLocation(requestID, 1)) as MergedLocation;
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
