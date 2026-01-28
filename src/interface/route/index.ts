@@ -725,7 +725,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         thisBusesElement.append(fragment);
       } else {
         for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const busIndex = currentGroupCapacity - 1 - p;
+          const busIndex = currentBusElementsQuantity - 1 - p;
           currentBusElements[busIndex].remove();
         }
       }
