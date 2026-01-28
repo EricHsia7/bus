@@ -6,7 +6,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } 
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../../index';
+import { pushPageHistory, revokePageHistory } from '../../index';
 import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
 
@@ -18,7 +18,7 @@ const LocationDetailsField = documentQuerySelector('.css_location_details_field'
 const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
 const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
 
-function generateElementOfItem(): GeneratedElement {
+function generateElementOfItem(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_location_details_action');
 
@@ -33,10 +33,7 @@ function generateElementOfItem(): GeneratedElement {
   name.classList.add('css_location_details_action_name');
   element.appendChild(name);
 
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
 function updateLocationDetailsField(integration: IntegratedLocationDetails, skeletonScreen: boolean, animation: boolean): void {
@@ -96,7 +93,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
       const fragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newItemElement = generateElementOfItem();
-        fragment.appendChild(newItemElement.element);
+        fragment.appendChild(newItemElement);
       }
       LocationDetailsActionsElement.append(fragment);
     } else {

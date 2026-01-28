@@ -41,7 +41,7 @@ export async function integrateLocationDetails(hash: string, requestID: string):
       name: '儲存',
       key: 'save-to-folder',
       action: function () {
-        openSaveToFolder('location', [hash]);
+        openSaveToFolder('location', [hash], null);
       }
     },
     {

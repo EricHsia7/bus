@@ -1,20 +1,17 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import {  pushPageHistory, revokePageHistory } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
 const PersonalScheduleManagerField = documentQuerySelector('.css_personal_schedule_manager_field');
 const PersonalScheduleManagerBodyElement = elementQuerySelector(PersonalScheduleManagerField, '.css_personal_schedule_manager_body');
 const ListElement = elementQuerySelector(PersonalScheduleManagerBodyElement, '.css_personal_schedule_manager_list');
 
-function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
-  // const identifier = generateIdentifier();
-
+function generateElementOfItem(item: PersonalSchedule): HTMLElement {
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_personal_schedule_manager_item');
-  // itemElement.id = identifier;
   itemElement.onclick = function () {
     openPersonalScheduleEditor(item.id);
   };
@@ -33,10 +30,7 @@ function generateElementOfItem(item: PersonalSchedule): GeneratedElement {
   arrowElement.appendChild(iconElement);
   itemElement.appendChild(arrowElement);
 
-  return {
-    element: itemElement,
-    id: ''
-  };
+  return itemElement;
 }
 async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
@@ -44,7 +38,7 @@ async function initializePersonalScheduleManagerField() {
   const fragment = new DocumentFragment();
   for (const item of personalSchedules) {
     const thisElement = generateElementOfItem(item);
-    fragment.appendChild(thisElement.element);
+    fragment.appendChild(thisElement);
   }
   ListElement.append(fragment);
 }

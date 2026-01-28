@@ -9,8 +9,8 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, g
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getBlankIconElement, getIconElement, getIconHTML, setIcon } from '../icons/index';
-import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -125,13 +125,10 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfItem(): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfItem(): HTMLElement {
   // Main container
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_location_group_item');
-  itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
   itemElement.setAttribute('push-direction', '0');
@@ -186,7 +183,7 @@ function generateElementOfItem(): GeneratedElement {
   stretchElement.classList.add('css_location_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
-    stretchLocationItem(identifier);
+    stretchLocationItem(itemElement);
   };
 
   // Capsule separator
@@ -225,7 +222,7 @@ function generateElementOfItem(): GeneratedElement {
   busTabButtonElement.appendChild(busTabIconElement);
   busTabButtonElement.appendChild(document.createTextNode('公車'));
   busTabButtonElement.onclick = () => {
-    switchLocationBodyTab(identifier, 0);
+    switchLocationBodyTab(itemElement, 0);
   };
 
   // Tab: 抵達時間
@@ -240,7 +237,7 @@ function generateElementOfItem(): GeneratedElement {
   arrivalTabButtonElement.appendChild(arrivalTabIconElement);
   arrivalTabButtonElement.appendChild(document.createTextNode('抵達時間'));
   arrivalTabButtonElement.onclick = () => {
-    switchLocationBodyTab(identifier, 1);
+    switchLocationBodyTab(itemElement, 1);
   };
 
   // Button: 儲存
@@ -291,13 +288,10 @@ function generateElementOfItem(): GeneratedElement {
   itemElement.appendChild(headElement);
   itemElement.appendChild(bodyElement);
 
-  return {
-    element: itemElement,
-    id: identifier
-  };
+  return itemElement;
 }
 
-function generateElementOfGroup(): GeneratedElement {
+function generateElementOfGroup(): HTMLElement {
   // Main container
   const groupElement = document.createElement('div');
   groupElement.classList.add('css_location_group');
@@ -319,26 +313,20 @@ function generateElementOfGroup(): GeneratedElement {
   groupElement.appendChild(detailsElement);
   groupElement.appendChild(itemsElement);
 
-  return {
-    element: groupElement,
-    id: ''
-  };
+  return groupElement;
 }
 
-function generateElementOfTab(): GeneratedElement {
+function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_location_group_tab');
 
   const span = document.createElement('span');
   element.appendChild(span);
 
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
-function generateElementOfGroupDetailsProperty(): GeneratedElement {
+function generateElementOfGroupDetailsProperty(): HTMLElement {
   // Main container
   const propertyElement = document.createElement('div');
   propertyElement.classList.add('css_location_group_details_property');
@@ -356,10 +344,75 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   propertyElement.appendChild(iconElement);
   propertyElement.appendChild(valueElement);
 
-  return {
-    element: propertyElement,
-    id: ''
-  };
+  return propertyElement;
+}
+
+function generateElementOfBus(): HTMLElement {
+  const busElement = document.createElement('div');
+  busElement.classList.add('css_location_group_item_bus');
+  busElement.setAttribute('on-this-route', 'false');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_location_group_item_bus_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_location_group_item_bus_icon');
+  iconElement.appendChild(getIconElement('directions_bus'));
+
+  const carNumberElement = document.createElement('div');
+  carNumberElement.classList.add('css_location_group_item_bus_car_number');
+
+  const attributesElement = document.createElement('div');
+  attributesElement.classList.add('css_location_group_item_bus_attributes');
+
+  const routeAttributeElement = document.createElement('div');
+  routeAttributeElement.classList.add('css_location_group_item_bus_route');
+
+  const carStatusAttributeElement = document.createElement('div');
+  carStatusAttributeElement.classList.add('css_location_group_item_bus_car_status');
+
+  const carTypeAttributeElement = document.createElement('div');
+  carTypeAttributeElement.classList.add('css_location_group_item_bus_car_type');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(carNumberElement);
+  busElement.appendChild(titleElement);
+
+  attributesElement.appendChild(routeAttributeElement);
+  attributesElement.appendChild(carStatusAttributeElement);
+  attributesElement.appendChild(carTypeAttributeElement);
+  busElement.appendChild(attributesElement);
+
+  return busElement;
+}
+
+function generateElementOfBusArrivalTime(): HTMLElement {
+  const busArrivalTimeElement = document.createElement('div');
+  busArrivalTimeElement.classList.add('css_location_group_item_bus_arrival_time');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_location_group_item_bus_arrival_time_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_location_group_item_bus_arrival_time_icon');
+  iconElement.appendChild(getIconElement('calendar_view_day'));
+
+  const personalScheduleNameElement = document.createElement('div');
+  personalScheduleNameElement.classList.add('css_location_group_item_bus_arrival_time_personal_schedule_name');
+
+  const personalScheduleTimeElement = document.createElement('div');
+  personalScheduleTimeElement.classList.add('css_location_group_item_bus_arrival_time_personal_schedule_time');
+
+  const chartElement = document.createElement('div');
+  chartElement.classList.add('css_location_group_item_bus_arrival_time_chart');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(personalScheduleNameElement);
+  titleElement.appendChild(personalScheduleTimeElement);
+  busArrivalTimeElement.appendChild(titleElement);
+  busArrivalTimeElement.appendChild(chartElement);
+
+  return busArrivalTimeElement;
 }
 
 function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
@@ -539,13 +592,79 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buses');
-      thisBusesElement.innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
+      const currentBusElementsQuantity = currentBusElements.length;
+      const busesQuantity = thisItem.buses.length;
+      const difference = currentBusElementsQuantity - busesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusElement = generateElementOfBus();
+          fragment.appendChild(newBusElement);
+        }
+        thisBusesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const busIndex = currentBusElementsQuantity - 1 - p;
+          currentBusElements[busIndex].remove();
+        }
+      }
+
+      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
+      for (let i = 0; i < busesQuantity; i++) {
+        const busItem = thisItem.buses[i];
+        const busElement = busElements[i];
+        const titleElement = elementQuerySelector(busElement, '.css_location_group_item_bus_title');
+        const carNumberElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_car_number');
+        const attributesElement = elementQuerySelector(busElement, '.css_location_group_item_bus_attributes');
+        const routeAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_route');
+        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_status');
+        const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_type');
+        busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
+        carNumberElement.innerText = busItem.carNumber;
+        routeAttributeElement.innerText = `路線：${busItem.RouteName}`;
+        carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
+        carTypeAttributeElement.innerText = `類型：${busItem.type}`;
+      }
+
+      thisBusesElement.setAttribute('empty', booleanToString(busesQuantity === 0));
     }
 
     function updateBusArrivalTimes(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_bus_arrival_times');
-      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_location_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
+      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
+      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
+      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
+          fragment.appendChild(newBusArrivalTimeElement);
+        }
+        thisBusArrivalTimesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
+          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
+      for (let i = 0; i < busArrivalTimesQuantity; i++) {
+        const busArrivalTimeItem = thisItem.busArrivalTimes[i];
+        const busArrivalTimeElement = busArrivalTimeElements[i];
+        const titleElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_title');
+        const personalScheduleNameElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_name');
+        const personalScheduleTimeElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_time');
+        const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_chart');
+        personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
+        personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
+        chartElement.innerHTML = busArrivalTimeItem.chart;
+      }
+
+      thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));
     }
 
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
@@ -567,7 +686,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.onclick = function () {
-        openSaveToFolder('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId]);
+        openSaveToFolder('stop', [thisItem.stopId, thisItem.routeId], saveToFolderButtonElement);
       };
       isFolderContentSaved('stop', thisItem.stopId).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
@@ -579,7 +698,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="schedule-notification"]');
       scheduleNotificationButtonElement.onclick = function () {
-        openScheduleNotification('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId, thisItem.status.time]);
+        openScheduleNotification(scheduleNotificationButtonElement, thisItem.stopId, thisItem.routeId, thisItem.status.time);
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
@@ -731,9 +850,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const tabsFragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newGroupElement = generateElementOfGroup();
-        groupsFragment.appendChild(newGroupElement.element);
+        groupsFragment.appendChild(newGroupElement);
         const newTabElement = generateElementOfTab();
-        tabsFragment.appendChild(newTabElement.element);
+        tabsFragment.appendChild(newTabElement);
       }
       LocationGroupsElement.append(groupsFragment);
       LocationGroupTabsTrayElement.append(tabsFragment);
@@ -759,7 +878,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newItemElement = generateElementOfItem();
-          LocationGroupItemsElement.appendChild(newItemElement.element);
+          LocationGroupItemsElement.appendChild(newItemElement);
         }
       } else {
         const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item');
@@ -780,7 +899,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           // var propertyIndex = currentGroupPropertyCapacity + o;
           const newPropertyElement = generateElementOfGroupDetailsProperty();
-          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement.element);
+          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement);
         }
       } else {
         const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
@@ -937,31 +1056,30 @@ export function closeLocation(): void {
   openPreviousPage();
 }
 
-export function stretchLocationItem(itemElementID: string): void {
-  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemElementID}`);
-  const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
+export function stretchLocationItem(thisItemElement: HTMLElement): void {
+  const itemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
 
-  const itemsElement = itemElement.parentElement as HTMLElement;
+  const itemsElement = thisItemElement.parentElement as HTMLElement;
 
-  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_location_group_item');
+  const elementsBelowItemElement = getElementsBelow(thisItemElement, 'css_location_group_item');
   const elementsBelowLength = elementsBelowItemElement.length;
 
   const itemsElementRect = itemsElement.getBoundingClientRect();
-  const itemElementRect = itemElement.getBoundingClientRect();
+  const itemElementRect = thisItemElement.getBoundingClientRect();
 
   // const itemElementX = itemElementRect.left - itemsElementRect.left;
   const itemElementY = itemElementRect.top - itemsElementRect.top;
 
-  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+  const stretched = thisItemElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = thisItemElement.getAttribute('animation') === 'true' ? true : false;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
 
     // Separate the elements from the document flow while keeping its position
-    itemElement.setAttribute('stretching', 'true');
+    thisItemElement.setAttribute('stretching', 'true');
     // itemElement.style.setProperty('--b-cssvar-css-location-group-item-x', `${itemElementX}px`);
-    itemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
+    thisItemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
     for (let i = 0; i < elementsBelowLength; i++) {
@@ -970,7 +1088,7 @@ export function stretchLocationItem(itemElementID: string): void {
       thisItemElement.setAttribute('push-state', '1');
     }
 
-    itemElement.addEventListener(
+    thisItemElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
@@ -980,12 +1098,12 @@ export function stretchLocationItem(itemElementID: string): void {
           thisItemElement.setAttribute('push-state', '0');
         }
         // Deposit the element
-        itemElement.setAttribute('stretching', 'false');
+        thisItemElement.setAttribute('stretching', 'false');
       },
       { once: true }
     );
 
-    itemElement.addEventListener(
+    thisItemElement.addEventListener(
       'transitionstart',
       function () {
         // Transition the elements below
@@ -1010,15 +1128,14 @@ export function stretchLocationItem(itemElementID: string): void {
     } else {
       itemBodyElement.setAttribute('displayed', 'false');
     }
-    itemElement.setAttribute('stretched', 'false');
+    thisItemElement.setAttribute('stretched', 'false');
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
-    itemElement.setAttribute('stretched', 'true');
+    thisItemElement.setAttribute('stretched', 'true');
   }
 }
 
-export function switchLocationBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+export function switchLocationBodyTab(itemElement: HTMLElement, tabCode: number): void {
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
   const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');

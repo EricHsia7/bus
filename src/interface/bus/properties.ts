@@ -3,14 +3,13 @@ import { getSettingOptionValue } from '../../data/settings/index';
 import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { compareThings } from '../../tools/index';
 import { getBlankIconElement, setIcon } from '../icons/index';
-import { GeneratedElement } from '../index';
 import { BusPropertiesGroupBodyElement } from './index';
 
 let previousProperties = [];
 let previousSkeletonScreen: boolean = false;
 let previousAnimation: boolean = false;
 
-function generateElementOfBusProperty(): GeneratedElement {
+function generateElementOfBusProperty(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_bus_property');
 
@@ -24,10 +23,7 @@ function generateElementOfBusProperty(): GeneratedElement {
   element.appendChild(iconElement);
   element.appendChild(valueElement);
 
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
 }
 
 export function setUpBusPropertiesFieldSkeletonScreen() {
@@ -96,7 +92,7 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         // const propertyIndex = currentPropertyCapacity + o;
         const newPropertyElement = generateElementOfBusProperty(skeletonScreen);
-        fragment.appendChild(newPropertyElement.element);
+        fragment.appendChild(newPropertyElement);
       }
       BusPropertiesGroupBodyElement.append(fragment);
     } else {
