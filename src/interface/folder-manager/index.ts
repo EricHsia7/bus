@@ -2,13 +2,13 @@ import { FolderWithContent, listFoldersWithContent } from '../../data/folder/ind
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
-import { GeneratedElement, pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
 const FolderManagerBodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
 const FolderManagerFolderListElement = elementQuerySelector(FolderManagerBodyElement, '.css_folder_manager_folder_list');
 
-function generateElementOfItem(item: FolderWithContent): GeneratedElement {
+function generateElementOfItem(item: FolderWithContent): HTMLElement {
   // Main container
   const folderItemElement = document.createElement('div');
   folderItemElement.classList.add('css_folder_manager_folder_item');
@@ -42,10 +42,7 @@ function generateElementOfItem(item: FolderWithContent): GeneratedElement {
   folderItemElement.appendChild(statusElement);
   folderItemElement.appendChild(arrowElement);
 
-  return {
-    element: folderItemElement,
-    id: ''
-  };
+  return folderItemElement;
 }
 
 async function initializeFolderManagerField() {
@@ -54,7 +51,7 @@ async function initializeFolderManagerField() {
   const fragment = new DocumentFragment();
   for (const item of foldersWithContent) {
     const newItemElement = generateElementOfItem(item);
-    fragment.appendChild(newItemElement.element);
+    fragment.appendChild(newItemElement);
   }
   FolderManagerFolderListElement.append(fragment);
 }

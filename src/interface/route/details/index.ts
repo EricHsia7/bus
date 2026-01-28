@@ -32,7 +32,7 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   svaeToFolderActionButtonElement.setAttribute('animation', booleanToString(playing_animation));
   svaeToFolderActionButtonElement.setAttribute('highlighted', booleanToString(existence));
   svaeToFolderActionButtonElement.onclick = function () {
-    openSaveToFolder('route', [RouteID]);
+    openSaveToFolder('route', [RouteID], svaeToFolderActionButtonElement);
   };
   getPermalinkActionButton.setAttribute('animation', booleanToString(playing_animation));
   getPermalinkActionButton.onclick = function () {

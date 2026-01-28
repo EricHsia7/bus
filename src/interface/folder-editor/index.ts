@@ -1,10 +1,9 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { generateIdentifier } from '../../tools/index';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { closePreviousPage, GeneratedElement, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
@@ -21,12 +20,9 @@ OpenFolderIconSelectorElement.onclick = function () {
   openFolderIconSelector('editor');
 };
 
-function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement {
   // Main container
   const itemElement = document.createElement('div');
-  itemElement.id = identifier;
   itemElement.classList.add('css_folder_editor_folder_item');
   itemElement.setAttribute('type', item.type);
 
@@ -90,7 +86,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   sortUpElement.classList.add('css_folder_editor_folder_item_sort_control_up');
   sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortUpElement.onclick = () => {
-    moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'up');
+    moveItemOnFolderEditor(itemElement, folder.id, item.type, item.id, 'up');
   };
 
   // Sort down control
@@ -98,7 +94,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   sortDownElement.classList.add('css_folder_editor_folder_item_sort_control_down');
   sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortDownElement.onclick = () => {
-    moveItemOnFolderEditor(identifier, folder.id, item.type, item.id, 'down');
+    moveItemOnFolderEditor(itemElement, folder.id, item.type, item.id, 'down');
   };
 
   // Delete control
@@ -106,7 +102,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   deleteElement.classList.add('css_folder_editor_folder_item_delete');
   deleteElement.appendChild(getIconElement('delete'));
   deleteElement.onclick = () => {
-    removeItemOnFolderEditor(identifier, folder.id, item.type, item.id);
+    removeItemOnFolderEditor(itemElement, folder.id, item.type, item.id);
   };
 
   // Capsule separators
@@ -128,10 +124,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): GeneratedEl
   itemElement.appendChild(mainElement);
   itemElement.appendChild(capsuleElement);
 
-  return {
-    element: itemElement,
-    id: identifier
-  };
+  return itemElement;
 }
 
 function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
@@ -146,7 +139,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
   const fragment = new DocumentFragment();
   for (const item of content) {
     const thisItemElement = generateElementOfItem(folder, item);
-    fragment.appendChild(thisItemElement.element);
+    fragment.appendChild(thisItemElement);
   }
   FolderContentElement.append(fragment);
 }
@@ -171,8 +164,7 @@ export function closeFolderEditor(): void {
   openPreviousPage();
 }
 
-export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: number): void {
-  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+export function removeItemOnFolderEditor(itemElement: HTMLElement, folderID: Folder['id'], type: FolderContent['type'], id: number): void {
   removeFromFolder(folderID, type, id).then((e) => {
     if (e) {
       itemElement.remove();
@@ -195,8 +187,7 @@ export function removeItemOnFolderEditor(itemID: string, folderID: Folder['id'],
   });
 }
 
-export function moveItemOnFolderEditor(itemID: string, folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): void {
-  const itemElement = elementQuerySelector(FolderEditorField, `.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item#${itemID}`);
+export function moveItemOnFolderEditor(itemElement: HTMLElement, folderID: Folder['id'], type: FolderContent['type'], id: FolderContent['id'], direction: 'up' | 'down'): void {
   updateFolderContentIndex(folderID, type, id, direction).then((e) => {
     if (e) {
       switch (direction) {

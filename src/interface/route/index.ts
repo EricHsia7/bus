@@ -9,8 +9,9 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, g
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getIconElement, getIconHTML } from '../icons/index';
-import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { getIconElement } from '../icons/index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -126,13 +127,10 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfThreadBox(): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfThreadBox(): HTMLElement {
   // Main thread box element
   const threadBoxElement = document.createElement('div');
   threadBoxElement.classList.add('css_route_group_thread_box');
-  threadBoxElement.id = identifier;
   threadBoxElement.setAttribute('stretched', 'false');
   threadBoxElement.setAttribute('stretching', 'false');
   threadBoxElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
@@ -170,19 +168,13 @@ function generateElementOfThreadBox(): GeneratedElement {
   threadBoxElement.appendChild(threadElement);
   threadBoxElement.appendChild(threadStatusElement);
 
-  return {
-    element: threadBoxElement,
-    id: identifier
-  };
+  return threadBoxElement;
 }
 
-function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement {
-  const identifier = generateIdentifier();
-
+function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_route_group_item');
-  itemElement.id = identifier;
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
   itemElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
@@ -251,7 +243,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabBusElement.setAttribute('type', 'tab');
   tabBusElement.setAttribute('code', '0');
   tabBusElement.onclick = () => {
-    switchRouteBodyTab(identifier, 0);
+    switchRouteBodyTab(itemElement, 0);
   };
 
   const tabBusIconElement = document.createElement('div');
@@ -268,7 +260,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabArrivalElement.setAttribute('type', 'tab');
   tabArrivalElement.setAttribute('code', '1');
   tabArrivalElement.onclick = () => {
-    switchRouteBodyTab(identifier, 1);
+    switchRouteBodyTab(itemElement, 1);
   };
 
   const tabArrivalIconElement = document.createElement('div');
@@ -285,7 +277,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabRouteElement.setAttribute('type', 'tab');
   tabRouteElement.setAttribute('code', '2');
   tabRouteElement.onclick = () => {
-    switchRouteBodyTab(identifier, 2);
+    switchRouteBodyTab(itemElement, 2);
   };
 
   const tabRouteIconElement = document.createElement('div');
@@ -302,7 +294,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabLocationElement.setAttribute('type', 'tab');
   tabLocationElement.setAttribute('code', '3');
   tabLocationElement.onclick = () => {
-    switchRouteBodyTab(identifier, 3);
+    switchRouteBodyTab(itemElement, 3);
   };
 
   const tabLocationIconElement = document.createElement('div');
@@ -369,13 +361,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   itemElement.appendChild(headElement);
   itemElement.appendChild(bodyElement);
 
-  return {
-    element: itemElement,
-    id: identifier
-  };
+  return itemElement;
 }
 
-function generateElementOfGroup(): GeneratedElement {
+function generateElementOfGroup(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group');
 
@@ -399,19 +388,172 @@ function generateElementOfGroup(): GeneratedElement {
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
-  return {
-    element: element,
-    id: ''
-  };
+
+  return element;
 }
 
-function generateElementOfTab(): GeneratedElement {
+function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
-  return {
-    element: element,
-    id: ''
-  };
+  return element;
+}
+
+function generateElementOfBus(): HTMLElement {
+  const busElement = document.createElement('div');
+  busElement.classList.add('css_route_group_item_bus');
+  busElement.setAttribute('on-this-route', 'false');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_bus_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_bus_icon');
+  iconElement.appendChild(getIconElement('directions_bus'));
+
+  const carNumberElement = document.createElement('div');
+  carNumberElement.classList.add('css_route_group_item_bus_car_number');
+
+  const attributesElement = document.createElement('div');
+  attributesElement.classList.add('css_route_group_item_bus_attributes');
+
+  const routeAttributeElement = document.createElement('div');
+  routeAttributeElement.classList.add('css_route_group_item_bus_route');
+
+  const carStatusAttributeElement = document.createElement('div');
+  carStatusAttributeElement.classList.add('css_route_group_item_bus_car_status');
+
+  const carTypeAttributeElement = document.createElement('div');
+  carTypeAttributeElement.classList.add('css_route_group_item_bus_car_type');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(carNumberElement);
+  busElement.appendChild(titleElement);
+
+  attributesElement.appendChild(routeAttributeElement);
+  attributesElement.appendChild(carStatusAttributeElement);
+  attributesElement.appendChild(carTypeAttributeElement);
+  busElement.appendChild(attributesElement);
+
+  return busElement;
+}
+
+function generateElementOfOverlappingRoute(): HTMLElement {
+  const overlappingRouteElement = document.createElement('div');
+  overlappingRouteElement.classList.add('css_route_group_item_overlapping_route');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_overlapping_route_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_overlapping_route_icon');
+  iconElement.appendChild(getIconElement('route'));
+
+  const routeNameElement = document.createElement('div');
+  routeNameElement.classList.add('css_route_group_item_overlapping_route_name');
+
+  const routeEndPoindsElement = document.createElement('div');
+  routeEndPoindsElement.classList.add('css_route_group_item_overlapping_route_endpoints');
+
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('css_route_group_item_overlapping_route_actions');
+
+  const viewRouteButtonElement = document.createElement('div');
+  viewRouteButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
+  viewRouteButtonElement.setAttribute('type', 'view-route');
+  viewRouteButtonElement.innerText = '查看路線';
+
+  const saveToFolderButtonElement = document.createElement('div');
+  saveToFolderButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
+  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
+  saveToFolderButtonElement.setAttribute('highlighted', 'false');
+  saveToFolderButtonElement.innerText = '儲存路線';
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(routeNameElement);
+  overlappingRouteElement.appendChild(titleElement);
+
+  overlappingRouteElement.appendChild(routeEndPoindsElement);
+
+  actionsElement.appendChild(viewRouteButtonElement);
+  actionsElement.appendChild(saveToFolderButtonElement);
+
+  overlappingRouteElement.appendChild(actionsElement);
+
+  return overlappingRouteElement;
+}
+
+function generateElementOfBusArrivalTime(): HTMLElement {
+  const busArrivalTimeElement = document.createElement('div');
+  busArrivalTimeElement.classList.add('css_route_group_item_bus_arrival_time');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_bus_arrival_time_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_bus_arrival_time_icon');
+  iconElement.appendChild(getIconElement('calendar_view_day'));
+
+  const personalScheduleNameElement = document.createElement('div');
+  personalScheduleNameElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_name');
+
+  const personalScheduleTimeElement = document.createElement('div');
+  personalScheduleTimeElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_time');
+
+  const chartElement = document.createElement('div');
+  chartElement.classList.add('css_route_group_item_bus_arrival_time_chart');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(personalScheduleNameElement);
+  titleElement.appendChild(personalScheduleTimeElement);
+  busArrivalTimeElement.appendChild(titleElement);
+  busArrivalTimeElement.appendChild(chartElement);
+
+  return busArrivalTimeElement;
+}
+
+function generateElementOfNearbyLocation(): HTMLElement {
+  const nearbyLocationElement = document.createElement('div');
+  nearbyLocationElement.classList.add('css_route_group_item_nearby_location');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_route_group_item_nearby_location_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_route_group_item_nearby_location_icon');
+  iconElement.appendChild(getIconElement('location_on'));
+
+  const locationNameElement = document.createElement('div');
+  locationNameElement.classList.add('css_route_group_item_nearby_location_name');
+
+  const distanceElement = document.createElement('div');
+  distanceElement.classList.add('css_route_group_item_nearby_location_distance');
+
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('css_route_group_item_nearby_location_actions');
+
+  const viewLocationButtonElement = document.createElement('div');
+  viewLocationButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
+  viewLocationButtonElement.setAttribute('type', 'view-location');
+  viewLocationButtonElement.innerText = '查看地點';
+
+  const saveToFolderButtonElement = document.createElement('div');
+  saveToFolderButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
+  saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
+  saveToFolderButtonElement.setAttribute('highlighted', 'false');
+  saveToFolderButtonElement.innerText = '儲存地點';
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(locationNameElement);
+  nearbyLocationElement.appendChild(titleElement);
+
+  nearbyLocationElement.appendChild(distanceElement);
+
+  actionsElement.appendChild(viewLocationButtonElement);
+  actionsElement.appendChild(saveToFolderButtonElement);
+
+  nearbyLocationElement.appendChild(actionsElement);
+
+  return nearbyLocationElement;
 }
 
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
@@ -541,19 +683,185 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_buses').innerHTML = thisItem.buses.length === 0 ? '<div class="css_route_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_route_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_route_group_item_bus_title"><div class="css_route_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_route_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_route_group_item_bus_attributes"><div class="css_route_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_route_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_route_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const thisBusesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_buses');
+      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
+      const currentBusElementsQuantity = currentBusElements.length;
+      const busesQuantity = thisItem.buses.length;
+      const difference = currentBusElementsQuantity - busesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusElement = generateElementOfBus();
+          fragment.appendChild(newBusElement);
+        }
+        thisBusesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const busIndex = currentBusElementsQuantity - 1 - p;
+          currentBusElements[busIndex].remove();
+        }
+      }
+
+      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
+      for (let i = 0; i < busesQuantity; i++) {
+        const busItem = thisItem.buses[i];
+        const busElement = busElements[i];
+        const titleElement = elementQuerySelector(busElement, '.css_route_group_item_bus_title');
+        const carNumberElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_car_number');
+        const attributesElement = elementQuerySelector(busElement, '.css_route_group_item_bus_attributes');
+        const routeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_route');
+        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_car_status');
+        const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_route_group_item_bus_car_type');
+        busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
+        carNumberElement.innerText = busItem.carNumber;
+        routeAttributeElement.innerText = `路線：${busItem.RouteName}`;
+        carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
+        carTypeAttributeElement.innerText = `類型：${busItem.type}`;
+      }
+
+      thisBusesElement.setAttribute('empty', booleanToString(busesQuantity === 0));
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes').innerHTML = thisItem.overlappingRoutes.length === 0 ? '<div class="css_route_group_item_overlapping_route_message">目前沒有路線可顯示</div>' : thisItem.overlappingRoutes.map((route) => `<div class="css_route_group_item_overlapping_route"><div class="css_route_group_item_overlapping_route_title"><div class="css_route_group_item_overlapping_route_icon">${getIconHTML('route')}</div><div class="css_route_group_item_overlapping_route_name">${route.name}</div></div><div class="css_route_group_item_overlapping_route_endpoints">${route.RouteEndPoints.html}</div><div class="css_route_group_item_overlapping_route_actions"><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.route.switchRoute(${route.RouteID}, [${route.PathAttributeId.join(',')}])">查看路線</div><div class="css_route_group_item_overlapping_route_action_button" onclick="bus.folder.openSaveToFolder('route-on-route', [${route.RouteID}])">儲存路線</div></div></div>`).join('');
+      const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
+      const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
+      const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
+      const overlappingRoutesQuantity = thisItem.overlappingRoutes.length;
+      const difference = currentOverlappingRouteElementsQuantity - overlappingRoutesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newOverlappingRouteElement = generateElementOfOverlappingRoute();
+          fragment.appendChild(newOverlappingRouteElement);
+        }
+        thisOverlappingRoutesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentOverlappingRouteElementsQuantity - 1 - p;
+          currentOverlappingRouteElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const overlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
+      for (let i = 0; i < overlappingRoutesQuantity; i++) {
+        const overlappingRouteItem = thisItem.overlappingRoutes[i];
+        const overlappingRouteElement = overlappingRouteElements[i];
+        const titleElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_title');
+        const routeNameElement = elementQuerySelector(titleElement, '.css_route_group_item_overlapping_route_name');
+        const routeEndPoindsElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_endpoints');
+        const actionsElement = elementQuerySelector(overlappingRouteElement, '.css_route_group_item_overlapping_route_actions');
+        const viewRouteButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_overlapping_route_action_button[type="view-route"]');
+        const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_overlapping_route_action_button[type="save-to-folder"]');
+
+        routeNameElement.innerText = overlappingRouteItem.name;
+        routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
+
+        (function (thisViewRouteButtonElement, thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
+          thisViewRouteButtonElement.onclick = function () {
+            switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
+          };
+        })(viewRouteButtonElement, overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+
+        (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
+          thisSaveToFolderButtonElement.onclick = function () {
+            openSaveToFolder('route', [thisOverlappingRouteID], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
+          };
+          isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+          });
+        })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
+      }
+
+      thisOverlappingRoutesElement.setAttribute('empty', booleanToString(overlappingRoutesQuantity === 0));
     }
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times').innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_route_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_route_group_item_bus_arrival_time"><div class="css_route_group_item_bus_arrival_time_title"><div class="css_route_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_route_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_route_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
+      const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times');
+      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
+      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
+      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
+          fragment.appendChild(newBusArrivalTimeElement);
+        }
+        thisBusArrivalTimesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
+          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
+      for (let i = 0; i < busArrivalTimesQuantity; i++) {
+        const busArrivalTimeItem = thisItem.busArrivalTimes[i];
+        const busArrivalTimeElement = busArrivalTimeElements[i];
+        const titleElement = elementQuerySelector(busArrivalTimeElement, '.css_route_group_item_bus_arrival_time_title');
+        const personalScheduleNameElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_arrival_time_personal_schedule_name');
+        const personalScheduleTimeElement = elementQuerySelector(titleElement, '.css_route_group_item_bus_arrival_time_personal_schedule_time');
+        const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_route_group_item_bus_arrival_time_chart');
+        personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
+        personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
+        chartElement.innerHTML = busArrivalTimeItem.chart;
+      }
+
+      thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));
     }
 
     function updateNearbyLocations(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
-      elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations').innerHTML = thisItem.nearbyLocations.length === 0 ? '<div class="css_route_group_item_nearby_locations_message">目前沒有地點可顯示</div>' : thisItem.nearbyLocations.map((nearbyLocation) => `<div class="css_route_group_item_nearby_location"><div class="css_route_group_item_nearby_location_title"><div class="css_route_group_item_nearby_location_icon">${getIconHTML('location_on')}</div><div class="css_route_group_item_nearby_location_name">${nearbyLocation.name}</div></div><div class="css_route_group_item_nearby_location_distance">${nearbyLocation.distance}公尺</div><div class="css_route_group_item_nearby_location_actions"><div class="css_route_group_item_nearby_location_action_button" onclick="bus.location.openLocation('${nearbyLocation.hash}')">查看地點</div><div class="css_route_group_item_nearby_location_action_button" onclick="bus.folder.openSaveToFolder('location-on-route', ['${nearbyLocation.hash}'])">儲存地點</div></div></div>`).join('');
+      const thisNearbyLocationsElement = elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations');
+      const currentNearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
+      const currentNearbyLocationElementsQuantity = currentNearbyLocationElements.length;
+      const nearbyLocationsQuantity = thisItem.nearbyLocations.length;
+      const difference = currentNearbyLocationElementsQuantity - nearbyLocationsQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newOverlappingRouteElement = generateElementOfNearbyLocation();
+          fragment.appendChild(newOverlappingRouteElement);
+        }
+        thisNearbyLocationsElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentNearbyLocationElementsQuantity - 1 - p;
+          currentNearbyLocationElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const nearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
+      for (let i = 0; i < nearbyLocationsQuantity; i++) {
+        const nearbyLocationItem = thisItem.nearbyLocations[i];
+        const nearbyLocationElement = nearbyLocationElements[i];
+        const titleElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_title');
+        const locationNameElement = elementQuerySelector(titleElement, '.css_route_group_item_nearby_location_name');
+        const distanceElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_distance');
+        const actionsElement = elementQuerySelector(nearbyLocationElement, '.css_route_group_item_nearby_location_actions');
+        const viewLocationButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_nearby_location_action_button[type="view-location"]');
+        const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_nearby_location_action_button[type="save-to-folder"]');
+
+        locationNameElement.innerText = nearbyLocationItem.name;
+        distanceElement.innerText = `${nearbyLocationItem.distance}公尺`;
+
+        (function (thisViewLocationButtonElement, thisNearbyLocationHash) {
+          thisViewLocationButtonElement.onclick = function () {
+            openLocation(thisNearbyLocationHash);
+          };
+        })(viewLocationButtonElement, nearbyLocationItem.hash);
+
+        (function (thisSaveToFolderButtonElement, thisNearbyLocationHash) {
+          thisSaveToFolderButtonElement.onclick = function () {
+            openSaveToFolder('location', [thisNearbyLocationHash], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
+          };
+          isFolderContentSaved('location', thisNearbyLocationHash).then(function (e) {
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
+          });
+        })(saveToFolderButtonElement, nearbyLocationItem.hash);
+      }
+
+      thisNearbyLocationsElement.setAttribute('empty', booleanToString(nearbyLocationsQuantity === 0));
     }
 
     function updateNearest(thisItemElement: HTMLElement, thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem): void {
@@ -611,7 +919,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.onclick = function () {
-        openSaveToFolder('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID]);
+        openSaveToFolder('stop', [thisItem.id, integration.RouteID], saveToFolderButtonElement);
       };
       isFolderContentSaved('stop', thisItem.id).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
@@ -743,9 +1051,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const newTabsFragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newGroupElement = generateElementOfGroup();
-        newGroupsFragment.appendChild(newGroupElement.element);
+        newGroupsFragment.appendChild(newGroupElement);
         const newTabElement = generateElementOfTab();
-        newTabsFragment.appendChild(newTabElement.element);
+        newTabsFragment.appendChild(newTabElement);
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
@@ -775,9 +1083,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newThreadsFragment = new DocumentFragment();
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
-          const newItemElement = generateElementOfItem(newThreadBoxElement.element);
-          newItemsFragment.appendChild(newItemElement.element);
-          newThreadsFragment.appendChild(newThreadBoxElement.element);
+          const newItemElement = generateElementOfItem(newThreadBoxElement);
+          newItemsFragment.appendChild(newItemElement);
+          newThreadsFragment.appendChild(newThreadBoxElement);
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadsFragment);
@@ -1033,8 +1341,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
   }
 }
 
-export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group_item#${itemID}`);
+export function switchRouteBodyTab(itemElement: HTMLElement, tabCode: number): void {
   const buttons = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
   const button = elementQuerySelectorAll(buttons, '.css_route_group_item_button[highlighted="true"][type="tab"]');
   for (const t of button) {

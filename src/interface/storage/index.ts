@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { GeneratedElement, querySize } from '../index';
+import { querySize } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
@@ -12,7 +12,7 @@ const StorageField = documentQuerySelector('.css_storage_field');
 const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
 const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
 
-function generateElementOfItem(): GeneratedElement {
+function generateElementOfItem(): HTMLElement {
   // Create root element
   const statisticsItemElement = document.createElement('div');
   statisticsItemElement.classList.add('css_storage_statistics_item');
@@ -29,10 +29,7 @@ function generateElementOfItem(): GeneratedElement {
   statisticsItemElement.appendChild(nameElement);
   statisticsItemElement.appendChild(valueElement);
 
-  return {
-    element: statisticsItemElement,
-    id: ''
-  };
+  return statisticsItemElement;
 }
 
 function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boolean, animation: boolean): void {
@@ -97,7 +94,7 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
       const fragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newElement = generateElementOfItem();
-        fragment.appendChild(newElement.element);
+        fragment.appendChild(newElement);
       }
       StatisticsElement.appendChild(fragment);
     } else {

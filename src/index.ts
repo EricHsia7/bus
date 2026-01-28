@@ -27,7 +27,7 @@ import { closeQRCode, openQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding, switchRoute } from './interface/route/index';
-import { closeSaveToFolder, openSaveToFolder } from './interface/save-to-folder/index';
+import { closeSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification } from './interface/schedule-notification/index';
 import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
 import { closeSettings, openSettings } from './interface/settings/index';
@@ -320,7 +320,6 @@ window.bus = {
     closeLocationDetails
   },
   folder: {
-    openSaveToFolder,
     closeSaveToFolder,
     closeFolderManager,
     closeFolderIconSelector,

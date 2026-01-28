@@ -5,7 +5,7 @@ import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } fr
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { GeneratedElement, querySize } from '../../index';
+import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
 
@@ -31,7 +31,7 @@ let recentViewsRefreshTimer_currentRequestID: string = '';
 let recentViewsRefreshTimer_streamStarted: boolean = false;
 let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
-function generateElementOfRecentViewItem(): GeneratedElement {
+function generateElementOfRecentViewItem(): HTMLElement {
   // Main container
   const recentViewsItemElement = document.createElement('div');
   recentViewsItemElement.classList.add('css_home_recent_views_item');
@@ -66,10 +66,7 @@ function generateElementOfRecentViewItem(): GeneratedElement {
   recentViewsItemElement.appendChild(headElement);
   recentViewsItemElement.appendChild(nameElement);
 
-  return {
-    element: recentViewsItemElement,
-    id: ''
-  };
+  return recentViewsItemElement;
 }
 
 function updateRecentViewsField(integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
@@ -241,7 +238,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       const fragment = new DocumentFragment();
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
         const newRecentViewItemElement = generateElementOfRecentViewItem();
-        fragment.appendChild(newRecentViewItemElement.element);
+        fragment.appendChild(newRecentViewItemElement);
       }
       RecentViewsContentElement.append(fragment);
     } else {
