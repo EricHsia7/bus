@@ -24,12 +24,12 @@ function generateElementOfItem(item: FolderWithContent): HTMLElement {
   // Name
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_folder_manager_folder_item_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
 
   // Status
   const statusElement = document.createElement('div');
   statusElement.classList.add('css_folder_manager_folder_item_status');
-  statusElement.appendChild(document.createTextNode(String(item.contentLength)));
+  statusElement.innerText = String(item.contentLength);
 
   // Arrow
   const arrowElement = document.createElement('div');

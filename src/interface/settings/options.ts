@@ -15,7 +15,7 @@ function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption
 
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_option_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
 
   const checkboxContainerElement = document.createElement('div');
   checkboxContainerElement.classList.add('css_option_checkbox');

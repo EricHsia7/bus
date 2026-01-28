@@ -105,7 +105,7 @@ function initializeKeyboard(): void {
             break;
           case '清空':
             newButtonElement.addEventListener(eventName, emptyInput);
-            newButtonElement.appendChild(document.createTextNode(item));
+            newButtonElement.innerText = item;
             break;
           case '鍵盤':
             newButtonElement.addEventListener(eventName, openSystemKeyboard);
@@ -121,7 +121,7 @@ function initializeKeyboard(): void {
                 };
               })(item)
             );
-            newButtonElement.appendChild(document.createTextNode(item));
+            newButtonElement.innerText = item;
             break;
         }
 

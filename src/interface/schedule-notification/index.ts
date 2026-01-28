@@ -22,7 +22,7 @@ function generateElementOfItem(item: ScheduleNotificationOption, thisButtonEleme
   // Name element
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_schedule_notification_item_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
 
   // Event handler
   const index = item.index;

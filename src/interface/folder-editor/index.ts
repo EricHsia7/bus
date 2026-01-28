@@ -70,12 +70,12 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   // Context element
   const contextElement = document.createElement('div');
   contextElement.classList.add('css_folder_editor_folder_item_context');
-  contextElement.appendChild(document.createTextNode(context));
+  contextElement.innerText = context;
 
   // Main element
   const mainElement = document.createElement('div');
   mainElement.classList.add('css_folder_editor_folder_item_main');
-  mainElement.appendChild(document.createTextNode(main));
+  mainElement.innerText = main;
 
   // Capsule element
   const capsuleElement = document.createElement('div');

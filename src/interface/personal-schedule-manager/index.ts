@@ -1,7 +1,7 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import {  pushPageHistory, revokePageHistory } from '../index';
+import { pushPageHistory, revokePageHistory } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
 const PersonalScheduleManagerField = documentQuerySelector('.css_personal_schedule_manager_field');
@@ -19,7 +19,7 @@ function generateElementOfItem(item: PersonalSchedule): HTMLElement {
   // Name element
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_personal_schedule_manager_item_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
   itemElement.appendChild(nameElement);
 
   // Arrow element

@@ -28,12 +28,12 @@ function generateElementOfItem(item: Setting): HTMLElement {
   // Name
   const nameElement = document.createElement('div');
   nameElement.classList.add('css_setting_name');
-  nameElement.appendChild(document.createTextNode(item.name));
+  nameElement.innerText = item.name;
 
   // Status
   const statusElement = document.createElement('div');
   statusElement.classList.add('css_setting_status');
-  statusElement.appendChild(document.createTextNode(item.status));
+  statusElement.innerText = item.status;
 
   // Arrow
   const arrowElement = document.createElement('div');
