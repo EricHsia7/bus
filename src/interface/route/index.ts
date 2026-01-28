@@ -783,15 +783,19 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         routeNameElement.innerText = overlappingRouteItem.name;
         routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
-        const thisOverlappingRouteID = overlappingRouteItem.RouteID;
-        const thisOverlappingRoutePathAttributeID = overlappingRouteItem.PathAttributeId;
-        viewRouteButtonElement.onclick = function () {
-          switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
-        };
-        saveToFolderButtonElement.onclick = function () {
-          openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
-        };
-        isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
+
+        (function (thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
+          viewRouteButtonElement.onclick = function () {
+            switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
+          };
+        })(overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+        (function (thisOverlappingRouteID) {
+          saveToFolderButtonElement.onclick = function () {
+            openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
+          };
+        })(overlappingRouteItem.RouteID);
+
+        isFolderContentSaved('route', overlappingRouteItem.RouteID).then(function (e) {
           saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
         });
       }
