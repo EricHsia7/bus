@@ -81,6 +81,12 @@ export interface FolderWithContent extends Folder {
 
 export type FolderWithContentArray = Array<FolderWithContent>;
 
+export interface FolderWithContentLength extends Folder {
+  contentLength: number;
+}
+
+export type FolderWithContentLengthArray = Array<FolderWithContentLength>;
+
 const FolderList: { [key: string]: Folder } = {};
 
 export async function initializeFolderList() {
@@ -249,7 +255,7 @@ async function getFolderContentLength(folderID: Folder['id']): Promise<number> {
 }
 
 export async function listFoldersWithContent(): Promise<FolderWithContentArray> {
-  const folders = await listFolders();
+  const folders = listFolders();
   const result: FolderWithContentArray = [];
   for (const folder of folders) {
     const folderContent = await listFolderContent(folder.id);
@@ -260,6 +266,22 @@ export async function listFoldersWithContent(): Promise<FolderWithContentArray> 
       id: folder.id,
       timestamp: folder.timestamp,
       content: folderContent,
+      contentLength: folderContentLength
+    });
+  }
+  return result;
+}
+
+export async function listFoldersWithContentLength(): Promise<FolderWithContentLengthArray> {
+  const folders = listFolders();
+  const result: FolderWithContentLengthArray = [];
+  for (const folder of folders) {
+    const folderContentLength = await getFolderContentLength(folder.id);
+    result.push({
+      name: folder.name,
+      icon: folder.icon,
+      id: folder.id,
+      timestamp: folder.timestamp,
       contentLength: folderContentLength
     });
   }
