@@ -225,7 +225,7 @@ function generateElementOfItem(): GeneratedElement {
   busTabButtonElement.appendChild(busTabIconElement);
   busTabButtonElement.appendChild(document.createTextNode('公車'));
   busTabButtonElement.onclick = () => {
-    switchLocationBodyTab(identifier, 0);
+    switchLocationBodyTab(itemElement, 0);
   };
 
   // Tab: 抵達時間
@@ -240,7 +240,7 @@ function generateElementOfItem(): GeneratedElement {
   arrivalTabButtonElement.appendChild(arrivalTabIconElement);
   arrivalTabButtonElement.appendChild(document.createTextNode('抵達時間'));
   arrivalTabButtonElement.onclick = () => {
-    switchLocationBodyTab(identifier, 1);
+    switchLocationBodyTab(itemElement, 1);
   };
 
   // Button: 儲存
@@ -707,7 +707,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const saveToFolderButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.onclick = function () {
-        openSaveToFolder('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId]);
+        openSaveToFolder('stop', [thisItem.stopId, thisItem.routeId], saveToFolderButtonElement);
       };
       isFolderContentSaved('stop', thisItem.stopId).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
@@ -1156,8 +1156,7 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
   }
 }
 
-export function switchLocationBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = elementQuerySelector(LocationGroupsElement, `.css_location_group .css_location_group_items .css_location_group_item#${itemID}`);
+export function switchLocationBodyTab(itemElement: HTMLElement, tabCode: number): void {
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
   const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');

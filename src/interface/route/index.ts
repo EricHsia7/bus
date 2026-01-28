@@ -252,7 +252,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabBusElement.setAttribute('type', 'tab');
   tabBusElement.setAttribute('code', '0');
   tabBusElement.onclick = () => {
-    switchRouteBodyTab(identifier, 0);
+    switchRouteBodyTab(itemElement, 0);
   };
 
   const tabBusIconElement = document.createElement('div');
@@ -269,7 +269,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabArrivalElement.setAttribute('type', 'tab');
   tabArrivalElement.setAttribute('code', '1');
   tabArrivalElement.onclick = () => {
-    switchRouteBodyTab(identifier, 1);
+    switchRouteBodyTab(itemElement, 1);
   };
 
   const tabArrivalIconElement = document.createElement('div');
@@ -286,7 +286,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabRouteElement.setAttribute('type', 'tab');
   tabRouteElement.setAttribute('code', '2');
   tabRouteElement.onclick = () => {
-    switchRouteBodyTab(identifier, 2);
+    switchRouteBodyTab(itemElement, 2);
   };
 
   const tabRouteIconElement = document.createElement('div');
@@ -303,7 +303,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   tabLocationElement.setAttribute('type', 'tab');
   tabLocationElement.setAttribute('code', '3');
   tabLocationElement.onclick = () => {
-    switchRouteBodyTab(identifier, 3);
+    switchRouteBodyTab(itemElement, 3);
   };
 
   const tabLocationIconElement = document.createElement('div');
@@ -793,7 +793,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
           thisSaveToFolderButtonElement.onclick = function () {
-            openSaveToFolder('route-on-route', [thisOverlappingRouteID]); // TODO: update attribute 'highlighted'
+            openSaveToFolder('route', [thisOverlappingRouteID], thisSaveToFolderButtonElement);
           };
           isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
             thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
@@ -882,7 +882,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         (function (thisSaveToFolderButtonElement, thisNearbyLocationHash) {
           thisSaveToFolderButtonElement.onclick = function () {
-            openSaveToFolder('location-on-route', [thisNearbyLocationHash]); // TODO: update attribute 'highlighted'
+            openSaveToFolder('location', [thisNearbyLocationHash], thisSaveToFolderButtonElement);
           };
           isFolderContentSaved('location', thisNearbyLocationHash).then(function (e) {
             thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
@@ -948,7 +948,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateSaveToFolderButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const saveToFolderButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="save-to-folder"]');
       saveToFolderButtonElement.onclick = function () {
-        openSaveToFolder('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID]);
+        openSaveToFolder('stop', [thisItem.id, integration.RouteID], saveToFolderButtonElement);
       };
       isFolderContentSaved('stop', thisItem.id).then((e) => {
         saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
@@ -1370,8 +1370,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
   }
 }
 
-export function switchRouteBodyTab(itemID: string, tabCode: number): void {
-  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group_item#${itemID}`);
+export function switchRouteBodyTab(itemElement: HTMLElement, tabCode: number): void {
   const buttons = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
   const button = elementQuerySelectorAll(buttons, '.css_route_group_item_button[highlighted="true"][type="tab"]');
   for (const t of button) {
