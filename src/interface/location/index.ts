@@ -436,7 +436,6 @@ function generateElementOfBusArrivalTime(): GeneratedElement {
   };
 }
 
-
 function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
@@ -655,7 +654,38 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateBusArrivalTimes(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_bus_arrival_times');
-      thisBusArrivalTimesElement.innerHTML = thisItem.busArrivalTimes.length === 0 ? '<div class="css_location_group_item_bus_arrival_message">目前沒有抵達時間可顯示</div>' : thisItem.busArrivalTimes.map((busArrivalTime) => `<div class="css_location_group_item_bus_arrival_time"><div class="css_location_group_item_bus_arrival_time_title"><div class="css_location_group_item_bus_arrival_time_icon">${getIconHTML('calendar_view_day')}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_name">${busArrivalTime.personalSchedule.name}</div><div class="css_location_group_item_bus_arrival_time_personal_schedule_time">週${indexToDay(busArrivalTime.day).name} ${timeObjectToString(busArrivalTime.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTime.personalSchedule.period.end)}</div></div><div class="css_location_group_item_bus_arrival_time_chart">${busArrivalTime.chart}</div></div>`).join('');
+      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
+      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
+      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
+          fragment.appendChild(newBusArrivalTimeElement.element);
+        }
+        thisBusArrivalTimesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
+          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        }
+      }
+
+      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
+      for (let i = 0; i < busArrivalTimesQuantity; i++) {
+        const busArrivalTimeItem = thisItem.busArrivalTimes[i];
+        const busArrivalTimeElement = busArrivalTimeElements[i];
+        const titleElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_title');
+        const personalScheduleNameElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_name');
+        const personalScheduleTimeElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_time');
+        const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_chart');
+        personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
+        personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
+        chartElement.innerHTML = busArrivalTimeItem.chart;
+      }
+
+      thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));
     }
 
     function updateStretch(thisElement: HTMLElement, skeletonScreen: boolean): void {
