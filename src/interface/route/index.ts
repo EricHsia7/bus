@@ -317,11 +317,6 @@ function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement 
   saveToFolderElement.classList.add('css_route_group_item_button');
   saveToFolderElement.setAttribute('highlighted', 'false');
   saveToFolderElement.setAttribute('type', 'save-to-folder');
-  /*
-  saveToFolderElement.onclick = () => {
-    openSaveToFolder('stop-on-route', [identifier, null, null]);
-  };
-  */
 
   const saveToFolderIconElement = document.createElement('div');
   saveToFolderIconElement.classList.add('css_route_group_item_button_icon');
@@ -626,7 +621,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemElement, '.css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[type="schedule-notification"]');
       scheduleNotificationButtonElement.onclick = function () {
-        openScheduleNotification('stop-on-route', [thisItemElement.id, thisItem.id, integration.RouteID, thisItem.status.time]);
+        openScheduleNotification(scheduleNotificationButtonElement, thisItem.id, integration.RouteID, thisItem.status.time);
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.id);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));

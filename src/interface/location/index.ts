@@ -579,7 +579,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const thisItemButtonsElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buttons');
       const scheduleNotificationButtonElement = elementQuerySelector(thisItemButtonsElement, '.css_location_group_item_button[type="schedule-notification"]');
       scheduleNotificationButtonElement.onclick = function () {
-        openScheduleNotification('stop-on-location', [thisItemElement.id, thisItem.stopId, thisItem.routeId, thisItem.status.time]);
+        openScheduleNotification(scheduleNotificationButtonElement, thisItem.stopId, thisItem.routeId, thisItem.status.time);
       };
       const havingNotifcationSchedules = stopHasNotifcationSchedules(thisItem.stopId);
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));

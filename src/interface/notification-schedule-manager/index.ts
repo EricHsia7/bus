@@ -127,7 +127,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemCancelElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
       thisItemCancelElement.onclick = function () {
-        cancelNotificationOnNotificationScheduleManager(thisItemElement.id, thisItem.schedule_id);
+        cancelNotificationOnNotificationScheduleManager(thisItemElement, thisItem.schedule_id);
       };
     }
 
@@ -332,12 +332,11 @@ export function closeNotificationScheduleManager(): void {
   openPreviousPage();
 }
 
-export async function cancelNotificationOnNotificationScheduleManager(identifier: string, schedule_id: NotificationSchedule['schedule_id']) {
+export async function cancelNotificationOnNotificationScheduleManager(thisItemElement: HTMLElement, schedule_id: NotificationSchedule['schedule_id']) {
   promptMessage('manufacturing', '處理中');
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
-    const itemElement = elementQuerySelector(NotificationScheduleList, `.css_notification_schedule_manager_item#${identifier}`);
-    itemElement.remove();
+    thisItemElement.remove();
     promptMessage('check_circle', '已取消通知');
     if (!notifcationScheduleManagerRefreshTimer_refreshing) {
       const playing_animation = getSettingOptionValue('playing_animation') as boolean;
