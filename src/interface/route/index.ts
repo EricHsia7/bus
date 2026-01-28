@@ -176,7 +176,7 @@ function generateElementOfThreadBox(): GeneratedElement {
   };
 }
 
-function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
+function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement {
   const identifier = generateIdentifier();
 
   // Main item element
@@ -224,7 +224,7 @@ function generateElementOfItem(threadBoxIdentifier: string): GeneratedElement {
   stretchElement.classList.add('css_route_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
-    stretchRouteItem(identifier, threadBoxIdentifier);
+    stretchRouteItem(itemElement, threadBoxElement);
   };
   capsuleElement.appendChild(stretchElement);
 
@@ -780,7 +780,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newThreadsFragment = new DocumentFragment();
         for (let o = 0, d = Math.abs(difference); o < d; o++) {
           const newThreadBoxElement = generateElementOfThreadBox();
-          const newItemElement = generateElementOfItem(newThreadBoxElement.id);
+          const newItemElement = generateElementOfItem(newThreadBoxElement.element);
           newItemsFragment.appendChild(newItemElement.element);
           newThreadsFragment.appendChild(newThreadBoxElement.element);
         }
@@ -933,10 +933,8 @@ export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId
   openRoute(RouteID, PathAttributeId);
 }
 
-export function stretchRouteItem(itemElementID: string, threadBoxElementID: string): void {
-  const itemElement = elementQuerySelector(RouteGroupsElement, `.css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item#${itemElementID}`);
+export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTMLElement): void {
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
-  const threadBoxElement = elementQuerySelector(RouteGroupsElement, `.css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box#${threadBoxElementID}`);
 
   const itemsTrackElement = itemElement.parentElement as HTMLElement;
   const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
