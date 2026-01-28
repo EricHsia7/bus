@@ -8,7 +8,7 @@ import { initializeSettings } from './data/settings/index';
 import { checkAppVersion } from './data/settings/version';
 import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
-import { closeBus, openBus } from './interface/bus/index';
+import { closeBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { closeFolderIconSelector, updateMaterialSymbolsSearchResult } from './interface/folder-icon-selector/index';
@@ -18,15 +18,15 @@ import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
-import { closeLocation, initializeLocationSliding, openLocation } from './interface/location/index';
-import { closeNotificationScheduleManager, openNotificationScheduleManager } from './interface/notification-schedule-manager/index';
+import { closeLocation, initializeLocationSliding } from './interface/location/index';
+import { closeNotificationScheduleManager } from './interface/notification-schedule-manager/index';
 import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPersonalScheduleCreator, switchPersonalScheduleCreatorDay } from './interface/personal-schedule-creator/index';
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
-import { closeQRCode, openQRCode } from './interface/qrcode/index';
+import { closeQRCode } from './interface/qrcode/index';
 import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
 import { closeRouteDetails } from './interface/route/details/index';
-import { closeRoute, initializeRouteSliding, switchRoute } from './interface/route/index';
+import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification } from './interface/schedule-notification/index';
 import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
@@ -311,11 +311,9 @@ window.bus = {
   },
   route: {
     closeRoute,
-    switchRoute,
     closeRouteDetails
   },
   location: {
-    openLocation,
     closeLocation,
     closeLocationDetails
   },
@@ -355,11 +353,9 @@ window.bus = {
     closeSettingsOptions
   },
   bus: {
-    openBus,
     closeBus
   },
   notification: {
-    openNotificationScheduleManager,
     closeNotificationScheduleManager,
     openRegisterNotification,
     closeRegisterNotification,
@@ -367,7 +363,6 @@ window.bus = {
     closeScheduleNotification
   },
   qrcode: {
-    openQRCode,
     closeQRCode
   }
 };
