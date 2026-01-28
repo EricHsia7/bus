@@ -9,7 +9,7 @@ import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, g
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
-import { getIconElement, getIconHTML } from '../icons/index';
+import { getIconElement } from '../icons/index';
 import { closePreviousPage, GeneratedElement, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
@@ -522,7 +522,7 @@ function generateElementOfBusArrivalTime(): GeneratedElement {
   const personalScheduleTimeElement = document.createElement('div');
   personalScheduleTimeElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_time');
 
-  const chartElement = document.createElement('css_route_group_item_bus_arrival_time_chart');
+  const chartElement = document.createElement('div');
   chartElement.classList.add('css_route_group_item_bus_arrival_time_chart');
 
   titleElement.appendChild(iconElement);

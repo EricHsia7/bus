@@ -362,6 +362,81 @@ function generateElementOfGroupDetailsProperty(): GeneratedElement {
   };
 }
 
+function generateElementOfBus(): GeneratedElement {
+  const busElement = document.createElement('div');
+  busElement.classList.add('css_location_group_item_bus');
+  busElement.setAttribute('on-this-route', 'false');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_location_group_item_bus_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_location_group_item_bus_icon');
+  iconElement.appendChild(getIconElement('directions_bus'));
+
+  const carNumberElement = document.createElement('div');
+  carNumberElement.classList.add('css_location_group_item_bus_car_number');
+
+  const attributesElement = document.createElement('div');
+  attributesElement.classList.add('css_location_group_item_bus_attributes');
+
+  const routeAttributeElement = document.createElement('div');
+  routeAttributeElement.classList.add('css_location_group_item_bus_route');
+
+  const carStatusAttributeElement = document.createElement('div');
+  carStatusAttributeElement.classList.add('css_location_group_item_bus_car_status');
+
+  const carTypeAttributeElement = document.createElement('div');
+  carTypeAttributeElement.classList.add('css_location_group_item_bus_car_type');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(carNumberElement);
+  busElement.appendChild(titleElement);
+
+  attributesElement.appendChild(routeAttributeElement);
+  attributesElement.appendChild(carStatusAttributeElement);
+  attributesElement.appendChild(carTypeAttributeElement);
+  busElement.appendChild(attributesElement);
+
+  return {
+    element: busElement,
+    id: ''
+  };
+}
+
+function generateElementOfBusArrivalTime(): GeneratedElement {
+  const busArrivalTimeElement = document.createElement('div');
+  busArrivalTimeElement.classList.add('css_location_group_item_bus_arrival_time');
+
+  const titleElement = document.createElement('div');
+  titleElement.classList.add('css_location_group_item_bus_arrival_time_title');
+
+  const iconElement = document.createElement('div');
+  iconElement.classList.add('css_location_group_item_bus_arrival_time_icon');
+  iconElement.appendChild(getIconElement('calendar_view_day'));
+
+  const personalScheduleNameElement = document.createElement('div');
+  personalScheduleNameElement.classList.add('css_location_group_item_bus_arrival_time_personal_schedule_name');
+
+  const personalScheduleTimeElement = document.createElement('div');
+  personalScheduleTimeElement.classList.add('css_location_group_item_bus_arrival_time_personal_schedule_time');
+
+  const chartElement = document.createElement('div');
+  chartElement.classList.add('css_location_group_item_bus_arrival_time_chart');
+
+  titleElement.appendChild(iconElement);
+  titleElement.appendChild(personalScheduleNameElement);
+  titleElement.appendChild(personalScheduleTimeElement);
+  busArrivalTimeElement.appendChild(titleElement);
+  busArrivalTimeElement.appendChild(chartElement);
+
+  return {
+    element: busArrivalTimeElement,
+    id: ''
+  };
+}
+
+
 function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
@@ -539,7 +614,42 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buses');
-      thisBusesElement.innerHTML = thisItem.buses.length === 0 ? '<div class="css_location_group_item_buses_message">目前沒有公車可顯示</div>' : thisItem.buses.map((bus) => `<div class="css_location_group_item_bus" on-this-route="${bus.onThisRoute}"><div class="css_location_group_item_bus_title"><div class="css_location_group_item_bus_icon">${getIconHTML('directions_bus')}</div><div class="css_location_group_item_bus_car_number">${bus.carNumber}</div></div><div class="css_location_group_item_bus_attributes"><div class="css_location_group_item_bus_route">路線：${bus.RouteName}</div><div class="css_location_group_item_bus_car_status">狀態：${bus.status.text}</div><div class="css_location_group_item_bus_car_type">類型：${bus.type}</div></div></div>`).join('');
+      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
+      const currentBusElementsQuantity = currentBusElements.length;
+      const busesQuantity = thisItem.buses.length;
+      const difference = currentBusElementsQuantity - busesQuantity;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const newBusElement = generateElementOfBus();
+          fragment.appendChild(newBusElement.element);
+        }
+        thisBusesElement.append(fragment);
+      } else {
+        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+          const busIndex = currentBusElementsQuantity - 1 - p;
+          currentBusElements[busIndex].remove();
+        }
+      }
+
+      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
+      for (let i = 0; i < busesQuantity; i++) {
+        const busItem = thisItem.buses[i];
+        const busElement = busElements[i];
+        const titleElement = elementQuerySelector(busElement, '.css_location_group_item_bus_title');
+        const carNumberElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_car_number');
+        const attributesElement = elementQuerySelector(busElement, '.css_location_group_item_bus_attributes');
+        const routeAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_route');
+        const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_status');
+        const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_type');
+        busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
+        carNumberElement.innerText = busItem.carNumber;
+        routeAttributeElement.innerText = `路線：${busItem.RouteName}`;
+        carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
+        carTypeAttributeElement.innerText = `類型：${busItem.type}`;
+      }
+
+      thisBusesElement.setAttribute('empty', booleanToString(busesQuantity === 0));
     }
 
     function updateBusArrivalTimes(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
