@@ -175,7 +175,6 @@ function generateElementOfThreadBox(): GeneratedElement {
 }
 
 function generateElementOfItem(threadBoxElement: HTMLElement): GeneratedElement {
-
   // Main item element
   const itemElement = document.createElement('div');
   itemElement.classList.add('css_route_group_item');
@@ -788,10 +787,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
           thisSaveToFolderButtonElement.onclick = function () {
-            openSaveToFolder('route', [thisOverlappingRouteID], thisSaveToFolderButtonElement);
+            openSaveToFolder('route', [thisOverlappingRouteID], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
           };
           isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
-            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
           });
         })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
       }
@@ -867,7 +866,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_nearby_location_action_button[type="save-to-folder"]');
 
         locationNameElement.innerText = nearbyLocationItem.name;
-        distanceElement.innerText = `${nearbyLocationItem.distance}公尺`; // TODO: html
+        distanceElement.innerText = `${nearbyLocationItem.distance}公尺`;
 
         (function (thisViewLocationButtonElement, thisNearbyLocationHash) {
           thisViewLocationButtonElement.onclick = function () {
@@ -877,10 +876,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
         (function (thisSaveToFolderButtonElement, thisNearbyLocationHash) {
           thisSaveToFolderButtonElement.onclick = function () {
-            openSaveToFolder('location', [thisNearbyLocationHash], thisSaveToFolderButtonElement);
+            openSaveToFolder('location', [thisNearbyLocationHash], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
           };
           isFolderContentSaved('location', thisNearbyLocationHash).then(function (e) {
-            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e)); // TODO: css
+            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
           });
         })(saveToFolderButtonElement, nearbyLocationItem.hash);
       }
