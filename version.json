@@ -1,7 +1,7 @@
 {
-  "build": 377,
-  "hash": "c4adb6f",
-  "full_hash": "c4adb6fa86bb16e98ce5e222caa12fba04eb3f05",
-  "branch_name": "dev-deprecate-generated-element",
-  "timestamp": "2026-01-28T08:59:09.607Z"
+  "build": 378,
+  "hash": "ba810d5",
+  "full_hash": "ba810d5d009d527852250811ebdb9d72fc8bf8f5",
+  "branch_name": "dev-html-element-as-parameter",
+  "timestamp": "2026-01-28T09:04:31.963Z"
 }
