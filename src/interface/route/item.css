@@ -600,6 +600,41 @@
   visibility: inherit;
 }
 
+/* empty: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses[empty="true"]::after,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes[empty="true"]::after,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times[empty="true"]::after,
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations[empty="true"]::after {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  white-space: nowrap;
+  word-break: keep-all;
+  font-size: 16px;
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses[empty="true"]::after {
+  content: '目前沒有公車可顯示';
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes[empty="true"]::after {
+  content: '目前沒有路線可顯示';
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times[empty="true"]::after {
+  content: '目前沒有抵達時間可顯示';
+}
+
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations[empty="true"]::after {
+  content: '目前沒有地點可顯示';
+}
+
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses::-webkit-scrollbar,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes::-webkit-scrollbar,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_bus_arrival_times::-webkit-scrollbar,

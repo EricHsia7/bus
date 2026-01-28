@@ -746,6 +746,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
         carTypeAttributeElement.innerText = `類型：${busItem.type}`;
       }
+
+      thisBusesElement.setAttribute('empty', booleanToString(busesQuantity === 0));
     }
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
