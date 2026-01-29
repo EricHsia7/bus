@@ -93,10 +93,23 @@ export function initializeLocationSliding(): void {
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+      /*
       if (currentIndex === locationSliding_targetIndex) {
         locationSliding_initialIndex = Math.round(currentIndex);
         locationSliding_sliding = false;
       }
+      */
+    },
+    { passive: true }
+  );
+
+  LocationGroupsElement.addEventListener(
+    'scrollend',
+    function (event: Event) {
+      const target = event.target as HTMLElement;
+      const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
+      locationSliding_initialIndex = Math.round(currentIndex);
+      locationSliding_sliding = false;
     },
     { passive: true }
   );
