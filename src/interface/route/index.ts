@@ -41,7 +41,7 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 let routeSliding_horizontal: boolean = false;
-let routeSliding_allowHorizontal: boolean = false;
+let routeSliding_allowHorizontal: boolean = true;
 
 let routeRefreshTimer_retryInterval: number = 10 * 1000;
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
@@ -252,10 +252,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   const buttonsElement = document.createElement('div');
   buttonsElement.classList.add('css_route_group_item_buttons');
   buttonsElement.addEventListener('mouseenter', function () {
-    routeSliding_allowHorizontal = true;
+    routeSliding_allowHorizontal = false;
   });
   buttonsElement.addEventListener('mouseleave', function () {
-    routeSliding_allowHorizontal = false;
+    routeSliding_allowHorizontal = true;
   });
 
   // Tab: 公車
@@ -360,10 +360,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   busesElement.classList.add('css_route_group_item_buses');
   busesElement.setAttribute('displayed', 'true');
   busesElement.addEventListener('mouseenter', function () {
-    routeSliding_allowHorizontal = true;
+    routeSliding_allowHorizontal = false;
   });
   busesElement.addEventListener('mouseleave', function () {
-    routeSliding_allowHorizontal = false;
+    routeSliding_allowHorizontal = true;
   });
   bodyElement.appendChild(busesElement);
 
@@ -372,10 +372,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   overlappingRoutesElement.classList.add('css_route_group_item_overlapping_routes');
   overlappingRoutesElement.setAttribute('displayed', 'false');
   overlappingRoutesElement.addEventListener('mouseenter', function () {
-    routeSliding_allowHorizontal = true;
+    routeSliding_allowHorizontal = false;
   });
   overlappingRoutesElement.addEventListener('mouseleave', function () {
-    routeSliding_allowHorizontal = false;
+    routeSliding_allowHorizontal = true;
   });
   bodyElement.appendChild(overlappingRoutesElement);
 
@@ -384,10 +384,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   busArrivalTimesElement.classList.add('css_route_group_item_bus_arrival_times');
   busArrivalTimesElement.setAttribute('displayed', 'false');
   busArrivalTimesElement.addEventListener('mouseenter', function () {
-    routeSliding_allowHorizontal = true;
+    routeSliding_allowHorizontal = false;
   });
   busArrivalTimesElement.addEventListener('mouseleave', function () {
-    routeSliding_allowHorizontal = false;
+    routeSliding_allowHorizontal = true;
   });
   bodyElement.appendChild(busArrivalTimesElement);
 
@@ -396,10 +396,10 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   nearbyLocationsElement.classList.add('css_route_group_item_nearby_locations');
   nearbyLocationsElement.setAttribute('displayed', 'false');
   nearbyLocationsElement.addEventListener('mouseenter', function () {
-    routeSliding_allowHorizontal = true;
+    routeSliding_allowHorizontal = false;
   });
   nearbyLocationsElement.addEventListener('mouseleave', function () {
-    routeSliding_allowHorizontal = false;
+    routeSliding_allowHorizontal = true;
   });
   bodyElement.appendChild(nearbyLocationsElement);
 
@@ -1255,6 +1255,7 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
   routeSliding_horizontal = false;
+  routeSliding_allowHorizontal = true;
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
