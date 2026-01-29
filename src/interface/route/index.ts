@@ -73,7 +73,7 @@ export function initializeRouteSliding(): void {
     'wheel',
     function (event: WheelEvent) {
       let horizontalSliding = Math.abs(event.deltaX) > Math.abs(event.deltaY) && routeSliding_allowHorizontal;
-      if (horizontalSliding !== routeSliding_horizontal) {
+      if (horizontalSliding !== routeSliding_horizontal && !routeSliding_sliding) {
         RouteGroupsElement.setAttribute('horizontal-scroll', booleanToString(horizontalSliding));
         routeSliding_horizontal = horizontalSliding;
       }
@@ -112,8 +112,6 @@ export function initializeRouteSliding(): void {
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(currentIndex);
         routeSliding_sliding = false;
-        routeSliding_horizontal = false;
-        RouteGroupsElement.setAttribute('horizontal-scroll', booleanToString(routeSliding_horizontal));
       }
     },
     { passive: true }
