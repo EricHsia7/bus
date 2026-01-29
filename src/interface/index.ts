@@ -216,7 +216,7 @@ export type SizesMap = {
   [sizeType: string]: Size;
 };
 
-export const Sizes: SizesMap = {
+const Sizes: SizesMap = {
   window: [0, 0],
   head: [0, 0],
   head_one_button: [0, 0],
