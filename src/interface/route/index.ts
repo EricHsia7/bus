@@ -117,6 +117,8 @@ export function initializeRouteSliding(): void {
 
   window.addEventListener('resize', () => {
     if (!routeSliding_sliding) {
+      const currentIndex = RouteGroupsElement.scrollLeft / getSize('window')[0];
+      routeSliding_initialIndex = Math.round(currentIndex);
       const initialGroupKey = `g_${routeSliding_initialIndex}`;
       const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
       const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
@@ -129,6 +131,8 @@ export function initializeRouteSliding(): void {
     if (screen.orientation) {
       screen.orientation.addEventListener('change', () => {
         if (!routeSliding_sliding) {
+          const currentIndex = RouteGroupsElement.scrollLeft / getSize('window')[0];
+          routeSliding_initialIndex = Math.round(currentIndex);
           const initialGroupKey = `g_${routeSliding_initialIndex}`;
           const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
           const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
