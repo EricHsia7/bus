@@ -40,7 +40,8 @@ let routeSliding_groupStyles: GroupStyles = {};
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
-let routeSliding_horizontalScrolling: boolean = false;
+let routeSliding_horizontal: boolean = false;
+let routeSliding_allowHorizontal: boolean = false;
 
 let routeRefreshTimer_retryInterval: number = 10 * 1000;
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
@@ -71,17 +72,10 @@ export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
     'wheel',
     function (event: WheelEvent) {
-      // Check if the user is moving more on the X axis than the Y axis
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        if (!routeSliding_horizontalScrolling) {
-          RouteGroupsElement.setAttribute('horizontal-scroll', 'true');
-          routeSliding_horizontalScrolling = true;
-        }
-      } else {
-        if (routeSliding_horizontalScrolling) {
-          RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
-          routeSliding_horizontalScrolling = false;
-        }
+      let horizontalSliding = Math.abs(event.deltaX) > Math.abs(event.deltaY) && routeSliding_allowHorizontal;
+      if (horizontalSliding !== routeSliding_horizontal) {
+        RouteGroupsElement.setAttribute('horizontal-scroll', booleanToString(horizontalSliding));
+        routeSliding_horizontal = horizontalSliding;
       }
     },
     { passive: true }
@@ -118,10 +112,8 @@ export function initializeRouteSliding(): void {
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(currentIndex);
         routeSliding_sliding = false;
-        if (routeSliding_horizontalScrolling) {
-          RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
-          routeSliding_horizontalScrolling = false;
-        }
+        routeSliding_horizontal = false;
+        RouteGroupsElement.setAttribute('horizontal-scroll', booleanToString(routeSliding_horizontal));
       }
     },
     { passive: true }
@@ -259,6 +251,12 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   // Buttons
   const buttonsElement = document.createElement('div');
   buttonsElement.classList.add('css_route_group_item_buttons');
+  buttonsElement.addEventListener('mouseenter', function () {
+    routeSliding_allowHorizontal = true;
+  });
+  buttonsElement.addEventListener('mouseleave', function () {
+    routeSliding_allowHorizontal = false;
+  });
 
   // Tab: 公車
   const tabBusElement = document.createElement('div');
@@ -361,24 +359,48 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   const busesElement = document.createElement('div');
   busesElement.classList.add('css_route_group_item_buses');
   busesElement.setAttribute('displayed', 'true');
+  busesElement.addEventListener('mouseenter', function () {
+    routeSliding_allowHorizontal = true;
+  });
+  busesElement.addEventListener('mouseleave', function () {
+    routeSliding_allowHorizontal = false;
+  });
   bodyElement.appendChild(busesElement);
 
   // Overlapping routes
   const overlappingRoutesElement = document.createElement('div');
   overlappingRoutesElement.classList.add('css_route_group_item_overlapping_routes');
   overlappingRoutesElement.setAttribute('displayed', 'false');
+  overlappingRoutesElement.addEventListener('mouseenter', function () {
+    routeSliding_allowHorizontal = true;
+  });
+  overlappingRoutesElement.addEventListener('mouseleave', function () {
+    routeSliding_allowHorizontal = false;
+  });
   bodyElement.appendChild(overlappingRoutesElement);
 
   // Bus arrival times
   const busArrivalTimesElement = document.createElement('div');
   busArrivalTimesElement.classList.add('css_route_group_item_bus_arrival_times');
   busArrivalTimesElement.setAttribute('displayed', 'false');
+  busArrivalTimesElement.addEventListener('mouseenter', function () {
+    routeSliding_allowHorizontal = true;
+  });
+  busArrivalTimesElement.addEventListener('mouseleave', function () {
+    routeSliding_allowHorizontal = false;
+  });
   bodyElement.appendChild(busArrivalTimesElement);
 
   // Nearby locations
   const nearbyLocationsElement = document.createElement('div');
   nearbyLocationsElement.classList.add('css_route_group_item_nearby_locations');
   nearbyLocationsElement.setAttribute('displayed', 'false');
+  nearbyLocationsElement.addEventListener('mouseenter', function () {
+    routeSliding_allowHorizontal = true;
+  });
+  nearbyLocationsElement.addEventListener('mouseleave', function () {
+    routeSliding_allowHorizontal = false;
+  });
   bodyElement.appendChild(nearbyLocationsElement);
 
   // Assemble
@@ -1232,7 +1254,7 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
-  routeSliding_horizontalScrolling = false;
+  routeSliding_horizontal = false;
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
