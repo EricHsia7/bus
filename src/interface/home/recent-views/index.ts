@@ -5,7 +5,7 @@ import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } fr
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { Sizes } from '../../index';
+import { getSize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
 
@@ -273,7 +273,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
 export function setUpRecentViewsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const defaultItemQuantity = Math.floor(Sizes.window[1] / 70 / 3) + 2;
+  const defaultItemQuantity = Math.floor(getSize('window')[1] / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({

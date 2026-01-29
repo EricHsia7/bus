@@ -238,6 +238,10 @@ export function updateSizes(): void {
   Sizes.location_bus_arrival_time_chart = [w - 30 - 20, 75];
 }
 
+export function getSize(sizeType: SizeType): Size {
+  return Sizes[sizeType];
+}
+
 export function scrollDocumentToTop(): void {
   window.scrollTo({
     top: 0,

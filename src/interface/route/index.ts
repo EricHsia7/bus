@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, Sizes } from '../index';
+import { closePreviousPage, getSize, GroupStyles, openPreviousPage, pushPageHistory } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -60,7 +60,7 @@ export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
     'touchstart',
     function () {
-      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / Sizes.window[0]);
+      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / getSize('window')[0]);
     },
     { passive: true }
   );
@@ -70,7 +70,7 @@ export function initializeRouteSliding(): void {
     function (event: Event) {
       routeSliding_sliding = true;
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / Sizes.window[0];
+      const currentIndex = target.scrollLeft / getSize('window')[0];
       if (currentIndex > routeSliding_initialIndex) {
         routeSliding_targetIndex = routeSliding_initialIndex + 1;
       } else {
@@ -91,7 +91,7 @@ export function initializeRouteSliding(): void {
       const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
-      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + Sizes.window[0] * 0.5 - tabWidth * 0.5;
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + getSize('window')[0] * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
       /*
       if (currentIndex === routeSliding_targetIndex) {
@@ -107,7 +107,7 @@ export function initializeRouteSliding(): void {
     'scrollend',
     function (event: Event) {
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / Sizes.window[0];
+      const currentIndex = target.scrollLeft / getSize('window')[0];
       routeSliding_initialIndex = Math.round(currentIndex);
       routeSliding_sliding = false;
     },
@@ -569,7 +569,7 @@ function generateElementOfNearbyLocation(): HTMLElement {
 
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const defaultItemQuantity: number = Math.floor(Sizes.window[1] / 50) + 5;
+  const defaultItemQuantity: number = Math.floor(getSize('window')[1] / 50) + 5;
   const defaultGroupQuantity = 2;
   let groupedItems: IntegratedRoute['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
@@ -1018,7 +1018,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   if (!routeSliding_sliding) {
     const initialGroupKey = `g_${routeSliding_initialIndex}`;
     const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
-    const offset = initialGroupStyle.offset * -1 + Sizes.window[0] * 0.5 - initialGroupStyle.width * 0.5;
+    const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
     updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
   }
@@ -1157,7 +1157,7 @@ async function refreshRoute() {
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
   document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, Sizes.route_bus_arrival_time_chart[0], Sizes.route_bus_arrival_time_chart[1], routeRefreshTimer_currentRequestID);
+  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, getSize('route_details_canvas')[0], getSize('route_details_canvas')[1], routeRefreshTimer_currentRequestID);
   updateRouteField(integration, false, playing_animation);
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {

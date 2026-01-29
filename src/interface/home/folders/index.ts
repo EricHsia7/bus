@@ -6,7 +6,7 @@ import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } fr
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
-import { Sizes } from '../../index';
+import { getSize } from '../../index';
 import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
 import { openRoute } from '../../route/index';
@@ -147,7 +147,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 
 export function setUpFolderFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const contentLength = Math.floor(Sizes.window[1] / 50 / 3) + 2;
+  const contentLength = Math.floor(getSize('window')[1] / 50 / 3) + 2;
   const folderQuantity = 3;
 
   const folders: integratedFolders['folders'] = [];

@@ -8,7 +8,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { pushPageHistory, revokePageHistory, scrollDocumentToTop, Sizes } from '../index';
+import { getSize, pushPageHistory, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -52,7 +52,7 @@ let textWidthToCursorStart: number = 0;
 let selectedTextWidth: number = 0;
 let selection: boolean = false;
 let cursorOffset: number = 0;
-let size = Sizes.head_two_button;
+let size = getSize('head_two_button');
 let width = size[0] * searchInputCanvasScale;
 let height = size[1] * searchInputCanvasScale;
 let playingCursorAnimation: boolean = false;
@@ -168,7 +168,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     }
   }
 
-  size = Sizes.head_two_button;
+  size = getSize('head_two_button');
   width = size[0] * searchInputCanvasScale;
   height = size[1] * searchInputCanvasScale;
   textColor = getCSSVariableValue('--b-cssvar-333333');
@@ -205,7 +205,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
 }
 
 export function resizeSearchInputCanvas(): void {
-  size = Sizes.head_two_button;
+  size = getSize('head_two_button');
   width = size[0] * searchInputCanvasScale;
   height = size[1] * searchInputCanvasScale;
   searchInputCanvasElement.width = width * searchInputCanvasScale;
