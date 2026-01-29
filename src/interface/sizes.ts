@@ -1,4 +1,4 @@
-const Sizes: SizesMap = {
+export let Sizes: SizesMap = {
   window: [0, 0],
   head: [0, 0],
   head_one_button: [0, 0],
@@ -17,7 +17,7 @@ export type SizesMap = {
 };
 
 export function getSize(sizeType: SizeType): Size {
-  return Sizes[sizeType] * 1;
+  return Sizes[sizeType] 
 }
 
 export function updateSizes(): void {
