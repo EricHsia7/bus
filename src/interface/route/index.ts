@@ -77,6 +77,11 @@ export function initializeRouteSliding(): void {
           RouteGroupsElement.setAttribute('horizontal-scroll', 'true');
           routeSliding_horizontalScrolling = true;
         }
+      } else {
+        if (routeSliding_horizontalScrolling) {
+          RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
+          routeSliding_horizontalScrolling = false;
+        }
       }
     },
     { passive: true }
@@ -113,10 +118,6 @@ export function initializeRouteSliding(): void {
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(currentIndex);
         routeSliding_sliding = false;
-        if (routeSliding_horizontalScrolling) {
-          RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
-          routeSliding_horizontalScrolling = false;
-        }
       }
     },
     { passive: true }
