@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, Sizes } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -37,8 +37,6 @@ let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
 let routeSliding_groupQuantity: number = 0;
 let routeSliding_groupStyles: GroupStyles = {};
-let routeSliding_fieldWidth: number = 0;
-let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
 let routeRefreshTimer_retryInterval: number = 10 * 1000;
@@ -62,7 +60,7 @@ export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
     'touchstart',
     function () {
-      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / Sizes.window[0]);
     },
     { passive: true }
   );
@@ -72,7 +70,7 @@ export function initializeRouteSliding(): void {
     function (event: Event) {
       routeSliding_sliding = true;
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
+      const currentIndex = target.scrollLeft / Sizes.window[0];
       if (currentIndex > routeSliding_initialIndex) {
         routeSliding_targetIndex = routeSliding_initialIndex + 1;
       } else {
@@ -93,7 +91,7 @@ export function initializeRouteSliding(): void {
       const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
-      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + Sizes.window[0] * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
       /*
       if (currentIndex === routeSliding_targetIndex) {
@@ -109,7 +107,7 @@ export function initializeRouteSliding(): void {
     'scrollend',
     function (event: Event) {
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
+      const currentIndex = target.scrollLeft / Sizes.window[0];
       routeSliding_initialIndex = Math.round(currentIndex);
       routeSliding_sliding = false;
     },
@@ -571,10 +569,7 @@ function generateElementOfNearbyLocation(): HTMLElement {
 
 function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: number = Math.floor(FieldHeight / 50) + 5;
+  const defaultItemQuantity: number = Math.floor(Sizes.window[1] / 50) + 5;
   const defaultGroupQuantity = 2;
   let groupedItems: IntegratedRoute['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
@@ -998,17 +993,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-
   const groupQuantity = integration.groupQuantity;
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
 
   routeSliding_groupQuantity = groupQuantity;
-  routeSliding_fieldWidth = FieldWidth;
-  routeSliding_fieldHeight = FieldHeight;
 
   let cumulativeOffset = 0;
   const groupNames = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, '未知'].map((e) => `往${e}`);
@@ -1029,7 +1018,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   if (!routeSliding_sliding) {
     const initialGroupKey = `g_${routeSliding_initialIndex}`;
     const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
-    const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
+    const offset = initialGroupStyle.offset * -1 + Sizes.window[0] * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
     updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
   }
@@ -1161,7 +1150,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 async function refreshRoute() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
   routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   routeRefreshTimer_refreshing = true;
@@ -1169,7 +1157,7 @@ async function refreshRoute() {
   RouteUpdateTimerElement.setAttribute('refreshing', 'true');
   RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
   document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
+  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, Sizes.route_bus_arrival_time_chart[0], Sizes.route_bus_arrival_time_chart[1], routeRefreshTimer_currentRequestID);
   updateRouteField(integration, false, playing_animation);
   let updateRate = 0;
   if (routeRefreshTimer_dynamic) {

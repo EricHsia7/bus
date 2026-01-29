@@ -6,7 +6,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory, Sizes } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
@@ -214,10 +214,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
 
 function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
+  const defaultItemQuantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(Sizes.window[1] / 50) + 5;
   let items: IntegratedNotificationSchedules['items'] = [];
   for (let i = 0; i < defaultItemQuantity; i++) {
     items.push({

@@ -130,11 +130,6 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 function setUpLocationDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const actions: IntegratedLocationDetailsAction[] = [];
-  /*
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  */
   const defaultActionsQuantity = 3;
   for (let i = 0; i < defaultActionsQuantity; i++) {
     actions.push({

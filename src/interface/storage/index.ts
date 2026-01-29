@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { querySize } from '../index';
+import { Sizes } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
@@ -125,10 +125,7 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
 
 function setUpStorageFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const FieldSize = querySize('window');
-  // const FieldWidth = FieldSize.width;
-  const FieldHeight = FieldSize.height;
-  const defaultCategoriesQuantity = Math.min(7, Math.floor(FieldHeight / 55) + 2);
+  const defaultCategoriesQuantity = Math.min(7, Math.floor(Sizes.window[1] / 55) + 2);
   const statistics: StoreSizeStatistics = {
     categorizedSizes: {},
     totalSize: 0

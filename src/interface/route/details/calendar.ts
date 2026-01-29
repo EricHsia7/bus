@@ -4,7 +4,7 @@ import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/el
 import { drawRoundedRect } from '../../../tools/graphic';
 import { booleanToString } from '../../../tools/index';
 import { getCSSVariableValue } from '../../../tools/style';
-import { querySize } from '../../index';
+import { Sizes } from '../../index';
 import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
 const calendarRatio = 70;
@@ -14,9 +14,6 @@ const gridlineWidth = 1.2;
 const gridlineLabelWidthLimit = 45;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 
-let canvasSize = querySize('route-details-canvas');
-let canvasWidth = canvasSize.width;
-let canvasHeight = canvasSize.height;
 let canvasScale = Math.min(window.devicePixelRatio, scaleLimit) || 1;
 
 let previousCalendar = {} as Calendar;
@@ -24,14 +21,11 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
-  canvasSize = querySize('route-details-canvas');
-  canvasWidth = canvasSize.width;
-  canvasHeight = canvasSize.height;
   canvasScale = Math.min(window.devicePixelRatio, scaleLimit) || 1;
 
   // Set the new size
-  canvas.width = canvasWidth * canvasScale;
-  canvas.height = canvasHeight * canvasScale;
+  canvas.width = Sizes.route_details_canvas[0] * canvasScale;
+  canvas.height = Sizes.route_details_canvas[1] * canvasScale;
 
   // Reset transformations before scaling
   const context = canvas.getContext('2d');
@@ -126,7 +120,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
     thisContext.fillStyle = gridColor;
 
     // Draw line
-    thisContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, canvasWidth - gridlineLabelWidthLimit, gridlineWidth);
+    thisContext.fillRect(boxX + gridlineLabelWidthLimit, boxY + 5, Sizes.route_details_canvas[0] - gridlineLabelWidthLimit, gridlineWidth);
 
     // Draw label
     thisContext.font = `400 ${12}px ${fontFamily}`;
@@ -153,7 +147,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
 
     const boxX = gridlineLabelWidthLimit;
     const boxY = ((thisCalendarEvent.date.getTime() - thisDayStart.getTime()) / (24 * 60 * 60 * 1000)) * 24 * calendarRatio;
-    const boxWidth = canvasWidth - gridlineLabelWidthLimit;
+    const boxWidth = Sizes.route_details_canvas[0] - gridlineLabelWidthLimit;
     const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendarRatio;
 
     // Draw background with rounded rectangle
@@ -192,7 +186,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
   const isDisplayed = currentDay === index;
   if (isDisplayed) {
     // Clear the canvas and redraw the content when displayed.
-    thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    thisCalendarEventGroupCanvasContext.clearRect(0, 0, Sizes.route_details_canvas[0], Sizes.route_details_canvas[1]);
 
     // Draw the gridlines.
     for (let hours = 0; hours < 24; hours++) {
@@ -205,7 +199,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
     }
   } else {
     // When not displayed, clear the canvas.
-    thisCalendarEventGroupCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    thisCalendarEventGroupCanvasContext.clearRect(0, 0, Sizes.route_details_canvas[0], Sizes.route_details_canvas[1]);
   }
 }
 
@@ -309,7 +303,7 @@ export function switchCalendarDay(day: number): void {
       // Clear the canvas for non-displayed elements.
       const canvas = elementQuerySelector(thisEventGroupElement, '.css_route_details_calendar_event_group_canvas') as HTMLCanvasElement;
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.clearRect(0, 0, Sizes.route_details_canvas[0], Sizes.route_details_canvas[1]);
     }*/
   }
 }

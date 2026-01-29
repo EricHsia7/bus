@@ -8,7 +8,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
+import { pushPageHistory, revokePageHistory, scrollDocumentToTop, Sizes } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -52,9 +52,9 @@ let textWidthToCursorStart: number = 0;
 let selectedTextWidth: number = 0;
 let selection: boolean = false;
 let cursorOffset: number = 0;
-let size = querySize('head-two-button');
-let width = size.width * searchInputCanvasScale;
-let height = size.height * searchInputCanvasScale;
+let size = Sizes.head_two_button;
+let width = size[0] * searchInputCanvasScale;
+let height = size[1] * searchInputCanvasScale;
 let playingCursorAnimation: boolean = false;
 let keyboardInitialized = false;
 
@@ -168,9 +168,9 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     }
   }
 
-  size = querySize('head-two-button');
-  width = size.width * searchInputCanvasScale;
-  height = size.height * searchInputCanvasScale;
+  size = Sizes.head_two_button;
+  width = size[0] * searchInputCanvasScale;
+  height = size[1] * searchInputCanvasScale;
   textColor = getCSSVariableValue('--b-cssvar-333333');
   placeholderTextColor = getCSSVariableValue('--b-cssvar-aeaeb2');
   cursorColor = getCSSVariableValue('--b-cssvar-main-color');
@@ -205,9 +205,9 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
 }
 
 export function resizeSearchInputCanvas(): void {
-  size = querySize('head-two-button');
-  width = size.width;
-  height = size.height;
+  size = Sizes.head_two_button;
+  width = size[0] * searchInputCanvasScale;
+  height = size[1] * searchInputCanvasScale;
   searchInputCanvasElement.width = width * searchInputCanvasScale;
   searchInputCanvasElement.height = height * searchInputCanvasScale;
   updateSearchInput(-1, -1);

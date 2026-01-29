@@ -208,56 +208,34 @@ export type GroupStyles = {
   };
 };
 
-export interface Size {
-  width: number;
-  height: number;
-}
+export type SizeType = 'window' | 'head' | 'head_one_button' | 'head_two_button' | 'route_details_canvas' | 'route_bus_arrival_time_chart' | 'location_bus_arrival_time_chart';
 
-type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button' | 'route-details-canvas' | 'route-bus-arrival-time-chart' | 'location-bus-arrival-time-chart';
+export type Size = [width: number, height: number];
 
-export function querySize(type: SizeType): Size {
-  let width: number = 0;
-  let height: number = 0;
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  switch (type) {
-    case 'window':
-      width = windowWidth;
-      height = windowHeight;
-      break;
-    case 'head':
-      width = windowWidth;
-      height = 55;
-      break;
-    case 'head-one-button':
-      width = windowWidth - 55;
-      height = 55;
-      break;
-    case 'head-two-button':
-      width = windowWidth - 55 * 2;
-      height = 55;
-      break;
-    case 'route-details-canvas':
-      width = windowWidth - 10 * 2 - 10 * 2;
-      height = 24 * 70;
-      break;
-    case 'route-bus-arrival-time-chart':
-      width = windowWidth - 45 - 15 - 20;
-      height = 75;
-      break;
-    case 'location-bus-arrival-time-chart':
-      width = windowWidth - 30 - 20;
-      height = 75;
-      break;
-    default:
-      width = 0;
-      height = 0;
-      break;
-  }
-  return {
-    width,
-    height
-  };
+export type Sizes = {
+  [sizeType: string]: Size;
+};
+
+export const Sizes: Sizes = {
+  window: [0, 0],
+  head: [0, 0],
+  head_one_button: [0, 0],
+  head_two_button: [0, 0],
+  route_details_canvas: [0, 0],
+  route_bus_arrival_time_chart: [0, 0],
+  location_bus_arrival_time_chart: [0, 0]
+};
+
+export function updateSizes(): void {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  Sizes.window = [w, h];
+  Sizes.head = [w, 55];
+  Sizes.head_one_button = [w - 55, 55];
+  Sizes.head_two_button = [w - 55 * 2, 55];
+  Sizes.route_details_canvas = [w - 10 * 2 - 10 * 2, 24 * 70];
+  Sizes.route_bus_arrival_time_chart = [w - 45 - 15 - 20, 75];
+  Sizes.location_bus_arrival_time_chart = [w - 30 - 20, 75];
 }
 
 export function scrollDocumentToTop(): void {

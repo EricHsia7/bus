@@ -2,7 +2,7 @@ import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
-import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory, Sizes } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
@@ -15,9 +15,8 @@ const startTimeElement = elementQuerySelector(statisticsElement, '.css_data_usag
 const endTimeElement = elementQuerySelector(statisticsElement, '.css_data_usage_statistics_item[name="end-time"] .css_data_usage_statistics_item_value');
 
 async function initializeDataUsage() {
-  const WindowSize = querySize('window');
-  const graphWidth = WindowSize.width;
-  const graphHeight = Math.min((5 / 18) * graphWidth, WindowSize.height * 0.33);
+  const graphWidth = Sizes.window[0];
+  const graphHeight = Math.min((5 / 18) * graphWidth, Sizes.window[1] * 0.33);
   const stats = await getDataUsageStats(graphWidth, graphHeight, 20);
   totalDataUsageElement.innerText = convertBytes(stats.stats.sum);
   maxDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.max);

@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, Sizes } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -36,8 +36,6 @@ let locationSliding_initialIndex: number = 0;
 let locationSliding_targetIndex: number = 0;
 let locationSliding_groupQuantity: number = 0;
 let locationSliding_groupStyles: GroupStyles = {};
-let locationSliding_fieldWidth: number = 0;
-let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
 let locationRefreshTimer_retryInterval: number = 10 * 1000;
@@ -60,7 +58,7 @@ export function initializeLocationSliding(): void {
   LocationGroupsElement.addEventListener(
     'touchstart',
     function () {
-      locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
+      locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / Sizes.window[0]);
     },
     { passive: true }
   );
@@ -70,7 +68,7 @@ export function initializeLocationSliding(): void {
     function (event: Event) {
       locationSliding_sliding = true;
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
+      const currentIndex = target.scrollLeft / Sizes.window[0];
       if (currentIndex > locationSliding_initialIndex) {
         locationSliding_targetIndex = locationSliding_initialIndex + 1;
       } else {
@@ -91,7 +89,7 @@ export function initializeLocationSliding(): void {
       const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
       const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
-      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
+      const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + Sizes.window[0] * 0.5 - tabWidth * 0.5;
       updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
       /*
       if (currentIndex === locationSliding_targetIndex) {
@@ -107,7 +105,7 @@ export function initializeLocationSliding(): void {
     'scrollend',
     function (event: Event) {
       const target = event.target as HTMLElement;
-      const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
+      const currentIndex = target.scrollLeft / Sizes.window[0];
       locationSliding_initialIndex = Math.round(currentIndex);
       locationSliding_sliding = false;
     },
@@ -429,11 +427,8 @@ function generateElementOfBusArrivalTime(): HTMLElement {
 }
 
 function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean; 
+  const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(Sizes.window[1] / 50) + 5, g_1: Math.floor(Sizes.window[1] / 50) + 5 };
   const defaultGroupQuantity = 2;
   let groupedItems: IntegratedLocation['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
@@ -797,19 +792,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-
   const groupQuantity = integration.groupQuantity;
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
   const groups = integration.groups;
 
   locationSliding_groupQuantity = groupQuantity;
-  locationSliding_fieldWidth = FieldWidth;
-  locationSliding_fieldHeight = FieldHeight;
-
+ 
   let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
@@ -828,7 +817,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   if (!locationSliding_sliding) {
     const initialGroupKey = `g_${locationSliding_initialIndex}`;
     const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
-    const offset = initialGroupStyle.offset * -1 + locationSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
+    const offset = initialGroupStyle.offset * -1 + Sizes.window[0] * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
     updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);
   }
@@ -987,7 +976,6 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 async function refreshLocation() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
   locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
   locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
   locationRefreshTimer_refreshing = true;
@@ -995,7 +983,7 @@ async function refreshLocation() {
   LocationUpdateTimerElement.setAttribute('refreshing', 'true');
   LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
   document.addEventListener(locationRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, locationRefreshTimer_currentRequestID);
+  const integration = await integrateLocation(currentHashSet_hash, Sizes.location_bus_arrival_time_chart[0], Sizes.location_bus_arrival_time_chart[1], locationRefreshTimer_currentRequestID);
   updateLocationField(integration, false, playing_animation);
   let updateRate = 0;
   if (locationRefreshTimer_dynamic) {
