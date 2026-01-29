@@ -216,7 +216,7 @@ window.bus = {
                 updateSizes();
                 resizeSearchInputCanvas();
               });
-              if (screen) {
+              if ('screen' in self) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
                     updateSizes();
