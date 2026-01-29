@@ -17,7 +17,7 @@ export type SizesMap = {
 };
 
 export function getSize(sizeType: SizeType): Size {
-  return Sizes[sizeType] 
+  return Sizes[sizeType];
 }
 
 export function updateSizes(): void {

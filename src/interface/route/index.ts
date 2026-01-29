@@ -114,6 +114,30 @@ export function initializeRouteSliding(): void {
     },
     { passive: true }
   );
+
+  window.addEventListener('resize', () => {
+    if (!routeSliding_sliding) {
+      const initialGroupKey = `g_${routeSliding_initialIndex}`;
+      const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+      const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
+      const tabLineWidth = initialGroupStyle.width - tabPadding;
+      updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
+    }
+  });
+
+  if (screen) {
+    if (screen.orientation) {
+      screen.orientation.addEventListener('change', () => {
+        if (!routeSliding_sliding) {
+          const initialGroupKey = `g_${routeSliding_initialIndex}`;
+          const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+          const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
+          const tabLineWidth = initialGroupStyle.width - tabPadding;
+          updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
+        }
+      });
+    }
+  }
 }
 
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {

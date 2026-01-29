@@ -112,6 +112,30 @@ export function initializeLocationSliding(): void {
     },
     { passive: true }
   );
+
+  window.addEventListener('resize', () => {
+    if (!locationSliding_sliding) {
+      const initialGroupKey = `g_${locationSliding_initialIndex}`;
+      const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
+      const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
+      const tabLineWidth = initialGroupStyle.width - tabPadding;
+      updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);
+    }
+  });
+
+  if (screen) {
+    if (screen.orientation) {
+      screen.orientation.addEventListener('change', () => {
+        if (!locationSliding_sliding) {
+          const initialGroupKey = `g_${locationSliding_initialIndex}`;
+          const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
+          const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
+          const tabLineWidth = initialGroupStyle.width - tabPadding;
+          updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);
+        }
+      });
+    }
+  }
 }
 
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
