@@ -151,13 +151,15 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const stopLocationIds = thisLocation.id;
   const setsOfVectors = thisLocation.v;
 
-  let StopIDs = [];
-  let RouteIDs = [];
+  let StopIDs: Array<number> = [];
+  let RouteIDs: Array<number> = [];
   const stopLocationQuantity = stopLocationIds.length;
 
   for (let i = 0; i < stopLocationQuantity; i++) {
-    StopIDs = StopIDs.concat(thisLocation.s[i]);
-    RouteIDs = RouteIDs.concat(thisLocation.r[i]);
+    for (let j = 0, l = thisLocation.s[i].length; j < l; j++) {
+      StopIDs.push(thisLocation.s[i][j]);
+      RouteIDs.push(thisLocation.r[i][j]);
+    }
   }
 
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);

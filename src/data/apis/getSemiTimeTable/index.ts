@@ -15,7 +15,7 @@ export async function getSemiTimeTable(requestID: string): Promise<object> {
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
       const data = await fetchData(url, requestID, `getSemiTimeTable_${api[0]}`, 'json');
-      for (let i = 0, l1 = data.BusInfo.length - 1; i < l1; i++) {
+      for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
