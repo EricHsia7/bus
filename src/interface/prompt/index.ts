@@ -46,6 +46,7 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
         { once: true }
       );
       promptElement.appendChild(promptButtonElement);
+      promptElement.setAttribute('button', 'true');
     }
   }
 
