@@ -32,6 +32,10 @@
   contain: layout;
 }
 
+.css_route_field .css_route_groups[horizontal-scroll="true"] .css_route_group {
+  pointer-events: none;
+}
+
 .css_route_field .css_route_groups .css_route_group::-webkit-scrollbar {
   display: none;
 }

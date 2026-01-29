@@ -40,6 +40,7 @@ let routeSliding_groupStyles: GroupStyles = {};
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
+let routeSliding_horizontalScrolling: boolean = false;
 
 let routeRefreshTimer_retryInterval: number = 10 * 1000;
 let routeRefreshTimer_baseInterval: number = 15 * 1000;
@@ -63,6 +64,20 @@ export function initializeRouteSliding(): void {
     'touchstart',
     function () {
       routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
+    },
+    { passive: true }
+  );
+
+  RouteGroupsElement.addEventListener(
+    'wheel',
+    function (event: WheelEvent) {
+      // Check if the user is moving more on the X axis than the Y axis
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+        if (!routeSliding_horizontalScrolling) {
+          RouteGroupsElement.setAttribute('horizontal-scroll', 'true');
+          routeSliding_horizontalScrolling = true;
+        }
+      }
     },
     { passive: true }
   );
@@ -98,6 +113,10 @@ export function initializeRouteSliding(): void {
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(currentIndex);
         routeSliding_sliding = false;
+        if (routeSliding_horizontalScrolling) {
+          RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
+          routeSliding_horizontalScrolling = false;
+        }
       }
     },
     { passive: true }
@@ -1208,9 +1227,11 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
+  routeSliding_horizontalScrolling = false;
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
+  RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
   setUpRouteFieldSkeletonScreen(RouteID, PathAttributeId);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
