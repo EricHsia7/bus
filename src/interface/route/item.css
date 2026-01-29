@@ -466,7 +466,8 @@
   overflow-x: scroll;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
   white-space: nowrap;
   word-break: keep-all;
   border-radius: var(--b-cssvar-border-radius-large);
@@ -591,7 +592,8 @@
   overflow-x: scroll;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
   scroll-snap-type: x mandatory;
   white-space: nowrap;
   word-break: keep-all;

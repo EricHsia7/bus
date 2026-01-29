@@ -7,7 +7,8 @@
   overflow-y: hidden;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
   scroll-snap-type: x mandatory;
   display: grid;
   grid-column-gap: 0px;
@@ -27,7 +28,8 @@
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: auto;
+  overscroll-behavior-y: contain;
   scroll-snap-align: center;
   contain: layout;
 }
