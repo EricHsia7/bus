@@ -497,7 +497,8 @@ export async function saveToFolder(folderID: Folder['id'], content: FolderConten
 
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
   if (thisFolderContentIndexArray.length === 0 || thisFolderContentIndexArray.indexOf(contentKey) < 0) {
-    await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray.concat(contentKey)));
+    thisFolderContentIndexArray.push(contentKey);
+    await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray));
     await lfSetItem(13, contentKey, JSON.stringify(content));
     return true;
   } else {
