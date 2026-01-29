@@ -1,3 +1,4 @@
+import { updateSizes } from './interface/sizes';
 import { recoverBusArrivalTimeDataFromWriteAheadLog } from './data/analytics/bus-arrival-time/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
@@ -16,7 +17,7 @@ import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage, updateSizes } from './interface/index';
+import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
 import { closeNotificationScheduleManager } from './interface/notification-schedule-manager/index';

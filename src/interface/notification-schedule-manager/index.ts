@@ -6,8 +6,9 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, getSize, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
+import { getSize } from '../sizes';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
 const NotificationScheduleManagerHeadElement = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_head');

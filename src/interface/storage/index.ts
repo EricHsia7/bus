@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { getSize } from '../index';
+import { getSize } from '../sizes';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;

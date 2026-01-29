@@ -10,10 +10,11 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { closePreviousPage, getSize, GroupStyles, openPreviousPage, pushPageHistory } from '../index';
+import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
+import { getSize } from '../sizes';
 import { openLocationDetails } from './details/index';
 
 const LocationField = documentQuerySelector('.css_location_field');

@@ -4,7 +4,7 @@ import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/el
 import { drawRoundedRect } from '../../../tools/graphic';
 import { booleanToString } from '../../../tools/index';
 import { getCSSVariableValue } from '../../../tools/style';
-import { getSize } from '../../index';
+import { getSize } from '../../sizes';
 import { CalendarDaysElement, CalendarEventGroupsElement } from './index';
 
 const calendarRatio = 70;

@@ -2,14 +2,14 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
-import { getSize } from '../../index';
 import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
 import { openRoute } from '../../route/index';
+import { getSize } from '../../sizes';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');

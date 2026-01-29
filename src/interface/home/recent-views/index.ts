@@ -1,13 +1,13 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { getSize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
+import { getSize } from '../../sizes';
 
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');

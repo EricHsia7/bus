@@ -8,10 +8,11 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { getSize, pushPageHistory, revokePageHistory, scrollDocumentToTop } from '../index';
+import { pushPageHistory, revokePageHistory, scrollDocumentToTop } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
+import { getSize } from '../sizes';
 
 let previousSearchResults: Array<SearchResult> = [];
 
