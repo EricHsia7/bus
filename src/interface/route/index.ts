@@ -72,9 +72,9 @@ export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
     'wheel',
     function (event: WheelEvent) {
-      let horizontalSliding = routeSliding_sliding || (Math.abs(event.deltaX) > Math.abs(event.deltaY) && routeSliding_allowHorizontal);
-      if (horizontalSliding !== routeSliding_horizontal && !routeSliding_sliding) {
-        RouteGroupsElement.setAttribute('horizontal-scroll', booleanToString(horizontalSliding));
+      let horizontalSliding = Math.abs(event.deltaX) > Math.abs(event.deltaY) && routeSliding_allowHorizontal;
+      if (horizontalSliding && !routeSliding_sliding) {
+        RouteGroupsElement.setAttribute('horizontal-scroll', 'true');
         routeSliding_horizontal = horizontalSliding;
       }
     },
