@@ -62,11 +62,14 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
     const apis = [
       [0, 2],
       [1, 2]
-    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    let result = [];
+    ];
+    const result = [];
     for (const api of apis) {
-      const data = await fetchData(api.url, requestID, `getCarInfo_${api.e[0]}`, 'json');
-      result = result.concat(data.BusInfo);
+      const url = getAPIURL(api[0], api[1]);
+      const data = await fetchData(url, requestID, `getCarInfo_${api[0]}`, 'json');
+      for (let i = 0, l = data.BusInfo.length; i < l; i++) {
+        result.push(data.BusInfo[i]);
+      }
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;

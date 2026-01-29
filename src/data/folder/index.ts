@@ -227,7 +227,7 @@ export async function listFolderContent(folderID: Folder['id']): Promise<Array<F
   if (thisFolderContentIndexArray.length === 0) {
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
-      id: 0,
+      id: 0
     };
     result.push(emptyItem);
     return result;
@@ -360,15 +360,13 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
-  let StopIDs = [] as Array<number>;
+  const StopIDs: Array<FolderContentStop['id']> = [];
   for (const folderWithContent1 of foldersWithContent) {
-    StopIDs = StopIDs.concat(
-      folderWithContent1.content
-        .filter((m) => {
-          return m.type === 'stop' ? true : false;
-        })
-        .map((e) => e.id as number)
-    );
+    for (let i = 0, l = folderWithContent1.content.length; i < l; i++) {
+      if (folderWithContent1.content[i].type === 'stop') {
+        StopIDs.push(folderWithContent1.content[i].id as FolderContentStop['id']);
+      }
+    }
   }
 
   const batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
@@ -499,7 +497,8 @@ export async function saveToFolder(folderID: Folder['id'], content: FolderConten
 
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
   if (thisFolderContentIndexArray.length === 0 || thisFolderContentIndexArray.indexOf(contentKey) < 0) {
-    await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray.concat(contentKey)));
+    thisFolderContentIndexArray.push(contentKey);
+    await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray));
     await lfSetItem(13, contentKey, JSON.stringify(content));
     return true;
   } else {

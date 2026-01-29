@@ -24,11 +24,14 @@ export async function getBusData(requestID: string): Promise<BusData> {
   const apis = [
     [0, 0],
     [1, 0]
-  ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-  let result = [];
+  ];
+  const result = [];
   for (const api of apis) {
-    const data = await fetchData(api.url, requestID, `getBusData_${api.e[0]}`, 'json');
-    result = result.concat(data.BusInfo);
+    const url = getAPIURL(api[0], api[1]);
+    const data = await fetchData(url, requestID, `getBusData_${api[0]}`, 'json');
+    for (let i = 0, l = data.BusInfo.length; i < l; i++) {
+      result.push(data.BusInfo[i]);
+    }
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }
   return result;
