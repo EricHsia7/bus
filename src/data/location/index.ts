@@ -151,8 +151,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const stopLocationIds = thisLocation.id;
   const setsOfVectors = thisLocation.v;
 
-  let StopIDs: Array<number> = [];
-  let RouteIDs: Array<number> = [];
+  const StopIDs: Array<number> = [];
+  const RouteIDs: Array<number> = [];
   const stopLocationQuantity = stopLocationIds.length;
 
   for (let i = 0; i < stopLocationQuantity; i++) {
