@@ -9,7 +9,8 @@
   display: inline-flex;
   margin-right: 10px;
   scroll-snap-align: center;
-  /* contain: layout; */
+  contain: layout;
+  vertical-align: top;
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item:last-child {
