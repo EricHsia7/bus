@@ -212,11 +212,11 @@ export type SizeType = 'window' | 'head' | 'head_one_button' | 'head_two_button'
 
 export type Size = [width: number, height: number];
 
-export type Sizes = {
+export type SizesMap = {
   [sizeType: string]: Size;
 };
 
-export const Sizes: Sizes = {
+export const Sizes: SizesMap = {
   window: [0, 0],
   head: [0, 0],
   head_one_button: [0, 0],
