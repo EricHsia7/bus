@@ -121,8 +121,9 @@ export function initializeRouteSliding(): void {
 
   RouteGroupsElement.addEventListener(
     'scrollend',
-    function () {
-      routeSliding_initialIndex = routeSliding_targetIndex;
+    function (event: Event) {
+      const target = event.target as HTMLElement;
+      routeSliding_initialIndex = Math.round(target.scrollLeft / routeSliding_fieldWidth);
       routeSliding_sliding = false;
       routeSliding_horizontal = false;
       routeSliding_allowHorizontal = true;
