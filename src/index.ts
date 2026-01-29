@@ -16,7 +16,7 @@ import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
+import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage, updateWindowSize } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
 import { closeNotificationScheduleManager } from './interface/notification-schedule-manager/index';
@@ -201,6 +201,7 @@ window.bus = {
     if (busInitialized === false) {
       busInitialized = true;
       setSplashScreenIconOffsetY();
+      updateWindowSize();
       initializeSettings().then(function () {
         setUpRecentViewsFieldSkeletonScreen();
         setUpFolderFieldSkeletonScreen();
@@ -212,11 +213,13 @@ window.bus = {
               resizeSearchInputCanvas();
               window.addEventListener('resize', () => {
                 resizeSearchInputCanvas();
+                updateWindowSize();
               });
               if (screen) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
                     resizeSearchInputCanvas();
+                    updateWindowSize();
                   });
                 }
               }

@@ -16,6 +16,9 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
+let windowWidth: number = 0;
+let windowHeight: number = 0;
+
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
 
 let pageHistory: Array<Page> = ['Home'];
@@ -218,8 +221,6 @@ type SizeType = 'window' | 'head' | 'head-one-button' | 'head-two-button' | 'rou
 export function querySize(type: SizeType): Size {
   let width: number = 0;
   let height: number = 0;
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
   switch (type) {
     case 'window':
       width = windowWidth;
@@ -258,6 +259,11 @@ export function querySize(type: SizeType): Size {
     width,
     height
   };
+}
+
+export function updateWindowSize(): void {
+  windowWidth = window.innerWidth;
+  windowHeight = window.innerHeight;
 }
 
 export function scrollDocumentToTop(): void {

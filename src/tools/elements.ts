@@ -14,13 +14,15 @@ export function elementQuerySelectorAll(element: HTMLElement, selectorExpression
   return element.querySelectorAll(selectorExpression);
 }
 
-export function getElementsBelow(referenceElement: HTMLElement, className: string): Array<HTMLElement> {
+export function getElementsBelow(referenceElement: HTMLElement, className: string, limit: number = Infinity): Array<HTMLElement> {
   const elements = [];
   let sibling = referenceElement.nextElementSibling;
 
-  while (sibling) {
+  let count = 0;
+  while (sibling && count < limit) {
     if (sibling.classList.contains(className)) {
       elements.push(sibling);
+      count++;
     }
     sibling = sibling.nextElementSibling;
   }

@@ -1242,8 +1242,9 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
   const itemsTrackElement = itemElement.parentElement as HTMLElement;
   const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
 
-  const elementsBelowThreadBoxElement = getElementsBelow(threadBoxElement, 'css_route_group_thread_box');
-  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item');
+  const limit = routeSliding_fieldHeight / 50;
+  const elementsBelowThreadBoxElement = getElementsBelow(threadBoxElement, 'css_route_group_thread_box', limit);
+  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item', limit);
 
   const elementsBelowLength = elementsBelowItemElement.length; // = elementsBelowThreadBoxElement.length
 
