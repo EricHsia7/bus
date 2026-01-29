@@ -71,10 +71,11 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
     const apis = [
       [0, 15],
       [1, 15]
-    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
+    ];
     let result = '';
     for (const api of apis) {
-      const data = await fetchData(api.url, requestID, `getSegmentBuffers_${api.e[0]}`, 'xml');
+      const url = getAPIURL(api[0], api[1]);
+      const data = await fetchData(url, requestID, `getSegmentBuffers_${api[0]}`, 'xml');
       result += data;
       setDataUpdateTime(requestID, -1);
     }

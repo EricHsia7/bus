@@ -10,11 +10,14 @@ export async function getSemiTimeTable(requestID: string): Promise<object> {
     const apis = [
       [0, 12],
       [1, 12]
-    ].map((e) => ({ url: getAPIURL(e[0], e[1]), e: e }));
-    let result = [];
+    ];
+    const result = [];
     for (const api of apis) {
-      const data = await fetchData(api.url, requestID, `getSemiTimeTable_${api.e[0]}`, 'json');
-      result = result.concat(data.BusInfo);
+      const url = getAPIURL(api[0], api[1]);
+      const data = await fetchData(url, requestID, `getSemiTimeTable_${api[0]}`, 'json');
+      for (let i = 0, l1 = data.BusInfo.length - 1; i < l1; i++) {
+        result.push(data.BusInfo[i]);
+      }
       setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
     }
     return result;
