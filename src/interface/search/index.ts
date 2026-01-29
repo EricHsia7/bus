@@ -209,8 +209,8 @@ export function resizeSearchInputCanvas(): void {
   size = getSize('head_two_button');
   width = size[0] * searchInputCanvasScale;
   height = size[1] * searchInputCanvasScale;
-  searchInputCanvasElement.width = width * searchInputCanvasScale;
-  searchInputCanvasElement.height = height * searchInputCanvasScale;
+  searchInputCanvasElement.width = width;
+  searchInputCanvasElement.height = height;
   updateSearchInput(-1, -1);
 }
 

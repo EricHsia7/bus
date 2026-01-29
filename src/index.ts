@@ -1,4 +1,3 @@
-import { updateSizes } from './interface/sizes';
 import { recoverBusArrivalTimeDataFromWriteAheadLog } from './data/analytics/bus-arrival-time/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
@@ -33,9 +32,10 @@ import { closeScheduleNotification } from './interface/schedule-notification/ind
 import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
 import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
+import { updateSizes } from './interface/sizes';
 import { closeStorage } from './interface/storage/index';
-import { openPermalink } from './tools/permalink';
 import { documentQuerySelector } from './tools/elements';
+import { openPermalink } from './tools/permalink';
 
 import './interface/theme.css';
 
