@@ -16,6 +16,24 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
+const Sizes: SizesMap = {
+  window: [0, 0],
+  head: [0, 0],
+  head_one_button: [0, 0],
+  head_two_button: [0, 0],
+  route_details_canvas: [0, 0],
+  route_bus_arrival_time_chart: [0, 0],
+  location_bus_arrival_time_chart: [0, 0]
+};
+
+export type SizeType = 'window' | 'head' | 'head_one_button' | 'head_two_button' | 'route_details_canvas' | 'route_bus_arrival_time_chart' | 'location_bus_arrival_time_chart';
+
+export type Size = [width: number, height: number];
+
+export type SizesMap = {
+  [sizeType: string]: Size;
+};
+
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
 
 let pageHistory: Array<Page> = ['Home'];
@@ -208,24 +226,6 @@ export type GroupStyles = {
   };
 };
 
-export type SizeType = 'window' | 'head' | 'head_one_button' | 'head_two_button' | 'route_details_canvas' | 'route_bus_arrival_time_chart' | 'location_bus_arrival_time_chart';
-
-export type Size = [width: number, height: number];
-
-export type SizesMap = {
-  [sizeType: string]: Size;
-};
-
-const Sizes: SizesMap = {
-  window: [0, 0],
-  head: [0, 0],
-  head_one_button: [0, 0],
-  head_two_button: [0, 0],
-  route_details_canvas: [0, 0],
-  route_bus_arrival_time_chart: [0, 0],
-  location_bus_arrival_time_chart: [0, 0]
-};
-
 export function updateSizes(): void {
   const w = window.innerWidth;
   const h = window.innerHeight;
@@ -239,7 +239,7 @@ export function updateSizes(): void {
 }
 
 export function getSize(sizeType: SizeType): Size {
-  return Sizes[sizeType];
+  return Sizes[sizeType] * 1;
 }
 
 export function scrollDocumentToTop(): void {
