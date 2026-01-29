@@ -116,6 +116,7 @@ export function initializeLocationSliding(): void {
   window.addEventListener('resize', () => {
     const currentIndex = LocationGroupsElement.scrollLeft / getSize('window')[0];
     locationSliding_initialIndex = Math.round(currentIndex);
+    locationSliding_targetIndex = routeSliding_initialIndex;
     const initialGroupKey = `g_${locationSliding_initialIndex}`;
     const initialGroupStyle = locationSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
     const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
@@ -128,6 +129,7 @@ export function initializeLocationSliding(): void {
       screen.orientation.addEventListener('change', () => {
         const currentIndex = LocationGroupsElement.scrollLeft / getSize('window')[0];
         locationSliding_initialIndex = Math.round(currentIndex);
+        locationSliding_targetIndex = routeSliding_initialIndex;
         const initialGroupKey = `g_${locationSliding_initialIndex}`;
         const initialGroupStyle = locationSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
         const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
