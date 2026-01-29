@@ -109,10 +109,24 @@ export function initializeRouteSliding(): void {
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
+      /*
       if (currentIndex === routeSliding_targetIndex) {
         routeSliding_initialIndex = Math.round(currentIndex);
         routeSliding_sliding = false;
       }
+      */
+    },
+    { passive: true }
+  );
+
+  RouteGroupsElement.addEventListener(
+    'scrollend',
+    function () {
+      routeSliding_initialIndex = routeSliding_targetIndex;
+      routeSliding_sliding = false;
+      routeSliding_horizontal = false;
+      routeSliding_allowHorizontal = true;
+      RouteGroupsElement.setAttribute('horizontal-scroll', 'false');
     },
     { passive: true }
   );
