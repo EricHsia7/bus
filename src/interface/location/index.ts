@@ -118,7 +118,7 @@ export function initializeLocationSliding(): void {
       const currentIndex = LocationGroupsElement.scrollLeft / getSize('window')[0];
       locationSliding_initialIndex = Math.round(currentIndex);
       const initialGroupKey = `g_${locationSliding_initialIndex}`;
-      const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
+      const initialGroupStyle = locationSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
       const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
       const tabLineWidth = initialGroupStyle.width - tabPadding;
       updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);
@@ -132,7 +132,7 @@ export function initializeLocationSliding(): void {
           const currentIndex = LocationGroupsElement.scrollLeft / getSize('window')[0];
           locationSliding_initialIndex = Math.round(currentIndex);
           const initialGroupKey = `g_${locationSliding_initialIndex}`;
-          const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
+          const initialGroupStyle = locationSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
           const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
           const tabLineWidth = initialGroupStyle.width - tabPadding;
           updateLocationCSS(locationSliding_groupQuantity, offset, tabLineWidth, locationSliding_initialIndex);

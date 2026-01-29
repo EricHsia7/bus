@@ -120,7 +120,7 @@ export function initializeRouteSliding(): void {
       const currentIndex = RouteGroupsElement.scrollLeft / getSize('window')[0];
       routeSliding_initialIndex = Math.round(currentIndex);
       const initialGroupKey = `g_${routeSliding_initialIndex}`;
-      const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+      const initialGroupStyle = routeSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
       const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
       const tabLineWidth = initialGroupStyle.width - tabPadding;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
@@ -134,7 +134,7 @@ export function initializeRouteSliding(): void {
           const currentIndex = RouteGroupsElement.scrollLeft / getSize('window')[0];
           routeSliding_initialIndex = Math.round(currentIndex);
           const initialGroupKey = `g_${routeSliding_initialIndex}`;
-          const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+          const initialGroupStyle = routeSliding_groupStyles[initialGroupKey] || { width: 0, offset: 0 };
           const offset = initialGroupStyle.offset * -1 + getSize('window')[0] * 0.5 - initialGroupStyle.width * 0.5;
           const tabLineWidth = initialGroupStyle.width - tabPadding;
           updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
