@@ -43,11 +43,12 @@ let size = querySize('head-two-button');
 let width = size.width;
 let height = size.height;
 let keyboardInitialized = false;
+let previousValue: string = '';
 
 export function typeTextIntoInput(value): void {
-  const currentValue = searchInputElement.value;
-  const newValue = `${currentValue}${value}`;
+  const newValue = `${previousValue}${value}`;
   searchInputElement.value = newValue;
+  previousValue = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -55,9 +56,9 @@ export function typeTextIntoInput(value): void {
 }
 
 export function deleteCharFromInput(): void {
-  const currentValue = searchInputElement.value;
-  const newValue = currentValue.substring(0, currentValue.length - 1);
+  const newValue = previousValue.substring(0, previousValue.length - 1);
   searchInputElement.value = newValue;
+  previousValue = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -66,6 +67,7 @@ export function deleteCharFromInput(): void {
 
 export function emptyInput(): void {
   searchInputElement.value = '';
+  previousValue = '';
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -133,24 +135,24 @@ export function closeKeyboard(): void {
 
 export function initializeSearchInput(): void {
   searchInputElement.addEventListener('paste', function () {
-    updateSearchResult();
     updateSearchInput();
+    updateSearchResult();
   });
   searchInputElement.addEventListener('cut', function () {
-    updateSearchResult();
     updateSearchInput();
+    updateSearchResult();
   });
   searchInputElement.addEventListener('selectionchange', function () {
-    updateSearchResult();
     updateSearchInput();
+    updateSearchResult();
   });
   document.addEventListener('selectionchange', function () {
-    updateSearchResult();
     updateSearchInput();
+    updateSearchResult();
   });
   searchInputElement.addEventListener('keyup', function () {
-    updateSearchResult();
     updateSearchInput();
+    updateSearchResult();
   });
   searchInputElement.addEventListener('scroll', function () {
     updateSearchInput();
@@ -185,6 +187,8 @@ function updateSearchInput(): void {
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
   searchInputElement.setAttribute('selection', booleanToString(selection));
+
+  previousValue = currentValue;
 }
 
 function bringToEnd(): void {
@@ -275,7 +279,7 @@ export function updateSearchResult(): void {
 
   const currentType = getSearchTypeFilterValue();
   const currentValue = searchInputElement.value;
-  if (!containPhoneticSymbols(currentValue)) {
+  if (!containPhoneticSymbols(currentValue) && currentValue !== previousValue) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
     const currentItemCapacity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
