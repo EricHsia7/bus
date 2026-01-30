@@ -16,7 +16,7 @@ export function getTextHeight(text: string, weight: number, size: string, fontFa
 }
 
 export function getTextBoundingBox(text: string, weight: number, size: string, fontFamily: string): [top: number, width: number, height: number] {
-  const canvas: HTMLCanvasElement = getTextHeight.canvas || (getTextHeight.canvas = document.createElement('canvas'));
+  const canvas: HTMLCanvasElement = getTextBoundingBox.canvas || (getTextBoundingBox.canvas = document.createElement('canvas'));
   const context = canvas.getContext('2d');
   const font: string = `${weight} ${size} ${fontFamily}`;
   context.font = font;
