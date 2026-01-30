@@ -156,7 +156,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     searchInputSVGTextElement.textContent = value;
     const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
     const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
-    const x = m[1] > width ? Math.min(Math.max(width - m[1], width - m1[1]), 0) : 0;
+    const x = m[1] > width ? Math.min(width - m1[1], 0) : 0;
     const y = m[0] + (height - m[2]) / 2;
     searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
     searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width), 0)} 0)`);
