@@ -224,11 +224,7 @@ window.bus = {
               initializeFolderList().then(() => {
                 initializeFolders();
               });
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
               const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
-              mediaQuery.addEventListener('change', function () {
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
               searchInputElement.addEventListener('paste', function () {
                 updateSearchResult();
                 updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
@@ -247,6 +243,9 @@ window.bus = {
               });
               searchInputElement.addEventListener('keyup', function () {
                 updateSearchResult();
+                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
+              });
+              searchInputElement.addEventListener('scroll', function () {
                 updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
               });
 
