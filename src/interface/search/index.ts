@@ -44,6 +44,7 @@ let width = size.width;
 let height = size.height;
 let keyboardInitialized = false;
 let previousValue: string = '';
+let previousType = 0;
 
 export function typeTextIntoInput(value): void {
   const currentValue = searchInputElement.value;
@@ -276,7 +277,7 @@ export function updateSearchResult(): void {
 
   const currentType = getSearchTypeFilterValue();
   const currentValue = searchInputElement.value;
-  if (!containPhoneticSymbols(currentValue) && currentValue !== previousValue) {
+  if (!containPhoneticSymbols(currentValue) && (currentValue !== previousValue || currentType !== previousType)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
     const currentItemCapacity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
@@ -313,6 +314,7 @@ export function updateSearchResult(): void {
   }
 
   previousValue = currentValue;
+  previousType = currentType;
 }
 
 export function switchSearchTypeFilter(): void {
@@ -326,7 +328,6 @@ export function switchSearchTypeFilter(): void {
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
   setIcon(searchTypeFilterButtonElement, icons[newType + 1]);
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
-  updateSearchInput();
   updateSearchResult();
 }
 
