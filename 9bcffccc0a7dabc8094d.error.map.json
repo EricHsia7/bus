@@ -20,5 +20,10 @@
   "'\"version\" cannot be null or undefined'": "E18",
   "'\"version\" should be in range from 1 to 40'": "E19",
   "'\"toSJISFunc\" is not a valid function.'": "E20",
-  "'\"' + data + '\"' +\n      ' cannot be encoded with mode ' + Mode.toString(mode) +\n      '.\\n Suggested mode is: ' + Mode.toString(bestMode)": "E21"
+  "'\"' + data + '\"' +\n      ' cannot be encoded with mode ' + Mode.toString(mode) +\n      '.\\n Suggested mode is: ' + Mode.toString(bestMode)": "E21",
+  "'Invalid JSON response from server'": "E22",
+  "'The provider is not valid.'": "E23",
+  "'Network response was not ok'": "E24",
+  "msg[status]": "E25",
+  "source + 'must be non-object'": "E26"
 }
