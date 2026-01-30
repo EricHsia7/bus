@@ -29,7 +29,7 @@ import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification } from './interface/schedule-notification/index';
-import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
+import { closeSearch, initializeSearchInput, openSearch, resizeSearchInputSVG, switchSearchTypeFilter } from './interface/search/index';
 import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
@@ -209,14 +209,14 @@ window.bus = {
             if (status === 'ok') {
               initializeRouteSliding();
               initializeLocationSliding();
-              resizeSearchInputCanvas();
+              resizeSearchInputSVG();
               window.addEventListener('resize', () => {
-                resizeSearchInputCanvas();
+                resizeSearchInputSVG();
               });
               if (screen) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
-                    resizeSearchInputCanvas();
+                    resizeSearchInputSVG();
                   });
                 }
               }
@@ -224,32 +224,7 @@ window.bus = {
               initializeFolderList().then(() => {
                 initializeFolders();
               });
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const searchInputElement = documentQuerySelector('.css_search_field .css_search_head .css_search_search_input #search_input') as HTMLInputElement;
-              mediaQuery.addEventListener('change', function () {
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('paste', function () {
-                updateSearchResult();
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('cut', function () {
-                updateSearchResult();
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('selectionchange', function () {
-                updateSearchResult();
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateSearchResult();
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-              searchInputElement.addEventListener('keyup', function () {
-                updateSearchResult();
-                updateSearchInput(searchInputElement.selectionStart, searchInputElement.selectionEnd);
-              });
-
+              initializeSearchInput();
               const searchMaterialSymbolsInputElement = documentQuerySelector('.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input #search_material_symbols_input') as HTMLInputElement;
               searchMaterialSymbolsInputElement.addEventListener('paste', function () {
                 updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
