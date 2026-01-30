@@ -32,16 +32,24 @@
   pointer-events: none;
 }
 
-.css_search_field .css_search_head .css_search_search_input svg text {
+.css_search_field .css_search_head .css_search_search_input svg text[component="text"] {
   white-space: pre;
+  fill: var(--b-cssvar-aeaeb2);
 }
 
-.css_search_field .css_search_head .css_search_search_input svg text[empty="false"] {
+/* empty: false */
+.css_search_field .css_search_head .css_search_search_input svg text[component="text"][empty="false"] {
   fill: var(--b-cssvar-333333);
 }
 
-.css_search_field .css_search_head .css_search_search_input svg text[empty="true"] {
-  fill: var(--b-cssvar-aeaeb2);
+.css_search_field .css_search_head .css_search_search_input svg path[component="cursor"] {
+  stroke: var(--b-cssvar-main-color);
+  stroke-width: 1.8;
+}
+
+/* selection: true */
+.css_search_field .css_search_head .css_search_search_input svg path[component="cursor"][selection="true"] {
+  visibility: hidden;
 }
 
 .css_search_field .css_search_head .css_search_search_input input {

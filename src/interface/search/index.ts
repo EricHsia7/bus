@@ -144,6 +144,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
   let value = getSearchInputValue();
   let left = getSearchInputScrollLeft();
   let empty = false;
+  let selection = false;
   if (value.length === 0) {
     value = searchInputPlaceholder;
     empty = true;
@@ -155,8 +156,11 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
       cursorEnd = cursorStart * 1;
     }
   }
+  selection = cursorStart !== cursorEnd;
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
+  searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
+
   // if (cursorStart === cursorEnd) {
   searchInputSVGTextElement.textContent = value;
   const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
