@@ -157,15 +157,14 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
   }
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
-  if (cursorStart === cursorEnd) {
-    searchInputSVGTextElement.textContent = value;
-    const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
-    const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
-    const x = left * -1;
-    const y = m[0] + (height - m[2]) / 2;
-    searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-    searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width), 0)} 0)`);
-  }
+  // if (cursorStart === cursorEnd) {
+  searchInputSVGTextElement.textContent = value;
+  const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
+  const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
+  const x = left * -1;
+  const y = m[0] + (height - m[2]) / 2;
+  searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
+  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width), 0)} 0)`);
 }
 
 export function resizeSearchInputSVG(): void {
