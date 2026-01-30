@@ -180,7 +180,7 @@ function updateSearchInput(): void {
 
   searchInputSVGTextElement.textContent = text;
   searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width - 1.8 / 2), 0)} 0)`);
+  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width - 1), 1)} 0)`);
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
@@ -199,6 +199,7 @@ export function resizeSearchInputSVG(): void {
   height = size.height;
   searchInputSVGElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
   bringToEnd();
+  updateSearchInput();
 }
 
 function generateElementOfSearchResultItem(): HTMLElement {
