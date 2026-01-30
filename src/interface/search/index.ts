@@ -159,7 +159,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     const x = m[1] > width ? Math.min(Math.max(width - m[1], width - m1[1]), 0) : 0;
     const y = m[0] + (height - m[2]) / 2;
     searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-    searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m[1] + x, width), 0)} 0)`);
+    searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width), 0)} 0)`);
   }
 }
 
