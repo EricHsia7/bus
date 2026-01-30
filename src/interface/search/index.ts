@@ -29,7 +29,7 @@ const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_sear
 
 const fontWeight: string = '400';
 const fontSize: string = '20px';
-const fontFamily: string = "'Noto Sans TC', sans-serif";
+const fontFamily: string = '"Noto Sans TC", sans-serif';
 const searchInputPlaceholder = '搜尋路線、地點、公車';
 
 const keyboardRows: Array<[string, string, string, string, string]> = [
@@ -156,9 +156,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     searchInputSVGTextElement.textContent = value;
     const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
     const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
-    console.log(0, m[0]);
-    console.log(1, m1[0]);
-    searchInputSVGTextElement.setAttribute('transform', `translate(${m[1] > width ? Math.max(width - m[1], width - m1[1]) : 0} ${m[2] / 2 - m[0]})`);
+    searchInputSVGTextElement.setAttribute('transform', `translate(${m[1] > width ? Math.max(width - m[1], width - m1[1]) : 0} ${m[0] + (height - m[2]) / 2})`);
     searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.min(m[1], width)} 0)`);
   }
 }
