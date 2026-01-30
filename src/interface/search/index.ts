@@ -192,7 +192,7 @@ function bringToEnd(): void {
   const length = currentValue.length;
   const m = getTextBoundingBox(currentValue, fontWeight, fontSize, fontFamily);
   searchInputElement.setSelectionRange(length, length);
-  searchInputSVGTextElement.scrollTo({ left: m[1] - width });
+  searchInputElement.scrollTo({ left: m[1] - width });
 }
 
 export function resizeSearchInputSVG(): void {
