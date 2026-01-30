@@ -21,7 +21,7 @@ export function getTextBoundingBox(text: string, weight: number, size: string, f
   const font: string = `${weight} ${size} ${fontFamily}`;
   context.font = font;
   const measurement = context.measureText(text);
-  const topOffset = Math.max(Math.abs(measurement.emHeightAscent), Math.abs(measurement.hangingBaseline), Math.abs(measurement.fontBoundingBoxAscent), Math.abs(measurement.actualBoundingBoxAscent));
+  const topOffset = Math.max(Math.abs(measurement.emHeightAscent || 0), Math.abs(measurement.hangingBaseline || 0), Math.abs(measurement.fontBoundingBoxAscent || 0), Math.abs(measurement.actualBoundingBoxAscent || 0));
   return [topOffset, measurement.width, measurement.fontBoundingBoxAscent + measurement.fontBoundingBoxDescent];
 }
 
