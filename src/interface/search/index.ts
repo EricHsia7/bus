@@ -1,8 +1,7 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
-import { drawRoundedRect } from '../../tools/graphic';
-import { supportTouch } from '../../tools/index';
-import { getCSSVariableValue } from '../../tools/style';
+import { getTextBoundingBox } from '../../tools/graphic';
+import { booleanToString, supportTouch } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
@@ -19,23 +18,23 @@ const searchField = documentQuerySelector('.css_search_field');
 const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
 const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
 const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input') as HTMLInputElement;
-const searchInputCanvasElement = elementQuerySelector(searchHeadElement, '.css_search_search_input canvas') as HTMLCanvasElement;
+
+const searchInputSVGElement = elementQuerySelector(searchHeadElement, '.css_search_search_input svg') as SVGElement;
+const searchInputSVGTextElement = elementQuerySelector(searchInputSVGElement, 'text[component="text"]') as SVGTextElement;
+const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement, 'path[component="cursor"]') as SVGPathElement;
+
 const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
-const searchInputCanvasContext = searchInputCanvasElement.getContext('2d');
-const searchInputPlaceholder = '搜尋路線、地點、公車';
-const searchInputCanvasScale = window.devicePixelRatio;
-
-const padding: number = 15 * searchInputCanvasScale;
-const cursorWidth: number = 1.8 * searchInputCanvasScale;
-const cursorBorderRadius: number = 0.9 * searchInputCanvasScale;
-const selectionHighlightBorderRadius: number = 4 * searchInputCanvasScale;
-const lineHeight: number = 25 * searchInputCanvasScale;
 const fontWeight: string = '400';
-const fontSize: number = 20 * searchInputCanvasScale;
+const fontSize: number = 20;
 const fontFamily: string = '"Noto Sans TC", sans-serif';
+const searchInputPlaceholder = '搜尋路線、地點、公車';
+
+const searchInputCanvas = document.createElement('canvas');
+const searchInputCanvasContext = searchInputCanvas.getContext('2d');
+searchInputCanvasContext.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
 
 const keyboardRows: Array<[string, string, string, string, string]> = [
   ['紅', '藍', '1', '2', '3'],
@@ -44,18 +43,9 @@ const keyboardRows: Array<[string, string, string, string, string]> = [
   ['鍵盤', '幹線', '清空', '0', '刪除']
 ];
 
-let textColor: string = getCSSVariableValue('--b-cssvar-333333');
-let placeholderTextColor: string = getCSSVariableValue('--b-cssvar-aeaeb2');
-let cursorColor: string = getCSSVariableValue('--b-cssvar-main-color');
-let textWidth: number = 0;
-let textWidthToCursorStart: number = 0;
-let selectedTextWidth: number = 0;
-let selection: boolean = false;
-let cursorOffset: number = 0;
 let size = querySize('head-two-button');
-let width = size.width * searchInputCanvasScale;
-let height = size.height * searchInputCanvasScale;
-let playingCursorAnimation: boolean = false;
+let width = size.width;
+let height = size.height;
 let keyboardInitialized = false;
 
 export function typeTextIntoInput(value): void {
@@ -135,14 +125,11 @@ function initializeKeyboard(): void {
 export function openKeyboard(): void {
   initializeKeyboard();
   searchKeyboardElement.setAttribute('displayed', 'true');
-  playingCursorAnimation = true;
-  animateCursor();
   updateSearchInput(-1, -1);
 }
 
 export function closeKeyboard(): void {
   searchKeyboardElement.setAttribute('displayed', 'false');
-  playingCursorAnimation = false;
 }
 
 export function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
@@ -168,62 +155,22 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
     }
   }
 
-  size = querySize('head-two-button');
-  width = size.width * searchInputCanvasScale;
-  height = size.height * searchInputCanvasScale;
-  textColor = getCSSVariableValue('--b-cssvar-333333');
-  placeholderTextColor = getCSSVariableValue('--b-cssvar-aeaeb2');
-  cursorColor = getCSSVariableValue('--b-cssvar-main-color');
-
-  searchInputCanvasContext.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-  searchInputCanvasContext.textAlign = 'center';
-  searchInputCanvasContext.textBaseline = 'middle';
-
-  textWidth = searchInputCanvasContext.measureText(value).width;
-  textWidthToCursorStart = searchInputCanvasContext.measureText(value.substring(0, cursorStart)).width;
-  selectedTextWidth = searchInputCanvasContext.measureText(value.substring(cursorStart, cursorEnd)).width;
-  cursorOffset = empty ? 1 : Math.max(1, textWidthToCursorStart);
-
-  searchInputCanvasContext.clearRect(0, 0, width, height);
-
+  searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   if (cursorStart === cursorEnd) {
-    selection = true;
-    searchInputCanvasContext.globalAlpha = 1;
-    searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
-    searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
-  } else {
-    selection = false;
-    searchInputCanvasContext.globalAlpha = 0.27;
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
-    searchInputCanvasContext.globalAlpha = 1;
-    searchInputCanvasContext.fillStyle = empty ? placeholderTextColor : textColor;
-    searchInputCanvasContext.fillText(value, textWidth / 2 + (Math.min(cursorOffset, width - padding) - cursorOffset), height / 2);
-    searchInputCanvasContext.globalAlpha = 0.08;
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, selectedTextWidth, lineHeight, selectionHighlightBorderRadius, cursorColor);
+    searchInputSVGTextElement.textContent = text;
+    const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
+    const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
+    searchInputSVGTextElement.setAttribute('transform', `translate(${m[1] > width ? Math.max(m[1] - width, m1[1] - width) : 0} ${m[2] / 2 + m[0]})`);
+    searchInputSVGCursorElement.setAttribute('transform', `translate(${m[1]} 0)`);
   }
 }
 
-export function resizeSearchInputCanvas(): void {
+export function resizeSearchInputSVG(): void {
   size = querySize('head-two-button');
   width = size.width;
   height = size.height;
-  searchInputCanvasElement.width = width * searchInputCanvasScale;
-  searchInputCanvasElement.height = height * searchInputCanvasScale;
+  searchInputSVGElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
   updateSearchInput(-1, -1);
-}
-
-function animateCursor(): void {
-  const x = performance.now();
-  const alpha = 1 - Math.pow(Math.sin((Math.PI * x) / 960), 4);
-  if (selection) {
-    searchInputCanvasContext.globalAlpha = alpha;
-    searchInputCanvasContext.clearRect(Math.min(cursorOffset, width - padding) - 1, 0, cursorWidth + 2, height);
-    drawRoundedRect(searchInputCanvasContext, Math.min(cursorOffset, width - padding), (height - lineHeight) / 2, cursorWidth, lineHeight, cursorBorderRadius, cursorColor);
-  }
-  if (playingCursorAnimation) {
-    window.requestAnimationFrame(animateCursor);
-  }
 }
 
 function generateElementOfSearchResultItem(): HTMLElement {

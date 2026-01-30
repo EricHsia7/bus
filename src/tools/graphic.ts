@@ -15,6 +15,14 @@ export function getTextHeight(text: string, weight: number, size: string, fontFa
   return context.measureText(text).actualBoundingBoxDescent;
 }
 
+export function getTextBoundingBox(text: string, weight: number, size: string, fontFamily: string): [top: number, width: number, height: number] {
+  const canvas: HTMLCanvasElement = getTextHeight.canvas || (getTextHeight.canvas = document.createElement('canvas'));
+  const context = canvas.getContext('2d');
+  const measurement = context.measureText(text);
+  const baseline = Math.min(measurement.hangingBaseline, measurement.alphabeticBaseline, measurement.ideographicBaseline);
+  return [measurement.fontBoundingBoxAscent - baseline, measurement.width, measurement.fontBoundingBoxAscent + measurement.fontBoundingBoxDescent];
+}
+
 interface CornerRadius {
   tl: number;
   tr: number;

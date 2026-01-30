@@ -29,7 +29,7 @@ import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification } from './interface/schedule-notification/index';
-import { closeSearch, openSearch, resizeSearchInputCanvas, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
+import { closeSearch, openSearch, resizeSearchInputSVG, switchSearchTypeFilter, updateSearchInput, updateSearchResult } from './interface/search/index';
 import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
@@ -209,14 +209,14 @@ window.bus = {
             if (status === 'ok') {
               initializeRouteSliding();
               initializeLocationSliding();
-              resizeSearchInputCanvas();
+              resizeSearchInputSVG();
               window.addEventListener('resize', () => {
-                resizeSearchInputCanvas();
+                resizeSearchInputSVG();
               });
               if (screen) {
                 if (screen.orientation) {
                   screen.orientation.addEventListener('change', () => {
-                    resizeSearchInputCanvas();
+                    resizeSearchInputSVG();
                   });
                 }
               }

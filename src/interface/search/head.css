@@ -23,13 +23,25 @@
   contain: layout;
 }
 
-.css_search_field .css_search_head .css_search_search_input canvas {
+.css_search_field .css_search_head .css_search_search_input svg {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 55px;
   pointer-events: none;
+}
+
+.css_search_field .css_search_head .css_search_search_input svg text {
+  white-space: pre;
+}
+
+.css_search_field .css_search_head .css_search_search_input svg text[empty="false"] {
+  fill: var(--b-cssvar-333333);
+}
+
+.css_search_field .css_search_head .css_search_search_input svg text[empty="true"] {
+  fill: var(--b-cssvar-aeaeb2);
 }
 
 .css_search_field .css_search_head .css_search_search_input input {
