@@ -326,6 +326,7 @@ export function switchSearchTypeFilter(): void {
   const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
   setIcon(searchTypeFilterButtonElement, icons[newType + 1]);
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
+  updateSearchInput();
   updateSearchResult();
 }
 
