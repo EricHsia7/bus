@@ -27,9 +27,9 @@ const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
-const fontWeight: string = '400';
-const fontSize: string = '20px';
-const fontFamily: string = '"Noto Sans TC", sans-serif';
+const fontWeight = '400';
+const fontSize = '20px';
+const fontFamily = '"Noto Sans TC", sans-serif';
 const searchInputPlaceholder = '搜尋路線、地點、公車';
 
 const keyboardRows: Array<[string, string, string, string, string]> = [
@@ -45,27 +45,27 @@ let height = size.height;
 let keyboardInitialized = false;
 
 export function typeTextIntoInput(value): void {
-  const currentValue = getSearchInputValue();
+  const currentValue = searchInputElement.value;
   const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
   updateSearchResult();
-  updateSearchInput(-1, -1);
+  bringToEnd();
   scrollDocumentToTop();
 }
 
 export function deleteCharFromInput(): void {
-  const currentValue = getSearchInputValue();
+  const currentValue = searchInputElement.value;
   const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
   updateSearchResult();
-  updateSearchInput(-1, -1);
+  bringToEnd();
   scrollDocumentToTop();
 }
 
 export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult();
-  updateSearchInput(-1, -1);
+  bringToEnd();
   scrollDocumentToTop();
 }
 
@@ -121,54 +121,73 @@ function initializeKeyboard(): void {
 export function openKeyboard(): void {
   initializeKeyboard();
   searchKeyboardElement.setAttribute('displayed', 'true');
-  updateSearchInput(-1, -1);
+  bringToEnd();
 }
 
 export function closeKeyboard(): void {
   searchKeyboardElement.setAttribute('displayed', 'false');
 }
 
-export function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
+export function initializeSearchInput(): void {
+  searchInputElement.addEventListener('paste', function () {
+    updateSearchResult();
+    updateSearchInput();
+  });
+  searchInputElement.addEventListener('cut', function () {
+    updateSearchResult();
+    updateSearchInput();
+  });
+  searchInputElement.addEventListener('selectionchange', function () {
+    updateSearchResult();
+    updateSearchInput();
+  });
+  document.addEventListener('selectionchange', function () {
+    updateSearchResult();
+    updateSearchInput();
+  });
+  searchInputElement.addEventListener('keyup', function () {
+    updateSearchResult();
+    updateSearchInput();
+  });
+  searchInputElement.addEventListener('scroll', function () {
+    updateSearchInput();
+  });
+}
+
+function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
   return parseInt(searchTypeFilterButtonElement.getAttribute('type'));
 }
 
-export function getSearchInputValue(): string {
-  return String(searchInputElement.value);
-}
+function updateSearchInput(): void {
+  const scrollLeft = searchInputElement.scrollLeft;
+  const currentValue = searchInputElement.value;
+  const selectionStart = searchInputElement.selectionStart;
+  const selectionEnd = searchInputElement.selectionEnd;
 
-export function getSearchInputScrollLeft(): number {
-  return searchInputElement.scrollLeft;
-}
+  const empty = currentValue.length === 0;
+  const text = empty ? searchInputPlaceholder : currentValue;
+  const cursorStart = empty ? 0 : selectionStart;
+  const cursorEnd = empty ? 0 : selectionEnd;
+  const selection = cursorStart !== cursorEnd;
 
-export function updateSearchInput(cursorStart: number, cursorEnd: number): void {
-  let value = getSearchInputValue();
-  let left = getSearchInputScrollLeft();
-  let empty = false;
-  let selection = false;
-  if (value.length === 0) {
-    value = searchInputPlaceholder;
-    empty = true;
-    cursorStart = 0;
-    cursorEnd = 0;
-  } else {
-    if (cursorStart === -1 && cursorEnd === -1) {
-      cursorStart = value.length;
-      cursorEnd = cursorStart * 1;
-    }
-  }
-  selection = cursorStart !== cursorEnd;
+  const m = getTextBoundingBox(text, fontWeight, fontSize, fontFamily);
+  const m1 = getTextBoundingBox(text.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
+  const x = scrollLeft * -1;
+  const y = m[0] + (height - m[2]) / 2;
+
+  searchInputSVGTextElement.textContent = text;
+  searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
+  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width - 1.8 / 2), 0)} 0)`);
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
   searchInputElement.setAttribute('selection', booleanToString(selection));
-  
-  searchInputSVGTextElement.textContent = value;
-  const m = getTextBoundingBox(value, fontWeight, fontSize, fontFamily);
-  const m1 = getTextBoundingBox(value.substring(0, cursorStart), fontWeight, fontSize, fontFamily);
-  const x = left * -1;
-  const y = m[0] + (height - m[2]) / 2;
-  searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width), 0)} 0)`);
+}
+
+function bringToEnd(): void {
+  const currentValue = searchInputElement.value;
+  const m = getTextBoundingBox(currentValue, fontWeight, fontSize, fontFamily);
+  searchInputSVGTextElement.scrollTo({ left: m[1] - width });
 }
 
 export function resizeSearchInputSVG(): void {
@@ -176,7 +195,7 @@ export function resizeSearchInputSVG(): void {
   width = size.width;
   height = size.height;
   searchInputSVGElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
-  updateSearchInput(-1, -1);
+  bringToEnd();
 }
 
 function generateElementOfSearchResultItem(): HTMLElement {
@@ -249,7 +268,7 @@ export function updateSearchResult(): void {
   }
 
   const currentType = getSearchTypeFilterValue();
-  const currentValue = getSearchInputValue();
+  const currentValue = searchInputElement.value;
   if (!containPhoneticSymbols(currentValue)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
