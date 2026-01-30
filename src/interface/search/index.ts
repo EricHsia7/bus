@@ -190,6 +190,7 @@ function updateSearchInput(): void {
 function bringToEnd(): void {
   const currentValue = searchInputElement.value;
   const m = getTextBoundingBox(currentValue, fontWeight, fontSize, fontFamily);
+  searchInputElement.setSelectionRange(currentValue.length - 1, currentValue.length - 1);
   searchInputSVGTextElement.scrollTo({ left: m[1] - width });
 }
 
