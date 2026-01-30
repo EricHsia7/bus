@@ -46,9 +46,9 @@ let keyboardInitialized = false;
 let previousValue: string = '';
 
 export function typeTextIntoInput(value): void {
-  const newValue = `${previousValue}${value}`;
+  const currentValue = searchInputElement.value;
+  const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
-  previousValue = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -56,9 +56,9 @@ export function typeTextIntoInput(value): void {
 }
 
 export function deleteCharFromInput(): void {
-  const newValue = previousValue.substring(0, previousValue.length - 1);
+  const currentValue = searchInputElement.value;
+  const newValue = currentValue.substring(0, currentValue.length - 1);
   searchInputElement.value = newValue;
-  previousValue = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -67,7 +67,6 @@ export function deleteCharFromInput(): void {
 
 export function emptyInput(): void {
   searchInputElement.value = '';
-  previousValue = '';
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -187,8 +186,6 @@ function updateSearchInput(): void {
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
   searchInputElement.setAttribute('selection', booleanToString(selection));
-
-  previousValue = currentValue;
 }
 
 function bringToEnd(): void {
@@ -314,6 +311,8 @@ export function updateSearchResult(): void {
     }
     previousSearchResults = searchResults;
   }
+
+  previousValue = currentValue;
 }
 
 export function switchSearchTypeFilter(): void {
