@@ -29,8 +29,8 @@ export async function getBusData(requestID: string): Promise<BusData> {
   for (const api of apis) {
     const url = getAPIURL(api[0], api[1]);
     const data = await fetchData(url, requestID, `getBusData_${api[0]}`, 'json');
-    for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-      result.push(data.BusInfo[i]);
+    for (let i = 0, l = data.BusInfo.length; i < l; i += 16) {
+      Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 16));
     }
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
   }
