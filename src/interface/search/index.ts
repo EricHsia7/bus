@@ -28,13 +28,9 @@ const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_searc
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
 const fontWeight: string = '400';
-const fontSize: number = 20;
+const fontSize: number = '20px';
 const fontFamily: string = '"Noto Sans TC", sans-serif';
 const searchInputPlaceholder = '搜尋路線、地點、公車';
-
-const searchInputCanvas = document.createElement('canvas');
-const searchInputCanvasContext = searchInputCanvas.getContext('2d');
-searchInputCanvasContext.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
 
 const keyboardRows: Array<[string, string, string, string, string]> = [
   ['紅', '藍', '1', '2', '3'],
