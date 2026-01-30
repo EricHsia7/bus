@@ -50,6 +50,7 @@ export function typeTextIntoInput(value): void {
   searchInputElement.value = newValue;
   updateSearchResult();
   bringToEnd();
+  updateSearchInput();
   scrollDocumentToTop();
 }
 
@@ -59,6 +60,7 @@ export function deleteCharFromInput(): void {
   searchInputElement.value = newValue;
   updateSearchResult();
   bringToEnd();
+  updateSearchInput();
   scrollDocumentToTop();
 }
 
@@ -66,6 +68,7 @@ export function emptyInput(): void {
   searchInputElement.value = '';
   updateSearchResult();
   bringToEnd();
+  updateSearchInput();
   scrollDocumentToTop();
 }
 
