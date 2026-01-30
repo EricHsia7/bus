@@ -22,7 +22,7 @@ export function getTextBoundingBox(text: string, weight: number, size: string, f
   context.font = font;
   const measurement = context.measureText(text);
   const baseline = Math.min(measurement.hangingBaseline, measurement.alphabeticBaseline, measurement.ideographicBaseline);
-  return [measurement.fontBoundingBoxAscent - baseline, measurement.width, measurement.fontBoundingBoxAscent + measurement.fontBoundingBoxDescent];
+  return [baseline - measurement.fontBoundingBoxAscent, measurement.width, measurement.fontBoundingBoxAscent + measurement.fontBoundingBoxDescent];
 }
 
 interface CornerRadius {
