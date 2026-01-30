@@ -67,9 +67,13 @@
   font-weight: 400;
   padding: 0px;
   margin: 0px;
-  color: transparent;
+  color: rgba(0, 0, 0, 0);
   caret-color: rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), 0);
   resize: none;
+}
+
+.css_search_field .css_search_head .css_search_search_input input[selection="true"] {
+  caret-color: var(--b-cssvar-main-color);
 }
 
 .css_search_field .css_search_head .css_search_button_left,

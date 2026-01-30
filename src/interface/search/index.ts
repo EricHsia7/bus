@@ -160,6 +160,7 @@ export function updateSearchInput(cursorStart: number, cursorEnd: number): void 
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
+  searchInputElement.setAttribute('selection', booleanToString(selection));
 
   // if (cursorStart === cursorEnd) {
   searchInputSVGTextElement.textContent = value;
