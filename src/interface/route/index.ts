@@ -697,8 +697,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisBusesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_buses');
-      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
-      const currentBusElementsQuantity = currentBusElements.length;
+      const busElements = Array.from(elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus'));
+      const currentBusElementsQuantity = busElements.length;
       const busesQuantity = thisItem.buses.length;
       const difference = currentBusElementsQuantity - busesQuantity;
       if (difference < 0) {
@@ -706,15 +706,16 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         for (let o = 0; o > difference; o--) {
           const newBusElement = generateElementOfBus();
           fragment.appendChild(newBusElement);
+          busElements.push(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
         for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
-          currentBusElements[p].remove();
+          busElements[p].remove();
+          busElements.splice(p, 1);
         }
       }
 
-      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
       for (let i = 0; i < busesQuantity; i++) {
         const busItem = thisItem.buses[i];
         const busElement = busElements[i];
@@ -1081,8 +1082,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  // const groupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
-
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisGroupElement = groupElements[i];
@@ -1113,7 +1112,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  // const tabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
