@@ -1020,7 +1020,12 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       thisTabElement.style.setProperty('--b-cssvar-route-tab-index', thisGroupIndex.toString());
     }
 
-    if (previousGroupStyle !== null && previousGroupStyle !== undefined) {
+    if (previousGroupStyle === null || previousGroupName === null) {
+      updateName(thisTabElement, thisGroupName);
+      updateWidth(thisTabElement, thisGroupStyle);
+      updateOffset(thisTabElement, thisGroupStyle);
+      updateIndex(thisTabElement, thisGroupIndex);
+    } else {
       if (previousGroupStyle.width !== thisGroupStyle.width) {
         updateWidth(thisTabElement, thisGroupStyle);
       }
@@ -1028,17 +1033,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (previousGroupStyle.offset !== thisGroupStyle.offset) {
         updateOffset(thisTabElement, thisGroupStyle);
       }
-    }
 
-    if (previousGroupName !== null && previousGroupName !== undefined) {
       if (previousGroupName !== thisGroupName) {
         updateName(thisTabElement, thisGroupName);
       }
-    } else {
-      updateName(thisTabElement, thisGroupName);
-      updateWidth(thisTabElement, thisGroupStyle);
-      updateOffset(thisTabElement, thisGroupStyle);
-      updateIndex(thisTabElement, thisGroupIndex);
     }
   }
 
