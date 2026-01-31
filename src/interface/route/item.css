@@ -144,6 +144,7 @@
   line-height: 30px;
   /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   font-weight: 400;
+  contain: layout;
 }
 
 /* skeleton screen: true */
@@ -253,6 +254,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  contain: layout;
 }
 
 /* displayed: false */
@@ -494,6 +496,7 @@
   transition: none;
   overflow: hidden;
   vertical-align: top;
+  contain: layout;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button:last-child {
