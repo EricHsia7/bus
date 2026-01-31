@@ -222,7 +222,13 @@ export async function listBusArrivalTimeDataGroups(typedArray: boolean = false):
     if (json) {
       const object = JSON.parse(json) as BusArrivalTimeDataGroup;
       if (typedArray) {
-        object.stats = new Uint32Array(object.stats);
+        if (object.max < 256) {
+          object.stats = new Uint8Array(object.stats);
+        } else if (object.max < 65536) {
+          object.stats = new Uint16Array(object.stats);
+        } else {
+          object.stats = new Uint32Array(object.stats);
+        }
       }
       result.push(object);
     }
