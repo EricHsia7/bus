@@ -862,7 +862,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     if (difference < 0) {
       const groupsFragment = new DocumentFragment();
       const tabsFragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+      for (let o = 0; o > difference; o--) {
         const newGroupElement = generateElementOfGroup();
         groupsFragment.appendChild(newGroupElement);
         const newTabElement = generateElementOfTab();
@@ -871,11 +871,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       LocationGroupsElement.append(groupsFragment);
       LocationGroupTabsTrayElement.append(tabsFragment);
     } else {
-      const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const groupIndex = currentGroupElementsLength - 1 - o;
-        currentGroupElements[groupIndex].remove();
-        LocationGroupTabElements[groupIndex].remove();
+      const currentLocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
+      for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
+        currentGroupElements[p].remove();
+        currentLocationGroupTabElements[p].remove();
       }
     }
   }
@@ -883,44 +882,44 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
+
     const thisLocationGroupElement = LocationGroupElements[i];
-    const currentItemCapacity = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item').length;
-    if (itemQuantity[groupKey] !== currentItemCapacity) {
-      const difference = currentItemCapacity - itemQuantity[groupKey];
+    const thisLocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
+    const currentLocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupItemsElement, '.css_location_group_item');
+    const currentLocationGroupItemElementsLength = currentLocationGroupItemElements.length;
+    if (itemQuantity[groupKey] !== currentLocationGroupItemElementsLength) {
+      const difference = currentLocationGroupItemElementsLength - itemQuantity[groupKey];
       if (difference < 0) {
-        const LocationGroupItemsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_items');
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
+        const fragment = new DocumentFragment();
+        for (let o = 0; o > difference; o--) {
           const newItemElement = generateElementOfItem();
-          LocationGroupItemsElement.appendChild(newItemElement);
+          fragment.appendChild(newItemElement);
         }
+        thisLocationGroupItemsElement.append(fragment);
       } else {
-        const LocationGroupItemElements = elementQuerySelectorAll(thisLocationGroupElement, '.css_location_group_items .css_location_group_item');
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
-          const itemIndex = currentItemCapacity - 1 - o;
-          LocationGroupItemElements[itemIndex].remove();
+        for (let p = currentLocationGroupItemElementsLength - 1, q = currentLocationGroupItemElementsLength - difference - 1; p > q; p--) {
+          currentLocationGroupItemElements[p].remove();
         }
       }
     }
 
-    const currentGroupPropertyCapacity = elementQuerySelectorAll(elementQuerySelectorAll(LocationGroupsElement, '.css_location_group')[i], '.css_location_group_details .css_location_group_details_body .css_location_group_details_property').length;
+    const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
+    const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
+    const currentGroupPropertyElements = elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property');
+    const currentGroupPropertyElementsLength = currentGroupPropertyElements.length;
     const groupPropertyQuantity = groups[groupKey].properties.length;
-    if (groupPropertyQuantity !== currentGroupPropertyCapacity) {
-      const difference = currentGroupPropertyCapacity - groupPropertyQuantity;
+    if (groupPropertyQuantity !== currentGroupPropertyElementsLength) {
+      const difference = currentGroupPropertyElementsLength - groupPropertyQuantity;
       if (difference < 0) {
-        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
-        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
-          // var propertyIndex = currentGroupPropertyCapacity + o;
+        const fragment = new DocumentFragment();
+        for (let o = 0; o > difference; o--) {
           const newPropertyElement = generateElementOfGroupDetailsProperty();
-          thisLocationGroupDetailsBodyElement.appendChild(newPropertyElement);
+          fragment.appendChild(newPropertyElement);
         }
+        thisLocationGroupDetailsBodyElement.append(fragment);
       } else {
-        const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
-        const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
-        const propertyElements = elementQuerySelectorAll(thisLocationGroupDetailsBodyElement, '.css_location_group_details_property');
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
-          const propertyIndex = currentGroupPropertyCapacity - 1 - o;
-          propertyElements[propertyIndex].remove();
+        for (let p = currentGroupPropertyElementsLength - 1, q = currentGroupPropertyElementsLength - difference - 1; p > q; p--) {
+          currentGroupPropertyElements[p].remove();
         }
       }
     }
