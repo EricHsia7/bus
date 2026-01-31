@@ -703,15 +703,14 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const difference = currentBusElementsQuantity - busesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newBusElement = generateElementOfBus();
           fragment.appendChild(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const busIndex = currentBusElementsQuantity - 1 - p;
-          currentBusElements[busIndex].remove();
+        for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
+          currentBusElements[p].remove();
         }
       }
 
@@ -743,15 +742,14 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const difference = currentOverlappingRouteElementsQuantity - overlappingRoutesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfOverlappingRoute();
           fragment.appendChild(newOverlappingRouteElement);
         }
         thisOverlappingRoutesElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const overlappingRouteIndex = currentOverlappingRouteElementsQuantity - 1 - p;
-          currentOverlappingRouteElements[overlappingRouteIndex].remove();
+        for (let p = currentOverlappingRouteElementsQuantity - 1, q = currentOverlappingRouteElementsQuantity - difference - 1; p > q; p--) {
+          currentOverlappingRouteElements[p].remove();
         }
       }
 
@@ -796,15 +794,14 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
           fragment.appendChild(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
-          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
+          currentBusArrivalTimeElements[p].remove();
         }
       }
 
@@ -832,15 +829,14 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const difference = currentNearbyLocationElementsQuantity - nearbyLocationsQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfNearbyLocation();
           fragment.appendChild(newOverlappingRouteElement);
         }
         thisNearbyLocationsElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const overlappingRouteIndex = currentNearbyLocationElementsQuantity - 1 - p;
-          currentNearbyLocationElements[overlappingRouteIndex].remove();
+        for (let p = currentNearbyLocationElementsQuantity - 1, q = currentNearbyLocationElementsQuantity - difference - 1; p > q; p--) {
+          currentNearbyLocationElements[p].remove();
         }
       }
 

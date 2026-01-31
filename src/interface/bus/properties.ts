@@ -84,22 +84,20 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
 
   // BusGroupPropertiesElement.setAttribute('skeleton-screen', skeletonScreen);
 
-  const currentPropertyCapacity = elementQuerySelectorAll(BusPropertiesGroupBodyElement, '.css_bus_property').length;
-  if (propertyQuantity !== currentPropertyCapacity) {
-    const difference = currentPropertyCapacity - propertyQuantity;
+  const currentPropertyElements = elementQuerySelectorAll(BusPropertiesGroupBodyElement, '.css_bus_property');
+  const currentPropertyElementsLength = currentPropertyElements.length;
+  if (propertyQuantity !== currentPropertyElementsLength) {
+    const difference = currentPropertyElementsLength - propertyQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        // const propertyIndex = currentPropertyCapacity + o;
+      for (let o = 0; o > difference; o--) {
         const newPropertyElement = generateElementOfBusProperty(skeletonScreen);
         fragment.appendChild(newPropertyElement);
       }
       BusPropertiesGroupBodyElement.append(fragment);
     } else {
-      const propertyElements = elementQuerySelectorAll(BusPropertiesGroupBodyElement, '.css_bus_property');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const propertyIndex = currentPropertyCapacity - 1 - o;
-        propertyElements[propertyIndex].remove();
+      for (let p = currentPropertyElementsLength - 1, q = currentPropertyElementsLength - difference - 1; p > q; p--) {
+        currentPropertyElements[p].remove();
       }
     }
   }

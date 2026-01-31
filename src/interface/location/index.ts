@@ -611,15 +611,14 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const difference = currentBusElementsQuantity - busesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newBusElement = generateElementOfBus();
           fragment.appendChild(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const busIndex = currentBusElementsQuantity - 1 - p;
-          currentBusElements[busIndex].remove();
+        for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
+          currentBusElements[p].remove();
         }
       }
 
@@ -652,15 +651,14 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
+        for (let o = 0; o > difference; o--) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
           fragment.appendChild(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
-        for (let p = 0, d = Math.abs(difference); p < d; p++) {
-          const overlappingRouteIndex = currentBusArrivalTimeElementsQuantity - 1 - p;
-          currentBusArrivalTimeElements[overlappingRouteIndex].remove();
+        for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
+          currentBusArrivalTimeElements[p].remove();
         }
       }
 
