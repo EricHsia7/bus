@@ -559,14 +559,6 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
-      const thisElementRect = thisElement.getBoundingClientRect();
-      const top = thisElementRect.top;
-      const left = thisElementRect.left;
-      const bottom = thisElementRect.bottom;
-      const right = thisElementRect.right;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRankElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_rank');
       const nextSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
@@ -575,23 +567,35 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       nextSlideElement.setAttribute('code', thisItem.ranking.code.toString());
       nextSlideElement.innerText = thisItem.ranking.text;
 
-      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        currentSlideElement.addEventListener(
-          'animationend',
-          function () {
-            currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
-            currentSlideElement.innerText = thisItem.ranking.text;
-            currentSlideElement.classList.remove('css_location_group_item_rank_current_slide_fade_out');
-            nextSlideElement.setAttribute('displayed', 'false');
-          },
-          { once: true }
-        );
-        nextSlideElement.setAttribute('displayed', 'true');
-        currentSlideElement.classList.add('css_location_group_item_rank_current_slide_fade_out');
-      } else {
-        currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
-        currentSlideElement.innerText = thisItem.ranking.text;
+      if (!skeletonScreen) {
+        if (animation) {
+          const thisElementRect = thisElement.getBoundingClientRect();
+          const top = thisElementRect.top;
+          const left = thisElementRect.left;
+          const bottom = thisElementRect.bottom;
+          const right = thisElementRect.right;
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
+          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+            currentSlideElement.addEventListener(
+              'animationend',
+              function () {
+                currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
+                currentSlideElement.innerText = thisItem.ranking.text;
+                currentSlideElement.classList.remove('css_location_group_item_rank_current_slide_fade_out');
+                nextSlideElement.setAttribute('displayed', 'false');
+              },
+              { once: true }
+            );
+            nextSlideElement.setAttribute('displayed', 'true');
+            currentSlideElement.classList.add('css_location_group_item_rank_current_slide_fade_out');
+            return;
+          }
+        }
       }
+
+      currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
+      currentSlideElement.innerText = thisItem.ranking.text;
     }
 
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
