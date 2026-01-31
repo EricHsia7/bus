@@ -259,7 +259,13 @@ export async function initializeUpdateRateDataGroups() {
 export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
   const now = new Date().getTime();
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
-  return updateRateData_groups.filter((item) => item.timestamp > oneWeekAgo);
+  const result: Array<UpdateRateDataGroup> = [];
+  for (const dataGroup of updateRateData_groups) {
+    if (dataGroup.timestamp > oneWeekAgo) {
+      result.push(dataGroup);
+    }
+  }
+  return result;
 }
 
 export async function discardExpiredUpdateRateDataGroups() {
