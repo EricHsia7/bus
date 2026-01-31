@@ -1052,8 +1052,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteNameSpanElement.innerText = integration.RouteName;
   }
 
-  const currentGroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
-  const currentGroupElementsLength = currentGroupElements.length;
+  const groupElements = Array.from(elementQuerySelectorAll(RouteGroupsElement, '.css_route_group'));
+  const tabElements = Array.from(elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab'));
+
+  const currentGroupElementsLength = groupElements.length;
   if (groupQuantity !== currentGroupElementsLength) {
     const difference = currentGroupElementsLength - groupQuantity;
     if (difference < 0) {
@@ -1062,21 +1064,24 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       for (let o = 0; o > difference; o--) {
         const newGroupElement = generateElementOfGroup();
         newGroupsFragment.appendChild(newGroupElement);
+        groupElements.push(newGroupElement)
         const newTabElement = generateElementOfTab();
         newTabsFragment.appendChild(newTabElement);
+        tabElements.push(newTabElement)
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
     } else {
-      const currentTabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
       for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
-        currentGroupElements[p].remove();
-        currentTabElements[p].remove();
+        groupElements[p].remove();
+        groupElements.splice(p, 1);
+        tabElements[p].remove();
+        tabElements.splice(p, 1);
       }
     }
   }
 
-  const groupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
+  // const groupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
 
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
@@ -1108,7 +1113,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  const tabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
+  // const tabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
