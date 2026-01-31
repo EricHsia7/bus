@@ -737,24 +737,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
-      const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
-      const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
+      const overlappingRouteElements = Array.from(elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route'));
+      const currentOverlappingRouteElementsLength = overlappingRouteElements.length;
       const overlappingRoutesQuantity = thisItem.overlappingRoutes.length;
-      const difference = currentOverlappingRouteElementsQuantity - overlappingRoutesQuantity;
+      const difference = currentOverlappingRouteElementsLength - overlappingRoutesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfOverlappingRoute();
           fragment.appendChild(newOverlappingRouteElement);
+          overlappingRouteElements.push(newOverlappingRouteElement);
         }
         thisOverlappingRoutesElement.append(fragment);
       } else {
-        for (let p = currentOverlappingRouteElementsQuantity - 1, q = currentOverlappingRouteElementsQuantity - difference - 1; p > q; p--) {
-          currentOverlappingRouteElements[p].remove();
+        for (let p = currentOverlappingRouteElementsLength - 1, q = currentOverlappingRouteElementsLength - difference - 1; p > q; p--) {
+          overlappingRouteElements[p].remove();
+          overlappingRouteElements.splice(p, 1);
         }
       }
 
-      const overlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
       for (let i = 0; i < overlappingRoutesQuantity; i++) {
         const overlappingRouteItem = thisItem.overlappingRoutes[i];
         const overlappingRouteElement = overlappingRouteElements[i];
@@ -789,24 +790,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times');
-      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
-      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimeElements = Array.from(elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time'));
+      const currentBusArrivalTimeElementsLength = busArrivalTimeElements.length;
       const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
-      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      const difference = currentBusArrivalTimeElementsLength - busArrivalTimesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
           fragment.appendChild(newBusArrivalTimeElement);
+          busArrivalTimeElements.push(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
-        for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
-          currentBusArrivalTimeElements[p].remove();
+        for (let p = currentBusArrivalTimeElementsLength - 1, q = currentBusArrivalTimeElementsLength - difference - 1; p > q; p--) {
+          busArrivalTimeElements[p].remove();
+          busArrivalTimeElements.splice(p, 1);
         }
       }
 
-      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
       for (let i = 0; i < busArrivalTimesQuantity; i++) {
         const busArrivalTimeItem = thisItem.busArrivalTimes[i];
         const busArrivalTimeElement = busArrivalTimeElements[i];
@@ -824,24 +826,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateNearbyLocations(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisNearbyLocationsElement = elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations');
-      const currentNearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
-      const currentNearbyLocationElementsQuantity = currentNearbyLocationElements.length;
+      const nearbyLocationElements = Array.from(elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location'));
+      const currentNearbyLocationElementsLength = nearbyLocationElements.length;
       const nearbyLocationsQuantity = thisItem.nearbyLocations.length;
-      const difference = currentNearbyLocationElementsQuantity - nearbyLocationsQuantity;
+      const difference = currentNearbyLocationElementsLength - nearbyLocationsQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfNearbyLocation();
           fragment.appendChild(newOverlappingRouteElement);
+          nearbyLocationElements.push(newOverlappingRouteElement);
         }
         thisNearbyLocationsElement.append(fragment);
       } else {
-        for (let p = currentNearbyLocationElementsQuantity - 1, q = currentNearbyLocationElementsQuantity - difference - 1; p > q; p--) {
-          currentNearbyLocationElements[p].remove();
+        for (let p = currentNearbyLocationElementsLength - 1, q = currentNearbyLocationElementsLength - difference - 1; p > q; p--) {
+          nearbyLocationElements[p].remove();
+          nearbyLocationElements.splice(p, 1);
         }
       }
 
-      const nearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
       for (let i = 0; i < nearbyLocationsQuantity; i++) {
         const nearbyLocationItem = thisItem.nearbyLocations[i];
         const nearbyLocationElement = nearbyLocationElements[i];
@@ -1065,10 +1068,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       for (let o = 0; o > difference; o--) {
         const newGroupElement = generateElementOfGroup();
         newGroupsFragment.appendChild(newGroupElement);
-        groupElements.push(newGroupElement)
+        groupElements.push(newGroupElement);
         const newTabElement = generateElementOfTab();
         newTabsFragment.appendChild(newTabElement);
-        tabElements.push(newTabElement)
+        tabElements.push(newTabElement);
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
