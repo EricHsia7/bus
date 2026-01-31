@@ -59,14 +59,12 @@ export interface integratedStopItem {
 }
 
 export interface IntegratedRoute {
+  groupNames: Array<string>;
   groupedItems: { [key: string]: Array<integratedStopItem> };
   groupQuantity: number;
   itemQuantity: { [key: string]: number };
   RouteName: string;
-  RouteEndPoints: {
-    RouteDeparture: string;
-    RouteDestination: string;
-  };
+  RouteEndPoints: [departure: string, destination: string];
   dataUpdateTime: number;
   RouteID: number;
   PathAttributeId: Array<number>;
@@ -353,14 +351,12 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const thisRouteDestination = thisRoute.des;
 
   const result2: IntegratedRoute = {
+    groupNames: [`往${thisRouteDestination}`, `往${thisRouteDeparture}`],
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,
     RouteName: thisRouteName,
-    RouteEndPoints: {
-      RouteDeparture: thisRouteDeparture,
-      RouteDestination: thisRouteDestination
-    },
+    RouteEndPoints: [thisRouteDeparture, thisRouteDestination],
     dataUpdateTime: getDataUpdateTime(requestID),
     RouteID,
     PathAttributeId
