@@ -124,6 +124,7 @@
       rgba(0, 0, 0, 0.7) 85%,
       rgba(0, 0, 0, 0.3) 100%);
   mask-repeat: no-repeat;
+  overflow: clip;
   contain: layout;
 }
 
@@ -134,7 +135,6 @@
   width: var(--b-cssvar-location-tabs-tray-width);
   height: 40px;
   overflow: clip;
-  display: block;
   transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
   contain: layout;
 }
