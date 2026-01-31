@@ -619,6 +619,8 @@
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
+  contain: layout;
+  overflow: hidden;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses[empty="true"]::after {
