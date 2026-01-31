@@ -10,7 +10,8 @@
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button {
   width: 60px;
   height: 60px;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
   display: inline-flex;
   justify-content: center;
   align-items: center;

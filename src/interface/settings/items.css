@@ -50,7 +50,8 @@
   font-size: 18px;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_name {
@@ -73,7 +74,8 @@
   text-overflow: ellipsis;
   text-align: right;
   display: block;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
 }
 
 .css_settings_field .css_settings_body .css_settings .css_setting[type="info"] .css_setting_status,

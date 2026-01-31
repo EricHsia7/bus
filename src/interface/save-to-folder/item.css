@@ -33,6 +33,7 @@
   line-height: 55px;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
   text-overflow: ellipsis;
 }

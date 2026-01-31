@@ -34,7 +34,7 @@
   /* box-shadow: 0px 0px 25px -19px rgba(0, 0, 0, 0.23); */
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-  overflow: hidden;
+  overflow: clip;
   animation-name: css_show_prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;

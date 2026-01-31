@@ -72,7 +72,7 @@
   color: var(--b-cssvar-333333);
   line-height: 25px;
   contain: layout;
-  overflow: hidden;
+  overflow: clip;
   text-overflow: ellipsis;
 }
 

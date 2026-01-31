@@ -39,7 +39,7 @@
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property[skeleton-screen="true"] .css_bus_property_icon {

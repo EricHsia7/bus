@@ -129,7 +129,7 @@
   bottom: 0px;
   width: 100%;
   height: 1px;
-  overflow: hidden;
+  overflow: clip;
   background: var(--b-cssvar-ededf2);
   contain: layout;
 }

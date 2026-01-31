@@ -37,7 +37,8 @@
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
 }
 
 .css_storage_field .css_storage_body .css_storage_statistics .css_storage_statistics_item[skeleton-screen="true"] .css_storage_statistics_item_name {

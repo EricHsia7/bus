@@ -63,7 +63,7 @@
   font-size: 18px;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* skeleton-screen: true */

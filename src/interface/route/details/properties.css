@@ -51,7 +51,8 @@
   font-weight: 400;
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
+  contain: layout;
   text-overflow: ellipsis;
 }
 

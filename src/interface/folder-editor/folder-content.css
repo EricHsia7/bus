@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   height: 50px;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* item > icon */
@@ -39,7 +39,7 @@
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* item > main */
@@ -57,7 +57,7 @@
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* item > capsule */
@@ -69,7 +69,7 @@
   height: 30px;
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
-  overflow: hidden;
+  overflow: clip;
   display: block;
 }
 

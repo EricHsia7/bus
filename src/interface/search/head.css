@@ -9,7 +9,7 @@
   background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-  overflow: hidden;
+  overflow: clip;
   contain: layout;
 }
 
@@ -19,7 +19,7 @@
   left: 55px;
   width: calc(100% - 55px - 55px);
   height: 55px;
-  overflow: hidden;
+  overflow: clip;
   contain: layout;
 }
 
