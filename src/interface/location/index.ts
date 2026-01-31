@@ -519,14 +519,6 @@ function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
 function updateLocationField(integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
     function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
-      const thisElementRect = thisElement.getBoundingClientRect();
-      const top = thisElementRect.top;
-      const left = thisElementRect.left;
-      const bottom = thisElementRect.bottom;
-      const right = thisElementRect.right;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisItemStatusElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_status');
       const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
@@ -535,23 +527,36 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       nextSlideElement.setAttribute('code', thisItem.status.code.toString());
       nextSlideElement.innerText = thisItem.status.text;
 
-      if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        currentSlideElement.addEventListener(
-          'animationend',
-          function () {
-            currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-            currentSlideElement.innerText = thisItem.status.text;
-            currentSlideElement.classList.remove('css_slide_fade_out');
-            nextSlideElement.setAttribute('displayed', 'false');
-          },
-          { once: true }
-        );
-        nextSlideElement.setAttribute('displayed', 'true');
-        currentSlideElement.classList.add('css_slide_fade_out');
-      } else {
-        currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-        currentSlideElement.innerText = thisItem.status.text;
+      if (!skeletonScreen) {
+        if (animation) {
+        /*
+        const thisElementRect = thisElement.getBoundingClientRect();
+        const top = thisElementRect.top;
+        const left = thisElementRect.left;
+        const bottom = thisElementRect.bottom;
+        const right = thisElementRect.right;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+        */
+          currentSlideElement.addEventListener(
+            'animationend',
+            function () {
+              currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+              currentSlideElement.innerText = thisItem.status.text;
+              currentSlideElement.classList.remove('css_slide_fade_out');
+              nextSlideElement.setAttribute('displayed', 'false');
+            },
+            { once: true }
+          );
+          nextSlideElement.setAttribute('displayed', 'true');
+          currentSlideElement.classList.add('css_slide_fade_out');
+          //}
+        }
       }
+
+      currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+      currentSlideElement.innerText = thisItem.status.text;
     }
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
