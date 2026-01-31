@@ -855,9 +855,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   }
 
   // TODO: updateTab
-  const currentGroupCapacity = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group').length;
-  if (groupQuantity !== currentGroupCapacity) {
-    const difference = currentGroupCapacity - groupQuantity;
+  const currentGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
+  const currentGroupElementsLength = currentGroupElements.length;
+  if (groupQuantity !== currentGroupElementsLength) {
+    const difference = currentGroupElementsLength - groupQuantity;
     if (difference < 0) {
       const groupsFragment = new DocumentFragment();
       const tabsFragment = new DocumentFragment();
@@ -870,11 +871,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       LocationGroupsElement.append(groupsFragment);
       LocationGroupTabsTrayElement.append(tabsFragment);
     } else {
-      const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
       const LocationGroupTabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const groupIndex = currentGroupCapacity - 1 - o;
-        LocationGroupElements[groupIndex].remove();
+        const groupIndex = currentGroupElementsLength - 1 - o;
+        currentGroupElements[groupIndex].remove();
         LocationGroupTabElements[groupIndex].remove();
       }
     }
