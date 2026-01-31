@@ -933,6 +933,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
     thisTabSpanElement.innerText = groups[groupKey].name;
+    thisTabElement.style.setProperty('--b-cssvar-location-tab-offset', `${locationSliding_groupStyles[groupKey].offset}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());
     const thisGroupElement = groupElements[i];

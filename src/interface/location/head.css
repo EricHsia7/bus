@@ -1,3 +1,9 @@
+@property --b-cssvar-location-tab-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 @property --b-cssvar-location-tab-width {
   syntax: '<length>';
   inherits: false;
@@ -129,7 +135,12 @@
 }
 
 .css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray .css_location_group_tab {
-  display: inline-flex;
+  position: absolute;
+  top: 0px;
+  left: var(--b-cssvar-location-tab-offset);
+  width: var(--b-cssvar-location-tab-width);
+  height: 40px;
+  display: flex;
   justify-content: center;
   align-items: center;
   font-size: 17px;
@@ -137,10 +148,7 @@
   white-space: nowrap;
   word-break: keep-all;
   color: var(--b-cssvar-333333);
-  vertical-align: top;
-  width: var(--b-cssvar-location-tab-width);
-  height: 40px;
-  position: relative;
+  /* vertical-align: top; */
   font-weight: 500;
   --b-cssvar-location-percentage: inherit;
   opacity: clamp(0.6, calc(1 - 0.4 * abs(var(--b-cssvar-location-percentage) - var(--b-cssvar-location-tab-index))), 1);

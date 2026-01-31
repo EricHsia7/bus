@@ -202,7 +202,7 @@ export function showErrorMessage(): void {
 }
 
 export type GroupStyles = {
-  [key: string]: {
+  [groupKey: string]: {
     width: number;
     offset: number;
   };
