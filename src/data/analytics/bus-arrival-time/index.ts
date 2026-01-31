@@ -214,23 +214,13 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
   }
 }
 
-export async function listBusArrivalTimeDataGroups(typedArray: boolean = false): Promise<BusArrivalTimeDataGroupArray> {
+export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
   const keys = await lfListItemKeys(6);
   const result: BusArrivalTimeDataGroupArray = [];
   for (const key of keys) {
     const json = await lfGetItem(6, key);
     if (json) {
-      const object = JSON.parse(json) as BusArrivalTimeDataGroup;
-      if (typedArray) {
-        if (object.max < 256) {
-          object.stats = new Uint8Array(object.stats);
-        } else if (object.max < 65536) {
-          object.stats = new Uint16Array(object.stats);
-        } else {
-          object.stats = new Uint32Array(object.stats);
-        }
-      }
-      result.push(object);
+      result.push(JSON.parse(json) as BusArrivalTimeDataGroup);
     }
   }
   return result;
