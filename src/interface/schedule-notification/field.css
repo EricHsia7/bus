@@ -8,6 +8,7 @@
   background: var(--b-cssvar-f9f9fb-blocky);
   display: block;
   visibility: hidden;
+  overflow: clip;
 }
 
 .css_schedule_notification_field[displayed="true"] {

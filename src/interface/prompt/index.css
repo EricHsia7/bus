@@ -98,7 +98,7 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .css_prompt[button="true"] .css_prompt_message {
@@ -118,7 +118,7 @@
   white-space: nowrap;
   text-align: right;
   line-height: 45px;
-  overflow: hidden;
+  overflow: clip;
   visibility: hidden;
 }
 

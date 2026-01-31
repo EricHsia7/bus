@@ -13,6 +13,7 @@
   background: var(--b-cssvar-ffffff-normal);
   display: block;
   visibility: hidden;
+  overflow: clip;
 }
 
 .css_route_field[displayed="true"] {

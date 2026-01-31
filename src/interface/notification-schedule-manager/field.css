@@ -7,6 +7,7 @@
   background: var(--b-cssvar-f9f9fb-blocky);
   display: block;
   visibility: hidden;
+  overflow: clip;
 }
 
 .css_notification_schedule_manager_field[displayed="true"] {
