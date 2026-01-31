@@ -185,7 +185,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       if (hasOwnProperty(IndexedLocation, thisSimplifiedLocationGeohash)) {
         thisIndexedLocationItem = IndexedLocation[thisSimplifiedLocationGeohash];
       }
-      let nearbyLocations: Array<integratedStopItemNearbyLocationItem> = [];
+      integratedStopItem.nearbyLocations = [];
       for (const item of thisIndexedLocationItem) {
         const mergedLocationKey = `ml_${item.hash}`;
         if (hasOwnProperty(MergedLocation, mergedLocationKey)) {
@@ -195,23 +195,24 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
             distance: convertPositionsToDistance(thisMergedLocation.la[0], thisMergedLocation.lo[0], thisSimplifiedLocation.la, thisSimplifiedLocation.lo) | 0,
             hash: thisMergedLocation.hash
           };
-          nearbyLocations.push(nearbyLocationItem);
+          integratedStopItem.nearbyLocations.push(nearbyLocationItem);
         }
       }
-      nearbyLocations.sort(function (a, b) {
+      integratedStopItem.nearbyLocations.sort(function (a, b) {
         return a.distance - b.distance;
       });
-      integratedStopItem.nearbyLocations = nearbyLocations;
 
       // Collect data from 'batchFoundBuses'
-      let buses = []; // as Array<FormattedBus>
+      integratedStopItem.buses = [];
       for (const overlappingStopID of thisSimplifiedLocation.s) {
         const overlappingStopKey = `s_${overlappingStopID}`;
         if (hasOwnProperty(batchFoundBuses, overlappingStopKey)) {
-          buses.push(batchFoundBuses[overlappingStopKey].map((e) => formatBus(e)));
+          for (let i = batchFoundBuses[overlappingStopKey].length - 1; i >= 0; i--) {
+            integratedStopItem.buses.push(formatBus(batchFoundBuses[overlappingStopKey][i]));
+          }
         }
       }
-      integratedStopItem.buses = buses.flat().sort(function (a, b) {
+      integratedStopItem.buses.sort(function (a, b) {
         return a.index - b.index;
       });
 
