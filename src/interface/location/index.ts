@@ -613,8 +613,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_buses');
-      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
-      const currentBusElementsQuantity = currentBusElements.length;
+      const busElements = Array.from(elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus'));
+      const currentBusElementsQuantity = busElements.length;
       const busesQuantity = thisItem.buses.length;
       const difference = currentBusElementsQuantity - busesQuantity;
       if (difference < 0) {
@@ -622,15 +622,16 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         for (let o = 0; o > difference; o--) {
           const newBusElement = generateElementOfBus();
           fragment.appendChild(newBusElement);
+          busElements.push(newBusElement);
         }
         thisBusesElement.append(fragment);
       } else {
         for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
-          currentBusElements[p].remove();
+          busElements[p].remove();
+          busElements.splice(p, 1);
         }
       }
 
-      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_location_group_item_bus');
       for (let i = 0; i < busesQuantity; i++) {
         const busItem = thisItem.buses[i];
         const busElement = busElements[i];
@@ -653,8 +654,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateBusArrivalTimes(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisItemBodyElement = elementQuerySelector(thisElement, '.css_location_group_item_body');
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemBodyElement, '.css_location_group_item_bus_arrival_times');
-      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
-      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimeElements = Array.from(elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time'));
+      const currentBusArrivalTimeElementsQuantity = busArrivalTimeElements.length;
       const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
       const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
       if (difference < 0) {
@@ -662,15 +663,16 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         for (let o = 0; o > difference; o--) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
           fragment.appendChild(newBusArrivalTimeElement);
+          busArrivalTimeElements.push(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
       } else {
         for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
-          currentBusArrivalTimeElements[p].remove();
+          busArrivalTimeElements[p].remove();
+          busArrivalTimeElements.splice(p, 1);
         }
       }
 
-      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_location_group_item_bus_arrival_time');
       for (let i = 0; i < busArrivalTimesQuantity; i++) {
         const busArrivalTimeItem = thisItem.busArrivalTimes[i];
         const busArrivalTimeElement = busArrivalTimeElements[i];
