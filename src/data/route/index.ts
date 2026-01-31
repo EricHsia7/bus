@@ -143,31 +143,32 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
         continue;
       }
       integratedStopItem.name = thisSimplifiedLocation.n;
-      integratedStopItem.overlappingRoutes = thisSimplifiedLocation.r
-        .filter((id: number) => id !== RouteID)
-        .map((id: number) => {
-          const overlappingRouteKey = `r_${id}`;
-          if (hasOwnProperty(Route, overlappingRouteKey)) {
-            const overlappingRoute = Route[overlappingRouteKey] as SimplifiedRouteItem;
-            const formattedOverlappingRoute = {
-              name: overlappingRoute.n,
-              RouteEndPoints: {
-                RouteDeparture: overlappingRoute.dep,
-                RouteDestination: overlappingRoute.des,
-                text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, // u2194 -> '↔'
-                html: `<span>${overlappingRoute.dep}</span><span>\u2194</span><span>${overlappingRoute.des}</span>`
-              },
-              RouteID: overlappingRoute.id,
-              PathAttributeId: overlappingRoute.pid
-            };
-            return formattedOverlappingRoute;
-          } else {
-            return null;
-          }
-        })
-        .filter((e) => {
-          return e !== null;
-        });
+
+      const thisSimplifiedLocationRoutesLength = thisSimplifiedLocation.r.length;
+      integratedStopItem.overlappingRoutes = [];
+      for (let i = 0; i < thisSimplifiedLocationRoutesLength; i++) {
+        const id = thisSimplifiedLocation.r[i];
+        if (id === RouteID) {
+          continue;
+        }
+        const overlappingRouteKey = `r_${id}`;
+        if (hasOwnProperty(Route, overlappingRouteKey)) {
+          const overlappingRoute = Route[overlappingRouteKey] as SimplifiedRouteItem;
+          const formattedOverlappingRoute = {
+            name: overlappingRoute.n,
+            RouteEndPoints: {
+              RouteDeparture: overlappingRoute.dep,
+              RouteDestination: overlappingRoute.des,
+              text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, // u2194 -> '↔'
+              html: `<span>${overlappingRoute.dep}</span><span>\u2194</span><span>${overlappingRoute.des}</span>`
+            },
+            RouteID: overlappingRoute.id,
+            PathAttributeId: overlappingRoute.pid
+          };
+          integratedStopItem.overlappingRoutes.push(formattedOverlappingRoute);
+        }
+      }
+
       integratedStopItem.position = {
         longitude: thisSimplifiedLocation.lo,
         latitude: thisSimplifiedLocation.la
