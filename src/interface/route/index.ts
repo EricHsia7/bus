@@ -1056,9 +1056,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteNameSpanElement.innerText = integration.RouteName;
   }
 
-  const currentGroupCapacity = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group').length;
-  if (groupQuantity !== currentGroupCapacity) {
-    const difference = currentGroupCapacity - groupQuantity;
+  const currentGroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
+  const currentGroupElementsLength = currentGroupElements.length;
+  if (groupQuantity !== currentGroupElementsLength) {
+    const difference = currentGroupElementsLength - groupQuantity;
     if (difference < 0) {
       const newGroupsFragment = new DocumentFragment();
       const newTabsFragment = new DocumentFragment();
@@ -1071,21 +1072,20 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
     } else {
-      const GroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
-      const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
+      const currentTabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
       for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const groupIndex = currentGroupCapacity - 1 - o;
-        GroupElements[groupIndex].remove();
-        TabElements[groupIndex].remove();
+        const groupIndex = currentGroupElementsLength - 1 - o;
+        currentGroupElements[groupIndex].remove();
+        currentTabElements[groupIndex].remove();
       }
     }
   }
 
-  const RouteGroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
+  const groupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
 
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
-    const thisGroupElement = RouteGroupElements[i];
+    const thisGroupElement = groupElements[i];
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
     const currentItemCapacity = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item').length;
@@ -1114,19 +1114,19 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
+  const tabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
 
-    const thisTabElement = TabElements[i];
+    const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
     thisTabSpanElement.innerText = groupNames[i];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[groupKey].offset}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
-    const thisGroupElement = RouteGroupElements[i];
+    const thisGroupElement = groupElements[i];
     if (skeletonScreen) {
       thisGroupElement.scrollTop = 0;
     }
