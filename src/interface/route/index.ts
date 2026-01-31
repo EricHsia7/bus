@@ -37,6 +37,7 @@ let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
 let routeSliding_groupQuantity: number = 0;
 let routeSliding_groupStyles: GroupStyles = {};
+let routeSliding_previousOffset: number = 0;
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
@@ -1033,7 +1034,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  function updateTabsTray(width: number): void {
+  function updateTabsTrayWidth(width: number): void {
     RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${width}px`);
   }
 
@@ -1189,7 +1190,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  updateTabsTray(cumulativeOffset);
+  if (routeSliding_previousOffset !== cumulativeOffset) {
+    updateTabsTrayWidth(cumulativeOffset);
+    routeSliding_previousOffset = cumulativeOffset;
+  }
 
   if (!routeSliding_sliding) {
     const initialGroupKey = `g_${routeSliding_initialIndex}`;
