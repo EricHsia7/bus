@@ -1,6 +1,6 @@
 import { recoverBusArrivalTimeDataFromWriteAheadLog } from './data/analytics/bus-arrival-time/index';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
-import { discardExpiredUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
+import { discardUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { initializeFolderList } from './data/folder/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { discardExpiredRecentViews } from './data/recent-views/index';
@@ -273,11 +273,10 @@ window.bus = {
     if (!busSecondlyInitialized) {
       busSecondlyInitialized = true;
       downloadData();
-      discardExpiredUpdateRateDataGroups();
       discardExpiredDataUsageStats();
       recoverBusArrivalTimeDataFromWriteAheadLog();
       discardExpiredRecentViews();
-      discardExpiredUpdateRateDataGroups().then(function () {
+      discardUpdateRateDataGroups().then(function () {
         initializeUpdateRateDataGroups().then(function () {
           recoverUpdateRateDataFromWriteAheadLog();
         });

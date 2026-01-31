@@ -261,14 +261,14 @@ export function listUpdateRateDataGroups(): Array<UpdateRateDataGroup> {
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const result: Array<UpdateRateDataGroup> = [];
   for (const dataGroup of updateRateData_groups) {
-    if (dataGroup.timestamp > oneWeekAgo) {
+    if (dataGroup.timestamp > oneWeekAgo && typeof dataGroup.stats.correlation === 'number') {
       result.push(dataGroup);
     }
   }
   return result;
 }
 
-export async function discardExpiredUpdateRateDataGroups() {
+export async function discardUpdateRateDataGroups() {
   const now = new Date().getTime();
   const oneWeekAgo = now - 60 * 60 * 7 * 1000;
   const keys = await lfListItemKeys(3);
@@ -276,7 +276,7 @@ export async function discardExpiredUpdateRateDataGroups() {
     const json = await lfGetItem(3, key);
     const object = JSON.parse(json) as UpdateRateDataGroup;
     const thisTimestamp = object.timestamp;
-    if (thisTimestamp <= oneWeekAgo) {
+    if (thisTimestamp <= oneWeekAgo || typeof object.stats.correlation !== 'number') {
       await lfRemoveItem(3, key);
     }
   }
