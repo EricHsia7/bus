@@ -80,7 +80,7 @@
   height: 70px;
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: clip;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;

@@ -2,7 +2,7 @@
   height: 60px;
   white-space: nowrap;
   word-break: keep-all;
-  overflow-y: hidden;
+  overflow-y: clip;
   overflow-x: scroll;
   background: rgba(0, 0, 0, 0);
 }

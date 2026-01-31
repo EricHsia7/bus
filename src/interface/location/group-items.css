@@ -472,7 +472,7 @@
   width: calc(100% - 30px);
   height: 35px;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: clip;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
@@ -563,7 +563,7 @@
   width: calc(100% - 30px);
   height: 121px;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: clip;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
