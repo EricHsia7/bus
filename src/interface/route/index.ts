@@ -1035,6 +1035,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         updateName(thisTabElement, thisGroupName);
       }
     } else {
+      updateName(thisTabElement, thisGroupName);
+      updateWidth(thisTabElement, thisGroupStyle);
+      updateOffset(thisTabElement, thisGroupStyle);
       updateIndex(thisTabElement, thisGroupIndex);
     }
   }
