@@ -214,13 +214,16 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
   }
 }
 
-export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
+export async function listBusArrivalTimeDataGroups(typedArray: boolean = false): Promise<BusArrivalTimeDataGroupArray> {
   const keys = await lfListItemKeys(6);
   const result: BusArrivalTimeDataGroupArray = [];
   for (const key of keys) {
     const json = await lfGetItem(6, key);
     if (json) {
       const object = JSON.parse(json) as BusArrivalTimeDataGroup;
+      if (typedArray) {
+        object.stats = new Uint32Array(object.stats);
+      }
       result.push(object);
     }
   }
@@ -258,7 +261,7 @@ export async function getBusArrivalTimes(chartWidth: number, chartHeight: number
   const taskID = generateIdentifier();
 
   const personalSchedules = await listPersonalSchedules();
-  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
+  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups(true);
 
   const result = await new Promise((resolve, reject) => {
     getBusArrivalTimesWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
