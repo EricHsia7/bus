@@ -201,11 +201,13 @@ export function showErrorMessage(): void {
   ErrorMessageElement.setAttribute('displayed', 'true');
 }
 
+export interface GroupStyle {
+  width: number;
+  offset: number;
+}
+
 export type GroupStyles = {
-  [groupKey: string]: {
-    width: number;
-    offset: number;
-  };
+  [groupKey: string]: GroupStyle;
 };
 
 export interface Size {

@@ -59,6 +59,7 @@ export interface integratedStopItem {
 }
 
 export interface IntegratedRoute {
+  groupNames: Array<string>;
   groupedItems: { [key: string]: Array<integratedStopItem> };
   groupQuantity: number;
   itemQuantity: { [key: string]: number };
@@ -353,6 +354,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const thisRouteDestination = thisRoute.des;
 
   const result2: IntegratedRoute = {
+    groupNames: [`往${thisRouteDestination}`, `往${thisRouteDeparture}`],
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,

@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { closePreviousPage, GroupStyle, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -36,6 +36,7 @@ let previousSkeletonScreen: boolean = false;
 let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
 let routeSliding_groupQuantity: number = 0;
+let routeSliding_previousGroupStyles: GroupStyles = {};
 let routeSliding_groupStyles: GroupStyles = {};
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
@@ -408,6 +409,8 @@ function generateElementOfGroup(): HTMLElement {
 function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
+  const span = document.createElement('span');
+  element.appendChild(span);
   return element;
 }
 
@@ -607,6 +610,7 @@ function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
   }
   updateRouteField(
     {
+      groupNames: ['載入中', '載入中'],
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
       itemQuantity: {
@@ -998,6 +1002,47 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
+  function updateTab(thisTabElement: HTMLElement, thisGroupStyle: GroupStyle, thisGroupName: string, thisGroupIndex: number, previousGroupStyle: GroupStyle | null, previousGroupName: string | null): void {
+    function updateName(thisTabElement: HTMLElement, thisGroupName: string): void {
+      const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
+      thisTabSpanElement.innerText = thisGroupName;
+    }
+
+    function updateOffset(thisTabElement: HTMLElement, thisGroupStyle: GroupStyle): void {
+      thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${thisGroupStyle.offset}px`);
+    }
+
+    function updateWidth(thisTabElement: HTMLElement, thisGroupStyle: GroupStyle): void {
+      thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${thisGroupStyle.width}px`);
+    }
+
+    function updateIndex(thisTabElement: HTMLElement, thisGroupIndex: number): void {
+      thisTabElement.style.setProperty('--b-cssvar-route-tab-index', thisGroupIndex.toString());
+    }
+
+    if (previousGroupStyle !== null && previousGroupStyle !== undefined) {
+      if (previousGroupStyle.width !== thisGroupStyle.width) {
+        updateWidth(thisTabElement, thisGroupStyle);
+      }
+
+      if (previousGroupStyle.offset !== thisGroupStyle.offset) {
+        updateOffset(thisTabElement, thisGroupStyle);
+      }
+    }
+
+    if (previousGroupName !== null && previousGroupName !== undefined) {
+      if (previousGroupName !== thisGroupName) {
+        updateName(thisTabElement, thisGroupName);
+      }
+    } else {
+      updateIndex(thisTabElement, thisGroupIndex);
+    }
+  }
+
+  function updateTabsTray(width: number): void {
+    RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${width}px`);
+  }
+
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -1005,13 +1050,13 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   const groupQuantity = integration.groupQuantity;
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
+  const groupNames = integration.groupNames;
 
   routeSliding_groupQuantity = groupQuantity;
   routeSliding_fieldWidth = FieldWidth;
   routeSliding_fieldHeight = FieldHeight;
 
   let cumulativeOffset = 0;
-  const groupNames = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, '未知'].map((e) => `往${e}`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const width = getTextWidth(groupNames[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
@@ -1025,14 +1070,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     width: 0,
     offset: cumulativeOffset
   };
-
-  if (!routeSliding_sliding) {
-    const initialGroupKey = `g_${routeSliding_initialIndex}`;
-    const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
-    const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
-    const tabLineWidth = initialGroupStyle.width - tabPadding;
-    updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
-  }
 
   if (previousSkeletonScreen !== skeletonScreen) {
     RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
@@ -1115,15 +1152,21 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
 
     const thisTabElement = TabElements[i];
-    thisTabElement.innerHTML = [integration.RouteEndPoints.RouteDestination, integration.RouteEndPoints.RouteDeparture, ''].map((e) => `<span>往${e}</span>`)[i];
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[groupKey].offset}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
+    const thisGroupStyle = routeSliding_groupStyles[groupKey];
+    const thisGroupName = groupNames[i];
+    let previousGroupStyle = null;
+    if (hasOwnProperty(routeSliding_previousGroupStyles, groupKey)) {
+      previousGroupStyle = routeSliding_previousGroupStyles[groupKey];
+    }
+    let previousGroupName = null;
+    if (hasOwnProperty(previousIntegration, 'groupNames')) {
+      previousGroupName = previousIntegration.groupNames[i];
+    }
+    updateTab(thisTabElement, thisGroupStyle, thisGroupName, i, previousGroupStyle, previousGroupName);
 
     const thisGroupElement = RouteGroupElements[i];
     if (skeletonScreen) {
@@ -1155,6 +1198,23 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
+  if (hasOwnProperty(routeSliding_previousGroupStyles, `g_${groupQuantity}`)) {
+    if (routeSliding_previousGroupStyles[`g_${groupQuantity}`].offset !== cumulativeOffset) {
+      updateTabsTray(cumulativeOffset);
+    }
+  } else {
+    updateTabsTray(cumulativeOffset);
+  }
+
+  if (!routeSliding_sliding) {
+    const initialGroupKey = `g_${routeSliding_initialIndex}`;
+    const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
+    const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
+    const tabLineWidth = initialGroupStyle.width - tabPadding;
+    updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
+  }
+
+  routeSliding_previousGroupStyles = routeSliding_groupStyles;
   previousIntegration = integration;
   previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
