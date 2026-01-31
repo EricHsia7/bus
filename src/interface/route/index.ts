@@ -1115,6 +1115,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   const TabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
 

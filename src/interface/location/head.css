@@ -22,6 +22,12 @@
   initial-value: 0px;
 }
 
+@property --b-cssvar-location-tabs-tray-width {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 @property --b-cssvar-location-percentage {
   syntax: '<number>';
   inherits: true;
@@ -122,14 +128,13 @@
 }
 
 .css_location_field .css_location_head .css_location_group_tabs .css_location_group_tabs_tray {
-  white-space: nowrap;
-  word-break: keep-all;
   position: absolute;
   top: 0px;
   left: 0px;
-  width: auto;
+  width: var(--b-cssvar-location-tabs-tray-width);
   height: 40px;
-  display: inline-block;
+  overflow: clip;
+  display: block;
   transform: translateX(var(--b-cssvar-location-tabs-tray-offset));
   contain: layout;
 }

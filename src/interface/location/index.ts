@@ -928,6 +928,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   const tabElements = elementQuerySelectorAll(LocationGroupTabsTrayElement, '.css_location_group_tab');
   const groupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
+  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-width', `${cumulativeOffset}px`);
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
     const thisTabElement = tabElements[i];

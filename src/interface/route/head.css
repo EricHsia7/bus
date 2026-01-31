@@ -1,7 +1,13 @@
-@property --b-cssvar-route-percentage {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
+@property --b-cssvar-route-tab-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-route-tab-width {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 30px;
 }
 
 @property --b-cssvar-route-tab-index {
@@ -16,16 +22,22 @@
   initial-value: 1;
 }
 
-@property --b-cssvar-route-tab-offset {
+@property --b-cssvar-route-tabs-tray-offset {
   syntax: '<length>';
   inherits: false;
   initial-value: 0px;
 }
 
-@property --b-cssvar-route-tab-width {
+@property --b-cssvar-route-tabs-tray-width {
   syntax: '<length>';
   inherits: false;
-  initial-value: 30px;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-route-percentage {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
 }
 
 @property --b-cssvar-route-update-timer-offset-ratio {
@@ -123,14 +135,13 @@
 }
 
 .css_route_field .css_route_head .css_route_group_tabs .css_route_group_tabs_tray {
-  white-space: nowrap;
-  word-break: keep-all;
   position: absolute;
   top: 0px;
   left: 0px;
-  width: auto;
+  width: var(--b-cssvar-route-tabs-tray-width);
   height: 40px;
-  display: inline-block;
+  display: block;
+  overflow: clip;
   transform: translateX(var(--b-cssvar-route-tabs-tray-offset));
   contain: layout;
 }
