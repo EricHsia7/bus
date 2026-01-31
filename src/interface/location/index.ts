@@ -529,29 +529,28 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
       if (!skeletonScreen) {
         if (animation) {
-        /*
-        const thisElementRect = thisElement.getBoundingClientRect();
-        const top = thisElementRect.top;
-        const left = thisElementRect.left;
-        const bottom = thisElementRect.bottom;
-        const right = thisElementRect.right;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-        */
-          currentSlideElement.addEventListener(
-            'animationend',
-            function () {
-              currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-              currentSlideElement.innerText = thisItem.status.text;
-              currentSlideElement.classList.remove('css_slide_fade_out');
-              nextSlideElement.setAttribute('displayed', 'false');
-            },
-            { once: true }
-          );
-          nextSlideElement.setAttribute('displayed', 'true');
-          currentSlideElement.classList.add('css_slide_fade_out');
-          //}
+          const thisElementRect = thisElement.getBoundingClientRect();
+          const top = thisElementRect.top;
+          const left = thisElementRect.left;
+          const bottom = thisElementRect.bottom;
+          const right = thisElementRect.right;
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
+          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+            currentSlideElement.addEventListener(
+              'animationend',
+              function () {
+                currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+                currentSlideElement.innerText = thisItem.status.text;
+                currentSlideElement.classList.remove('css_slide_fade_out');
+                nextSlideElement.setAttribute('displayed', 'false');
+              },
+              { once: true }
+            );
+            nextSlideElement.setAttribute('displayed', 'true');
+            currentSlideElement.classList.add('css_slide_fade_out');
+            return;
+          }
         }
       }
 
