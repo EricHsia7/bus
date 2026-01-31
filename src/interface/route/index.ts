@@ -36,7 +36,6 @@ let previousSkeletonScreen: boolean = false;
 let routeSliding_initialIndex: number = 0;
 let routeSliding_targetIndex: number = 0;
 let routeSliding_groupQuantity: number = 0;
-let routeSliding_previousGroupStyles: GroupStyles = {};
 let routeSliding_groupStyles: GroupStyles = {};
 let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
@@ -1002,7 +1001,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  function updateTab(thisTabElement: HTMLElement, thisGroupStyle: GroupStyle, thisGroupName: string, thisGroupIndex: number, previousGroupStyle: GroupStyle | null, previousGroupName: string | null): void {
+  function updateTab(thisTabElement: HTMLElement, thisGroupStyle: GroupStyle, thisGroupName: string, thisGroupIndex: number, previousGroupName: string | null): void {
     function updateName(thisTabElement: HTMLElement, thisGroupName: string): void {
       const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
       thisTabSpanElement.innerText = thisGroupName;
@@ -1020,21 +1019,15 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       thisTabElement.style.setProperty('--b-cssvar-route-tab-index', thisGroupIndex.toString());
     }
 
-    if (previousGroupStyle === null || previousGroupName === null) {
+    if (previousGroupName === null) {
       updateName(thisTabElement, thisGroupName);
       updateWidth(thisTabElement, thisGroupStyle);
       updateOffset(thisTabElement, thisGroupStyle);
       updateIndex(thisTabElement, thisGroupIndex);
     } else {
-      if (previousGroupStyle.width !== thisGroupStyle.width) {
-        updateWidth(thisTabElement, thisGroupStyle);
-      }
-
-      if (previousGroupStyle.offset !== thisGroupStyle.offset) {
-        updateOffset(thisTabElement, thisGroupStyle);
-      }
-
       if (previousGroupName !== thisGroupName) {
+        updateWidth(thisTabElement, thisGroupStyle);
+        updateOffset(thisTabElement, thisGroupStyle);
         updateName(thisTabElement, thisGroupName);
       }
     }
@@ -1159,15 +1152,12 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     const thisTabElement = TabElements[i];
     const thisGroupStyle = routeSliding_groupStyles[groupKey];
     const thisGroupName = groupNames[i];
-    let previousGroupStyle = null;
-    if (hasOwnProperty(routeSliding_previousGroupStyles, groupKey)) {
-      previousGroupStyle = routeSliding_previousGroupStyles[groupKey];
-    }
-    let previousGroupName = null;
     if (hasOwnProperty(previousIntegration, 'groupNames')) {
-      previousGroupName = previousIntegration.groupNames[i];
+      const previousGroupName = previousIntegration.groupNames[i];
+      updateTab(thisTabElement, thisGroupStyle, thisGroupName, i, previousGroupName);
+    } else {
+      updateTab(thisTabElement, thisGroupStyle, thisGroupName, i, null);
     }
-    updateTab(thisTabElement, thisGroupStyle, thisGroupName, i, previousGroupStyle, previousGroupName);
 
     const thisGroupElement = RouteGroupElements[i];
     if (skeletonScreen) {
@@ -1199,13 +1189,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  if (hasOwnProperty(routeSliding_previousGroupStyles, `g_${groupQuantity}`)) {
-    if (routeSliding_previousGroupStyles[`g_${groupQuantity}`].offset !== cumulativeOffset) {
-      updateTabsTray(cumulativeOffset);
-    }
-  } else {
-    updateTabsTray(cumulativeOffset);
-  }
+  updateTabsTray(cumulativeOffset);
 
   if (!routeSliding_sliding) {
     const initialGroupKey = `g_${routeSliding_initialIndex}`;
@@ -1215,7 +1199,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     updateRouteCSS(routeSliding_groupQuantity, offset, tabLineWidth, routeSliding_initialIndex);
   }
 
-  routeSliding_previousGroupStyles = routeSliding_groupStyles;
   previousIntegration = integration;
   previousAnimation = animation;
   previousSkeletonScreen = skeletonScreen;
