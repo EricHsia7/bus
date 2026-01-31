@@ -408,6 +408,8 @@ function generateElementOfGroup(): HTMLElement {
 function generateElementOfTab(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('css_route_group_tab');
+  const span = document.createElement('span');
+  element.appendChild(span);
   return element;
 }
 
