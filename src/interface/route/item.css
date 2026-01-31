@@ -711,12 +711,6 @@
   background-color: rgba(var(--b-cssvar-ededf2-inflected-to-user-position-r), var(--b-cssvar-ededf2-inflected-to-user-position-g), var(--b-cssvar-ededf2-inflected-to-user-position-b), var(--b-cssvar-ededf2-opacity-a));
 }
 
-/* animation: true && stretched: true && skeleton-screen: false && displayed: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_route_group_item_body .css_route_group_item_buses[displayed="true"] .css_route_group_item_bus {
-  transition: background-color var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
-}
-
 /* on this route: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
   background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-e));
