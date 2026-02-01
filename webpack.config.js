@@ -164,14 +164,14 @@ module.exports = (env, argv) => {
         }
       },
       concatenateModules: true,
-      chunkIds: 'total-size',
-      mangleExports: 'size'
+      chunkIds: 'size',
+      mangleExports: 'size',
+      avoidEntryIife: true
     },
     devtool: 'source-map',
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
       hot: false
     }
-    // Add any additional plugins and configurations as needed
   };
 };
