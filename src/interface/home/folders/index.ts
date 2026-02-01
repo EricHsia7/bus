@@ -498,7 +498,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         folderElements.push(newFolderElement);
       }
       HomeFoldersElement.append(fragment);
-    } else {
+    } else if (difference > 0) {
       for (let p = currentFolderElementsLength - 1, q = currentFolderElementsLength - difference - 1; p > q; p--) {
         folderElements[p].remove();
         folderElements.splice(p, 1);
@@ -524,7 +524,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           thisFolderContentElement.appendChild(newItemElement);
           thisFolderContentItemElements.push(newItemElement);
         }
-      } else {
+      } else if (difference > 0) {
         for (let p = currentFolderContentItemElementsLength - 1, q = currentFolderContentItemElementsLength - difference - 1; p > q; p--) {
           thisFolderContentItemElements[p].remove();
           thisFolderContentItemElements.splice(p, 1);

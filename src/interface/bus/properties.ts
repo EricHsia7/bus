@@ -95,7 +95,7 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
         fragment.appendChild(newPropertyElement);
       }
       BusPropertiesGroupBodyElement.append(fragment);
-    } else {
+    } else if (difference > 0) {
       for (let p = currentPropertyElementsLength - 1, q = currentPropertyElementsLength - difference - 1; p > q; p--) {
         currentPropertyElements[p].remove();
       }

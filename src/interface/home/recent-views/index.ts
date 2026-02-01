@@ -245,7 +245,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         itemElements.push(newRecentViewItemElement);
       }
       RecentViewsContentElement.append(fragment);
-    } else {
+    } else if (difference > 0) {
       for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);

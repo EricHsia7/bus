@@ -709,7 +709,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           busElements.push(newBusElement);
         }
         thisBusesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
           busElements[p].remove();
           busElements.splice(p, 1);
@@ -749,7 +749,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           overlappingRouteElements.push(newOverlappingRouteElement);
         }
         thisOverlappingRoutesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentOverlappingRouteElementsLength - 1, q = currentOverlappingRouteElementsLength - difference - 1; p > q; p--) {
           overlappingRouteElements[p].remove();
           overlappingRouteElements.splice(p, 1);
@@ -802,7 +802,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           busArrivalTimeElements.push(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentBusArrivalTimeElementsLength - 1, q = currentBusArrivalTimeElementsLength - difference - 1; p > q; p--) {
           busArrivalTimeElements[p].remove();
           busArrivalTimeElements.splice(p, 1);
@@ -838,7 +838,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           nearbyLocationElements.push(newOverlappingRouteElement);
         }
         thisNearbyLocationsElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentNearbyLocationElementsLength - 1, q = currentNearbyLocationElementsLength - difference - 1; p > q; p--) {
           nearbyLocationElements[p].remove();
           nearbyLocationElements.splice(p, 1);
@@ -1075,7 +1075,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
-    } else {
+    } else if (difference > 0) {
       for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
         groupElements[p].remove();
         groupElements.splice(p, 1);
@@ -1087,37 +1087,39 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
+
     const thisGroupElement = groupElements[i];
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
-    const currentGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
-    const currentGroupItemElementsLength = currentGroupItemElements.length;
-    if (itemQuantity[groupKey] !== currentGroupItemElementsLength) {
-      const difference = currentGroupItemElementsLength - itemQuantity[groupKey];
+
+    const itemElements = Array.from(elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item'));
+    const threadBoxElements = Array.from(elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box'));
+
+    const currentItemElementsLength = itemElements.length;
+    if (itemQuantity[groupKey] !== currentItemElementsLength) {
+      const difference = currentItemElementsLength - itemQuantity[groupKey];
       if (difference < 0) {
         const newItemsFragment = new DocumentFragment();
-        const newThreadsFragment = new DocumentFragment();
+        const newThreadBoxesFragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newThreadBoxElement = generateElementOfThreadBox();
           const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
-          newThreadsFragment.appendChild(newThreadBoxElement);
+          itemElements.push(newItemElement);
+          newThreadBoxesFragment.appendChild(newThreadBoxElement);
+          threadBoxElements.push(newThreadBoxElement);
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
-        thisGroupThreadsTrackElement.append(newThreadsFragment);
-      } else {
-        const currentGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
-        for (let p = currentGroupItemElementsLength - 1, q = currentGroupItemElementsLength - difference - 1; p > q; p--) {
-          currentGroupItemElements[p].remove();
-          currentGroupThreadElements[p].remove();
+        thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
+      } else if (difference > 0) {
+        for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+          itemElements[p].remove();
+          itemElements.splice(p, 1);
+          threadBoxElements[p].remove();
+          threadBoxElements.splice(p, 1);
         }
       }
     }
-  }
-
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
-  for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
 
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
@@ -1126,18 +1128,13 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
-    const thisGroupElement = groupElements[i];
     if (skeletonScreen) {
       thisGroupElement.scrollTop = 0;
     }
 
-    const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
-    const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
-    const thisGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
-    const thisGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = thisGroupItemElements[j];
-      const thisThreadBoxElement = thisGroupThreadElements[j];
+      const thisItemElement = itemElements[j];
+      const thisThreadBoxElement = threadBoxElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (hasOwnProperty(previousIntegration, 'groupedItems')) {
         if (hasOwnProperty(previousIntegration.groupedItems, groupKey)) {
@@ -1155,6 +1152,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       }
     }
   }
+
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
 
   previousIntegration = integration;
   previousAnimation = animation;

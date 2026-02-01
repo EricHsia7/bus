@@ -625,7 +625,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           busElements.push(newBusElement);
         }
         thisBusesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
           busElements[p].remove();
           busElements.splice(p, 1);
@@ -666,7 +666,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           busArrivalTimeElements.push(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
           busArrivalTimeElements[p].remove();
           busArrivalTimeElements.splice(p, 1);
@@ -881,7 +881,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       }
       LocationGroupsElement.append(groupsFragment);
       LocationGroupTabsTrayElement.append(tabsFragment);
-    } else {
+    } else if (difference > 0) {
       for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
         groupElements[p].remove();
         groupElements.splice(p, 1);
@@ -913,7 +913,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           propertyElements.push(newPropertyElement);
         }
         thisLocationGroupDetailsBodyElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentGroupPropertyElementsLength - 1, q = currentGroupPropertyElementsLength - difference - 1; p > q; p--) {
           propertyElements[p].remove();
           propertyElements.splice(p, 1);
@@ -935,7 +935,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           itemElements.push(newItemElement);
         }
         thisLocationGroupItemsElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[p].remove();
           itemElements.splice(p, 1);
@@ -945,7 +945,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
-    
+
     thisTabSpanElement.innerText = groups[groupKey].name;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-offset', `${locationSliding_groupStyles[groupKey].offset}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[groupKey].width}px`);
