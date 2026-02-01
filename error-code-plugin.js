@@ -74,11 +74,17 @@ class ErrorCodePlugin {
   }
 
   isNewError(node) {
-    return /* node.type === 'ThrowStatement' && */ node.argument.type === 'NewExpression' && node.argument.callee.name === 'Error';
+    if (node?.argument) {
+      return /* node.type === 'ThrowStatement' && */ node.argument?.type === 'NewExpression' && node.argument.callee.name === 'Error';
+    }
+    return false;
   }
 
   isNewTypeError(node) {
-    return /* node.type === 'ThrowStatement' && */ node.argument.type === 'NewExpression' && node.argument.callee.name === 'TypeError';
+    if (node?.argument) {
+      return /* node.type === 'ThrowStatement' && */ node.argument.type === 'NewExpression' && node.argument.callee.name === 'TypeError';
+    }
+    return false;
   }
 
   walk(node, callback) {
