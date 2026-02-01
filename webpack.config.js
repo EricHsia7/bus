@@ -156,15 +156,16 @@ module.exports = (env, argv) => {
         minSize: 25000,
         maxSize: 51200,
         cacheGroups: {
-          // Define your cache groups here with specific rules
           default: {
             minChunks: 1,
             priority: -20,
             reuseExistingChunk: true
           }
-          // Add more cache groups if needed
         }
-      }
+      },
+      concatenateModules: true,
+      chunkIds: 'total-size',
+      mangleExports: 'size'
     },
     devtool: 'source-map',
     devServer: {
