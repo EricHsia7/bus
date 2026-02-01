@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2024",
     "module": "es2022",
     "outDir": "./dist",
     "strict": true,
