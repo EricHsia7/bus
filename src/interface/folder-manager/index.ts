@@ -1,5 +1,5 @@
 import { FolderWithContentLength, listFoldersWithContentLength } from '../../data/folder/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
@@ -10,29 +10,29 @@ const FolderManagerFolderListElement = elementQuerySelector(FolderManagerBodyEle
 
 function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Main container
-  const folderItemElement = document.createElement('div');
+  const folderItemElement = documentCreateDivElement();
   folderItemElement.classList.add('css_folder_manager_folder_item');
   folderItemElement.onclick = () => {
     openFolderEditor(item.id);
   };
 
   // Icon
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_folder_manager_folder_item_icon');
   iconElement.appendChild(getIconElement(item.icon));
 
   // Name
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_folder_manager_folder_item_name');
   nameElement.innerText = item.name;
 
   // Status
-  const statusElement = document.createElement('div');
+  const statusElement = documentCreateDivElement();
   statusElement.classList.add('css_folder_manager_folder_item_status');
   statusElement.innerText = String(item.contentLength);
 
   // Arrow
-  const arrowElement = document.createElement('div');
+  const arrowElement = documentCreateDivElement();
   arrowElement.classList.add('css_folder_manager_folder_item_arrow');
   arrowElement.appendChild(getIconElement('arrow_forward_ios'));
 

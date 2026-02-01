@@ -1,7 +1,7 @@
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../../data/apis/loader';
 import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { dataDownloadCompleted } from '../home/index';
@@ -18,7 +18,7 @@ const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
 
 function generateElementOfSymbol(symbol: string): HTMLElement {
-  const element = document.createElement('div');
+  const element = documentCreateDivElement();
   element.classList.add('css_folder_icon_selector_symbol');
   element.onclick = function () {
     selectFolderIcon(symbol, currentTarget);

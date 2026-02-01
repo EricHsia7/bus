@@ -1,5 +1,5 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { getTextBoundingBox } from '../../tools/graphic';
 import { booleanToString, supportTouch } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
@@ -207,13 +207,13 @@ export function resizeSearchInputSVG(): void {
 }
 
 function generateElementOfSearchResultItem(): HTMLElement {
-  const searchResultItemElement = document.createElement('div');
+  const searchResultItemElement = documentCreateDivElement();
   searchResultItemElement.classList.add('css_search_search_result');
 
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_search_search_result_name');
 
-  const typeElement = document.createElement('div');
+  const typeElement = documentCreateDivElement();
   typeElement.classList.add('css_search_search_result_type');
   typeElement.appendChild(getBlankIconElement());
 

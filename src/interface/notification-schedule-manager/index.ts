@@ -3,7 +3,7 @@ import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
@@ -50,35 +50,35 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 
 function generateElementOfItem(): HTMLElement {
   // Main item element
-  const itemElement = document.createElement('div');
+  const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_notification_schedule_manager_item');
 
   // Hours element
-  const hoursElement = document.createElement('div');
+  const hoursElement = documentCreateDivElement();
   hoursElement.classList.add('css_notification_schedule_manager_item_hours');
   itemElement.appendChild(hoursElement);
 
   // Notification schedule container
-  const notificationScheduleElement = document.createElement('div');
+  const notificationScheduleElement = documentCreateDivElement();
   notificationScheduleElement.classList.add('css_notification_schedule_manager_item_notification_schedule');
 
   // Minutes element
-  const minutesElement = document.createElement('div');
+  const minutesElement = documentCreateDivElement();
   minutesElement.classList.add('css_notification_schedule_manager_item_notification_schedule_minutes');
   notificationScheduleElement.appendChild(minutesElement);
 
   // Context element
-  const contextElement = document.createElement('div');
+  const contextElement = documentCreateDivElement();
   contextElement.classList.add('css_notification_schedule_manager_item_notification_schedule_context');
   notificationScheduleElement.appendChild(contextElement);
 
   // Main element
-  const mainElement = document.createElement('div');
+  const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_notification_schedule_manager_item_notification_schedule_main');
   notificationScheduleElement.appendChild(mainElement);
 
   // Cancel button element
-  const cancelElement = document.createElement('div');
+  const cancelElement = documentCreateDivElement();
   cancelElement.classList.add('css_notification_schedule_manager_item_notification_schedule_cancel');
   const iconElement = document.createElement('span');
   iconElement.appendChild(getIconElement('close'));

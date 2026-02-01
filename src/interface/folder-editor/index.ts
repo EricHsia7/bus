@@ -1,5 +1,5 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderIconSelector } from '../folder-icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
@@ -22,7 +22,7 @@ OpenFolderIconSelectorElement.onclick = function () {
 
 function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement {
   // Main container
-  const itemElement = document.createElement('div');
+  const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_folder_editor_folder_item');
   itemElement.setAttribute('type', item.type);
 
@@ -63,26 +63,26 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   }
 
   // Icon element
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_folder_editor_folder_item_icon');
   iconElement.appendChild(getIconElement(icon));
 
   // Context element
-  const contextElement = document.createElement('div');
+  const contextElement = documentCreateDivElement();
   contextElement.classList.add('css_folder_editor_folder_item_context');
   contextElement.innerText = context;
 
   // Main element
-  const mainElement = document.createElement('div');
+  const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_folder_editor_folder_item_main');
   mainElement.innerText = main;
 
   // Capsule element
-  const capsuleElement = document.createElement('div');
+  const capsuleElement = documentCreateDivElement();
   capsuleElement.classList.add('css_folder_editor_folder_item_capsule');
 
   // Sort up control
-  const sortUpElement = document.createElement('div');
+  const sortUpElement = documentCreateDivElement();
   sortUpElement.classList.add('css_folder_editor_folder_item_sort_control_up');
   sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortUpElement.onclick = () => {
@@ -90,7 +90,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   };
 
   // Sort down control
-  const sortDownElement = document.createElement('div');
+  const sortDownElement = documentCreateDivElement();
   sortDownElement.classList.add('css_folder_editor_folder_item_sort_control_down');
   sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortDownElement.onclick = () => {
@@ -98,7 +98,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   };
 
   // Delete control
-  const deleteElement = document.createElement('div');
+  const deleteElement = documentCreateDivElement();
   deleteElement.classList.add('css_folder_editor_folder_item_delete');
   deleteElement.appendChild(getIconElement('delete'));
   deleteElement.onclick = () => {
@@ -106,9 +106,9 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   };
 
   // Capsule separators
-  const separator1Element = document.createElement('div');
+  const separator1Element = documentCreateDivElement();
   separator1Element.classList.add('css_folder_editor_folder_item_capsule_separator');
-  const separator2Element = document.createElement('div');
+  const separator2Element = documentCreateDivElement();
   separator2Element.classList.add('css_folder_editor_folder_item_capsule_separator');
 
   // Assemble capsule

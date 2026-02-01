@@ -1,7 +1,7 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
@@ -33,24 +33,24 @@ let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
 
 function generateElementOfRecentViewItem(): HTMLElement {
   // Main container
-  const recentViewsItemElement = document.createElement('div');
+  const recentViewsItemElement = documentCreateDivElement();
   recentViewsItemElement.classList.add('css_home_recent_views_item');
 
   // Head
-  const headElement = document.createElement('div');
+  const headElement = documentCreateDivElement();
   headElement.classList.add('css_home_recent_views_item_head');
 
   // Icon
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_home_recent_views_item_icon');
   iconElement.appendChild(getBlankIconElement());
 
   // Title
-  const titleElement = document.createElement('div');
+  const titleElement = documentCreateDivElement();
   titleElement.classList.add('css_home_recent_views_item_title');
 
   // Time
-  const timeElement = document.createElement('div');
+  const timeElement = documentCreateDivElement();
   timeElement.classList.add('css_home_recent_views_item_time');
 
   // Assemble head
@@ -59,7 +59,7 @@ function generateElementOfRecentViewItem(): HTMLElement {
   headElement.appendChild(timeElement);
 
   // Name
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_home_recent_views_item_name');
 
   // Assemble item
