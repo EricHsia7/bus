@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash].css',
+        filename: '[contenthash:10].css',
         runtime: false
       }),
       new MangleCssClassPlugin({
@@ -92,7 +92,7 @@ module.exports = (env, argv) => {
     mode: 'production', // Set the mode to 'production' or 'development'
     entry: './src/index.ts', // Entry point of your application
     output: {
-      filename: '[contenthash].js', // Output bundle filename
+      filename: '[contenthash:10].js', // Output bundle filename
       hashFunction: Hasher,
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',
