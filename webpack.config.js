@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
   return {
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[contenthash:10].css',
+        filename: '[contenthash].css',
         runtime: false
       }),
       new MangleCssClassPlugin({
@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
         skipWaiting: true,
-        exclude: [/\.map$/, /error\.map\.json$/, /LICENSE\.txt$/],
+        exclude: [/\.map$/, /\.erm$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
         runtimeCaching: [
@@ -92,7 +92,7 @@ module.exports = (env, argv) => {
     mode: 'production', // Set the mode to 'production' or 'development'
     entry: './src/index.ts', // Entry point of your application
     output: {
-      filename: '[contenthash:10].js', // Output bundle filename
+      filename: '[contenthash].js', // Output bundle filename
       hashFunction: Hasher,
       path: path.resolve(__dirname, 'dist'), // Output directory for bundled files
       publicPath: './',

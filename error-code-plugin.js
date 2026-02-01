@@ -95,11 +95,11 @@ class ErrorCodePlugin {
   }
 
   saveManifest(compilation, pathname) {
-    const json = JSON.stringify(Object.fromEntries(this.mapping), null, 2);
+    const json = JSON.stringify(Object.fromEntries(this.mapping));
     const extension = path.extname(pathname);
     const base = path.basename(pathname, extension);
     const dir = path.dirname(pathname);
-    const fullPath = path.join(dir, `${base}.error.map.json`);
+    const fullPath = path.join(dir, `${base}.erm`);
     compilation.emitAsset(fullPath, new sources.RawSource(json));
   }
 }
