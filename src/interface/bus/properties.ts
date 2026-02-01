@@ -1,6 +1,6 @@
 import { integratedBus } from '../../data/bus/index';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDIVElement, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { compareThings } from '../../tools/index';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { BusPropertiesGroupBodyElement } from './index';
@@ -10,14 +10,14 @@ let previousSkeletonScreen: boolean = false;
 let previousAnimation: boolean = false;
 
 function generateElementOfBusProperty(): HTMLElement {
-  const element = document.createElement('div');
+  const element = documentCreateDIVElement();
   element.classList.add('css_bus_property');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_bus_property_icon');
   iconElement.appendChild(getBlankIconElement());
 
-  const valueElement = document.createElement('div');
+  const valueElement = documentCreateDIVElement();
   valueElement.classList.add('css_bus_property_value');
 
   element.appendChild(iconElement);

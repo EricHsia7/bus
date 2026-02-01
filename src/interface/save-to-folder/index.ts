@@ -1,5 +1,5 @@
 import { Folder, FolderContent, isFolderContentSaved, listFolders, saveLocation, saveRoute, saveStop } from '../../data/folder/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
@@ -13,18 +13,18 @@ const successfulSaveMessage = '已儲存至資料夾';
 const failedSaveMessage = '無法儲存';
 
 function generateElementOfItem(item: Folder, type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): HTMLElement {
-  const itemElement = document.createElement('div');
+  const itemElement = documentCreateDIVElement();
   itemElement.classList.add('css_save_to_folder_list_item');
 
   // Icon element
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_save_to_folder_item_icon');
   const iconSpanElement = document.createElement('span');
   iconSpanElement.appendChild(getIconElement(item.icon));
   iconElement.appendChild(iconSpanElement);
 
   // Name element
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDIVElement();
   nameElement.classList.add('css_save_to_folder_item_name');
   nameElement.innerText = item.name;
 

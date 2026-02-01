@@ -1,5 +1,5 @@
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDIVElement, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings } from '../../../tools/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { PropertiesGroupBodyElement, PropertiesGroupElement } from './index';
@@ -9,15 +9,15 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 function generateElementOfProperty(): HTMLElement {
-  const propertyElement = document.createElement('div');
+  const propertyElement = documentCreateDIVElement();
   propertyElement.classList.add('css_route_details_property');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_route_details_property_icon');
   iconElement.appendChild(getBlankIconElement());
   propertyElement.appendChild(iconElement);
 
-  const valueElement = document.createElement('div');
+  const valueElement = documentCreateDIVElement();
   valueElement.classList.add('css_route_details_property_value');
   propertyElement.appendChild(valueElement);
 

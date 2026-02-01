@@ -1,5 +1,5 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
@@ -10,20 +10,20 @@ const ListElement = elementQuerySelector(PersonalScheduleManagerBodyElement, '.c
 
 function generateElementOfItem(item: PersonalSchedule): HTMLElement {
   // Main item element
-  const itemElement = document.createElement('div');
+  const itemElement = documentCreateDIVElement();
   itemElement.classList.add('css_personal_schedule_manager_item');
   itemElement.onclick = function () {
     openPersonalScheduleEditor(item.id);
   };
 
   // Name element
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDIVElement();
   nameElement.classList.add('css_personal_schedule_manager_item_name');
   nameElement.innerText = item.name;
   itemElement.appendChild(nameElement);
 
   // Arrow element
-  const arrowElement = document.createElement('div');
+  const arrowElement = documentCreateDIVElement();
   arrowElement.classList.add('css_personal_schedule_manager_item_arrow');
   const iconElement = document.createElement('span');
   iconElement.appendChild(getIconElement('arrow_forward_ios'));

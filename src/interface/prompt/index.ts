@@ -1,5 +1,5 @@
 import { getSettingOptionValue } from '../../data/settings/index';
-import { documentQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDIVElement, documentQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
@@ -19,23 +19,23 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
-  const promptElement = document.createElement('div');
+  const promptElement = documentCreateDIVElement();
   promptElement.classList.add('css_prompt');
   promptElement.setAttribute('animation', booleanToString(playing_animation));
 
-  const promptIconElement = document.createElement('div');
+  const promptIconElement = documentCreateDIVElement();
   promptIconElement.classList.add('css_prompt_icon');
   promptIconElement.appendChild(getIconElement(icon));
   promptElement.appendChild(promptIconElement);
 
-  const promptMessageElement = document.createElement('div');
+  const promptMessageElement = documentCreateDIVElement();
   promptMessageElement.classList.add('css_prompt_message');
   promptMessageElement.innerText = message;
   promptElement.appendChild(promptMessageElement);
 
   if (typeof button === 'object' && button !== null && button !== undefined) {
     if (typeof button?.action === 'function') {
-      const promptButtonElement = document.createElement('div');
+      const promptButtonElement = documentCreateDIVElement();
       promptButtonElement.classList.add('css_prompt_button');
       promptButtonElement.innerText = button.text;
       promptButtonElement.addEventListener(

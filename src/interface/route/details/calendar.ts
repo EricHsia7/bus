@@ -1,6 +1,6 @@
 import { Calendar, CalendarDay, CalendarEvent, CalendarEventGroup } from '../../../data/route/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDIVElement, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { drawRoundedRect } from '../../../tools/graphic';
 import { booleanToString } from '../../../tools/index';
 import { getCSSVariableValue } from '../../../tools/style';
@@ -40,7 +40,7 @@ function resizeRouteDetailsCalendarCanvas(canvas: HTMLCanvasElement): void {
 }
 
 function generateElementOfDay(): HTMLElement {
-  const element = document.createElement('div');
+  const element = documentCreateDIVElement();
   element.classList.add('css_route_details_calendar_day');
 
   return element;
@@ -48,7 +48,7 @@ function generateElementOfDay(): HTMLElement {
 
 function generateElementOfEventGroup(): HTMLElement {
   // Main event group element
-  const eventGroupElement = document.createElement('div');
+  const eventGroupElement = documentCreateDIVElement();
   eventGroupElement.classList.add('css_route_details_calendar_event_group');
 
   // Canvas element

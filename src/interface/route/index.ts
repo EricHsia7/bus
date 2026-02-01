@@ -5,7 +5,7 @@ import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
+import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
@@ -142,7 +142,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 
 function generateElementOfThreadBox(): HTMLElement {
   // Main thread box element
-  const threadBoxElement = document.createElement('div');
+  const threadBoxElement = documentCreateDIVElement();
   threadBoxElement.classList.add('css_route_group_thread_box');
   threadBoxElement.setAttribute('stretched', 'false');
   threadBoxElement.setAttribute('stretching', 'false');
@@ -150,28 +150,28 @@ function generateElementOfThreadBox(): HTMLElement {
   threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
 
   // Thread container
-  const threadElement = document.createElement('div');
+  const threadElement = documentCreateDIVElement();
   threadElement.classList.add('css_route_group_thread');
 
   // Thread progress
-  const threadProgressElement = document.createElement('div');
+  const threadProgressElement = documentCreateDIVElement();
   threadProgressElement.classList.add('css_route_group_thread_progress');
   threadProgressElement.setAttribute('displayed', 'false');
   threadElement.appendChild(threadProgressElement);
 
   // Thread status container
-  const threadStatusElement = document.createElement('div');
+  const threadStatusElement = documentCreateDIVElement();
   threadStatusElement.classList.add('css_route_group_thread_status');
 
   // Next slide
-  const nextSlideElement = document.createElement('div');
+  const nextSlideElement = documentCreateDIVElement();
   nextSlideElement.classList.add('css_next_slide');
   nextSlideElement.setAttribute('code', '0');
   nextSlideElement.setAttribute('displayed', 'false');
   threadStatusElement.appendChild(nextSlideElement);
 
   // Current slide
-  const currentSlideElement = document.createElement('div');
+  const currentSlideElement = documentCreateDIVElement();
   currentSlideElement.classList.add('css_current_slide');
   currentSlideElement.setAttribute('code', '0');
   currentSlideElement.setAttribute('displayed', 'true');
@@ -186,7 +186,7 @@ function generateElementOfThreadBox(): HTMLElement {
 
 function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   // Main item element
-  const itemElement = document.createElement('div');
+  const itemElement = documentCreateDIVElement();
   itemElement.classList.add('css_route_group_item');
   itemElement.setAttribute('stretched', 'false');
   itemElement.setAttribute('stretching', 'false');
@@ -194,29 +194,29 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   itemElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
 
   // Head
-  const headElement = document.createElement('div');
+  const headElement = documentCreateDIVElement();
   headElement.classList.add('css_route_group_item_head');
 
   // Name
-  const nameElement = document.createElement('div');
+  const nameElement = documentCreateDIVElement();
   nameElement.classList.add('css_route_group_item_name');
   headElement.appendChild(nameElement);
 
   // Capsule
-  const capsuleElement = document.createElement('div');
+  const capsuleElement = documentCreateDIVElement();
   capsuleElement.classList.add('css_route_group_item_capsule');
 
   // Status
-  const statusElement = document.createElement('div');
+  const statusElement = documentCreateDIVElement();
   statusElement.classList.add('css_route_group_item_status');
 
-  const nextSlideElement = document.createElement('div');
+  const nextSlideElement = documentCreateDIVElement();
   nextSlideElement.classList.add('css_next_slide');
   nextSlideElement.setAttribute('code', '0');
   nextSlideElement.setAttribute('displayed', 'false');
   statusElement.appendChild(nextSlideElement);
 
-  const currentSlideElement = document.createElement('div');
+  const currentSlideElement = documentCreateDIVElement();
   currentSlideElement.classList.add('css_current_slide');
   currentSlideElement.setAttribute('code', '0');
   currentSlideElement.setAttribute('displayed', 'true');
@@ -225,7 +225,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   capsuleElement.appendChild(statusElement);
 
   // Stretch button
-  const stretchElement = document.createElement('div');
+  const stretchElement = documentCreateDIVElement();
   stretchElement.classList.add('css_route_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = () => {
@@ -234,23 +234,23 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   capsuleElement.appendChild(stretchElement);
 
   // Capsule separator
-  const capsuleSeparatorElement = document.createElement('div');
+  const capsuleSeparatorElement = documentCreateDIVElement();
   capsuleSeparatorElement.classList.add('css_route_group_item_capsule_separator');
   capsuleElement.appendChild(capsuleSeparatorElement);
 
   headElement.appendChild(capsuleElement);
 
   // Body
-  const bodyElement = document.createElement('div');
+  const bodyElement = documentCreateDIVElement();
   bodyElement.classList.add('css_route_group_item_body');
   bodyElement.setAttribute('displayed', 'false');
 
   // Buttons
-  const buttonsElement = document.createElement('div');
+  const buttonsElement = documentCreateDIVElement();
   buttonsElement.classList.add('css_route_group_item_buttons');
 
   // Tab: 公車
-  const tabBusElement = document.createElement('div');
+  const tabBusElement = documentCreateDIVElement();
   tabBusElement.classList.add('css_route_group_item_button');
   tabBusElement.setAttribute('highlighted', 'true');
   tabBusElement.setAttribute('type', 'tab');
@@ -259,7 +259,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
     switchRouteBodyTab(itemElement, 0);
   };
 
-  const tabBusIconElement = document.createElement('div');
+  const tabBusIconElement = documentCreateDIVElement();
   tabBusIconElement.classList.add('css_route_group_item_button_icon');
   tabBusIconElement.appendChild(getIconElement('directions_bus'));
   tabBusElement.appendChild(tabBusIconElement);
@@ -267,7 +267,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   buttonsElement.appendChild(tabBusElement);
 
   // Tab: 抵達時間
-  const tabArrivalElement = document.createElement('div');
+  const tabArrivalElement = documentCreateDIVElement();
   tabArrivalElement.classList.add('css_route_group_item_button');
   tabArrivalElement.setAttribute('highlighted', 'false');
   tabArrivalElement.setAttribute('type', 'tab');
@@ -276,7 +276,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
     switchRouteBodyTab(itemElement, 1);
   };
 
-  const tabArrivalIconElement = document.createElement('div');
+  const tabArrivalIconElement = documentCreateDIVElement();
   tabArrivalIconElement.classList.add('css_route_group_item_button_icon');
   tabArrivalIconElement.appendChild(getIconElement('departure_board'));
   tabArrivalElement.appendChild(tabArrivalIconElement);
@@ -284,7 +284,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   buttonsElement.appendChild(tabArrivalElement);
 
   // Tab: 路線
-  const tabRouteElement = document.createElement('div');
+  const tabRouteElement = documentCreateDIVElement();
   tabRouteElement.classList.add('css_route_group_item_button');
   tabRouteElement.setAttribute('highlighted', 'false');
   tabRouteElement.setAttribute('type', 'tab');
@@ -293,7 +293,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
     switchRouteBodyTab(itemElement, 2);
   };
 
-  const tabRouteIconElement = document.createElement('div');
+  const tabRouteIconElement = documentCreateDIVElement();
   tabRouteIconElement.classList.add('css_route_group_item_button_icon');
   tabRouteIconElement.appendChild(getIconElement('route'));
   tabRouteElement.appendChild(tabRouteIconElement);
@@ -301,7 +301,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   buttonsElement.appendChild(tabRouteElement);
 
   // Tab: 地點
-  const tabLocationElement = document.createElement('div');
+  const tabLocationElement = documentCreateDIVElement();
   tabLocationElement.classList.add('css_route_group_item_button');
   tabLocationElement.setAttribute('highlighted', 'false');
   tabLocationElement.setAttribute('type', 'tab');
@@ -310,7 +310,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
     switchRouteBodyTab(itemElement, 3);
   };
 
-  const tabLocationIconElement = document.createElement('div');
+  const tabLocationIconElement = documentCreateDIVElement();
   tabLocationIconElement.classList.add('css_route_group_item_button_icon');
   tabLocationIconElement.appendChild(getIconElement('location_on'));
   tabLocationElement.appendChild(tabLocationIconElement);
@@ -318,12 +318,12 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   buttonsElement.appendChild(tabLocationElement);
 
   // Save to folder
-  const saveToFolderElement = document.createElement('div');
+  const saveToFolderElement = documentCreateDIVElement();
   saveToFolderElement.classList.add('css_route_group_item_button');
   saveToFolderElement.setAttribute('highlighted', 'false');
   saveToFolderElement.setAttribute('type', 'save-to-folder');
 
-  const saveToFolderIconElement = document.createElement('div');
+  const saveToFolderIconElement = documentCreateDIVElement();
   saveToFolderIconElement.classList.add('css_route_group_item_button_icon');
   saveToFolderIconElement.appendChild(getIconElement('folder'));
   saveToFolderElement.appendChild(saveToFolderIconElement);
@@ -331,13 +331,13 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   buttonsElement.appendChild(saveToFolderElement);
 
   // Schedule notification
-  const scheduleNotificationElement = document.createElement('div');
+  const scheduleNotificationElement = documentCreateDIVElement();
   scheduleNotificationElement.classList.add('css_route_group_item_button');
   scheduleNotificationElement.setAttribute('highlighted', 'false');
   scheduleNotificationElement.setAttribute('type', 'schedule-notification');
   scheduleNotificationElement.setAttribute('enabled', 'true');
 
-  const scheduleNotificationIconElement = document.createElement('div');
+  const scheduleNotificationIconElement = documentCreateDIVElement();
   scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
   scheduleNotificationIconElement.appendChild(getIconElement('notifications'));
   scheduleNotificationElement.appendChild(scheduleNotificationIconElement);
@@ -347,25 +347,25 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   bodyElement.appendChild(buttonsElement);
 
   // Buses
-  const busesElement = document.createElement('div');
+  const busesElement = documentCreateDIVElement();
   busesElement.classList.add('css_route_group_item_buses');
   busesElement.setAttribute('displayed', 'true');
   bodyElement.appendChild(busesElement);
 
   // Overlapping routes
-  const overlappingRoutesElement = document.createElement('div');
+  const overlappingRoutesElement = documentCreateDIVElement();
   overlappingRoutesElement.classList.add('css_route_group_item_overlapping_routes');
   overlappingRoutesElement.setAttribute('displayed', 'false');
   bodyElement.appendChild(overlappingRoutesElement);
 
   // Bus arrival times
-  const busArrivalTimesElement = document.createElement('div');
+  const busArrivalTimesElement = documentCreateDIVElement();
   busArrivalTimesElement.classList.add('css_route_group_item_bus_arrival_times');
   busArrivalTimesElement.setAttribute('displayed', 'false');
   bodyElement.appendChild(busArrivalTimesElement);
 
   // Nearby locations
-  const nearbyLocationsElement = document.createElement('div');
+  const nearbyLocationsElement = documentCreateDIVElement();
   nearbyLocationsElement.classList.add('css_route_group_item_nearby_locations');
   nearbyLocationsElement.setAttribute('displayed', 'false');
   bodyElement.appendChild(nearbyLocationsElement);
@@ -378,22 +378,22 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
 }
 
 function generateElementOfGroup(): HTMLElement {
-  const element = document.createElement('div');
+  const element = documentCreateDIVElement();
   element.classList.add('css_route_group');
 
-  const tracksElement = document.createElement('div');
+  const tracksElement = documentCreateDIVElement();
   tracksElement.classList.add('css_route_group_tracks');
 
-  const threadTrackElement = document.createElement('div');
+  const threadTrackElement = documentCreateDIVElement();
   threadTrackElement.classList.add('css_route_group_threads_track');
 
-  const threadBoxSpace = document.createElement('div');
+  const threadBoxSpace = documentCreateDIVElement();
   threadBoxSpace.classList.add('css_route_group_thread_box_space_top');
 
-  const itemsTrackElement = document.createElement('div');
+  const itemsTrackElement = documentCreateDIVElement();
   itemsTrackElement.classList.add('css_route_group_items_track');
 
-  const itemSpaceElement = document.createElement('div');
+  const itemSpaceElement = documentCreateDIVElement();
   itemSpaceElement.classList.add('css_route_group_item_space_top');
 
   itemsTrackElement.appendChild(itemSpaceElement);
@@ -406,7 +406,7 @@ function generateElementOfGroup(): HTMLElement {
 }
 
 function generateElementOfTab(): HTMLElement {
-  const element = document.createElement('div');
+  const element = documentCreateDIVElement();
   element.classList.add('css_route_group_tab');
   const span = document.createElement('span');
   element.appendChild(span);
@@ -414,30 +414,30 @@ function generateElementOfTab(): HTMLElement {
 }
 
 function generateElementOfBus(): HTMLElement {
-  const busElement = document.createElement('div');
+  const busElement = documentCreateDIVElement();
   busElement.classList.add('css_route_group_item_bus');
   busElement.setAttribute('on-this-route', 'false');
 
-  const titleElement = document.createElement('div');
+  const titleElement = documentCreateDIVElement();
   titleElement.classList.add('css_route_group_item_bus_title');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_route_group_item_bus_icon');
   iconElement.appendChild(getIconElement('directions_bus'));
 
-  const carNumberElement = document.createElement('div');
+  const carNumberElement = documentCreateDIVElement();
   carNumberElement.classList.add('css_route_group_item_bus_car_number');
 
-  const attributesElement = document.createElement('div');
+  const attributesElement = documentCreateDIVElement();
   attributesElement.classList.add('css_route_group_item_bus_attributes');
 
-  const routeAttributeElement = document.createElement('div');
+  const routeAttributeElement = documentCreateDIVElement();
   routeAttributeElement.classList.add('css_route_group_item_bus_route');
 
-  const carStatusAttributeElement = document.createElement('div');
+  const carStatusAttributeElement = documentCreateDIVElement();
   carStatusAttributeElement.classList.add('css_route_group_item_bus_car_status');
 
-  const carTypeAttributeElement = document.createElement('div');
+  const carTypeAttributeElement = documentCreateDIVElement();
   carTypeAttributeElement.classList.add('css_route_group_item_bus_car_type');
 
   titleElement.appendChild(iconElement);
@@ -453,31 +453,31 @@ function generateElementOfBus(): HTMLElement {
 }
 
 function generateElementOfOverlappingRoute(): HTMLElement {
-  const overlappingRouteElement = document.createElement('div');
+  const overlappingRouteElement = documentCreateDIVElement();
   overlappingRouteElement.classList.add('css_route_group_item_overlapping_route');
 
-  const titleElement = document.createElement('div');
+  const titleElement = documentCreateDIVElement();
   titleElement.classList.add('css_route_group_item_overlapping_route_title');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_route_group_item_overlapping_route_icon');
   iconElement.appendChild(getIconElement('route'));
 
-  const routeNameElement = document.createElement('div');
+  const routeNameElement = documentCreateDIVElement();
   routeNameElement.classList.add('css_route_group_item_overlapping_route_name');
 
-  const routeEndPoindsElement = document.createElement('div');
+  const routeEndPoindsElement = documentCreateDIVElement();
   routeEndPoindsElement.classList.add('css_route_group_item_overlapping_route_endpoints');
 
-  const actionsElement = document.createElement('div');
+  const actionsElement = documentCreateDIVElement();
   actionsElement.classList.add('css_route_group_item_overlapping_route_actions');
 
-  const viewRouteButtonElement = document.createElement('div');
+  const viewRouteButtonElement = documentCreateDIVElement();
   viewRouteButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
   viewRouteButtonElement.setAttribute('type', 'view-route');
   viewRouteButtonElement.innerText = '查看路線';
 
-  const saveToFolderButtonElement = document.createElement('div');
+  const saveToFolderButtonElement = documentCreateDIVElement();
   saveToFolderButtonElement.classList.add('css_route_group_item_overlapping_route_action_button');
   saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
   saveToFolderButtonElement.setAttribute('highlighted', 'false');
@@ -498,23 +498,23 @@ function generateElementOfOverlappingRoute(): HTMLElement {
 }
 
 function generateElementOfBusArrivalTime(): HTMLElement {
-  const busArrivalTimeElement = document.createElement('div');
+  const busArrivalTimeElement = documentCreateDIVElement();
   busArrivalTimeElement.classList.add('css_route_group_item_bus_arrival_time');
 
-  const titleElement = document.createElement('div');
+  const titleElement = documentCreateDIVElement();
   titleElement.classList.add('css_route_group_item_bus_arrival_time_title');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_route_group_item_bus_arrival_time_icon');
   iconElement.appendChild(getIconElement('calendar_view_day'));
 
-  const personalScheduleNameElement = document.createElement('div');
+  const personalScheduleNameElement = documentCreateDIVElement();
   personalScheduleNameElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_name');
 
-  const personalScheduleTimeElement = document.createElement('div');
+  const personalScheduleTimeElement = documentCreateDIVElement();
   personalScheduleTimeElement.classList.add('css_route_group_item_bus_arrival_time_personal_schedule_time');
 
-  const chartElement = document.createElement('div');
+  const chartElement = documentCreateDIVElement();
   chartElement.classList.add('css_route_group_item_bus_arrival_time_chart');
 
   titleElement.appendChild(iconElement);
@@ -527,31 +527,31 @@ function generateElementOfBusArrivalTime(): HTMLElement {
 }
 
 function generateElementOfNearbyLocation(): HTMLElement {
-  const nearbyLocationElement = document.createElement('div');
+  const nearbyLocationElement = documentCreateDIVElement();
   nearbyLocationElement.classList.add('css_route_group_item_nearby_location');
 
-  const titleElement = document.createElement('div');
+  const titleElement = documentCreateDIVElement();
   titleElement.classList.add('css_route_group_item_nearby_location_title');
 
-  const iconElement = document.createElement('div');
+  const iconElement = documentCreateDIVElement();
   iconElement.classList.add('css_route_group_item_nearby_location_icon');
   iconElement.appendChild(getIconElement('location_on'));
 
-  const locationNameElement = document.createElement('div');
+  const locationNameElement = documentCreateDIVElement();
   locationNameElement.classList.add('css_route_group_item_nearby_location_name');
 
-  const distanceElement = document.createElement('div');
+  const distanceElement = documentCreateDIVElement();
   distanceElement.classList.add('css_route_group_item_nearby_location_distance');
 
-  const actionsElement = document.createElement('div');
+  const actionsElement = documentCreateDIVElement();
   actionsElement.classList.add('css_route_group_item_nearby_location_actions');
 
-  const viewLocationButtonElement = document.createElement('div');
+  const viewLocationButtonElement = documentCreateDIVElement();
   viewLocationButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
   viewLocationButtonElement.setAttribute('type', 'view-location');
   viewLocationButtonElement.innerText = '查看地點';
 
-  const saveToFolderButtonElement = document.createElement('div');
+  const saveToFolderButtonElement = documentCreateDIVElement();
   saveToFolderButtonElement.classList.add('css_route_group_item_nearby_location_action_button');
   saveToFolderButtonElement.setAttribute('type', 'save-to-folder');
   saveToFolderButtonElement.setAttribute('highlighted', 'false');
