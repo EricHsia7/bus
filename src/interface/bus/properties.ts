@@ -104,10 +104,10 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
   for (let i = 0; i < propertyQuantity; i++) {
     const thisPropertyElement = propertyElements[i];
     const thisProperty = properties[i];
-    if (previousProperties.length === 0) {
-      updateProperty(thisPropertyElement, thisProperty, null);
-    } else {
+    if (previousProperties[i]) {
       updateProperty(thisPropertyElement, thisProperty, previousProperties[i]);
+    } else {
+      updateProperty(thisPropertyElement, thisProperty, null);
     }
   }
 
