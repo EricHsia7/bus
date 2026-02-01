@@ -34,5 +34,8 @@
   "'Unknown EC Level: ' + string": "E32",
   "'resolver must be a function'": "E33",
   "\"Cannot call a class as a function\"": "E34",
-  "'Unkown type: ' + type": "E35"
+  "'Unkown type: ' + type": "E35",
+  "\"Can't call config() after localforage \" + 'has been used.'": "E36",
+  "'Database version must be a number.'": "E37",
+  "`HTTP error! status: ${response.status}`": "E38"
 }
