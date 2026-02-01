@@ -23,6 +23,5 @@
   "'FetchError'": "E21",
   "`HTTP error! status: ${response.status}`": "E22",
   "'Invalid JSON response from server'": "E23",
-  "'The provider is not valid.'": "E24",
-  "'Network response was not ok'": "E25"
+  "'The provider is not valid.'": "E24"
 }

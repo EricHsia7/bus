@@ -21,8 +21,5 @@
   "'\"toSJISFunc\" is not a valid function.'": "E19",
   "'\"' + data + '\"' +\n      ' cannot be encoded with mode ' + Mode.toString(mode) +\n      '.\\n Suggested mode is: ' + Mode.toString(bestMode)": "E20",
   "'FetchError'": "E21",
-  "`HTTP error! status: ${response.status}`": "E22",
-  "'Invalid JSON response from server'": "E23",
-  "'The provider is not valid.'": "E24",
-  "'Network response was not ok'": "E25"
+  "`HTTP error! status: ${response.status}`": "E22"
 }
