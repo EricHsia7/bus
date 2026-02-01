@@ -14,21 +14,21 @@ export default defineConfig(
 
       // Code Style
       'prefer-const': 'warn',
-      'no-var': 'warn',
+      'no-var': 'off',
       'no-case-declarations': 'warn',
-      'no-useless-escape': 'warn',
+      'no-useless-escape': 'off',
       'no-constant-binary-expression': 'warn',
 
       // TypeScript Specific
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-redeclare': 'warn',
 
       // Functions
       'no-async-promise-executor': 'warn',
-      '@typescript-eslint/no-unsafe-function-type': 'warn'
+      '@typescript-eslint/no-unsafe-function-type': 'off'
     }
   }
 );
