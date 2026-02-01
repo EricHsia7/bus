@@ -697,8 +697,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateBuses(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisBusesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_buses');
-      const currentBusElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
-      const currentBusElementsQuantity = currentBusElements.length;
+      const busElements = Array.from(elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus'));
+      const currentBusElementsQuantity = busElements.length;
       const busesQuantity = thisItem.buses.length;
       const difference = currentBusElementsQuantity - busesQuantity;
       if (difference < 0) {
@@ -706,15 +706,16 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         for (let o = 0; o > difference; o--) {
           const newBusElement = generateElementOfBus();
           fragment.appendChild(newBusElement);
+          busElements.push(newBusElement);
         }
         thisBusesElement.append(fragment);
-      } else {
+      } else if (difference > 0) {
         for (let p = currentBusElementsQuantity - 1, q = currentBusElementsQuantity - difference - 1; p > q; p--) {
-          currentBusElements[p].remove();
+          busElements[p].remove();
+          busElements.splice(p, 1);
         }
       }
 
-      const busElements = elementQuerySelectorAll(thisBusesElement, '.css_route_group_item_bus');
       for (let i = 0; i < busesQuantity; i++) {
         const busItem = thisItem.buses[i];
         const busElement = busElements[i];
@@ -736,24 +737,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateOverlappingRoutes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisOverlappingRoutesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_overlapping_routes');
-      const currentOverlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
-      const currentOverlappingRouteElementsQuantity = currentOverlappingRouteElements.length;
+      const overlappingRouteElements = Array.from(elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route'));
+      const currentOverlappingRouteElementsLength = overlappingRouteElements.length;
       const overlappingRoutesQuantity = thisItem.overlappingRoutes.length;
-      const difference = currentOverlappingRouteElementsQuantity - overlappingRoutesQuantity;
+      const difference = currentOverlappingRouteElementsLength - overlappingRoutesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfOverlappingRoute();
           fragment.appendChild(newOverlappingRouteElement);
+          overlappingRouteElements.push(newOverlappingRouteElement);
         }
         thisOverlappingRoutesElement.append(fragment);
-      } else {
-        for (let p = currentOverlappingRouteElementsQuantity - 1, q = currentOverlappingRouteElementsQuantity - difference - 1; p > q; p--) {
-          currentOverlappingRouteElements[p].remove();
+      } else if (difference > 0) {
+        for (let p = currentOverlappingRouteElementsLength - 1, q = currentOverlappingRouteElementsLength - difference - 1; p > q; p--) {
+          overlappingRouteElements[p].remove();
+          overlappingRouteElements.splice(p, 1);
         }
       }
 
-      const overlappingRouteElements = elementQuerySelectorAll(thisOverlappingRoutesElement, '.css_route_group_item_overlapping_route');
       for (let i = 0; i < overlappingRoutesQuantity; i++) {
         const overlappingRouteItem = thisItem.overlappingRoutes[i];
         const overlappingRouteElement = overlappingRouteElements[i];
@@ -788,24 +790,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateBusArrivalTimes(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisBusArrivalTimesElement = elementQuerySelector(thisItemElement, '.css_route_group_item_bus_arrival_times');
-      const currentBusArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
-      const currentBusArrivalTimeElementsQuantity = currentBusArrivalTimeElements.length;
+      const busArrivalTimeElements = Array.from(elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time'));
+      const currentBusArrivalTimeElementsLength = busArrivalTimeElements.length;
       const busArrivalTimesQuantity = thisItem.busArrivalTimes.length;
-      const difference = currentBusArrivalTimeElementsQuantity - busArrivalTimesQuantity;
+      const difference = currentBusArrivalTimeElementsLength - busArrivalTimesQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newBusArrivalTimeElement = generateElementOfBusArrivalTime();
           fragment.appendChild(newBusArrivalTimeElement);
+          busArrivalTimeElements.push(newBusArrivalTimeElement);
         }
         thisBusArrivalTimesElement.append(fragment);
-      } else {
-        for (let p = currentBusArrivalTimeElementsQuantity - 1, q = currentBusArrivalTimeElementsQuantity - difference - 1; p > q; p--) {
-          currentBusArrivalTimeElements[p].remove();
+      } else if (difference > 0) {
+        for (let p = currentBusArrivalTimeElementsLength - 1, q = currentBusArrivalTimeElementsLength - difference - 1; p > q; p--) {
+          busArrivalTimeElements[p].remove();
+          busArrivalTimeElements.splice(p, 1);
         }
       }
 
-      const busArrivalTimeElements = elementQuerySelectorAll(thisBusArrivalTimesElement, '.css_route_group_item_bus_arrival_time');
       for (let i = 0; i < busArrivalTimesQuantity; i++) {
         const busArrivalTimeItem = thisItem.busArrivalTimes[i];
         const busArrivalTimeElement = busArrivalTimeElements[i];
@@ -823,24 +826,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     function updateNearbyLocations(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
       const thisNearbyLocationsElement = elementQuerySelector(thisItemElement, '.css_route_group_item_nearby_locations');
-      const currentNearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
-      const currentNearbyLocationElementsQuantity = currentNearbyLocationElements.length;
+      const nearbyLocationElements = Array.from(elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location'));
+      const currentNearbyLocationElementsLength = nearbyLocationElements.length;
       const nearbyLocationsQuantity = thisItem.nearbyLocations.length;
-      const difference = currentNearbyLocationElementsQuantity - nearbyLocationsQuantity;
+      const difference = currentNearbyLocationElementsLength - nearbyLocationsQuantity;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newOverlappingRouteElement = generateElementOfNearbyLocation();
           fragment.appendChild(newOverlappingRouteElement);
+          nearbyLocationElements.push(newOverlappingRouteElement);
         }
         thisNearbyLocationsElement.append(fragment);
-      } else {
-        for (let p = currentNearbyLocationElementsQuantity - 1, q = currentNearbyLocationElementsQuantity - difference - 1; p > q; p--) {
-          currentNearbyLocationElements[p].remove();
+      } else if (difference > 0) {
+        for (let p = currentNearbyLocationElementsLength - 1, q = currentNearbyLocationElementsLength - difference - 1; p > q; p--) {
+          nearbyLocationElements[p].remove();
+          nearbyLocationElements.splice(p, 1);
         }
       }
 
-      const nearbyLocationElements = elementQuerySelectorAll(thisNearbyLocationsElement, '.css_route_group_item_nearby_location');
       for (let i = 0; i < nearbyLocationsQuantity; i++) {
         const nearbyLocationItem = thisItem.nearbyLocations[i];
         const nearbyLocationElement = nearbyLocationElements[i];
@@ -1052,8 +1056,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteNameSpanElement.innerText = integration.RouteName;
   }
 
-  const currentGroupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
-  const currentGroupElementsLength = currentGroupElements.length;
+  const groupElements = Array.from(elementQuerySelectorAll(RouteGroupsElement, '.css_route_group'));
+  const tabElements = Array.from(elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab'));
+
+  const currentGroupElementsLength = groupElements.length;
   if (groupQuantity !== currentGroupElementsLength) {
     const difference = currentGroupElementsLength - groupQuantity;
     if (difference < 0) {
@@ -1062,56 +1068,58 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       for (let o = 0; o > difference; o--) {
         const newGroupElement = generateElementOfGroup();
         newGroupsFragment.appendChild(newGroupElement);
+        groupElements.push(newGroupElement);
         const newTabElement = generateElementOfTab();
         newTabsFragment.appendChild(newTabElement);
+        tabElements.push(newTabElement);
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
-    } else {
-      const currentTabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
+    } else if (difference > 0) {
       for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
-        currentGroupElements[p].remove();
-        currentTabElements[p].remove();
+        groupElements[p].remove();
+        groupElements.splice(p, 1);
+        tabElements[p].remove();
+        tabElements.splice(p, 1);
       }
     }
   }
 
-  const groupElements = elementQuerySelectorAll(RouteGroupsElement, '.css_route_group');
-
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = `g_${i}`;
+
     const thisGroupElement = groupElements[i];
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
-    const currentGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
-    const currentGroupItemElementsLength = currentGroupItemElements.length;
-    if (itemQuantity[groupKey] !== currentGroupItemElementsLength) {
-      const difference = currentGroupItemElementsLength - itemQuantity[groupKey];
+
+    const itemElements = Array.from(elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item'));
+    const threadBoxElements = Array.from(elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box'));
+
+    const currentItemElementsLength = itemElements.length;
+    if (itemQuantity[groupKey] !== currentItemElementsLength) {
+      const difference = currentItemElementsLength - itemQuantity[groupKey];
       if (difference < 0) {
         const newItemsFragment = new DocumentFragment();
-        const newThreadsFragment = new DocumentFragment();
+        const newThreadBoxesFragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newThreadBoxElement = generateElementOfThreadBox();
           const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
-          newThreadsFragment.appendChild(newThreadBoxElement);
+          itemElements.push(newItemElement);
+          newThreadBoxesFragment.appendChild(newThreadBoxElement);
+          threadBoxElements.push(newThreadBoxElement);
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
-        thisGroupThreadsTrackElement.append(newThreadsFragment);
-      } else {
-        const currentGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
-        for (let p = currentGroupItemElementsLength - 1, q = currentGroupItemElementsLength - difference - 1; p > q; p--) {
-          currentGroupItemElements[p].remove();
-          currentGroupThreadElements[p].remove();
+        thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
+      } else if (difference > 0) {
+        for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+          itemElements[p].remove();
+          itemElements.splice(p, 1);
+          threadBoxElements[p].remove();
+          threadBoxElements.splice(p, 1);
         }
       }
     }
-  }
-
-  const tabElements = elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab');
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
-  for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
 
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
@@ -1120,18 +1128,13 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
-    const thisGroupElement = groupElements[i];
     if (skeletonScreen) {
       thisGroupElement.scrollTop = 0;
     }
 
-    const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
-    const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
-    const thisGroupItemElements = elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item');
-    const thisGroupThreadElements = elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box');
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = thisGroupItemElements[j];
-      const thisThreadBoxElement = thisGroupThreadElements[j];
+      const thisItemElement = itemElements[j];
+      const thisThreadBoxElement = threadBoxElements[j];
       const thisItem = groupedItems[groupKey][j];
       if (hasOwnProperty(previousIntegration, 'groupedItems')) {
         if (hasOwnProperty(previousIntegration.groupedItems, groupKey)) {
@@ -1149,6 +1152,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       }
     }
   }
+
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
 
   previousIntegration = integration;
   previousAnimation = animation;

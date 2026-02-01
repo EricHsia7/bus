@@ -173,28 +173,28 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   const itemQuantity = integration.itemQuantity;
   const items = integration.items;
 
-  const currentItemCapacity = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item').length;
-  if (itemQuantity !== currentItemCapacity) {
-    const difference = currentItemCapacity - itemQuantity;
+  const itemElements = Array.from(elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item'));
+  const currentItemElementsLength = itemElements.length;
+  if (itemQuantity !== currentItemElementsLength) {
+    const difference = currentItemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+      for (let o = 0; o > difference; o--) {
         const newItemElement = generateElementOfItem();
         fragment.appendChild(newItemElement);
+        itemElements.push(newItemElement);
       }
       NotificationScheduleList.append(fragment);
-    } else {
-      const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const itemIndex = currentItemCapacity - 1 - o;
-        NotificationScheduleItemElements[itemIndex].remove();
+    } else if (difference > 0) {
+      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+        itemElements[p].remove();
+        itemElements.splice(p, 1);
       }
     }
   }
 
-  const NotificationScheduleItemElements = elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item');
   for (let j = 0; j < itemQuantity; j++) {
-    const thisItemElement = NotificationScheduleItemElements[j];
+    const thisItemElement = itemElements[j];
     const thisItem = items[j];
     if (hasOwnProperty(previousIntegration, 'items')) {
       if (previousIntegration.items[j]) {

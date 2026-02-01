@@ -84,27 +84,26 @@ export function updatePropertiesField(properties: Array, skeletonScreen: boolean
     PropertiesGroupElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   }
 
-  const currentPropertyCapacity = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property').length;
-  if (propertyQuantity !== currentPropertyCapacity) {
-    const difference = currentPropertyCapacity - propertyQuantity;
+  const propertyElements = Array.from(elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property'));
+  const currentPropertyElementsLength = propertyElements.length;
+  if (propertyQuantity !== currentPropertyElementsLength) {
+    const difference = currentPropertyElementsLength - propertyQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        // const propertyIndex = currentPropertyCapacity + o;
+      for (let o = 0; o > difference; o--) {
         const newPropertyElement = generateElementOfProperty();
         fragment.appendChild(newPropertyElement);
+        propertyElements.push(newPropertyElement);
       }
       PropertiesGroupBodyElement.append(fragment);
-    } else {
-      const propertyElements = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const propertyIndex = currentPropertyCapacity - 1 - o;
-        propertyElements[propertyIndex].remove();
+    } else if (difference > 0) {
+      for (let p = currentPropertyElementsLength - 1, q = currentPropertyElementsLength - difference - 1; p > q; p--) {
+        propertyElements[p].remove();
+        propertyElements.splice(p, 1);
       }
     }
   }
 
-  const propertyElements = elementQuerySelectorAll(PropertiesGroupBodyElement, '.css_route_details_property');
   for (let i = 0; i < propertyQuantity; i++) {
     const thisPropertyElement = propertyElements[i];
     const thisProperty = properties[i];

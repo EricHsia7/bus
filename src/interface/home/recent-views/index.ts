@@ -1,8 +1,8 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { querySize } from '../../index';
@@ -95,7 +95,8 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     }
 
     function updateTitle(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const titleElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_title');
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
+      const thisTitleElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_title');
       let title = '';
       switch (thisItem.type) {
         case 'route':
@@ -113,17 +114,18 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      titleElement.innerText = title;
+      thisTitleElement.innerText = title;
     }
 
     function updateTime(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const timeElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head .css_home_recent_views_item_time');
-      timeElement.innerText = thisItem.time.relative;
+      const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
+      const thisTimeElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_time');
+      thisTimeElement.innerText = thisItem.time.relative;
     }
 
     function updateName(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
-      nameElement.innerText = thisItem.name;
+      const thisNameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
+      thisNameElement.innerText = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
@@ -190,24 +192,24 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             }
             break;
           case 'route':
-            if (!compareThings(previousItem.name, thisItem.name)) {
+            if (previousItem.name !== thisItem.name) {
               updateName(thisElement, thisItem);
             }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.id, thisItem.id) || !compareThings(previousItem.pid, thisItem.pid)) {
+            if (previousItem.id !== thisItem.id || !compareThings(previousItem.pid, thisItem.pid)) {
               updateOnclick(thisElement, thisItem);
             }
             break;
           case 'bus':
-            if (!compareThings(previousItem.name, thisItem.name)) {
+            if (previousItem.name !== thisItem.name) {
               updateName(thisElement, thisItem);
             }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.id, thisItem.id)) {
+            if (previousItem.id !== thisItem.id) {
               updateOnclick(thisElement, thisItem);
             }
             break;
@@ -219,10 +221,10 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
           default:
             break;
         }
-        if (animation !== previousAnimation) {
+        if (previousAnimation !== animation) {
           updateAnimation(thisElement, animation);
         }
-        if (skeletonScreen !== previousSkeletonScreen) {
+        if (previousSkeletonScreen !== skeletonScreen) {
           updateSkeletonScreen(thisElement, skeletonScreen);
         }
       }
@@ -231,28 +233,28 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
   const itemQuantity = integration.itemQuantity;
 
-  const currentItemCapacity = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item').length;
-  if (itemQuantity !== currentItemCapacity) {
-    const difference = currentItemCapacity - itemQuantity;
+  const itemElements = Array.from(elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item'));
+  const currentItemElementsLength = itemElements.length;
+  if (itemQuantity !== currentItemElementsLength) {
+    const difference = currentItemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+      for (let o = 0; o > difference; o--) {
         const newRecentViewItemElement = generateElementOfRecentViewItem();
         fragment.appendChild(newRecentViewItemElement);
+        itemElements.push(newRecentViewItemElement);
       }
       RecentViewsContentElement.append(fragment);
-    } else {
-      const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const recentViewItemIndex = currentItemCapacity - 1 - o;
-        RecentViewsItemElements[recentViewItemIndex].remove();
+    } else if (difference > 0) {
+      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+        itemElements[p].remove();
+        itemElements.splice(p, 1);
       }
     }
   }
 
-  const RecentViewsItemElements = elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item');
   for (let i = 0; i < itemQuantity; i++) {
-    const thisElement = RecentViewsItemElements[i];
+    const thisElement = itemElements[i];
     const thisItem = integration.items[i];
     if (hasOwnProperty(previousIntegration, 'items')) {
       if (previousIntegration.items[i]) {

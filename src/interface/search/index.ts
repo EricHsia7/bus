@@ -280,26 +280,26 @@ export function updateSearchResult(): void {
   if (!containPhoneticSymbols(currentValue) && (currentValue !== previousValue || currentType !== previousType)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
-    const currentItemCapacity = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result').length;
+    const searchResultElements = Array.from(elementQuerySelectorAll(searchResultsElement, '.css_search_search_result'));
+    const currentItemCapacity = searchResultElements.length;
     if (searchResultLength !== currentItemCapacity) {
       const difference = currentItemCapacity - searchResultLength;
       if (difference < 0) {
         const fragment = new DocumentFragment();
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
-          const newElement = generateElementOfSearchResultItem();
-          fragment.appendChild(newElement);
+        for (let o = 0; o > difference; o--) {
+          const newSearchResultElement = generateElementOfSearchResultItem();
+          fragment.appendChild(newSearchResultElement);
+          searchResultElements.push(newSearchResultElement);
         }
         searchResultsElement.appendChild(fragment);
-      } else {
-        const searchResultElements2 = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
-        for (let o = 0, d = Math.abs(difference); o < d; o++) {
-          const itemIndex = currentItemCapacity - 1 - o;
-          searchResultElements2[itemIndex].remove();
+      } else if (difference > 0) {
+        for (let p = currentItemCapacity - 1, q = currentItemCapacity - difference - 1; p > q; p--) {
+          searchResultElements[p].remove();
+          searchResultElements.splice(p, 1);
         }
       }
     }
 
-    const searchResultElements = elementQuerySelectorAll(searchResultsElement, '.css_search_search_result');
     for (let i = 0; i < searchResultLength; i++) {
       const previousItem = previousSearchResults[i];
       const currentItem = searchResults[i];

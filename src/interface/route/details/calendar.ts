@@ -226,43 +226,46 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   const calendarEventGroups = calendar.calendarEventGroups;
   const eventQuantity = calendar.calendarEventQuantity;
 
-  const currentEventGroupCapacity = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group').length;
-  if (eventGroupQuantity !== currentEventGroupCapacity) {
-    const difference = currentEventGroupCapacity - eventGroupQuantity;
+  const eventGroupElements = Array.from(elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group'));
+  const dayElements = Array.from(elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day'));
+
+  const currentEventGroupElementsLength = eventGroupElements.length;
+  if (eventGroupQuantity !== currentEventGroupElementsLength) {
+    const difference = currentEventGroupElementsLength - eventGroupQuantity;
     if (difference < 0) {
-      // Add missing day and event group elements.
+      // Add missing elements
       const calendarDaysFragment = new DocumentFragment();
       const calendarEventGroupsFragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
+      for (let o = 0; o > difference; o--) {
         const newDayElement = generateElementOfDay();
         calendarDaysFragment.appendChild(newDayElement);
+        dayElements.push(newDayElement);
         const newEventGroupElement = generateElementOfEventGroup();
         calendarEventGroupsFragment.appendChild(newEventGroupElement);
+        eventGroupElements.push(newEventGroupElement);
       }
       CalendarDaysElement.append(calendarDaysFragment);
       CalendarEventGroupsElement.append(calendarEventGroupsFragment);
-    } else {
-      // Remove extra elements.
-      const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
-      const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const eventGroupIndex = currentEventGroupCapacity - 1 - o;
-        CalendarDayElements[eventGroupIndex].remove();
-        CalendarEventGroupElements[eventGroupIndex].remove();
+    } else if (difference > 0) {
+      // Remove extra elements
+      for (let p = currentEventGroupElementsLength - 1, q = currentEventGroupElementsLength - difference - 1; p > q; p--) {
+        dayElements[p].remove();
+        dayElements.splice(p, 1);
+        eventGroupElements[p].remove();
+        eventGroupElements.splice(p, 1);
       }
     }
+    // Do nothing if difference is zero
   }
 
   // Update each day and its corresponding event group.
-  const CalendarDayElements = elementQuerySelectorAll(CalendarDaysElement, '.css_route_details_calendar_day');
-  const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (let i = 0; i < eventGroupQuantity; i++) {
     const eventGroupKey = `d_${i}`;
     const thisDay = eventGroups[eventGroupKey];
     const thisEventGroup = calendarEventGroups[eventGroupKey];
 
-    const thisDayElement = CalendarDayElements[i];
-    const thisEventGroupElement = CalendarEventGroupElements[i];
+    const thisDayElement = dayElements[i];
+    const thisEventGroupElement = eventGroupElements[i];
 
     updateDay(thisDayElement, thisDay, currentDay, skeletonScreen, animation, i);
     updateEventGroup(thisEventGroupElement, thisEventGroup, currentDay, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);

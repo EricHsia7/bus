@@ -87,30 +87,30 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
   }
 
   const categoriesQuantity = categories.length;
-  const currentItemCapacity = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item').length;
-  if (categoriesQuantity !== currentItemCapacity) {
-    const difference = currentItemCapacity - categoriesQuantity;
+  const itemElements = Array.from(elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item'));
+  const currentItemElementsLength = itemElements.length;
+  if (categoriesQuantity !== currentItemElementsLength) {
+    const difference = currentItemElementsLength - categoriesQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const newElement = generateElementOfItem();
-        fragment.appendChild(newElement);
+      for (let o = 0; o > difference; o--) {
+        const newItemElement = generateElementOfItem();
+        fragment.appendChild(newItemElement);
+        itemElements.push(newItemElement);
       }
       StatisticsElement.appendChild(fragment);
-    } else {
-      const statisticsItemElements2 = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item');
-      for (let o = 0, d = Math.abs(difference); o < d; o++) {
-        const itemIndex = currentItemCapacity - 1 - o;
-        statisticsItemElements2[itemIndex].remove();
+    } else if (difference > 0) {
+      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+        itemElements[p].remove();
+        itemElements.splice(p, 1);
       }
     }
   }
 
-  const statisticsItemElements = elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item');
   for (let i = 0; i < categoriesQuantity; i++) {
     const previousItem = previousCategories[i];
     const currentItem = categories[i];
-    const thisItemElement = statisticsItemElements[i];
+    const thisItemElement = itemElements[i];
     if (previousItem) {
       updateItem(thisItemElement, currentItem, previousItem);
     } else {
