@@ -28,6 +28,6 @@ export function getElementsBelow(referenceElement: HTMLElement, className: strin
   return elements;
 }
 
-export function documentCreateDIVElement(): HTMLDivElement {
+export function documentCreateDivElement(): HTMLDivElement {
   return document.createElement('div');
 }

@@ -3,7 +3,7 @@ import { importData } from '../../data/import/index';
 import { listSettings, Setting } from '../../data/settings/index';
 import { getTreeURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
-import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier, releaseFile } from '../../tools/index';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
@@ -14,29 +14,29 @@ const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_b
 const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
 
 function generateElementOfItem(item: Setting): HTMLElement {
-  const settingElement = documentCreateDIVElement();
+  const settingElement = documentCreateDivElement();
   settingElement.classList.add('css_setting');
   settingElement.setAttribute('type', item.type);
 
   // Icon
-  const iconElement = documentCreateDIVElement();
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_setting_icon');
   const iconSpanElement = document.createElement('span');
   iconSpanElement.appendChild(getIconElement(item.icon));
   iconElement.appendChild(iconSpanElement);
 
   // Name
-  const nameElement = documentCreateDIVElement();
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_setting_name');
   nameElement.innerText = item.name;
 
   // Status
-  const statusElement = documentCreateDIVElement();
+  const statusElement = documentCreateDivElement();
   statusElement.classList.add('css_setting_status');
   statusElement.innerText = item.status;
 
   // Arrow
-  const arrowElement = documentCreateDIVElement();
+  const arrowElement = documentCreateDivElement();
   arrowElement.classList.add('css_setting_arrow');
   const arrowSpanElement = document.createElement('span');
   arrowSpanElement.appendChild(getIconElement('arrow_forward_ios'));

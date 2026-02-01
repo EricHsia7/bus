@@ -1,5 +1,5 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
-import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -9,18 +9,18 @@ const ScheduleNotificationBodyElement = elementQuerySelector(ScheduleNotificatio
 const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificationBodyElement, '.css_schedule_notification_list');
 
 function generateElementOfItem(item: ScheduleNotificationOption, thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): HTMLElement {
-  const itemElement = documentCreateDIVElement();
+  const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_schedule_notification_list_item');
 
   // Icon element
-  const iconElement = documentCreateDIVElement();
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_schedule_notification_item_icon');
   const iconSpanElement = document.createElement('span');
   iconSpanElement.appendChild(getIconElement(item.icon));
   iconElement.appendChild(iconSpanElement);
 
   // Name element
-  const nameElement = documentCreateDIVElement();
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_schedule_notification_item_name');
   nameElement.innerText = item.name;
 

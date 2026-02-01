@@ -2,7 +2,7 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
-import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
@@ -35,37 +35,37 @@ let foldersRefreshTimer_streamStarted: boolean = false;
 
 function generateElementOfItem(): HTMLElement {
   // Main container
-  const itemElement = documentCreateDIVElement();
+  const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_home_folder_item');
   itemElement.setAttribute('type', 'stop');
 
   // Icon
-  const iconElement = documentCreateDIVElement();
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_home_folder_item_icon');
   iconElement.appendChild(getIconElement('location_on'));
 
   // Context
-  const contextElement = documentCreateDIVElement();
+  const contextElement = documentCreateDivElement();
   contextElement.classList.add('css_home_folder_item_context');
 
   // Main
-  const mainElement = documentCreateDIVElement();
+  const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_home_folder_item_main');
 
   // Capsule
-  const capsuleElement = documentCreateDIVElement();
+  const capsuleElement = documentCreateDivElement();
   capsuleElement.classList.add('css_home_folder_item_capsule');
 
   // Status
-  const statusElement = documentCreateDIVElement();
+  const statusElement = documentCreateDivElement();
   statusElement.classList.add('css_home_folder_item_status');
 
-  const nextSlideElement = documentCreateDIVElement();
+  const nextSlideElement = documentCreateDivElement();
   nextSlideElement.classList.add('css_next_slide');
   nextSlideElement.setAttribute('code', '0');
   nextSlideElement.setAttribute('displayed', 'false');
 
-  const currentSlideElement = documentCreateDIVElement();
+  const currentSlideElement = documentCreateDivElement();
   currentSlideElement.classList.add('css_current_slide');
   currentSlideElement.setAttribute('code', '0');
   currentSlideElement.setAttribute('displayed', 'true');
@@ -74,12 +74,12 @@ function generateElementOfItem(): HTMLElement {
   statusElement.appendChild(currentSlideElement);
 
   // Button
-  const buttonElement = documentCreateDIVElement();
+  const buttonElement = documentCreateDivElement();
   buttonElement.classList.add('css_home_folder_item_button');
   buttonElement.appendChild(getIconElement('keyboard_arrow_right'));
 
   // Capsule separator
-  const capsuleSeparatorElement = documentCreateDIVElement();
+  const capsuleSeparatorElement = documentCreateDivElement();
   capsuleSeparatorElement.classList.add('css_home_folder_item_capsule_separator');
 
   // Assemble capsule
@@ -98,20 +98,20 @@ function generateElementOfItem(): HTMLElement {
 
 function generateElementOfFolder(): HTMLElement {
   // Main container
-  const folderElement = documentCreateDIVElement();
+  const folderElement = documentCreateDivElement();
   folderElement.classList.add('css_home_folder');
 
   // Head
-  const headElement = documentCreateDIVElement();
+  const headElement = documentCreateDivElement();
   headElement.classList.add('css_home_folder_head');
 
   // Icon
-  const iconElement = documentCreateDIVElement();
+  const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_home_folder_icon');
   iconElement.appendChild(getBlankIconElement());
 
   // Name
-  const nameElement = documentCreateDIVElement();
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_home_folder_name');
 
   // Assemble head
@@ -119,7 +119,7 @@ function generateElementOfFolder(): HTMLElement {
   headElement.appendChild(nameElement);
 
   // Content
-  const contentElement = documentCreateDIVElement();
+  const contentElement = documentCreateDivElement();
   contentElement.classList.add('css_home_folder_content');
 
   // Assemble folder

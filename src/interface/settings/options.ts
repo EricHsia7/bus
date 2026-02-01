@@ -1,5 +1,5 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
-import { documentCreateDIVElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
@@ -10,14 +10,14 @@ const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.
 const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
 
 function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): HTMLElement {
-  const optionElement = documentCreateDIVElement();
+  const optionElement = documentCreateDivElement();
   optionElement.classList.add('css_option');
 
-  const nameElement = documentCreateDIVElement();
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_option_name');
   nameElement.innerText = item.name;
 
-  const checkboxContainerElement = documentCreateDIVElement();
+  const checkboxContainerElement = documentCreateDivElement();
   checkboxContainerElement.classList.add('css_option_checkbox');
 
   const checkboxElement = document.createElement('input');

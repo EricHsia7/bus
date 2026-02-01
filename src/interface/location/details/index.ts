@@ -2,7 +2,7 @@ import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/a
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../../data/location/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
 import { getBlankIconElement, setIcon } from '../../icons/index';
@@ -19,17 +19,17 @@ const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.
 const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
 
 function generateElementOfItem(): HTMLElement {
-  const element = documentCreateDIVElement();
+  const element = documentCreateDivElement();
   element.classList.add('css_location_details_action');
 
   // Icon
-  const icon = documentCreateDIVElement();
+  const icon = documentCreateDivElement();
   icon.classList.add('css_location_details_action_icon');
   icon.appendChild(getBlankIconElement());
   element.appendChild(icon);
 
   // Name
-  const name = documentCreateDIVElement();
+  const name = documentCreateDivElement();
   name.classList.add('css_location_details_action_name');
   element.appendChild(name);
 

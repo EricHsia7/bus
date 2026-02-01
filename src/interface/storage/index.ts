@@ -1,6 +1,6 @@
 import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../data/analytics/storage-size';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { documentCreateDIVElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { querySize } from '../index';
 
@@ -14,15 +14,15 @@ const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage
 
 function generateElementOfItem(): HTMLElement {
   // Create root element
-  const statisticsItemElement = documentCreateDIVElement();
+  const statisticsItemElement = documentCreateDivElement();
   statisticsItemElement.classList.add('css_storage_statistics_item');
 
   // Create name element
-  const nameElement = documentCreateDIVElement();
+  const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_storage_statistics_item_name');
 
   // Create value element
-  const valueElement = documentCreateDIVElement();
+  const valueElement = documentCreateDivElement();
   valueElement.classList.add('css_storage_statistics_item_value');
 
   // Append children
