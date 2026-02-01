@@ -35,7 +35,7 @@ class ErrorCodePlugin {
             });
             this.walk(ast, (node) => {
               if (this.isNewError(node) || this.isNewTypeError(node)) {
-                const arg = node.argument.arguments[0];
+                const arg = node.arguments[0];
                 const originalText = code.slice(arg.start, arg.end);
 
                 // Get or create error code
