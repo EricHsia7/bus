@@ -19,6 +19,9 @@ const thisVersion = require('./dist/version.json');
 module.exports = (env, argv) => {
   return {
     plugins: [
+      new webpack.ids.DeterministicModuleIdsPlugin({
+        maxLength: 3
+      }),
       new MiniCssExtractPlugin({
         filename: '[contenthash].css',
         runtime: false
@@ -164,7 +167,7 @@ module.exports = (env, argv) => {
         }
       },
       concatenateModules: true,
-      chunkIds: 'size',
+      chunkIds: false,
       mangleExports: 'size',
       avoidEntryIife: true
     },
