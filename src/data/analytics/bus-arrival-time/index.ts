@@ -257,7 +257,7 @@ export async function getBusArrivalTimes(chartWidth: number, chartHeight: number
   const taskID = generateIdentifier();
 
   const personalSchedules = await listPersonalSchedules();
-  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups(true);
+  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
 
   const result = await new Promise((resolve, reject) => {
     getBusArrivalTimesWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
