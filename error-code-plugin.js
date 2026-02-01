@@ -99,7 +99,7 @@ class ErrorCodePlugin {
     const extension = path.extname(pathname);
     const base = path.basename(pathname, extension);
     const dir = path.dirname(pathname);
-    const fullPath = path.join(dir, `${base}.erm`);
+    const fullPath = path.join(dir, `${base}.js.erm`);
     compilation.emitAsset(fullPath, new sources.RawSource(json));
   }
 }
