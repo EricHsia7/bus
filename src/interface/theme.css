@@ -155,24 +155,24 @@
     --b-cssvar-ffffff-normal-b: 30;
 
     --b-cssvar-ffffff-blocky: #1c1e25;
-    --b-cssvar-ffffff-blocky-r: 13;
-    --b-cssvar-ffffff-blocky-g: 13;
-    --b-cssvar-ffffff-blocky-b: 16;
+    --b-cssvar-ffffff-blocky-r: 28;
+    --b-cssvar-ffffff-blocky-g: 30;
+    --b-cssvar-ffffff-blocky-b: 37;
 
     --b-cssvar-f9f9fb-normal: #1c1e25;
-    --b-cssvar-f9f9fb-normal-r: 13;
-    --b-cssvar-f9f9fb-normal-g: 13;
-    --b-cssvar-f9f9fb-normal-b: 16;
+    --b-cssvar-f9f9fb-normal-r: 28;
+    --b-cssvar-f9f9fb-normal-g: 30;
+    --b-cssvar-f9f9fb-normal-b: 37;
 
     --b-cssvar-f9f9fb-blocky: #17191e;
     --b-cssvar-f9f9fb-blocky-r: 23;
     --b-cssvar-f9f9fb-blocky-g: 25;
     --b-cssvar-f9f9fb-blocky-b: 30;
 
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #232c38;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 35;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 44;
-    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 56;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer: #20252e;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 32;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 37;
+    --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 46;
 
     --b-cssvar-f9f9fb-inflected-to-user-position: #242538;
     --b-cssvar-f9f9fb-inflected-to-user-position-r: 36;
