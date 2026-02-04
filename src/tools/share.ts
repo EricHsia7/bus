@@ -14,7 +14,7 @@ function downloadBlobFile(blob: Blob, fileName: string, timeout: number = 32 * 1
   return blobURL;
 }
 
-export function shareFile(content: string, type: string = 'application/json', fileName: string): void {
+export async function shareFile(content: string, type: string = 'application/json', fileName: string): void {
   const blob = new Blob([content], { type: type });
   const fileObj = new File([blob], fileName, { type: type });
   if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
