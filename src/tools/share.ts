@@ -76,6 +76,20 @@ async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
+async function copyLink(url: string) {
+  promptMessage('link', '複製連結', {
+    text: '複製',
+    action: async function () {
+      const copy = await copyToClipboard(url);
+      if (copy) {
+        promptMessage('check', '已複製連結');
+      } else {
+        promptMessage('cancel', '無法複製連結');
+      }
+    }
+  });
+}
+
 export async function shareLink(title: string, url: string) {
   if (
     navigator.canShare &&
@@ -90,24 +104,9 @@ export async function shareLink(title: string, url: string) {
         url: url
       });
     } catch (error) {
-      promptMessage('link', '複製連結', {
-        text: '複製',
-        action: async function () {
-          const copy = await copyToClipboard(url);
-          if (copy) {
-            promptMessage('check', '已複製連結');
-          } else {
-            promptMessage('cancel', '無法複製連結');
-          }
-        }
-      });
+      copyLink(url);
     }
   } else {
-    const copy = await copyToClipboard(url);
-    if (copy) {
-      promptMessage('check', '已複製連結');
-    } else {
-      promptMessage('cancel', '無法複製連結');
-    }
+    copyLink(url);
   }
 }
