@@ -61,7 +61,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
 
     // Select the text
     textArea.select();
-    textArea.setSelectionRange(0, 99999); // For mobile devices
+    // textArea.setSelectionRange(0, text.length);
 
     // Execute the copy command
     const successful = document.execCommand('copy');
