@@ -5,9 +5,9 @@ import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { getPermalink } from '../../../tools/permalink';
+import { shareLink } from '../../../tools/share';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
-import { promptMessage } from '../../prompt/index';
 import { openQRCode } from '../../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
@@ -185,20 +185,7 @@ export async function shareLocationPermalink(hash: string) {
     const link = getPermalink(1, {
       hash: hash
     });
-    if (navigator.share) {
-      navigator
-        .share({
-          title: thisLocation.n,
-          url: link
-        })
-        .then(() => {
-          promptMessage('check_circle', '已分享地點');
-        })
-        .catch((e) => {
-          promptMessage('cancel', '已取消分享');
-          console.error(e);
-        });
-    }
+    shareLink(thisLocation.n, link);
   }
 }
 

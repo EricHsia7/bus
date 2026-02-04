@@ -4,7 +4,8 @@ import { listSettings, Setting } from '../../data/settings/index';
 import { getTreeURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { generateIdentifier, releaseFile } from '../../tools/index';
+import { generateIdentifier } from '../../tools/index';
+import { shareFile } from '../../tools/share';
 import { getIconElement } from '../icons/index';
 import { pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -85,7 +86,7 @@ export function closeSettings(): void {
 export async function downloadExportFile() {
   promptMessage('manufacturing', '資料匯出中');
   const content = await exportData();
-  releaseFile(content, 'application/json', 'bus-export.json');
+  shareFile(content, 'application/json', 'bus-export.json');
 }
 
 export function openFileToImportData(): void {

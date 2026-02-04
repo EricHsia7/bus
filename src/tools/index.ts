@@ -72,41 +72,6 @@ export function getNoCacheParameter(interval: number): string {
   return string;
 }
 
-export function downloadBlobFile(blob: Blob, fileName: string, timeout: number = 32 * 1000): string {
-  const blobURL = URL.createObjectURL(blob);
-  const downloadLink = document.createElement('a');
-  downloadLink.href = blobURL;
-  downloadLink.download = fileName;
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  downloadLink.remove();
-  setTimeout(() => {
-    URL.revokeObjectURL(blobURL);
-  }, timeout);
-  return blobURL;
-}
-
-export function releaseFile(content: string, type: string = 'application/json', fileName: string): void {
-  const blob = new Blob([content], { type: type });
-  const fileObj = new File([blob], fileName, { type: type });
-  if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
-    navigator
-      .share({
-        files: [fileObj]
-      })
-      .catch((error) => {
-        promptMessage('download', '下載資料', {
-          text: '下載',
-          action: function () {
-            downloadBlobFile(blob, fileName);
-          }
-        });
-      });
-  } else {
-    downloadBlobFile(blob, fileName);
-  }
-}
-
 export function isRunningStandalone(): boolean {
   return window.matchMedia('(display-mode: standalone)').matches;
 }
