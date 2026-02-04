@@ -82,7 +82,7 @@ async function copyLink(url: string) {
     action: async function () {
       const copy = await copyToClipboard(url);
       if (copy) {
-        promptMessage('check', '已複製連結');
+        promptMessage('check_circle', '已複製連結');
       } else {
         promptMessage('cancel', '無法複製連結');
       }
