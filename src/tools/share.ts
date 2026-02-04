@@ -76,7 +76,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
-export async function shareLink(title: string, url: string): Promise<boolean> {
+export async function shareLink(title: string, url: string) {
   if (
     navigator.canShare &&
     navigator.canShare({
@@ -103,6 +103,11 @@ export async function shareLink(title: string, url: string): Promise<boolean> {
       });
     }
   } else {
-    copyToClipboard(url);
+    const copy = await copyToClipboard(url);
+    if (copy) {
+      promptMessage('check', '已複製連結');
+    } else {
+      promptMessage('cancel', '無法複製連結');
+    }
   }
 }
