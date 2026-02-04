@@ -19,7 +19,7 @@ export function shareFile(content: string, type: string = 'application/json', fi
   const fileObj = new File([blob], fileName, { type: type });
   if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
     try {
-      navigator.share({
+      await navigator.share({
         files: [fileObj]
       });
     } catch (error) {
@@ -99,7 +99,7 @@ export async function shareLink(title: string, url: string) {
     })
   ) {
     try {
-      navigator.share({
+      await navigator.share({
         title: title,
         url: url
       });
