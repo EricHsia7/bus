@@ -77,7 +77,13 @@ async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 export async function shareLink(title: string, url: string): Promise<boolean> {
-  if (navigator.canShare && navigator.canShare({ files: [fileObj] })) {
+  if (
+    navigator.canShare &&
+    navigator.canShare({
+      title: title,
+      url: url
+    })
+  ) {
     try {
       navigator.share({
         title: title,
