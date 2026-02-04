@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-copy-link
 
 jobs:
   build:
