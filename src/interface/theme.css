@@ -1,15 +1,15 @@
 :root {
-  --b-cssvar-main-color: #5577a3;
-  --b-cssvar-main-color-r: 85;
-  --b-cssvar-main-color-g: 119;
-  --b-cssvar-main-color-b: 163;
-  --b-cssvar-main-color-opacity-flattened-c: #d1dae7;
+  --b-cssvar-main-color: #658fc6;
+  --b-cssvar-main-color-r: 101;
+  --b-cssvar-main-color-g: 143;
+  --b-cssvar-main-color-b: 198;
+  --b-cssvar-main-color-opacity-flattened-c: #dde6f2;
 
-  --b-cssvar-main-color-inflected-to-segment-buffer: #4593b5;
-  --b-cssvar-main-color-inflected-to-segment-buffer-r: 69;
-  --b-cssvar-main-color-inflected-to-segment-buffer-g: 147;
-  --b-cssvar-main-color-inflected-to-segment-buffer-b: 181;
-  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #d7e3eb;
+  --b-cssvar-main-color-inflected-to-segment-buffer: #5991bb;
+  --b-cssvar-main-color-inflected-to-segment-buffer-r: 89;
+  --b-cssvar-main-color-inflected-to-segment-buffer-g: 145;
+  --b-cssvar-main-color-inflected-to-segment-buffer-b: 187;
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #dbe7f2;
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
@@ -19,8 +19,8 @@
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
-  --b-cssvar-main-color-opacity-c: 0.3;
-  --b-cssvar-main-color-opacity-d: 0.15;
+  --b-cssvar-main-color-opacity-c: 0.22;
+  --b-cssvar-main-color-opacity-d: 0.16;
   --b-cssvar-main-color-opacity-e: 0.11;
 
   --b-cssvar-ffffff-normal: #ffffff;
@@ -46,10 +46,10 @@
   --b-cssvar-f9f9fb-blocky-g: 249;
   --b-cssvar-f9f9fb-blocky-b: 251;
 
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #f0f3f7;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 240;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 243;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 247;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #f4f6f9;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 244;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 246;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 249;
 
   --b-cssvar-f9f9fb-inflected-to-user-position: #f2f1f9;
   --b-cssvar-f9f9fb-inflected-to-user-position-r: 242;
