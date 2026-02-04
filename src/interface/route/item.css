@@ -191,7 +191,7 @@
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_capsule_separator {
-  background: var(--b-cssvar-aeaeb2-inflected-to-segment-buffer);
+  background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* skeleton screen: true */
