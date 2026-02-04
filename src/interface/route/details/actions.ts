@@ -1,6 +1,6 @@
 import { searchRouteByRouteID } from '../../../data/search/index';
 import { getPermalink } from '../../../tools/permalink';
-import { promptMessage } from '../../prompt/index';
+import { shareLink } from '../../../tools/share';
 import { openQRCode } from '../../qrcode/index';
 
 export async function shareRoutePermalink(RouteID: number) {
@@ -10,20 +10,7 @@ export async function shareRoutePermalink(RouteID: number) {
       id: RouteID,
       name: thisRoute.n
     });
-    if (navigator.share) {
-      navigator
-        .share({
-          title: thisRoute.n,
-          url: link
-        })
-        .then(() => {
-          promptMessage('check_circle', '已分享路線');
-        })
-        .catch((e) => {
-          promptMessage('cancel', '已取消分享');
-          console.error(e);
-        });
-    }
+    shareLink(thisRoute.n, link);
   }
 }
 
