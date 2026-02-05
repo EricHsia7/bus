@@ -1,107 +1,155 @@
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../../data/apis/loader';
-import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { generateIdentifier } from '../../tools/index';
+import { getSettingOptionValue } from '../../data/settings/index';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { booleanToString, generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
-import { dataDownloadCompleted } from '../home/index';
-import { getIconElement } from '../icons/index';
-import { pushPageHistory, revokePageHistory } from '../index';
-import { promptMessage } from '../prompt/index';
+import { getBlankIconElement, setIcon } from '../icons/index';
+import { MaterialSymbols } from '../icons/material-symbols-type';
+import { pushPageHistory, querySize, revokePageHistory } from '../index';
 
-type Target = 'editor' | 'creator' | '';
-
-let currentTarget: Target = '';
-
-const folderEditorField = documentQuerySelector('.css_folder_editor_field');
-const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
 const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
+const iconSelectorBodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
+const symbolsElement = elementQuerySelector(iconSelectorBodyElement, '.css_icon_selector_material_symbols');
 
-function generateElementOfSymbol(symbol: string): HTMLElement {
+let currentSymbols: Array<MaterialSymbols> = [];
+
+let previousSymbols: Array<MaterialSymbols> = [];
+let previousAnimation: boolean = false;
+let previosuSkeletonScreen: boolean = false;
+let previousInputElement;
+
+function generateElementOfSymbol(): HTMLElement {
   const element = documentCreateDivElement();
   element.classList.add('css_icon_selector_symbol');
-  element.onclick = function () {
-    selectIcon(symbol, currentTarget);
-  };
-  element.appendChild(getIconElement(symbol));
+  element.appendChild(getBlankIconElement());
   return element;
 }
 
-async function initializeIconSelectorField() {
-  const materialSymbolsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols');
-  materialSymbolsElement.innerHTML = '';
+function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: HTMLInputElement, skeletonScreen: boolean, animation: boolean): void {
+  function updateSymbol(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols, previousSymbol: MaterialSymbols | null): void {
+    function updateIcon(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols): void {
+      setIcon(thisSymbolElement, thisSymbol);
+    }
+
+    function updateOnclick(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols, inputElement: HTMLInputElement): void {
+      thisSymbolElement.onclick = function () {
+        selectIcon(thisSymbol, inputElement);
+      };
+    }
+
+    function updateSkeletonScreen(thisSymbolElement: HTMLElement, skeletonScreen: boolean): void {
+      thisSymbolElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    }
+
+    function updateAnimation(thisSymbolElement: HTMLElement, animation: boolean): void {
+      thisSymbolElement.setAttribute('animation', booleanToString(animation));
+    }
+
+    if (previousSymbol === null || previousSymbol === undefined) {
+      updateIcon(thisSymbolElement, thisSymbol);
+      updateOnclick(thisSymbolElement, thisSymbol, inputElement);
+      updateSkeletonScreen(thisSymbolElement, skeletonScreen);
+      updateAnimation(thisSymbolElement, animation);
+    } else {
+      if (previousSymbol !== thisSymbol) {
+        updateIcon(thisSymbolElement, thisSymbol);
+        updateOnclick(thisSymbolElement, thisSymbol, inputElement);
+      } else if (previousInputElement !== inputElement) {
+        updateOnclick(thisSymbolElement, thisSymbol, inputElement);
+      }
+
+      if (previosuSkeletonScreen !== skeletonScreen) {
+        updateSkeletonScreen(thisSymbolElement, skeletonScreen);
+      }
+
+      if (previousAnimation !== animation) {
+        updateAnimation(thisSymbolElement, animation);
+      }
+    }
+  }
+
+  const symbolsLength = symbols.length;
+  const symbolElements = Array.from(elementQuerySelectorAll(symbolsElement, '.css_icon_selector_symbol'));
+  const currentSymbolElementsLength = symbolElements.length;
+  if (symbolsLength !== currentSymbolElementsLength) {
+    const difference = currentSymbolElementsLength - symbolsLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newSymbolElement = generateElementOfSymbol();
+        fragment.appendChild(newSymbolElement);
+        symbolElements.push(newSymbolElement);
+      }
+      symbolsElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = currentSymbolElementsLength - 1, q = currentSymbolElementsLength - difference - 1; p > q; p--) {
+        symbolElements[p].remove();
+        symbolElements.splice(p, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < symbolsLength; i++) {
+    const previousSymbol = previousSymbols[i];
+    const currentSymbol = symbols[i];
+    const thisSymbolElement = symbolElements[i];
+    if (previousSymbol) {
+      updateSymbol(thisSymbolElement, currentSymbol, previousSymbol);
+    } else {
+      updateItem(thisSymbolElement, currentSymbol, null);
+    }
+  }
+
+  previousSymbols = symbols;
+  previousInputElement = inputElement;
+  previosuSkeletonScreen = skeletonScreen;
+  previousAnimation = animation;
+}
+
+function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement) {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const WindowSize = querySize('window');
+  const quantity = Math.floor(WindowSize.width / 50) * (Math.floor(WindowSize.height / 50) + 3);
+  const symbols = [];
+  for (let i = 0; i < quantity; i++) {
+    symbols.push('');
+  }
+  updateIconSelectorField(symbols, inputElement, true, playing_animation);
+}
+
+async function initializeIconSelectorField(inputElement: HTMLInputElement) {
+  setupIconSelectorFieldSkeleton(inputElement);
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
   const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
+  updateIconSelectorField(materialSymbols.symbols, inputElement, false, playing_animation);
+  currentSymbols = materialSymbols.symbols;
   deleteDataReceivingProgress(requestID);
-  const fragment = new DocumentFragment();
-  const dictionary = materialSymbols.dictionary.split(',');
-  for (const symbolKey in materialSymbols.symbols) {
-    const symbolNameComponents = symbolKey.split('_');
-    for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
-      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
-    }
-    const symbol = symbolNameComponents.join('_');
-    const symbolElement = generateElementOfSymbol(symbol, currentTarget);
-    fragment.appendChild(symbolElement);
-  }
-  materialSymbolsElement.append(fragment);
 }
 
 export function updateMaterialSymbolsSearchResult(query: string): void {
-  const materialSymbolsSearchResultsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols_search_results');
-  const materialSymbolsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols');
   if (!containPhoneticSymbols(query)) {
-    const searchResults = searchForMaterialSymbols(query);
-    const fragment = new DocumentFragment();
-    for (const result of searchResults) {
-      const symbolElement = generateElementOfSymbol(result.item, currentTarget);
-      fragment.appendChild(symbolElement);
+    const searchResults = searchForMaterialSymbols(query); // TODO: return name index
+    for (let i = searchResults.length - 1; i >= 0; i--) {
+      const item = searchResults[i].item;
+      const currentIndex = currentSymbols.indexOf(item);
+      if (!currentSymbols[i] || currentIndex < 0) continue;
+      [currentSymbols[i], currentSymbols[currentIndex]] = [currentSymbols[currentIndex], currentSymbols[i]];
     }
-    materialSymbolsSearchResultsElement.innerHTML = '';
-    materialSymbolsSearchResultsElement.append(fragment);
-    materialSymbolsSearchResultsElement.setAttribute('displayed', searchResults.length > 0 ? 'true' : 'false');
-    materialSymbolsElement.setAttribute('displayed', searchResults.length > 0 ? 'false' : 'true');
+    updateIconSelectorField(currentSymbols, previousInputElement, previosuSkeletonScreen, previousAnimation);
   }
 }
 
-export function selectIcon(symbol: string): void {
-  let iconInputElement;
-  switch (currentTarget) {
-    case 'editor':
-      iconInputElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input');
-      break;
-    case 'creator':
-      iconInputElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input input');
-      break;
-    default:
-      break;
-  }
-  iconInputElement.value = symbol;
+function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
+  inputElement.value = symbol;
   closeIconSelector();
 }
 
-export function openIconSelector(target: Target): void {
+export function openIconSelector(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelector');
-  var openIconSelectorElement;
-  switch (target) {
-    case 'editor':
-      currentTarget = 'editor';
-      openIconSelectorElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_icon_selector');
-      break;
-    case 'creator':
-      currentTarget = 'creator';
-      openIconSelectorElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_icon_selector');
-      break;
-    default:
-      break;
-  }
-  if (dataDownloadCompleted) {
-    iconSelectorField.setAttribute('displayed', 'true');
-    initializeIconSelectorField(currentTarget);
-    prepareForMaterialSymbolsSearch();
-  } else {
-    promptMessage('download_for_offline', '資料還在下載中');
-  }
+  iconSelectorField.setAttribute('displayed', 'true');
+  initializeIconSelectorField(inputElement);
 }
 
 export function closeIconSelector(): void {

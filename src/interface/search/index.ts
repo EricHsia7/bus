@@ -281,9 +281,9 @@ export function updateSearchResult(): void {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
     const searchResultElements = Array.from(elementQuerySelectorAll(searchResultsElement, '.css_search_search_result'));
-    const currentItemCapacity = searchResultElements.length;
-    if (searchResultLength !== currentItemCapacity) {
-      const difference = currentItemCapacity - searchResultLength;
+    const currentSearchResultElementsLength = searchResultElements.length;
+    if (searchResultLength !== currentSearchResultElementsLength) {
+      const difference = currentSearchResultElementsLength - searchResultLength;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
@@ -293,7 +293,7 @@ export function updateSearchResult(): void {
         }
         searchResultsElement.appendChild(fragment);
       } else if (difference > 0) {
-        for (let p = currentItemCapacity - 1, q = currentItemCapacity - difference - 1; p > q; p--) {
+        for (let p = currentSearchResultElementsLength - 1, q = currentSearchResultElementsLength - difference - 1; p > q; p--) {
           searchResultElements[p].remove();
           searchResultElements.splice(p, 1);
         }
