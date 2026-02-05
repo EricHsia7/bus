@@ -15,20 +15,20 @@ let currentTarget: Target = '';
 
 const folderEditorField = documentQuerySelector('.css_folder_editor_field');
 const folderCreatorField = documentQuerySelector('.css_folder_creator_field');
-const folderIconSelectorField = documentQuerySelector('.css_folder_icon_selector_field');
+const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
 
 function generateElementOfSymbol(symbol: string): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_folder_icon_selector_symbol');
+  element.classList.add('css_icon_selector_symbol');
   element.onclick = function () {
-    selectFolderIcon(symbol, currentTarget);
+    selectIcon(symbol, currentTarget);
   };
   element.appendChild(getIconElement(symbol));
   return element;
 }
 
-async function initializeFolderIconSelectorField() {
-  const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
+async function initializeIconSelectorField() {
+  const materialSymbolsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols');
   materialSymbolsElement.innerHTML = '';
   const requestID = generateIdentifier();
   const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
@@ -48,8 +48,8 @@ async function initializeFolderIconSelectorField() {
 }
 
 export function updateMaterialSymbolsSearchResult(query: string): void {
-  const materialSymbolsSearchResultsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols_search_results');
-  const materialSymbolsElement = elementQuerySelector(folderIconSelectorField, '.css_folder_icon_selector_body .css_folder_icon_selector_material_symbols');
+  const materialSymbolsSearchResultsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols_search_results');
+  const materialSymbolsElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body .css_icon_selector_material_symbols');
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query);
     const fragment = new DocumentFragment();
@@ -64,7 +64,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
   }
 }
 
-export function selectFolderIcon(symbol: string): void {
+export function selectIcon(symbol: string): void {
   let iconInputElement;
   switch (currentTarget) {
     case 'editor':
@@ -77,34 +77,34 @@ export function selectFolderIcon(symbol: string): void {
       break;
   }
   iconInputElement.value = symbol;
-  closeFolderIconSelector();
+  closeIconSelector();
 }
 
-export function openFolderIconSelector(target: Target): void {
-  pushPageHistory('FolderIconSelector');
-  var openFolderIconSelectorElement;
+export function openIconSelector(target: Target): void {
+  pushPageHistory('IconSelector');
+  var openIconSelectorElement;
   switch (target) {
     case 'editor':
       currentTarget = 'editor';
-      openFolderIconSelectorElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
+      openIconSelectorElement = elementQuerySelector(folderEditorField, '.css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_icon_selector');
       break;
     case 'creator':
       currentTarget = 'creator';
-      openFolderIconSelectorElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector');
+      openIconSelectorElement = elementQuerySelector(folderCreatorField, '.css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_icon_selector');
       break;
     default:
       break;
   }
   if (dataDownloadCompleted) {
-    folderIconSelectorField.setAttribute('displayed', 'true');
-    initializeFolderIconSelectorField(currentTarget);
+    iconSelectorField.setAttribute('displayed', 'true');
+    initializeIconSelectorField(currentTarget);
     prepareForMaterialSymbolsSearch();
   } else {
     promptMessage('download_for_offline', '資料還在下載中');
   }
 }
 
-export function closeFolderIconSelector(): void {
-  revokePageHistory('FolderIconSelector');
-  folderIconSelectorField.setAttribute('displayed', 'false');
+export function closeIconSelector(): void {
+  revokePageHistory('IconSelector');
+  iconSelectorField.setAttribute('displayed', 'false');
 }

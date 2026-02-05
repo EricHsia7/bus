@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-icon-selector
 
 jobs:
   build:
@@ -79,7 +80,7 @@ jobs:
       - name: Deploy with gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b dist
+          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>" -b dist-test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # -d: directory, -b: branch, -u: user, -a: add

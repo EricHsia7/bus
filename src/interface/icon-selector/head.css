@@ -1,4 +1,4 @@
-.css_folder_icon_selector_field .css_folder_icon_selector_head {
+.css_icon_selector_field .css_icon_selector_head {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -11,7 +11,7 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_search_input {
   position: absolute;
   top: 0px;
   left: 55px;
@@ -19,7 +19,7 @@
   height: 55px;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_search_input input {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_search_input input {
   -webkit-appearance: none;
   appearance: none;
   background: rgba(0, 0, 0, 0);
@@ -38,7 +38,7 @@
   height: 55px;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_button_left {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_button_left {
   position: absolute;
   width: 55px;
   height: 55px;
@@ -47,12 +47,12 @@
   align-items: center;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_button_left {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_button_left {
   top: 0px;
   left: 0px;
 }
 
-.css_folder_icon_selector_field .css_folder_icon_selector_head .css_folder_icon_selector_button_left span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_button_left span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

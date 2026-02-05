@@ -27,7 +27,7 @@
   color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
 }
 
-.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector {
+.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_icon_selector {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -38,7 +38,7 @@
   align-items: center;
 }
 
-.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_folder_icon_selector span.css_material_symbols_rounded {
+.css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-icon"] .css_folder_creator_group_body .css_folder_creator_icon_input .css_folder_creator_open_icon_selector span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
