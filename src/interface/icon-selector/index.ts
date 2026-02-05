@@ -24,7 +24,7 @@ let previousInputElement;
 
 function generateElementOfSymbol(): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_icon_selector_symbol');
+  element.classList.add('css_icon_selector_material_symbols_symbol');
   element.appendChild(getBlankIconElement());
   return element;
 }
@@ -73,7 +73,7 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
   }
 
   const symbolsLength = symbols.length;
-  const symbolElements = Array.from(elementQuerySelectorAll(symbolsElement, '.css_icon_selector_symbol'));
+  const symbolElements = Array.from(elementQuerySelectorAll(symbolsElement, '.css_icon_selector_material_symbols_symbol'));
   const currentSymbolElementsLength = symbolElements.length;
   if (symbolsLength !== currentSymbolElementsLength) {
     const difference = currentSymbolElementsLength - symbolsLength;

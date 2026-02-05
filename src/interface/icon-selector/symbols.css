@@ -11,7 +11,7 @@
 }
 
 /* symbols > symbol */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,13 +19,13 @@
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
 }
 
 /* skeleton screen: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol[skeleton-screen="true"] span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol[skeleton-screen="true"] span.css_material_symbols_rounded {
   visibility: hidden;
 }
