@@ -211,7 +211,7 @@ window.bus = {
     setupFolderFieldSkeletonScreen();
 
     // check app version
-    const status = checkAppVersion();
+    const status = await checkAppVersion();
     if (status === 'ok') {
       // initalize folder
       await initializeFolderList();
@@ -246,7 +246,7 @@ window.bus = {
       initializeSearchInput();
       initializeIconSelectorSearchInput();
 
-      fadeOutSplashScreen(async function () {
+      fadeOutSplashScreen(function () {
         document.addEventListener(
           'click',
           function () {
