@@ -136,14 +136,16 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 export function updateMaterialSymbolsSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query); // TODO: return name index
-    console.log(query, searchResults, searchResults.length);
     for (let i = searchResults.length - 1; i >= 0; i--) {
       const item = searchResults[i].item;
       const currentIndex = currentSymbols.indexOf(item);
+      console.log(0, item, currentIndex);
       if (!currentSymbols[i] || currentIndex < 0) continue;
       [currentSymbols[i], currentSymbols[currentIndex]] = [currentSymbols[currentIndex], currentSymbols[i]];
     }
     updateIconSelectorField(currentSymbols, previousInputElement, false, previousAnimation);
+    console.log(1, previousSymbols);
+    console.log(2, currentSymbols);
   }
 }
 
