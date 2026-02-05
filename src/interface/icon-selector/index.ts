@@ -100,9 +100,9 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
     } else {
       updateSymbol(thisSymbolElement, currentSymbol, null);
     }
+    previousSymbols[i] = symbols[i];
   }
 
-  previousSymbols = symbols;
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
