@@ -17,7 +17,7 @@ const OpenIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, 
 const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
 OpenIconSelectorElement.onclick = function () {
-  openIconSelector('editor');
+  openIconSelector(IconInputElement);
 };
 
 function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement {

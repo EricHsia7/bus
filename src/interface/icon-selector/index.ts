@@ -124,8 +124,11 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
   const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
-  updateIconSelectorField(materialSymbols.symbols, inputElement, false, playing_animation);
-  currentSymbols = materialSymbols.symbols;
+  currentSymbols = [];
+  for (const symbol in materialSymbols.symbols) {
+    currentSymbols.push(symbol);
+  }
+  updateIconSelectorField(currentSymbols, inputElement, false, playing_animation);
   deleteDataReceivingProgress(requestID);
 }
 
@@ -138,7 +141,7 @@ export function updateMaterialSymbolsSearchResult(query: string): void {
       if (!currentSymbols[i] || currentIndex < 0) continue;
       [currentSymbols[i], currentSymbols[currentIndex]] = [currentSymbols[currentIndex], currentSymbols[i]];
     }
-    updateIconSelectorField(currentSymbols, previousInputElement, previosuSkeletonScreen, previousAnimation);
+    updateIconSelectorField(currentSymbols, previousInputElement, false, previousAnimation);
   }
 }
 
