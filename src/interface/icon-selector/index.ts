@@ -1,6 +1,6 @@
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { deleteDataReceivingProgress } from '../../data/apis/loader';
-import { searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
+import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
@@ -129,13 +129,14 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
     currentSymbols.push(symbol);
   }
   updateIconSelectorField(currentSymbols, inputElement, false, playing_animation);
+  prepareForMaterialSymbolsSearch(materialSymbols);
   deleteDataReceivingProgress(requestID);
 }
 
 export function updateMaterialSymbolsSearchResult(query: string): void {
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query); // TODO: return name index
-    console.log(searchResults, searchResults.length);
+    console.log(query, searchResults, searchResults.length);
     for (let i = searchResults.length - 1; i >= 0; i--) {
       const item = searchResults[i].item;
       const currentIndex = currentSymbols.indexOf(item);

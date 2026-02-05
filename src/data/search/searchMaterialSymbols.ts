@@ -1,22 +1,17 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
-import { generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { hasOwnProperty } from '../../tools/index';
 import { levenshtein } from '../../tools/levenshtein';
-import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
-import { deleteDataReceivingProgress } from '../apis/loader';
+import { UnpackedMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 
 let searchStructure = {};
 let readyToSearch = false;
 
-export async function prepareForMaterialSymbolsSearch() {
+export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMaterialSymbolsSearchIndex): void {
   if (readyToSearch) return;
 
-  const requestID = generateIdentifier();
-  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
-  deleteDataReceivingProgress(requestID);
-
-  const dictionary = materialSymbolsSearchIndex.dictionary.split(',');
-  const symbols = materialSymbolsSearchIndex.symbols;
+  const dictionary = materialSymbols.dictionary.split(',');
+  const symbols = materialSymbols.symbols;
   const names = [];
   const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
 
@@ -40,9 +35,7 @@ export async function prepareForMaterialSymbolsSearch() {
 }
 
 export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): Array<{ item: MaterialSymbols; score: number }> {
-  console.log(0);
   if (!readyToSearch) return [];
-  console.log(1);
 
   const { dictionary, names, wordToSymbols } = searchStructure;
   const broadLength = Math.round(names.length * broadThreshold);
