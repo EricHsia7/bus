@@ -26,10 +26,11 @@ export function offsetDate(origin: Date, date: number, hours: number, minutes: n
   return duplicatedOrigin;
 }
 
-export function timeStampToNumber(string: string): number {
+export function timeStampToNumber(string: string, timeZoneOffset: number = 0): number {
   const regex = /[0-9\.]*/gm;
   const match = string.match(regex);
   if (match) {
+    const localTimeZoneOffset = new Date().getTimezoneOffset();
     const year = parseInt(match[0]);
     const month = parseInt(match[2]);
     const date = parseInt(match[4]);
@@ -43,7 +44,9 @@ export function timeStampToNumber(string: string): number {
     date_object.setMonth(month - 1);
     date_object.setDate(date);
     date_object.setHours(hours);
-    date_object.setMinutes(minutes);
+    date_object.setMinutes(minutes + localTimeZoneOffset - timeZoneOffset);
+    // UTC - local = local offset -> UTC = local + local offset
+    // UTC - target = target offset -> target = UTC - target offset = (local + local offset) - target offset
     date_object.setSeconds(seconds);
     return date_object.getTime();
   }
