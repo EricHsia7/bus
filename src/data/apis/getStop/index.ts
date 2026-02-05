@@ -66,7 +66,7 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }

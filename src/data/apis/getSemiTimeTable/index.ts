@@ -18,7 +18,7 @@ export async function getSemiTimeTable(requestID: string): Promise<object> {
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
