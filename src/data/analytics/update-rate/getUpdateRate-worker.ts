@@ -54,7 +54,7 @@ function processWorkerTask(): void {
     }
     weightedAverage = totalCorrelation / totalWeight;
 
-    const result = isNaN(weightedAverage) ? 0.8 : weightedAverage;
+    const result = isNaN(weightedAverage) || weightedAverage < 0.1 || weightedAverage > 1 ? 0.8 : weightedAverage;
 
     // Send the result back to the main thread
     port.postMessage([result, taskID]);
