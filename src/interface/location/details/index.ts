@@ -126,7 +126,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   previousSkeletonScreen = skeletonScreen;
 }
 
-function setUpLocationDetailsFieldSkeletonScreen(): void {
+function setupLocationDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const actions: IntegratedLocationDetailsAction[] = [];
   /*
@@ -165,7 +165,7 @@ async function initializeLocationDetailsField(hash: string) {
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
   LocationDetailsField.setAttribute('displayed', 'true');
-  setUpLocationDetailsFieldSkeletonScreen();
+  setupLocationDetailsFieldSkeletonScreen();
   initializeLocationDetailsField(hash);
 }
 

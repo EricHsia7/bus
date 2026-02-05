@@ -4,7 +4,7 @@ import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
-import { setUpBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
+import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 export const BusField = documentQuerySelector('.css_bus_field');
 export const BusHeadElement = elementQuerySelector(BusField, '.css_bus_head');
@@ -29,7 +29,7 @@ export function closeBus(): void {
 }
 
 async function initializeBusPage(id: number) {
-  setUpBusPropertiesFieldSkeletonScreen();
+  setupBusPropertiesFieldSkeletonScreen();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
   const integration = await integrateBus(id, requestID);

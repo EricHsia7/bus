@@ -59,7 +59,7 @@ function generateElementOfEventGroup(): HTMLElement {
   return eventGroupElement;
 }
 
-export function setUpCalendarGroupSkeletonScreen(): void {
+export function setupCalendarGroupSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const defaultEventQuantity = {
     d_0: 47,

@@ -123,7 +123,7 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
   previousAnimation = animation;
 }
 
-function setUpStorageFieldSkeletonScreen(): void {
+function setupStorageFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const FieldSize = querySize('window');
   // const FieldWidth = FieldSize.width;
@@ -148,7 +148,7 @@ function setUpStorageFieldSkeletonScreen(): void {
 
 async function refreshStorageStatistics() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  setUpStorageFieldSkeletonScreen();
+  setupStorageFieldSkeletonScreen();
   const statistics = await getStoresSizeStatistics();
   updateStorageField(statistics, false, playing_animation);
 }

@@ -145,7 +145,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-export function setUpFolderFieldSkeletonScreen(): void {
+export function setupFolderFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -624,7 +624,7 @@ async function streamFolders() {
 }
 
 export function initializeFolders(): void {
-  setUpFolderFieldSkeletonScreen();
+  setupFolderFieldSkeletonScreen();
   if (!foldersRefreshTimer_streaming) {
     foldersRefreshTimer_streaming = true;
     if (!foldersRefreshTimer_streamStarted) {

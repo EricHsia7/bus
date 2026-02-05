@@ -24,7 +24,7 @@ function generateElementOfProperty(): HTMLElement {
   return propertyElement;
 }
 
-export function setUppropertiesGroupSkeletonScreen(): void {
+export function setuppropertiesGroupSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const defaultPropertyQuantity = 5;
   const properties = [];

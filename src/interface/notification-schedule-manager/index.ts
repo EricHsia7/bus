@@ -212,7 +212,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   previousSkeletonScreen = skeletonScreen;
 }
 
-function setUpNotificationScheduleManagerFieldSkeletonScreen(): void {
+function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -306,7 +306,7 @@ async function streamNotificationScheduleManager() {
 export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
   NotificationScheduleManagerField.setAttribute('displayed', 'true');
-  setUpNotificationScheduleManagerFieldSkeletonScreen();
+  setupNotificationScheduleManagerFieldSkeletonScreen();
   if (!notifcationScheduleManagerRefreshTimer_streaming) {
     notifcationScheduleManagerRefreshTimer_streaming = true;
     if (!notifcationScheduleManagerRefreshTimer_streamStarted) {

@@ -428,7 +428,7 @@ function generateElementOfBusArrivalTime(): HTMLElement {
   return busArrivalTimeElement;
 }
 
-function setUpLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
+function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -1062,7 +1062,7 @@ export function openLocation(hash: IntegratedLocation['hash']): void {
   LocationField.setAttribute('displayed', 'true');
   LocationGroupsElement.scrollLeft = 0;
   LocationGroupsElement.focus();
-  setUpLocationFieldSkeletonScreen(hash);
+  setupLocationFieldSkeletonScreen(hash);
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
     if (!locationRefreshTimer_streamStarted) {

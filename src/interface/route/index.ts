@@ -571,7 +571,7 @@ function generateElementOfNearbyLocation(): HTMLElement {
   return nearbyLocationElement;
 }
 
-function setUpRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
+function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -1226,7 +1226,7 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
   RouteField.setAttribute('displayed', 'true');
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
-  setUpRouteFieldSkeletonScreen(RouteID, PathAttributeId);
+  setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {

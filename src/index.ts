@@ -13,9 +13,9 @@ import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
 import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
 import { closeFolderManager } from './interface/folder-manager/index';
-import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
+import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
-import { initializeRecentViews, setUpRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
+import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
@@ -197,76 +197,88 @@ let busInitialized = false;
 let busSecondlyInitialized = false;
 
 window.bus = {
-  initialize: function () {
-    if (busInitialized === false) {
-      busInitialized = true;
-      setSplashScreenIconOffsetY();
-      initializeSettings().then(function () {
-        setUpRecentViewsFieldSkeletonScreen();
-        setUpFolderFieldSkeletonScreen();
-        checkAppVersion()
-          .then((status) => {
-            if (status === 'ok') {
-              initializeRouteSliding();
-              initializeLocationSliding();
-              resizeSearchInputSVG();
-              window.addEventListener('resize', () => {
-                resizeSearchInputSVG();
-              });
-              if (screen) {
-                if (screen.orientation) {
-                  screen.orientation.addEventListener('change', () => {
-                    resizeSearchInputSVG();
-                  });
-                }
-              }
-              initializeRecentViews();
-              initializeFolderList().then(() => {
-                initializeFolders();
-              });
-              initializeSearchInput();
-              initializeIconSelectorSearchInput();
-              openPermalink();
-              fadeOutSplashScreen(function () {
-                loadNotificationClient();
-                initializeNotificationSchedules().then(function () {
-                  discardExpiredNotificationSchedules();
-                });
-                document.addEventListener(
-                  'click',
-                  function () {
-                    askForPositioningPermission();
-                    askForCalibratingPermission();
-                  },
-                  { once: true }
-                );
-              });
-            }
-            if (status === 'fetchError' || status === 'unknownError') {
-              showErrorMessage();
-              fadeOutSplashScreen();
-            }
-          })
-          .catch(() => {
-            showErrorMessage();
-            fadeOutSplashScreen();
-          });
+  initialize: async function () {
+    if (busInitialized) return;
+    busInitialized = true;
+
+    setSplashScreenIconOffsetY();
+
+    // initialize settings
+    await initializeSettings();
+
+    // setup skeleton screen
+    setupRecentViewsFieldSkeletonScreen();
+    setupFolderFieldSkeletonScreen();
+
+    // check app version
+    const status = checkAppVersion();
+    if (status === 'ok') {
+      // initalize folder
+      await initializeFolderList();
+      initializeFolders();
+
+      // initialize sliding
+      initializeRouteSliding();
+      initializeLocationSliding();
+
+      // handle permanent link
+      openPermalink();
+
+      // handle window resize
+      resizeSearchInputSVG();
+
+      window.addEventListener('resize', () => {
+        resizeSearchInputSVG();
       });
+
+      if (screen in self) {
+        if (screen.orientation) {
+          screen.orientation.addEventListener('change', () => {
+            resizeSearchInputSVG();
+          });
+        }
+      }
+
+      // initialize recent views
+      initializeRecentViews();
+
+      // initialize search inputs
+      initializeSearchInput();
+      initializeIconSelectorSearchInput();
+
+      fadeOutSplashScreen(async function () {
+        document.addEventListener(
+          'click',
+          function () {
+            askForPositioningPermission();
+            askForCalibratingPermission();
+          },
+          { once: true }
+        );
+      });
+    } else if (status === 'fetchError' || status === 'unknownError') {
+      showErrorMessage();
+      fadeOutSplashScreen();
     }
   },
-  secondlyInitialize: function () {
-    if (!busSecondlyInitialized) {
-      busSecondlyInitialized = true;
-      downloadData();
-      discardExpiredDataUsageStats();
-      recoverBusArrivalTimeDataFromWriteAheadLog();
-      discardExpiredRecentViews();
-      discardUpdateRateDataGroups().then(function () {
-        initializeUpdateRateDataGroups().then(function () {
-          recoverUpdateRateDataFromWriteAheadLog();
-        });
-      });
-    }
+  secondlyInitialize: async function () {
+    if (busSecondlyInitialized) return;
+    busSecondlyInitialized = true;
+
+    await loadNotificationClient();
+    await initializeNotificationSchedules();
+    await discardExpiredNotificationSchedules();
+
+    await downloadData();
+
+    await recoverBusArrivalTimeDataFromWriteAheadLog();
+
+    await discardUpdateRateDataGroups();
+    await discardExpiredRecentViews();
+    await discardExpiredDataUsageStats();
+
+    await initializeUpdateRateDataGroups();
+    await recoverUpdateRateDataFromWriteAheadLog();
   },
   route: {
     closeRoute,

@@ -273,7 +273,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
   previousSkeletonScreen = skeletonScreen;
 }
 
-export function setUpRecentViewsFieldSkeletonScreen(): void {
+export function setupRecentViewsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
@@ -353,7 +353,7 @@ async function streamRecentViews() {
 }
 
 export function initializeRecentViews(): void {
-  setUpRecentViewsFieldSkeletonScreen();
+  setupRecentViewsFieldSkeletonScreen();
   if (!recentViewsRefreshTimer_streaming) {
     recentViewsRefreshTimer_streaming = true;
     if (!recentViewsRefreshTimer_streamStarted) {

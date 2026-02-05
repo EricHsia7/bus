@@ -6,8 +6,8 @@ import { booleanToString, generateIdentifier } from '../../../tools/index';
 import { pushPageHistory, revokePageHistory } from '../../index';
 import { openSaveToFolder } from '../../save-to-folder/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';
-import { setUpCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
-import { setUppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
+import { setupCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
+import { setuppropertiesGroupSkeletonScreen, updatePropertiesField } from './properties';
 
 export const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 export const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
@@ -42,8 +42,8 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   showPermalinkQRCodeActionButton.onclick = function () {
     showRoutePermalinkQRCode(RouteID);
   };
-  setUppropertiesGroupSkeletonScreen(PropertiesGroupElement);
-  setUpCalendarGroupSkeletonScreen();
+  setuppropertiesGroupSkeletonScreen(PropertiesGroupElement);
+  setupCalendarGroupSkeletonScreen();
   const requestID = generateIdentifier();
   const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
   updatePropertiesField(integration.properties, false, playing_animation);
