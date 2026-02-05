@@ -95,12 +95,6 @@ export function initializeRouteSliding(): void {
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
-      /*
-      if (currentIndex === routeSliding_targetIndex) {
-        routeSliding_initialIndex = Math.round(currentIndex);
-        routeSliding_sliding = false;
-      }
-      */
     },
     { passive: true }
   );
@@ -586,7 +580,7 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
       groupedItems[groupKey].push({
         name: '',
         goBack: '0',
-        status: { code: 8, text: '', time: -6 },
+        status: { code: 8, text: '--', time: -6 },
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],

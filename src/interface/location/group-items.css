@@ -361,6 +361,15 @@
   visibility: hidden;
 }
 
+/* code: 8 */
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="8"],
+.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="8"] {
+  background: var(--b-cssvar-ededf2);
+  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  font-size: 11px;
+  font-weight: 500;
+}
+
 /* code: 7 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="7"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="7"] {
@@ -419,7 +428,6 @@
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
-  transition: none;
 }
 
 /* fadeout */

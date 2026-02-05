@@ -447,7 +447,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
         stopId: 0,
         status: {
           code: 8,
-          text: '',
+          text: '--',
           time: -6
         },
         ranking: {
@@ -518,7 +518,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
 
 function updateLocationField(integration: IntegratedLocation, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedLocationItem, previousItem: IntegratedLocationItem | null): void {
-    function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
+    function updateStatus(thisElement: HTMLElement, thisItem: IntegratedLocationItem, skeletonScreen: boolean, animation: boolean): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisItemStatusElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_status');
       const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
@@ -558,7 +558,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       currentSlideElement.innerText = thisItem.status.text;
     }
 
-    function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, animation: boolean): void {
+    function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, skeletonScreen: boolean, animation: boolean): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRankElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_rank');
       const nextSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_next_slide');
@@ -726,8 +726,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
 
     if (previousItem === null || previousItem === undefined) {
-      updateStatus(thisElement, thisItem, animation);
-      updateRank(thisElement, thisItem, animation);
+      updateStatus(thisElement, thisItem, skeletonScreen, animation);
+      updateRank(thisElement, thisItem, skeletonScreen, animation);
       updateRouteDirection(thisElement, thisItem);
       updateRouteName(thisElement, thisItem);
       updateBuses(thisElement, thisItem);
@@ -739,11 +739,11 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       updateScheduleNotificationButton(thisElement, thisItem);
     } else {
       if (thisItem.status.time !== previousItem.status.time) {
-        updateStatus(thisElement, thisItem, animation);
+        updateStatus(thisElement, thisItem, skeletonScreen, animation);
         updateScheduleNotificationButton(thisElement, thisItem);
       }
       if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
-        updateRank(thisElement, thisItem, animation);
+        updateRank(thisElement, thisItem, skeletonScreen, animation);
       }
       if (previousItem.stopId !== thisItem.stopId) {
         updateRouteDirection(thisElement, thisItem);
