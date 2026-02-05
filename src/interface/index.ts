@@ -16,7 +16,7 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'FolderIconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -50,7 +50,7 @@ export function closePreviousPage(): void {
       case 'FolderEditor':
         closeFolderEditor();
         break;
-      case 'FolderIconSelector':
+      case 'IconSelector':
         break;
       case 'FolderManager':
         closeFolderManager();
@@ -115,7 +115,7 @@ export function openPreviousPage(): void {
       case 'FolderEditor':
         openFolderEditor();
         break;
-      case 'FolderIconSelector':
+      case 'IconSelector':
         break;
       case 'FolderManager':
         openFolderManager();

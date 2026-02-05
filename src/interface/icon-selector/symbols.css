@@ -1,0 +1,31 @@
+/* symbols */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols {
+  position: relative;
+  width: 100%;
+  margin-top: 55px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  /* min box width: 50px */
+  /* Responsive columns */
+  gap: 5px;
+}
+
+/* symbols > symbol */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
+  color: var(--b-cssvar-333333);
+}
+
+/* skeleton screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol[skeleton-screen="true"] span.css_material_symbols_rounded {
+  visibility: hidden;
+}

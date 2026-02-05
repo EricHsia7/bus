@@ -1,6 +1,6 @@
 import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, updateFolder, updateFolderContentIndex } from '../../data/folder/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { openFolderIconSelector } from '../folder-icon-selector/index';
+import { openIconSelector } from '../icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
@@ -13,11 +13,11 @@ const FolderEditorBodyElement = elementQuerySelector(FolderEditorField, '.css_fo
 const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups');
 const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input') as HTMLInputElement;
 const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input') as HTMLInputElement;
-const OpenFolderIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_folder_icon_selector');
+const OpenIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_icon_selector');
 const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
-OpenFolderIconSelectorElement.onclick = function () {
-  openFolderIconSelector('editor');
+OpenIconSelectorElement.onclick = function () {
+  openIconSelector(IconInputElement);
 };
 
 function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement {

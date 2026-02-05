@@ -1,4 +1,4 @@
-.css_folder_icon_selector_field {
+.css_icon_selector_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -10,6 +10,6 @@
   overflow: clip;
 }
 
-.css_folder_icon_selector_field[displayed="true"] {
+.css_icon_selector_field[displayed="true"] {
   visibility: visible;
 }

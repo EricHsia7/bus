@@ -1,36 +1,26 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
-import { generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { hasOwnProperty } from '../../tools/index';
 import { levenshtein } from '../../tools/levenshtein';
-import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
-import { deleteDataReceivingProgress } from '../apis/loader';
+import { UnpackedMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 
 let searchStructure = {};
 let readyToSearch = false;
 
-export async function prepareForMaterialSymbolsSearch() {
+export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMaterialSymbolsSearchIndex): void {
   if (readyToSearch) return;
 
-  const requestID = generateIdentifier();
-  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
-  deleteDataReceivingProgress(requestID);
-
-  const dictionary = materialSymbolsSearchIndex.dictionary.split(',');
-  const symbols = materialSymbolsSearchIndex.symbols;
+  const dictionary = materialSymbols.dictionary.split(',');
+  const symbols = materialSymbols.symbols;
   const names = [];
   const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
 
   let nameIndex = 0;
-  for (const symbolKey in symbols) {
+  for (const symbol in symbols) {
     // Create list of symbol names
-    const symbolNameComponents = symbolKey.split('_');
-    for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
-      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
-    }
-    const symbol = symbolNameComponents.join('_');
     names.push(symbol);
     // Build wordIndex → nameIndex mapping
-    for (const wordIndex of symbols[symbolKey]) {
+    for (const wordIndex of symbols[symbol]) {
       const wordIndexKey = `w${wordIndex}`;
       if (!hasOwnProperty(wordToSymbols, wordIndexKey)) {
         wordToSymbols[wordIndexKey] = [];
