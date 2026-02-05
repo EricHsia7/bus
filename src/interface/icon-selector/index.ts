@@ -10,8 +10,10 @@ import { MaterialSymbols } from '../icons/material-symbols-type';
 import { pushPageHistory, querySize, revokePageHistory } from '../index';
 
 const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
-const iconSelectorBodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
-const symbolsElement = elementQuerySelector(iconSelectorBodyElement, '.css_icon_selector_material_symbols');
+const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
+const searchInputElement = elementQuerySelector(headElement, '#search_material_symbols_input') as HTMLInputElement;
+const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
+const symbolsElement = elementQuerySelector(bodyElement, '.css_icon_selector_material_symbols');
 
 let currentSymbols: Array<MaterialSymbols> = [];
 
@@ -134,19 +136,39 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
   deleteDataReceivingProgress(requestID);
 }
 
-export function updateMaterialSymbolsSearchResult(query: string): void {
+export function initializeIconSelectorSearchInput(): void {
+  searchInputElement.addEventListener('paste', function () {
+    updateMaterialSymbolsSearchResult();
+  });
+
+  searchInputElement.addEventListener('cut', function () {
+    updateMaterialSymbolsSearchResult();
+  });
+
+  searchInputElement.addEventListener('selectionchange', function () {
+    updateMaterialSymbolsSearchResult();
+  });
+
+  document.addEventListener('selectionchange', function () {
+    updateMaterialSymbolsSearchResult();
+  });
+
+  searchInputElement.addEventListener('keyup', function () {
+    updateMaterialSymbolsSearchResult();
+  });
+}
+
+export function updateMaterialSymbolsSearchResult(): void {
+  const query = searchInputElement.value;
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query); // TODO: return name index
     for (let i = searchResults.length - 1; i >= 0; i--) {
       const item = searchResults[i].item;
       const currentIndex = currentSymbols.indexOf(item);
-      console.log(0, item, currentIndex);
       if (!currentSymbols[i] || currentIndex < 0) continue;
       [currentSymbols[i], currentSymbols[currentIndex]] = [currentSymbols[currentIndex], currentSymbols[i]];
     }
     updateIconSelectorField(currentSymbols, previousInputElement, false, previousAnimation);
-    console.log(1, previousSymbols);
-    console.log(2, currentSymbols);
   }
 }
 

@@ -11,7 +11,7 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
-import { closeIconSelector, updateMaterialSymbolsSearchResult } from './interface/icon-selector/index';
+import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
 import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setUpFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
@@ -34,7 +34,6 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { documentQuerySelector } from './tools/elements';
 
 import './interface/theme.css';
 
@@ -226,22 +225,7 @@ window.bus = {
                 initializeFolders();
               });
               initializeSearchInput();
-              const searchMaterialSymbolsInputElement = documentQuerySelector('.css_icon_selector_field .css_icon_selector_head .css_icon_selector_search_input #search_material_symbols_input') as HTMLInputElement;
-              searchMaterialSymbolsInputElement.addEventListener('paste', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('cut', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              document.addEventListener('selectionchange', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
-              searchMaterialSymbolsInputElement.addEventListener('keyup', function () {
-                updateMaterialSymbolsSearchResult(searchMaterialSymbolsInputElement.value);
-              });
+              initializeIconSelectorSearchInput();
               openPermalink();
               fadeOutSplashScreen(function () {
                 loadNotificationClient();
