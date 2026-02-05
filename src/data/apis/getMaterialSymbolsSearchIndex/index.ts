@@ -23,8 +23,8 @@ function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): Unp
     for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
       symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
     }
-    data[symbolNameComponents.join('_')] = data[symbolKey];
-    delete data[symbolKey];
+    data.symbols[symbolNameComponents.join('_')] = data.symbols[symbolKey];
+    delete data.symbols[symbolKey];
   }
 
   return data as UnpackedMaterialSymbolsSearchIndex;
@@ -38,7 +38,7 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_search_index_v3_cache';
+  const cacheKey = 'bus_material_symbols_search_index_v4_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
