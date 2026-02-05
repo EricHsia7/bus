@@ -97,7 +97,7 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
     if (previousSymbol) {
       updateSymbol(thisSymbolElement, currentSymbol, previousSymbol);
     } else {
-      updateItem(thisSymbolElement, currentSymbol, null);
+      updateSymbol(thisSymbolElement, currentSymbol, null);
     }
   }
 
