@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-fix-timezone-2
 
 jobs:
   build:
