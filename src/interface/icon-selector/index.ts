@@ -102,7 +102,6 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
     } else {
       updateSymbol(thisSymbolElement, currentSymbol, null);
     }
-    // previousSymbols[i] = symbols[i];
   }
 
   previousSymbols = symbols.slice();
@@ -180,6 +179,7 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
 export function openIconSelector(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelector');
   iconSelectorField.setAttribute('displayed', 'true');
+  searchInputElement.value = '';
   initializeIconSelectorField(inputElement);
 }
 

@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
-  border-radius: var(--b-cssvar-border-radius-small);
+  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol span.css_material_symbols_rounded {
