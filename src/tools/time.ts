@@ -44,9 +44,9 @@ export function timeStampToNumber(string: string, timeZoneOffset: number = 0): n
     date_object.setMonth(month - 1);
     date_object.setDate(date);
     date_object.setHours(hours);
-    date_object.setMinutes(minutes + localTimeZoneOffset - timeZoneOffset);
-    // UTC - local = local offset -> UTC = local + local offset
-    // UTC - target = target offset -> target = UTC - target offset = (local + local offset) - target offset
+    date_object.setMinutes(minutes + timeZoneOffset - localTimeZoneOffset);
+    // UTC - source = source offset -> UTC = source + soucre offset
+    // UTC - local = local offset -> local = UTC - local offset = (source + soucre offset) - local offset
     date_object.setSeconds(seconds);
     return date_object.getTime();
   }
