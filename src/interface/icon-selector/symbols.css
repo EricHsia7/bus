@@ -1,3 +1,4 @@
+/* symbols */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols {
   position: relative;
   width: 100%;
@@ -9,15 +10,22 @@
   gap: 5px;
 }
 
+/* symbols > symbol */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol {
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
+  border-radius: var(--b-cssvar-border-radius-small);
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
+}
+
+/* skeleton screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_symbol[skeleton-screen="true"] span.css_material_symbols_rounded {
+  visibility: hidden;
 }

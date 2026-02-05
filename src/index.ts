@@ -130,6 +130,7 @@ import './interface/icon-selector/field.css';
 import './interface/icon-selector/head.css';
 import './interface/icon-selector/body.css';
 import './interface/icon-selector/symbols.css';
+import './interface/icon-selector/index.css';
 
 import './interface/personal-schedule-manager/field.css';
 import './interface/personal-schedule-manager/head.css';
