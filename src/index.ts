@@ -217,12 +217,19 @@ window.bus = {
       await initializeFolderList();
       initializeFolders();
 
+      // handle permanent link
+      openPermalink();
+
+      // initialize recent views
+      initializeRecentViews();
+
       // initialize sliding
       initializeRouteSliding();
       initializeLocationSliding();
 
-      // handle permanent link
-      openPermalink();
+      // initialize search inputs
+      initializeSearchInput();
+      initializeIconSelectorSearchInput();
 
       // handle window resize
       resizeSearchInputSVG();
@@ -238,13 +245,6 @@ window.bus = {
           });
         }
       }
-
-      // initialize recent views
-      initializeRecentViews();
-
-      // initialize search inputs
-      initializeSearchInput();
-      initializeIconSelectorSearchInput();
 
       fadeOutSplashScreen(function () {
         document.addEventListener(
