@@ -43,11 +43,11 @@ function processWorkerTask(): void {
     let totalCorrelation: number = 0;
     let totalWeight: number = 0;
     for (const dataGroup of dataGroups) {
-      if (typeof dataGroup.stats.correlation !== 'number') {
+      if (typeof dataGroup.stats.correlation !== 'number' || isNaN(dataGroup.stats.correlation)) {
         continue;
       }
       const absoluteCorrelation = Math.abs(dataGroup.stats.correlation);
-      if (absoluteCorrelation >= 0.5) {
+      if (absoluteCorrelation >= 0.5 && absoluteCorrelation <= 1) {
         totalCorrelation += absoluteCorrelation * dataGroup.stats.length;
         totalWeight += dataGroup.stats.length;
       }
