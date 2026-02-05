@@ -157,7 +157,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
+      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480);
     }
     return result;
   }

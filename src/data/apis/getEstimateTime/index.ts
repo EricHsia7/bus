@@ -22,7 +22,7 @@ export async function getEstimateTime(requestID: string): Promise<EstimateTime> 
     for (let i = 0, l = data.BusInfo.length; i < l; i++) {
       result.push(data.BusInfo[i]);
     }
-    setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime);
+    setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480);
   }
   return result;
 }
