@@ -580,7 +580,11 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
       groupedItems[groupKey].push({
         name: '',
         goBack: '0',
-        status: { code: 8, text: '載入中', time: -6 },
+        status: {
+          code: 8,
+          text: '載入中',
+          time: -6
+        },
         buses: [],
         overlappingRoutes: [],
         busArrivalTimes: [],
