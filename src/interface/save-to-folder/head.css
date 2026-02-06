@@ -11,10 +11,8 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
-.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left,
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_right {
   width: 55px;
   height: 55px;
   display: flex;
@@ -22,7 +20,20 @@
   align-items: center;
 }
 
-.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left span.css_material_symbols_rounded {
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_right {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left span.css_material_symbols_rounded,
+.css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_right span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
