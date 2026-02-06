@@ -15,7 +15,7 @@
 .css_page_transition_slide_in_ltr {
   animation-name: slideOut;
   animation-duration: 0.5s;
-  animation-timing-function: var(--b-cssvar-page-transiton-ease);
+  animation-timing-function: var(--b-cssvar-page-transiton-ease-reverse);
   animation-fill-mode: forwards;
   animation-direction: reverse;
 }
@@ -23,7 +23,7 @@
 .css_page_transition_slide_out_ltr {
   animation-name: slideIn;
   animation-duration: 0.5s;
-  animation-timing-function: var(--b-cssvar-page-transiton-ease);
+  animation-timing-function: var(--b-cssvar-page-transiton-ease-reverse);
   animation-fill-mode: forwards;
   animation-direction: reverse;
 }

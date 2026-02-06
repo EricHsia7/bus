@@ -133,7 +133,8 @@
   --b-cssvar-head-background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   --b-cssvar-large-head-background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 70%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
 
-   --b-cssvar-page-transiton-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --b-cssvar-page-transiton-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --b-cssvar-page-transiton-ease-reverse: cubic-bezier(1, 0, 0.68, 0.28);
 }
 
 @media (prefers-color-scheme: dark) {
