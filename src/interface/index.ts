@@ -135,7 +135,6 @@ export function showPreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
   if (pageHistoryLength > 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
-    console.log(1, pageHistory);
     switch (previousPage) {
       case 'Home':
         showHome();
