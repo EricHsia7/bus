@@ -14,8 +14,7 @@ export const BusPropertiesGroupElement = elementQuerySelector(BusGroupsElement, 
 export const BusPropertiesGroupBodyElement = elementQuerySelector(BusPropertiesGroupElement, '.css_bus_group_body');
 export const BusLocationGroupElement = elementQuerySelector(BusGroupsElement, '.css_bus_group[group="location"]');
 
-export function showBus(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showBus(  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
   BusField.addEventListener(
     'animationend',
     function () {
@@ -25,7 +24,6 @@ export function showBus(pageTransitionDirection: PageTransitionDirection): void 
   );
   BusField.classList.add(className);
   BusField.setAttribute('displayed', 'true');
-}
 
 export function hideBus(pageTransitionDirection: PageTransitionDirection): void {
   const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';

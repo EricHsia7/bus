@@ -1,7 +1,7 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
@@ -47,23 +47,41 @@ function initializeFolderCreator(callback: Function): void {
   };
 }
 
-export function showFolderCreator(): void {
+export function showFolderCreator(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  FolderCreatorField.addEventListener(
+    'animationend',
+    function () {
+      FolderCreatorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderCreatorField.classList.add(className);
   FolderCreatorField.setAttribute('displayed', 'true');
 }
 
-export function hideFolderCreator(): void {
-  FolderCreatorField.setAttribute('displayed', 'false');
+export function hideFolderCreator(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  FolderCreatorField.addEventListener(
+    'animationend',
+    function () {
+      FolderCreatorField.setAttribute('displayed', 'false');
+      FolderCreatorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderCreatorField.classList.add(className);
 }
 
 export function openFolderCreator(callback: Function): void {
   pushPageHistory('FolderCreator');
   initializeFolderCreator(callback);
-  showFolderCreator();
+  showFolderCreator('rtl');
   hidePreviousPage();
 }
 
 export function closeFolderCreator(): void {
-  hideFolderCreator();
+  hideFolderCreator('ltr');
   showPreviousPage();
   revokePageHistory('FolderCreator');
 }
