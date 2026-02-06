@@ -4,7 +4,7 @@ import { hideBus, showBus } from './bus/index';
 import { hideDataUsage, showDataUsage } from './data-usage/index';
 import { hideFolderCreator, showFolderCreator } from './folder-creator/index';
 import { hideFolderEditor, showFolderEditor } from './folder-editor/index';
-import { hideFolderManager, openFolderManager } from './folder-manager/index';
+import { hideFolderManager, openFolderManager, showFolderManager } from './folder-manager/index';
 import { hideHome, showHome } from './home/index';
 import { hideIconSelector, showIconSelector } from './icon-selector/index';
 import { hideLocationDetails, showLocationDetails } from './location/details/index';
@@ -135,7 +135,6 @@ export function showPreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
   if (pageHistoryLength > 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
-    pageHistory.pop();
     switch (previousPage) {
       case 'Home':
         showHome();
@@ -150,7 +149,7 @@ export function showPreviousPage(): void {
         showIconSelector();
         break;
       case 'FolderManager':
-        openFolderManager();
+        showFolderManager();
         break;
       case 'Location':
         showLocation();
