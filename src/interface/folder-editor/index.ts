@@ -167,9 +167,9 @@ export function openFolderEditor(folderID: string): void {
 }
 
 export function closeFolderEditor(): void {
-  revokePageHistory('FolderEditor');
   hideFolderEditor();
   showPreviousPage();
+  revokePageHistory('FolderEditor');
 }
 
 export function removeItemOnFolderEditor(itemElement: HTMLElement, folderID: Folder['id'], type: FolderContent['type'], id: number): void {

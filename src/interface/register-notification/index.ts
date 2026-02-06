@@ -33,9 +33,9 @@ export function openRegisterNotification(): void {
 }
 
 export function closeRegisterNotification(): void {
-  revokePageHistory('RegisterNotification');
   hideRegisterNotification();
   showPreviousPage();
+  revokePageHistory('RegisterNotification');
 }
 
 export async function saveFormulatedRegisterNotification() {

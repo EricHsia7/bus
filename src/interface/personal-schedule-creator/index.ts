@@ -60,9 +60,9 @@ export function openPersonalScheduleCreator(): void {
 }
 
 export function closePersonalScheduleCreator(): void {
-  revokePageHistory('PersonalScheduleCreator');
   hidePersonalScheduleCreator();
   showPreviousPage();
+  revokePageHistory('PersonalScheduleCreator');
 }
 
 export function switchPersonalScheduleCreatorDay(day: WeekDayIndex): void {

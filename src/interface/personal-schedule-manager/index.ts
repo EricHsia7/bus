@@ -60,7 +60,7 @@ export function openPersonalScheduleManager(): void {
 }
 
 export function closePersonalScheduleManager(): void {
-  revokePageHistory('PersonalScheduleManager');
   PersonalScheduleManagerField.setAttribute('displayed', 'false');
   showPreviousPage();
+  revokePageHistory('PersonalScheduleManager');
 }

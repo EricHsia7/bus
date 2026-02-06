@@ -354,8 +354,8 @@ export function openSearch(): void {
 }
 
 export function closeSearch(): void {
-  revokePageHistory('Search');
   closeKeyboard();
   hideSearch();
   showPreviousPage();
+  revokePageHistory('Search');
 }

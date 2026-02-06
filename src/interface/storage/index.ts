@@ -169,7 +169,7 @@ export function openStorage(): void {
 }
 
 export function closeStorage(): void {
-  revokePageHistory('Storage');
   hideStorage();
   showPreviousPage();
+  revokePageHistory('Storage');
 }

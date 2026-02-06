@@ -178,9 +178,9 @@ export function openLocationDetails(hash: string): void {
 }
 
 export function closeLocationDetails(): void {
-  revokePageHistory('LocationDetails');
   hideLocationDetails();
   showPreviousPage();
+  revokePageHistory('LocationDetails');
 }
 
 export async function shareLocationPermalink(hash: string) {

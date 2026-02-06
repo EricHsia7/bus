@@ -1249,10 +1249,10 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
 }
 
 export function closeRoute(): void {
-  revokePageHistory('Route');
   hideRoute();
   routeRefreshTimer_streaming = false;
   showPreviousPage();
+  revokePageHistory('Route');
 }
 
 export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {

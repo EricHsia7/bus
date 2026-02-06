@@ -31,9 +31,9 @@ export function openBus(id: number): void {
 }
 
 export function closeBus(): void {
-  revokePageHistory('Bus');
   hideBus();
   showPreviousPage();
+  revokePageHistory('Bus');
 }
 
 async function initializeBusPage(id: number) {

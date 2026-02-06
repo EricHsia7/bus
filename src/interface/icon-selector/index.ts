@@ -193,7 +193,7 @@ export function openIconSelector(inputElement: HTMLInputElement): void {
 }
 
 export function closeIconSelector(): void {
-  revokePageHistory('IconSelector');
   hideIconSelector();
   showPreviousPage();
+  revokePageHistory('IconSelector');
 }

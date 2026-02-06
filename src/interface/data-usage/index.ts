@@ -43,7 +43,7 @@ export function openDataUsage(): void {
 }
 
 export function closeDataUsage(): void {
-  revokePageHistory('DataUsage');
   hideDataUsage();
   showPreviousPage();
+  revokePageHistory('DataUsage');
 }

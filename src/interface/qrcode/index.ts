@@ -26,7 +26,7 @@ export function openQRCode(text: string): void {
 }
 
 export function closeQRCode(): void {
-  revokePageHistory('QRCode');
   hideQRCode();
   showPreviousPage();
+  revokePageHistory('QRCode');
 }

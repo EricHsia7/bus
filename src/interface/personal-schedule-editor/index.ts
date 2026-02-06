@@ -85,9 +85,9 @@ export function openPersonalScheduleEditor(personalScheduleID: string): void {
 }
 
 export function closePersonalScheduleEditor(): void {
-  revokePageHistory('PersonalScheduleEditor');
   hidePersonalScheduleEditor();
   showPreviousPage();
+  revokePageHistory('PersonalScheduleEditor');
 }
 
 export function switchPersonalScheduleEditorDay(day: WeekDayIndex): void {

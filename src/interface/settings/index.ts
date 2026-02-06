@@ -88,9 +88,9 @@ export function openSettings(): void {
 }
 
 export function closeSettings(): void {
-  revokePageHistory('Settings');
   hideSettings();
   showPreviousPage();
+  revokePageHistory('Settings');
 }
 
 export async function downloadExportFile() {

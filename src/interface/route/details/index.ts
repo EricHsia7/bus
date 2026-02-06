@@ -3,7 +3,7 @@ import { integrateRouteDetails } from '../../../data/route/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
-import { pushPageHistory, revokePageHistory } from '../../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openSaveToFolder } from '../../save-to-folder/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';
 import { setupCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
@@ -62,11 +62,13 @@ export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>
   pushPageHistory('RouteDetails');
   showRouteDetails();
   initializeRouteDetailsField(RouteID, PathAttributeId);
+  hidePreviousPage();
 }
 
 export function closeRouteDetails(): void {
-  revokePageHistory('RouteDetails');
   hideRouteDetails();
+  revokePageHistory('RouteDetails');
+  showPreviousPage();
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (const CalendarEventGroupElement of CalendarEventGroupElements) {
     CalendarEventGroupElement.remove();

@@ -62,9 +62,9 @@ export function openScheduleNotification(thisButtonElement: HTMLElement, StopID:
 }
 
 export function closeScheduleNotification(): void {
-  revokePageHistory('ScheduleNotification');
   hideScheduleNotification();
   showPreviousPage();
+  revokePageHistory('ScheduleNotification');
 }
 
 export function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number, index: number): void {

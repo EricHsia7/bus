@@ -72,7 +72,7 @@ export function openFolderManager(): void {
 }
 
 export function closeFolderManager(): void {
-  revokePageHistory('FolderManager');
   hideFolderManager();
   showPreviousPage();
+  revokePageHistory('FolderManager');
 }

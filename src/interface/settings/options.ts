@@ -65,9 +65,9 @@ export function openSettingsOptions(settingKey: string): void {
 }
 
 export function closeSettingsOptions(): void {
-  revokePageHistory('SettingsOptions');
   hideSettingsOptions();
   showPreviousPage();
+  revokePageHistory('SettingsOptions');
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {

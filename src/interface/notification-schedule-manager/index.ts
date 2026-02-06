@@ -328,10 +328,10 @@ export function openNotificationScheduleManager(): void {
 }
 
 export function closeNotificationScheduleManager(): void {
-  revokePageHistory('NotificationScheduleManager');
   hideNotificationScheduleManager();
   notifcationScheduleManagerRefreshTimer_streaming = false;
   showPreviousPage();
+  revokePageHistory('NotificationScheduleManager');
 }
 
 export async function cancelNotificationOnNotificationScheduleManager(thisItemElement: HTMLElement, schedule_id: NotificationSchedule['schedule_id']) {

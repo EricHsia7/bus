@@ -43,7 +43,7 @@ export function openFolderCreator(): void {
 }
 
 export function closeFolderCreator(): void {
-  revokePageHistory('FolderCreator');
   hideFolderCreator();
   showPreviousPage();
+  revokePageHistory('FolderCreator');
 }

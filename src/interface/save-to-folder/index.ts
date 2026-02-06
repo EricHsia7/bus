@@ -133,7 +133,7 @@ export function openSaveToFolder(type: FolderContent['type'], parameters: Array<
 }
 
 export function closeSaveToFolder(): void {
-  revokePageHistory('SaveToFolder');
   hideSaveToFolder();
   showPreviousPage();
+  revokePageHistory('SaveToFolder');
 }

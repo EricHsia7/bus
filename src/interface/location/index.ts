@@ -1091,10 +1091,10 @@ export function openLocation(hash: IntegratedLocation['hash']): void {
 }
 
 export function closeLocation(): void {
-  revokePageHistory('Location');
   hideLocation();
   locationRefreshTimer_streaming = false;
   showPreviousPage();
+  revokePageHistory('Location');
 }
 
 export function stretchLocationItem(thisItemElement: HTMLElement): void {
