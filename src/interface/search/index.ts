@@ -7,7 +7,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -331,12 +331,23 @@ export function switchSearchTypeFilter(): void {
   updateSearchResult();
 }
 
+export function showSearch(): void {
+  searchField.setAttribute('displayed', 'true');
+}
+
+export function hideSearch(): void {
+  searchField.setAttribute('displayed', 'false');
+}
+
 export function openSearch(): void {
   if (dataDownloadCompleted) {
     pushPageHistory('Search');
-    searchField.setAttribute('displayed', 'true');
+    showSearch();
+
     openKeyboard();
     prepareForSearch();
+
+    hidePreviousPage();
   } else {
     promptMessage('download_for_offline', '資料還在下載中');
   }
@@ -345,5 +356,6 @@ export function openSearch(): void {
 export function closeSearch(): void {
   revokePageHistory('Search');
   closeKeyboard();
-  searchField.setAttribute('displayed', 'false');
+  hideSearch();
+  showPreviousPage();
 }

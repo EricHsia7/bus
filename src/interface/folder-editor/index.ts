@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { openIconSelector } from '../icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
@@ -151,17 +151,25 @@ async function initializeFolderEditorField(folderID: string) {
   updateFolderEditorField(folder, content);
 }
 
+export function showFolderEditor(): void {
+  FolderEditorField.setAttribute('displayed', 'true');
+}
+
+export function hideFolderEditor(): void {
+  FolderEditorField.setAttribute('displayed', 'false');
+}
+
 export function openFolderEditor(folderID: string): void {
   pushPageHistory('FolderEditor');
-  FolderEditorField.setAttribute('displayed', 'true');
+  showFolderEditor();
   initializeFolderEditorField(folderID);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeFolderEditor(): void {
-  // revokePageHistory('FolderEditor');
-  FolderEditorField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('FolderEditor');
+  hideFolderEditor();
+  showPreviousPage();
 }
 
 export function removeItemOnFolderEditor(itemElement: HTMLElement, folderID: Folder['id'], type: FolderContent['type'], id: number): void {

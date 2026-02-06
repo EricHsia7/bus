@@ -7,4 +7,9 @@
   background: var(--b-cssvar-f9f9fb-blocky);
   display: block;
   overflow: clip;
+  visibility: hidden;
+}
+
+.css_home_field[displayed="true"] {
+  visibility: visible;
 }

@@ -1,7 +1,7 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
@@ -28,14 +28,22 @@ export function createFormulatedFolder(): void {
   });
 }
 
+export function showFolderCreator(): void {
+  FolderCreatorField.setAttribute('displayed', 'true');
+}
+
+export function hideFolderCreator(): void {
+  FolderCreatorField.setAttribute('displayed', 'false');
+}
+
 export function openFolderCreator(): void {
   pushPageHistory('FolderCreator');
-  FolderCreatorField.setAttribute('displayed', 'true');
-  closePreviousPage();
+  showFolderCreator();
+  hidePreviousPage();
 }
 
 export function closeFolderCreator(): void {
-  // revokePageHistory('FolderCreator');
-  FolderCreatorField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('FolderCreator');
+  hideFolderCreator();
+  showPreviousPage();
 }

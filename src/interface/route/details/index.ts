@@ -50,15 +50,23 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   updateCalendarGroup(integration.calendar, false, playing_animation);
 }
 
+export function showRouteDetails(): void {
+  RouteDetailsField.setAttribute('displayed', 'true');
+}
+
+export function hideRouteDetails(): void {
+  RouteDetailsField.setAttribute('displayed', 'false');
+}
+
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('RouteDetails');
-  RouteDetailsField.setAttribute('displayed', 'true');
+  showRouteDetails();
   initializeRouteDetailsField(RouteID, PathAttributeId);
 }
 
 export function closeRouteDetails(): void {
   revokePageHistory('RouteDetails');
-  RouteDetailsField.setAttribute('displayed', 'false');
+  hideRouteDetails();
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (const CalendarEventGroupElement of CalendarEventGroupElements) {
     CalendarEventGroupElement.remove();

@@ -2,7 +2,7 @@ import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
-import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, querySize, revokePageHistory } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
@@ -27,15 +27,23 @@ async function initializeDataUsage() {
   chartElement.innerHTML = stats.chart;
 }
 
+export function showDataUsage(): void {
+  dataUsageField.setAttribute('displayed', 'true');
+}
+
+export function hideDataUsage(): void {
+  dataUsageField.setAttribute('displayed', 'false');
+}
+
 export function openDataUsage(): void {
   pushPageHistory('DataUsage');
-  dataUsageField.setAttribute('displayed', 'true');
+  showDataUsage();
   initializeDataUsage();
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeDataUsage(): void {
-  // revokePageHistory('DataUsage');
-  dataUsageField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('DataUsage');
+  hideDataUsage();
+  showPreviousPage();
 }

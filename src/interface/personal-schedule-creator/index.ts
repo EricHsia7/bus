@@ -1,7 +1,7 @@
 import { createPersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { WeekDayIndex } from '../../tools/time';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleCreatorField = documentQuerySelector('.css_personal_schedule_creator_field');
@@ -45,16 +45,24 @@ export function createFormulatedPersonalSchedule(): void {
   });
 }
 
+export function showPersonalScheduleCreator(): void {
+  PersonalScheduleCreatorField.setAttribute('displayed', 'true');
+}
+
+export function hidePersonalScheduleCreator(): void {
+  PersonalScheduleCreatorField.setAttribute('displayed', 'false');
+}
+
 export function openPersonalScheduleCreator(): void {
   pushPageHistory('PersonalScheduleCreator');
-  PersonalScheduleCreatorField.setAttribute('displayed', 'true');
-  closePreviousPage();
+  showPersonalScheduleCreator();
+  hidePreviousPage();
 }
 
 export function closePersonalScheduleCreator(): void {
-  // revokePageHistory('PersonalScheduleCreator');
-  PersonalScheduleCreatorField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('PersonalScheduleCreator');
+  hidePersonalScheduleCreator();
+  showPreviousPage();
 }
 
 export function switchPersonalScheduleCreatorDay(day: WeekDayIndex): void {

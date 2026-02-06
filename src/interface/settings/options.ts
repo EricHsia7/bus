@@ -1,6 +1,6 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
 const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
@@ -49,17 +49,25 @@ function initializeSettingsOptionsField(settingKey: string): void {
   SettingsOptionsOptionsElement.append(fragment);
 }
 
+export function showSettingsOptions(): void {
+  SettingsOptionsField.setAttribute('displayed', 'true');
+}
+
+export function hideSettingsOptions(): void {
+  SettingsOptionsField.setAttribute('displayed', 'false');
+}
+
 export function openSettingsOptions(settingKey: string): void {
   pushPageHistory('SettingsOptions');
-  SettingsOptionsField.setAttribute('displayed', 'true');
+  showSettingsOptions();
   initializeSettingsOptionsField(settingKey);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeSettingsOptions(): void {
-  // revokePageHistory('SettingsOptions');
-  SettingsOptionsField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('SettingsOptions');
+  hideSettingsOptions();
+  showPreviousPage();
 }
 
 export function settingsOptionsHandler(event: Event, settingKey: string, index: number): void {

@@ -6,7 +6,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, querySize, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
@@ -303,9 +303,17 @@ async function streamNotificationScheduleManager() {
     });
 }
 
+export function showNotificationScheduleManager(): void {
+  NotificationScheduleManagerField.setAttribute('displayed', 'true');
+}
+
+export function hideNotificationScheduleManager(): void {
+  NotificationScheduleManagerField.setAttribute('displayed', 'false');
+}
+
 export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
-  NotificationScheduleManagerField.setAttribute('displayed', 'true');
+  showNotificationScheduleManager();
   setupNotificationScheduleManagerFieldSkeletonScreen();
   if (!notifcationScheduleManagerRefreshTimer_streaming) {
     notifcationScheduleManagerRefreshTimer_streaming = true;
@@ -316,14 +324,14 @@ export function openNotificationScheduleManager(): void {
       refreshNotificationScheduleManager();
     }
   }
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeNotificationScheduleManager(): void {
-  // revokePageHistory('NotificationScheduleManager');
-  NotificationScheduleManagerField.setAttribute('displayed', 'false');
+  revokePageHistory('NotificationScheduleManager');
+  hideNotificationScheduleManager();
   notifcationScheduleManagerRefreshTimer_streaming = false;
-  openPreviousPage();
+  showPreviousPage();
 }
 
 export async function cancelNotificationOnNotificationScheduleManager(thisItemElement: HTMLElement, schedule_id: NotificationSchedule['schedule_id']) {

@@ -3,7 +3,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 export const BusField = documentQuerySelector('.css_bus_field');
@@ -14,18 +14,26 @@ export const BusPropertiesGroupElement = elementQuerySelector(BusGroupsElement, 
 export const BusPropertiesGroupBodyElement = elementQuerySelector(BusPropertiesGroupElement, '.css_bus_group_body');
 export const BusLocationGroupElement = elementQuerySelector(BusGroupsElement, '.css_bus_group[group="location"]');
 
+export function showBus(): void {
+  BusField.setAttribute('displayed', 'true');
+}
+
+export function hideBus(): void {
+  BusField.setAttribute('displayed', 'false');
+}
+
 export function openBus(id: number): void {
   pushPageHistory('Bus');
   logRecentView('bus', id);
-  BusField.setAttribute('displayed', 'true');
+  showBus();
   initializeBusPage(id);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeBus(): void {
-  // revokePageHistory('Bus');
-  BusField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  revokePageHistory('Bus');
+  hideBus();
+  showPreviousPage();
 }
 
 async function initializeBusPage(id: number) {
