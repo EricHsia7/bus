@@ -16,13 +16,11 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   const folderItemElement = documentCreateDivElement();
   folderItemElement.classList.add('css_folder_manager_folder_item');
 
-  (function (id) {
-    folderItemElement.onclick = function () {
-      openFolderEditor(id, function () {
-        initializeFolderManagerField();
-      });
-    };
-  })(item.id);
+  folderItemElement.onclick = function () {
+    openFolderEditor(item.id, function () {
+      initializeFolderManagerField();
+    });
+  };
 
   // Icon
   const iconElement = documentCreateDivElement();

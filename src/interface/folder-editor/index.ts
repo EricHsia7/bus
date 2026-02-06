@@ -138,6 +138,10 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
 }
 
 async function initializeFolderEditorField(folderID: string, callback: Function) {
+  // TODO: add skeleton screen
+  const folder = getFolder(folderID);
+  const content = await listFolderContent(folderID);
+
   NameInputElement.value = folder.name;
   IconInputElement.value = folder.icon;
 
@@ -145,9 +149,6 @@ async function initializeFolderEditorField(folderID: string, callback: Function)
     saveEditedFolder(folder.id, callback);
   };
 
-  // TODO: add skeleton screen
-  const folder = getFolder(folderID);
-  const content = await listFolderContent(folderID);
   if (typeof folder !== 'boolean' && folder !== false) {
     updateFolderEditorField(folder, content);
   }
