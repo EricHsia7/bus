@@ -1,7 +1,8 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { timeObjectToString, WeekDayIndex } from '../../tools/time';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleEditorField = documentQuerySelector('.css_personal_schedule_editor_field');
@@ -48,6 +49,8 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
   await updatePersonalSchedule(personalSchedule);
   promptMessage('check_circle', '已儲存變更');
   closePersonalScheduleEditor();
+  // callback
+  initializePersonalScheduleManagerField();
 }
 
 async function initializePersonalScheduleEditorField(personalScheduleID: string) {

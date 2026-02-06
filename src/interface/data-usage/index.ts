@@ -2,7 +2,7 @@ import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, querySize, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');

@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { openIconSelector } from '../icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');

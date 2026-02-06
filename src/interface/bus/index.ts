@@ -3,7 +3,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 export const BusField = documentQuerySelector('.css_bus_field');
