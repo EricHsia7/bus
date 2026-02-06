@@ -1279,7 +1279,8 @@ export function closeRoute(): void {
 
 export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   routeRefreshTimer_streaming = false;
-  openRoute(RouteID, PathAttributeId);
+  logRecentView('route', RouteID);
+  initializeRoute(RouteID, PathAttributeId);
 }
 
 export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTMLElement): void {
