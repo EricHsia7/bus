@@ -1,7 +1,7 @@
 import { createPersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { WeekDayIndex } from '../../tools/time';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
@@ -47,22 +47,40 @@ export async function createFormulatedPersonalSchedule(): void {
   }
 }
 
-export function showPersonalScheduleCreator(): void {
+export function showPersonalScheduleCreator(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  PersonalScheduleCreatorField.addEventListener(
+    'animationend',
+    function () {
+      PersonalScheduleCreatorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  PersonalScheduleCreatorField.classList.add(className);
   PersonalScheduleCreatorField.setAttribute('displayed', 'true');
 }
 
-export function hidePersonalScheduleCreator(): void {
-  PersonalScheduleCreatorField.setAttribute('displayed', 'false');
+export function hidePersonalScheduleCreator(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  PersonalScheduleCreatorField.addEventListener(
+    'animationend',
+    function () {
+      PersonalScheduleCreatorField.setAttribute('displayed', 'false');
+      PersonalScheduleCreatorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  PersonalScheduleCreatorField.classList.add(className);
 }
 
 export function openPersonalScheduleCreator(): void {
   pushPageHistory('PersonalScheduleCreator');
-  showPersonalScheduleCreator();
+  showPersonalScheduleCreator('rtl');
   hidePreviousPage();
 }
 
 export function closePersonalScheduleCreator(): void {
-  hidePersonalScheduleCreator();
+  hidePersonalScheduleCreator('ltr');
   showPreviousPage();
   revokePageHistory('PersonalScheduleCreator');
 }

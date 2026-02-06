@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { GroupStyles, hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -1236,24 +1236,42 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   }
 }
 
-export function showRoute(): void {
+export function showRoute(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  RouteField.addEventListener(
+    'animationend',
+    function () {
+      RouteField.classList.remove(className);
+    },
+    { once: true }
+  );
+  RouteField.classList.add(className);
   RouteField.setAttribute('displayed', 'true');
 }
 
-export function hideRoute(): void {
-  RouteField.setAttribute('displayed', 'false');
+export function hideRoute(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  RouteField.addEventListener(
+    'animationend',
+    function () {
+      RouteField.setAttribute('displayed', 'false');
+      RouteField.classList.remove(className);
+    },
+    { once: true }
+  );
+  RouteField.classList.add(className);
 }
 
 export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   pushPageHistory('Route');
   logRecentView('route', RouteID);
-  showRoute();
+  showRoute('rtl');
   initializeRoute(RouteID, PathAttributeId);
   hidePreviousPage();
 }
 
 export function closeRoute(): void {
-  hideRoute();
+  hideRoute('ltr');
   routeRefreshTimer_streaming = false;
   showPreviousPage();
   revokePageHistory('Route');

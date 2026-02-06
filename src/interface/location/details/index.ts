@@ -7,7 +7,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { getPermalink } from '../../../tools/permalink';
 import { shareLink } from '../../../tools/share';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openQRCode } from '../../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
@@ -163,22 +163,41 @@ async function initializeLocationDetailsField(hash: string) {
   updateLocationDetailsField(integration, false, playing_animation);
 }
 
-export function showLocationDetails(): void {
+export function showLocationDetails(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  LocationDetailsField.addEventListener(
+    'animationend',
+    function () {
+      LocationDetailsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  LocationDetailsField.classList.add(className);
   LocationDetailsField.setAttribute('displayed', 'true');
 }
-export function hideLocationDetails(): void {
-  LocationDetailsField.setAttribute('displayed', 'false');
+
+export function hideLocationDetails(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  LocationDetailsField.addEventListener(
+    'animationend',
+    function () {
+      LocationDetailsField.setAttribute('displayed', 'false');
+      LocationDetailsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  LocationDetailsField.classList.add(className);
 }
 
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
-  showLocationDetails();
+  showLocationDetails('rtl');
   initializeLocationDetailsField(hash);
   hidePreviousPage();
 }
 
 export function closeLocationDetails(): void {
-  hideLocationDetails();
+  hideLocationDetails('ltr');
   showPreviousPage();
   revokePageHistory('LocationDetails');
 }

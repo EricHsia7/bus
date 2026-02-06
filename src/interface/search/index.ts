@@ -7,16 +7,16 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
 
 let previousSearchResults: Array<SearchResult> = [];
 
-const searchField = documentQuerySelector('.css_search_field');
-const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
-const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
+const SearchField = documentQuerySelector('.css_search_field');
+const searchHeadElement = elementQuerySelector(SearchField, '.css_search_head');
+const searchBodyElement = elementQuerySelector(SearchField, '.css_search_body');
 const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input') as HTMLInputElement;
 
 const searchInputSVGElement = elementQuerySelector(searchHeadElement, '.css_search_search_input svg') as SVGElement;
@@ -331,18 +331,36 @@ export function switchSearchTypeFilter(): void {
   updateSearchResult();
 }
 
-export function showSearch(): void {
-  searchField.setAttribute('displayed', 'true');
+export function showSearch(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  SearchField.addEventListener(
+    'animationend',
+    function () {
+      SearchField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SearchField.classList.add(className);
+  SearchField.setAttribute('displayed', 'true');
 }
 
-export function hideSearch(): void {
-  searchField.setAttribute('displayed', 'false');
+export function hideSearch(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  SearchField.addEventListener(
+    'animationend',
+    function () {
+      SearchField.setAttribute('displayed', 'false');
+      SearchField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SearchField.classList.add(className);
 }
 
 export function openSearch(): void {
   if (dataDownloadCompleted) {
     pushPageHistory('Search');
-    showSearch();
+    showSearch('rtl');
 
     openKeyboard();
     prepareForSearch();
@@ -355,7 +373,7 @@ export function openSearch(): void {
 
 export function closeSearch(): void {
   closeKeyboard();
-  hideSearch();
+  hideSearch('ltr');
   showPreviousPage();
   revokePageHistory('Search');
 }

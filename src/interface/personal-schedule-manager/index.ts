@@ -1,7 +1,7 @@
 import { listPersonalSchedules, PersonalSchedule } from '../../data/personal-schedule/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { openPersonalScheduleEditor } from '../personal-schedule-editor/index';
 
 const PersonalScheduleManagerField = documentQuerySelector('.css_personal_schedule_manager_field');
@@ -44,23 +44,41 @@ export async function initializePersonalScheduleManagerField() {
   ListElement.append(fragment);
 }
 
-export function showPersonalScheduleManager(): void {
+export function showPersonalScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  PersonalScheduleManagerField.addEventListener(
+    'animationend',
+    function () {
+      PersonalScheduleManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  PersonalScheduleManagerField.classList.add(className);
   PersonalScheduleManagerField.setAttribute('displayed', 'true');
 }
 
-export function hidePersonalScheduleManager(): void {
-  PersonalScheduleManagerField.setAttribute('displayed', 'false');
+export function hidePersonalScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  PersonalScheduleManagerField.addEventListener(
+    'animationend',
+    function () {
+      PersonalScheduleManagerField.setAttribute('displayed', 'false');
+      PersonalScheduleManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  PersonalScheduleManagerField.classList.add(className);
 }
 
 export function openPersonalScheduleManager(): void {
   pushPageHistory('PersonalScheduleManager');
-  PersonalScheduleManagerField.setAttribute('displayed', 'true');
+  showPersonalScheduleManager('rtl');
   initializePersonalScheduleManagerField();
   hidePreviousPage();
 }
 
 export function closePersonalScheduleManager(): void {
-  PersonalScheduleManagerField.setAttribute('displayed', 'false');
+  hidePersonalScheduleManager('ltr');
   showPreviousPage();
   revokePageHistory('PersonalScheduleManager');
 }

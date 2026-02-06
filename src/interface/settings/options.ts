@@ -1,6 +1,6 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializeSettingsField } from './index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
@@ -56,23 +56,41 @@ function initializeSettingsOptionsField(settingKey: string): void {
   SettingsOptionsOptionsElement.append(fragment);
 }
 
-export function showSettingsOptions(): void {
+export function showSettingsOptions(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  SettingsOptionsField.addEventListener(
+    'animationend',
+    function () {
+      SettingsOptionsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SettingsOptionsField.classList.add(className);
   SettingsOptionsField.setAttribute('displayed', 'true');
 }
 
-export function hideSettingsOptions(): void {
-  SettingsOptionsField.setAttribute('displayed', 'false');
+export function hideSettingsOptions(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  SettingsOptionsField.addEventListener(
+    'animationend',
+    function () {
+      SettingsOptionsField.setAttribute('displayed', 'false');
+      SettingsOptionsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SettingsOptionsField.classList.add(className);
 }
 
 export function openSettingsOptions(settingKey: string): void {
   pushPageHistory('SettingsOptions');
-  showSettingsOptions();
+  showSettingsOptions('rtl');
   initializeSettingsOptionsField(settingKey);
   hidePreviousPage();
 }
 
 export function closeSettingsOptions(): void {
-  hideSettingsOptions();
+  hideSettingsOptions('ltr');
   showPreviousPage();
   revokePageHistory('SettingsOptions');
 }

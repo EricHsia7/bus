@@ -6,7 +6,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
@@ -303,17 +303,35 @@ async function streamNotificationScheduleManager() {
     });
 }
 
-export function showNotificationScheduleManager(): void {
+export function showNotificationScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  NotificationScheduleManagerField.addEventListener(
+    'animationend',
+    function () {
+      NotificationScheduleManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  NotificationScheduleManagerField.classList.add(className);
   NotificationScheduleManagerField.setAttribute('displayed', 'true');
 }
 
-export function hideNotificationScheduleManager(): void {
-  NotificationScheduleManagerField.setAttribute('displayed', 'false');
+export function hideNotificationScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  NotificationScheduleManagerField.addEventListener(
+    'animationend',
+    function () {
+      NotificationScheduleManagerField.setAttribute('displayed', 'false');
+      NotificationScheduleManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  NotificationScheduleManagerField.classList.add(className);
 }
 
 export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
-  showNotificationScheduleManager();
+  showNotificationScheduleManager('rtl');
   setupNotificationScheduleManagerFieldSkeletonScreen();
   if (!notifcationScheduleManagerRefreshTimer_streaming) {
     notifcationScheduleManagerRefreshTimer_streaming = true;
@@ -328,7 +346,7 @@ export function openNotificationScheduleManager(): void {
 }
 
 export function closeNotificationScheduleManager(): void {
-  hideNotificationScheduleManager();
+  hideNotificationScheduleManager('ltr');
   notifcationScheduleManagerRefreshTimer_streaming = false;
   showPreviousPage();
   revokePageHistory('NotificationScheduleManager');

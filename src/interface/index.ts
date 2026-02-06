@@ -32,7 +32,7 @@ const splashScreenTimer_openTime = new Date().getTime();
 
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
-export type PageTransitionDirection = 'ltr' | 'rtl'
+export type PageTransitionDirection = 'ltr' | 'rtl';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -77,55 +77,55 @@ export function hidePreviousPage(): void {
         hideLocation('rtl');
         break;
       case 'LocationDetails':
-        hideLocationDetails();
+        hideLocationDetails('rtl');
         break;
       case 'Route':
-        hideRoute();
+        hideRoute('rtl');
         break;
       case 'RouteDetails':
-        hideRouteDetails();
+        hideRouteDetails('rtl');
         break;
       case 'SaveToFolder':
-        hideSaveToFolder();
+        hideSaveToFolder('rtl');
         break;
       case 'Search':
-        hideSearch();
+        hideSearch('rtl');
         break;
       case 'Settings':
-        hideSettings();
+        hideSettings('rtl');
         break;
       case 'SettingsOptions':
-        hideSettingsOptions();
+        hideSettingsOptions('rtl');
         break;
       case 'DataUsage':
-        hideDataUsage();
+        hideDataUsage('rtl');
         break;
       case 'PersonalScheduleManager':
-        hidePersonalScheduleManager();
+        hidePersonalScheduleManager('rtl');
         break;
       case 'PersonalScheduleCreator':
-        hidePersonalScheduleCreator();
+        hidePersonalScheduleCreator('rtl');
         break;
       case 'PersonalScheduleEditor':
-        hidePersonalScheduleEditor();
+        hidePersonalScheduleEditor('rtl');
         break;
       case 'Bus':
         hideBus('rtl');
         break;
       case 'RegisterNotification':
-        hideRegisterNotification();
+        hideRegisterNotification('rtl');
         break;
       case 'ScheduleNotification':
-        hideScheduleNotification();
+        hideScheduleNotification('rtl');
         break;
       case 'NotificationScheduleManager':
-        hideNotificationScheduleManager();
+        hideNotificationScheduleManager('rtl');
         break;
       case 'QRCode':
-        hideQRCode();
+        hideQRCode('rtl');
         break;
       case 'Storage':
-        hideStorage();
+        hideStorage('rtl');
         break;
       default:
         break;
@@ -157,55 +157,55 @@ export function showPreviousPage(): void {
         showLocation('ltr');
         break;
       case 'LocationDetails':
-        showLocationDetails();
+        showLocationDetails('ltr');
         break;
       case 'Route':
-        showRoute();
+        showRoute('ltr');
         break;
       case 'RouteDetails':
-        showRouteDetails();
+        showRouteDetails('ltr');
         break;
       case 'SaveToFolder':
-        showSaveToFolder();
+        showSaveToFolder('ltr');
         break;
       case 'Search':
-        showSearch();
+        showSearch('ltr');
         break;
       case 'Settings':
-        shwoSettings();
+        shwoSettings('ltr');
         break;
       case 'SettingsOptions':
-        showSettingsOptions();
+        showSettingsOptions('ltr');
         break;
       case 'DataUsage':
-        showDataUsage();
+        showDataUsage('ltr');
         break;
       case 'PersonalScheduleManager':
-        showPersonalScheduleManager();
+        showPersonalScheduleManager('ltr');
         break;
       case 'PersonalScheduleCreator':
-        showPersonalScheduleCreator();
+        showPersonalScheduleCreator('ltr');
         break;
       case 'PersonalScheduleEditor':
-        showPersonalScheduleEditor();
+        showPersonalScheduleEditor('ltr');
         break;
       case 'Bus':
         showBus('ltr');
         break;
       case 'RegisterNotification':
-        showRegisterNotification();
+        showRegisterNotification('ltr');
         break;
       case 'ScheduleNotification':
-        showScheduleNotification();
+        showScheduleNotification('ltr');
         break;
       case 'NotificationScheduleManager':
-        showNotificationScheduleManager();
+        showNotificationScheduleManager('ltr');
         break;
       case 'QRCode':
-        showQRCode();
+        showQRCode('ltr');
         break;
       case 'Storage':
-        showStorage();
+        showStorage('ltr');
         break;
       default:
         break;
