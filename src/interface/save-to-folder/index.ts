@@ -2,7 +2,7 @@ import { Folder, FolderContent, isFolderContentSaved, listFolders, saveLocation,
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
@@ -117,13 +117,23 @@ function initializeSaveToFolderField(type: FolderContent['type'], parameters: Ar
   SaveToFolderListElement.append(fragment);
 }
 
+export function showSaveToFolder(): void {
+  SaveToFolderField.setAttribute('displayed', 'true');
+}
+
+export function hideSaveToFolder(): void {
+  SaveToFolderField.setAttribute('displayed', 'false');
+}
+
 export function openSaveToFolder(type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): void {
   pushPageHistory('SaveToFolder');
-  SaveToFolderField.setAttribute('displayed', 'true');
+  showSaveToFolder();
   initializeSaveToFolderField(type, parameters, saveToFolderButtonElement);
+  hidePreviousPage();
 }
 
 export function closeSaveToFolder(): void {
+  hideSaveToFolder();
+  showPreviousPage();
   revokePageHistory('SaveToFolder');
-  SaveToFolderField.setAttribute('displayed', 'false');
 }

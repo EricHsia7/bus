@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { querySize } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
@@ -146,18 +146,30 @@ function setupStorageFieldSkeletonScreen(): void {
   updateStorageField(statistics, true, playing_animation);
 }
 
-async function refreshStorageStatistics() {
+async function initializeStorageStatistics() {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   setupStorageFieldSkeletonScreen();
   const statistics = await getStoresSizeStatistics();
   updateStorageField(statistics, false, playing_animation);
 }
 
-export function openStorage(): void {
+export function showStorage(): void {
   StorageField.setAttribute('displayed', 'true');
-  refreshStorageStatistics();
+}
+
+export function hideStorage(): void {
+  StorageField.setAttribute('displayed', 'false');
+}
+
+export function openStorage(): void {
+  pushPageHistory('Storage');
+  showStorage();
+  initializeStorageStatistics();
+  hidePreviousPage();
 }
 
 export function closeStorage(): void {
-  StorageField.setAttribute('displayed', 'false');
+  hideStorage();
+  showPreviousPage();
+  revokePageHistory('Storage');
 }

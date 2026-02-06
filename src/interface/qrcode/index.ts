@@ -1,6 +1,6 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const QRCodeField = documentQuerySelector('.css_qrcode_field');
 const QRCodeBodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
@@ -10,15 +10,23 @@ export function initializeQRCodeField(text: string): void {
   QRCodeBodyElement.innerHTML = svg;
 }
 
+export function showQRCode(): void {
+  QRCodeField.setAttribute('displayed', 'true');
+}
+
+export function hideQRCode(): void {
+  QRCodeField.setAttribute('displayed', 'false');
+}
+
 export function openQRCode(text: string): void {
   pushPageHistory('QRCode');
-  QRCodeField.setAttribute('displayed', 'true');
+  showQRCode();
   initializeQRCodeField(text);
-  // closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeQRCode(): void {
+  hideQRCode();
+  showPreviousPage();
   revokePageHistory('QRCode');
-  QRCodeField.setAttribute('displayed', 'false');
-  // openPreviousPage();
 }

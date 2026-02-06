@@ -3,7 +3,7 @@ import { integrateRouteDetails } from '../../../data/route/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
-import { pushPageHistory, revokePageHistory } from '../../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openSaveToFolder } from '../../save-to-folder/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';
 import { setupCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
@@ -50,15 +50,25 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   updateCalendarGroup(integration.calendar, false, playing_animation);
 }
 
+export function showRouteDetails(): void {
+  RouteDetailsField.setAttribute('displayed', 'true');
+}
+
+export function hideRouteDetails(): void {
+  RouteDetailsField.setAttribute('displayed', 'false');
+}
+
 export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>): void {
   pushPageHistory('RouteDetails');
-  RouteDetailsField.setAttribute('displayed', 'true');
+  showRouteDetails();
   initializeRouteDetailsField(RouteID, PathAttributeId);
+  hidePreviousPage();
 }
 
 export function closeRouteDetails(): void {
+  hideRouteDetails();
+  showPreviousPage();
   revokePageHistory('RouteDetails');
-  RouteDetailsField.setAttribute('displayed', 'false');
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (const CalendarEventGroupElement of CalendarEventGroupElements) {
     CalendarEventGroupElement.remove();

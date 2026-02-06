@@ -7,7 +7,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { getPermalink } from '../../../tools/permalink';
 import { shareLink } from '../../../tools/share';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { pushPageHistory, revokePageHistory } from '../../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openQRCode } from '../../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
@@ -163,15 +163,24 @@ async function initializeLocationDetailsField(hash: string) {
   updateLocationDetailsField(integration, false, playing_animation);
 }
 
+export function showLocationDetails(): void {
+  LocationDetailsField.setAttribute('displayed', 'true');
+}
+export function hideLocationDetails(): void {
+  LocationDetailsField.setAttribute('displayed', 'false');
+}
+
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
-  LocationDetailsField.setAttribute('displayed', 'true');
+  showLocationDetails();
   initializeLocationDetailsField(hash);
+  hidePreviousPage();
 }
 
 export function closeLocationDetails(): void {
+  hideLocationDetails();
+  showPreviousPage();
   revokePageHistory('LocationDetails');
-  LocationDetailsField.setAttribute('displayed', 'false');
 }
 
 export async function shareLocationPermalink(hash: string) {

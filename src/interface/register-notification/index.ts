@@ -2,7 +2,7 @@ import { registerNotificationClient } from '../../data/notification/apis/registe
 import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { isValidURL } from '../../tools/index';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const RegisterNotificationField = documentQuerySelector('.css_register_notification_field');
@@ -17,17 +17,25 @@ function initializeRegisterNotificationField() {
   RgistrationKeyInputElement.value = '';
 }
 
+export function showRegisterNotification(): void {
+  RegisterNotificationField.setAttribute('displayed', 'true');
+}
+
+export function hideRegisterNotification(): void {
+  RegisterNotificationField.setAttribute('displayed', 'false');
+}
+
 export function openRegisterNotification(): void {
   pushPageHistory('RegisterNotification');
-  RegisterNotificationField.setAttribute('displayed', 'true');
+  showRegisterNotification();
   initializeRegisterNotificationField();
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeRegisterNotification(): void {
-  // revokePageHistory('RegisterNotification');
-  RegisterNotificationField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  hideRegisterNotification();
+  showPreviousPage();
+  revokePageHistory('RegisterNotification');
 }
 
 export async function saveFormulatedRegisterNotification() {

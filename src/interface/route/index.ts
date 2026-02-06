@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { hidePreviousPage, GroupStyles, showPreviousPage, pushPageHistory, querySize, revokePageHistory } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -1232,19 +1232,27 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   }
 }
 
+export function showRoute(): void {
+  RouteField.setAttribute('displayed', 'true');
+}
+
+export function hideRoute(): void {
+  RouteField.setAttribute('displayed', 'false');
+}
+
 export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   pushPageHistory('Route');
   logRecentView('route', RouteID);
-  RouteField.setAttribute('displayed', 'true');
+  showRoute();
   initializeRoute(RouteID, PathAttributeId);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeRoute(): void {
-  // revokePageHistory('Route');
-  RouteField.setAttribute('displayed', 'false');
+  hideRoute();
   routeRefreshTimer_streaming = false;
-  openPreviousPage();
+  showPreviousPage();
+  revokePageHistory('Route');
 }
 
 export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {

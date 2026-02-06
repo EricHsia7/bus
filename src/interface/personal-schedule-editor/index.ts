@@ -1,7 +1,7 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { timeObjectToString, WeekDayIndex } from '../../tools/time';
-import { closePreviousPage, openPreviousPage, pushPageHistory } from '../index';
+import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleEditorField = documentQuerySelector('.css_personal_schedule_editor_field');
@@ -69,17 +69,25 @@ async function initializePersonalScheduleEditorField(personalScheduleID: string)
   };
 }
 
+export function showPersonalScheduleEditor(): void {
+  PersonalScheduleEditorField.setAttribute('displayed', 'true');
+}
+
+export function hidePersonalScheduleEditor(): void {
+  PersonalScheduleEditorField.setAttribute('displayed', 'false');
+}
+
 export function openPersonalScheduleEditor(personalScheduleID: string): void {
   pushPageHistory('PersonalScheduleEditor');
-  PersonalScheduleEditorField.setAttribute('displayed', 'true');
+  showPersonalScheduleEditor();
   initializePersonalScheduleEditorField(personalScheduleID);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closePersonalScheduleEditor(): void {
-  // revokePageHistory('PersonalScheduleEditor');
-  PersonalScheduleEditorField.setAttribute('displayed', 'false');
-  openPreviousPage();
+  hidePersonalScheduleEditor();
+  showPreviousPage();
+  revokePageHistory('PersonalScheduleEditor');
 }
 
 export function switchPersonalScheduleEditorDay(day: WeekDayIndex): void {

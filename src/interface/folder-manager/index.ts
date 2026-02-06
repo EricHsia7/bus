@@ -2,7 +2,7 @@ import { FolderWithContentLength, listFoldersWithContentLength } from '../../dat
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
 const FolderManagerBodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
@@ -56,15 +56,23 @@ async function initializeFolderManagerField() {
   FolderManagerFolderListElement.append(fragment);
 }
 
+export function showFolderManager(): void {
+  FolderManagerField.setAttribute('displayed', 'true');
+}
+
+export function hideFolderManager(): void {
+  FolderManagerField.setAttribute('displayed', 'false');
+}
+
 export function openFolderManager(): void {
   pushPageHistory('FolderManager');
-  FolderManagerField.setAttribute('displayed', 'true');
+  showFolderManager();
   initializeFolderManagerField();
-  // closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeFolderManager(): void {
+  hideFolderManager();
+  showPreviousPage();
   revokePageHistory('FolderManager');
-  FolderManagerField.setAttribute('displayed', 'false');
-  // openPreviousPage();
 }

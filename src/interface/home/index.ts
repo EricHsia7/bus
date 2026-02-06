@@ -50,3 +50,11 @@ export async function downloadData() {
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }
+
+export function showHome(): void {
+  HomeField.setAttribute('displayed', 'true');
+}
+
+export function hideHome(): void {
+  HomeField.setAttribute('displayed', 'false');
+}

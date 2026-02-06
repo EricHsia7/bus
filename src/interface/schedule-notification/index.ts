@@ -1,7 +1,7 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
@@ -46,15 +46,25 @@ function initializeScheduleNotificationField(thisButtonElement: HTMLElement, Sto
   ScheduleNotificationListElement.append(fragment);
 }
 
+export function showScheduleNotification(): void {
+  ScheduleNotificationField.setAttribute('displayed', 'true');
+}
+
+export function hideScheduleNotification(): void {
+  ScheduleNotificationField.setAttribute('displayed', 'false');
+}
+
 export function openScheduleNotification(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): void {
   pushPageHistory('ScheduleNotification');
-  ScheduleNotificationField.setAttribute('displayed', 'true');
+  showScheduleNotification();
   initializeScheduleNotificationField(thisButtonElement, StopID, RouteID, EstimateTime);
+  hidePreviousPage();
 }
 
 export function closeScheduleNotification(): void {
+  hideScheduleNotification();
+  showPreviousPage();
   revokePageHistory('ScheduleNotification');
-  ScheduleNotificationField.setAttribute('displayed', 'false');
 }
 
 export function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number, index: number): void {

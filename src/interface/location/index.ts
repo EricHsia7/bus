@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { closePreviousPage, GroupStyles, openPreviousPage, pushPageHistory, querySize } from '../index';
+import { hidePreviousPage, GroupStyles, showPreviousPage, pushPageHistory, querySize, revokePageHistory } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -1074,19 +1074,27 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
   }
 }
 
+export function showLocation(): void {
+  LocationField.setAttribute('displayed', 'true');
+}
+
+export function hideLocation(): void {
+  LocationField.setAttribute('displayed', 'false');
+}
+
 export function openLocation(hash: IntegratedLocation['hash']): void {
   pushPageHistory('Location');
   logRecentView('location', hash);
-  LocationField.setAttribute('displayed', 'true');
+  showLocation();
   initializeLocation(hash);
-  closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeLocation(): void {
-  // revokePageHistory('Location');
-  LocationField.setAttribute('displayed', 'false');
+  hideLocation();
   locationRefreshTimer_streaming = false;
-  openPreviousPage();
+  showPreviousPage();
+  revokePageHistory('Location');
 }
 
 export function stretchLocationItem(thisItemElement: HTMLElement): void {

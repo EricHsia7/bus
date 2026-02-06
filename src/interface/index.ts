@@ -1,14 +1,28 @@
 import { documentQuerySelector } from '../tools/elements';
 import { isRunningStandalone } from '../tools/index';
-import { closeBus, openBus } from './bus/index';
-import { closeFolderCreator, openFolderCreator } from './folder-creator/index';
-import { closeFolderEditor, openFolderEditor } from './folder-editor/index';
-import { closeFolderManager, openFolderManager } from './folder-manager/index';
-import { closePersonalScheduleEditor, openPersonalScheduleEditor } from './personal-schedule-editor/index';
-import { closePersonalScheduleManager, openPersonalScheduleManager } from './personal-schedule-manager/index';
-import { closeRegisterNotification, openRegisterNotification } from './register-notification/index';
-import { closeSearch, openSearch } from './search/index';
-import { closeSettings, openSettings } from './settings/index';
+import { hideBus, showBus } from './bus/index';
+import { hideDataUsage, showDataUsage } from './data-usage/index';
+import { hideFolderCreator, showFolderCreator } from './folder-creator/index';
+import { hideFolderEditor, showFolderEditor } from './folder-editor/index';
+import { hideFolderManager, showFolderManager } from './folder-manager/index';
+import { hideHome, showHome } from './home/index';
+import { hideIconSelector, showIconSelector } from './icon-selector/index';
+import { hideLocationDetails, showLocationDetails } from './location/details/index';
+import { hideLocation, showLocation } from './location/index';
+import { hideNotificationScheduleManager, showNotificationScheduleManager } from './notification-schedule-manager/index';
+import { hidePersonalScheduleCreator, showPersonalScheduleCreator } from './personal-schedule-creator/index';
+import { hidePersonalScheduleEditor, showPersonalScheduleEditor } from './personal-schedule-editor/index';
+import { hidePersonalScheduleManager, showPersonalScheduleManager } from './personal-schedule-manager/index';
+import { hideQRCode, showQRCode } from './qrcode/index';
+import { hideRegisterNotification, showRegisterNotification } from './register-notification/index';
+import { hideRouteDetails, showRouteDetails } from './route/details/index';
+import { hideRoute, showRoute } from './route/index';
+import { hideSaveToFolder, showSaveToFolder } from './save-to-folder/index';
+import { hideScheduleNotification, showScheduleNotification } from './schedule-notification/index';
+import { hideSearch, showSearch } from './search/index';
+import { hideSettings, shwoSettings } from './settings/index';
+import { hideSettingsOptions, showSettingsOptions } from './settings/options';
+import { hideStorage, showStorage } from './storage/index';
 
 const SplashScreenElement = documentQuerySelector('.css_splash_screen');
 const ErrorMessageElement = documentQuerySelector('.css_error_message');
@@ -16,7 +30,7 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -29,71 +43,87 @@ export function pushPageHistory(page: Page): void {
 }
 
 export function revokePageHistory(page: Page): void {
-  if (pageHistory.indexOf(page) > -1) {
-    const pageHistoryLength = pageHistory.length;
+  const pageHistoryLength = pageHistory.length;
+  if (pageHistoryLength > 1) {
     if (pageHistory[pageHistoryLength - 1] === page) {
       pageHistory.pop();
     }
   }
 }
 
-export function closePreviousPage(): void {
+export function hidePreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
   if (pageHistoryLength > 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
+        hideHome();
         break;
       case 'FolderCreator':
-        closeFolderCreator();
+        hideFolderCreator();
         break;
       case 'FolderEditor':
-        closeFolderEditor();
+        hideFolderEditor();
         break;
       case 'IconSelector':
+        hideIconSelector();
         break;
       case 'FolderManager':
-        closeFolderManager();
+        hideFolderManager();
         break;
       case 'Location':
+        hideLocation();
         break;
       case 'LocationDetails':
+        hideLocationDetails();
         break;
       case 'Route':
+        hideRoute();
         break;
       case 'RouteDetails':
+        hideRouteDetails();
         break;
       case 'SaveToFolder':
+        hideSaveToFolder();
         break;
       case 'Search':
-        closeSearch();
+        hideSearch();
         break;
       case 'Settings':
-        closeSettings();
+        hideSettings();
         break;
       case 'SettingsOptions':
+        hideSettingsOptions();
         break;
       case 'DataUsage':
+        hideDataUsage();
         break;
       case 'PersonalScheduleManager':
-        closePersonalScheduleManager();
+        hidePersonalScheduleManager();
         break;
       case 'PersonalScheduleCreator':
+        hidePersonalScheduleCreator();
         break;
       case 'PersonalScheduleEditor':
-        closePersonalScheduleEditor();
+        hidePersonalScheduleEditor();
         break;
       case 'Bus':
-        closeBus();
+        hideBus();
         break;
       case 'RegisterNotification':
-        closeRegisterNotification();
+        hideRegisterNotification();
         break;
       case 'ScheduleNotification':
+        hideScheduleNotification();
         break;
       case 'NotificationScheduleManager':
+        hideNotificationScheduleManager();
         break;
       case 'QRCode':
+        hideQRCode();
+        break;
+      case 'Storage':
+        hideStorage();
         break;
       default:
         break;
@@ -101,64 +131,80 @@ export function closePreviousPage(): void {
   }
 }
 
-export function openPreviousPage(): void {
+export function showPreviousPage(): void {
   const pageHistoryLength = pageHistory.length;
   if (pageHistoryLength > 1) {
     const previousPage = pageHistory[pageHistoryLength - 2];
-    pageHistory.pop();
+    console.log(1, pageHistory);
     switch (previousPage) {
       case 'Home':
+        showHome();
         break;
       case 'FolderCreator':
-        openFolderCreator();
+        showFolderCreator();
         break;
       case 'FolderEditor':
-        openFolderEditor();
+        showFolderEditor();
         break;
       case 'IconSelector':
+        showIconSelector();
         break;
       case 'FolderManager':
-        openFolderManager();
+        showFolderManager();
         break;
       case 'Location':
+        showLocation();
         break;
       case 'LocationDetails':
+        showLocationDetails();
         break;
       case 'Route':
+        showRoute();
         break;
       case 'RouteDetails':
+        showRouteDetails();
         break;
       case 'SaveToFolder':
+        showSaveToFolder();
         break;
       case 'Search':
-        openSearch();
+        showSearch();
         break;
       case 'Settings':
-        openSettings();
+        shwoSettings();
         break;
       case 'SettingsOptions':
+        showSettingsOptions();
         break;
       case 'DataUsage':
+        showDataUsage();
         break;
       case 'PersonalScheduleManager':
-        openPersonalScheduleManager();
+        showPersonalScheduleManager();
         break;
       case 'PersonalScheduleCreator':
+        showPersonalScheduleCreator();
         break;
       case 'PersonalScheduleEditor':
-        openPersonalScheduleEditor();
+        showPersonalScheduleEditor();
         break;
       case 'Bus':
-        openBus();
+        showBus();
         break;
       case 'RegisterNotification':
-        openRegisterNotification();
+        showRegisterNotification();
         break;
       case 'ScheduleNotification':
+        showScheduleNotification();
         break;
       case 'NotificationScheduleManager':
+        showNotificationScheduleManager();
         break;
       case 'QRCode':
+        showQRCode();
+        break;
+      case 'Storage':
+        showStorage();
         break;
       default:
         break;

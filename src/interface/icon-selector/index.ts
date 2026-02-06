@@ -7,7 +7,7 @@ import { booleanToString, generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { pushPageHistory, querySize, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
 const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
@@ -177,15 +177,23 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
   closeIconSelector();
 }
 
+export function showIconSelector(): void {
+  iconSelectorField.setAttribute('displayed', 'true');
+}
+
+export function hideIconSelector(): void {
+  iconSelectorField.setAttribute('displayed', 'false');
+}
+
 export function openIconSelector(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelector');
-  iconSelectorField.setAttribute('displayed', 'true');
+  showIconSelector();
   initializeIconSelectorField(inputElement);
-  // closePreviousPage();
+  hidePreviousPage();
 }
 
 export function closeIconSelector(): void {
+  hideIconSelector();
+  showPreviousPage();
   revokePageHistory('IconSelector');
-  iconSelectorField.setAttribute('displayed', 'false');
-  // openPreviousPage();
 }

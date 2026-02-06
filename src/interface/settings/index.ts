@@ -7,7 +7,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { generateIdentifier } from '../../tools/index';
 import { shareFile } from '../../tools/share';
 import { getIconElement } from '../icons/index';
-import { pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SettingsField = documentQuerySelector('.css_settings_field');
@@ -72,15 +72,25 @@ async function initializeSettingsField() {
   SettingsElement.append(fragment);
 }
 
+export function shwoSettings(): void {
+  SettingsField.setAttribute('displayed', 'true');
+}
+
+export function hideSettings(): void {
+  SettingsField.setAttribute('displayed', 'false');
+}
+
 export function openSettings(): void {
   pushPageHistory('Settings');
-  SettingsField.setAttribute('displayed', 'true');
+  shwoSettings();
   initializeSettingsField();
+  hidePreviousPage();
 }
 
 export function closeSettings(): void {
+  hideSettings();
+  showPreviousPage();
   revokePageHistory('Settings');
-  SettingsField.setAttribute('displayed', 'false');
 }
 
 export async function downloadExportFile() {
