@@ -582,7 +582,7 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
         goBack: '0',
         status: {
           code: 8,
-          text: '載入中',
+          text: '',
           time: -6
         },
         buses: [],

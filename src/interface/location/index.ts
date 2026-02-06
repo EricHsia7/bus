@@ -447,7 +447,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
         stopId: 0,
         status: {
           code: 8,
-          text: '載入中',
+          text: '',
           time: -6
         },
         ranking: {

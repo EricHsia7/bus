@@ -172,7 +172,7 @@ export function setupFolderFieldSkeletonScreen(): void {
         name: '',
         status: {
           code: 8,
-          text: '載入中',
+          text: '',
           time: -6
         },
         direction: 0,
