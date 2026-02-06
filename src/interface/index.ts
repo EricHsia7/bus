@@ -205,6 +205,7 @@ export function showPreviousPage(): void {
         break;
       case 'Storage':
         showStorage();
+        break;
       default:
         break;
     }
