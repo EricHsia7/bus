@@ -158,6 +158,7 @@ function setupLocationDetailsFieldSkeletonScreen(): void {
 async function initializeLocationDetailsField(hash: string) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
+  setupLocationDetailsFieldSkeletonScreen();
   const integration = await integrateLocationDetails(hash, requestID);
   updateLocationDetailsField(integration, false, playing_animation);
 }
@@ -165,7 +166,6 @@ async function initializeLocationDetailsField(hash: string) {
 export function openLocationDetails(hash: string): void {
   pushPageHistory('LocationDetails');
   LocationDetailsField.setAttribute('displayed', 'true');
-  setupLocationDetailsFieldSkeletonScreen();
   initializeLocationDetailsField(hash);
 }
 

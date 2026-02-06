@@ -1210,17 +1210,17 @@ export function streamRoute(): void {
     });
 }
 
-export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
-  pushPageHistory('Route');
-  logRecentView('route', RouteID);
+function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']) {
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
-  RouteField.setAttribute('displayed', 'true');
+
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
+
   setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
+
   if (!routeRefreshTimer_streaming) {
     routeRefreshTimer_streaming = true;
     if (!routeRefreshTimer_streamStarted) {
@@ -1230,6 +1230,13 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
       refreshRoute();
     }
   }
+}
+
+export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
+  pushPageHistory('Route');
+  logRecentView('route', RouteID);
+  RouteField.setAttribute('displayed', 'true');
+  initializeRoute(RouteID, PathAttributeId);
   closePreviousPage();
 }
 

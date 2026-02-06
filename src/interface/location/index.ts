@@ -1053,16 +1053,16 @@ export function streamLocation(): void {
     });
 }
 
-export function openLocation(hash: IntegratedLocation['hash']): void {
-  pushPageHistory('Location');
-  logRecentView('location', hash);
+function initializeLocation(hash: IntegratedLocation['hash']) {
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   locationSliding_groupStyles = {};
-  LocationField.setAttribute('displayed', 'true');
+
   LocationGroupsElement.scrollLeft = 0;
   LocationGroupsElement.focus();
+
   setupLocationFieldSkeletonScreen(hash);
+
   if (!locationRefreshTimer_streaming) {
     locationRefreshTimer_streaming = true;
     if (!locationRefreshTimer_streamStarted) {
@@ -1072,6 +1072,13 @@ export function openLocation(hash: IntegratedLocation['hash']): void {
       refreshLocation();
     }
   }
+}
+
+export function openLocation(hash: IntegratedLocation['hash']): void {
+  pushPageHistory('Location');
+  logRecentView('location', hash);
+  LocationField.setAttribute('displayed', 'true');
+  initializeLocation(hash);
   closePreviousPage();
 }
 

@@ -122,9 +122,10 @@ function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement) {
 }
 
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
-  setupIconSelectorFieldSkeleton(inputElement);
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
+  searchInputElement.value = '';
+  setupIconSelectorFieldSkeleton(inputElement);
   const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
   currentSymbols = [];
   for (const symbol in materialSymbols.symbols) {
@@ -179,11 +180,12 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
 export function openIconSelector(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelector');
   iconSelectorField.setAttribute('displayed', 'true');
-  searchInputElement.value = '';
   initializeIconSelectorField(inputElement);
+  // closePreviousPage();
 }
 
 export function closeIconSelector(): void {
   revokePageHistory('IconSelector');
   iconSelectorField.setAttribute('displayed', 'false');
+  // openPreviousPage();
 }

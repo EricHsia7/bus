@@ -32,6 +32,7 @@ function generateElementOfItem(item: PersonalSchedule): HTMLElement {
 
   return itemElement;
 }
+
 async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
   const personalSchedules = await listPersonalSchedules();

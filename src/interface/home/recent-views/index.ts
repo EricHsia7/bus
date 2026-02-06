@@ -353,7 +353,7 @@ async function streamRecentViews() {
 }
 
 export function initializeRecentViews(): void {
-  setupRecentViewsFieldSkeletonScreen();
+  // setupRecentViewsFieldSkeletonScreen();
   if (!recentViewsRefreshTimer_streaming) {
     recentViewsRefreshTimer_streaming = true;
     if (!recentViewsRefreshTimer_streamStarted) {
