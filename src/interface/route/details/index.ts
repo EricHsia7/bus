@@ -67,8 +67,8 @@ export function openRouteDetails(RouteID: number, PathAttributeId: Array<number>
 
 export function closeRouteDetails(): void {
   hideRouteDetails();
-  revokePageHistory('RouteDetails');
   showPreviousPage();
+  revokePageHistory('RouteDetails');
   const CalendarEventGroupElements = elementQuerySelectorAll(CalendarEventGroupsElement, '.css_route_details_calendar_event_group');
   for (const CalendarEventGroupElement of CalendarEventGroupElements) {
     CalendarEventGroupElement.remove();
