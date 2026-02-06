@@ -1,6 +1,6 @@
-import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
+import { changeSettingOption, getSetting, initializeSettings, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
 const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
@@ -8,6 +8,7 @@ const SettingsOptionsOptionsElement = elementQuerySelector(SettingsOptionsBodyEl
 const SettingsOptionsDescriptionElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_options_description');
 const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_head');
 const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
+const SettingsOptionsLeftButtonElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_button_left');
 
 function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): HTMLElement {
   const optionElement = documentCreateDivElement();
@@ -36,6 +37,11 @@ function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption
 
 function initializeSettingsOptionsField(settingKey: string): void {
   const setting = getSetting(settingKey) as SettingSelect;
+  SettingsOptionsLeftButtonElement.onclick = function () {
+    closeSettingsOptions();
+    // callback
+    initializeSettings();
+  };
   SettingsOptionsTitleElement.innerText = setting.name;
   SettingsOptionsDescriptionElement.innerText = setting.description;
   SettingsOptionsOptionsElement.innerHTML = '';
