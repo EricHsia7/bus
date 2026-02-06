@@ -61,7 +61,7 @@ function generateElementOfItem(item: Setting): HTMLElement {
   return settingElement;
 }
 
-async function initializeSettingsField() {
+export async function initializeSettingsField() {
   const list = await listSettings();
   SettingsElement.innerHTML = '';
   const fragment = new DocumentFragment();

@@ -1,6 +1,7 @@
-import { changeSettingOption, getSetting, initializeSettings, SettingSelect, SettingSelectOption } from '../../data/settings/index';
+import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { initializeSettingsField } from './index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
 const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
@@ -40,7 +41,7 @@ function initializeSettingsOptionsField(settingKey: string): void {
   SettingsOptionsLeftButtonElement.onclick = function () {
     closeSettingsOptions();
     // callback
-    initializeSettings();
+    initializeSettingsField();
   };
   SettingsOptionsTitleElement.innerText = setting.name;
   SettingsOptionsDescriptionElement.innerText = setting.description;
