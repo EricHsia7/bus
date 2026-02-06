@@ -66,7 +66,7 @@ export function showHome(pageTransitionDirection: PageTransitionDirection): void
 }
 
 export function hideHome(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
   HomeField.addEventListener(
     'animationend',
     function () {
