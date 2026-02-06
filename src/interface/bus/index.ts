@@ -43,13 +43,13 @@ export function hideBus(pageTransitionDirection: PageTransitionDirection): void 
 export function openBus(id: number): void {
   pushPageHistory('Bus');
   logRecentView('bus', id);
-  showBus();
+  showBus('rtl');
   initializeBusPage(id);
   hidePreviousPage();
 }
 
 export function closeBus(): void {
-  hideBus();
+  hideBus('ltr');
   showPreviousPage();
   revokePageHistory('Bus');
 }

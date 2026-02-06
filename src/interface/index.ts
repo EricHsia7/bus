@@ -59,7 +59,7 @@ export function hidePreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
-        hideHome();
+        hideHome('rtl');
         break;
       case 'FolderCreator':
         hideFolderCreator();
@@ -110,7 +110,7 @@ export function hidePreviousPage(): void {
         hidePersonalScheduleEditor();
         break;
       case 'Bus':
-        hideBus();
+        hideBus('rtl');
         break;
       case 'RegisterNotification':
         hideRegisterNotification();
@@ -139,7 +139,7 @@ export function showPreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
-        showHome();
+        showHome('ltr');
         break;
       case 'FolderCreator':
         showFolderCreator();
@@ -190,7 +190,7 @@ export function showPreviousPage(): void {
         showPersonalScheduleEditor();
         break;
       case 'Bus':
-        showBus();
+        showBus('ltr');
         break;
       case 'RegisterNotification':
         showRegisterNotification();

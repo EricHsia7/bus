@@ -1,18 +1,18 @@
-.css_page_transition_slide_in_ltr {
+.css_page_transition_slide_in_rtl {
   animation-name: slideIn;
   animation-duration: 0.5s;
   animation-timing-function: var(--b-cssvar-page-transiton-ease);
   animation-fill-mode: forwards;
 }
 
-.css_page_transition_slide_out_ltr {
+.css_page_transition_slide_out_rtl {
   animation-name: slideOut;
   animation-duration: 0.5s;
   animation-timing-function: var(--b-cssvar-page-transiton-ease);
   animation-fill-mode: forwards;
 }
 
-.css_page_transition_slide_in_rtl {
+.css_page_transition_slide_in_ltr {
   animation-name: slideIn;
   animation-duration: 0.5s;
   animation-timing-function: var(--b-cssvar-page-transiton-ease);
@@ -20,7 +20,7 @@
   animation-direction: reverse;
 }
 
-.css_page_transition_slide_out_rtl {
+.css_page_transition_slide_out_ltr {
   animation-name: slideOut;
   animation-duration: 0.5s;
   animation-timing-function: var(--b-cssvar-page-transiton-ease);
