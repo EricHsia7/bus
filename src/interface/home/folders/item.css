@@ -32,7 +32,6 @@
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
-  visibility: visible;
 }
 
 /* skeleton screen: true */
@@ -106,18 +105,18 @@
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule {
-  visibility: visible;
+  visibility: inherit;
   width: 30px;
 }
 
 /* type: location */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="location"] .css_home_folder_item_capsule {
-  visibility: visible;
+  visibility: inherit;
   width: 30px;
 }
 
@@ -145,17 +144,17 @@
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: route */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="route"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: location */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="location"] .css_home_folder_item_capsule .css_home_folder_item_button {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: bus */
@@ -193,7 +192,7 @@
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_capsule_separator {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: route */
@@ -235,7 +234,7 @@
 
 /* type: stop */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[type="stop"] .css_home_folder_item_capsule .css_home_folder_item_status {
-  visibility: visible;
+  visibility: inherit;
 }
 
 /* type: route */
