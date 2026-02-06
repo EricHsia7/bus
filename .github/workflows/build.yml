@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-open-folder-creator-callback
 
 jobs:
   build:

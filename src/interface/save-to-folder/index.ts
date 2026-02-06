@@ -1,13 +1,16 @@
 import { Folder, FolderContent, isFolderContentSaved, listFolders, saveLocation, saveRoute, saveStop } from '../../data/folder/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
+import { openFolderCreator } from '../folder-creator/index';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
-const SaveToFolderBodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
-const SaveToFolderListElement = elementQuerySelector(SaveToFolderBodyElement, '.css_save_to_folder_list');
+const bodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
+const listElement = elementQuerySelector(bodyElement, '.css_save_to_folder_list');
+const headElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_head');
+const rightButtonElement = elementQuerySelector(headElement, '.css_save_to_folder_button_right');
 
 const successfulSaveMessage = '已儲存至資料夾';
 const failedSaveMessage = '無法儲存';
@@ -107,14 +110,19 @@ function generateElementOfItem(item: Folder, type: FolderContent['type'], parame
 }
 
 function initializeSaveToFolderField(type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined) {
+  rightButtonElement.onclick = function () {
+    openFolderCreator(function () {
+      initializeSaveToFolderField(type, parameters, saveToFolderButtonElement);
+    });
+  };
   const folders = listFolders();
-  SaveToFolderListElement.innerHTML = '';
+  listElement.innerHTML = '';
   const fragment = new DocumentFragment();
   for (const item of folders) {
     const newItemElement = generateElementOfItem(item, type, parameters, saveToFolderButtonElement);
     fragment.appendChild(newItemElement);
   }
-  SaveToFolderListElement.append(fragment);
+  listElement.append(fragment);
 }
 
 export function showSaveToFolder(): void {
