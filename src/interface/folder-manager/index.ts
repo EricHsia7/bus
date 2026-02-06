@@ -15,11 +15,14 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Main container
   const folderItemElement = documentCreateDivElement();
   folderItemElement.classList.add('css_folder_manager_folder_item');
-  folderItemElement.onclick = () => {
-    openFolderEditor(item.id, function () {
-      initializeFolderManagerField();
-    });
-  };
+
+  (function (id) {
+    folderItemElement.onclick = function () {
+      openFolderEditor(id, function () {
+        initializeFolderManagerField();
+      });
+    };
+  })(item.id);
 
   // Icon
   const iconElement = documentCreateDivElement();

@@ -148,7 +148,9 @@ async function initializeFolderEditorField(folderID: string, callback: Function)
   // TODO: add skeleton screen
   const folder = getFolder(folderID);
   const content = await listFolderContent(folderID);
-  updateFolderEditorField(folder, content);
+  if (typeof folder !== 'boolean' && folder !== false) {
+    updateFolderEditorField(folder, content);
+  }
 }
 
 export function showFolderEditor(): void {
