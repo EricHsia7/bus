@@ -206,6 +206,9 @@ window.bus = {
     // initialize settings
     await initializeSettings();
 
+    // initalize folder list
+    await initializeFolderList();
+
     // setup skeleton screen
     setupRecentViewsFieldSkeletonScreen();
     setupFolderFieldSkeletonScreen();
@@ -213,9 +216,6 @@ window.bus = {
     // check app version
     const status = await checkAppVersion();
     if (status === 'ok') {
-      // initalize folder list
-      await initializeFolderList();
-
       // handle permanent link
       openPermalink();
 
