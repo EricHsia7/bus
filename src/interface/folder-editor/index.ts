@@ -128,13 +128,6 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
 }
 
 function updateFolderEditorField(folder: Folder, content: Array<FolderContent>): void {
-  NameInputElement.value = folder.name;
-  IconInputElement.value = folder.icon;
-
-  LeftButtonElement.onclick = function () {
-    saveEditedFolder(folder.id);
-  };
-
   FolderContentElement.innerHTML = '';
   const fragment = new DocumentFragment();
   for (const item of content) {
@@ -144,7 +137,14 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>):
   FolderContentElement.append(fragment);
 }
 
-async function initializeFolderEditorField(folderID: string) {
+async function initializeFolderEditorField(folderID: string, callback: Function) {
+  NameInputElement.value = folder.name;
+  IconInputElement.value = folder.icon;
+
+  LeftButtonElement.onclick = function () {
+    saveEditedFolder(folder.id, callback);
+  };
+
   // TODO: add skeleton screen
   const folder = getFolder(folderID);
   const content = await listFolderContent(folderID);
@@ -159,10 +159,10 @@ export function hideFolderEditor(): void {
   FolderEditorField.setAttribute('displayed', 'false');
 }
 
-export function openFolderEditor(folderID: string): void {
+export function openFolderEditor(folderID: string, callback: Function): void {
   pushPageHistory('FolderEditor');
   showFolderEditor();
-  initializeFolderEditorField(folderID);
+  initializeFolderEditorField(folderID, callback);
   hidePreviousPage();
 }
 
@@ -222,15 +222,17 @@ export function moveItemOnFolderEditor(itemElement: HTMLElement, folderID: Folde
   });
 }
 
-export function saveEditedFolder(folderID: string): void {
+export async function saveEditedFolder(folderID: string, callback: Function) {
   const name = NameInputElement.value;
   const icon = IconInputElement.value;
-  updateFolder(folderID, name, icon).then(function (e) {
-    if (e) {
-      closeFolderEditor();
-      promptMessage('check_circle', '已儲存變更');
-    } else {
-      promptMessage('error', '無法儲存');
+  const update = await updateFolder(folderID, name, icon);
+  if (update) {
+    closeFolderEditor();
+    promptMessage('check_circle', '已儲存變更');
+    if (typeof callback === 'function') {
+      callback();
     }
-  });
+  } else {
+    promptMessage('error', '無法儲存');
+  }
 }

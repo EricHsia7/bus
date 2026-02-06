@@ -16,7 +16,9 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   const folderItemElement = documentCreateDivElement();
   folderItemElement.classList.add('css_folder_manager_folder_item');
   folderItemElement.onclick = () => {
-    openFolderEditor(item.id);
+    openFolderEditor(item.id, function () {
+      initializeFolderManagerField();
+    });
   };
 
   // Icon
