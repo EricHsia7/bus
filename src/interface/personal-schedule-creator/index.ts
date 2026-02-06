@@ -2,6 +2,7 @@ import { createPersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { WeekDayIndex } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleCreatorField = documentQuerySelector('.css_personal_schedule_creator_field');
@@ -13,7 +14,7 @@ const endTimeInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, 
 const dayGroupBodyElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body');
 const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_creator_day');
 
-export function createFormulatedPersonalSchedule(): void {
+export async function createFormulatedPersonalSchedule(): void {
   const name = nameInputElement.value;
   const startTime = startTimeInputElement.value;
   const endTime = endTimeInputElement.value;
@@ -35,14 +36,15 @@ export function createFormulatedPersonalSchedule(): void {
     }
   }
 
-  createPersonalSchedule(name, startHours, startMinutes, endHours, endMinutes, days).then(function (e) {
-    if (e) {
-      closePersonalScheduleCreator();
-      promptMessage('calendar_view_day', '已建立個人化行程');
-    } else {
-      promptMessage('error', '無法建立個人化行程');
-    }
-  });
+  const creation = await createPersonalSchedule(name, startHours, startMinutes, endHours, endMinutes, days);
+  if (creation) {
+    closePersonalScheduleCreator();
+    promptMessage('calendar_view_day', '已建立個人化行程');
+    // callback
+    initializePersonalScheduleManagerField();
+  } else {
+    promptMessage('error', '無法建立個人化行程');
+  }
 }
 
 export function showPersonalScheduleCreator(): void {
