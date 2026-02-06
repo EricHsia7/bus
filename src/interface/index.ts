@@ -62,19 +62,19 @@ export function hidePreviousPage(): void {
         hideHome('rtl');
         break;
       case 'FolderCreator':
-        hideFolderCreator();
+        hideFolderCreator('rtl');
         break;
       case 'FolderEditor':
-        hideFolderEditor();
+        hideFolderEditor('rtl');
         break;
       case 'IconSelector':
-        hideIconSelector();
+        hideIconSelector('rtl');
         break;
       case 'FolderManager':
-        hideFolderManager();
+        hideFolderManager('rtl');
         break;
       case 'Location':
-        hideLocation();
+        hideLocation('rtl');
         break;
       case 'LocationDetails':
         hideLocationDetails();
@@ -142,19 +142,19 @@ export function showPreviousPage(): void {
         showHome('ltr');
         break;
       case 'FolderCreator':
-        showFolderCreator();
+        showFolderCreator('ltr');
         break;
       case 'FolderEditor':
-        showFolderEditor();
+        showFolderEditor('ltr');
         break;
       case 'IconSelector':
-        showIconSelector();
+        showIconSelector('ltr');
         break;
       case 'FolderManager':
-        showFolderManager();
+        showFolderManager('ltr');
         break;
       case 'Location':
-        showLocation();
+        showLocation('ltr');
         break;
       case 'LocationDetails':
         showLocationDetails();
