@@ -10,7 +10,7 @@ import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
-import { closeFolderCreator, createFormulatedFolder, openFolderCreator } from './interface/folder-creator/index';
+import { closeFolderCreator } from './interface/folder-creator/index';
 import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
 import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
@@ -294,9 +294,7 @@ window.bus = {
     closeSaveToFolder,
     closeFolderManager,
     closeIconSelector,
-    openFolderCreator,
-    closeFolderCreator,
-    createFormulatedFolder
+    closeFolderCreator
   },
   search: {
     openSearch,

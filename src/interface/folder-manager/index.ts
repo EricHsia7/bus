@@ -1,12 +1,15 @@
 import { FolderWithContentLength, listFoldersWithContentLength } from '../../data/folder/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
-const FolderManagerBodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
-const FolderManagerFolderListElement = elementQuerySelector(FolderManagerBodyElement, '.css_folder_manager_folder_list');
+const bodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
+const listElement = elementQuerySelector(bodyElement, '.css_folder_manager_folder_list');
+const headElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_head');
+const rightButtonElement = elementQuerySelector(headElement, '.css_folder_manager_button_right');
 
 function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Main container
@@ -46,14 +49,19 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
 }
 
 async function initializeFolderManagerField() {
+  rightButtonElement.onclick = function () {
+    openFolderCreator(function () {
+      initializeFolderManagerField();
+    });
+  };
   const foldersWithContent = await listFoldersWithContentLength();
-  FolderManagerFolderListElement.innerHTML = '';
+  listElement.innerHTML = '';
   const fragment = new DocumentFragment();
   for (const item of foldersWithContent) {
     const newItemElement = generateElementOfItem(item);
     fragment.appendChild(newItemElement);
   }
-  FolderManagerFolderListElement.append(fragment);
+  listElement.append(fragment);
 }
 
 export function showFolderManager(): void {
