@@ -24,7 +24,7 @@ import { closePersonalScheduleCreator, createFormulatedPersonalSchedule, openPer
 import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPersonalSchedule, switchPersonalScheduleEditorDay } from './interface/personal-schedule-editor/index';
 import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closeQRCode } from './interface/qrcode/index';
-import { closeRegisterNotification, openRegisterNotification, saveFormulatedRegisterNotification } from './interface/register-notification/index';
+import { openRegisterNotification } from './interface/register-notification/index';
 import { closeRouteDetails } from './interface/route/details/index';
 import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
@@ -329,8 +329,6 @@ window.bus = {
   notification: {
     closeNotificationScheduleManager,
     openRegisterNotification,
-    closeRegisterNotification,
-    saveFormulatedRegisterNotification,
     closeScheduleNotification
   },
   qrcode: {

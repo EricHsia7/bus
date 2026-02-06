@@ -2,19 +2,40 @@ import { registerNotificationClient } from '../../data/notification/apis/registe
 import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { isValidURL } from '../../tools/index';
-import { hidePreviousPage, showPreviousPage, pushPageHistory, revokePageHistory } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
+import { initializeSettingsField } from '../settings/index';
 
 const RegisterNotificationField = documentQuerySelector('.css_register_notification_field');
-const RegisterNotificationBodyElement = elementQuerySelector(RegisterNotificationField, '.css_register_notification_body');
-const RegisterNotificationGroupsElement = elementQuerySelector(RegisterNotificationBodyElement, '.css_register_notification_groups');
+const bodyElement = elementQuerySelector(RegisterNotificationField, '.css_register_notification_body');
 
-const ProviderInputElement = elementQuerySelector(RegisterNotificationGroupsElement, '.css_register_notification_group[group="provider"] .css_register_notification_group_body input');
-const RgistrationKeyInputElement = elementQuerySelector(RegisterNotificationGroupsElement, '.css_register_notification_group[group="registration-key"] .css_register_notification_group_body input');
+const groupsElement = elementQuerySelector(bodyElement, '.css_register_notification_groups');
+
+const providerGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="provider"]');
+const providerGroupBodyElement = elementQuerySelector(providerGroupElement, '.css_register_notification_group_body');
+const providerInputElement = elementQuerySelector(providerGroupBodyElement, 'input');
+
+const rgistrationKeyGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="registration-ke"]');
+const rgistrationKeyGroupBodyElement = elementQuerySelector(rgistrationKeyGroupElement, '.css_register_notification_group_body');
+const rgistrationKeyInputElement = elementQuerySelector(rgistrationKeyGroupBodyElement, 'input');
+
+const headElement = elementQuerySelector(RegisterNotificationField, '.css_register_notification_head');
+const leftButtonElement = elementQuerySelector(headElement, '.css_register_notification_button_left');
+const rightButtonElement = elementQuerySelector(headElement, '.css_register_notification_button_right');
 
 function initializeRegisterNotificationField() {
-  ProviderInputElement.value = getNotificationProvider();
-  RgistrationKeyInputElement.value = '';
+  leftButtonElement.onclick = function () {
+    closeRegisterNotification();
+    // callback
+    initializeSettingsField();
+  };
+
+  rightButtonElement.onclick = function () {
+    saveFormulatedRegisterNotification();
+  };
+
+  providerInputElement.value = getNotificationProvider();
+  rgistrationKeyInputElement.value = '';
 }
 
 export function showRegisterNotification(): void {
@@ -40,8 +61,8 @@ export function closeRegisterNotification(): void {
 
 export async function saveFormulatedRegisterNotification() {
   promptMessage('manufacturing', '處理中');
-  const provider = ProviderInputElement.value;
-  const registrationKey = RgistrationKeyInputElement.value;
+  const provider = providerInputElement.value;
+  const registrationKey = rgistrationKeyInputElement.value;
   if (!isValidURL(provider)) {
     promptMessage('error', '無效的提供者');
     return;
