@@ -1053,7 +1053,7 @@ export function streamLocation(): void {
     });
 }
 
-function initializeLocation(hash: IntegratedLocation['hash']) {
+function initializeLocation(hash: IntegratedLocation['hash']): void {
   currentHashSet_hash = hash;
   locationSliding_initialIndex = 0;
   locationSliding_groupStyles = {};

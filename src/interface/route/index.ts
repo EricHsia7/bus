@@ -1210,7 +1210,7 @@ export function streamRoute(): void {
     });
 }
 
-function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']) {
+function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   currentRouteIDSet_RouteID = RouteID;
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
