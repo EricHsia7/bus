@@ -15,7 +15,7 @@ const providerGroupElement = elementQuerySelector(groupsElement, '.css_register_
 const providerGroupBodyElement = elementQuerySelector(providerGroupElement, '.css_register_notification_group_body');
 const providerInputElement = elementQuerySelector(providerGroupBodyElement, 'input');
 
-const rgistrationKeyGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="registration-ke"]');
+const rgistrationKeyGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="registration-key"]');
 const rgistrationKeyGroupBodyElement = elementQuerySelector(rgistrationKeyGroupElement, '.css_register_notification_group_body');
 const rgistrationKeyInputElement = elementQuerySelector(rgistrationKeyGroupBodyElement, 'input');
 
