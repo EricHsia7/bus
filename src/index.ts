@@ -293,7 +293,7 @@ window.bus = {
   folder: {
     closeSaveToFolder,
     closeFolderManager,
-    closeIconSelector: closeIconSelector,
+    closeIconSelector,
     openFolderCreator,
     closeFolderCreator,
     createFormulatedFolder
