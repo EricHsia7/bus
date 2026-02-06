@@ -142,16 +142,15 @@ async function initializeFolderEditorField(folderID: string, callback: Function)
   const folder = getFolder(folderID);
   const content = await listFolderContent(folderID);
 
-  NameInputElement.value = folder.name;
-  IconInputElement.value = folder.icon;
+  if (typeof folder === 'boolean' || folder === false) return;
 
   LeftButtonElement.onclick = function () {
     saveEditedFolder(folder.id, callback);
   };
+  NameInputElement.value = folder.name;
+  IconInputElement.value = folder.icon;
 
-  if (typeof folder !== 'boolean' && folder !== false) {
-    updateFolderEditorField(folder, content);
-  }
+  updateFolderEditorField(folder, content);
 }
 
 export function showFolderEditor(): void {
