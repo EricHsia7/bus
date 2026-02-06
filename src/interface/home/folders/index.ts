@@ -624,7 +624,7 @@ async function streamFolders() {
 }
 
 export function initializeFolders(): void {
-  setupFolderFieldSkeletonScreen();
+  // setupFolderFieldSkeletonScreen();
   if (!foldersRefreshTimer_streaming) {
     foldersRefreshTimer_streaming = true;
     if (!foldersRefreshTimer_streamStarted) {
