@@ -288,9 +288,7 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
   const Route = (await getRoute(requestID, false)) as Route;
   const thisRoute = findRoute(Route, RouteID);
 
-  const SemiTimeTable = await getSemiTimeTable(requestID);
-  const TimeTable = await getTimeTable(requestID);
-  const Provider = await getProvider(requestID);
+  const [SemiTimeTable, TimeTable, Provider] = await Promise.all([getSemiTimeTable(requestID), getTimeTable(requestID), getProvider(requestID)]);
   const timeTableRules = getTimeTableRules(thisRoute);
   const calendar = generateCalendarFromTimeTables(RouteID, PathAttributeId, timeTableRules, SemiTimeTable, TimeTable);
   const thisProviderId = thisRoute.providerId;
@@ -327,7 +325,9 @@ export async function integrateRouteDetails(RouteID: number, PathAttributeId: Ar
       }
     ]
   };
+
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
+
   return result;
 }

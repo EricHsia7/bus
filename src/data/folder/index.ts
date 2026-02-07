@@ -6,7 +6,7 @@ import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 // import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
-import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -337,11 +337,8 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
   setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
 
-  const EstimateTime = await getEstimateTime(requestID);
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const [foldersWithContent, Route, EstimateTime] = (await Promise.all([listFoldersWithContent(), getRoute(requestID, true), getEstimateTime(requestID)])) as [FolderWithContentArray, SimplifiedRoute, EstimateTime];
   // const Location = (await getLocation(requestID, 1)) as MergedLocation;
-
-  const foldersWithContent = await listFoldersWithContent();
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
   // const location_labels = getSettingOptionValue('location_labels');
