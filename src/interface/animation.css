@@ -31,24 +31,24 @@
 @keyframes slideIn {
   0% {
     opacity: 0;
-    transform: translateX(30vw);
+    transform: translateX(80px);
   }
 
   100% {
     opacity: 1;
-    transform: translateX(0vw);
+    transform: translateX(0px);
   }
 }
 
 @keyframes slideOut {
   0% {
     opacity: 1;
-    transform: translateX(0vw);
+    transform: translateX(0px);
 
   }
 
   100% {
     opacity: 0;
-    transform: translateX(-30vw);
+    transform: translateX(-80px);
   }
 }
