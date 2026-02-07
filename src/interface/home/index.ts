@@ -32,11 +32,8 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 export async function downloadData() {
-  /*
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
-  */
-  // eliminate duplicate downloads in integrateFolders
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
