@@ -1,6 +1,6 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const QRCodeField = documentQuerySelector('.css_qrcode_field');
 const QRCodeBodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
@@ -10,23 +10,41 @@ export function initializeQRCodeField(text: string): void {
   QRCodeBodyElement.innerHTML = svg;
 }
 
-export function showQRCode(): void {
+export function showQRCode(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  QRCodeField.addEventListener(
+    'animationend',
+    function () {
+      QRCodeField.classList.remove(className);
+    },
+    { once: true }
+  );
+  QRCodeField.classList.add(className);
   QRCodeField.setAttribute('displayed', 'true');
 }
 
-export function hideQRCode(): void {
-  QRCodeField.setAttribute('displayed', 'false');
+export function hideQRCode(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  QRCodeField.addEventListener(
+    'animationend',
+    function () {
+      QRCodeField.setAttribute('displayed', 'false');
+      QRCodeField.classList.remove(className);
+    },
+    { once: true }
+  );
+  QRCodeField.classList.add(className);
 }
 
 export function openQRCode(text: string): void {
   pushPageHistory('QRCode');
-  showQRCode();
+  showQRCode('rtl');
   initializeQRCodeField(text);
   hidePreviousPage();
 }
 
 export function closeQRCode(): void {
-  hideQRCode();
+  hideQRCode('ltr');
   showPreviousPage();
   revokePageHistory('QRCode');
 }

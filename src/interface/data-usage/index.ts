@@ -2,7 +2,7 @@ import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
@@ -27,23 +27,41 @@ async function initializeDataUsage() {
   chartElement.innerHTML = stats.chart;
 }
 
-export function showDataUsage(): void {
+export function showDataUsage(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  dataUsageField.addEventListener(
+    'animationend',
+    function () {
+      dataUsageField.classList.remove(className);
+    },
+    { once: true }
+  );
+  dataUsageField.classList.add(className);
   dataUsageField.setAttribute('displayed', 'true');
 }
 
-export function hideDataUsage(): void {
-  dataUsageField.setAttribute('displayed', 'false');
+export function hideDataUsage(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  dataUsageField.addEventListener(
+    'animationend',
+    function () {
+      dataUsageField.setAttribute('displayed', 'false');
+      dataUsageField.classList.remove(className);
+    },
+    { once: true }
+  );
+  dataUsageField.classList.add(className);
 }
 
 export function openDataUsage(): void {
   pushPageHistory('DataUsage');
-  showDataUsage();
+  showDataUsage('rtl');
   initializeDataUsage();
   hidePreviousPage();
 }
 
 export function closeDataUsage(): void {
-  hideDataUsage();
+  hideDataUsage('ltr');
   showPreviousPage();
   revokePageHistory('DataUsage');
 }

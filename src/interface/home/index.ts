@@ -4,6 +4,7 @@ import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbol
 import { getRoute } from '../../data/apis/getRoute/index';
 import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { PageTransitionDirection } from '../index';
 
 const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;
@@ -39,10 +40,28 @@ export async function downloadData() {
   deleteDataUpdateTime(dataDownloadRequestID);
 }
 
-export function showHome(): void {
+export function showHome(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  HomeField.addEventListener(
+    'animationend',
+    function () {
+      HomeField.classList.remove(className);
+    },
+    { once: true }
+  );
+  HomeField.classList.add(className);
   HomeField.setAttribute('displayed', 'true');
 }
 
-export function hideHome(): void {
-  HomeField.setAttribute('displayed', 'false');
+export function hideHome(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  HomeField.addEventListener(
+    'animationend',
+    function () {
+      HomeField.setAttribute('displayed', 'false');
+      HomeField.classList.remove(className);
+    },
+    { once: true }
+  );
+  HomeField.classList.add(className);
 }

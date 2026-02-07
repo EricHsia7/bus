@@ -2,7 +2,7 @@ import { registerNotificationClient } from '../../data/notification/apis/registe
 import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { isValidURL } from '../../tools/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { initializeSettingsField } from '../settings/index';
 
@@ -38,23 +38,41 @@ function initializeRegisterNotificationField() {
   rgistrationKeyInputElement.value = '';
 }
 
-export function showRegisterNotification(): void {
+export function showRegisterNotification(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  RegisterNotificationField.addEventListener(
+    'animationend',
+    function () {
+      RegisterNotificationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  RegisterNotificationField.classList.add(className);
   RegisterNotificationField.setAttribute('displayed', 'true');
 }
 
-export function hideRegisterNotification(): void {
-  RegisterNotificationField.setAttribute('displayed', 'false');
+export function hideRegisterNotification(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  RegisterNotificationField.addEventListener(
+    'animationend',
+    function () {
+      RegisterNotificationField.setAttribute('displayed', 'false');
+      RegisterNotificationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  RegisterNotificationField.classList.add(className);
 }
 
 export function openRegisterNotification(): void {
   pushPageHistory('RegisterNotification');
-  showRegisterNotification();
+  showRegisterNotification('rtl');
   initializeRegisterNotificationField();
   hidePreviousPage();
 }
 
 export function closeRegisterNotification(): void {
-  hideRegisterNotification();
+  hideRegisterNotification('ltr');
   showPreviousPage();
   revokePageHistory('RegisterNotification');
 }

@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
 const bodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
@@ -67,23 +67,41 @@ async function initializeFolderManagerField() {
   listElement.append(fragment);
 }
 
-export function showFolderManager(): void {
+export function showFolderManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  FolderManagerField.addEventListener(
+    'animationend',
+    function () {
+      FolderManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderManagerField.classList.add(className);
   FolderManagerField.setAttribute('displayed', 'true');
 }
 
-export function hideFolderManager(): void {
-  FolderManagerField.setAttribute('displayed', 'false');
+export function hideFolderManager(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  FolderManagerField.addEventListener(
+    'animationend',
+    function () {
+      FolderManagerField.setAttribute('displayed', 'false');
+      FolderManagerField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderManagerField.classList.add(className);
 }
 
 export function openFolderManager(): void {
   pushPageHistory('FolderManager');
-  showFolderManager();
+  showFolderManager('rtl');
   initializeFolderManagerField();
   hidePreviousPage();
 }
 
 export function closeFolderManager(): void {
-  hideFolderManager();
+  hideFolderManager('ltr');
   showPreviousPage();
   revokePageHistory('FolderManager');
 }

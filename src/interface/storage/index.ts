@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
@@ -153,23 +153,41 @@ async function initializeStorageStatistics() {
   updateStorageField(statistics, false, playing_animation);
 }
 
-export function showStorage(): void {
+export function showStorage(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  StorageField.addEventListener(
+    'animationend',
+    function () {
+      StorageField.classList.remove(className);
+    },
+    { once: true }
+  );
+  StorageField.classList.add(className);
   StorageField.setAttribute('displayed', 'true');
 }
 
-export function hideStorage(): void {
-  StorageField.setAttribute('displayed', 'false');
+export function hideStorage(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  StorageField.addEventListener(
+    'animationend',
+    function () {
+      StorageField.setAttribute('displayed', 'false');
+      StorageField.classList.remove(className);
+    },
+    { once: true }
+  );
+  StorageField.classList.add(className);
 }
 
 export function openStorage(): void {
   pushPageHistory('Storage');
-  showStorage();
+  showStorage('rtl');
   initializeStorageStatistics();
   hidePreviousPage();
 }
 
 export function closeStorage(): void {
-  hideStorage();
+  hideStorage('ltr');
   showPreviousPage();
   revokePageHistory('Storage');
 }

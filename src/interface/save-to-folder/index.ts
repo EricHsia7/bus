@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { booleanToString } from '../../tools/index';
 import { openFolderCreator } from '../folder-creator/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
@@ -125,23 +125,41 @@ function initializeSaveToFolderField(type: FolderContent['type'], parameters: Ar
   listElement.append(fragment);
 }
 
-export function showSaveToFolder(): void {
+export function showSaveToFolder(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  SaveToFolderField.addEventListener(
+    'animationend',
+    function () {
+      SaveToFolderField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SaveToFolderField.classList.add(className);
   SaveToFolderField.setAttribute('displayed', 'true');
 }
 
-export function hideSaveToFolder(): void {
-  SaveToFolderField.setAttribute('displayed', 'false');
+export function hideSaveToFolder(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  SaveToFolderField.addEventListener(
+    'animationend',
+    function () {
+      SaveToFolderField.setAttribute('displayed', 'false');
+      SaveToFolderField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SaveToFolderField.classList.add(className);
 }
 
 export function openSaveToFolder(type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): void {
   pushPageHistory('SaveToFolder');
-  showSaveToFolder();
+  showSaveToFolder('rtl');
   initializeSaveToFolderField(type, parameters, saveToFolderButtonElement);
   hidePreviousPage();
 }
 
 export function closeSaveToFolder(): void {
-  hideSaveToFolder();
+  hideSaveToFolder('ltr');
   showPreviousPage();
   revokePageHistory('SaveToFolder');
 }

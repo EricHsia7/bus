@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { openIconSelector } from '../icon-selector/index';
 import { getIconElement } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
@@ -153,23 +153,41 @@ async function initializeFolderEditorField(folderID: string, callback: Function)
   updateFolderEditorField(folder, content);
 }
 
-export function showFolderEditor(): void {
+export function showFolderEditor(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  FolderEditorField.addEventListener(
+    'animationend',
+    function () {
+      FolderEditorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderEditorField.classList.add(className);
   FolderEditorField.setAttribute('displayed', 'true');
 }
 
-export function hideFolderEditor(): void {
-  FolderEditorField.setAttribute('displayed', 'false');
+export function hideFolderEditor(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  FolderEditorField.addEventListener(
+    'animationend',
+    function () {
+      FolderEditorField.setAttribute('displayed', 'false');
+      FolderEditorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  FolderEditorField.classList.add(className);
 }
 
 export function openFolderEditor(folderID: string, callback: Function): void {
   pushPageHistory('FolderEditor');
-  showFolderEditor();
+  showFolderEditor('rtl');
   initializeFolderEditorField(folderID, callback);
   hidePreviousPage();
 }
 
 export function closeFolderEditor(): void {
-  hideFolderEditor();
+  hideFolderEditor('ltr');
   showPreviousPage();
   revokePageHistory('FolderEditor');
 }

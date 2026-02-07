@@ -43,6 +43,8 @@ import './interface/icons/index.css';
 
 import './interface/animation.css';
 
+import './interface/page-transition.css';
+
 import './interface/home/field.css';
 import './interface/home/head.css';
 import './interface/home/body.css';

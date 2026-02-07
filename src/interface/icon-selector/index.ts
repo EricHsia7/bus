@@ -7,12 +7,12 @@ import { booleanToString, generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
-const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
-const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
+const IconSelectorField = documentQuerySelector('.css_icon_selector_field');
+const headElement = elementQuerySelector(IconSelectorField, '.css_icon_selector_head');
 const searchInputElement = elementQuerySelector(headElement, '#search_material_symbols_input') as HTMLInputElement;
-const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
+const bodyElement = elementQuerySelector(IconSelectorField, '.css_icon_selector_body');
 const symbolsElement = elementQuerySelector(bodyElement, '.css_icon_selector_material_symbols');
 
 let currentSymbols: Array<MaterialSymbols> = [];
@@ -177,23 +177,41 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
   closeIconSelector();
 }
 
-export function showIconSelector(): void {
-  iconSelectorField.setAttribute('displayed', 'true');
+export function showIconSelector(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  IconSelectorField.addEventListener(
+    'animationend',
+    function () {
+      IconSelectorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  IconSelectorField.classList.add(className);
+  IconSelectorField.setAttribute('displayed', 'true');
 }
 
-export function hideIconSelector(): void {
-  iconSelectorField.setAttribute('displayed', 'false');
+export function hideIconSelector(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  IconSelectorField.addEventListener(
+    'animationend',
+    function () {
+      IconSelectorField.setAttribute('displayed', 'false');
+      IconSelectorField.classList.remove(className);
+    },
+    { once: true }
+  );
+  IconSelectorField.classList.add(className);
 }
 
 export function openIconSelector(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelector');
-  showIconSelector();
+  showIconSelector('rtl');
   initializeIconSelectorField(inputElement);
   hidePreviousPage();
 }
 
 export function closeIconSelector(): void {
-  hideIconSelector();
+  hideIconSelector('ltr');
   showPreviousPage();
   revokePageHistory('IconSelector');
 }

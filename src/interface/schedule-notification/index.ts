@@ -1,7 +1,7 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
@@ -46,23 +46,41 @@ function initializeScheduleNotificationField(thisButtonElement: HTMLElement, Sto
   ScheduleNotificationListElement.append(fragment);
 }
 
-export function showScheduleNotification(): void {
+export function showScheduleNotification(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  ScheduleNotificationField.addEventListener(
+    'animationend',
+    function () {
+      ScheduleNotificationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  ScheduleNotificationField.classList.add(className);
   ScheduleNotificationField.setAttribute('displayed', 'true');
 }
 
-export function hideScheduleNotification(): void {
-  ScheduleNotificationField.setAttribute('displayed', 'false');
+export function hideScheduleNotification(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  ScheduleNotificationField.addEventListener(
+    'animationend',
+    function () {
+      ScheduleNotificationField.setAttribute('displayed', 'false');
+      ScheduleNotificationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  ScheduleNotificationField.classList.add(className);
 }
 
 export function openScheduleNotification(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): void {
   pushPageHistory('ScheduleNotification');
-  showScheduleNotification();
+  showScheduleNotification('rtl');
   initializeScheduleNotificationField(thisButtonElement, StopID, RouteID, EstimateTime);
   hidePreviousPage();
 }
 
 export function closeScheduleNotification(): void {
-  hideScheduleNotification();
+  hideScheduleNotification('ltr');
   showPreviousPage();
   revokePageHistory('ScheduleNotification');
 }

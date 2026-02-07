@@ -7,7 +7,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { generateIdentifier } from '../../tools/index';
 import { shareFile } from '../../tools/share';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SettingsField = documentQuerySelector('.css_settings_field');
@@ -72,23 +72,41 @@ export async function initializeSettingsField() {
   SettingsElement.append(fragment);
 }
 
-export function shwoSettings(): void {
+export function shwoSettings(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  SettingsField.addEventListener(
+    'animationend',
+    function () {
+      SettingsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SettingsField.classList.add(className);
   SettingsField.setAttribute('displayed', 'true');
 }
 
-export function hideSettings(): void {
-  SettingsField.setAttribute('displayed', 'false');
+export function hideSettings(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  SettingsField.addEventListener(
+    'animationend',
+    function () {
+      SettingsField.setAttribute('displayed', 'false');
+      SettingsField.classList.remove(className);
+    },
+    { once: true }
+  );
+  SettingsField.classList.add(className);
 }
 
 export function openSettings(): void {
   pushPageHistory('Settings');
-  shwoSettings();
+  shwoSettings('rtl');
   initializeSettingsField();
   hidePreviousPage();
 }
 
 export function closeSettings(): void {
-  hideSettings();
+  hideSettings('ltr');
   showPreviousPage();
   revokePageHistory('Settings');
 }

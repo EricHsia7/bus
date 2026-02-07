@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { GroupStyles, hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -1074,24 +1074,42 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
   }
 }
 
-export function showLocation(): void {
+export function showLocation(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  LocationField.addEventListener(
+    'animationend',
+    function () {
+      LocationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  LocationField.classList.add(className);
   LocationField.setAttribute('displayed', 'true');
 }
 
-export function hideLocation(): void {
-  LocationField.setAttribute('displayed', 'false');
+export function hideLocation(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  LocationField.addEventListener(
+    'animationend',
+    function () {
+      LocationField.setAttribute('displayed', 'false');
+      LocationField.classList.remove(className);
+    },
+    { once: true }
+  );
+  LocationField.classList.add(className);
 }
 
 export function openLocation(hash: IntegratedLocation['hash']): void {
   pushPageHistory('Location');
   logRecentView('location', hash);
-  showLocation();
+  showLocation('rtl');
   initializeLocation(hash);
   hidePreviousPage();
 }
 
 export function closeLocation(): void {
-  hideLocation();
+  hideLocation('ltr');
   locationRefreshTimer_streaming = false;
   showPreviousPage();
   revokePageHistory('Location');

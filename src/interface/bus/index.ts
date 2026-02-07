@@ -3,7 +3,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 export const BusField = documentQuerySelector('.css_bus_field');
@@ -14,24 +14,42 @@ export const BusPropertiesGroupElement = elementQuerySelector(BusGroupsElement, 
 export const BusPropertiesGroupBodyElement = elementQuerySelector(BusPropertiesGroupElement, '.css_bus_group_body');
 export const BusLocationGroupElement = elementQuerySelector(BusGroupsElement, '.css_bus_group[group="location"]');
 
-export function showBus(): void {
+export function showBus(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+  BusField.addEventListener(
+    'animationend',
+    function () {
+      BusField.classList.remove(className);
+    },
+    { once: true }
+  );
+  BusField.classList.add(className);
   BusField.setAttribute('displayed', 'true');
 }
 
-export function hideBus(): void {
-  BusField.setAttribute('displayed', 'false');
+export function hideBus(pageTransitionDirection: PageTransitionDirection): void {
+  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+  BusField.addEventListener(
+    'animationend',
+    function () {
+      BusField.setAttribute('displayed', 'false');
+      BusField.classList.remove(className);
+    },
+    { once: true }
+  );
+  BusField.classList.add(className);
 }
 
 export function openBus(id: number): void {
   pushPageHistory('Bus');
   logRecentView('bus', id);
-  showBus();
+  showBus('rtl');
   initializeBusPage(id);
   hidePreviousPage();
 }
 
 export function closeBus(): void {
-  hideBus();
+  hideBus('ltr');
   showPreviousPage();
   revokePageHistory('Bus');
 }
