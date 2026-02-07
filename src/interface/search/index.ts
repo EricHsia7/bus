@@ -123,16 +123,6 @@ function initializeKeyboard(): void {
   }
 }
 
-export function openKeyboard(): void {
-  initializeKeyboard();
-  searchKeyboardElement.setAttribute('displayed', 'true');
-  bringToEnd();
-}
-
-export function closeKeyboard(): void {
-  searchKeyboardElement.setAttribute('displayed', 'false');
-}
-
 export function initializeSearchInput(): void {
   searchInputElement.addEventListener('paste', function () {
     updateSearchInput();
@@ -362,7 +352,7 @@ export function openSearch(): void {
     pushPageHistory('Search');
     showSearch('rtl');
 
-    openKeyboard();
+    initializeKeyboard();
     prepareForSearch();
 
     hidePreviousPage();
@@ -372,7 +362,6 @@ export function openSearch(): void {
 }
 
 export function closeSearch(): void {
-  closeKeyboard();
   hideSearch('ltr');
   showPreviousPage();
   revokePageHistory('Search');
