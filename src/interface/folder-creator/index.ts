@@ -1,7 +1,7 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
@@ -47,8 +47,8 @@ function initializeFolderCreator(callback: Function): void {
   };
 }
 
-export function showFolderCreator(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showFolderCreator(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   FolderCreatorField.addEventListener(
     'animationend',
     function () {
@@ -60,8 +60,8 @@ export function showFolderCreator(pageTransitionDirection: PageTransitionDirecti
   FolderCreatorField.setAttribute('displayed', 'true');
 }
 
-export function hideFolderCreator(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideFolderCreator(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   FolderCreatorField.addEventListener(
     'animationend',
     function () {

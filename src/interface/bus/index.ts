@@ -3,7 +3,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
 export const BusField = documentQuerySelector('.css_bus_field');
@@ -14,8 +14,8 @@ export const BusPropertiesGroupElement = elementQuerySelector(BusGroupsElement, 
 export const BusPropertiesGroupBodyElement = elementQuerySelector(BusPropertiesGroupElement, '.css_bus_group_body');
 export const BusLocationGroupElement = elementQuerySelector(BusGroupsElement, '.css_bus_group[group="location"]');
 
-export function showBus(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showBus(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   BusField.addEventListener(
     'animationend',
     function () {
@@ -27,8 +27,8 @@ export function showBus(pageTransitionDirection: PageTransitionDirection): void 
   BusField.setAttribute('displayed', 'true');
 }
 
-export function hideBus(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideBus(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   BusField.addEventListener(
     'animationend',
     function () {

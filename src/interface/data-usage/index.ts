@@ -2,7 +2,7 @@ import { getDataUsageStats } from '../../data/analytics/data-usage/index';
 import { convertBytes } from '../../tools/convert';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { dateToString } from '../../tools/time';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const dataUsageField = documentQuerySelector('.css_data_usage_field');
 const dataUsageBodyElement = elementQuerySelector(dataUsageField, '.css_data_usage_body');
@@ -27,8 +27,8 @@ async function initializeDataUsage() {
   chartElement.innerHTML = stats.chart;
 }
 
-export function showDataUsage(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showDataUsage(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   dataUsageField.addEventListener(
     'animationend',
     function () {
@@ -40,8 +40,8 @@ export function showDataUsage(pageTransitionDirection: PageTransitionDirection):
   dataUsageField.setAttribute('displayed', 'true');
 }
 
-export function hideDataUsage(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideDataUsage(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   dataUsageField.addEventListener(
     'animationend',
     function () {

@@ -7,7 +7,7 @@ import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openRoute } from '../route/index';
@@ -321,8 +321,8 @@ export function switchSearchTypeFilter(): void {
   updateSearchResult();
 }
 
-export function showSearch(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showSearch(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   SearchField.addEventListener(
     'animationend',
     function () {
@@ -334,8 +334,8 @@ export function showSearch(pageTransitionDirection: PageTransitionDirection): vo
   SearchField.setAttribute('displayed', 'true');
 }
 
-export function hideSearch(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideSearch(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   SearchField.addEventListener(
     'animationend',
     function () {

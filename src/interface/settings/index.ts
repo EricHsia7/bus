@@ -7,7 +7,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { generateIdentifier } from '../../tools/index';
 import { shareFile } from '../../tools/share';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SettingsField = documentQuerySelector('.css_settings_field');
@@ -72,8 +72,8 @@ export async function initializeSettingsField() {
   SettingsElement.append(fragment);
 }
 
-export function shwoSettings(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function shwoSettings(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   SettingsField.addEventListener(
     'animationend',
     function () {
@@ -85,8 +85,8 @@ export function shwoSettings(pageTransitionDirection: PageTransitionDirection): 
   SettingsField.setAttribute('displayed', 'true');
 }
 
-export function hideSettings(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideSettings(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   SettingsField.addEventListener(
     'animationend',
     function () {

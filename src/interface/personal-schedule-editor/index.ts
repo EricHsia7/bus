@@ -1,7 +1,7 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { timeObjectToString, WeekDayIndex } from '../../tools/time';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
@@ -72,8 +72,8 @@ async function initializePersonalScheduleEditorField(personalScheduleID: string)
   };
 }
 
-export function showPersonalScheduleEditor(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showPersonalScheduleEditor(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   PersonalScheduleEditorField.addEventListener(
     'animationend',
     function () {
@@ -85,8 +85,8 @@ export function showPersonalScheduleEditor(pageTransitionDirection: PageTransiti
   PersonalScheduleEditorField.setAttribute('displayed', 'true');
 }
 
-export function hidePersonalScheduleEditor(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hidePersonalScheduleEditor(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   PersonalScheduleEditorField.addEventListener(
     'animationend',
     function () {

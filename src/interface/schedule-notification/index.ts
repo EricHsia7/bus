@@ -1,7 +1,7 @@
 import { scheduleNotificationForStop, ScheduleNotificationOption, scheduleNotificationOptions } from '../../data/notification/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
@@ -46,8 +46,8 @@ function initializeScheduleNotificationField(thisButtonElement: HTMLElement, Sto
   ScheduleNotificationListElement.append(fragment);
 }
 
-export function showScheduleNotification(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showScheduleNotification(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   ScheduleNotificationField.addEventListener(
     'animationend',
     function () {
@@ -59,8 +59,8 @@ export function showScheduleNotification(pageTransitionDirection: PageTransition
   ScheduleNotificationField.setAttribute('displayed', 'true');
 }
 
-export function hideScheduleNotification(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideScheduleNotification(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   ScheduleNotificationField.addEventListener(
     'animationend',
     function () {

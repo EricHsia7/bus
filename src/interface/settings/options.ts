@@ -1,6 +1,6 @@
 import { changeSettingOption, getSetting, SettingSelect, SettingSelectOption } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorAll, elementQuerySelector } from '../../tools/elements';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializeSettingsField } from './index';
 
 const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
@@ -56,8 +56,8 @@ function initializeSettingsOptionsField(settingKey: string): void {
   SettingsOptionsOptionsElement.append(fragment);
 }
 
-export function showSettingsOptions(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showSettingsOptions(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   SettingsOptionsField.addEventListener(
     'animationend',
     function () {
@@ -69,8 +69,8 @@ export function showSettingsOptions(pageTransitionDirection: PageTransitionDirec
   SettingsOptionsField.setAttribute('displayed', 'true');
 }
 
-export function hideSettingsOptions(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideSettingsOptions(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   SettingsOptionsField.addEventListener(
     'animationend',
     function () {

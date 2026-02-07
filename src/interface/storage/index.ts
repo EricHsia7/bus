@@ -2,7 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
@@ -153,8 +153,8 @@ async function initializeStorageStatistics() {
   updateStorageField(statistics, false, playing_animation);
 }
 
-export function showStorage(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showStorage(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   StorageField.addEventListener(
     'animationend',
     function () {
@@ -166,8 +166,8 @@ export function showStorage(pageTransitionDirection: PageTransitionDirection): v
   StorageField.setAttribute('displayed', 'true');
 }
 
-export function hideStorage(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideStorage(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   StorageField.addEventListener(
     'animationend',
     function () {

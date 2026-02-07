@@ -7,7 +7,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { getPermalink } from '../../../tools/permalink';
 import { shareLink } from '../../../tools/share';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openQRCode } from '../../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
@@ -163,8 +163,8 @@ async function initializeLocationDetailsField(hash: string) {
   updateLocationDetailsField(integration, false, playing_animation);
 }
 
-export function showLocationDetails(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showLocationDetails(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   LocationDetailsField.addEventListener(
     'animationend',
     function () {
@@ -176,8 +176,8 @@ export function showLocationDetails(pageTransitionDirection: PageTransitionDirec
   LocationDetailsField.setAttribute('displayed', 'true');
 }
 
-export function hideLocationDetails(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideLocationDetails(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   LocationDetailsField.addEventListener(
     'animationend',
     function () {

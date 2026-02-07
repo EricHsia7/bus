@@ -1,6 +1,6 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const QRCodeField = documentQuerySelector('.css_qrcode_field');
 const QRCodeBodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
@@ -10,8 +10,8 @@ export function initializeQRCodeField(text: string): void {
   QRCodeBodyElement.innerHTML = svg;
 }
 
-export function showQRCode(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showQRCode(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   QRCodeField.addEventListener(
     'animationend',
     function () {
@@ -23,8 +23,8 @@ export function showQRCode(pageTransitionDirection: PageTransitionDirection): vo
   QRCodeField.setAttribute('displayed', 'true');
 }
 
-export function hideQRCode(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideQRCode(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   QRCodeField.addEventListener(
     'animationend',
     function () {

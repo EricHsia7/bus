@@ -3,7 +3,7 @@ import { integrateRouteDetails } from '../../../data/route/details';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../../tools/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
 import { openSaveToFolder } from '../../save-to-folder/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from './actions';
 import { setupCalendarGroupSkeletonScreen, updateCalendarGroup } from './calendar';
@@ -50,8 +50,8 @@ async function initializeRouteDetailsField(RouteID: number, PathAttributeId: Arr
   updateCalendarGroup(integration.calendar, false, playing_animation);
 }
 
-export function showRouteDetails(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showRouteDetails(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   RouteDetailsField.addEventListener(
     'animationend',
     function () {
@@ -63,8 +63,8 @@ export function showRouteDetails(pageTransitionDirection: PageTransitionDirectio
   RouteDetailsField.setAttribute('displayed', 'true');
 }
 
-export function hideRouteDetails(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideRouteDetails(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   RouteDetailsField.addEventListener(
     'animationend',
     function () {

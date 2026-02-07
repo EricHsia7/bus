@@ -6,7 +6,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
@@ -303,8 +303,8 @@ async function streamNotificationScheduleManager() {
     });
 }
 
-export function showNotificationScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showNotificationScheduleManager(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   NotificationScheduleManagerField.addEventListener(
     'animationend',
     function () {
@@ -316,8 +316,8 @@ export function showNotificationScheduleManager(pageTransitionDirection: PageTra
   NotificationScheduleManagerField.setAttribute('displayed', 'true');
 }
 
-export function hideNotificationScheduleManager(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideNotificationScheduleManager(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   NotificationScheduleManagerField.addEventListener(
     'animationend',
     function () {

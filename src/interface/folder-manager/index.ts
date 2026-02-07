@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
 const bodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
@@ -67,8 +67,8 @@ async function initializeFolderManagerField() {
   listElement.append(fragment);
 }
 
-export function showFolderManager(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showFolderManager(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   FolderManagerField.addEventListener(
     'animationend',
     function () {
@@ -80,8 +80,8 @@ export function showFolderManager(pageTransitionDirection: PageTransitionDirecti
   FolderManagerField.setAttribute('displayed', 'true');
 }
 
-export function hideFolderManager(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideFolderManager(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   FolderManagerField.addEventListener(
     'animationend',
     function () {

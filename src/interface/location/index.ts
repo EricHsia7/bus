@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { GroupStyles, hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -1074,8 +1074,8 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
   }
 }
 
-export function showLocation(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showLocation(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   LocationField.addEventListener(
     'animationend',
     function () {
@@ -1087,8 +1087,8 @@ export function showLocation(pageTransitionDirection: PageTransitionDirection): 
   LocationField.setAttribute('displayed', 'true');
 }
 
-export function hideLocation(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideLocation(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   LocationField.addEventListener(
     'animationend',
     function () {

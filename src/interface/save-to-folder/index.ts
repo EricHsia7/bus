@@ -3,7 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { booleanToString } from '../../tools/index';
 import { openFolderCreator } from '../folder-creator/index';
 import { getIconElement } from '../icons/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
 const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
@@ -125,8 +125,8 @@ function initializeSaveToFolderField(type: FolderContent['type'], parameters: Ar
   listElement.append(fragment);
 }
 
-export function showSaveToFolder(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showSaveToFolder(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   SaveToFolderField.addEventListener(
     'animationend',
     function () {
@@ -138,8 +138,8 @@ export function showSaveToFolder(pageTransitionDirection: PageTransitionDirectio
   SaveToFolderField.setAttribute('displayed', 'true');
 }
 
-export function hideSaveToFolder(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideSaveToFolder(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   SaveToFolderField.addEventListener(
     'animationend',
     function () {

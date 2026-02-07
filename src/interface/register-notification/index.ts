@@ -2,7 +2,7 @@ import { registerNotificationClient } from '../../data/notification/apis/registe
 import { getNotificationProvider, setNotificationProvider } from '../../data/notification/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { isValidURL } from '../../tools/index';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 import { initializeSettingsField } from '../settings/index';
 
@@ -38,8 +38,8 @@ function initializeRegisterNotificationField() {
   rgistrationKeyInputElement.value = '';
 }
 
-export function showRegisterNotification(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showRegisterNotification(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   RegisterNotificationField.addEventListener(
     'animationend',
     function () {
@@ -51,8 +51,8 @@ export function showRegisterNotification(pageTransitionDirection: PageTransition
   RegisterNotificationField.setAttribute('displayed', 'true');
 }
 
-export function hideRegisterNotification(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideRegisterNotification(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   RegisterNotificationField.addEventListener(
     'animationend',
     function () {

@@ -7,7 +7,7 @@ import { booleanToString, generateIdentifier } from '../../tools/index';
 import { containPhoneticSymbols } from '../../tools/text';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
-import { hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const IconSelectorField = documentQuerySelector('.css_icon_selector_field');
 const headElement = elementQuerySelector(IconSelectorField, '.css_icon_selector_head');
@@ -177,8 +177,8 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
   closeIconSelector();
 }
 
-export function showIconSelector(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showIconSelector(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   IconSelectorField.addEventListener(
     'animationend',
     function () {
@@ -190,8 +190,8 @@ export function showIconSelector(pageTransitionDirection: PageTransitionDirectio
   IconSelectorField.setAttribute('displayed', 'true');
 }
 
-export function hideIconSelector(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideIconSelector(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   IconSelectorField.addEventListener(
     'animationend',
     function () {

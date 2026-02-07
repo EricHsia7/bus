@@ -32,8 +32,6 @@ const splashScreenTimer_openTime = new Date().getTime();
 
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
-export type PageTransitionDirection = 'ltr' | 'rtl';
-
 let pageHistory: Array<Page> = ['Home'];
 
 export function pushPageHistory(page: Page): void {
@@ -59,73 +57,73 @@ export function hidePreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
-        hideHome('rtl');
+        hideHome(false);
         break;
       case 'FolderCreator':
-        hideFolderCreator('rtl');
+        hideFolderCreator(false);
         break;
       case 'FolderEditor':
-        hideFolderEditor('rtl');
+        hideFolderEditor(false);
         break;
       case 'IconSelector':
-        hideIconSelector('rtl');
+        hideIconSelector(false);
         break;
       case 'FolderManager':
-        hideFolderManager('rtl');
+        hideFolderManager(false);
         break;
       case 'Location':
-        hideLocation('rtl');
+        hideLocation(false);
         break;
       case 'LocationDetails':
-        hideLocationDetails('rtl');
+        hideLocationDetails(false);
         break;
       case 'Route':
-        hideRoute('rtl');
+        hideRoute(false);
         break;
       case 'RouteDetails':
-        hideRouteDetails('rtl');
+        hideRouteDetails(false);
         break;
       case 'SaveToFolder':
-        hideSaveToFolder('rtl');
+        hideSaveToFolder(false);
         break;
       case 'Search':
-        hideSearch('rtl');
+        hideSearch(false);
         break;
       case 'Settings':
-        hideSettings('rtl');
+        hideSettings(false);
         break;
       case 'SettingsOptions':
-        hideSettingsOptions('rtl');
+        hideSettingsOptions(false);
         break;
       case 'DataUsage':
-        hideDataUsage('rtl');
+        hideDataUsage(false);
         break;
       case 'PersonalScheduleManager':
-        hidePersonalScheduleManager('rtl');
+        hidePersonalScheduleManager(false);
         break;
       case 'PersonalScheduleCreator':
-        hidePersonalScheduleCreator('rtl');
+        hidePersonalScheduleCreator(false);
         break;
       case 'PersonalScheduleEditor':
-        hidePersonalScheduleEditor('rtl');
+        hidePersonalScheduleEditor(false);
         break;
       case 'Bus':
-        hideBus('rtl');
+        hideBus(false);
         break;
       case 'RegisterNotification':
-        hideRegisterNotification('rtl');
+        hideRegisterNotification(false);
         break;
       case 'ScheduleNotification':
-        hideScheduleNotification('rtl');
+        hideScheduleNotification(false);
         break;
       case 'NotificationScheduleManager':
-        hideNotificationScheduleManager('rtl');
+        hideNotificationScheduleManager(false);
         break;
       case 'QRCode':
-        hideQRCode('rtl');
+        hideQRCode(false);
         break;
       case 'Storage':
-        hideStorage('rtl');
+        hideStorage(false);
         break;
       default:
         break;
@@ -139,73 +137,73 @@ export function showPreviousPage(): void {
     const previousPage = pageHistory[pageHistoryLength - 2];
     switch (previousPage) {
       case 'Home':
-        showHome('ltr');
+        showHome(true);
         break;
       case 'FolderCreator':
-        showFolderCreator('ltr');
+        showFolderCreator(true);
         break;
       case 'FolderEditor':
-        showFolderEditor('ltr');
+        showFolderEditor(true);
         break;
       case 'IconSelector':
-        showIconSelector('ltr');
+        showIconSelector(true);
         break;
       case 'FolderManager':
-        showFolderManager('ltr');
+        showFolderManager(true);
         break;
       case 'Location':
-        showLocation('ltr');
+        showLocation(true);
         break;
       case 'LocationDetails':
-        showLocationDetails('ltr');
+        showLocationDetails(true);
         break;
       case 'Route':
-        showRoute('ltr');
+        showRoute(true);
         break;
       case 'RouteDetails':
-        showRouteDetails('ltr');
+        showRouteDetails(true);
         break;
       case 'SaveToFolder':
-        showSaveToFolder('ltr');
+        showSaveToFolder(true);
         break;
       case 'Search':
-        showSearch('ltr');
+        showSearch(true);
         break;
       case 'Settings':
-        shwoSettings('ltr');
+        shwoSettings(true);
         break;
       case 'SettingsOptions':
-        showSettingsOptions('ltr');
+        showSettingsOptions(true);
         break;
       case 'DataUsage':
-        showDataUsage('ltr');
+        showDataUsage(true);
         break;
       case 'PersonalScheduleManager':
-        showPersonalScheduleManager('ltr');
+        showPersonalScheduleManager(true);
         break;
       case 'PersonalScheduleCreator':
-        showPersonalScheduleCreator('ltr');
+        showPersonalScheduleCreator(true);
         break;
       case 'PersonalScheduleEditor':
-        showPersonalScheduleEditor('ltr');
+        showPersonalScheduleEditor(true);
         break;
       case 'Bus':
-        showBus('ltr');
+        showBus(true);
         break;
       case 'RegisterNotification':
-        showRegisterNotification('ltr');
+        showRegisterNotification(true);
         break;
       case 'ScheduleNotification':
-        showScheduleNotification('ltr');
+        showScheduleNotification(true);
         break;
       case 'NotificationScheduleManager':
-        showNotificationScheduleManager('ltr');
+        showNotificationScheduleManager(true);
         break;
       case 'QRCode':
-        showQRCode('ltr');
+        showQRCode(true);
         break;
       case 'Storage':
-        showStorage('ltr');
+        showStorage(true);
         break;
       default:
         break;

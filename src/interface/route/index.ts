@@ -10,7 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
-import { GroupStyles, hidePreviousPage, PageTransitionDirection, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
@@ -1236,8 +1236,8 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   }
 }
 
-export function showRoute(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_in_ltr' : 'css_page_transition_slide_in_rtl';
+export function showRoute(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse ? 'css_page_transition_slide_in_reverse' : 'css_page_transition_fade_in';
   RouteField.addEventListener(
     'animationend',
     function () {
@@ -1249,8 +1249,8 @@ export function showRoute(pageTransitionDirection: PageTransitionDirection): voi
   RouteField.setAttribute('displayed', 'true');
 }
 
-export function hideRoute(pageTransitionDirection: PageTransitionDirection): void {
-  const className = pageTransitionDirection === 'ltr' ? 'css_page_transition_slide_out_ltr' : 'css_page_transition_slide_out_rtl';
+export function hideRoute(pageTransitionReverse: boolean): void {
+  const className = pageTransitionReverse === 'ltr' ? 'css_page_transition_slide_out_reverse' : 'css_page_transition_fade_out';
   RouteField.addEventListener(
     'animationend',
     function () {
