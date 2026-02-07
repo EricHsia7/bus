@@ -13,11 +13,6 @@
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
   grid-template-rows: auto;
-  visibility: hidden;
-}
-
-.css_search_keyboard[displayed="true"] {
-  visibility: visible;
 }
 
 .css_search_keyboard .css_search_keyboard_key {
