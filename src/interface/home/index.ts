@@ -19,34 +19,22 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-    progressElement.addEventListener(
-      'transitionend',
-      function () {
-        homeButtonRightElement.setAttribute('complete', 'true');
-      },
-      { once: true }
-    );
+    homeButtonRightElement.setAttribute('complete', 'true');
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
     dataDownloadCompleted = true;
   }
 }
 
 export async function downloadData() {
-  /*
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
-  */
-  // eliminate duplicate downloads in integrateFolders
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSearchIndex', 0, false);
   document.addEventListener(dataDownloadRequestID, handleDataReceivingProgressUpdates);
-  await getRoute(dataDownloadRequestID, true);
-  await getLocation(dataDownloadRequestID, 1);
-  await getCarInfo(dataDownloadRequestID, true);
-  await getMaterialSymbolsSearchIndex(dataDownloadRequestID);
+  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true), getMaterialSymbolsSearchIndex(dataDownloadRequestID)]);
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }
