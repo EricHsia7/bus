@@ -29,21 +29,25 @@
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateX(100%);
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
   }
 
-  to {
-    transform: translateX(0);
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
   }
 }
 
 @keyframes slideOut {
-  from {
-    transform: translateX(0);
+  0% {
+    opacity: 1;
+    transform: translateX(0px);
   }
 
-  to {
-    transform: translateX(-30%);
+  100% {
+    opacity: 0;
+    transform: translateX(-20px);
   }
 }

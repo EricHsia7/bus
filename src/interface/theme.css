@@ -128,9 +128,9 @@
 
   --b-cssvar-transition-duration: 320ms;
 
-  --b-cssvar-page-transition-duration: 600ms;
-  --b-cssvar-page-transiton-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --b-cssvar-page-transiton-ease-reverse: cubic-bezier(1, 0, 0.68, 0.28);
+  --b-cssvar-page-transition-duration: 300ms;
+  --b-cssvar-page-transiton-ease: cubic-bezier(0.4, 0, 1, 1);
+  --b-cssvar-page-transiton-ease-reverse: cubic-bezier(0, 0, 0.6, 1);
 
   --b-cssvar-backdrop-filter: saturate(180%) blur(20px);
 
