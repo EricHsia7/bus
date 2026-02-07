@@ -31,7 +31,7 @@
 @keyframes slideIn {
   0% {
     opacity: 0;
-    transform: translateX(100vw);
+    transform: translateX(30vw);
   }
 
   100% {
