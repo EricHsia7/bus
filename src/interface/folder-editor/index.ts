@@ -230,11 +230,10 @@ export async function saveEditedFolder(folderID: string, callback: Function) {
   const update = await updateFolder(folderID, name, icon);
   if (update) {
     closeFolderEditor();
-    promptMessage('check_circle', '已儲存變更');
     if (typeof callback === 'function') {
       callback();
     }
   } else {
-    promptMessage('error', '無法儲存');
+    promptMessage('error', '無法儲存變更');
   }
 }

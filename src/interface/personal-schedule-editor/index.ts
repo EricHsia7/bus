@@ -46,11 +46,15 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
   personalSchedule.period.end.hours = endHours;
   personalSchedule.period.end.minutes = endMinutes;
 
-  await updatePersonalSchedule(personalSchedule);
-  promptMessage('check_circle', '已儲存變更');
-  closePersonalScheduleEditor();
-  // callback
-  initializePersonalScheduleManagerField();
+  const update = await updatePersonalSchedule(personalSchedule);
+  if (update) {
+    closePersonalScheduleEditor();
+    // callback
+    initializePersonalScheduleManagerField();
+  } else {
+    promptMessage('error', '無法儲存變更');
+  }
+
 }
 
 async function initializePersonalScheduleEditorField(personalScheduleID: string) {
