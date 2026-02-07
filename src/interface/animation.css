@@ -30,23 +30,23 @@
 
 @keyframes slideIn {
   0% {
-    transform: translateX(100%);
+    transform: translateX(100vw);
   }
 
   100% {
-    transform: translateX(0);
+    transform: translateX(0vw);
   }
 }
 
 @keyframes slideOut {
   0% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0vw);
 
   }
 
   100% {
     opacity: 0;
-    transform: translateX(-30%);
+    transform: translateX(-30vw);
   }
 }
