@@ -6,7 +6,7 @@ import { getBusEvent } from '../apis/getBusEvent/index';
 import { getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getSegmentBuffers, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
+import { getSegmentBuffers, SimplifiedSegmentBuffer, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem, Stop } from '../apis/getStop/index';
 import { batchFindBusesForRoute, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
@@ -85,12 +85,9 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-  const [Route, Stop] = (await Promise.all([getRoute(requestID, true), getStop(requestID)])) as [SimplifiedRoute, SimplifiedStop];
+  const [Route, Stop, SegmentBuffers] = (await Promise.all([getRoute(requestID, true), getStop(requestID), getSegmentBuffers(requestID)])) as [SimplifiedRoute, SimplifiedStop, SimplifiedSegmentBuffer];
   const [SimplifiedLocation, MergedLocation, IndexedLocation] = (await Promise.all([getLocation(requestID, 0), getLocation(requestID, 1), getLocation(requestID, 2)])) as [SimplifiedLocation, MergedLocation, IndexedLocation];
-  const SegmentBuffers = await getSegmentBuffers(requestID);
-  const EstimateTime = await getEstimateTime(requestID);
-  const [BusEvent, BusData] = await Promise.all([getBusEvent(requestID), getBusData(requestID)]);
-  const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
+  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(requestID), getBusEvent(requestID), getBusData(requestID), getBusArrivalTimes(chartWidth, chartHeight)]);
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
   let hasSegmentBuffers: boolean = false;
