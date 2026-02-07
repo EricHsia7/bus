@@ -85,11 +85,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-  const [Route, Stop] = (await new Promise.all([getRoute(requestID, true), getStop(requestID)])) as [SimplifiedRoute, SimplifiedStop];
-  const [SimplifiedLocation, MergedLocation, IndexedLocation] = (await new Promise.all([getLocation(requestID, 0), getLocation(requestID, 1), getLocation(requestID, 2)])) as [SimplifiedLocation, MergedLocation, IndexedLocation];
+  const [Route, Stop] = (await Promise.all([getRoute(requestID, true), getStop(requestID)])) as [SimplifiedRoute, SimplifiedStop];
+  const [SimplifiedLocation, MergedLocation, IndexedLocation] = (await Promise.all([getLocation(requestID, 0), getLocation(requestID, 1), getLocation(requestID, 2)])) as [SimplifiedLocation, MergedLocation, IndexedLocation];
   const SegmentBuffers = await getSegmentBuffers(requestID);
   const EstimateTime = await getEstimateTime(requestID);
-  const [BusEvent, BusData] = await new Promise.all([getBusEvent(requestID), getBusData(requestID)]);
+  const [BusEvent, BusData] = await Promise.all([getBusEvent(requestID), getBusData(requestID)]);
   const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
