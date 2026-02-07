@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-page-transition-3
+      - dev-page-transition-3-slide-2
 
 jobs:
   build:
