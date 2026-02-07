@@ -10,7 +10,7 @@ import { getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
-import { getStop } from '../apis/getStop/index';
+import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { batchFindBusesForLocation, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
@@ -127,13 +127,9 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
   setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-  const EstimateTime = await getEstimateTime(requestID);
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  const Stop = await getStop(requestID);
-  const BusEvent = await getBusEvent(requestID);
-  const BusData = await getBusData(requestID);
-  const BusArrivalTimes = await getBusArrivalTimes(chartWidth, chartHeight);
+
+  const [Route, Stop, Location] = (await Promise.all([await getRoute(requestID, true), await getStop(requestID), await getLocation(requestID, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
+  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(requestID), getBusEvent(requestID), getBusData(requestID), getBusArrivalTimes(chartWidth, chartHeight)]);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
