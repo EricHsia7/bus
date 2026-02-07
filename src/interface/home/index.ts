@@ -19,13 +19,8 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-    progressElement.addEventListener(
-      'transitionend',
-      function () {
-        homeButtonRightElement.setAttribute('complete', 'true');
-      },
-      { once: true }
-    );
+    homeButtonRightElement.setAttribute('complete', 'true');
+    // progressElement.addEventListener('transitionend', function () {}, { once: true });
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
     dataDownloadCompleted = true;
   }
