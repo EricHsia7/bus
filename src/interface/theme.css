@@ -126,15 +126,16 @@
   --b-cssvar-border-radius-small: 8px;
   --b-cssvar-border-radius-none: 0px;
 
-  --b-cssvar-transition-duration: 0.32s;
+  --b-cssvar-transition-duration: 320ms;
+
+  --b-cssvar-page-transition-duration: 500ms;
+  --b-cssvar-page-transiton-ease: cubic-bezier(0.2, 0.8, 0.15, 1);
+  --b-cssvar-page-transiton-ease-reverse: cubic-bezier(0.85, 0, 0.8, 0.2);
 
   --b-cssvar-backdrop-filter: saturate(180%) blur(20px);
 
   --b-cssvar-head-background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 80%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
   --b-cssvar-large-head-background: linear-gradient(180deg, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-a)) 0%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 70%, rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), var(--b-cssvar-ffffff-opacity-b)) 100%);
-
-  --b-cssvar-page-transiton-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --b-cssvar-page-transiton-ease-reverse: cubic-bezier(1, 0, 0.68, 0.28);
 }
 
 @media (prefers-color-scheme: dark) {
