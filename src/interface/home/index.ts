@@ -20,7 +20,6 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
     homeButtonRightElement.setAttribute('complete', 'true');
-    // progressElement.addEventListener('transitionend', function () {}, { once: true });
     progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
     dataDownloadCompleted = true;
   }
