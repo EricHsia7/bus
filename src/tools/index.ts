@@ -118,5 +118,5 @@ export function nearestPowerOf2(x: number): number {
 }
 
 export function getSubpixelPrecision(): number {
-  return Math.ceil(Math.log2(window.devicePixelRatio || 1));
+  return Math.ceil(Math.log2(window.devicePixelRatio || 1)) + 1;
 }
