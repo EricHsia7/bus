@@ -93,10 +93,12 @@
   --b-cssvar-ranking-color-3: #43c881;
   --b-cssvar-ranking-color-3-opacity-flattened-d: color-mix(in srgb, #ffffff, #43c881 6%);
 
+  /*
   --b-cssvar-ranking-color-opacity-a: 0.27;
   --b-cssvar-ranking-color-opacity-b: 0.20;
   --b-cssvar-ranking-color-opacity-c: 0.13;
   --b-cssvar-ranking-color-opacity-d: 0.06;
+  */
 
   --b-cssvar-disabled-opacity: 0.6;
 
@@ -170,18 +172,15 @@
     --b-cssvar-ededf2: #1f222a;
     --b-cssvar-ededf2-opacity-flattened-a: color-mix(in srgb, #17191e, #1f222a 50%);
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: #27303d;
+    --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, #1f222a, #5991bb 13%);
 
-    --b-cssvar-ededf2-inflected-to-user-position: #28293e;
+    --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, #1f222a, #7866f1 11%);
 
     --b-cssvar-aeaeb2: #363a42;
-    --b-cssvar-aeaeb2-r: 54;
-    --b-cssvar-aeaeb2-g: 58;
-    --b-cssvar-aeaeb2-b: 66;
 
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer: #343e4c;
+    --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, #363a42, #5991bb 11%);
 
-    --b-cssvar-aeaeb2-inflected-to-user-position: #3b3c56;
+    --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, #17191e, color-mix(in srgb, #363a42, #7866f1 14%) 90%);
 
     --b-cssvar-333333: #ffffff;
     --b-cssvar-333333-r: 255;
@@ -202,10 +201,12 @@
 
     --b-cssvar-ranking-color-3-opacity-flattened-d: color-mix(in srgb, color-mix(in srgb, #000000, #17191e 60%), #43c881 10%);
 
+    /*
     --b-cssvar-ranking-color-opacity-a: 0.25;
     --b-cssvar-ranking-color-opacity-b: 0.20;
     --b-cssvar-ranking-color-opacity-c: 0.15;
     --b-cssvar-ranking-color-opacity-d: 0.10;
+    */
 
     --b-cssvar-backdrop-filter: saturate(100%) blur(15px);
   }
