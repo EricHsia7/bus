@@ -74,7 +74,7 @@ function processWorkerTask(data: data): DataUsageStats {
   const fillingPathData = `M${padding},${height + padding} ${pathData} L${lastX},${height + padding} L${padding},${height + padding}`;
   const path = `<path d="${pathData}" fill="none" stroke="var(--b-cssvar-main-color)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" opacity="1"></path>`;
   const fillingPath = `<path d="${fillingPathData}" stroke="none" stroke-width="0" fill="url(#grad1)"></path>`;
-  const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:var(--b-cssvar-main-color-30-flattened);" /><stop offset="73%" style="stop-color:var(--b-cssvar-main-color-09-flattened);" /><stop offset="100%" style="stop-color:rgba(0, 0, 0, 0);" /></linearGradient>`;
+  const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" style="stop-color:var(--b-cssvar-main-color-30-flattened);" /><stop offset="73%" style="stop-color:var(--b-cssvar-main-color-09-flattened);" /><stop offset="100%" style="stop-color:var(--b-cssvar-ffffff-blocky);" /></linearGradient>`;
 
   // SVG
   const chart = /*html*/ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${fillingPath}${path}${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}</svg>`;
