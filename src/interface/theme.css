@@ -53,9 +53,9 @@
   /* aeaeb2 */
   --b-cssvar-aeaeb2: rgb(174, 174, 178);
 
-  --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, 174, 174, 178, rgb(89, 145, 187) 11%);
+  --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, rgb(174, 174, 178), rgb(89, 145, 187) 11%);
 
-  --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(255, 255, 255), color-mix(in srgb, 174, 174, 178, rgb(99, 84, 199) 11%) 93%);
+  --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(255, 255, 255), color-mix(in srgb, rgb(174, 174, 178), rgb(99, 84, 199) 11%) 93%);
 
   /* 333333 */
   --b-cssvar-333333: rgb(51, 51, 51);
