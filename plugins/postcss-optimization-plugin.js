@@ -24,7 +24,7 @@ class PostCssOptimizationPlugin {
                 from: pathname,
                 to: pathname,
                 map: {
-                  annotation: true
+                  annotation: false
                 }
               });
 
