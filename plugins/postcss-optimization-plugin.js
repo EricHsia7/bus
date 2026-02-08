@@ -23,6 +23,7 @@ class PostCssOptimizationPlugin {
 
             try {
               const { css: newCSS, map: newMap } = await postcss(this.options.plugins || []).process(source, {
+                from: pathname,
                 to: pathname,
                 map: {
                   inline: false
