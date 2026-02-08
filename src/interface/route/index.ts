@@ -1224,7 +1224,7 @@ export function closeRoute(): void {
 }
 
 export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
-  routeRefreshTimer_streaming = false;
+  routeTick.pause();
   openRoute(RouteID, PathAttributeId);
 }
 
