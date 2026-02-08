@@ -84,15 +84,11 @@ export class Tick {
     // If the async callback is currently running (isRunning === true), it will finish naturally, but the "if (this.isPaused) return" check inside tick() will prevent it from scheduling the next one.
   }
 
-  resume(runImmediately: boolean = true) {
+  resume() {
     if (!this.isPaused) return;
     this.isPaused = false;
 
     if (!this.isRunning) {
-      if (!runImmediately) {
-        this.pivot = new Date().getTime();
-        this.lastTickCount = 0;
-      }
       this.tick();
     }
   }

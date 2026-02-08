@@ -1194,7 +1194,7 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
 
   if (routeTick.isPaused) {
-    routeTick.resume(true);
+    routeTick.resume();
   } else {
     routeTick.tick();
   }
