@@ -60,12 +60,14 @@
   --b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a: color-mix(in srgb, #ffffff, color-mix(in srgb, #ededf2, #5991bb 8.5%) 50%);
 
   --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, #ededf2, #6354c7 5%);
-  --b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a: color-mix(in srgb, #ffffff, color-mix(in srgb, #ededf2, #6354c7 5%) 50%);
+  --b-cssvar-ededf2-inflected-to-user-position-opacity-flattened-a: color-mix(in srgb, #ffffff, color-mix(in srgb, #ededf2, #6354c7 5%) 50%);
 
   --b-cssvar-ededf2-opacity-a: 0.5;
 
   --b-cssvar-aeaeb2: #aeaeb2;
+
   --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, #aeaeb2, #5991bb 11%);
+
   --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, #ffffff, color-mix(in srgb, #aeaeb2, #6354c7 11%) 93%);
 
   --b-cssvar-333333: #333333;

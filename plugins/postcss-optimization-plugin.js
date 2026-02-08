@@ -24,7 +24,6 @@ class PostCssOptimizationPlugin {
 
             try {
               const code = source.source();
-              console.log(code);
               const { css: newCSS, map: newSourceMapGenerator } = await postcss(this.options.plugins || []).process(code, {
                 from: pathname,
                 to: pathname,
