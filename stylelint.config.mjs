@@ -14,11 +14,14 @@ export default {
         message: (selector) => `Expected class selector "${selector}" to start with "css_"`
       }
     ],
-    'length-zero-no-unit': false,
+    'alpha-value-notation': false,
     'color-function-alias-notation': false,
     'color-function-notation': false,
+    'comment-empty-line-before': false,
     'declaration-block-no-redundant-longhand-properties': false,
     'declaration-property-value-no-unknown': false,
-    'no-descending-specificity': false
+    'length-zero-no-unit': false,
+    'no-descending-specificity': false,
+    'property-no-vendor-prefix': false
   }
 };
