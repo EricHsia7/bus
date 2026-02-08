@@ -20,16 +20,10 @@ class PostCssOptimizationPlugin {
             if (!pathname.endsWith('.css')) continue;
 
             try {
-              const result = await postcss(this.options.plugins || []).process(source, {
-                from: pathname,
-                to: pathname,
-                map: {
-                  annotation: false
-                }
-              });
+              const result = await postcss(this.options.plugins || []).process(source);
 
               // Update the asset in the compilation
-              compilation.updateAsset(pathname, new sources.RawSource(result.css));
+              compilation.updateAsset(pathname, result.css);
             } catch (error) {
               console.error(`PostCSS Error in ${pathname}:`, error);
               compilation.errors.push(error);
