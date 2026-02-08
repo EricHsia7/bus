@@ -10,7 +10,7 @@ export class Tick {
   constructor(callback: Function, interval: number) {
     this.pivot = new Date().getTime();
     this.interval = interval;
-    this.lastTickCount = 0;
+    this.lastTickCount = -1;
     this.isRunning = false; // "True" while the callback function is actually executing
     this.isPaused = false; // "True" if the user requested a stop
     this.timerId = null; // To track and clear the waiting timeout
@@ -89,6 +89,8 @@ export class Tick {
     this.isPaused = false;
 
     if (!this.isRunning) {
+      this.pivot = new Date().getTime();
+      this.lastTickCount = -1;
       this.tick();
     }
   }
