@@ -154,9 +154,7 @@ module.exports = (env, argv) => {
           }
         }),
         new PostCssOptimizationPlugin({
-          options: {
-            plugins: [postcssColorMixFunction({ preserve: false })]
-          }
+          plugins: [postcssColorMixFunction({ preserve: false })]
         })
       ],
       splitChunks: {
