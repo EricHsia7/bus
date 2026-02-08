@@ -22,6 +22,7 @@ export default {
     'declaration-property-value-no-unknown': false,
     'length-zero-no-unit': false,
     'no-descending-specificity': false,
-    'property-no-vendor-prefix': false
+    'property-no-vendor-prefix': false,
+    'custom-property-empty-line-before': false
   }
 };
