@@ -141,7 +141,6 @@ module.exports = (env, argv) => {
             }
           }
         }),
-        new PostCssOptimizationPlugin({ options: { plugins: [postcssColorMixFunction({ preserve: false })] } }),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
@@ -152,6 +151,11 @@ module.exports = (env, argv) => {
                 discardComments: { removeAll: true }
               }
             ]
+          }
+        }),
+        new PostCssOptimizationPlugin({
+          options: {
+            plugins: [postcssColorMixFunction({ preserve: false })]
           }
         })
       ],
