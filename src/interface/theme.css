@@ -96,13 +96,16 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* main color */
-    --b-cssvar-main-color: #597aa8;
+    --b-cssvar-main-color: rgb(89, 122, 168);
     --b-cssvar-main-color-r: 89;
     --b-cssvar-main-color-g: 122;
     --b-cssvar-main-color-b: 168;
-    --b-cssvar-main-color-22-flattened: color-mix(in srgb, rgb(23, 25, 30), #597aa8 30%);
-    --b-cssvar-main-color-16-flattened: color-mix(in srgb, rgb(23, 25, 30), #597aa8 23%);
-    --b-cssvar-main-color-11-flattened: color-mix(in srgb, rgb(23, 25, 30), #597aa8 15%);
+    --b-cssvar-main-color-60-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 60%);
+    --b-cssvar-main-color-30-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 30%);
+    --b-cssvar-main-color-22-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 30%);
+    --b-cssvar-main-color-16-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 23%);
+    --b-cssvar-main-color-11-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 15%);
+    --b-cssvar-main-color-09-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 122, 168) 9%);
 
     /* main color && segment buffer */
     --b-cssvar-main-color-inflected-to-segment-buffer: rgb(89, 145, 187);
@@ -111,10 +114,10 @@
     --b-cssvar-main-color-inflected-to-segment-buffer-11-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 145, 187) 15%);
 
     /* main color && user position */
-    --b-cssvar-main-color-inflected-to-user-position: #7866f1;
-    --b-cssvar-main-color-inflected-to-user-position-22-flattened: color-mix(in srgb, rgb(23, 25, 30), #7866f1 30%);
-    --b-cssvar-main-color-inflected-to-user-position-16-flattened: color-mix(in srgb, rgb(23, 25, 30), #7866f1 23%);
-    --b-cssvar-main-color-inflected-to-user-position-11-flattened: color-mix(in srgb, rgb(23, 25, 30), #7866f1 15%);
+    --b-cssvar-main-color-inflected-to-user-position: rgb(120, 102, 241);
+    --b-cssvar-main-color-inflected-to-user-position-22-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 30%);
+    --b-cssvar-main-color-inflected-to-user-position-16-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 23%);
+    --b-cssvar-main-color-inflected-to-user-position-11-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 15%);
 
     /* ffffff */
     --b-cssvar-ffffff-normal: rgb(23, 25, 30);
@@ -131,24 +134,24 @@
 
     --b-cssvar-f9f9fb-inflected-to-segment-buffer: color-mix(in srgb, rgb(28, 30, 37), rgb(89, 145, 187) 6%);
 
-    --b-cssvar-f9f9fb-inflected-to-user-position: color-mix(in srgb, rgb(28, 30, 37), #7866f1 5%);
+    --b-cssvar-f9f9fb-inflected-to-user-position: color-mix(in srgb, rgb(28, 30, 37), rgb(120, 102, 241) 5%);
 
     /* ededf2 */
-    --b-cssvar-ededf2: #1f222a;
-    --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(28, 30, 37), #1f222a 50%);
+    --b-cssvar-ededf2: rgb(31, 34, 42);
+    --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(31, 34, 42) 50%);
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, #1f222a, rgb(89, 145, 187) 13%);
-    --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(28, 30, 37), rgb(89, 145, 187) 6%), color-mix(in srgb, #1f222a, rgb(89, 145, 187) 13%) 50%);
+    --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, rgb(31, 34, 42), rgb(89, 145, 187) 13%);
+    --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(28, 30, 37), rgb(89, 145, 187) 6%), color-mix(in srgb, rgb(31, 34, 42), rgb(89, 145, 187) 13%) 50%);
 
-    --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, #1f222a, #7866f1 11%);
-    --b-cssvar-ededf2-inflected-to-user-position-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(28, 30, 37), #7866f1 5%), color-mix(in srgb, #1f222a, #7866f1 11%) 50%);
+    --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, rgb(31, 34, 42), rgb(120, 102, 241) 11%);
+    --b-cssvar-ededf2-inflected-to-user-position-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(28, 30, 37), rgb(120, 102, 241) 5%), color-mix(in srgb, rgb(31, 34, 42), rgb(120, 102, 241) 11%) 50%);
 
     /* aeaeb2 */
     --b-cssvar-aeaeb2: rgb(54, 58, 66);
 
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, #363a42, rgb(89, 145, 187) 11%);
+    --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, rgb(54, 58, 66), rgb(89, 145, 187) 11%);
 
-    --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(23, 25, 30), color-mix(in srgb, #363a42, #7866f1 14%) 90%);
+    --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(23, 25, 30), color-mix(in srgb, rgb(54, 58, 66), rgb(120, 102, 241) 14%) 90%);
 
     /* 333333 */
     --b-cssvar-333333: rgb(255, 255, 255);
@@ -158,13 +161,13 @@
     --b-cssvar-333333-33-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(255, 255, 255) 26%);
 
     /* ranking color */
-    --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, color-mix(in srgb, #000000, rgb(23, 25, 30) 60%), rgb(73, 214, 139) 25%);
+    --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(73, 214, 139) 25%);
 
-    --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, color-mix(in srgb, #000000, rgb(23, 25, 30) 60%), rgb(73, 209, 136) 20%);
+    --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(73, 209, 136) 20%);
 
-    --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, color-mix(in srgb, #000000, rgb(23, 25, 30) 60%), rgb(67, 205, 131) 15%);
+    --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(67, 205, 131) 15%);
 
-    --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, color-mix(in srgb, #000000, rgb(23, 25, 30) 60%), rgb(67, 200, 129) 10%);
+    --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(67, 200, 129) 10%);
 
     --b-cssvar-backdrop-filter: saturate(100%) blur(15px);
   }
