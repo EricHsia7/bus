@@ -1,11 +1,10 @@
 const { Compilation, sources } = require('webpack');
 const postcss = require('postcss');
 const { SourceMapSource } = require('webpack-sources');
+const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 
 class PostCssOptimizationPlugin {
-  constructor(options = {}) {
-    this.options = options;
-  }
+  constructor() {}
 
   apply(compiler) {
     const pluginName = 'PostCssOptimizationPlugin';
@@ -24,7 +23,7 @@ class PostCssOptimizationPlugin {
 
             try {
               const code = source.source();
-              const { css: newCSS, map: newSourceMapGenerator } = await postcss(this.options.plugins || []).process(code, {
+              const { css: newCSS, map: newSourceMapGenerator } = await postcss([postcssColorMixFunction({ preserve: false })]).process(code, {
                 from: pathname,
                 to: pathname,
                 map: {
