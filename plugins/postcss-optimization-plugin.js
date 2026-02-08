@@ -16,30 +16,25 @@ class PostCssOptimizationPlugin {
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
         async (assets) => {
-          // Filter for CSS files
-          const cssAssets = Object.keys(assets).filter((filename) => filename.endsWith('.css'));
+          for (const [pathname, source] of Object.entries(assets)) {
+            if (!pathname.endsWith('.css')) continue;
 
-          await Promise.all(
-            cssAssets.map(async (filename) => {
-              const asset = assets[filename];
-              const originalCss = asset.source();
+            try {
+              const result = await postcss(this.options.plugins || []).process(source, {
+                from: pathname,
+                to: pathname,
+                map: {
+                  annotation: true
+                }
+              });
 
-              try {
-                // Process with PostCSS
-                const result = await postcss(this.options.plugins || []).process(originalCss, {
-                  from: filename,
-                  to: filename,
-                  map: { annotation: false } // Handle sourcemaps if needed
-                });
-
-                // Update the asset in the compilation
-                compilation.updateAsset(filename, new sources.RawSource(result.css));
-              } catch (error) {
-                console.error(`PostCSS Error in ${filename}:`, error);
-                compilation.errors.push(error);
-              }
-            })
-          );
+              // Update the asset in the compilation
+              compilation.updateAsset(pathname, new sources.RawSource(result.css));
+            } catch (error) {
+              console.error(`PostCSS Error in ${pathname}:`, error);
+              compilation.errors.push(error);
+            }
+          }
         }
       );
     });
