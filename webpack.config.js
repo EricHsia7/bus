@@ -11,8 +11,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 const { Hasher } = require('./hasher');
-const { ErrorCodePlugin } = require('./error-code-plugin');
+const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
+const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -138,6 +140,9 @@ module.exports = (env, argv) => {
               drop_console: [/*'log',*/ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
             }
           }
+        }),
+        new PostCssOptimizationPlugin({
+          plugins: [postcssColorMixFunction({ preserve: false, enableProgressiveCustomProperties: false })]
         }),
         new CssMinimizerPlugin({
           parallel: 4,

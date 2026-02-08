@@ -68,7 +68,7 @@
   padding: 0px;
   margin: 0px;
   color: rgba(0, 0, 0, 0);
-  caret-color: rgba(var(--b-cssvar-ffffff-normal-r), var(--b-cssvar-ffffff-normal-g), var(--b-cssvar-ffffff-normal-b), 0);
+  caret-color: rgba(0, 0, 0, 0);
   resize: none;
 }
 
@@ -114,6 +114,6 @@
 .css_search_field .css_search_head .css_search_button_right[type="1"] span.css_material_symbols_rounded,
 .css_search_field .css_search_head .css_search_button_right[type="2"] span.css_material_symbols_rounded {
   color: var(--b-cssvar-main-color);
-  text-shadow: 0px 0px 5px rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), 0.6);
+  text-shadow: 0px 0px 5px var(--b-cssvar-main-color-60-flattened);
   overflow: visible;
 }

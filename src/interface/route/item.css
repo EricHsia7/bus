@@ -292,7 +292,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="7"] {
   background: var(--b-cssvar-ededf2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
 }
@@ -319,7 +319,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="3"] {
   background: var(--b-cssvar-ededf2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
 }
@@ -375,21 +375,21 @@
   color: var(--b-cssvar-main-color);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-opacity-flattened-c);
+  background: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 1 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="1"] {
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c);
+  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-22-flattened);
 }
 
 /* code: 1 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="1"] {
   color: var(--b-cssvar-main-color-inflected-to-user-position);
-  background: var(--b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c);
+  background: var(--b-cssvar-main-color-inflected-to-user-position-22-flattened);
 }
 
 /* code: 0.5 */
@@ -540,19 +540,19 @@
 
 /* highlighted: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-16-flattened);
   color: var(--b-cssvar-main-color);
 }
 
 /* highlighted: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-16-flattened);
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* highlighted: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-16-flattened);
   color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
@@ -637,7 +637,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-60-flattened);
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
@@ -724,7 +724,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location {
-  background-color: rgba(var(--b-cssvar-ededf2-inflected-to-segment-buffer-r), var(--b-cssvar-ededf2-inflected-to-segment-buffer-g), var(--b-cssvar-ededf2-inflected-to-segment-buffer-b), var(--b-cssvar-ededf2-opacity-a));
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened);
 }
 
 /* nearest: true */
@@ -732,22 +732,22 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location {
-  background-color: rgba(var(--b-cssvar-ededf2-inflected-to-user-position-r), var(--b-cssvar-ededf2-inflected-to-user-position-g), var(--b-cssvar-ededf2-inflected-to-user-position-b), var(--b-cssvar-ededf2-opacity-a));
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position-50-flattened);
 }
 
 /* on this route: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-16-flattened);
 }
 
 /* on this route: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-16-flattened);
 }
 
 /* on this route: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-16-flattened);
 }
 
 /* body > buses, overlapping routes, bus arrival times, nearby locations > bus, overlapping route, bus arrival time, nearby location > title */
@@ -824,7 +824,7 @@
   height: 20px;
   font-size: 14px;
   line-height: 20px;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: var(--b-cssvar-333333-70-flattened);
   white-space: nowrap;
   word-break: keep-all;
   overflow: clip;
@@ -918,7 +918,7 @@
   white-space: nowrap;
   word-break: keep-all;
   justify-content: space-between;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-b));
+  color: var(--b-cssvar-333333-80-flattened);
   overflow: clip;
   contain: layout;
   align-items: center;
@@ -970,20 +970,20 @@
 /* highlighted: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-16-flattened);
   color: var(--b-cssvar-main-color);
 }
 
 /* highlighted: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-16-flattened);
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* highlighted: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-16-flattened);
   color: var(--b-cssvar-main-color-inflected-to-user-position);
 }

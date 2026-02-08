@@ -92,7 +92,7 @@
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="calendar"] .css_route_details_group_body .css_route_details_calendar_days .css_route_details_calendar_day[animation="true"][skeleton-screen="true"] {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, rgba(var(--b-cssvar-ededf2-r), var(--b-cssvar-ededf2-g), var(--b-cssvar-ededf2-b), 0.5) 100%);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;

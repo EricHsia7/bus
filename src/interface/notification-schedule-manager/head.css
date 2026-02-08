@@ -81,7 +81,7 @@
   left: 0px;
   width: 100%;
   height: 1px;
-  background: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-e));
+  background: var(--b-cssvar-333333-33-flattened);
   contain: layout;
 }
 
