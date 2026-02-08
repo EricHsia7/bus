@@ -120,23 +120,16 @@ module.exports = (env, argv) => {
         {
           test: /\.css$/,
           use: [
+            'css-loader',
             {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: [
-                    [
-                      '@csstools/postcss-color-mix-function',
-                      {
-                        preserve: false
-                      }
-                    ]
-                  ]
+                  plugins: ['@csstools/postcss-color-mix-function']
                 }
               }
             },
-            MiniCssExtractPlugin.loader,
-            'css-loader'
+            MiniCssExtractPlugin.loader
           ]
         }
       ]
