@@ -3,19 +3,19 @@
   --b-cssvar-main-color-r: 101;
   --b-cssvar-main-color-g: 143;
   --b-cssvar-main-color-b: 198;
-  --b-cssvar-main-color-opacity-flattened-c: color-mix(in srgb, #fff, #658fc6 22%);
+  --b-cssvar-main-color-opacity-flattened-c: color-mix(in srgb, #ffffff, #658fc6 22%);
+  --b-cssvar-main-color-opacity-flattened-d: color-mix(in srgb, #ffffff, #658fc6 16%);
+  --b-cssvar-main-color-opacity-flattened-e: color-mix(in srgb, #ffffff, #658fc6 11%);
 
   --b-cssvar-main-color-inflected-to-segment-buffer: #5991bb;
-  --b-cssvar-main-color-inflected-to-segment-buffer-r: 89;
-  --b-cssvar-main-color-inflected-to-segment-buffer-g: 145;
-  --b-cssvar-main-color-inflected-to-segment-buffer-b: 187;
-  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: color-mix(in srgb, #fff, #5991bb 22%);
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: color-mix(in srgb, #ffffff, #5991bb 22%);
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-d: color-mix(in srgb, #ffffff, #5991bb 16%);
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-e: color-mix(in srgb, #ffffff, #5991bb 11%);
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
-  --b-cssvar-main-color-inflected-to-user-position-r: 99;
-  --b-cssvar-main-color-inflected-to-user-position-g: 84;
-  --b-cssvar-main-color-inflected-to-user-position-b: 199;
-  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #d9d7ec;
+  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: color-mix(in srgb, #ffffff, #6354c7 22%);
+  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-d: color-mix(in srgb, #ffffff, #6354c7 16%);
+  --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-e: color-mix(in srgb, #ffffff, #6354c7 11%);
 
   --b-cssvar-main-color-opacity-a: 1;
   --b-cssvar-main-color-opacity-b: 0.8;
@@ -46,49 +46,27 @@
   --b-cssvar-f9f9fb-blocky-g: 249;
   --b-cssvar-f9f9fb-blocky-b: 251;
 
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer: #f4f6f9;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-r: 244;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-g: 246;
-  --b-cssvar-f9f9fb-inflected-to-segment-buffer-b: 249;
+  --b-cssvar-f9f9fb-inflected-to-segment-buffer: color-mix(in srgb, #f9f9fb, #5991bb 3%);
 
-  --b-cssvar-f9f9fb-inflected-to-user-position: #f2f1f9;
-  --b-cssvar-f9f9fb-inflected-to-user-position-r: 242;
-  --b-cssvar-f9f9fb-inflected-to-user-position-g: 241;
-  --b-cssvar-f9f9fb-inflected-to-user-position-b: 249;
+  --b-cssvar-f9f9fb-inflected-to-user-position: color-mix(in srgb, #f9f9fb, #6354c7 4%);
 
   --b-cssvar-f9f9fb-opacity-a: 1;
   --b-cssvar-f9f9fb-opacity-b: 0.7;
 
   --b-cssvar-ededf2: #ededf2;
-  --b-cssvar-ededf2-r: 237;
-  --b-cssvar-ededf2-g: 237;
-  --b-cssvar-ededf2-b: 242;
+  --b-cssvar-ededf2-opacity-flattened-a: color-mix(in srgb, #ffffff, #ededf2 50%);
+
+  --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, #ededf2, #5991bb 8.5%);
+  --b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a: color-mix(in srgb, #ffffff, color-mix(in srgb, #ededf2, #5991bb 8.5%) 50%);
+
+  --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, #ededf2, #6354c7 5%);
+  --b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a: color-mix(in srgb, #ffffff, color-mix(in srgb, #ededf2, #6354c7 5%) 50%);
+
   --b-cssvar-ededf2-opacity-a: 0.5;
 
-  --b-cssvar-ededf2-inflected-to-segment-buffer: #e0e6ee;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-r: 224;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-g: 230;
-  --b-cssvar-ededf2-inflected-to-segment-buffer-b: 238;
-
-  --b-cssvar-ededf2-inflected-to-user-position: #e6e6f0;
-  --b-cssvar-ededf2-inflected-to-user-position-r: 230;
-  --b-cssvar-ededf2-inflected-to-user-position-g: 230;
-  --b-cssvar-ededf2-inflected-to-user-position-b: 240;
-
   --b-cssvar-aeaeb2: #aeaeb2;
-  --b-cssvar-aeaeb2-r: 174;
-  --b-cssvar-aeaeb2-g: 174;
-  --b-cssvar-aeaeb2-b: 178;
-
-  --b-cssvar-aeaeb2-inflected-to-segment-buffer: #a5acb2;
-  --b-cssvar-aeaeb2-inflected-to-segment-buffer-r: 165;
-  --b-cssvar-aeaeb2-inflected-to-segment-buffer-g: 172;
-  --b-cssvar-aeaeb2-inflected-to-segment-buffer-b: 178;
-
-  --b-cssvar-aeaeb2-inflected-to-user-position: #acaab8;
-  --b-cssvar-aeaeb2-inflected-to-user-position-r: 172;
-  --b-cssvar-aeaeb2-inflected-to-user-position-g: 170;
-  --b-cssvar-aeaeb2-inflected-to-user-position-b: 184;
+  --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, #aeaeb2, #5991bb 11%);
+  --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, #ffffff, color-mix(in srgb, #aeaeb2, #6354c7 11%) 93%);
 
   --b-cssvar-333333: #333333;
   --b-cssvar-333333-r: 51;
@@ -102,16 +80,16 @@
   --b-cssvar-333333-opacity-e: 0.33;
 
   --b-cssvar-ranking-color-0: #49d68b;
-  --b-cssvar-ranking-color-0-opacity-flattened-a: #d0f5e0;
+  --b-cssvar-ranking-color-0-opacity-flattened-a: color-mix(in srgb, #ffffff, #49d68b 27%);
 
   --b-cssvar-ranking-color-1: #49d188;
-  --b-cssvar-ranking-color-1-opacity-flattened-b: #dcf7e8;
+  --b-cssvar-ranking-color-1-opacity-flattened-b: color-mix(in srgb, #ffffff, #49d188 20%);
 
   --b-cssvar-ranking-color-2: #43cd83;
-  --b-cssvar-ranking-color-2-opacity-flattened-c: #e8f9ef;
+  --b-cssvar-ranking-color-2-opacity-flattened-c: color-mix(in srgb, #ffffff, #43cd83 13%);
 
   --b-cssvar-ranking-color-3: #43c881;
-  --b-cssvar-ranking-color-3-opacity-flattened-d: #f4fcf8;
+  --b-cssvar-ranking-color-3-opacity-flattened-d: color-mix(in srgb, #ffffff, #43c881 6%);
 
   --b-cssvar-ranking-color-opacity-a: 0.27;
   --b-cssvar-ranking-color-opacity-b: 0.20;
@@ -140,22 +118,23 @@
     --b-cssvar-main-color-r: 89;
     --b-cssvar-main-color-g: 122;
     --b-cssvar-main-color-b: 168;
-    --b-cssvar-main-color-opacity-flattened-c: #2b3648;
+    --b-cssvar-main-color-opacity-flattened-c: color-mix(in srgb, #17191e, #597aa8 30%);
+    --b-cssvar-main-color-opacity-flattened-d: color-mix(in srgb, #17191e, #597aa8 23%);
+    --b-cssvar-main-color-opacity-flattened-e: color-mix(in srgb, #17191e, #597aa8 15%);
 
     --b-cssvar-main-color-inflected-to-segment-buffer: #5991bb;
-    --b-cssvar-main-color-inflected-to-segment-buffer-r: 89;
-    --b-cssvar-main-color-inflected-to-segment-buffer-g: 145;
-    --b-cssvar-main-color-inflected-to-segment-buffer-b: 187;
-    --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #2e4051;
+    --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: color-mix(in srgb, #17191e, #5991bb 30%);
+    --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-d: color-mix(in srgb, #17191e, #5991bb 23%);
+    --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-e: color-mix(in srgb, #17191e, #5991bb 15%);
 
     --b-cssvar-main-color-inflected-to-user-position: #7866f1;
-    --b-cssvar-main-color-inflected-to-user-position-r: 120;
-    --b-cssvar-main-color-inflected-to-user-position-g: 102;
-    --b-cssvar-main-color-inflected-to-user-position-b: 241;
-    --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: #2f2c53;
+    --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-c: color-mix(in srgb, #17191e, #7866f1 30%);
+    --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-d: color-mix(in srgb, #17191e, #7866f1 23%);
+    --b-cssvar-main-color-inflected-to-user-position-opacity-flattened-e: color-mix(in srgb, #17191e, #7866f1 15%);
 
     --b-cssvar-main-color-opacity-a: 1;
     --b-cssvar-main-color-opacity-b: 0.8;
+    --b-cssvar-main-color-opacity-c: 0.3;
     --b-cssvar-main-color-opacity-d: 0.23;
     --b-cssvar-main-color-opacity-e: 0.15;
 
@@ -190,14 +169,9 @@
     --b-cssvar-f9f9fb-inflected-to-user-position-b: 47;
 
     --b-cssvar-ededf2: #1f222a;
-    --b-cssvar-ededf2-r: 31;
-    --b-cssvar-ededf2-g: 34;
-    --b-cssvar-ededf2-b: 42;
+    --b-cssvar-ededf2-opacity-flattened-a: color-mix(in srgb, #17191e, #1f222a 50%);
 
     --b-cssvar-ededf2-inflected-to-segment-buffer: #27303d;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-r: 39;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-g: 48;
-    --b-cssvar-ededf2-inflected-to-segment-buffer-b: 61;
 
     --b-cssvar-ededf2-inflected-to-user-position: #28293e;
     --b-cssvar-ededf2-inflected-to-user-position-r: 40;
@@ -210,14 +184,8 @@
     --b-cssvar-aeaeb2-b: 66;
 
     --b-cssvar-aeaeb2-inflected-to-segment-buffer: #343e4c;
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer-r: 52;
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer-g: 62;
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer-b: 76;
 
     --b-cssvar-aeaeb2-inflected-to-user-position: #3b3c56;
-    --b-cssvar-aeaeb2-inflected-to-user-position-r: 59;
-    --b-cssvar-aeaeb2-inflected-to-user-position-g: 60;
-    --b-cssvar-aeaeb2-inflected-to-user-position-b: 86;
 
     --b-cssvar-333333: #ffffff;
     --b-cssvar-333333-r: 255;
@@ -230,13 +198,13 @@
     --b-cssvar-333333-opacity-d: 0.6;
     --b-cssvar-333333-opacity-e: 0.26;
 
-    --b-cssvar-ranking-color-0-opacity-flattened-a: #1b412d;
+    --b-cssvar-ranking-color-0-opacity-flattened-a: color-mix(in srgb, color-mix(in srgb #000000, #17191e 60%), #49d68b 25%);
 
-    --b-cssvar-ranking-color-1-opacity-flattened-b: #153022;
+    --b-cssvar-ranking-color-1-opacity-flattened-b: color-mix(in srgb, color-mix(in srgb #000000, #17191e 60%), #49d188 20%);
 
-    --b-cssvar-ranking-color-2-opacity-flattened-c: #10251b;
+    --b-cssvar-ranking-color-2-opacity-flattened-c: color-mix(in srgb, color-mix(in srgb #000000, #17191e 60%), #43cd83 15%);
 
-    --b-cssvar-ranking-color-3-opacity-flattened-d: #0d1c16;
+    --b-cssvar-ranking-color-3-opacity-flattened-d: color-mix(in srgb, color-mix(in srgb #000000, #17191e 60%), #43c881 10%);
 
     --b-cssvar-ranking-color-opacity-a: 0.25;
     --b-cssvar-ranking-color-opacity-b: 0.20;

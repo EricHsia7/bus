@@ -522,7 +522,7 @@
 
 /* highlighted: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buttons .css_location_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-opacity-flattened-d);
   color: var(--b-cssvar-main-color);
 }
 
@@ -655,7 +655,7 @@
 
 /* on this route: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-opacity-flattened-e);
 }
 
 /* items > item > body > buses, bus arrival times > bus, bus arrival time > title */

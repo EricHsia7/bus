@@ -540,19 +540,19 @@
 
 /* highlighted: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-opacity-flattened-d);
   color: var(--b-cssvar-main-color);
 }
 
 /* highlighted: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-d);
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* highlighted: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-opacity-flattened-d);
   color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
@@ -724,7 +724,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location {
-  background-color: rgba(var(--b-cssvar-ededf2-inflected-to-segment-buffer-r), var(--b-cssvar-ededf2-inflected-to-segment-buffer-g), var(--b-cssvar-ededf2-inflected-to-segment-buffer-b), var(--b-cssvar-ededf2-opacity-a));
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a);
 }
 
 /* nearest: true */
@@ -732,22 +732,22 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location {
-  background-color: rgba(var(--b-cssvar-ededf2-inflected-to-user-position-r), var(--b-cssvar-ededf2-inflected-to-user-position-g), var(--b-cssvar-ededf2-inflected-to-user-position-b), var(--b-cssvar-ededf2-opacity-a));
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a);
 }
 
 /* on this route: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-opacity-flattened-e);
 }
 
 /* on this route: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-e);
 }
 
 /* on this route: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-e));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-opacity-flattened-e);
 }
 
 /* body > buses, overlapping routes, bus arrival times, nearby locations > bus, overlapping route, bus arrival time, nearby location > title */
@@ -970,20 +970,20 @@
 /* highlighted: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-r), var(--b-cssvar-main-color-g), var(--b-cssvar-main-color-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-opacity-flattened-d);
   color: var(--b-cssvar-main-color);
 }
 
 /* highlighted: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-segment-buffer-r), var(--b-cssvar-main-color-inflected-to-segment-buffer-g), var(--b-cssvar-main-color-inflected-to-segment-buffer-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-d);
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* highlighted: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button[highlighted="true"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button[highlighted="true"] {
-  background-color: rgba(var(--b-cssvar-main-color-inflected-to-user-position-r), var(--b-cssvar-main-color-inflected-to-user-position-g), var(--b-cssvar-main-color-inflected-to-user-position-b), var(--b-cssvar-main-color-opacity-d));
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-opacity-flattened-d);
   color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
