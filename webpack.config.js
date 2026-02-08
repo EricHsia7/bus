@@ -120,7 +120,6 @@ module.exports = (env, argv) => {
         {
           test: /\.css$/,
           use: [
-            MiniCssExtractPlugin.loader,
             {
               loader: 'postcss-loader',
               options: {
@@ -136,6 +135,7 @@ module.exports = (env, argv) => {
                 }
               }
             },
+            MiniCssExtractPlugin.loader,
             'css-loader'
           ]
         }
