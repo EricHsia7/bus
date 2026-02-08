@@ -24,6 +24,6 @@
 }
 
 .css_personal_schedule_creator_field .css_personal_schedule_creator_body .css_personal_schedule_creator_groups .css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body .css_personal_schedule_creator_day[highlighted="true"] {
-  background-color: var(--b-cssvar-main-color-opacity-flattened-d);
+  background-color: var(--b-cssvar-main-color-16-flattened);
   color: var(--b-cssvar-main-color);
 }

@@ -7,7 +7,7 @@
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(10px + 55px);
-  color: var(--b-cssvar-333333-opacity-flattened-d);
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 15px;
   font-weight: 400;
 }

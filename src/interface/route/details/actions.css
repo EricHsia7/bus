@@ -27,7 +27,7 @@
 }
 
 .css_route_details_field .css_route_details_body .css_route_details_groups .css_route_details_group[group="actions"] .css_route_details_group_body .css_route_details_action_button[highlighted="true"] {
-  background-color: var(--b-cssvar-main-color-opacity-flattened-d);
+  background-color: var(--b-cssvar-main-color-16-flattened);
   color: var(--b-cssvar-main-color);
 }
 

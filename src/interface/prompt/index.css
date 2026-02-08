@@ -29,7 +29,7 @@
   bottom: calc(20px + var(--b-cssvar-safe-area-bottom));
   opacity: 0;
   transform: translateX(-50%) scale(0.98);
-  background: rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.8);
+  background: var(--b-cssvar-f9f9fb-normal-80);
   border: 1px solid var(--b-cssvar-ededf2);
   /* box-shadow: 0px 0px 25px -19px rgba(0, 0, 0, 0.23); */
   backdrop-filter: var(--b-cssvar-backdrop-filter);

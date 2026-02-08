@@ -6,7 +6,7 @@
   background: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
-  color: var(--b-cssvar-333333-opacity-flattened-d);
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 15px;
   font-weight: 400;
   margin-top: calc(10px + 55px);
@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   justify-content: right;
-  color: var(--b-cssvar-333333-opacity-flattened-d);
+  color: var(--b-cssvar-333333-60-flattened);
   white-space: nowrap;
   word-break: keep-all;
 }

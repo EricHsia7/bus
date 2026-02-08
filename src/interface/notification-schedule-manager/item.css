@@ -113,7 +113,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 14px;
-  color: var(--b-cssvar-333333-opacity-flattened-c);
+  color: var(--b-cssvar-333333-70-flattened);
   contain: layout;
   word-break: keep-all;
   white-space: nowrap;
@@ -185,7 +185,7 @@
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_main,
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_notification_schedule .css_notification_schedule_manager_item_notification_schedule_cancel {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-opacity-flattened-a) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, var(--b-cssvar-ededf2-opacity-flattened-a) 100%);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;

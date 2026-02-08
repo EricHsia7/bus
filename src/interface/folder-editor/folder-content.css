@@ -36,7 +36,7 @@
   line-height: 14px;
   display: flex;
   align-items: center;
-  color: var(--b-cssvar-333333-opacity-flattened-c);
+  color: var(--b-cssvar-333333-70-flattened);
   white-space: nowrap;
   word-break: keep-all;
   overflow: clip;

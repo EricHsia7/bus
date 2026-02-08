@@ -50,7 +50,7 @@
   height: 14px;
   line-height: 14px;
   display: block;
-  color: var(--b-cssvar-333333-opacity-flattened-c);
+  color: var(--b-cssvar-333333-70-flattened);
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
@@ -293,7 +293,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="7"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="7"] {
   background: var(--b-cssvar-ededf2);
-  color: var(--b-cssvar-333333-opacity-flattened-d);
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
 }
@@ -308,7 +308,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="4"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="3"] {
   background: var(--b-cssvar-ededf2);
-  color: var(--b-cssvar-333333-opacity-flattened-d);
+  color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
 }
@@ -328,7 +328,7 @@
   color: var(--b-cssvar-main-color);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-opacity-flattened-c);
+  background: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 0.5 */
@@ -362,7 +362,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_context,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_main {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-opacity-flattened-a) 0%, rgba(var(--b-cssvar-ffffff-blocky-r), var(--b-cssvar-ffffff-blocky-g), var(--b-cssvar-ffffff-blocky-b), 0.5) 50%, var(--b-cssvar-ededf2-opacity-flattened-a) 100%);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;

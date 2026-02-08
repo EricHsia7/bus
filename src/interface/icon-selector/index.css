@@ -4,7 +4,7 @@
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_material_symbols .css_icon_selector_material_symbols_symbol[animation="true"][skeleton-screen="true"] {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-opacity-flattened-a) 0%, var(--b-cssvar-f9f9fb-normal-opacity-flatten-c) 50%, var(--b-cssvar-ededf2-opacity-flattened-a) 100%);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-f9f9fb-normal-50-flatten) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;
