@@ -65,7 +65,7 @@
   right: 45px;
   width: 120px;
   height: 55px;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   line-height: 55px;
   font-weight: 400;
   font-size: 16px;
@@ -103,7 +103,7 @@
   width: 15px;
   height: 15px;
   font-size: 18px;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox {
@@ -154,7 +154,7 @@
   position: relative;
   left: calc(10px + 5px);
   width: calc(100% - 10px * 2 - 5px * 2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   font-size: 15px;
   white-space: pre-line;
   word-break: break-all;

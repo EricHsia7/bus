@@ -78,7 +78,7 @@ body input[type="text"] {
   width: 100%;
   height: 100%;
   background: var(--b-cssvar-ffffff-normal);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   font-size: 16px;
   word-break: break-all;
   display: flex;

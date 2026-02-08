@@ -18,5 +18,5 @@
 }
 
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group[group="folder-name"] .css_folder_creator_group_body input:read-only {
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
 }

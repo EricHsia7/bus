@@ -160,7 +160,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="-1"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="-1"] {
   background: var(--b-cssvar-ededf2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   font-weight: 400;
   font-size: 18px;
 }
@@ -222,7 +222,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 14px;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: var(--b-cssvar-333333-opacity-flattened-c);
   white-space: nowrap;
   word-break: keep-all;
   overflow: clip;
@@ -371,7 +371,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="7"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="7"] {
   background: var(--b-cssvar-ededf2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   font-size: 11px;
   font-weight: 500;
 }
@@ -386,7 +386,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="4"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="3"] {
   background: var(--b-cssvar-ededf2);
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   font-size: 11px;
   font-weight: 500;
 }
@@ -591,7 +591,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-d));
+  color: var(--b-cssvar-333333-opacity-flattened-d);
   white-space: nowrap;
   word-break: keep-all;
   font-size: 16px;
@@ -720,7 +720,7 @@
   height: 20px;
   font-size: 14px;
   line-height: 20px;
-  color: rgba(var(--b-cssvar-333333-r), var(--b-cssvar-333333-g), var(--b-cssvar-333333-b), var(--b-cssvar-333333-opacity-c));
+  color: var(--b-cssvar-333333-opacity-flattened-c);
   white-space: nowrap;
   word-break: keep-all;
   overflow: clip;
