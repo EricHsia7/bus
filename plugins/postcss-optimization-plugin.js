@@ -1,5 +1,6 @@
 const { Compilation, sources } = require('webpack');
 const postcss = require('postcss');
+const { SourceMapSource } = require('webpack-sources');
 
 class PostCssOptimizationPlugin {
   constructor(options = {}) {
