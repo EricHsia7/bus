@@ -11,8 +11,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 const { Hasher } = require('./hasher');
-const { ErrorCodePlugin } = require('./error-code-plugin');
+const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
+const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -119,18 +121,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
-          use: [
-            'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: ['@csstools/postcss-color-mix-function']
-                }
-              }
-            },
-            MiniCssExtractPlugin.loader
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
         }
       ]
     },
@@ -150,6 +141,7 @@ module.exports = (env, argv) => {
             }
           }
         }),
+        new PostCssOptimizationPlugin({ options: { plugins: [postcssColorMixFunction({ preserve: false })] } }),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
