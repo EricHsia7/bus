@@ -732,7 +732,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_bus_arrival_times .css_route_group_item_bus_arrival_time,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location {
-  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer-opacity-flattened-a);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position-opacity-flattened-a);
 }
 
 /* on this route: true */
