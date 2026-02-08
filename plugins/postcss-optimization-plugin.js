@@ -10,7 +10,7 @@ class PostCssOptimizationPlugin {
   apply(compiler) {
     const pluginName = 'PostCssOptimizationPlugin';
 
-    compiler.hooks.compilation.tapPromise(pluginName, async (compilation) => {
+    compiler.hooks.compilation.tap(pluginName, (compilation) => {
       compilation.hooks.processAssets.tapPromise(
         {
           name: pluginName,
