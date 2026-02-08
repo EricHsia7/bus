@@ -10,7 +10,7 @@ class PostCssOptimizationPlugin {
   apply(compiler) {
     const pluginName = 'PostCssOptimizationPlugin';
 
-    compiler.hooks.compilation.tap(pluginName, (compilation) => {
+    compiler.hooks.compilation.tapPromise(pluginName, async (compilation) => {
       compilation.hooks.processAssets.tapPromise(
         {
           name: pluginName,
@@ -23,7 +23,8 @@ class PostCssOptimizationPlugin {
             const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
 
             try {
-              const { css: newCSS, map: newSourceMapGenerator } = await postcss(this.options.plugins || []).process(source, {
+              const code = source.source();
+              const { css: newCSS, map: newSourceMapGenerator } = await postcss(this.options.plugins || []).process(code, {
                 from: pathname,
                 to: pathname,
                 map: {
