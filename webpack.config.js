@@ -140,9 +140,7 @@ module.exports = (env, argv) => {
             }
           }
         }),
-        new PostCssOptimizationPlugin({
-          plugins: [postcssColorMixFunction()]
-        }),
+        new PostCssOptimizationPlugin(),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
