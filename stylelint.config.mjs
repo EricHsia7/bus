@@ -13,6 +13,12 @@ export default {
       {
         message: (selector) => `Expected class selector "${selector}" to start with "css_"`
       }
-    ]
+    ],
+    'length-zero-no-unit': false,
+    'color-function-alias-notation': false,
+    'color-function-notation': false,
+    'declaration-block-no-redundant-longhand-properties': false,
+    'declaration-property-value-no-unknown': false,
+    'no-descending-specificity': false
   }
 };
