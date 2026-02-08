@@ -111,13 +111,11 @@
     --b-cssvar-main-color-inflected-to-segment-buffer: rgb(89, 145, 187);
     --b-cssvar-main-color-inflected-to-segment-buffer-22-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 145, 187) 30%);
     --b-cssvar-main-color-inflected-to-segment-buffer-16-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 145, 187) 23%);
-    --b-cssvar-main-color-inflected-to-segment-buffer-11-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(89, 145, 187) 15%);
 
     /* main color && user position */
     --b-cssvar-main-color-inflected-to-user-position: rgb(120, 102, 241);
     --b-cssvar-main-color-inflected-to-user-position-22-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 30%);
     --b-cssvar-main-color-inflected-to-user-position-16-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 23%);
-    --b-cssvar-main-color-inflected-to-user-position-11-flattened: color-mix(in srgb, rgb(23, 25, 30), rgb(120, 102, 241) 15%);
 
     /* ffffff */
     --b-cssvar-ffffff-normal: rgb(23, 25, 30);

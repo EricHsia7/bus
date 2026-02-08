@@ -742,12 +742,12 @@
 
 /* on this route: true && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-11-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-16-flattened);
 }
 
 /* on this route: true && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_body .css_route_group_item_buses .css_route_group_item_bus[on-this-route="true"] {
-  background-color: var(--b-cssvar-main-color-inflected-to-user-position-11-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-16-flattened);
 }
 
 /* body > buses, overlapping routes, bus arrival times, nearby locations > bus, overlapping route, bus arrival time, nearby location > title */
