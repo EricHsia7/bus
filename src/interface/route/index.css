@@ -14,7 +14,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="true"] .css_route_group_thread,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="true"] .css_route_group_thread_status {
   background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-opacity-flattened-a) 0%, rgba(var(--b-cssvar-f9f9fb-normal-r), var(--b-cssvar-f9f9fb-normal-g), var(--b-cssvar-f9f9fb-normal-b), 0.5) 50%, var(--b-cssvar-ededf2-opacity-flattened-a) 100%);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-opacity-flattened-a) 0%, var(--b-cssvar-f9f9fb-normal-opacity-flatten-c) 50%, var(--b-cssvar-ededf2-opacity-flattened-a) 100%);
   background-size: 400% 400%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;
