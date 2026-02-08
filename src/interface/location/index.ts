@@ -7,7 +7,7 @@ import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -55,6 +55,7 @@ let locationRefreshTimer_streamStarted: boolean = false;
 let currentHashSet_hash: string = '';
 
 let tabPadding: number = 20;
+let subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeLocationSliding(): void {
   LocationGroupsElement.addEventListener(
@@ -118,7 +119,7 @@ export function initializeLocationSliding(): void {
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   LocationGroupsElement.style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
   LocationGroupTabLineElement.style.setProperty('--b-cssvar-location-tab-line-width-scale', tabLineWidth.toString());
-  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset.toFixed(5)}px`);
+  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
   LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toString());
 }
 

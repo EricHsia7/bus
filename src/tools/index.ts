@@ -116,3 +116,7 @@ export function isValidURL(string: string): boolean {
 export function nearestPowerOf2(x: number): number {
   return 1 << (31 - Math.clz32(x));
 }
+
+export function getSubpixelPrecision(): number {
+  return Math.ceil(Math.log2(window.devicePixelRatio || 1));
+}

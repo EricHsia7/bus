@@ -7,7 +7,7 @@ import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -57,6 +57,7 @@ let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
 
 let tabPadding: number = 20;
+let subpixelPrecision: number = getSubpixelPrecision()
 
 export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
@@ -114,7 +115,7 @@ export function initializeRouteSliding(): void {
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   RouteGroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
   RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(5)}px`);
+  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toString());
 }
 
