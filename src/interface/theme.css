@@ -3,13 +3,13 @@
   --b-cssvar-main-color-r: 101;
   --b-cssvar-main-color-g: 143;
   --b-cssvar-main-color-b: 198;
-  --b-cssvar-main-color-opacity-flattened-c: #dde6f2;
+  --b-cssvar-main-color-opacity-flattened-c: color-mix(in srgb, #fff, #658fc6 22%);
 
   --b-cssvar-main-color-inflected-to-segment-buffer: #5991bb;
   --b-cssvar-main-color-inflected-to-segment-buffer-r: 89;
   --b-cssvar-main-color-inflected-to-segment-buffer-g: 145;
   --b-cssvar-main-color-inflected-to-segment-buffer-b: 187;
-  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: #dbe7f2;
+  --b-cssvar-main-color-inflected-to-segment-buffer-opacity-flattened-c: color-mix(in srgb, #fff, #5991bb 22%);
 
   --b-cssvar-main-color-inflected-to-user-position: #6354c7;
   --b-cssvar-main-color-inflected-to-user-position-r: 99;
