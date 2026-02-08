@@ -89,7 +89,7 @@ export class Tick {
     this.isPaused = false;
 
     if (!this.isRunning) {
-      if (runImmediately) {
+      if (!runImmediately) {
         this.pivot = new Date().getTime();
         this.lastTickCount = 0;
       }
