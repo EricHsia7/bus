@@ -148,7 +148,7 @@
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_name {
   background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
-  background-size: 400% 400%;
+  background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: skeleton-loading;
   animation-duration: 1.2s;
