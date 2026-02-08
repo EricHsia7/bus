@@ -117,7 +117,7 @@ function updateDay(thisDayElement: HTMLElement, thisDay: CalendarDay, currentDay
   thisDayElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
 }
 
-function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, currentDay: number, mainColor: string, mainColorR: string, mainColorG: string, mainColorB: string, mainColorA: string, gridColor: string, index: number): void {
+function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalendarEventGroup: CalendarEventGroup, currentDay: number, mainColor: string, mainColor11Flatten: string, gridColor: string, index: number): void {
   function drawGridline(thisContext: CanvasRenderingContext2D, hours: number, gridColor: string): void {
     const boxX = 0;
     const boxY = hours * calendarRatio;
@@ -138,7 +138,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
     thisContext.fillText(labelText, (gridlineLabelWidthLimit - labelWidth) / 2, boxY + (gridlineBoxHeight - labelHeight) / 2, labelWidth);
   }
 
-  function drawEvent(thisContext: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent, mainColor: string, mainColorR: string, mainColorG: string, mainColorB: string, mainColorA: string): void {
+  function drawEvent(thisContext: CanvasRenderingContext2D, thisCalendarEvent: CalendarEvent, mainColor: string, mainColor11Flatten: string): void {
     // Calculate the start of the day for this event only once.
     const thisDayStart = new Date();
     thisDayStart.setDate(1);
@@ -157,7 +157,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
     const boxHeight = ((thisCalendarEvent.duration * 60 * 1000) / (24 * 60 * 60 * 1000)) * 24 * calendarRatio;
 
     // Draw background with rounded rectangle
-    drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, `rgba(${mainColorR}, ${mainColorG}, ${mainColorB}, ${mainColorA})`);
+    drawRoundedRect(thisContext, boxX, boxY, boxWidth, boxHeight, 3, mainColor11Flatten);
 
     // Draw decoration (a thin rounded rectangle)
     drawRoundedRect(thisContext, boxX, boxY, 3, boxHeight, { tl: 3, tr: 0, bl: 3, br: 0 }, mainColor);
@@ -201,7 +201,7 @@ function updateEventGroup(thisCalendarEventGroupElement: HTMLElement, thisCalend
 
     // Draw all events for this group.
     for (const thisCalendarEvent of thisCalendarEventGroup) {
-      drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent, mainColor, mainColorR, mainColorG, mainColorB, mainColorA);
+      drawEvent(thisCalendarEventGroupCanvasContext, thisCalendarEvent, mainColor, mainColor11Flatten);
     }
   } else {
     // When not displayed, clear the canvas.
@@ -214,11 +214,8 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
   const currentDay = new Date().getDay();
 
   // Retrieve the CSS variable values just once
-  const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
-  const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
-  const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-  const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-e');
   const mainColor = getCSSVariableValue('--b-cssvar-main-color');
+  const mainColor11Flattened = getCSSVariableValue('--b-cssvar-main-color-11-flattened');
   const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
   const eventGroups = calendar.calendarDays;
@@ -268,7 +265,7 @@ export function updateCalendarGroup(calendar: Calendar, skeletonScreen: boolean,
     const thisEventGroupElement = eventGroupElements[i];
 
     updateDay(thisDayElement, thisDay, currentDay, skeletonScreen, animation, i);
-    updateEventGroup(thisEventGroupElement, thisEventGroup, currentDay, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
+    updateEventGroup(thisEventGroupElement, thisEventGroup, currentDay, mainColor, mainColor11Flattened, gridColor, i);
   }
 
   previousCalendar = calendar;
@@ -294,16 +291,13 @@ export function switchCalendarDay(day: number): void {
     const calendarDay = previousCalendar?.calendarDays[eventGroupKey];
     if (calendarEventGroup && calendarDay) {
       // Retrieve the CSS variable values just once
-      const mainColorR = getCSSVariableValue('--b-cssvar-main-color-r');
-      const mainColorG = getCSSVariableValue('--b-cssvar-main-color-g');
-      const mainColorB = getCSSVariableValue('--b-cssvar-main-color-b');
-      const mainColorA = getCSSVariableValue('--b-cssvar-main-color-opacity-e');
       const mainColor = getCSSVariableValue('--b-cssvar-main-color');
+      const mainColor11Flatten = getCSSVariableValue('--b-cssvar-main-color-11-flattened');
       const gridColor = getCSSVariableValue('--b-cssvar-ededf2');
 
       // Reuse the drawing logic from updateEventGroup and updateDay for the visible event group.
       updateDay(thisCalendarDayElement, calendarDay, day, false, playing_animation, i);
-      updateEventGroup(thisEventGroupElement, calendarEventGroup, day, mainColor, mainColorR, mainColorG, mainColorB, mainColorA, gridColor, i);
+      updateEventGroup(thisEventGroupElement, calendarEventGroup, day, mainColor, mainColor11Flatten, gridColor, i);
     }
     /*} else {
       thisCalendarDayElement.setAttribute('highlighted', 'false');
