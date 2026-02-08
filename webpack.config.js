@@ -141,6 +141,9 @@ module.exports = (env, argv) => {
             }
           }
         }),
+        new PostCssOptimizationPlugin({
+          plugins: [postcssColorMixFunction({ preserve: false })]
+        }),
         new CssMinimizerPlugin({
           parallel: 4,
           minimizerOptions: {
@@ -152,9 +155,6 @@ module.exports = (env, argv) => {
               }
             ]
           }
-        }),
-        new PostCssOptimizationPlugin({
-          plugins: [postcssColorMixFunction({ preserve: false })]
         })
       ],
       splitChunks: {
