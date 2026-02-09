@@ -8,6 +8,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getIconElement } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -41,23 +42,13 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
-let routeRefreshTimer_retryInterval: number = 10 * 1000;
-let routeRefreshTimer_baseInterval: number = 15 * 1000;
-let routeRefreshTimer_minInterval: number = 5 * 1000;
-let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
-let routeRefreshTimer_dynamic: boolean = true;
-let routeRefreshTimer_lastUpdate: number = 0;
-let routeRefreshTimer_nextUpdate: number = 0;
-let routeRefreshTimer_currentRequestID: string = '';
-let routeRefreshTimer_refreshing: boolean = false;
-let routeRefreshTimer_streaming: boolean = false;
-let routeRefreshTimer_streamStarted: boolean = false;
+const routeTick = new Tick(refreshRoute, 15 * 1000);
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
 
 let tabPadding: number = 20;
-let subpixelPrecision: number = getSubpixelPrecision()
+let subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
@@ -119,17 +110,15 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
   RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toString());
 }
 
-function animateUpdateTimer(): void {
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${routeRefreshTimer_dynamicInterval}ms`);
+function animateUpdateTimer(interval: number): void {
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${interval.toString()}ms`);
   RouteUpdateTimerElement.classList.add('css_route_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  if (routeRefreshTimer_refreshing) {
-    const offsetRatio = CustomEvent.detail.progress - 1;
-    RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-offset-ratio', offsetRatio.toString());
-  }
+  const offsetRatio = CustomEvent.detail.progress - 1;
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-offset-ratio', offsetRatio.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
@@ -1159,64 +1148,43 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshRoute() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
-  routeRefreshTimer_dynamic = refresh_interval_setting.dynamic;
-  routeRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
-  routeRefreshTimer_refreshing = true;
-  routeRefreshTimer_currentRequestID = generateIdentifier();
-  RouteUpdateTimerElement.setAttribute('refreshing', 'true');
-  RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
-  document.addEventListener(routeRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, routeRefreshTimer_currentRequestID);
-  updateRouteField(integration, false, playing_animation);
-  let updateRate = 0;
-  if (routeRefreshTimer_dynamic) {
-    updateRate = await getUpdateRate();
+async function refreshRoute(): Promise<number> {
+  try {
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
+    const requestID = generateIdentifier();
+    RouteUpdateTimerElement.setAttribute('refreshing', 'true');
+    RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
+    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
+    const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, requestID);
+    updateRouteField(integration, false, playing_animation);
+    let updateRate = 0;
+    if (refresh_interval_setting.dynamic) {
+      updateRate = await getUpdateRate();
+    }
+    const lastUpdate = new Date().getTime();
+    let nextUpdate = 0;
+    if (refresh_interval_setting.dynamic) {
+      nextUpdate = Math.max(lastUpdate + 5000, integration.dataUpdateTime + refresh_interval_setting.baseInterval / updateRate);
+    } else {
+      nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
+    }
+    RouteUpdateTimerElement.setAttribute('refreshing', 'false');
+    const interval = Math.max(5000, nextUpdate - lastUpdate);
+    animateUpdateTimer(interval);
+    return interval;
+  } catch (err) {
+    const interval = 10 * 1000;
+    promptMessage('error', `路線發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
-  routeRefreshTimer_lastUpdate = new Date().getTime();
-  if (routeRefreshTimer_dynamic) {
-    routeRefreshTimer_nextUpdate = Math.max(routeRefreshTimer_lastUpdate + routeRefreshTimer_minInterval, integration.dataUpdateTime + routeRefreshTimer_baseInterval / updateRate);
-  } else {
-    routeRefreshTimer_nextUpdate = routeRefreshTimer_lastUpdate + routeRefreshTimer_baseInterval;
-  }
-  routeRefreshTimer_dynamicInterval = Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - routeRefreshTimer_lastUpdate);
-  routeRefreshTimer_refreshing = false;
-  RouteUpdateTimerElement.setAttribute('refreshing', 'false');
-  animateUpdateTimer();
-}
-
-export function streamRoute(): void {
-  refreshRoute()
-    .then(function () {
-      if (routeRefreshTimer_streaming) {
-        setTimeout(
-          function () {
-            streamRoute();
-          },
-          Math.max(routeRefreshTimer_minInterval, routeRefreshTimer_nextUpdate - new Date().getTime())
-        );
-      } else {
-        routeRefreshTimer_streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (routeRefreshTimer_streaming) {
-        promptMessage('error', `路線網路連線中斷，將在${routeRefreshTimer_retryInterval / 1000}秒後重試。`);
-        setTimeout(function () {
-          streamRoute();
-        }, routeRefreshTimer_retryInterval);
-      } else {
-        routeRefreshTimer_streamStarted = false;
-      }
-    });
 }
 
 function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   currentRouteIDSet_RouteID = RouteID;
+
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
@@ -1226,14 +1194,10 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
 
   setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
 
-  if (!routeRefreshTimer_streaming) {
-    routeRefreshTimer_streaming = true;
-    if (!routeRefreshTimer_streamStarted) {
-      routeRefreshTimer_streamStarted = true;
-      streamRoute();
-    } else {
-      refreshRoute();
-    }
+  if (routeTick.isPaused) {
+    routeTick.resume(true);
+  } else {
+    routeTick.tick();
   }
 }
 
@@ -1255,13 +1219,13 @@ export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: 
 
 export function closeRoute(): void {
   hideRoute();
-  routeRefreshTimer_streaming = false;
+  routeTick.pause();
   showPreviousPage();
   revokePageHistory('Route');
 }
 
 export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
-  routeRefreshTimer_streaming = false;
+  routeTick.pause();
   openRoute(RouteID, PathAttributeId);
 }
 

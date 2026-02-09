@@ -8,6 +8,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -40,17 +41,7 @@ let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
-let locationRefreshTimer_retryInterval: number = 10 * 1000;
-let locationRefreshTimer_baseInterval: number = 15 * 1000;
-let locationRefreshTimer_minInterval: number = 5 * 1000;
-let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
-let locationRefreshTimer_dynamic: boolean = true;
-let locationRefreshTimer_lastUpdate: number = 0;
-let locationRefreshTimer_nextUpdate: number = 0;
-let locationRefreshTimer_currentRequestID: string = '';
-let locationRefreshTimer_refreshing: boolean = false;
-let locationRefreshTimer_streaming: boolean = false;
-let locationRefreshTimer_streamStarted: boolean = false;
+const locationTick = new Tick(refreshLocation, 15 * 1000);
 
 let currentHashSet_hash: string = '';
 
@@ -123,17 +114,15 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
   LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toString());
 }
 
-function animateUpdateTimer(): void {
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${locationRefreshTimer_dynamicInterval}ms`);
+function animateUpdateTimer(interval: number): void {
+  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${interval}ms`);
   LocationUpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  if (locationRefreshTimer_refreshing) {
-    const offsetRatio = CustomEvent.detail.progress - 1;
-    LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-offset-ratio', offsetRatio.toString());
-  }
+  const offsetRatio = CustomEvent.detail.progress - 1;
+  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-offset-ratio', offsetRatio.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
@@ -998,64 +987,43 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshLocation() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
-  locationRefreshTimer_dynamic = refresh_interval_setting.dynamic;
-  locationRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
-  locationRefreshTimer_refreshing = true;
-  locationRefreshTimer_currentRequestID = generateIdentifier();
-  LocationUpdateTimerElement.setAttribute('refreshing', 'true');
-  LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
-  document.addEventListener(locationRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, locationRefreshTimer_currentRequestID);
-  updateLocationField(integration, false, playing_animation);
-  let updateRate = 0;
-  if (locationRefreshTimer_dynamic) {
-    updateRate = await getUpdateRate();
+async function refreshLocation(): Promise<number> {
+  try {
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
+    const requestID = generateIdentifier();
+    LocationUpdateTimerElement.setAttribute('refreshing', 'true');
+    LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
+    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
+    const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, requestID);
+    updateLocationField(integration, false, playing_animation);
+    let updateRate = 0;
+    if (refresh_interval_setting.dynamic) {
+      updateRate = await getUpdateRate();
+    }
+    const lastUpdate = new Date().getTime();
+    let nextUpdate = 0;
+    if (refresh_interval_setting.dynamic) {
+      nextUpdate = Math.max(lastUpdate + 5000, integration.dataUpdateTime + refresh_interval_setting.baseInterval / updateRate);
+    } else {
+      nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
+    }
+    const interval = Math.max(5000, nextUpdate - lastUpdate);
+    LocationUpdateTimerElement.setAttribute('refreshing', 'false');
+    animateUpdateTimer(interval);
+    return interval;
+  } catch (err) {
+    const interval = 10 * 1000;
+    promptMessage('error', `地點發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
-  locationRefreshTimer_lastUpdate = new Date().getTime();
-  if (locationRefreshTimer_dynamic) {
-    locationRefreshTimer_nextUpdate = Math.max(locationRefreshTimer_lastUpdate + locationRefreshTimer_minInterval, integration.dataUpdateTime + locationRefreshTimer_baseInterval / updateRate);
-  } else {
-    locationRefreshTimer_nextUpdate = locationRefreshTimer_lastUpdate + locationRefreshTimer_baseInterval;
-  }
-  locationRefreshTimer_dynamicInterval = Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - locationRefreshTimer_lastUpdate);
-  locationRefreshTimer_refreshing = false;
-  LocationUpdateTimerElement.setAttribute('refreshing', 'false');
-  animateUpdateTimer();
-}
-
-export function streamLocation(): void {
-  refreshLocation()
-    .then(function () {
-      if (locationRefreshTimer_streaming) {
-        setTimeout(
-          function () {
-            streamLocation();
-          },
-          Math.max(locationRefreshTimer_minInterval, locationRefreshTimer_nextUpdate - new Date().getTime())
-        );
-      } else {
-        locationRefreshTimer_streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (locationRefreshTimer_streaming) {
-        promptMessage('error', `地點網路連線中斷，將在${locationRefreshTimer_retryInterval / 1000}秒後重試。`);
-        setTimeout(function () {
-          streamLocation();
-        }, locationRefreshTimer_retryInterval);
-      } else {
-        locationRefreshTimer_streamStarted = false;
-      }
-    });
 }
 
 function initializeLocation(hash: IntegratedLocation['hash']): void {
   currentHashSet_hash = hash;
+
   locationSliding_initialIndex = 0;
   locationSliding_groupStyles = {};
 
@@ -1064,14 +1032,10 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
 
   setupLocationFieldSkeletonScreen(hash);
 
-  if (!locationRefreshTimer_streaming) {
-    locationRefreshTimer_streaming = true;
-    if (!locationRefreshTimer_streamStarted) {
-      locationRefreshTimer_streamStarted = true;
-      streamLocation();
-    } else {
-      refreshLocation();
-    }
+  if (locationTick.isPaused) {
+    locationTick.resume(true);
+  } else {
+    locationTick.tick();
   }
 }
 
@@ -1093,7 +1057,7 @@ export function openLocation(hash: IntegratedLocation['hash']): void {
 
 export function closeLocation(): void {
   hideLocation();
-  locationRefreshTimer_streaming = false;
+  locationTick.pause();
   showPreviousPage();
   revokePageHistory('Location');
 }
