@@ -82,6 +82,7 @@ export class Tick {
   }
 
   handleVisibilityChange(): void {
+    if (this.lastTickCount < 0) return;
     if (document.hidden) {
       if (!this.isPaused) {
         this.isAutoPaused = true;
