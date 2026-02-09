@@ -583,7 +583,6 @@ async function refreshFolders(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    console.log(3, err);
     const interval = 10 * 1000;
     promptMessage('error', `資料夾發生錯誤，將在${interval / 1000}秒後重試。`);
     animateUpdateTimer(interval);
