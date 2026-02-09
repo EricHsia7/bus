@@ -1175,6 +1175,7 @@ async function refreshRoute(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
+    console.log(1, err);
     const interval = 10 * 1000;
     promptMessage('error', `路線發生錯誤，將在${interval / 1000}秒後重試。`);
     animateUpdateTimer(interval);

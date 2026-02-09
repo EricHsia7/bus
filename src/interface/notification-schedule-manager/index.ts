@@ -263,6 +263,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
   } catch (err) {
+    console.log(2, err);
     const interval = 10 * 1000;
     promptMessage('error', `通知發生錯誤，將在${interval / 1000}秒後重試。`);
     animateUpdateTimer(interval);
