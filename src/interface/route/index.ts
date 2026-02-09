@@ -42,8 +42,6 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
-let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
-
 const routeTick = new Tick(refreshRoute, 15 * 1000);
 
 let currentRouteIDSet_RouteID: number = 0;
@@ -1177,13 +1175,16 @@ async function refreshRoute(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `路線網路連線中斷，將在${10}秒後重試。`);
-    return 10 * 1000;
+    const interval = 10 * 1000;
+    promptMessage('error', `路線發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
 }
 
 function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   currentRouteIDSet_RouteID = RouteID;
+
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
@@ -1194,7 +1195,7 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
 
   if (routeTick.isPaused) {
-    routeTick.resume();
+    routeTick.resume(true);
   } else {
     routeTick.tick();
   }

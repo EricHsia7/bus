@@ -5,6 +5,7 @@ import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, in
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { Tick } from '../../tools/tick';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
@@ -20,29 +21,17 @@ let previousIntegration = {} as IntegratedNotificationSchedules;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-let notifcationScheduleManagerRefreshTimer_retryInterval: number = 10 * 1000;
-let notifcationScheduleManagerRefreshTimer_baseInterval: number = 15 * 1000;
-let notifcationScheduleManagerRefreshTimer_minInterval: number = 5 * 1000;
-let notifcationScheduleManagerRefreshTimer_dynamicInterval: number = 15 * 1000;
-let notifcationScheduleManagerRefreshTimer_dynamic: boolean = true;
-let notifcationScheduleManagerRefreshTimer_lastUpdate: number = 0;
-let notifcationScheduleManagerRefreshTimer_nextUpdate: number = 0;
-let notifcationScheduleManagerRefreshTimer_currentRequestID: string = '';
-let notifcationScheduleManagerRefreshTimer_refreshing: boolean = false;
-let notifcationScheduleManagerRefreshTimer_streaming: boolean = false;
-let notifcationScheduleManagerRefreshTimer_streamStarted: boolean = false;
+const notifcationScheduleManagerTick = new Tick(refreshNotificationScheduleManager, 15 * 1000);
 
-function animateUpdateTimer(): void {
-  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${notifcationScheduleManagerRefreshTimer_dynamicInterval}ms`);
+function animateUpdateTimer(interval: number): void {
+  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
   NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  if (notifcationScheduleManagerRefreshTimer_refreshing) {
-    const offsetRatio = CustomEvent.detail.progress - 1;
-    NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-offset-ratio', offsetRatio.toString());
-  }
+  const offsetRatio = CustomEvent.detail.progress - 1;
+  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-offset-ratio', offsetRatio.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
@@ -249,58 +238,36 @@ function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
   );
 }
 
-async function refreshNotificationScheduleManager() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  notifcationScheduleManagerRefreshTimer_dynamic = refresh_interval_setting.dynamic;
-  notifcationScheduleManagerRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
-  notifcationScheduleManagerRefreshTimer_refreshing = true;
-  notifcationScheduleManagerRefreshTimer_currentRequestID = generateIdentifier();
-  NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
-  NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
-  document.addEventListener(notifcationScheduleManagerRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
-  updateNotificationScheduleManagerField(integration, false, playing_animation);
-  let updateRate = 0;
-  if (notifcationScheduleManagerRefreshTimer_dynamic) {
-    updateRate = await getUpdateRate();
+async function refreshNotificationScheduleManager(): Promise<number> {
+  try {
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const requestID = generateIdentifier();
+    NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
+    NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
+    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
+    const integration = await integrateNotifcationSchedules(requestID);
+    updateNotificationScheduleManagerField(integration, false, playing_animation);
+    let updateRate = 0;
+    if (refresh_interval_setting.dynamic) {
+      updateRate = await getUpdateRate();
+    }
+    const lastUpdate = new Date().getTime();
+    let nextUpdate = 0;
+    if (refresh_interval_setting.dynamic) {
+      nextUpdate = Math.max(lastUpdate + 5000, integration.dataUpdateTime + refresh_interval_setting.baseInterval / updateRate);
+    } else {
+      nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
+    }
+    const interval = Math.max(5000, nextUpdate - lastUpdate);
+    NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
+    animateUpdateTimer(interval);
+  } catch (err) {
+    const interval = 10 * 1000;
+    promptMessage('error', `通知發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
-  notifcationScheduleManagerRefreshTimer_lastUpdate = new Date().getTime();
-  if (notifcationScheduleManagerRefreshTimer_dynamic) {
-    notifcationScheduleManagerRefreshTimer_nextUpdate = Math.max(notifcationScheduleManagerRefreshTimer_lastUpdate + notifcationScheduleManagerRefreshTimer_minInterval, integration.dataUpdateTime + notifcationScheduleManagerRefreshTimer_baseInterval / updateRate);
-  } else {
-    notifcationScheduleManagerRefreshTimer_nextUpdate = notifcationScheduleManagerRefreshTimer_lastUpdate + notifcationScheduleManagerRefreshTimer_baseInterval;
-  }
-  notifcationScheduleManagerRefreshTimer_dynamicInterval = Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - notifcationScheduleManagerRefreshTimer_lastUpdate);
-  notifcationScheduleManagerRefreshTimer_refreshing = false;
-  NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
-  animateUpdateTimer();
-}
-
-async function streamNotificationScheduleManager() {
-  refreshNotificationScheduleManager()
-    .then(function () {
-      if (notifcationScheduleManagerRefreshTimer_streaming) {
-        setTimeout(
-          function () {
-            streamNotificationScheduleManager();
-          },
-          Math.max(notifcationScheduleManagerRefreshTimer_minInterval, notifcationScheduleManagerRefreshTimer_nextUpdate - new Date().getTime())
-        );
-      } else {
-        notifcationScheduleManagerRefreshTimer_streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (notifcationScheduleManagerRefreshTimer_streaming) {
-        setTimeout(function () {
-          streamNotificationScheduleManager();
-        }, notifcationScheduleManagerRefreshTimer_retryInterval);
-      } else {
-        notifcationScheduleManagerRefreshTimer_streamStarted = false;
-      }
-    });
 }
 
 export function showNotificationScheduleManager(): void {
@@ -315,21 +282,17 @@ export function openNotificationScheduleManager(): void {
   pushPageHistory('NotificationScheduleManager');
   showNotificationScheduleManager();
   setupNotificationScheduleManagerFieldSkeletonScreen();
-  if (!notifcationScheduleManagerRefreshTimer_streaming) {
-    notifcationScheduleManagerRefreshTimer_streaming = true;
-    if (!notifcationScheduleManagerRefreshTimer_streamStarted) {
-      notifcationScheduleManagerRefreshTimer_streamStarted = true;
-      streamNotificationScheduleManager();
-    } else {
-      refreshNotificationScheduleManager();
-    }
+  if (notifcationScheduleManagerTick.isPaused) {
+    notifcationScheduleManagerTick.resume(true);
+  } else {
+    notifcationScheduleManagerTick.tick();
   }
   hidePreviousPage();
 }
 
 export function closeNotificationScheduleManager(): void {
   hideNotificationScheduleManager();
-  notifcationScheduleManagerRefreshTimer_streaming = false;
+  notifcationScheduleManagerTick.pause();
   showPreviousPage();
   revokePageHistory('NotificationScheduleManager');
 }
@@ -340,11 +303,7 @@ export async function cancelNotificationOnNotificationScheduleManager(thisItemEl
   if (cancellation) {
     thisItemElement.remove();
     promptMessage('check_circle', '已取消通知');
-    if (!notifcationScheduleManagerRefreshTimer_refreshing) {
-      const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-      const integration = await integrateNotifcationSchedules(notifcationScheduleManagerRefreshTimer_currentRequestID);
-      updateNotificationScheduleManagerField(integration, false, playing_animation);
-    }
+    // TODO: refresh
   } else {
     promptMessage('error', '取消失敗');
   }
