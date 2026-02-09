@@ -41,18 +41,6 @@ let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
-let locationRefreshTimer_retryInterval: number = 10 * 1000;
-let locationRefreshTimer_baseInterval: number = 15 * 1000;
-let locationRefreshTimer_minInterval: number = 5 * 1000;
-let locationRefreshTimer_dynamicInterval: number = 15 * 1000;
-let locationRefreshTimer_dynamic: boolean = true;
-let locationRefreshTimer_lastUpdate: number = 0;
-let locationRefreshTimer_nextUpdate: number = 0;
-let locationRefreshTimer_currentRequestID: string = '';
-let locationRefreshTimer_refreshing: boolean = false;
-let locationRefreshTimer_streaming: boolean = false;
-let locationRefreshTimer_streamStarted: boolean = false;
-
 const locationTick = new Tick(refreshLocation, 15 * 1000);
 
 let currentHashSet_hash: string = '';
