@@ -42,8 +42,6 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
-let routeRefreshTimer_dynamicInterval: number = 15 * 1000;
-
 const routeTick = new Tick(refreshRoute, 15 * 1000);
 
 let currentRouteIDSet_RouteID: number = 0;
@@ -1194,7 +1192,7 @@ function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: I
   setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
 
   if (routeTick.isPaused) {
-    routeTick.resume();
+    routeTick.resume(true);
   } else {
     routeTick.tick();
   }

@@ -4,22 +4,32 @@ export class Tick {
   lastTickCount: number;
   isRunning: boolean;
   isPaused: boolean;
+  isAutoPaused: boolean;
   timerId: number | null;
   callback: Function;
 
-  constructor(callback: Function, interval: number) {
+  constructor(callback: () => Promise<number>, interval: number): void {
     this.pivot = new Date().getTime();
     this.interval = interval;
     this.lastTickCount = -1;
-    this.isRunning = false; // "True" while the callback function is actually executing
-    this.isPaused = false; // "True" if the user requested a stop
-    this.timerId = null; // To track and clear the waiting timeout
+    this.isRunning = false;
+    this.isPaused = false;
+    this.isAutoPaused = false;
+    this.timerId = null;
     this.callback = callback;
+
+    // Bind the handler so 'this' refers to the class instance
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+
+    // Automatically attach listener if in a browser environment
+    if ('document' in self) {
+      document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    }
   }
 
   async tick() {
     // prevent running if paused or already running
-    if (this.isPaused || this.isRunning) return;
+    if (this.isPaused || this.isAutoPaused || this.isRunning) return;
 
     const t0 = new Date().getTime();
     const tickCount0 = Math.floor((t0 - this.pivot) / this.interval);
@@ -44,23 +54,22 @@ export class Tick {
 
     this.isRunning = false;
 
-    // If paused during execution, stop here (do not schedule next)
-    if (this.isPaused) return;
+    // Re-check stop conditions before scheduling next
+    if (this.isPaused || this.isAutoPaused) return;
 
     const t1 = new Date().getTime();
 
-    // Shift Pivot (Dynamic Interval Logic)
+    // Pivot Shift (Dynamic Interval)
     if (typeof newInterval === 'number' && newInterval > 0 && newInterval !== this.interval) {
       this.interval = newInterval;
       this.pivot = t1;
       this.lastTickCount = 0;
     }
 
-    // Schedule Next Tick
     this.scheduleNext();
   }
 
-  scheduleNext() {
+  scheduleNext(): void {
     // Clean up any existing timer just in case
     if (this.timerId) clearTimeout(this.timerId);
 
@@ -72,10 +81,21 @@ export class Tick {
     this.timerId = setTimeout(() => this.tick(), Math.max(0, delay));
   }
 
-  pause() {
+  handleVisibilityChange(): void {
+    if (document.hidden) {
+      if (!this.isPaused) {
+        this.isAutoPaused = true;
+        if (this.timerId) clearTimeout(this.timerId);
+      }
+    } else if (this.isAutoPaused) {
+      this.isAutoPaused = false;
+      if (!this.isRunning) this.scheduleNext();
+    }
+  }
+
+  pause(): void {
     if (this.isPaused) return;
     this.isPaused = true;
-
     // Stop waiting for the next tick immediately
     if (this.timerId) {
       clearTimeout(this.timerId);
@@ -84,14 +104,27 @@ export class Tick {
     // If the async callback is currently running (isRunning === true), it will finish naturally, but the "if (this.isPaused) return" check inside tick() will prevent it from scheduling the next one.
   }
 
-  resume() {
+  resume(runImmediately: boolean = false): void {
     if (!this.isPaused) return;
     this.isPaused = false;
 
-    if (!this.isRunning) {
-      this.pivot = new Date().getTime();
-      this.lastTickCount = -1;
-      this.tick();
+    // Only restart if the tab is actually visible.
+    // clear 'isPaused' but leave '_autoPaused' logic to handle it when tab opens.
+    if ('document' in self && document.hidden) {
+      this.isAutoPaused = true;
+    } else if (!this.isRunning) {
+      if (runImmediately) {
+        this.pivot = new Date().getTime();
+        this.lastTickCount = -1;
+      }
+      this.scheduleNext();
+    }
+  }
+
+  destroy(): void {
+    this.pause();
+    if ('document' in self) {
+      document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     }
   }
 }
