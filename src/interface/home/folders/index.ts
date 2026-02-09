@@ -4,6 +4,7 @@ import { Folder, integratedFolder, integratedFolderContent, integratedFolders, i
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { Tick } from '../../../tools/tick';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { querySize } from '../../index';
@@ -21,17 +22,7 @@ let previousIntegration = {} as integratedFolders;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-let foldersRefreshTimer_retryInterval: number = 10 * 1000;
-let foldersRefreshTimer_baseInterval: number = 15 * 1000;
-let foldersRefreshTimer_minInterval: number = 5 * 1000;
-let foldersRefreshTimer_dynamicInterval: number = 15 * 1000;
-let foldersRefreshTimer_dynamic: boolean = true;
-let foldersRefreshTimer_lastUpdate: number = 0;
-let foldersRefreshTimer_nextUpdate: number = 0;
-let foldersRefreshTimer_currentRequestID: string = '';
-let foldersRefreshTimer_refreshing: boolean = false;
-let foldersRefreshTimer_streaming: boolean = false;
-let foldersRefreshTimer_streamStarted: boolean = false;
+const foldersTick = new Tick(refreshFolders, 15 * 1000);
 
 function generateElementOfItem(): HTMLElement {
   // Main container
@@ -129,17 +120,15 @@ function generateElementOfFolder(): HTMLElement {
   return folderElement;
 }
 
-function animateUpdateTimer(): void {
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${foldersRefreshTimer_dynamicInterval}ms`);
+function animateUpdateTimer(interval: number): void {
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${interval}ms`);
   HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  if (foldersRefreshTimer_refreshing) {
-    const offsetRatio = CustomEvent.detail.progress - 1;
-    HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-offset-ratio', offsetRatio.toString());
-  }
+  const offsetRatio = CustomEvent.detail.progress - 1;
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-offset-ratio', offsetRatio.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
@@ -568,70 +557,44 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   previousSkeletonScreen = skeletonScreen;
 }
 
-async function refreshFolders() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  foldersRefreshTimer_dynamic = refresh_interval_setting.dynamic;
-  foldersRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
-  foldersRefreshTimer_refreshing = true;
-  foldersRefreshTimer_currentRequestID = generateIdentifier();
-  HomeUpdateTimerElement.setAttribute('refreshing', 'true');
-  HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
-  document.addEventListener(foldersRefreshTimer_currentRequestID, handleDataReceivingProgressUpdates);
-  const integration = await integrateFolders(foldersRefreshTimer_currentRequestID);
-  updateFoldersElement(integration, false, playing_animation);
-  let updateRate = 0;
-  if (foldersRefreshTimer_dynamic) {
-    updateRate = await getUpdateRate();
+async function refreshFolders(): Promise<number> {
+  try {
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const requestID = generateIdentifier();
+    HomeUpdateTimerElement.setAttribute('refreshing', 'true');
+    HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
+    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
+    const integration = await integrateFolders(requestID);
+    updateFoldersElement(integration, false, playing_animation);
+    let updateRate = 0;
+    if (refresh_interval_setting.dynamic) {
+      updateRate = await getUpdateRate();
+    }
+    const lastUpdate = new Date().getTime();
+    let nextUpdate = 0;
+    if (refresh_interval_setting.dynamic) {
+      nextUpdate = Math.max(lastUpdate + 5000, integration.dataUpdateTime + refresh_interval_setting.baseInterval / updateRate);
+    } else {
+      nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
+    }
+    const interval = Math.max(5000, nextUpdate - lastUpdate);
+    HomeUpdateTimerElement.setAttribute('refreshing', 'false');
+    animateUpdateTimer(interval);
+    return interval;
+  } catch (err) {
+    const interval = 10 * 1000;
+    promptMessage('error', `資料夾發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
-  foldersRefreshTimer_lastUpdate = new Date().getTime();
-  if (foldersRefreshTimer_dynamic) {
-    foldersRefreshTimer_nextUpdate = Math.max(foldersRefreshTimer_lastUpdate + foldersRefreshTimer_minInterval, integration.dataUpdateTime + foldersRefreshTimer_baseInterval / updateRate);
-  } else {
-    foldersRefreshTimer_nextUpdate = foldersRefreshTimer_lastUpdate + foldersRefreshTimer_baseInterval;
-  }
-  foldersRefreshTimer_dynamicInterval = Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - foldersRefreshTimer_lastUpdate);
-  foldersRefreshTimer_refreshing = false;
-  HomeUpdateTimerElement.setAttribute('refreshing', 'false');
-  animateUpdateTimer();
-}
-
-async function streamFolders() {
-  refreshFolders()
-    .then(function () {
-      if (foldersRefreshTimer_streaming) {
-        setTimeout(
-          function () {
-            streamFolders();
-          },
-          Math.max(foldersRefreshTimer_minInterval, foldersRefreshTimer_nextUpdate - new Date().getTime())
-        );
-      } else {
-        foldersRefreshTimer_streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (foldersRefreshTimer_streaming) {
-        promptMessage('error', `資料夾網路連線中斷，將在${foldersRefreshTimer_retryInterval / 1000}秒後重試。`);
-        setTimeout(function () {
-          streamFolders();
-        }, foldersRefreshTimer_retryInterval);
-      } else {
-        foldersRefreshTimer_streamStarted = false;
-      }
-    });
 }
 
 export function initializeFolders(): void {
   // setupFolderFieldSkeletonScreen();
-  if (!foldersRefreshTimer_streaming) {
-    foldersRefreshTimer_streaming = true;
-    if (!foldersRefreshTimer_streamStarted) {
-      foldersRefreshTimer_streamStarted = true;
-      streamFolders();
-    } else {
-      refreshFolders();
-    }
+  if (foldersTick.isPaused) {
+    foldersTick.resume(true);
+  } else {
+    foldersTick.tick();
   }
 }

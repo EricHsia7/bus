@@ -1175,13 +1175,16 @@ async function refreshRoute(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `路線網路連線中斷，將在${10}秒後重試。`);
-    return 10 * 1000;
+    const interval = 10 * 1000;
+    promptMessage('error', `路線發生錯誤，將在${interval / 1000}秒後重試。`);
+    animateUpdateTimer(interval);
+    return interval;
   }
 }
 
 function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
   currentRouteIDSet_RouteID = RouteID;
+
   currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
