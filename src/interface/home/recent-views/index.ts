@@ -1,8 +1,8 @@
-import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { getSettingOptionValue } from '../../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
 import { querySize } from '../../index';
@@ -18,18 +18,7 @@ let previousIntegration = {};
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-let recentViewsRefreshTimer_retryInterval: number = 10 * 1000;
-let recentViewsRefreshTimer_baseInterval: number = 15 * 1000;
-let recentViewsRefreshTimer_minInterval: number = 5 * 1000;
-let recentViewsRefreshTimer_dynamicInterval: number = 15 * 1000;
-let recentViewsRefreshTimer_dynamic: boolean = true;
-let recentViewsRefreshTimer_streaming: boolean = false;
-let recentViewsRefreshTimer_lastUpdate: number = 0;
-let recentViewsRefreshTimer_nextUpdate: number = 0;
-let recentViewsRefreshTimer_refreshing: boolean = false;
-let recentViewsRefreshTimer_currentRequestID: string = '';
-let recentViewsRefreshTimer_streamStarted: boolean = false;
-let recentViewsRefreshTimer_timer: ReturnType<typeof setTimeout>;
+const recentViewsTick = new Tick(refreshRecentViews, 15 * 1000);
 
 function generateElementOfRecentViewItem(): HTMLElement {
   // Main container
@@ -301,66 +290,23 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
   );
 }
 
-async function refreshRecentViews() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-  recentViewsRefreshTimer_dynamic = refresh_interval_setting.dynamic;
-  recentViewsRefreshTimer_baseInterval = refresh_interval_setting.baseInterval;
-  recentViewsRefreshTimer_refreshing = true;
-  recentViewsRefreshTimer_currentRequestID = generateIdentifier();
-  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'true');
-  const integration = await integrateRecentViews(recentViewsRefreshTimer_currentRequestID);
-  updateRecentViewsField(integration, false, playing_animation);
-  let updateRate = 0;
-  if (recentViewsRefreshTimer_dynamic) {
-    updateRate = await getUpdateRate();
+async function refreshRecentViews(): Promise<number> {
+  try {
+    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const requestID = generateIdentifier();
+    const integration = await integrateRecentViews(requestID);
+    updateRecentViewsField(integration, false, playing_animation);
+    return 15 * 1000;
+  } catch (err) {
+    return 10 * 1000;
   }
-  recentViewsRefreshTimer_lastUpdate = new Date().getTime();
-  if (recentViewsRefreshTimer_dynamic) {
-    recentViewsRefreshTimer_nextUpdate = Math.max(recentViewsRefreshTimer_lastUpdate + recentViewsRefreshTimer_minInterval, integration.dataUpdateTime + recentViewsRefreshTimer_baseInterval / updateRate);
-  } else {
-    recentViewsRefreshTimer_nextUpdate = recentViewsRefreshTimer_lastUpdate + recentViewsRefreshTimer_baseInterval;
-  }
-  recentViewsRefreshTimer_dynamicInterval = Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - recentViewsRefreshTimer_lastUpdate);
-  recentViewsRefreshTimer_refreshing = false;
-  // documentQuerySelector('.css_home_update_timer').setAttribute('refreshing', 'false');
-}
-
-async function streamRecentViews() {
-  refreshRecentViews()
-    .then(function () {
-      if (recentViewsRefreshTimer_streaming) {
-        recentViewsRefreshTimer_timer = setTimeout(
-          function () {
-            streamRecentViews();
-          },
-          Math.max(recentViewsRefreshTimer_minInterval, recentViewsRefreshTimer_nextUpdate - new Date().getTime())
-        );
-      } else {
-        recentViewsRefreshTimer_streamStarted = false;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (recentViewsRefreshTimer_streaming) {
-        recentViewsRefreshTimer_timer = setTimeout(function () {
-          streamRecentViews();
-        }, recentViewsRefreshTimer_retryInterval);
-      } else {
-        recentViewsRefreshTimer_streamStarted = false;
-      }
-    });
 }
 
 export function initializeRecentViews(): void {
   // setupRecentViewsFieldSkeletonScreen();
-  if (!recentViewsRefreshTimer_streaming) {
-    recentViewsRefreshTimer_streaming = true;
-    if (!recentViewsRefreshTimer_streamStarted) {
-      recentViewsRefreshTimer_streamStarted = true;
-      streamRecentViews();
-    } else {
-      refreshRecentViews();
-    }
+  if (recentViewsTick.isPaused) {
+    recentViewsTick.resume(true);
+  } else {
+    recentViewsTick.tick();
   }
 }
