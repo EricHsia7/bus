@@ -5,11 +5,13 @@ import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loade
 
 export type integratedRouteCalendarEventTime = [start: number, end: number]; // hours * 60 + minutes
 export type integratedRouteCalendarEventInterval = [min: number, max: number];
+export type integratedRouteCalendarEventCount = [min: number, max: number];
 
 export interface integratedRouteCalendarRepeatedEvent {
   type: 'repeated';
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
+  count: integratedRouteCalendarEventCount;
   day: 1 | 2 | 3 | 4 | 5 | 6 | 7;
 }
 
@@ -17,6 +19,7 @@ export interface integratedRouteCalendarScheduledEvent {
   type: 'scheduled';
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
+  count: integratedRouteCalendarEventCount;
   date: [year: number, month: number, date: number];
 }
 
@@ -40,25 +43,30 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       continue;
     }
 
+    const startTime = parseTimeCode(item.StartTime, 0) as TimeMoment;
+    const endTime = parseTimeCode(item.EndTime, 0) as TimeMoment;
+    const start = startTime.hours * 60 + startTime.minutes;
+    const end = endTime.hours * 60 + endTime.minutes;
+    const longHeadway = parseInt(item.LongHeadway, 10);
+    const lowHeadway = parseInt(item.LowHeadway, 10);
+
     if (item.DateType === '0') {
       const day = parseInt(item.DateValue, 10);
-      const startTime = parseTimeCode(item.StartTime, 0) as TimeMoment;
-      const endTime = parseTimeCode(item.EndTime, 0) as TimeMoment;
       const repeatedEvent: integratedRouteCalendarRepeatedEvent = {
         type: 'repeated',
-        time: [startTime.hours * 60 + startTime.minutes, endTime.hours * 60 + endTime.minutes],
-        interval: [parseInt(item.LowHeadway, 10), parseInt(item.LongHeadway, 10)],
+        time: [start, end],
+        interval: [longHeadway, lowHeadway],
+        count: [Math.floor((endTime - startTime) / lowHeadway), Math.floor((endTime - startTime) / longHeadway)],
         day: day
       };
       result.repeated[day - 1].push(repeatedEvent);
     } else if (item.DateType === '1') {
       const dateValue = item.DateValue;
-      const startTime = parseTimeCode(item.StartTime, 0) as TimeMoment;
-      const endTime = parseTimeCode(item.EndTime, 0) as TimeMoment;
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
         type: 'scheduled',
-        time: [startTime.hours * 60 + startTime.minutes, endTime.hours * 60 + endTime.minutes],
-        interval: [parseInt(item.LowHeadway, 10), parseInt(item.LongHeadway, 10)],
+        time: [start, end],
+        interval: [longHeadway, lowHeadway],
+        count: [Math.floor((endTime - startTime) / lowHeadway), Math.floor((endTime - startTime) / longHeadway)],
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
@@ -73,6 +81,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
 
   deleteDataUpdateTime(requestID);
   deleteDataReceivingProgress(requestID);
-  
+
   return result;
 }
