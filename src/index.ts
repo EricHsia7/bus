@@ -34,7 +34,6 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { integrateRouteCalendar } from './data/route/calendar';
 
 import './interface/theme.css';
 
@@ -334,9 +333,6 @@ window.bus = {
   },
   qrcode: {
     closeQRCode
-  },
-  test: {
-    integrateRouteCalendar
   }
 };
 

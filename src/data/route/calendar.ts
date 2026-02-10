@@ -56,7 +56,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         type: 'repeated',
         time: [start, end],
         interval: [longHeadway, lowHeadway],
-        count: [Math.floor((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
         day: day
       };
       result.repeated[day - 1].push(repeatedEvent);
@@ -66,7 +66,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         type: 'scheduled',
         time: [start, end],
         interval: [longHeadway, lowHeadway],
-        count: [Math.floor((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
