@@ -5,7 +5,20 @@ import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loade
 let SemiTimetableAPIVariableCache_available: boolean = false;
 let SemiTimetableAPIVariableCache_data: object = {};
 
-export async function getSemiTimeTable(requestID: string): Promise<object> {
+export interface SemiTimetableItem {
+  Id: number;
+  PathAttributeId: number;
+  StartTime: string; // hhmm
+  EndTime: string; // hhmm
+  LongHeadway: string; // minutes
+  LowHeadway: string; // minutes
+  DateType: '0' | '1';
+  DateValue: string; // DateType: 0 -> [1: Mon, 2: Tue, 3: Wed, 4: Thu, 5: Fri, 6: Sun, 7: Sat]; DateType: 1 -> yyyymmdd (UTC+8)
+}
+
+export type SemiTimeTable = Array<SemiTimetableItem>;
+
+export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable> {
   async function getData() {
     const apis = [
       [0, 12],
