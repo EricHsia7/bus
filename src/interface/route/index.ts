@@ -96,8 +96,11 @@ export function initializeRouteSliding(): void {
     function (event: Event) {
       const target = event.target as HTMLElement;
       const currentIndex = target.scrollLeft / routeSliding_fieldWidth;
-      routeSliding_initialIndex = Math.round(currentIndex);
-      routeSliding_sliding = false;
+      const difference = currentIndex - routeSliding_targetIndex;
+      if (difference > -0.01 && difference < 0.01) {
+        routeSliding_initialIndex = Math.round(currentIndex);
+        routeSliding_sliding = false;
+      }
     },
     { passive: true }
   );
