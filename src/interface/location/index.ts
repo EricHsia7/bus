@@ -95,7 +95,7 @@ export function initializeLocationSliding(): void {
       const target = event.target as HTMLElement;
       const currentIndex = target.scrollLeft / locationSliding_fieldWidth;
       const difference = currentIndex - locationSliding_targetIndex;
-      if (difference > -0.01 && difference < 0.01) {
+      if (-0.01 < difference && difference < 0.01) {
         locationSliding_initialIndex = Math.round(currentIndex);
         locationSliding_sliding = false;
       }
