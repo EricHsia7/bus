@@ -8,7 +8,7 @@ import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPr
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
 const timelinesElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_timelines');
-let timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
+const timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
 
 let currentDate = new Date();
 let currentIntegration = {} as integratedRouteCalendar;
@@ -115,7 +115,8 @@ function initializeRouteCalendarSliding(): void {
       const tomorrow = offsetDate(currentDate, 1, 0, 0);
       timelineElements[2].after(timelineElements[0]);
       timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
-      [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[1], timelineElements[2], generateRouteCalendarSVG(currentIntegration, tomorrow, routeCalendarSliding_fieldWidth)];
+      [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[1], timelineElements[2], timelineElements[0]];
+      [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [currentTimelineSVGs[1], currentTimelineSVGs[2], generateRouteCalendarSVG(currentIntegration, tomorrow, routeCalendarSliding_fieldWidth)];
       timelineElements[2].innerHTML = currentTimelineSVGs[2];
     }
   });
