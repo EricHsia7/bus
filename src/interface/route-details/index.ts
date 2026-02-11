@@ -212,6 +212,6 @@ export async function showRoutePermalinkQRCode(RouteID: SimplifiedRouteItem['id'
       id: RouteID,
       name: thisRoute.n
     });
-    openQRCode(thisRoute.n, link);
+    openQRCode(link);
   }
 }
