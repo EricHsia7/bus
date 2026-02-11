@@ -25,7 +25,7 @@ import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPers
 import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closeQRCode } from './interface/qrcode/index';
 import { openRegisterNotification } from './interface/register-notification/index';
-import { closeRouteDetails } from './interface/route/details/index';
+import { closeRouteDetails } from './interface/route-details/index';
 import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
 import { closeScheduleNotification } from './interface/schedule-notification/index';
@@ -66,13 +66,11 @@ import './interface/route/item.css';
 import './interface/route/thread.css';
 import './interface/route/index.css';
 
-import './interface/route/details/field.css';
-import './interface/route/details/head.css';
-import './interface/route/details/body.css';
-import './interface/route/details/groups.css';
-import './interface/route/details/actions.css';
-import './interface/route/details/properties.css';
-import './interface/route/details/calendar.css';
+import './interface/route-details/field.css';
+import './interface/route-details/head.css';
+import './interface/route-details/body.css';
+import './interface/route-details/actions.css';
+import './interface/route-details/index.css';
 
 import './interface/route-calendar/field.css';
 import './interface/route-calendar/head.css';
