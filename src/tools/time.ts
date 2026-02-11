@@ -61,7 +61,7 @@ export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss
     .replaceAll(/h{2,2}/g, String(date.getHours()).padStart(2, '0'))
     .replaceAll(/m{2,2}/g, String(date.getMinutes()).padStart(2, '0'))
     .replaceAll(/s{2,2}/g, String(date.getSeconds()).padStart(2, '0'))
-    .replaceAll(/WW{2,2}/g, `週${['日', '一', '二', '三', '四', '五', '六'][date.getDay()]}`);
+    .replaceAll(/W{2,2}/g, `週${['日', '一', '二', '三', '四', '五', '六'][date.getDay()]}`);
   return result;
 }
 
