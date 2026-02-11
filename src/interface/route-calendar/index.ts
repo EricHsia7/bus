@@ -3,10 +3,12 @@ import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/rout
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
 import { generateIdentifier } from '../../tools/index';
-import { offsetDate } from '../../tools/time';
+import { dateToString, offsetDate } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
+const headElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_head');
+const titleElement = elementQuerySelector(headElement, '.css_route_calendar_title');
 const timelinesElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_timelines');
 const timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
 
@@ -110,6 +112,7 @@ function initializeRouteCalendarSliding(): void {
       [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[2], timelineElements[0], timelineElements[1]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [generateRouteCalendarSVG(currentIntegration, yesterday, routeCalendarSliding_fieldWidth), currentTimelineSVGs[0], currentTimelineSVGs[1]];
       timelineElements[0].innerHTML = currentTimelineSVGs[0];
+      titleElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
     } else if (idx === 2) {
       currentDate = offsetDate(currentDate, 1, 0, 0);
       const tomorrow = offsetDate(currentDate, 1, 0, 0);
@@ -118,6 +121,7 @@ function initializeRouteCalendarSliding(): void {
       [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[1], timelineElements[2], timelineElements[0]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [currentTimelineSVGs[1], currentTimelineSVGs[2], generateRouteCalendarSVG(currentIntegration, tomorrow, routeCalendarSliding_fieldWidth)];
       timelineElements[2].innerHTML = currentTimelineSVGs[2];
+      titleElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
     }
   });
 
@@ -136,6 +140,7 @@ async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid
     currentTimelineSVGs[i] = generateRouteCalendarSVG(integration, date, routeCalendarSliding_fieldWidth);
     timelineElements[i].innerHTML = currentTimelineSVGs[i];
   }
+  titleElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
   initializeRouteCalendarSliding();
 }
 
