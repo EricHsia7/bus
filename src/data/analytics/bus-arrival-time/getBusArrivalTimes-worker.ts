@@ -105,7 +105,7 @@ function processWorkerTask(): void {
       const verticalGridline = `<path d="${verticalGridlinePathCommand}" fill="none" stroke-width="0.35" component="vertical-gridline"/>`;
 
       // Bottom line
-      const bottomLinePathCommand = `M0 ${chartHeight} L${chartWidth} ${chartHeight - 0.35 / 2}`;
+      const bottomLinePathCommand = `M0 ${chartHeight - 0.35 / 2} L${chartWidth} ${chartHeight - 0.35 / 2}`;
       const bottomLine = `<path d="${bottomLinePathCommand}" fill="none" stroke-width="0.35" component="bottom-line"/>`;
 
       // Bars
