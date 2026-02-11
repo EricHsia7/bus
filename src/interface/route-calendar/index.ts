@@ -24,7 +24,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const fontFamily = "'Noto Sans TC', sans-serif";
 
   const gridLabelWidth = 35;
-  const gridHeight = 70;
+  const gridHeight = 80;
   const gridLineLabelFontWeight = 400;
   const gridLineLabelFontSize = 10;
 
