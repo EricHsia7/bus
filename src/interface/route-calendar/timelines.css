@@ -45,7 +45,7 @@
   stroke: var(--b-cssvar-ededf2);
 }
 
-.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="gridline-label"] {
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg text[component="gridline-label"] {
   fill: var(--b-cssvar-ededf2);
 }
 
@@ -57,10 +57,10 @@
   stroke: var(--b-cssvar-main-color);
 }
 
-.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-title"] {
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg text[component="event-title"] {
   fill: var(--b-cssvar-main-color);
 }
 
-.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-description"] {
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg text[component="event-description"] {
   fill: var(--b-cssvar-333333-60-flattened);
 }
