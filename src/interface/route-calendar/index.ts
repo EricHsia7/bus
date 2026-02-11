@@ -3,7 +3,7 @@ import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/rout
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
 import { offsetDate } from '../../tools/time';
-import { querySize } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
 const timelinesElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_timelines');
@@ -134,6 +134,7 @@ async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid
     currentTimelineSVGs[i] = generateRouteCalendarSVG(integration, date, routeCalendarSliding_fieldWidth);
     timelineElements[i].innerHTML = currentTimelineSVGs[i];
   }
+  initializeRouteCalendarSliding();
 }
 
 export function showRouteCalendar(): void {
@@ -141,5 +142,18 @@ export function showRouteCalendar(): void {
 }
 
 export function hideRouteCalendar(): void {
-  routeCalendarField.setAttribute('displayed', 'true');
+  routeCalendarField.setAttribute('displayed', 'false');
+}
+
+export function openRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid']): void {
+  pushPageHistory('RouteCalendar');
+  showRouteCalendar();
+  initializeRouteCalendar(PathAttributeId);
+  hidePreviousPage();
+}
+
+export function closeRouteCalendar(): void {
+  hideRouteCalendar();
+  showPreviousPage();
+  revokePageHistory('RouteCalendar');
 }
