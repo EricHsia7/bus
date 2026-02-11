@@ -4,8 +4,9 @@
   left: 0px;
   width: 100%;
   height: 55px;
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
-  background: var(--b-cssvar-large-head-background);
+  background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
