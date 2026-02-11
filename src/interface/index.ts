@@ -16,7 +16,7 @@ import { hidePersonalScheduleManager, showPersonalScheduleManager } from './pers
 import { hideQRCode, showQRCode } from './qrcode/index';
 import { hideRegisterNotification, showRegisterNotification } from './register-notification/index';
 import { hideRouteCalendar, showRouteCalendar } from './route-calendar/index';
-import { hideRouteDetails, showRouteDetails } from './route/details/index';
+import { hideRouteDetails, showRouteDetails } from './route-details/index';
 import { hideRoute, showRoute } from './route/index';
 import { hideSaveToFolder, showSaveToFolder } from './save-to-folder/index';
 import { hideScheduleNotification, showScheduleNotification } from './schedule-notification/index';
