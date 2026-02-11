@@ -1,6 +1,6 @@
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
-import { IntegratedRouteDetailsAction, integrateRouteDetails } from '../../data/route/details';
+import { IntegratedRouteDetails, IntegratedRouteDetailsAction, integrateRouteDetails } from '../../data/route/details';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
