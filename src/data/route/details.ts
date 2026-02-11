@@ -3,6 +3,7 @@ import { showLocationPermalinkQRCode } from '../../interface/location/details/in
 import { openRouteCalendar } from '../../interface/route-calendar/index';
 import { shareRoutePermalink } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
+import { hasOwnProperty } from '../../tools/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
