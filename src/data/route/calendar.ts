@@ -28,6 +28,7 @@ export type integratedRouteCalendarDay = Array<integratedRouteCalendarRepeatedEv
 export interface integratedRouteCalendar {
   repeated: [mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sun: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
   scheduled: Array<integratedRouteCalendarScheduledEvent>;
+  timeZoneOffset: -480;
 }
 
 export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid'], requestID: string): Promise<integratedRouteCalendar> {
@@ -35,7 +36,8 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
 
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
-    scheduled: []
+    scheduled: [],
+    timeZoneOffset: -480
   };
 
   for (const item of SemiTimeTable) {
