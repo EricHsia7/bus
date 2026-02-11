@@ -80,15 +80,16 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     if (PathAttributeId.indexOf(item.PathAttributeId) < 0) {
       continue;
     }
+    const assumedDuration = 30;
     const departureTime = parseTimeCode(item.DepartureTime, 0) as TimeMoment;
     const start = departureTime.hours * 60 + departureTime.minutes;
-    const end = start + 15;
+    const end = start + assumedDuration;
     if (item.DateType === '0') {
       const day = parseInt(item.DateValue, 10) - 1;
       const repeatedEvent: integratedRouteCalendarRepeatedEvent = {
         type: 'repeated',
         time: [start, end],
-        interval: [15, 15],
+        interval: [assumedDuration, assumedDuration],
         count: [1, 1],
         day: day
       };
@@ -98,7 +99,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
         type: 'scheduled',
         time: [start, end],
-        interval: [15, 15],
+        interval: [assumedDuration, assumedDuration],
         count: [1, 1],
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
