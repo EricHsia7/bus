@@ -34,7 +34,7 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { openRouteCalendar } from './interface/route-calendar/index';
+import { closeRouteCalendar } from './interface/route-calendar/index';
 
 import './interface/theme.css';
 
@@ -290,7 +290,7 @@ window.bus = {
   route: {
     closeRoute,
     closeRouteDetails,
-    openRouteCalendar
+    closeRouteCalendar
   },
   location: {
     closeLocation,
