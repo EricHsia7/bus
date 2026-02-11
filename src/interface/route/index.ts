@@ -14,9 +14,9 @@ import { getIconElement } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
+import { openRouteDetails } from '../route-details/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
-import { openRouteDetails } from './details/index';
 
 const RouteField = documentQuerySelector('.css_route_field');
 const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
