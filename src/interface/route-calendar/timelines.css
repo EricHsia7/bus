@@ -54,7 +54,7 @@
 }
 
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-decoration"] {
-  fill: var(--b-cssvar-main-color);
+  stroke: var(--b-cssvar-main-color);
 }
 
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-title"] {
