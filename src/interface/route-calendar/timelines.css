@@ -46,11 +46,11 @@
 }
 
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="gridline"] {
-  stroke: var(--b-cssvar-ededf2);
+  stroke: var(--b-cssvar-aeaeb2);
 }
 
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg text[component="gridline-label"] {
-  fill: var(--b-cssvar-ededf2);
+  fill: var(--b-cssvar-aeaeb2);
 }
 
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-box"] {
