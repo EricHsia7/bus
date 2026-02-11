@@ -38,7 +38,7 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_route_calendar_field .css_route_calendar_head .css_route_calendar_title {
+.css_route_calendar_field .css_route_calendar_head .css_route_calendar_date {
   position: absolute;
   top: 0px;
   left: 55px;
