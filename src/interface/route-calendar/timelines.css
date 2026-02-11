@@ -40,3 +40,27 @@
   left: 0px;
   width: 100%;
 }
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="gridline"] {
+  stroke: var(--b-cssvar-ededf2);
+}
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="gridline-label"] {
+  fill: var(--b-cssvar-ededf2);
+}
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-box"] {
+  fill: var(--b-cssvar-main-color-11);
+}
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-decoration"] {
+  fill: var(--b-cssvar-main-color);
+}
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-title"] {
+  fill: var(--b-cssvar-main-color);
+}
+
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg path[component="event-description"] {
+  fill: var(--b-cssvar-333333-60-flattened);
+}
