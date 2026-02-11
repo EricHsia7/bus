@@ -34,9 +34,13 @@
   contain: layout;
 }
 
+.css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline::-webkit-scrollbar {
+  display: none;
+}
+
 .css_route_calendar_field .css_route_calendar_timelines .css_route_calendar_timeline svg {
   position: relative;
-  top: 0px;
+  top: 95px;
   left: 0px;
   width: 100%;
 }
