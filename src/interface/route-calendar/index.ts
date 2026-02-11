@@ -24,7 +24,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const fontFamily = "'Noto Sans TC', sans-serif";
 
   const gridLabelWidth = 35;
-  const gridHeight = 80;
+  const gridHeight = 90;
   const gridLineLabelFontWeight = 400;
   const gridLineLabelFontSize = 10;
 
@@ -46,7 +46,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
     gridLineLabels.push(`<text x="${gridLabelWidth - textWidth}" y="${y + 3}" font-weight="${gridLineLabelFontWeight}" font-size="${gridLineLabelFontSize}" font-family="${fontFamily}" component="gridline-label">${text}</text>`);
   }
 
-  const gridLine = `<path d="${gridLinePathCommands.join(' ')}" fill="none" stroke-width="0.35" component="gridline"/>`;
+  const gridLine = `<path d="${gridLinePathCommands.join(' ')}" fill="none" stroke-width="0.45" component="gridline"/>`;
   const height = gridHeight * 24 + verticalPadding * 2;
 
   const day = date.getDay();
