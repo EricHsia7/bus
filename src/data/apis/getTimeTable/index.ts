@@ -5,7 +5,18 @@ import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loade
 let TimetableAPIVariableCache_available: boolean = false;
 let TimetableAPIVariableCache_data: object = {};
 
-export async function getTimeTable(requestID: string): Promise<object> {
+export interface TimetableItem {
+  Id: number;
+  PathAttributeId: number;
+  DateType: '0' | '1';
+  DateValue: string; // DateType: 0 -> [1: Sun, 2: Mon, 3: Tue, 4: Wed, 5: Thu, 6: Fri, 7: Sat]; DateType: 1 -> yyyymmdd (UTC+8)
+  DepartureTime: string; // hhmm
+  IsLastBus: string; // 0: false, 1: true
+}
+
+export type Timetable = Array<TimetableItem>;
+
+export async function getTimeTable(requestID: string): Promise<Timetable> {
   async function getData() {
     const apis = [
       [0, 14],

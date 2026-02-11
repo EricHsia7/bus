@@ -50,8 +50,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const height = gridHeight * 24 + verticalPadding * 2;
 
   const day = date.getDay();
-  const index = day < 1 ? 6 : day - 1;
-  const events = integration.repeated[index];
+  const events = integration.repeated[day];
   const scheduledEvents = integration.scheduled;
   const date2 = offsetDate(date, 0, 0, integration.timeZoneOffset - date.getTimezoneOffset());
   const eventDate = [date2.getFullYear(), date2.getMonth() + 1, date2.getDate()];
