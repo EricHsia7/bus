@@ -15,7 +15,8 @@ import { hidePersonalScheduleEditor, showPersonalScheduleEditor } from './person
 import { hidePersonalScheduleManager, showPersonalScheduleManager } from './personal-schedule-manager/index';
 import { hideQRCode, showQRCode } from './qrcode/index';
 import { hideRegisterNotification, showRegisterNotification } from './register-notification/index';
-import { hideRouteDetails, showRouteDetails } from './route/details/index';
+import { hideRouteCalendar, showRouteCalendar } from './route-calendar/index';
+import { hideRouteDetails, showRouteDetails } from './route-details/index';
 import { hideRoute, showRoute } from './route/index';
 import { hideSaveToFolder, showSaveToFolder } from './save-to-folder/index';
 import { hideScheduleNotification, showScheduleNotification } from './schedule-notification/index';
@@ -30,7 +31,7 @@ const ErrorMessageElement = documentQuerySelector('.css_error_message');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'RouteCalendar' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -82,6 +83,9 @@ export function hidePreviousPage(): void {
         break;
       case 'RouteDetails':
         hideRouteDetails();
+        break;
+      case 'RouteCalendar':
+        hideRouteCalendar();
         break;
       case 'SaveToFolder':
         hideSaveToFolder();
@@ -162,6 +166,9 @@ export function showPreviousPage(): void {
         break;
       case 'RouteDetails':
         showRouteDetails();
+        break;
+      case 'RouteCalendar':
+        showRouteCalendar();
         break;
       case 'SaveToFolder':
         showSaveToFolder();

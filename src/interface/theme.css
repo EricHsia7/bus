@@ -8,6 +8,7 @@
   --b-cssvar-main-color-30-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(101, 143, 198) 30%);
   --b-cssvar-main-color-22-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(101, 143, 198) 22%);
   --b-cssvar-main-color-16-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(101, 143, 198) 16%);
+  --b-cssvar-main-color-11: rgba(101, 143, 198, 0.11);
   --b-cssvar-main-color-11-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(101, 143, 198) 11%);
   --b-cssvar-main-color-09-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(101, 143, 198) 9%);
 
