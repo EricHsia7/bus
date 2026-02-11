@@ -74,6 +74,10 @@ import './interface/route/details/actions.css';
 import './interface/route/details/properties.css';
 import './interface/route/details/calendar.css';
 
+import './interface/route-calendar/field.css';
+import './interface/route-calendar/head.css';
+import './interface/route-calendar/timelines.css';
+
 import './interface/location/field.css';
 import './interface/location/head.css';
 import './interface/location/groups.css';
