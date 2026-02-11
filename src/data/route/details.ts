@@ -1,7 +1,6 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { showLocationPermalinkQRCode } from '../../interface/location/details/index';
 import { openRouteCalendar } from '../../interface/route-calendar/index';
-import { shareRoutePermalink } from '../../interface/route-details/index';
+import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -66,7 +65,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
     };
   }
 
-  const actions: IntegratedLocationDetailsActionArray = [
+  const actions: IntegratedRouteDetailsActionArray = [
     {
       icon: 'folder',
       name: '儲存',
@@ -96,14 +95,14 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       name: '二維條碼',
       key: 'permalink-qr-code',
       action: function () {
-        showLocationPermalinkQRCode(hash);
+        showRoutePermalinkQRCode(RouteID);
       }
     }
   ];
-  const result: IntegratedLocationDetails = {
+  const result: IntegratedRouteDetails = {
     actions: actions,
     actionsQuantity: actions.length,
-    hash: hash
+    RouteID: RouteID
   };
   return result;
 }
