@@ -8,7 +8,7 @@ import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPr
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
 const timelinesElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_timelines');
-const timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
+let timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
 
 let currentDate = new Date();
 let currentIntegration = {} as integratedRouteCalendar;
