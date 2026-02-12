@@ -63,7 +63,9 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
   const thisPersonalSchedule = await getPersonalSchedule(personalSchedule.id);
   if (thisPersonalSchedule) {
     await lfSetItem(7, personalSchedule.id, JSON.stringify(personalSchedule));
+    return true;
   }
+  return false;
 }
 
 export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
