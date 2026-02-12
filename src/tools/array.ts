@@ -48,7 +48,7 @@ export function areItemsDifferent(arr: Array): boolean {
  */
 
 export function getIntersection(arrayA: Array, arrayB: Array): Array {
-  let result = [];
+  const result = [];
   if (arrayA.length <= arrayB.length) {
     for (const item of arrayA) {
       if (arrayB.indexOf(item) > -1) {

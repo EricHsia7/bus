@@ -1,7 +1,7 @@
 import { getTextWidth } from './graphic';
 
 export function getUnicodes(string: string, unique: boolean = true): Array<number> {
-  let result = [];
+  const result = [];
   if (typeof string === 'string') {
     const stringLength = string.length;
     for (let i = 0; i < stringLength; i++) {
