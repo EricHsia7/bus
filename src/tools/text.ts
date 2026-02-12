@@ -15,12 +15,7 @@ export function getUnicodes(string: string, unique: boolean = true): Array<numbe
 }
 
 export function containPhoneticSymbols(string: string): boolean {
-  const regex = /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm;
-  if (regex.test(string)) {
-    return true;
-  } else {
-    return false;
-  }
+  return /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm.test(string);
 }
 
 export function truncateText(text: string, weight: number, size: string, fontFamily: string, maxWidth: number): string {
