@@ -244,7 +244,7 @@
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer.css_location_update_timer_slide_rtl {
-  animation-name: slideRTL;
+  animation-name: slide-rtl;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;

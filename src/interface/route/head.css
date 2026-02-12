@@ -254,7 +254,7 @@
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer.css_route_update_timer_slide_rtl {
-  animation-name: slideRTL;
+  animation-name: slide-rtl;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;

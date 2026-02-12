@@ -1,4 +1,4 @@
-@keyframes css_show_prompt {
+@keyframes show-prompt {
   0% {
     opacity: 0;
     transform: translateX(-50%) scale(0.98);
@@ -35,7 +35,7 @@
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   overflow: clip;
-  animation-name: css_show_prompt;
+  animation-name: show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
@@ -53,7 +53,7 @@
   align-items: center;
 }
 
-@keyframes css_fill_prompt_icon {
+@keyframes fill-prompt-icon {
   0% {
     --b-cssvar-font-variation-settings-fill: 0;
   }
@@ -75,9 +75,9 @@
 
 .css_prompt[animation="true"] .css_prompt_icon span.css_material_symbols_rounded {
   --b-cssvar-font-variation-settings-fill: 0;
-  animation-name: css_fill_prompt_icon;
+  animation-name: fill-prompt-icon;
   animation-duration: 2800ms;
-  /* avoid css_show_prompt from synchronizing with this shorter timeline */
+  /* avoid show-prompt from synchronizing with this shorter timeline */
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }

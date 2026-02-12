@@ -151,7 +151,7 @@
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer.css_home_update_timer_slide_rtl {
-  animation-name: slideRTL;
+  animation-name: slide-rtl;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;

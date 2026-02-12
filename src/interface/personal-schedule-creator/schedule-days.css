@@ -7,8 +7,7 @@
   color: var(--b-cssvar-333333);
   font-size: 20px;
   font-weight: 400;
-  background: rgba(0, 0, 0, 0);
-  border-radius: var(--b-cssvar-border-radius-none);
+  background-color: rgba(0, 0, 0, 0);
   margin-top: 10px;
   border-radius: var(--b-cssvar-border-radius-normal);
   transition: color var(--b-cssvar-transition-duration), background-color var(--b-cssvar-transition-duration);
