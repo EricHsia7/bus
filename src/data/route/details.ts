@@ -54,10 +54,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
   const thisRouteKey = `r_${RouteID}`;
-  let thisRoute = {} as SimplifiedRouteItem;
-  if (hasOwnProperty(Route, thisRouteKey)) {
-    thisRoute = Route[thisRouteKey];
-  } else {
+  if (!hasOwnProperty(Route, thisRouteKey)) {
     return {
       actions: [],
       actionsQuantity: 0,
