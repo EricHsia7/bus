@@ -1,10 +1,14 @@
+html {
+  background-color: var(--b-cssvar-ffffff-normal);
+}
+
 body {
   font-family: "Noto Sans TC", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
