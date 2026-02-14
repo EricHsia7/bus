@@ -127,7 +127,7 @@ function handleDataReceivingProgressUpdates(event: Event): void {
   }
 }
 
-function generateElementOfThreadBox(): HTMLElement {
+function generateElementOfThreadBox(index: number): HTMLElement {
   // Main thread box element
   const threadBoxElement = documentCreateDivElement();
   threadBoxElement.classList.add('css_route_group_thread_box');
@@ -135,6 +135,7 @@ function generateElementOfThreadBox(): HTMLElement {
   threadBoxElement.setAttribute('stretching', 'false');
   threadBoxElement.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
   threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
+  threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', index.toString());
 
   // Thread container
   const threadElement = documentCreateDivElement();
@@ -1093,7 +1094,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newItemsFragment = new DocumentFragment();
         const newThreadBoxesFragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
-          const newThreadBoxElement = generateElementOfThreadBox();
+          const newThreadBoxElement = generateElementOfThreadBox(itemQuantity[groupKey] + o);
           const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
           itemElements.push(newItemElement);
@@ -1274,7 +1275,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       const thisItemElement = elementsBelowItemElement[i];
       const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
       // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (elementsBelowLength - i - 1).toString());
-      thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (-1 * i - 1).toString());
+      // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (-1 * i - 1).toString());
       thisThreadBoxElement.setAttribute('push-direction', pushDirection);
       thisThreadBoxElement.setAttribute('push-state', '1');
       thisItemElement.setAttribute('push-direction', pushDirection);
