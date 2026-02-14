@@ -1094,7 +1094,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newItemsFragment = new DocumentFragment();
         const newThreadBoxesFragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
-          const newThreadBoxElement = generateElementOfThreadBox(itemQuantity[groupKey] + o);
+          const newThreadBoxElement = generateElementOfThreadBox(-1 * currentItemElementsLength + o);
           const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
           itemElements.push(newItemElement);
