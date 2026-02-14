@@ -47,6 +47,11 @@
   /* clip-path: inset(0 0 0 0); */
 }
 
+/* push-direction: 0 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="0"][push-state="0"] {
+  transform: translateY(0px);
+}
+
 /* push-direction: 1 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="1"][push-state="0"] {
   transform: translateY(0px);
