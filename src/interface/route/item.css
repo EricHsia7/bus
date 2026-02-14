@@ -41,7 +41,7 @@
 /* stretching: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[stretching="true"] {
   position: absolute;
-/* left: var(--b-cssvar-css-route-group-item-x); p*/
+  /* left: var(--b-cssvar-css-route-group-item-x); */
   left: 0px;
   top: var(--b-cssvar-css-route-group-item-y);
   /* clip-path: inset(0 0 0 0); */
@@ -49,6 +49,16 @@
 
 /* push-direction: 0 && push-state: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="0"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 1 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="0"][push-state="1"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 2 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[push-direction="0"][push-state="2"] {
   transform: translateY(0px);
 }
 
