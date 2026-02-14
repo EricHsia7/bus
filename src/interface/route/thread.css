@@ -35,6 +35,7 @@
   background: var(--b-cssvar-ffffff-normal);
   overflow: visible;
   transition: none;
+  z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child {
@@ -73,7 +74,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="1"][push-state="1"] {
   transform: translateY(50px);
   /* compensate the height of the already collapsed element separated from the document flow */
-  z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
 /* push-direction: 1 && push-state: 2 */
