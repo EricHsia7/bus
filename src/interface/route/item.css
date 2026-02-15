@@ -943,7 +943,7 @@
   grid-template-columns: 1fr 1fr;
   height: 36px;
   padding: 0px;
-  grid-column-gap: 5px;
+  column-gap: 5px;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button,
