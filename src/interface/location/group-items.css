@@ -44,7 +44,6 @@
   /* left: var(--b-cssvar-css-location-group-item-x); */
   left: 0px;
   top: var(--b-cssvar-css-location-group-item-y);
-  /* clip-path: inset(0 0 0 0); */
 }
 
 /* push-direction: 1 && push-state: 0 */
@@ -82,13 +81,6 @@
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
-
-/* animation: true && skeleton screen: false && stretching: true && push-direction: 0 && push-state: 0 */
-/*
-.css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="false"][stretching="true"][push-direction="0"][push-state="0"] {
-  transition: clip-path var(--b-cssvar-transition-duration);
-}
-*/
 
 /* stretched: false && stretching: false */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretched="false"][stretching="false"] {
