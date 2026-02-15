@@ -115,12 +115,6 @@
   /* head: 50px + body: 171px */
 }
 
-/* animation: true && skeleton screen: false && stretching: true && push-direction: 0 && push-state: 0 */
-/*
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[animation="true"][skeleton-screen="false"][stretching="true"][push-direction="0"][push-state="0"] {
-  transition: clip-path var(--b-cssvar-transition-duration);
-}
-*/
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);

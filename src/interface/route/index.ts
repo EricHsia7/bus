@@ -1279,8 +1279,6 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
     for (let i = 0; i < elementsBelowLength; i++) {
       const thisItemElement = elementsBelowItemElement[i];
       const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
-      // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (elementsBelowLength - i - 1).toString());
-      // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (-1 * i - 1).toString());
       thisThreadBoxElement.setAttribute('push-direction', pushDirection);
       thisThreadBoxElement.setAttribute('push-state', '1');
       thisItemElement.setAttribute('push-direction', pushDirection);
