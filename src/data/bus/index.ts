@@ -1,10 +1,10 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools/index';
-import { getBusData } from '../apis/getBusData/index';
-import { getBusEvent } from '../apis/getBusEvent/index';
-import { CarInfoItem, getCarInfo } from '../apis/getCarInfo/index';
+import { BusData, getBusData } from '../apis/getBusData/index';
+import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
+import { CarInfoItem, getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
-import { getStop } from '../apis/getStop/index';
+import { getStop, SimplifiedStop, Stop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { searchRouteByPathAttributeId } from '../search/index';
@@ -21,11 +21,8 @@ export interface integratedBus {
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
   const carKey = `c_${id}`;
-  const CarInfo = await getCarInfo(requestID, true);
-  const BusData = await getBusData(requestID);
-  const BusEvent = await getBusEvent(requestID);
-  const Stop = await getStop(requestID);
-  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
+  const [CarInfo, BusData, BusEvent] = (await Promise.all([getCarInfo(requestID, true), getBusData(requestID), getBusEvent(requestID)])) as [SimplifiedCarInfo, BusData, BusEvent];
+  const [Stop, Location] = (await Promise.all([getStop(requestID), getLocation(requestID, 0)])) as [SimplifiedStop, SimplifiedLocation];
 
   let result: integratedBus = {
     properties: [],
