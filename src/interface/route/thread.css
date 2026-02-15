@@ -33,9 +33,9 @@
   height: 50px;
   width: 45px;
   overflow: visible;
-  /* will-change: transform; */
-  transform: translateY(0px);
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
+  will-change: transform;
+  transform: translateY(0px);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child {

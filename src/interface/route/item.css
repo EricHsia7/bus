@@ -27,11 +27,11 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  /* will-change: transform; */
   display: block;
   background: var(--b-cssvar-ffffff-normal);
   overflow: clip;
   contain: layout;
+  will-change: transform;
   transform: translateY(0px);
 }
 
