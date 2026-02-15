@@ -1091,7 +1091,7 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
       thisItemElement.setAttribute('push-state', '1');
     }
 
-    thisItemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
@@ -1106,7 +1106,7 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
       { once: true }
     );
 
-    thisItemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionstart',
       function () {
         // Transition the elements below

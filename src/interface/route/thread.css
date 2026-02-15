@@ -32,9 +32,8 @@
   left: 0px;
   height: 50px;
   width: 45px;
-  background: var(--b-cssvar-ffffff-normal);
   overflow: visible;
-  transition: none;
+  will-change: transform;
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
@@ -48,6 +47,12 @@
   /* left: var(--b-cssvar-css-route-group-thread-box-x); */
   left: 0px;
   top: var(--b-cssvar-css-route-group-thread-box-y);
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] {
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* push-direction: 0 && push-state: 0 */
@@ -81,7 +86,6 @@
   transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
-  z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
 /* push-direction: 2 && push-state: 0 */
@@ -93,7 +97,6 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[push-direction="2"][push-state="1"] {
   transform: translateY(calc(50px + 171px));
   /* compensate the height of the already expanded element separated from the document flow */
-  z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
 /* push-direction: 2 && push-state: 2 */
@@ -101,29 +104,39 @@
   transform: translateY(50px);
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
-  z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
-/* stretched: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] {
-  height: calc(50px + 171px);
-  /* head: 50px + body: 171px */
-}
-
-/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] {
-  transition: height var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
+/* thread box > background */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_box_background {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 45px;
+  height: 50px;
+  background: var(--b-cssvar-ffffff-normal);
+  transform-origin: top left;
+  z-index: -1;
 }
 
 /* segment buffer: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_box_background {
   background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] {
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_box_background {
   background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
+}
+
+/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_thread_box_background {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread_box_background {
+  transform: scaleY(calc((50 + 171) / 50));
 }
 
 /* thread box > thread */
@@ -138,11 +151,12 @@
   top: calc((50px - 10px) / 2 + 10px);
   left: calc((45px - 2px) / 2);
   width: 2px;
-  height: calc(100% - 10px);
+  height: calc(50px - 10px);
   background: var(--b-cssvar-ededf2);
   z-index: 2;
   overflow: clip;
   contain: layout;
+  transform-origin: top left;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box:last-child .css_route_group_thread {
@@ -159,21 +173,27 @@
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
+/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_thread {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread {
+  transform: scaleY(calc((50 + 171 - 10) / (50 - 10)));
+}
+
 /* thread box > thread > progress */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 2px;
-  height: 50px;
+  height: calc(50px - 10px);
   background: var(--b-cssvar-main-color);
   transform-origin: top left;
-  transform: scaleY(1) translateY(var(--b-cssvar-thread-progress-translate-y));
-}
-
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress {
-  transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
+  transform: translateY(var(--b-cssvar-thread-progress-translate-y));
 }
 
 /* displayed: false */
@@ -186,11 +206,6 @@
   visibility: visible;
 }
 
-/* stretched: true */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress {
-  transform: scaleY(calc((50 + 171) / 50)) translateY(var(--b-cssvar-thread-progress-translate-y));
-}
-
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress {
   background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
@@ -200,6 +215,18 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress {
   background: var(--b-cssvar-main-color-inflected-to-user-position);
 }
+
+/* animation: true && skeleton screen: false */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"] .css_route_group_thread .css_route_group_thread_progress {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress {
+  transform: translateY(var(--b-cssvar-thread-progress-translate-y));
+}
+
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::before {
   position: absolute;
@@ -221,7 +248,7 @@
 
 /* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress::before {
-  transform: scaleY(calc(50 / (50 + 171))) translateY(-1px);
+  transform: scaleY(calc((50 - 10) / (50 + 171 - 10))) translateY(-1px);
 }
 
 /* segment buffer: true */
@@ -254,7 +281,7 @@
 
 /* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread .css_route_group_thread_progress::after {
-  transform: scaleY(calc(50 / (50 + 171))) translateY(1px);
+  transform: scaleY(calc((50 - 10) / (50 + 171 - 10))) translateY(1px);
 }
 
 /* segment buffer: true */
@@ -406,7 +433,7 @@
 /* code: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="0"] {
-  transition: none;
+  background: var(--b-cssvar-ededf2);
 }
 
 /* code: 0 && segment buffer: true */

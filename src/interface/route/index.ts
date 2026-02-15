@@ -137,6 +137,10 @@ function generateElementOfThreadBox(index: number): HTMLElement {
   threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', index.toString());
 
+  // Thread box background
+  const threadBoxBackgroundElement = documentCreateDivElement();
+  threadBoxBackgroundElement.classList.add('css_route_group_thread_box_background');
+
   // Thread container
   const threadElement = documentCreateDivElement();
   threadElement.classList.add('css_route_group_thread');
@@ -166,6 +170,7 @@ function generateElementOfThreadBox(index: number): HTMLElement {
   threadStatusElement.appendChild(currentSlideElement);
 
   // Assemble
+  threadBoxElement.appendChild(threadBoxBackgroundElement);
   threadBoxElement.appendChild(threadElement);
   threadBoxElement.appendChild(threadStatusElement);
 
@@ -1274,15 +1279,13 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
     for (let i = 0; i < elementsBelowLength; i++) {
       const thisItemElement = elementsBelowItemElement[i];
       const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
-      // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (elementsBelowLength - i - 1).toString());
-      // thisThreadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', (-1 * i - 1).toString());
       thisThreadBoxElement.setAttribute('push-direction', pushDirection);
       thisThreadBoxElement.setAttribute('push-state', '1');
       thisItemElement.setAttribute('push-direction', pushDirection);
       thisItemElement.setAttribute('push-state', '1');
     }
 
-    itemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
@@ -1301,7 +1304,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       { once: true }
     );
 
-    itemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionstart',
       function () {
         // Transition the elements below
