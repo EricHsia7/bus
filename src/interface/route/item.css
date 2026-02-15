@@ -435,7 +435,6 @@
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
-  transition: none;
 }
 
 /* code: 0 && segment buffer: true */

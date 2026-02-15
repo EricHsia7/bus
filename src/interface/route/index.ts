@@ -1287,7 +1287,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       thisItemElement.setAttribute('push-state', '1');
     }
 
-    itemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionend',
       function () {
         // Reset the push direction and push state
@@ -1306,7 +1306,7 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       { once: true }
     );
 
-    itemElement.addEventListener(
+    itemBodyElement.addEventListener(
       'transitionstart',
       function () {
         // Transition the elements below
