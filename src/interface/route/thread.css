@@ -115,6 +115,7 @@
   height: 50px;
   background: var(--b-cssvar-ffffff-normal);
   transform-origin: top left;
+  z-index: -1;
 }
 
 /* segment buffer: true */
@@ -172,6 +173,13 @@
   background: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
+/* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_route_group_thread {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[stretched="true"] .css_route_group_thread {
   transform: scaleY(calc((50 + 171 - 10) / (50 - 10)));
 }
@@ -293,7 +301,6 @@
   height: 10px;
   background: var(--b-cssvar-ededf2);
   border-radius: 5px;
-  overflow: clip;
   contain: layout;
 }
 
