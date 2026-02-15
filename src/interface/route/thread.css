@@ -301,6 +301,7 @@
   height: 10px;
   background: var(--b-cssvar-ededf2);
   border-radius: 5px;
+  overflow: clip;
   contain: layout;
 }
 
