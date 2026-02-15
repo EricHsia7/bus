@@ -137,6 +137,10 @@ function generateElementOfThreadBox(index: number): HTMLElement {
   threadBoxElement.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-z-index', index.toString());
 
+  // Thread box background
+  const threadBoxBackgroundElement = documentCreateDivElement();
+  threadBoxBackgroundElement.classList.add('css_route_group_thread_box_background');
+
   // Thread container
   const threadElement = documentCreateDivElement();
   threadElement.classList.add('css_route_group_thread');
@@ -166,6 +170,7 @@ function generateElementOfThreadBox(index: number): HTMLElement {
   threadStatusElement.appendChild(currentSlideElement);
 
   // Assemble
+  threadBoxElement.appendChild(threadBoxBackgroundElement);
   threadBoxElement.appendChild(threadElement);
   threadBoxElement.appendChild(threadStatusElement);
 

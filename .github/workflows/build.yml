@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-status-bar
+      - dev-thread-box-transform-3
 
 jobs:
   build:
