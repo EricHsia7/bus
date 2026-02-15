@@ -5,6 +5,7 @@
   initial-value: 0px;
 }
 */
+
 @property --b-cssvar-css-location-group-item-y {
   syntax: '<length>';
   inherits: false;
