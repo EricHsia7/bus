@@ -33,6 +33,7 @@
   display: block;
   overflow: clip;
   contain: layout;
+  will-change: transform;
 }
 
 /* stretching: true */

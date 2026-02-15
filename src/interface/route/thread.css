@@ -33,7 +33,7 @@
   height: 50px;
   width: 45px;
   overflow: visible;
-  transition: none;
+  will-change: transform;
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
