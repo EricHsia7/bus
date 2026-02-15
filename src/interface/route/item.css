@@ -27,11 +27,12 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  will-change: transform;
+  /* will-change: transform; */
   display: block;
   background: var(--b-cssvar-ffffff-normal);
   overflow: clip;
   contain: layout;
+  transform: translateY(0px);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item:last-child {

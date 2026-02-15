@@ -34,7 +34,8 @@
   display: block;
   overflow: clip;
   contain: layout;
-  will-change: transform;
+  /* will-change: transform; */
+  transform: translateY(0px);
 }
 
 /* stretching: true */

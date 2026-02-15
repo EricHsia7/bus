@@ -33,7 +33,8 @@
   height: 50px;
   width: 45px;
   overflow: visible;
-  will-change: transform;
+  /* will-change: transform; */
+  transform: translateY(0px);
   z-index: var(--b-cssvar-css-route-group-thread-z-index);
 }
 
