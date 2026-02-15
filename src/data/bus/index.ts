@@ -4,7 +4,7 @@ import { BusData, getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
-import { getStop, SimplifiedStop, Stop } from '../apis/getStop/index';
+import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { searchRouteByPathAttributeId } from '../search/index';
