@@ -27,7 +27,7 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  transition: none;
+  will-change: transform;
   display: block;
   background: var(--b-cssvar-ffffff-normal);
   overflow: clip;
