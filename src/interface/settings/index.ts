@@ -22,9 +22,7 @@ function generateElementOfItem(item: Setting): HTMLElement {
   // Icon
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_setting_icon');
-  const iconSpanElement = document.createElement('span');
-  iconSpanElement.appendChild(getIconElement(item.icon));
-  iconElement.appendChild(iconSpanElement);
+  iconElement.appendChild(getIconElement(item.icon));
 
   // Name
   const nameElement = documentCreateDivElement();
