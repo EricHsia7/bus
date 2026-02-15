@@ -44,7 +44,6 @@
   /* left: var(--b-cssvar-css-route-group-item-x); */
   left: 0px;
   top: var(--b-cssvar-css-route-group-item-y);
-  /* clip-path: inset(0 0 0 0); */
 }
 
 /* push-direction: 0 && push-state: 0 */
