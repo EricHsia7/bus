@@ -43,7 +43,7 @@
 @property --b-cssvar-route-update-timer-stroke-dashoffset {
   syntax: '<length>';
   inherits: false;
-  initial-value: 0px;
+  initial-value: -1px;
 }
 
 @property --b-cssvar-route-update-timer-interval {

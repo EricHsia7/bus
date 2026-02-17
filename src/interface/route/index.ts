@@ -1181,7 +1181,7 @@ async function refreshRoute(): Promise<number> {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
     RouteButtonRightElement.setAttribute('refreshing', 'false');
-    RouteUpdateProgressElement.style.setProperty('--b-cssvar-route-update-timer-stroke-dashoffset', `${0}px`);
+    RouteUpdateProgressElement.style.setProperty('--b-cssvar-route-update-timer-stroke-dashoffset', `${-1}px`);
     const interval = Math.max(5000, nextUpdate - lastUpdate);
     animateUpdateTimer(interval);
     return interval;
