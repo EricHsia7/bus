@@ -120,7 +120,7 @@ function animateUpdateTimer(interval: number): void {
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-offset-ratio', CustomEvent.detail.progress.toString());
+  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', CustomEvent.detail.progress.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }

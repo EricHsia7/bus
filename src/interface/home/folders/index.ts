@@ -127,8 +127,7 @@ function animateUpdateTimer(interval: number): void {
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  const offsetRatio = CustomEvent.detail.progress - 1;
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-offset-ratio', offsetRatio.toString());
+  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-scale-x', CustomEvent.detail.progress.toString());
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }

@@ -40,10 +40,10 @@
   initial-value: 0;
 }
 
-@property --b-cssvar-route-update-timer-offset-ratio {
+@property --b-cssvar-route-update-timer-scale-x {
   syntax: '<number>';
   inherits: false;
-  initial-value: -1;
+  initial-value: 0;
 }
 
 @property --b-cssvar-route-update-timer-interval {
@@ -246,7 +246,7 @@
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
-  transform: scaleX(var(--b-cssvar-route-update-timer-offset-ratio));
+  transform: scaleX(var(--b-cssvar-route-update-timer-scale-x));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }

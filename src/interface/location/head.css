@@ -34,10 +34,10 @@
   initial-value: 0;
 }
 
-@property --b-cssvar-location-update-timer-offset-ratio {
+@property --b-cssvar-location-update-timer-scale-x {
   syntax: '<number>';
   inherits: false;
-  initial-value: -1;
+  initial-value: 0;
 }
 
 @property --b-cssvar-location-update-timer-interval {
@@ -238,13 +238,13 @@
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer[refreshing="true"] {
-  transform: translateX(calc(var(--b-cssvar-location-update-timer-offset-ratio) * 100%));
+  transform: scaleX(var(--b-cssvar-location-update-timer-scale-x));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer.css_location_update_timer_slide_rtl {
-  animation-name: slide-rtl;
+  animation-name: scaledown;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;
