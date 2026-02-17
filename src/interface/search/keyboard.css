@@ -11,7 +11,7 @@
   border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: 10px;
+  gap: 10px;
   grid-template-rows: auto;
   visibility: hidden;
 }
