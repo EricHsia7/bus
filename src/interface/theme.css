@@ -64,6 +64,7 @@
   --b-cssvar-333333-70-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(51, 51, 51) 70%);
   --b-cssvar-333333-60-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(51, 51, 51) 60%);
   --b-cssvar-333333-33-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(51, 51, 51) 33%);
+  --b-cssvar-333333-15-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(51, 51, 51) 15%);
 
   /* ranking color */
   --b-cssvar-ranking-color-0: rgb(73, 214, 139);
@@ -158,6 +159,7 @@
     --b-cssvar-333333-70-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(255, 255, 255) 70%);
     --b-cssvar-333333-60-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(255, 255, 255) 60%);
     --b-cssvar-333333-33-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(255, 255, 255) 26%);
+    --b-cssvar-333333-15-flattened: color-mix(in srgb, rgb(28, 30, 37), rgb(255, 255, 255) 15%);
 
     /* ranking color */
     --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(73, 214, 139) 25%);
