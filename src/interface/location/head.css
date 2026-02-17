@@ -234,7 +234,7 @@
   width: 100%;
   height: 1px;
   background: var(--b-cssvar-333333-33-flattened);
-  contain: layout;
+  transform-origin: top left;
 }
 
 .css_location_field .css_location_head .css_location_update_timer_box .css_location_update_timer[refreshing="true"] {
