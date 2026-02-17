@@ -1,4 +1,4 @@
-@property --b-cssvar-stroke-dashoffset {
+@property --b-cssvar-download-stroke-dashoffset {
   syntax: '<length>';
   inherits: false;
   initial-value: 189px;
@@ -32,6 +32,7 @@
   background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
 }
 
 .css_home_field .css_home_head .css_home_title {
@@ -82,20 +83,23 @@
   height: 20px;
 }
 
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[arrow="arrow"],
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="arrow"],
 .css_home_field .css_home_head .css_home_button_right svg#search-svg path {
   fill: var(--b-cssvar-333333);
 }
 
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[track="track"],
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[progress="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="track"] {
+  stroke: var(--b-cssvar-333333-15-flattened);
+}
+
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="progress"] {
   stroke: var(--b-cssvar-333333);
 }
 
-.css_home_field .css_home_head .css_home_button_right svg path[progress="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg path[component="progress"] {
   stroke-dasharray: 189px;
-  stroke-dashoffset: var(--b-cssvar-stroke-dashoffset);
-  transition: --b-cssvar-stroke-dashoffset var(--b-cssvar-transition-duration);
+  stroke-dashoffset: var(--b-cssvar-download-stroke-dashoffset);
+  transition: --b-cssvar-download-stroke-dashoffset var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }
 

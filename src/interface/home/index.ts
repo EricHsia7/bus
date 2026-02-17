@@ -11,16 +11,16 @@ export let dataDownloadCompleted = false;
 const HomeField = documentQuerySelector('.css_home_field');
 const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const homeButtonRightElement = elementQuerySelector(HomeHeadElement, '.css_home_button_right');
-const progressElement = elementQuerySelector(homeButtonRightElement, 'svg#download-svg path[progress="progress"]');
+const progressElement = elementQuerySelector(homeButtonRightElement, 'svg#download-svg path[component="progress"]');
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
   const pixels = (1 - getDataReceivingProgress(dataDownloadRequestID)) * 189;
-  progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
+  progressElement.style.setProperty('--b-cssvar-download-stroke-dashoffset', `${pixels}px`);
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
     homeButtonRightElement.setAttribute('complete', 'true');
-    progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
+    progressElement.style.setProperty('--b-cssvar-download-stroke-dashoffset', `${0}px`);
     dataDownloadCompleted = true;
   }
 }

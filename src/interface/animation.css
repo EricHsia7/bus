@@ -27,3 +27,13 @@
     transform: translateX(-100%);
   }
 }
+
+@keyframes countdown {
+  0% {
+    stroke-dashoffset: -2199px;
+  }
+
+  100% {
+    stroke-dashoffset: 0px;
+  }
+}

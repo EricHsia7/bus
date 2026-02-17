@@ -40,10 +40,10 @@
   initial-value: 0;
 }
 
-@property --b-cssvar-route-update-timer-offset-ratio {
-  syntax: '<number>';
+@property --b-cssvar-route-update-timer-stroke-dashoffset {
+  syntax: '<length>';
   inherits: false;
-  initial-value: -1;
+  initial-value: 0px;
 }
 
 @property --b-cssvar-route-update-timer-interval {
@@ -66,6 +66,7 @@
 
 .css_route_field .css_route_head .css_route_button_left,
 .css_route_field .css_route_head .css_route_button_right {
+  position: absolute;
   width: 55px;
   height: 55px;
   display: flex;
@@ -74,22 +75,68 @@
 }
 
 .css_route_field .css_route_head .css_route_button_left {
-  position: absolute;
   top: 0px;
   left: 0px;
 }
 
 .css_route_field .css_route_head .css_route_button_right {
-  position: absolute;
   top: 0px;
   right: 0px;
 }
 
-.css_route_field .css_route_head .css_route_button_left span.css_material_symbols_rounded,
-.css_route_field .css_route_head .css_route_button_right span.css_material_symbols_rounded {
+.css_route_field .css_route_head .css_route_button_left span.css_material_symbols_rounded {
   height: 20px;
   width: 20px;
   color: var(--b-cssvar-333333);
+}
+
+.css_route_field .css_route_head .css_route_button_right svg {
+  position: absolute;
+  top: calc((55px - 24px) / 2);
+  left: calc((55px - 24px) / 2);
+  width: 24px;
+  height: 24px;
+}
+
+.css_route_field .css_route_head .css_route_button_right svg path[component="info"] {
+  fill: var(--b-cssvar-333333);
+}
+
+.css_route_field .css_route_head .css_route_button_right svg circle[component="track"] {
+  stroke: var(--b-cssvar-333333-15-flattened);
+}
+
+.css_route_field .css_route_head .css_route_button_right svg circle[component="progress"] {
+  stroke: var(--b-cssvar-333333);
+  stroke-dasharray: 2199px;
+  stroke-dashoffset: var(--b-cssvar-route-update-timer-stroke-dashoffset);
+  visibility: hidden;
+}
+
+/* displayed: true && refreshing: true */
+.css_route_field[displayed="true"] .css_route_head .css_route_button_right[refreshing="true"] svg circle[component="progress"] {
+  visibility: visible;
+  transition: --b-cssvar-route-update-timer-stroke-dashoffset var(--b-cssvar-transition-duration);
+  transition-timing-function: linear;
+}
+
+.css_route_field .css_route_head .css_route_button_right svg circle[component="timer"] {
+  stroke: var(--b-cssvar-333333);
+  stroke-dasharray: 2199px;
+  stroke-dashoffset: 0px;
+}
+
+/* displayed: true && refreshing: false */
+.css_route_field[displayed="true"] .css_route_head .css_route_button_right[refreshing="false"] svg circle[component="timer"] {
+  visibility: visible;
+}
+
+.css_route_field .css_route_head .css_route_button_right svg circle[component="timer"].css_route_update_timer_countdown {
+  animation-name: countdown;
+  animation-timing-function: linear;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  animation-duration: var(--b-cssvar-route-update-timer-interval);
 }
 
 .css_route_field .css_route_head .css_route_name {
@@ -224,39 +271,4 @@
   background: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-route-tab-line-width-scale))) translateX(2px);
   transform-origin: top right;
-}
-
-.css_route_field .css_route_head .css_route_update_timer_box {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  width: 100%;
-  height: 1px;
-  overflow: clip;
-  background: var(--b-cssvar-ededf2);
-  contain: layout;
-}
-
-.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 1px;
-  background: var(--b-cssvar-333333-33-flattened);
-  contain: layout;
-}
-
-.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer[refreshing="true"] {
-  transform: translateX(calc(var(--b-cssvar-route-update-timer-offset-ratio) * 100%));
-  transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: linear;
-}
-
-.css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer.css_route_update_timer_slide_rtl {
-  animation-name: slide-rtl;
-  animation-timing-function: linear;
-  animation-direction: normal;
-  animation-fill-mode: forwards;
-  animation-duration: var(--b-cssvar-route-update-timer-interval);
 }

@@ -23,7 +23,8 @@ const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
 const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
 const RouteNameSpanElement = elementQuerySelector(RouteNameElement, 'span');
 const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
-const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
+const RouteUpdateProgressElement = elementQuerySelector(RouteButtonRightElement, 'svg circle[component="progress"]');
+const RouteUpdateTimerElement = elementQuerySelector(RouteButtonRightElement, 'svg circle[component="timer"]');
 const RouteGroupTabsElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs');
 const RouteGroupTabsTrayElement = elementQuerySelector(RouteGroupTabsElement, '.css_route_group_tabs_tray');
 const RouteGroupTabLineTrackElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track');
@@ -115,13 +116,13 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 
 function animateUpdateTimer(interval: number): void {
   RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${interval.toString()}ms`);
-  RouteUpdateTimerElement.classList.add('css_route_update_timer_slide_rtl');
+  RouteUpdateTimerElement.classList.add('css_route_update_timer_countdown');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
   const CustomEvent = event as DataReceivingProgressEvent;
-  const offsetRatio = CustomEvent.detail.progress - 1;
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-offset-ratio', offsetRatio.toString());
+  const offset = CustomEvent.detail.progress * -2199;
+  RouteUpdateProgressElement.style.setProperty('--b-cssvar-route-update-timer-stroke-dashoffset', `${offset}px`);
   if (CustomEvent.detail.stage === 'end') {
     document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
   }
@@ -1163,8 +1164,8 @@ async function refreshRoute(): Promise<number> {
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
     const requestID = generateIdentifier();
-    RouteUpdateTimerElement.setAttribute('refreshing', 'true');
-    RouteUpdateTimerElement.classList.remove('css_route_update_timer_slide_rtl');
+    RouteButtonRightElement.setAttribute('refreshing', 'true');
+    RouteUpdateTimerElement.classList.remove('css_route_update_timer_countdown');
     document.addEventListener(requestID, handleDataReceivingProgressUpdates);
     const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, requestID);
     updateRouteField(integration, false, playing_animation);
@@ -1179,7 +1180,7 @@ async function refreshRoute(): Promise<number> {
     } else {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
-    RouteUpdateTimerElement.setAttribute('refreshing', 'false');
+    RouteButtonRightElement.setAttribute('refreshing', 'false');
     const interval = Math.max(5000, nextUpdate - lastUpdate);
     animateUpdateTimer(interval);
     return interval;
