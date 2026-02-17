@@ -124,7 +124,7 @@
 .css_route_field .css_route_head .css_route_button_right svg circle[component="timer"] {
   stroke: var(--b-cssvar-333333);
   stroke-dasharray: 2199px;
-  stroke-dashoffset: 0px;
+  stroke-dashoffset: -2199px;
   visibility: hidden;
 }
 
