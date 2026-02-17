@@ -32,7 +32,6 @@
   background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-  border-bottom: 1px solid var(--b-cssvar-ededf2);
 }
 
 .css_home_field .css_home_head .css_home_title {

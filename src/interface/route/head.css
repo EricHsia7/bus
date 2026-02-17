@@ -62,6 +62,7 @@
   background: var(--b-cssvar-large-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
+  border-bottom: 1px solid var(--b-cssvar-ededf2);
 }
 
 .css_route_field .css_route_head .css_route_button_left,
@@ -124,6 +125,7 @@
   stroke: var(--b-cssvar-333333);
   stroke-dasharray: 2199px;
   stroke-dashoffset: 0px;
+  visibility: hidden;
 }
 
 /* displayed: true && refreshing: false */
