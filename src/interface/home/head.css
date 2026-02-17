@@ -82,17 +82,17 @@
   height: 20px;
 }
 
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[arrow="arrow"],
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="arrow"],
 .css_home_field .css_home_head .css_home_button_right svg#search-svg path {
   fill: var(--b-cssvar-333333);
 }
 
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[track="track"],
-.css_home_field .css_home_head .css_home_button_right svg#download-svg path[progress="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="track"],
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="progress"] {
   stroke: var(--b-cssvar-333333);
 }
 
-.css_home_field .css_home_head .css_home_button_right svg path[progress="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg path[component="progress"] {
   stroke-dasharray: 189px;
   stroke-dashoffset: var(--b-cssvar-stroke-dashoffset);
   transition: --b-cssvar-stroke-dashoffset var(--b-cssvar-transition-duration);
