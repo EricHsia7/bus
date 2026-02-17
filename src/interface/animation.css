@@ -27,3 +27,13 @@
     transform: translateX(-100%);
   }
 }
+
+@keyframes scaledown {
+  0% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(0);
+  }
+}
