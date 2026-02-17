@@ -18,12 +18,12 @@
   }
 }
 
-@keyframes slide-rtl {
+@keyframes scaledown {
   0% {
-    transform: translateX(0%);
+    transform: scaleX(1);
   }
 
   100% {
-    transform: translateX(-100%);
+    transform: scaleX(0);
   }
 }

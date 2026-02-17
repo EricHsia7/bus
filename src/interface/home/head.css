@@ -10,10 +10,10 @@
   initial-value: 1.4201187871;
 }
 
-@property --b-cssvar-home-update-timer-offset-ratio {
+@property --b-cssvar-home-update-timer-scale-x {
   syntax: '<number>';
   inherits: false;
-  initial-value: -1;
+  initial-value: 0;
 }
 
 @property --b-cssvar-home-update-timer-interval {
@@ -141,17 +141,17 @@
   width: 100%;
   height: 1px;
   background: var(--b-cssvar-333333-33-flattened);
-  contain: layout;
+  transform-origin: top left;
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"] {
-  transform: translateX(calc(var(--b-cssvar-home-update-timer-offset-ratio) * 100%));
+  transform: scaleX(var(--b-cssvar-home-update-timer-scale-x));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: linear;
 }
 
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer.css_home_update_timer_slide_rtl {
-  animation-name: slide-rtl;
+  animation-name: scaledown;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;
