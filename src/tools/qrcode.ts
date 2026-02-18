@@ -1,5 +1,3 @@
-import { generateRoundedRectPath } from './graphic';
-
 const QRCode = require('qrcode/lib/core/qrcode');
 
 export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
@@ -244,5 +242,5 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
     finalPath.push(pathString);
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}" shape-rendering="geometricPrecision"><path d="${finalPath.join(' ')}" stroke-linejoin="round" fill-rule="nonzero" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}" shape-rendering="geometricPrecision"><path d="${finalPath.join(' ')}" stroke-linejoin="round" fill-rule="nonzero" stroke="none" /></svg>`;
 }
