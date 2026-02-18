@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-qrcode-svg-2
 
 jobs:
   build:
