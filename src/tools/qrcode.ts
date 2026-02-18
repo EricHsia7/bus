@@ -29,7 +29,7 @@ export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeE
   return matrix;
 }
 
-export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 1, scale: number = 4): string {
+export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 0, scale: number = 4): string {
   const filledNeighborhood = [
     [
       [-1, 0],
