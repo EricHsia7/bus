@@ -9,7 +9,7 @@ const rightButtonElement = elementQuerySelector(headElement, '.css_qrcode_button
 const bodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
 
 export function initializeQRCodeField(text: string): void {
-  const svg = generateRoundedQRCodeSVG(text, 'M', 0.5, 0.3, 1, 4);
+  const svg = generateRoundedQRCodeSVG(text, 'M', 0.5, 0.3, 1, 10);
   bodyElement.innerHTML = svg;
   rightButtonElement.onclick = function () {
     shareFile(svg, 'image/svg+xml', 'qrcode.svg');
