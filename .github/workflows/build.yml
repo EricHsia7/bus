@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-progress-scale
+      - dev-qrcode-svg-2
 
 jobs:
   build:
