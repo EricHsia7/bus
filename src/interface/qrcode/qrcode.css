@@ -3,3 +3,8 @@
   width: clamp(150px, 55%, 350px);
   aspect-ratio: 1 / 1;
 }
+
+.css_qrcode_field .css_qrcode_body svg path {
+  fill: var(--b-cssvar-333333);
+  stroke: var(--b-cssvar-333333);
+}
