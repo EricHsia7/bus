@@ -13,6 +13,7 @@
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left,
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_right {
+  position: absolute;
   width: 55px;
   height: 55px;
   display: flex;
@@ -21,13 +22,11 @@
 }
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left {
-  position: absolute;
   top: 0px;
   left: 0px;
 }
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_right {
-  position: absolute;
   top: 0px;
   right: 0px;
 }
