@@ -215,12 +215,11 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
     // Pick a starting point
     let startKey = adjacency.keys().next().value;
     let currentKey = startKey;
-    let pathString = '';
 
     // Start a new sub-path
     // Find the first segment to determine M command
     const firstSeg = adjacency.get(startKey)[0]; // naive pick
-    pathString += `M${firstSeg.x1} ${firstSeg.y1}`;
+    finalPath.push(`M${firstSeg.x1} ${firstSeg.y1}`);
 
     // Walk the loop
     while (true) {
@@ -231,16 +230,15 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
       const segment = potentialNext.shift();
       if (potentialNext.length === 0) adjacency.delete(currentKey);
 
-      pathString += ' ' + segment.command;
+      finalPath.push(segment.command);
 
       currentKey = `${Math.round(segment.x2)},${Math.round(segment.y2)}`;
       if (currentKey === startKey && (!adjacency.has(startKey) || adjacency.get(startKey).length === 0)) {
-        pathString += ' Z';
+        finalPath.push('Z');
         break; // Closed loop
       }
     }
-    finalPath.push(pathString);
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}" shape-rendering="geometricPrecision"><path d="${finalPath.join(' ')}" stroke-linejoin="round" fill-rule="nonzero" stroke="none" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}"><path d="${finalPath.join('')}" fill-rule="nonzero" stroke="none" /></svg>`;
 }
