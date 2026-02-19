@@ -22,6 +22,7 @@
   initial-value: 0ms;
 }
 
+/* head */
 .css_home_field .css_home_head {
   position: absolute;
   top: 0px;
@@ -34,6 +35,7 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
+/* head > title */
 .css_home_field .css_home_head .css_home_title {
   position: absolute;
   top: 0px;
@@ -48,27 +50,27 @@
   font-weight: 500;
 }
 
+/* head > button */
 .css_home_field .css_home_head .css_home_button_left,
 .css_home_field .css_home_head .css_home_button_right {
   position: absolute;
+  top: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_home_field .css_home_head .css_home_button_left {
-  top: 0px;
   left: 0px;
 }
 
 .css_home_field .css_home_head .css_home_button_right {
-  top: 0px;
   right: 0px;
 }
 
 .css_home_field .css_home_head .css_home_button_left span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
@@ -76,8 +78,8 @@
 
 .css_home_field .css_home_head .css_home_button_right svg {
   position: absolute;
-  top: 17.5px;
-  left: 17.5px;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
 }
@@ -123,6 +125,7 @@
   opacity: 0;
 }
 
+/* head > update timer box */
 .css_home_field .css_home_head .css_home_update_timer_box {
   position: absolute;
   left: 0px;
@@ -134,6 +137,7 @@
   contain: layout;
 }
 
+/* head > update timer box > update timer */
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer {
   position: absolute;
   top: 0px;
@@ -144,6 +148,7 @@
   transform-origin: top left;
 }
 
+/* refreshing: true */
 .css_home_field .css_home_head .css_home_update_timer_box .css_home_update_timer[refreshing="true"] {
   transform: scaleX(var(--b-cssvar-home-update-timer-scale-x));
   transition: transform var(--b-cssvar-transition-duration);
