@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.restore-cached-dependencies.outputs.cache-hit != 'true'
-        run: npm Install
+        run: npm install
 
       - name: Cache dependencies
         id: cache-dependencies
