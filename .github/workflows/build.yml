@@ -31,7 +31,7 @@ jobs:
             dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Cache dependencies
         id: cache-dependencies
