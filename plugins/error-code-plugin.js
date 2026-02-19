@@ -12,10 +12,12 @@ class ErrorCodePlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.compilation.tap('ErrorCodePlugin', (compilation) => {
+    const pluginName = 'ErrorCodePlugin';
+
+    compiler.hooks.compilation.tap(pluginName, (compilation) => {
       compilation.hooks.processAssets.tap(
         {
-          name: 'ErrorCodePlugin',
+          name: pluginName,
           // This stage runs AFTER tree shaking and optimization
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
