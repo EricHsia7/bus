@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-deprecate-lint-plugin
 
 jobs:
   build:
@@ -66,6 +67,12 @@ jobs:
       
       - name: Generate version.json
         run: node version.js
+
+      - name: ESLint
+        run: npx eslint "**/*.{js,jsx,ts,tsx}" || true
+
+      - name: Stylelint
+        run: npx stylelint "**/*.css" || true
 
       - name: Build project
         run: npx webpack --mode=production
