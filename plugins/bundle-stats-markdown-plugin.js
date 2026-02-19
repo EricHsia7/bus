@@ -56,26 +56,19 @@ class BundleStatsMarkdownPlugin {
             totalSize += size;
           }
 
-          const rows = [];
-
-          rows.push(['**[total]**', '**[total]**', formatSize(totalSize)]);
+          const details = [];
           for (const extension in categories) {
-            rows.push([`**${extension}**`, '**[total]**', formatSize(categories[extension].totalSize)]);
+            const entries = [];
             categories[extension].files.sort(function (a, b) {
               return b[1] - a[1];
             });
             for (const file of categories[extension].files) {
-              rows.push(['..', `${file[0]}${extension}`, formatSize(file[1])]);
+              entries.push(`- ${file[0]}${extension}: ${formatSize(file[1])}`);
             }
+            details.push([`<details>\n<summary>[${extension}] **Total Size**: ${formatSize(categories[extension].totalSize)}</summary>\n\n${entries.join('\n')}\n</details>`]);
           }
 
-          const markdownContent = `# ${this.options.title}\n\n${[
-            ['Type', 'Name', 'Size'],
-            ['---', '---', '---']
-          ]
-            .concat(rows)
-            .map((row) => `| ${row.join(' | ')} |`)
-            .join('\n')}`;
+          const markdownContent = `# ${this.options.title}\n\n- **Total Size**: ${formatSize(totalSize)}\n${details.join('\n')}`;
 
           // Emit the new markdown file to the build output
           compilation.emitAsset(this.options.filename, new compiler.webpack.sources.RawSource(markdownContent));
