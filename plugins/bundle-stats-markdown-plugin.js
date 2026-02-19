@@ -58,16 +58,16 @@ class BundleStatsMarkdownPlugin {
 
           const rows = [];
 
+          rows.push(['**[total]**', '**[total]**', formatSize(totalSize)]);
           for (const extension in categories) {
+            rows.push([`**${extension}**`, '**[total]**', formatSize(categories[extension].totalSize)]);
             categories[extension].files.sort(function (a, b) {
               return b[1] - a[1];
             });
             for (const file of categories[extension].files) {
-              rows.push(['..', file[0], formatSize(file[1])]);
+              rows.push(['..', `${file[0]}${extension}`, formatSize(file[1])]);
             }
-            rows.push([`**${extension}**`, '**[total]**', formatSize(categories[extension].totalSize)]);
           }
-          rows.push(['**[total]**', '**[total]**', formatSize(totalSize)]);
 
           const markdownContent = `# ${this.options.title}\n\n${[
             ['Type', 'Name', 'Size'],
