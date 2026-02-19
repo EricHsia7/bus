@@ -56,4 +56,6 @@ class BundleStatsMarkdownPlugin {
   }
 }
 
-module.exports = BundleStatsMarkdownPlugin;
+module.exports = {
+  BundleStatsMarkdownPlugin
+};
