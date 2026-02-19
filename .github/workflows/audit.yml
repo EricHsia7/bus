@@ -7,7 +7,7 @@ on:
   
 
 jobs:
-  build:
+  audit:
     runs-on: ubuntu-latest
     environment: audit-dependencies
     steps:
@@ -31,4 +31,4 @@ jobs:
             dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Audit dependencies
-        run: npm audit
+        run: npm audit 
