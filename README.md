@@ -3,8 +3,8 @@
 | Type | Name | Size |
 | --- | --- | --- |
 | **[total]** | **[total]** | 2.81 MB |
-| **.html** | **[total]** | 33.65 KB |
-| .. | index.html | 33.65 KB |
+| **.html** | **[total]** | 33.63 KB |
+| .. | index.html | 33.63 KB |
 | **.js** | **[total]** | 349.21 KB |
 | .. | ed7810c0ece095419ce1.js | 28.19 KB |
 | .. | a6b82cb50ce1f17099de.js | 23.38 KB |
