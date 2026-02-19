@@ -9,8 +9,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const StylelintPlugin = require('stylelint-webpack-plugin');
 const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 const { Hasher } = require('./hasher');
 const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
@@ -80,15 +78,6 @@ module.exports = (env, argv) => {
       new SubresourceIntegrityPlugin({
         hashFuncNames: ['sha512'], // Hash algorithms
         enabled: true
-      }),
-      new StylelintPlugin({
-        extensions: ['css'],
-        fix: false,
-        failOnError: false
-      }),
-      new ESLintPlugin({
-        extensions: ['js', 'jsx', 'ts', 'tsx'],
-        failOnError: false
       })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)

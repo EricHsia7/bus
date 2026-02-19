@@ -67,6 +67,12 @@ jobs:
       - name: Generate version.json
         run: node version.js
 
+      - name: ESLint
+        run: npx eslint "src/**/*.{js,jsx,ts,tsx}" || true
+
+      - name: Stylelint
+        run: npx stylelint "src/**/*.css" || true
+
       - name: Build project
         run: npx webpack --mode=production
 

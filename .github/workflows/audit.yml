@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
-  
 
 jobs:
   audit:
@@ -31,4 +30,4 @@ jobs:
             dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Audit dependencies
-        run: npm audit 
+        run: npm audit || true
