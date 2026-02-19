@@ -1,5 +1,6 @@
 import { convertPositionsToDistance } from '../../tools/convert';
 import { hasOwnProperty } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
@@ -292,7 +293,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           // ensure that (x, y) is between (x1, y1) and (x2, y2)
           const distance1 = Math.hypot(x - x1, y - y1);
           const distance2 = Math.hypot(x - x2, y - y2);
-          progress = Math.max(0, Math.min(distance1 / (distance1 + distance2), 1));
+          progress = clamp(distance1 / (distance1 + distance2), 0, 1);
         }
       }
     }

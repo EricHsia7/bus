@@ -183,3 +183,13 @@ export function findGlobalExtrema(array: Array<number>): [minimum: number, maxim
   }
   return [min, max];
 }
+
+export function clamp(x: number, lowerLimit: number, upperLimit: number): number {
+  if (x > upperLimit) {
+    return upperLimit;
+  } else if (x < lowerLimit) {
+    return lowerLimit;
+  } else {
+    return x;
+  }
+}

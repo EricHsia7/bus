@@ -2,6 +2,7 @@ import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../dat
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { getTextBoundingBox } from '../../tools/graphic';
 import { booleanToString, supportTouch } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
@@ -182,7 +183,7 @@ function updateSearchInput(): void {
 
   searchInputSVGTextElement.textContent = text;
   searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : Math.max(Math.min(m1[1] + x, width - 1), 1)} 0)`);
+  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : clamp(m1[1] + x, 1, width - 1)} 0)`);
 
   searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
   searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));

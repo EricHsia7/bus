@@ -1,4 +1,5 @@
 import { hasOwnProperty } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { pakoInflate } from '../../tools/pako-inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
@@ -193,7 +194,7 @@ export function getDataReceivingProgress(requestID: string): number {
           received += dataReceivingProgress[requestID][key].progress;
         }
       }
-      const progress = Math.min(Math.max(received / total, 0), 1);
+      const progress = clamp(received / total, 0, 1);
       return progress === Infinity || isNaN(progress) ? 1 : progress;
     }
   }

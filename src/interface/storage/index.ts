@@ -2,6 +2,7 @@ import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../d
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 let previousCategories: Array<StoreSize> = [];
@@ -128,7 +129,7 @@ function setupStorageFieldSkeletonScreen(): void {
   const FieldSize = querySize('window');
   // const FieldWidth = FieldSize.width;
   const FieldHeight = FieldSize.height;
-  const defaultCategoriesQuantity = Math.min(7, Math.floor(FieldHeight / 55) + 2);
+  const defaultCategoriesQuantity = clamp(Math.floor(FieldHeight / 55) + 2, 0, 7);
   const statistics: StoreSizeStatistics = {
     categorizedSizes: {},
     totalSize: 0
