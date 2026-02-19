@@ -30,4 +30,4 @@ jobs:
             dependencies-${{ runner.os }}-${{ hashFiles('package.json') }}
 
       - name: Audit dependencies
-        run: npm audit || true
+        run: npm audit --audit-level=high
