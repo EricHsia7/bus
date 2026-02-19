@@ -7,7 +7,6 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MangleCssClassPlugin = require('mangle-css-class-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -90,10 +89,6 @@ module.exports = (env, argv) => {
       new ESLintPlugin({
         extensions: ['js', 'jsx', 'ts', 'tsx'],
         failOnError: false
-      }),
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static', // Generate static HTML report
-        reportFilename: 'bundle-analysis-report/index.html' // Output file path and name
       })
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
