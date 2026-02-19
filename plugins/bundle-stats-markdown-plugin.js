@@ -1,10 +1,22 @@
 const path = require('path');
 
+function formatSize(contentLength) {
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let i = 0;
+
+  while (contentLength >= 1000 && i < units.length - 1) {
+    contentLength /= 1000;
+    i++;
+  }
+
+  return `${Math.floor(contentLength * 100) / 100} ${units[i]}`;
+}
+
 class BundleStatsMarkdownPlugin {
   constructor(options = {}) {
     // Default options
     this.options = {
-      filename: 'bundle-stats.md',
+      filename: 'README.md',
       title: 'Bundle Statistics',
       ...options
     };
@@ -22,31 +34,48 @@ class BundleStatsMarkdownPlugin {
           stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT
         },
         (assets) => {
+          let categories = {};
           let totalSize = 0;
-          let markdownContent = `# ${this.options.title}\n\n`;
-          markdownContent += `Generated on: ${new Date().toLocaleString()}\n\n`;
-
-          // Create the table header
-          markdownContent += `| File Name | Size (KB) |\n`;
-          markdownContent += `| --- | --- |\n`;
 
           // Iterate through assets and gather stats
           for (const [pathname, source] of Object.entries(assets)) {
             const asset = compilation.getAsset(pathname);
-
             const extension = path.extname(pathname);
             const base = path.basename(pathname, extension);
+            const size = asset.source.size(); // bytes
+            if (!categories.hasOwnProperty(extension)) {
+              categories[extension] = {
+                totalSize: 0,
+                files: []
+              };
+            }
 
-            const sizeInBytes = asset.source.size();
-            const sizeInKB = (sizeInBytes / 1000).toFixed(2);
+            categories[extension].files.push([base, size]);
+            categories[extension].totalSize += size;
 
-            totalSize += sizeInBytes;
-            markdownContent += `| \`${base}\` | ${sizeInKB} KB |\n`;
+            totalSize += size;
           }
 
-          // Add a total summary footer
-          const totalSizeInKB = (totalSize / 1000).toFixed(2);
-          markdownContent += `\n**Total Bundle Size:** ${totalSizeInKB} KB\n`;
+          const rows = [];
+
+          for (const extension in categories) {
+            categories[extension].files.sort(function (a, b) {
+              return b[1] - a[1];
+            });
+            for (const file of categories[extension].files) {
+              rows.push(['..', file[0], formatSize(file[1])]);
+            }
+            rows.push([`**${extension}**`, '**[total]**', formatSize(categories[extension].totalSize)]);
+          }
+          rows.push(['**[total]**', '**[total]**', formatSize(totalSize)]);
+
+          const markdownContent = `# ${this.options.title}\n\n${[
+            ['Type', 'Name', 'Size'],
+            ['---', '---', '---']
+          ]
+            .concat(rows)
+            .map((row) => `| ${row.join(' | ')} |`)
+            .join('\n')}`;
 
           // Emit the new markdown file to the build output
           compilation.emitAsset(this.options.filename, new compiler.webpack.sources.RawSource(markdownContent));
