@@ -13,12 +13,12 @@
   left: 0px;
   width: 50px;
   height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((50px - 20px) / 2);
+  left: calc((50px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
@@ -103,31 +103,29 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete {
   position: absolute;
+  top: 0px;
   width: 30px;
   height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up {
-  top: 0px;
   left: 0px;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down {
-  top: 0px;
   left: 30px;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete {
-  top: 0px;
   left: 60px;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up span.css_material_symbols_rounded,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down span.css_material_symbols_rounded,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((30px - 15px) / 2);
+  left: calc((30px - 15px) / 2);
   width: 15px;
   height: 15px;
   color: var(--b-cssvar-333333);

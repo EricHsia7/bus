@@ -14,25 +14,24 @@
 .css_location_details_field .css_location_details_head .css_location_details_button_left,
 .css_location_details_field .css_location_details_head .css_location_details_button_right {
   position: absolute;
+  top: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_location_details_field .css_location_details_head .css_location_details_button_left {
-  top: 0px;
   left: 0px;
 }
 
 .css_location_details_field .css_location_details_head .css_location_details_button_right {
-  top: 0px;
   right: 0px;
 }
 
 .css_location_details_field .css_location_details_head .css_location_details_button_left span.css_material_symbols_rounded,
 .css_location_details_field .css_location_details_head .css_location_details_button_right span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

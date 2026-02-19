@@ -20,25 +20,21 @@
 /* actions > action > icon */
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action .css_location_details_action_icon {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 55px;
-  height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: calc((55px - 30px) / 2);
+  left: calc((55px - 30px) / 2);
+  width: 30px;
+  height: 30px;
 }
 
 /* skeleton-screen: true */
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action[skeleton-screen="true"] .css_location_details_action_icon {
-  top: 12.5px;
-  left: 12.5px;
-  width: 30px;
-  height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 .css_location_details_field .css_location_details_body .css_location_details_actions .css_location_details_action .css_location_details_action_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((30px - 20px) / 2);
+  left: calc((30px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

@@ -16,12 +16,12 @@
   left: 0px;
   width: 40px;
   height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property .css_bus_property_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((30px - 20px) / 2);
+  left: calc((40px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

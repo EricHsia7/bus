@@ -32,12 +32,12 @@
   left: 0px;
   width: 25px;
   height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group .css_folder_creator_group_head .css_folder_creator_group_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((25px - 15px) / 2);
+  left: calc((25px - 15px) / 2);
   height: 15px;
   width: 15px;
   color: var(--b-cssvar-333333);

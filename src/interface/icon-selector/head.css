@@ -44,12 +44,12 @@
   left: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_icon_selector_field .css_icon_selector_head .css_icon_selector_button_left span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

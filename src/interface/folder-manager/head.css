@@ -13,27 +13,25 @@
 
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left,
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right {
+  position: absolute;
+  top: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left {
-  position: absolute;
-  top: 0px;
   left: 0px;
 }
 
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right {
-  position: absolute;
-  top: 0px;
   right: 0px;
 }
 
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left span.css_material_symbols_rounded,
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_right span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   height: 20px;
   width: 20px;
   color: var(--b-cssvar-333333);

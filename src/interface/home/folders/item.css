@@ -137,9 +137,6 @@
   right: 0px;
   width: 30px;
   height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* type: stop */
@@ -168,6 +165,9 @@
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_button span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((30px - 20px) / 2);
+  left: calc((30px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

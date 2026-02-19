@@ -10,12 +10,12 @@
   left: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
@@ -55,12 +55,12 @@
   right: 17.5px;
   width: 20px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_arrow span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 15px) / 2);
+  left: calc((20px - 15px) / 2);
   width: 15px;
   height: 15px;
   font-size: 18px;

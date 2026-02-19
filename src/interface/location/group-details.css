@@ -35,9 +35,6 @@
   left: 0px;
   width: 40px;
   height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon {
@@ -49,6 +46,9 @@
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property .css_location_details_property_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((30px - 20px) / 2);
+  left: calc((40px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

@@ -39,12 +39,9 @@
   left: 0px;
   width: 25px;
   height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  contain: layout;
 }
 
+/* skeleton-screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder[skeleton-screen="true"] .css_home_folder_head .css_home_folder_icon {
   top: 5px;
   left: 5px;
@@ -54,6 +51,9 @@
 }
 
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_head .css_home_folder_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((25px - 15px) / 2);
+  left: calc((25px - 15px) / 2);
   height: 15px;
   width: 15px;
   font-size: 18px;

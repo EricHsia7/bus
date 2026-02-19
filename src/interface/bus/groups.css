@@ -32,12 +32,12 @@
   left: 0px;
   width: 25px;
   height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group .css_bus_group_head .css_bus_group_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((25px - 15px) / 2);
+  left: calc((25px - 15px) / 2);
   height: 15px;
   width: 15px;
   color: var(--b-cssvar-333333);
