@@ -23,6 +23,7 @@ export default {
     'length-zero-no-unit': null,
     'no-descending-specificity': null,
     'property-no-vendor-prefix': null,
-    'custom-property-empty-line-before': null
+    'custom-property-empty-line-before': null,
+    'declaration-empty-line-before': null
   }
 };
