@@ -10,12 +10,12 @@
   left: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_schedule_notification_field .css_schedule_notification_body .css_schedule_notification_list .css_schedule_notification_list_item .css_schedule_notification_item_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);

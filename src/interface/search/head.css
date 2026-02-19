@@ -79,25 +79,24 @@
 .css_search_field .css_search_head .css_search_button_left,
 .css_search_field .css_search_head .css_search_button_right {
   position: absolute;
+  top: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_search_field .css_search_head .css_search_button_left {
-  top: 0px;
   left: 0px;
 }
 
 .css_search_field .css_search_head .css_search_button_right {
-  top: 0px;
   right: 0px;
 }
 
 .css_search_field .css_search_head .css_search_button_left span.css_material_symbols_rounded,
 .css_search_field .css_search_head .css_search_button_right span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
 }

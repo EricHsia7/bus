@@ -44,12 +44,12 @@
   left: 0px;
   width: 55px;
   height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((50px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   height: 20px;
   width: 20px;
   color: var(--b-cssvar-333333);
@@ -61,10 +61,10 @@
   left: 55px;
   width: calc(100% - 55px);
   height: 50px;
-  display: flex;
   font-size: 20px;
   color: var(--b-cssvar-333333);
   font-weight: 400;
+  display: flex;
   align-items: center;
   white-space: nowrap;
   word-break: keep-all;

@@ -17,22 +17,18 @@
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_left,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_right {
   position: absolute;
+  top: 0px;
   width: 55px;
   height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .css_settings_field .css_settings_head .css_settings_button_left,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_left {
-  top: 0px;
   left: 0px;
 }
 
 .css_settings_field .css_settings_head .css_settings_button_right,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_right {
-  top: 0px;
   right: 0px;
 }
 
@@ -40,6 +36,9 @@
 .css_settings_field .css_settings_head .css_settings_button_right span.css_material_symbols_rounded,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_left span.css_material_symbols_rounded,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_right span.css_material_symbols_rounded {
+  position: absolute;
+  top: calc((55px - 20px) / 2);
+  left: calc((55px - 20px) / 2);
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
