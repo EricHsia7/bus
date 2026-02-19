@@ -13,6 +13,7 @@ const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 const { Hasher } = require('./hasher');
 const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
 const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
+const { BundleStatsMarkdownPlugin } = require('./plugins/bundle-stats-markdown-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -78,7 +79,8 @@ module.exports = (env, argv) => {
       new SubresourceIntegrityPlugin({
         hashFuncNames: ['sha512'], // Hash algorithms
         enabled: true
-      })
+      }),
+      new BundleStatsMarkdownPlugin()
     ],
     target: ['web', 'es6'], // Target the browser environment (es6 is the default for browsers)
     mode: 'production', // Set the mode to 'production' or 'development'
