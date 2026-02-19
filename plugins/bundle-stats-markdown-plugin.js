@@ -65,10 +65,10 @@ class BundleStatsMarkdownPlugin {
             for (const file of categories[extension].files) {
               entries.push(`- [${formatSize(file[1])}] **${file[0]}${extension}**`);
             }
-            details.push([`<details>\n<summary>[${formatSize(categories[extension].totalSize)}] <b>${extension}</b></summary>\n\n${entries.join('\n')}\n</details>`]);
+            details.push([`<details>\n<summary>[${formatSize(categories[extension].totalSize)}] <b>*.${extension}</b></summary>\n\n${entries.join('\n')}\n</details>`]);
           }
 
-          const markdownContent = `# ${this.options.title}\n\n- [${formatSize(totalSize)}] **total**\n${details.join('\n')}`;
+          const markdownContent = `# ${this.options.title}\n\n[${formatSize(totalSize)}] **\*.\***\n${details.join('\n')}`;
 
           // Emit the new markdown file to the build output
           compilation.emitAsset(this.options.filename, new compiler.webpack.sources.RawSource(markdownContent));
