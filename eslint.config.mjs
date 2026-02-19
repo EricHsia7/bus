@@ -16,6 +16,7 @@ export default defineConfig(eslint.configs.recommended, tseslint.configs.recomme
     'no-case-declarations': 'warn',
     'no-useless-escape': 'off',
     'no-constant-binary-expression': 'warn',
+    'preserve-caught-error': 'off',
 
     // TypeScript Specific
     '@typescript-eslint/no-explicit-any': 'off',
