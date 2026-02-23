@@ -3,7 +3,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-top: calc(10px + 55px);
+  margin-top: calc(10px + 55px + var(--b-cssvar-safe-area-top));
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group {
