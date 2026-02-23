@@ -4,6 +4,10 @@ html {
   overscroll-behavior-y: none;
 }
 
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: "Noto Sans TC", sans-serif;
   font-optical-sizing: auto;
@@ -15,6 +19,10 @@ body {
   text-rendering: optimizeLegibility;
   height: 100vh;
   overscroll-behavior-y: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body * {
