@@ -3,7 +3,7 @@
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 55px;
+  height: calc(var(--b-cssvar-safe-area-top) + 55px);
   border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
   background: var(--b-cssvar-head-background);
@@ -14,6 +14,7 @@
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left,
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_right {
   position: absolute;
+  top: var(--b-cssvar-safe-area-top);
   width: 55px;
   height: 55px;
   display: flex;
@@ -22,12 +23,10 @@
 }
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left {
-  top: 0px;
   left: 0px;
 }
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_right {
-  top: 0px;
   right: 0px;
 }
 
@@ -40,7 +39,7 @@
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_title {
   position: absolute;
-  top: 0px;
+  top: var(--b-cssvar-safe-area-top);
   left: 55px;
   width: calc(100% - 110px);
   height: 55px;

@@ -3,7 +3,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-top: calc(10px + 55px);
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group {

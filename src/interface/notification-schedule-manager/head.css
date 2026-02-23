@@ -15,7 +15,7 @@
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 55px;
+  height: calc(var(--b-cssvar-safe-area-top) + 55px);
   box-sizing: border-box;
   background: var(--b-cssvar-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
@@ -24,6 +24,8 @@
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left,
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right {
+  position: absolute;
+  top: var(--b-cssvar-safe-area-top);
   width: 55px;
   height: 55px;
   display: flex;
@@ -32,14 +34,10 @@
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left {
-  position: absolute;
-  top: 0px;
   left: 0px;
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_right {
-  position: absolute;
-  top: 0px;
   right: 0px;
 }
 
@@ -52,7 +50,7 @@
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_title {
   position: absolute;
-  top: 0px;
+  top: var(--b-cssvar-safe-area-top);
   left: 55px;
   width: calc(100% - 110px);
   height: 55px;

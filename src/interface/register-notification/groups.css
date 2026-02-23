@@ -3,7 +3,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-top: calc(10px + 55px);
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
 }
 
 .css_register_notification_field .css_register_notification_body .css_register_notification_groups .css_register_notification_group {

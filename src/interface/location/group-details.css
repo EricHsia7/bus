@@ -3,7 +3,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-top: 95px;
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 95px);
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body {

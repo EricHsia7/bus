@@ -1,5 +1,12 @@
 html {
   background-color: var(--b-cssvar-ffffff-normal);
+  height: 100vh;
+  overscroll-behavior-y: none;
+  overflow: clip;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -11,6 +18,13 @@ body {
   background-color: var(--b-cssvar-ffffff-normal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  height: 100vh;
+  overscroll-behavior-y: none;
+  overflow: clip;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body * {

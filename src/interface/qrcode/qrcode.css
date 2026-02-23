@@ -2,6 +2,7 @@
   position: relative;
   width: clamp(200px, 60%, 400px);
   aspect-ratio: 1 / 1;
+  transform: translateY(calc(var(--b-cssvar-safe-area-top) / 2));
 }
 
 .css_qrcode_field .css_qrcode_body svg path {
