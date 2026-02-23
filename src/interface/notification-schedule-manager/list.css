@@ -4,6 +4,6 @@
   width: calc(100% - 20px);
   height: auto;
   display: inline-block;
-  margin-top: calc(10px + 55px + var(--b-cssvar-safe-area-top));
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }

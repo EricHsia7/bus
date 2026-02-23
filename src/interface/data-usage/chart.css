@@ -6,7 +6,7 @@
   background: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
-  margin-top: calc(10px + 55px + var(--b-cssvar-safe-area-top));
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 15px;
   font-weight: 400;

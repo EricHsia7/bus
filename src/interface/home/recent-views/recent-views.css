@@ -4,7 +4,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-top: calc(10px + 55px + var(--b-cssvar-safe-area-top));
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
 }
 
 /* recent-views > head */
