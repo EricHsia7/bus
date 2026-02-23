@@ -2,6 +2,7 @@ html {
   background-color: var(--b-cssvar-ffffff-normal);
   height: 100vh;
   overscroll-behavior-y: none;
+  overflow: clip;
 }
 
 html::-webkit-scrollbar {
@@ -19,6 +20,7 @@ body {
   text-rendering: optimizeLegibility;
   height: 100vh;
   overscroll-behavior-y: none;
+  overflow: clip;
 }
 
 body::-webkit-scrollbar {
