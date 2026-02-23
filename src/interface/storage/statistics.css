@@ -9,7 +9,7 @@
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 15px;
   font-weight: 400;
-  margin-top: calc(10px + 55px);
+  margin-top: calc(10px + 55px + var(--b-cssvar-safe-area-top));
   margin-bottom: var(--b-cssvar-safe-area-bottom);
 }
 

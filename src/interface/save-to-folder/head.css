@@ -3,7 +3,7 @@
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 55px;
+  height: calc(55px + var(--b-cssvar-safe-area-top));
   border-bottom: 1px solid var(--b-cssvar-ededf2);
   box-sizing: border-box;
   background: var(--b-cssvar-head-background);
@@ -13,6 +13,8 @@
 
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left,
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_right {
+  position: absolute;
+  top: var(--b-cssvar-safe-area-top);
   width: 55px;
   height: 55px;
   display: flex;
@@ -21,14 +23,10 @@
 }
 
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
-  position: absolute;
-  top: 0px;
   left: 0px;
 }
 
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_right {
-  position: absolute;
-  top: 0px;
   right: 0px;
 }
 
@@ -41,7 +39,7 @@
 
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_title {
   position: absolute;
-  top: 0px;
+  top: var(--b-cssvar-safe-area-top);
   left: 55px;
   width: calc(100% - 110px);
   height: 55px;
