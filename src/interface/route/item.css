@@ -16,7 +16,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item_space_top {
   position: relative;
   width: 100%;
-  height: 95px;
+  height: calc(95px + var(--b-cssvar-safe-area-top));
   background: transparent;
 }
 
