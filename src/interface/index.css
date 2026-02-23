@@ -11,6 +11,7 @@ body {
   background-color: var(--b-cssvar-ffffff-normal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  height: 100vh;
 }
 
 body * {
