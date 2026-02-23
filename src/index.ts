@@ -204,7 +204,7 @@ window.bus = {
     if (busInitialized) return;
     busInitialized = true;
 
-    setSplashScreenIconOffsetY();
+    // setSplashScreenIconOffsetY();
 
     // initialize settings
     await initializeSettings();
