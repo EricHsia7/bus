@@ -16,7 +16,7 @@ import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { fadeOutSplashScreen, setSplashScreenIconOffsetY, showErrorMessage } from './interface/index';
+import { fadeOutSplashScreen, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location/details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
 import { closeNotificationScheduleManager } from './interface/notification-schedule-manager/index';
@@ -203,8 +203,6 @@ window.bus = {
   initialize: async function () {
     if (busInitialized) return;
     busInitialized = true;
-
-    // setSplashScreenIconOffsetY();
 
     // initialize settings
     await initializeSettings();
