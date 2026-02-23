@@ -35,7 +35,7 @@
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result:first-child {
-  margin-top: calc(55px + var(--b-cssvar-safe-area-top));
+  margin-top: calc(var(--b-cssvar-safe-area-top) + 55px);
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result .css_search_search_result_type {
