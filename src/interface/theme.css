@@ -26,7 +26,7 @@
 
   /* ffffff */
   --b-cssvar-ffffff-normal: rgb(255, 255, 255);
-  --b-cssvar-ffffff-normal-60: rgba(255, 255, 255, 0.6);
+  --b-cssvar-ffffff-normal-50: rgba(255, 255, 255, 0.5);
 
   --b-cssvar-ffffff-blocky: rgb(255, 255, 255);
 
@@ -89,10 +89,10 @@
 
   --b-cssvar-transition-duration: 0.32s;
 
-  --b-cssvar-backdrop-filter: saturate(180%) blur(20px);
+  --b-cssvar-backdrop-filter: saturate(180%) blur(10px);
 
-  --b-cssvar-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-60) 80%, var(--b-cssvar-ffffff-normal-60) 100%);
-  --b-cssvar-large-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-60) 70%, var(--b-cssvar-ffffff-normal-60) 100%);
+  --b-cssvar-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-50) 80%, var(--b-cssvar-ffffff-normal-50) 100%);
+  --b-cssvar-large-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-50) 70%, var(--b-cssvar-ffffff-normal-50) 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -121,7 +121,7 @@
 
     /* ffffff */
     --b-cssvar-ffffff-normal: rgb(23, 25, 30);
-    --b-cssvar-ffffff-normal-60: rgba(23, 25, 30, 0.6);
+    --b-cssvar-ffffff-normal-50: rgba(23, 25, 30, 0.5);
 
     --b-cssvar-ffffff-blocky: rgb(28, 30, 37);
 
@@ -170,7 +170,7 @@
 
     --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(23, 25, 30) 60%), rgb(67, 200, 129) 10%);
 
-    --b-cssvar-backdrop-filter: saturate(100%) blur(15px);
+    --b-cssvar-backdrop-filter: saturate(100%) blur(10px);
   }
 }
 
