@@ -70,16 +70,6 @@ body input[type="text"] {
   visibility: hidden;
 }
 
-.css_splash_screen svg.css_splash_screen_icon {
-  width: clamp(50px, calc(100vw * 0.45), 160px);
-  height: clamp(50px, calc(100vw * 0.45), 160px);
-  visibility: hidden;
-}
-
-.css_splash_screen svg.css_splash_screen_icon path {
-  fill: var(--b-cssvar-333333);
-}
-
 .css_splash_screen_fade_out {
   animation-name: fadeout;
   animation-timing-function: ease-in-out;
