@@ -73,6 +73,7 @@ body input[type="text"] {
 .css_splash_screen svg.css_splash_screen_icon {
   width: clamp(50px, calc(100vw * 0.45), 160px);
   height: clamp(50px, calc(100vw * 0.45), 160px);
+  visibility: hidden;
 }
 
 .css_splash_screen svg.css_splash_screen_icon path {
