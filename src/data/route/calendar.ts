@@ -81,7 +81,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       continue;
     }
     const assumedDuration = 30;
-    const departureTime = parseTimeCode(item.DepartureTime, 0, true) as TimeMoment;
+    const departureTime = parseTimeCode(item.DepartureTime, 0, false) as TimeMoment;
     const start = departureTime.hours * 60 + departureTime.minutes;
     const end = start + assumedDuration;
     if (item.DateType === '0') {
