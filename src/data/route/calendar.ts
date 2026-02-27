@@ -46,8 +46,8 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       continue;
     }
 
-    const startTime = parseTimeCode(item.StartTime, 0) as TimeMoment;
-    const endTime = parseTimeCode(item.EndTime, 0) as TimeMoment;
+    const startTime = parseTimeCode(item.StartTime, 0, false) as TimeMoment;
+    const endTime = parseTimeCode(item.EndTime, 0, true) as TimeMoment;
     const start = startTime.hours * 60 + startTime.minutes;
     const end = endTime.hours * 60 + endTime.minutes;
     const longHeadway = parseInt(item.LongHeadway, 10);
@@ -81,7 +81,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       continue;
     }
     const assumedDuration = 30;
-    const departureTime = parseTimeCode(item.DepartureTime, 0) as TimeMoment;
+    const departureTime = parseTimeCode(item.DepartureTime, 0, true) as TimeMoment;
     const start = departureTime.hours * 60 + departureTime.minutes;
     const end = start + assumedDuration;
     if (item.DateType === '0') {

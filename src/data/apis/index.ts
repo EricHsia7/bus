@@ -1,4 +1,5 @@
 import { hasOwnProperty } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { formatTime } from '../../tools/time';
 import { BusData, BusDataItem } from './getBusData/index';
 import { BusEvent, BusEventItem } from './getBusEvent/index';
@@ -57,10 +58,11 @@ export interface TimeRange {
  * parseTimeCode
  * @param code 0: hhmm/mm, 1: mmMM/mm
  * @param mode 0: moment, 1: range
+ * @param wrap
  * @returns 0: TimeMoment, 1: TimeRange
  */
 
-export function parseTimeCode(code: string, mode: 0 | 1): TimeMoment | TimeRange {
+export function parseTimeCode(code: string, mode: 0 | 1, wrap: boolean = false): TimeMoment | TimeRange {
   const codeLength = code.length;
   if (mode === 0) {
     let hours = 0;
@@ -71,6 +73,11 @@ export function parseTimeCode(code: string, mode: 0 | 1): TimeMoment | TimeRange
     }
     if (codeLength === 2) {
       minutes = parseInt(code);
+    }
+    if (wrap) {
+      const timestamp = clamp(((hours * 24 + minutes - 1) % (60 * 24)) + 1, 0, 60 * 24 - 1);
+      minutes = timestamp % 60;
+      hours = (timestamp - minutes) / 60;
     }
     return {
       type: 'moment',
