@@ -60,11 +60,12 @@
   height: calc(var(--b-cssvar-safe-area-top) + 95px);
   box-sizing: border-box;
   background: var(--b-cssvar-large-head-background);
-  /* backdrop-filter: var(--b-cssvar-backdrop-filter); */
-  /* -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter); */
+  backdrop-filter: var(--b-cssvar-backdrop-filter);
+  -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   z-index: 1;
 }
 
+/* 
 .css_route_field .css_route_head::before {
   content: "";
   position: absolute;
@@ -89,7 +90,7 @@
   backdrop-filter: blur(8px);
   mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
   z-index: -1;
-}
+} */
 
 .css_route_field .css_route_head .css_route_button_left,
 .css_route_field .css_route_head .css_route_button_right {
