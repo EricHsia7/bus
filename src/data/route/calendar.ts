@@ -57,6 +57,9 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         [start, end] = [end, start];
       }
     }
+    if (end >= 60 * 24) {
+      end = 60 * 24 - 1;
+    }
     const longHeadway = parseInt(item.LongHeadway, 10);
     const lowHeadway = parseInt(item.LowHeadway, 10);
 
