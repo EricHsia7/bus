@@ -137,21 +137,21 @@
     --b-cssvar-f9f9fb-inflected-to-user-position: color-mix(in srgb, rgb(9, 10, 12), rgb(120, 102, 241) 5%);
 
     /* ededf2 */
-    --b-cssvar-ededf2: rgb(19, 21, 24);
-    --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(9, 10, 12), rgb(19, 21, 24) 50%);
+    --b-cssvar-ededf2: rgb(19, 20, 23);
+    --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(9, 10, 12), rgb(19, 20, 23) 50%);
 
-    --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, rgb(19, 21, 24), rgb(89, 145, 187) 13%);
-    --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(9, 10, 12), rgb(89, 145, 187) 6%), color-mix(in srgb, rgb(19, 21, 24), rgb(89, 145, 187) 13%) 50%);
+    --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, rgb(19, 20, 23), rgb(89, 145, 187) 13%);
+    --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(9, 10, 12), rgb(89, 145, 187) 6%), color-mix(in srgb, rgb(19, 20, 23), rgb(89, 145, 187) 13%) 50%);
 
-    --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, rgb(19, 21, 24), rgb(120, 102, 241) 11%);
-    --b-cssvar-ededf2-inflected-to-user-position-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(9, 10, 12), rgb(120, 102, 241) 5%), color-mix(in srgb, rgb(19, 21, 24), rgb(120, 102, 241) 11%) 50%);
+    --b-cssvar-ededf2-inflected-to-user-position: color-mix(in srgb, rgb(19, 20, 23), rgb(120, 102, 241) 11%);
+    --b-cssvar-ededf2-inflected-to-user-position-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(9, 10, 12), rgb(120, 102, 241) 5%), color-mix(in srgb, rgb(19, 20, 23), rgb(120, 102, 241) 11%) 50%);
 
     /* aeaeb2 */
-    --b-cssvar-aeaeb2: rgb(36, 39, 43);
+    --b-cssvar-aeaeb2: rgb(31, 32, 35);
 
-    --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, rgb(36, 39, 43), rgb(89, 145, 187) 11%);
+    --b-cssvar-aeaeb2-inflected-to-segment-buffer: color-mix(in srgb, rgb(31, 32, 35), rgb(89, 145, 187) 11%);
 
-    --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(0, 0, 0), color-mix(in srgb, rgb(36, 39, 43), rgb(120, 102, 241) 14%) 90%);
+    --b-cssvar-aeaeb2-inflected-to-user-position: color-mix(in srgb, rgb(0, 0, 0), color-mix(in srgb, rgb(31, 32, 35), rgb(120, 102, 241) 14%) 90%);
 
     /* 333333 */
     --b-cssvar-333333: rgb(255, 255, 255);
