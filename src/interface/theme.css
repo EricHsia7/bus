@@ -170,7 +170,7 @@
 
     --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, color-mix(in srgb, rgb(0, 0, 0), rgb(0, 0, 0) 60%), rgb(67, 200, 129) 10%);
 
-    --b-cssvar-backdrop-filter: brightness(90%) blur(10px);
+    --b-cssvar-backdrop-filter: brightness(95%) blur(10px);
   }
 }
 
