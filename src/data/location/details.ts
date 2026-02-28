@@ -1,5 +1,5 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
-import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location/details/index';
+import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';

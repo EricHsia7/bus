@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-black-theme
+      - dev-separate-location-details
 
 jobs:
   build:
