@@ -7,7 +7,7 @@ import { hideFolderEditor, showFolderEditor } from './folder-editor/index';
 import { hideFolderManager, showFolderManager } from './folder-manager/index';
 import { hideHome, showHome } from './home/index';
 import { hideIconSelector, showIconSelector } from './icon-selector/index';
-import { hideLocationDetails, showLocationDetails } from './location/details/index';
+import { hideLocationDetails, showLocationDetails } from './location-details/index';
 import { hideLocation, showLocation } from './location/index';
 import { hideNotificationScheduleManager, showNotificationScheduleManager } from './notification-schedule-manager/index';
 import { hidePersonalScheduleCreator, showPersonalScheduleCreator } from './personal-schedule-creator/index';

@@ -12,10 +12,10 @@ import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { openLocationDetails } from '../location-details/index';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
-import { openLocationDetails } from './details/index';
 
 const LocationField = documentQuerySelector('.css_location_field');
 const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');

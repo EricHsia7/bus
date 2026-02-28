@@ -1,14 +1,14 @@
-import { getLocation, MergedLocation, MergedLocationItem } from '../../../data/apis/getLocation/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../../data/apis/loader';
-import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../../data/location/details';
-import { getSettingOptionValue } from '../../../data/settings/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
-import { getPermalink } from '../../../tools/permalink';
-import { shareLink } from '../../../tools/share';
-import { getBlankIconElement, setIcon } from '../../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
-import { openQRCode } from '../../qrcode/index';
+import { getLocation, MergedLocation, MergedLocationItem } from '../../data/apis/getLocation/index';
+import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
+import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../data/location/details';
+import { getSettingOptionValue } from '../../data/settings/index';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { getPermalink } from '../../tools/permalink';
+import { shareLink } from '../../tools/share';
+import { getBlankIconElement, setIcon } from '../icons/index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { openQRCode } from '../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
 let previousAnimation: boolean = false;
@@ -128,12 +128,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 
 function setupLocationDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const actions: IntegratedLocationDetailsAction[] = [];
-  /*
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  */
+  const actions: Array<IntegratedLocationDetailsAction> = [];
   const defaultActionsQuantity = 3;
   for (let i = 0; i < defaultActionsQuantity; i++) {
     actions.push({
