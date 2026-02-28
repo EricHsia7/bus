@@ -2,13 +2,13 @@ import { getLocation, MergedLocation, MergedLocationItem } from '../../data/apis
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../data/location/details';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { getBlankIconElement, setIcon } from '../../icons/index';
-import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../../index';
-import { openQRCode } from '../../qrcode/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getPermalink } from '../../tools/permalink';
 import { shareLink } from '../../tools/share';
+import { getBlankIconElement, setIcon } from '../icons/index';
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { openQRCode } from '../qrcode/index';
 
 let previousIntegration = {} as IntegratedLocationDetails;
 let previousAnimation: boolean = false;
