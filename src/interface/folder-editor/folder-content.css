@@ -10,7 +10,7 @@
   overscroll-behavior-y: auto;
   display: grid;
   column-gap: 0px;
-  grid-template-columns: 100% calc(50px * 3);
+  grid-template-columns: 100% calc(40px * 3);
   scroll-snap-type: x mandatory;
 }
 
@@ -83,12 +83,14 @@
 /* item > drawer */
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer {
   position: relative;
-  width: calc(50px * 3);
+  width: calc(10px + 3 * (50px - 10px - 10px) + (3 - 1) * 5px + 10px);
   height: 50px;
   display: grid;
-  column-gap: 0px;
-  grid-template-columns: repeat(3, 50px);
+  column-gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
   scroll-snap-align: end;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 /* item > drawer > button */
@@ -97,13 +99,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-large);
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button:nth-child(1) span.css_material_symbols_rounded {
