@@ -187,6 +187,7 @@ export function removeItemOnFolderEditor(itemElement: HTMLElement, folderID: Fol
           promptMessage('delete', '已移除地點');
           break;
         default:
+          promptMessage('delete', '已移除項目');
           break;
       }
     } else {

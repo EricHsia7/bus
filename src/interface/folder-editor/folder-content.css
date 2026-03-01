@@ -10,7 +10,7 @@
   overscroll-behavior-y: auto;
   display: grid;
   column-gap: 0px;
-  grid-template-columns: 100% calc(40px * 3);
+  grid-template-columns: 100% calc(10px + 3 * (50px - 10px - 10px) + (3 - 1) * 5px + 10px);
   scroll-snap-type: x mandatory;
 }
 
