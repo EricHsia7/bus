@@ -3,11 +3,26 @@
   position: relative;
   width: 100%;
   height: 50px;
-  overflow: clip;
+  overflow-x: scroll;
+  overflow-y: clip;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
 }
 
-/* item > icon */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_icon {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item::-webkit-scrollbar {
+  display: none;
+}
+
+/* item > head */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_head {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+/* item > head > icon */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_head .css_folder_editor_folder_item_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -18,14 +33,14 @@
   align-items: center;
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_icon span.css_material_symbols_rounded {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_head .css_folder_editor_folder_item_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
   color: var(--b-cssvar-333333);
 }
 
-/* item > context */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_context {
+/* item > head > context */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_head .css_folder_editor_folder_item_context {
   position: absolute;
   top: 7.5px;
   left: 50px;
@@ -42,8 +57,8 @@
   overflow: clip;
 }
 
-/* item > main */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_main {
+/* item > head > main */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_head .css_folder_editor_folder_item_main {
   position: absolute;
   top: 21.5px;
   left: 50px;
@@ -60,98 +75,32 @@
   overflow: clip;
 }
 
-/* item > capsule */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 90px;
-  height: 30px;
-  background: var(--b-cssvar-ededf2);
-  border-radius: var(--b-cssvar-border-radius-normal);
-  overflow: clip;
-  display: block;
+/* item > drawer */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer {
+  position: relative;
+  width: calc(50px * 3);
+  height: 50px;
+  display: grid;
+  column-gap: 0px;
+  grid-template-columns: repeat(3, 50px);
+  scroll-snap-align: end;
 }
 
-/* type: stop */
-.css_folder_editor_field[displayed="true"] .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="stop"] .css_folder_editor_folder_item_capsule {
-  visibility: visible;
-}
-
-/* type: route */
-.css_folder_editor_field[displayed="true"] .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="route"] .css_folder_editor_folder_item_capsule {
-  visibility: visible;
-}
-
-/* type: location */
-.css_folder_editor_field[displayed="true"] .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="location"] .css_folder_editor_folder_item_capsule {
-  visibility: visible;
-}
-
-/* type: bus */
-.css_folder_editor_field[displayed="true"] .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="bus"] .css_folder_editor_folder_item_capsule {
-  visibility: visible;
-}
-
-/* type: empty */
-.css_folder_editor_field[displayed="true"] .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[type="empty"] .css_folder_editor_folder_item_capsule {
-  visibility: hidden;
-}
-
-/* item > capsule > sort control, delete */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete {
-  position: absolute;
-  width: 30px;
-  height: 30px;
+/* item > drawer > button */
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up {
-  top: 0px;
-  left: 0px;
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down {
-  top: 0px;
-  left: 30px;
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete {
-  top: 0px;
-  left: 60px;
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up span.css_material_symbols_rounded,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_down span.css_material_symbols_rounded,
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_delete span.css_material_symbols_rounded {
-  width: 15px;
-  height: 15px;
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button span.css_material_symbols_rounded {
+  width: 20px;
+  height: 20px;
   color: var(--b-cssvar-333333);
   font-size: 18px;
 }
 
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_sort_control_up span.css_material_symbols_rounded {
+.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button:nth-child(1) span.css_material_symbols_rounded {
   transform: rotate(180deg);
-}
-
-/* item > capsule > separator */
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator {
-  position: absolute;
-  width: 1px;
-  height: 24px;
-  background: var(--b-cssvar-aeaeb2);
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(4) {
-  top: 3px;
-  left: 29.5px;
-}
-
-.css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_capsule .css_folder_editor_folder_item_capsule_separator:nth-child(5) {
-  top: 3px;
-  left: 59.5px;
 }
