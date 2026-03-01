@@ -24,7 +24,11 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   // Main container
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_folder_editor_folder_item');
-  itemElement.setAttribute('type', item.type);
+  // itemElement.setAttribute('type', item.type);
+
+  // Head
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_folder_editor_folder_item_head');
 
   // Icon, context, main text
   let context = '';
@@ -62,28 +66,28 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
       break;
   }
 
-  // Icon element
+  // Icon
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_folder_editor_folder_item_icon');
   iconElement.appendChild(getIconElement(icon));
 
-  // Context element
+  // Context
   const contextElement = documentCreateDivElement();
   contextElement.classList.add('css_folder_editor_folder_item_context');
   contextElement.innerText = context;
 
-  // Main element
+  // Main
   const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_folder_editor_folder_item_main');
   mainElement.innerText = main;
 
-  // Capsule element
-  const capsuleElement = documentCreateDivElement();
-  capsuleElement.classList.add('css_folder_editor_folder_item_capsule');
+  // Drawer
+  const drawerElement = documentCreateDivElement();
+  drawerElement.classList.add('css_folder_editor_folder_item_drawer');
 
   // Sort up control
   const sortUpElement = documentCreateDivElement();
-  sortUpElement.classList.add('css_folder_editor_folder_item_sort_control_up');
+  sortUpElement.classList.add('css_folder_editor_folder_item_drawer_button');
   sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortUpElement.onclick = () => {
     moveItemOnFolderEditor(itemElement, folder.id, item.type, item.id, 'up');
@@ -91,7 +95,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
 
   // Sort down control
   const sortDownElement = documentCreateDivElement();
-  sortDownElement.classList.add('css_folder_editor_folder_item_sort_control_down');
+  sortDownElement.classList.add('css_folder_editor_folder_item_drawer_button');
   sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortDownElement.onclick = () => {
     moveItemOnFolderEditor(itemElement, folder.id, item.type, item.id, 'down');
@@ -99,30 +103,24 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
 
   // Delete control
   const deleteElement = documentCreateDivElement();
-  deleteElement.classList.add('css_folder_editor_folder_item_delete');
+  deleteElement.classList.add('css_folder_editor_folder_item_drawer_button');
   deleteElement.appendChild(getIconElement('delete'));
   deleteElement.onclick = () => {
     removeItemOnFolderEditor(itemElement, folder.id, item.type, item.id);
   };
 
-  // Capsule separators
-  const separator1Element = documentCreateDivElement();
-  separator1Element.classList.add('css_folder_editor_folder_item_capsule_separator');
-  const separator2Element = documentCreateDivElement();
-  separator2Element.classList.add('css_folder_editor_folder_item_capsule_separator');
+  // Assemble drawer
+  drawerElement.appendChild(sortUpElement);
+  drawerElement.appendChild(sortDownElement);
+  drawerElement.appendChild(deleteElement);
 
-  // Assemble capsule
-  capsuleElement.appendChild(sortUpElement);
-  capsuleElement.appendChild(sortDownElement);
-  capsuleElement.appendChild(deleteElement);
-  capsuleElement.appendChild(separator1Element);
-  capsuleElement.appendChild(separator2Element);
+  // Assemble head
+  headElement.appendChild(iconElement);
+  headElement.appendChild(contextElement);
+  headElement.appendChild(mainElement);
 
-  // Assemble main item
-  itemElement.appendChild(iconElement);
-  itemElement.appendChild(contextElement);
-  itemElement.appendChild(mainElement);
-  itemElement.appendChild(capsuleElement);
+  itemElement.appendChild(headElement);
+  itemElement.appendChild(drawerElement);
 
   return itemElement;
 }
@@ -189,6 +187,7 @@ export function removeItemOnFolderEditor(itemElement: HTMLElement, folderID: Fol
           promptMessage('delete', '已移除地點');
           break;
         default:
+          promptMessage('delete', '已移除項目');
           break;
       }
     } else {
