@@ -24,7 +24,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   // Main container
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_folder_editor_folder_item');
-  itemElement.setAttribute('type', item.type);
+  // itemElement.setAttribute('type', item.type);
 
   // Head
   const headElement = documentCreateDivElement();
