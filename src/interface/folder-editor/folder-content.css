@@ -8,6 +8,10 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
+  display: grid;
+  column-gap: 0px;
+  grid-template-columns: 100% calc(50px * 3);
+  scroll-snap-type: x mandatory;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item::-webkit-scrollbar {
