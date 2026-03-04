@@ -251,22 +251,24 @@ function generateElementOfItem(): HTMLElement {
   saveButtonElement.appendChild(document.createTextNode('儲存'));
 
   // Button: 通知
-  const notifyButtonElement = documentCreateDivElement();
-  notifyButtonElement.classList.add('css_location_group_item_button');
-  notifyButtonElement.setAttribute('highlighted', 'false');
-  notifyButtonElement.setAttribute('type', 'schedule-notification');
-  notifyButtonElement.setAttribute('enabled', 'true');
-  const notifyButtonIconElement = documentCreateDivElement();
-  notifyButtonIconElement.classList.add('css_location_group_item_button_icon');
-  notifyButtonIconElement.appendChild(getIconElement('notifications'));
-  notifyButtonElement.appendChild(notifyButtonIconElement);
-  notifyButtonElement.appendChild(document.createTextNode('通知'));
+  const scheduleNotificationButtonElement = documentCreateDivElement();
+  scheduleNotificationButtonElement.classList.add('css_location_group_item_button');
+  scheduleNotificationButtonElement.setAttribute('highlighted', 'false');
+  scheduleNotificationButtonElement.setAttribute('type', 'schedule-notification');
+  scheduleNotificationButtonElement.setAttribute('enabled', 'true');
+  scheduleNotificationButtonElement.setAttribute('processing', 'false');
+
+  const scheduleNotificationButtonIconElement = documentCreateDivElement();
+  scheduleNotificationButtonIconElement.classList.add('css_location_group_item_button_icon');
+  scheduleNotificationButtonIconElement.appendChild(getIconElement('notifications'));
+  scheduleNotificationButtonElement.appendChild(scheduleNotificationButtonIconElement);
+  scheduleNotificationButtonElement.appendChild(document.createTextNode('通知'));
 
   // Assemble buttons
   buttonsElement.appendChild(busTabButtonElement);
   buttonsElement.appendChild(arrivalTabButtonElement);
   buttonsElement.appendChild(saveButtonElement);
-  buttonsElement.appendChild(notifyButtonElement);
+  buttonsElement.appendChild(scheduleNotificationButtonElement);
 
   // Buses
   const busesElement = documentCreateDivElement();
