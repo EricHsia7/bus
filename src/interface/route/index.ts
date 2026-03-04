@@ -328,6 +328,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   scheduleNotificationElement.setAttribute('highlighted', 'false');
   scheduleNotificationElement.setAttribute('type', 'schedule-notification');
   scheduleNotificationElement.setAttribute('enabled', 'true');
+  scheduleNotificationElement.setAttribute('processing', 'false');
 
   const scheduleNotificationIconElement = documentCreateDivElement();
   scheduleNotificationIconElement.classList.add('css_route_group_item_button_icon');
