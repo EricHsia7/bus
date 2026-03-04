@@ -68,7 +68,6 @@ export function closeScheduleNotification(): void {
 }
 
 export function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
-  // promptMessage('manufacturing', '處理中');
   thisButtonElement.setAttribute('enabled', 'false');
   thisButtonElement.setAttribute('processing', 'true');
   closeScheduleNotification();
