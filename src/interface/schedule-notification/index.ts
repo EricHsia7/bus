@@ -68,26 +68,26 @@ export function closeScheduleNotification(): void {
 }
 
 export function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number, index: number): void {
-  promptMessage('manufacturing', '處理中');
+  // promptMessage('manufacturing', '處理中');
   thisButtonElement.setAttribute('enabled', 'false');
+  thisButtonElement.setAttribute('processing', 'true');
   closeScheduleNotification();
   scheduleNotificationForStop(StopID, RouteID, EstimateTime, index).then((result) => {
     switch (result) {
       case 0:
         promptMessage('error', '設定失敗');
-        thisButtonElement.setAttribute('enabled', 'true');
         break;
       case 1:
         promptMessage('check_circle', '設定成功');
-        thisButtonElement.setAttribute('enabled', 'true');
         thisButtonElement.setAttribute('highlighted', 'true');
         break;
       case 2:
         promptMessage('warning', '在設定中註冊後才可設定到站通知');
-        thisButtonElement.setAttribute('enabled', 'true');
         break;
       default:
         break;
     }
+    thisButtonElement.setAttribute('processing', 'false');
+    thisButtonElement.setAttribute('enabled', 'true');
   });
 }

@@ -569,6 +569,13 @@
   opacity: var(--b-cssvar-disabled-opacity);
 }
 
+/* processing: true */
+.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[processing="true"] {
+  animation-name: processing;
+  animation-duration: var(--b-cssvar-transition-duration);
+  animation-iteration-count: infinite;
+}
+
 /* body > buttons > button > button icon */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button .css_route_group_item_button_icon {
   position: relative;
