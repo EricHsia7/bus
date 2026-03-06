@@ -41,7 +41,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
     scheduled: [],
-    trackQuantity: 1,
+    trackQuantity: [1, 1, 1, 1, 1, 1, 1],
     timeZoneOffset: -480
   };
 
