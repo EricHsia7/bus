@@ -138,7 +138,9 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     });
 
     // Sort primarily by time, secondarily by type (-1 before +1)
-    times[i].sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+    times[i].sort(function (a, b) {
+      return a[0] === b[0] ? a[1] - b[1] : a[0] - b[0];
+    });
     currentCount = 0;
     maxCount = 0;
     for (const time of times[i]) {
