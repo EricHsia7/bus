@@ -13,6 +13,7 @@ export interface integratedRouteCalendarRepeatedEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
+  track: number;
   day: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 }
 
@@ -21,14 +22,16 @@ export interface integratedRouteCalendarScheduledEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
+  track: number;
   date: [year: number, month: number, date: number];
 }
 
 export type integratedRouteCalendarDay = Array<integratedRouteCalendarRepeatedEvent>;
 
 export interface integratedRouteCalendar {
-  repeated: [mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sun: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
+  repeated: [sun: integratedRouteCalendarDay, mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
   scheduled: Array<integratedRouteCalendarScheduledEvent>;
+  trackQuantity: [sun: number, mon: number, tue: number, wed: number, thu: number, fri: number, sat: number];
   timeZoneOffset: -480;
 }
 
