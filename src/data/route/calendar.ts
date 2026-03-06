@@ -129,16 +129,20 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     }
   }
 
+  let currentCount = 0;
+  let maxCount = 0;
   for (let i = 0; i < 7; i++) {
+    // Sort events by time
     result.repeated[i].sort(function (a, b) {
       return a.time[0] - b.time[0];
     });
+
+    // Sort primarily by time, secondarily by type (-1 before +1)
     times[i].sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
-    // Sorted primarily by time, secondarily by type (-1 before +1)
-    let currentCount = 0;
-    let maxCount = 0;
-    for (let [, type] of times[i]) {
-      currentCount += type;
+    currentCount = 0;
+    maxCount = 0;
+    for (const time of times[i]) {
+      currentCount += time[1];
       maxCount = Math.max(maxCount, currentCount);
     }
     result.trackQuantity[i] = maxCount > 0 ? maxCount : 1;
