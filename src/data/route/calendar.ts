@@ -41,8 +41,11 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
     scheduled: [],
+    trackQuantity: 1,
     timeZoneOffset: -480
   };
+
+  const times: Array<Array<[number, 1 | -1]>> = [[], [], [], [], [], [], []];
 
   for (const item of SemiTimeTable) {
     if (PathAttributeId.indexOf(item.PathAttributeId) < 0) {
@@ -73,9 +76,11 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [longHeadway, lowHeadway],
         count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        track: 0,
         day: day
       };
       result.repeated[day].push(repeatedEvent);
+      times[day].push([start, 1], [end, -1]);
     } else if (item.DateType === '1') {
       const dateValue = item.DateValue;
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
@@ -83,6 +88,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [longHeadway, lowHeadway],
         count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        track: 0,
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
@@ -104,9 +110,11 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [assumedDuration, assumedDuration],
         count: [1, 1],
+        track: 0,
         day: day
       };
       result.repeated[day].push(repeatedEvent);
+      times[day].push([start, 1], [end, -1]);
     } else if (item.DateType === '1') {
       const dateValue = item.DateValue;
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
@@ -114,6 +122,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [assumedDuration, assumedDuration],
         count: [1, 1],
+        track: 0,
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
@@ -124,6 +133,15 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     result.repeated[i].sort(function (a, b) {
       return a.time[0] - b.time[0];
     });
+    times[i].sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+    // Sorted primarily by time, secondarily by type (-1 before +1)
+    let currentCount = 0;
+    let maxCount = 0;
+    for (let [, type] of times[i]) {
+      currentCount += type;
+      maxCount = Math.max(maxCount, currentCount);
+    }
+    result.trackQuantity[i] = maxCount > 0 ? maxCount : 1;
   }
 
   deleteDataUpdateTime(requestID);
