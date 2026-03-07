@@ -13,7 +13,7 @@ export interface integratedRouteCalendarRepeatedEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
-  track: number;
+  track: number; // zero-based
   day: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 }
 
@@ -22,7 +22,7 @@ export interface integratedRouteCalendarScheduledEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
-  track: number;
+  track: number; // zero-based
   date: [year: number, month: number, date: number];
 }
 
@@ -131,6 +131,8 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
 
   let currentCount = 0;
   let maxCount = 0;
+  let lastEndTime = [0];
+  let lastTrack = 0;
   for (let i = 0; i < 7; i++) {
     // Sort events by time
     result.repeated[i].sort(function (a, b) {
@@ -143,11 +145,26 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     });
     currentCount = 0;
     maxCount = 0;
+    lastEndTime = [0];
+    lastTrack = 0;
+
     for (const time of times[i]) {
       currentCount += time[1];
       maxCount = Math.max(maxCount, currentCount);
     }
     result.trackQuantity[i] = maxCount > 0 ? maxCount : 1;
+    for (let j = 0, l = result.repeated[i].length; j < l; j++) {
+      if (result.repeated[i][j].time[0] < lastEndTime[lastTrack]) {
+        lastTrack++;
+        lastEndTime.push(0);
+      } else {
+        lastTrack--;
+      }
+      if (result.repeated[i][j].time[1] > lastEndTime[lastTrack]) {
+        lastEndTime[lastTrack] = result.repeated[i][j].time[1];
+      }
+      result.repeated[i][j].track = lastTrack;
+    }
   }
 
   deleteDataUpdateTime(requestID);
