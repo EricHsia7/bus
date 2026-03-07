@@ -35,8 +35,9 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const eventBoxPadding = 3;
   const eventBoxFontWeight = 500;
   const eventBoxFontSize = 15;
-  const eventBoxGap = 5;
-  const eventBoxWidth = (width - gridLabelWidth - (integration.trackQuantity[day] - 1) * eventBoxGap) / integration.trackQuantity[day];
+  const eventBoxHorizontalGap = 2;
+  const eventBoxVerticalGap = 5;
+  const eventBoxWidth = (width - gridLabelWidth - (integration.trackQuantity[day] - 1) * eventBoxVerticalGap) / integration.trackQuantity[day];
 
   const gridLinePathCommands = [];
   const gridLineLabels = [];
@@ -75,9 +76,9 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const eventBoxTexts = [];
   const minutesPerDay = 24 * 60;
   for (let i = events.length - 1; i >= 0; i--) {
-    const x = gridLabelWidth + (eventBoxWidth + eventBoxGap) * events[i].track;
-    const y = (events[i].time[0] / minutesPerDay) * height;
-    const eventBoxHeight = ((events[i].time[1] - events[i].time[0]) / minutesPerDay) * height;
+    const x = gridLabelWidth + (eventBoxWidth + eventBoxVerticalGap) * events[i].track;
+    const y = (events[i].time[0] / minutesPerDay) * height + eventBoxHorizontalGap / 2;
+    const eventBoxHeight = ((events[i].time[1] - events[i].time[0]) / minutesPerDay) * height - eventBoxHorizontalGap / 2;
     const startMinutes = events[i].time[0] % 60;
     const startHours = (events[i].time[0] - startMinutes) / 60;
     const endMinutes = events[i].time[1] % 60;
