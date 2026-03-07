@@ -1,10 +1,10 @@
 # Bundle Statistics
 
-[2.81 MB] **\*.\***
+[2.82 MB] **\*.\***
 <details>
-<summary>[31.67 KB] <b>*.html</b></summary>
+<summary>[31.72 KB] <b>*.html</b></summary>
 
-- [31.67 KB] **index.html**
+- [31.72 KB] **index.html**
 </details>
 <details>
 <summary>[349.49 KB] <b>*.js</b></summary>
@@ -47,12 +47,12 @@
 - [510 Bytes] **82a2e0280e7aaf91e0be.js**
 </details>
 <details>
-<summary>[124.41 KB] <b>*.css</b></summary>
+<summary>[125.05 KB] <b>*.css</b></summary>
 
 - [23.32 KB] **bb466f99f75f3638bd9b.css**
 - [20.91 KB] **32079caef5a4e4275e14.css**
 - [19.55 KB] **e6ae39c014e37dc2b287.css**
-- [17.35 KB] **7b695f718fbad04bb14d.css**
+- [18 KB] **19ba7a01c72afd6621a2.css**
 - [16.52 KB] **4e9db9159b63fb1dbfc7.css**
 - [15.2 KB] **7f06adfb9940e919c383.css**
 - [11.54 KB] **047677af58ae05dd0e12.css**
@@ -102,7 +102,7 @@
 - [163 Bytes] **ed7810c0ece095419ce1.js.LICENSE.txt**
 </details>
 <details>
-<summary>[2.27 MB] <b>*.map</b></summary>
+<summary>[2.28 MB] <b>*.map</b></summary>
 
 - [148 KB] **workbox-bd643b3e.js.map**
 - [141.48 KB] **ed7810c0ece095419ce1.js.map**
@@ -116,8 +116,8 @@
 - [70.03 KB] **c856add981b7b83c2c8f.js.map**
 - [70.02 KB] **7d2aa3d8678b512652bc.js.map**
 - [69.22 KB] **32079caef5a4e4275e14.css.map**
+- [63.06 KB] **19ba7a01c72afd6621a2.css.map**
 - [60.46 KB] **0bfe28fc914d6f9d58a6.js.map**
-- [59.86 KB] **7b695f718fbad04bb14d.css.map**
 - [56.91 KB] **9dcace3f167acabcdc46.js.map**
 - [56.67 KB] **2c763512e2f43b2d8526.js.map**
 - [54.41 KB] **d11c39b7589cfdfb45f6.js.map**
