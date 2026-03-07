@@ -157,7 +157,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
       if (result.repeated[i][j].time[0] < lastEndTime[lastTrack]) {
         lastTrack++;
         lastEndTime.push(0);
-      } else {
+      } else if (result.repeated[i][j].time[0] > lastEndTime[lastTrack]) {
         lastTrack--;
       }
       if (result.repeated[i][j].time[1] > lastEndTime[lastTrack]) {
