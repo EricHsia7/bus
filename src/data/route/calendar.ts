@@ -131,7 +131,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
 
   let lastEndTime = [0];
   let lastTrack = 0;
-  let maxTrack = 0;
+  let currentTrack = -1;
   for (let i = 0; i < 7; i++) {
     // Sort events by time
     result.repeated[i].sort(function (a, b) {
@@ -140,23 +140,24 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
 
     lastEndTime = [0];
     lastTrack = 0;
-    maxTrack = 0;
     for (let j = 0, l = result.repeated[i].length; j < l; j++) {
-      if (result.repeated[i][j].time[0] < lastEndTime[lastTrack]) {
-        lastTrack++;
-        lastEndTime.push(0);
-        if (lastTrack > maxTrack) {
-          maxTrack = lastTrack;
+      currentTrack = -1;
+      for (let k = 0, m = lastEndTime.length; k < m; k++) {
+        if (result.repeated[i][j].time[0] >= lastEndTime[k]) {
+          currentTrack = k;
+          break;
         }
-      } else if (lastTrack > 0) {
-        lastTrack--;
       }
-      if (result.repeated[i][j].time[1] > lastEndTime[lastTrack]) {
-        lastEndTime[lastTrack] = result.repeated[i][j].time[1];
+      if (currentTrack < 0) {
+        lastEndTime.push(0);
+        currentTrack = lastEndTime.length - 1;
       }
-      result.repeated[i][j].track = lastTrack;
+      if (result.repeated[i][j].time[1] > lastEndTime[currentTrack]) {
+        lastEndTime[currentTrack] = result.repeated[i][j].time[1];
+      }
+      result.repeated[i][j].track = currentTrack;
     }
-    result.trackQuantity[i] = maxTrack + 1;
+    result.trackQuantity[i] = lastEndTime.length;
   }
 
   deleteDataUpdateTime(requestID);
