@@ -137,7 +137,6 @@ async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid
   currentDate = new Date();
   const requestID = generateIdentifier();
   const integration = await integrateRouteCalendar(PathAttributeId, requestID);
-  console.log(integration);
   currentIntegration = integration;
   for (let i = 0; i < 3; i++) {
     const date = offsetDate(currentDate, i - 1, 0, 0);
