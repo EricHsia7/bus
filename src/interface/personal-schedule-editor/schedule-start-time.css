@@ -18,6 +18,6 @@
   text-align: left;
 }
 
-.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-end-time"] .css_personal_schedule_editor_group_body input::-webkit-date-and-time-value {
+.css_personal_schedule_editor_field .css_personal_schedule_editor_body .css_personal_schedule_editor_groups .css_personal_schedule_editor_group[group="schedule-start-time"] .css_personal_schedule_editor_group_body input::-webkit-date-and-time-value {
   text-align: left;
 }
