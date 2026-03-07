@@ -13,6 +13,7 @@ export interface integratedRouteCalendarRepeatedEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
+  track: number; // zero-based
   day: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 }
 
@@ -21,14 +22,16 @@ export interface integratedRouteCalendarScheduledEvent {
   time: integratedRouteCalendarEventTime;
   interval: integratedRouteCalendarEventInterval;
   count: integratedRouteCalendarEventCount;
+  track: number; // zero-based
   date: [year: number, month: number, date: number];
 }
 
 export type integratedRouteCalendarDay = Array<integratedRouteCalendarRepeatedEvent>;
 
 export interface integratedRouteCalendar {
-  repeated: [mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sun: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
+  repeated: [sun: integratedRouteCalendarDay, mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
   scheduled: Array<integratedRouteCalendarScheduledEvent>;
+  trackQuantity: [sun: number, mon: number, tue: number, wed: number, thu: number, fri: number, sat: number];
   timeZoneOffset: -480;
 }
 
@@ -38,6 +41,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
     scheduled: [],
+    trackQuantity: [1, 1, 1, 1, 1, 1, 1],
     timeZoneOffset: -480
   };
 
@@ -70,6 +74,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [longHeadway, lowHeadway],
         count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        track: 0,
         day: day
       };
       result.repeated[day].push(repeatedEvent);
@@ -80,6 +85,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [longHeadway, lowHeadway],
         count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
+        track: 0,
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
@@ -101,6 +107,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [assumedDuration, assumedDuration],
         count: [1, 1],
+        track: 0,
         day: day
       };
       result.repeated[day].push(repeatedEvent);
@@ -111,16 +118,40 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         time: [start, end],
         interval: [assumedDuration, assumedDuration],
         count: [1, 1],
+        track: 0,
         date: [parseInt(dateValue.slice(0, -4), 10), parseInt(dateValue.slice(-4, -2), 10), parseInt(dateValue.slice(-2), 10)]
       };
       result.scheduled.push(scheduledEvent);
     }
   }
 
+  let lastEndTime = [0];
+  let currentTrack = -1;
   for (let i = 0; i < 7; i++) {
+    // Sort events by time
     result.repeated[i].sort(function (a, b) {
       return a.time[0] - b.time[0];
     });
+
+    lastEndTime = [0];
+    for (let j = 0, l = result.repeated[i].length; j < l; j++) {
+      currentTrack = -1;
+      for (let k = 0, m = lastEndTime.length; k < m; k++) {
+        if (result.repeated[i][j].time[0] >= lastEndTime[k]) {
+          currentTrack = k;
+          break;
+        }
+      }
+      if (currentTrack < 0) {
+        lastEndTime.push(0);
+        currentTrack = lastEndTime.length - 1;
+      }
+      if (result.repeated[i][j].time[1] > lastEndTime[currentTrack]) {
+        lastEndTime[currentTrack] = result.repeated[i][j].time[1];
+      }
+      result.repeated[i][j].track = currentTrack;
+    }
+    result.trackQuantity[i] = lastEndTime.length;
   }
 
   deleteDataUpdateTime(requestID);
