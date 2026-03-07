@@ -45,8 +45,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     timeZoneOffset: -480
   };
 
-  const times: Array<Array<[number, 1 | -1]>> = [[], [], [], [], [], [], []];
-
   for (const item of SemiTimeTable) {
     if (PathAttributeId.indexOf(item.PathAttributeId) < 0) {
       continue;
@@ -80,7 +78,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         day: day
       };
       result.repeated[day].push(repeatedEvent);
-      times[day].push([start, 1], [end, -1]);
     } else if (item.DateType === '1') {
       const dateValue = item.DateValue;
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
@@ -114,7 +111,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         day: day
       };
       result.repeated[day].push(repeatedEvent);
-      times[day].push([start, 1], [end, -1]);
     } else if (item.DateType === '1') {
       const dateValue = item.DateValue;
       const scheduledEvent: integratedRouteCalendarScheduledEvent = {
@@ -130,7 +126,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
   }
 
   let lastEndTime = [0];
-  let lastTrack = 0;
   let currentTrack = -1;
   for (let i = 0; i < 7; i++) {
     // Sort events by time
@@ -139,7 +134,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     });
 
     lastEndTime = [0];
-    lastTrack = 0;
     for (let j = 0, l = result.repeated[i].length; j < l; j++) {
       currentTrack = -1;
       for (let k = 0, m = lastEndTime.length; k < m; k++) {
