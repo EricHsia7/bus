@@ -36,7 +36,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const eventBoxFontWeight = 500;
   const eventBoxFontSize = 15;
   const eventBoxHorizontalGap = 2;
-  const eventBoxVerticalGap = 5;
+  const eventBoxVerticalGap = 3;
   const eventBoxWidth = (width - gridLabelWidth - (integration.trackQuantity[day] - 1) * eventBoxVerticalGap) / integration.trackQuantity[day];
 
   const gridLinePathCommands = [];
