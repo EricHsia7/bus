@@ -83,10 +83,10 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
     const startHours = (events[i].time[0] - startMinutes) / 60;
     const endMinutes = events[i].time[1] % 60;
     const endHours = (events[i].time[1] - endMinutes) / 60;
-    const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')} - ${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+    const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}-${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
     const titleWidth = 30;
     const titleHeight = 17;
-    const description = `每${events[i].interval[0] === events[i].interval[1] ? events[i].interval[0] : events[i].interval.join(' - ')}分鐘一班 | ${events[i].count[0] === events[i].count[1] ? events[i].count[0] : events[i].count.join(' - ')}班`;
+    const description = `${events[i].interval[0] === events[i].interval[1] ? events[i].interval[0] : events[i].interval.join('-')}分鐘一班|${events[i].count[0] === events[i].count[1] ? events[i].count[0] : events[i].count.join('-')}班`;
     const descriptionWidth = 30;
     const descriptionHeight = 17;
     Array.prototype.push.apply(eventBoxPathCommands, generateRoundedRectPath(x, y, eventBoxWidth, eventBoxHeight, borderRadius, false));
