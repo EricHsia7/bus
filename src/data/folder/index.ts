@@ -241,9 +241,6 @@ export function listFolders(): FolderArray {
     };
     result.push(folderObject);
   }
-  result.sort(function (a, b) {
-    return a.timestamp - b.timestamp;
-  });
   return result;
 }
 
