@@ -12,12 +12,13 @@ let storage = {
   recentViewsStore: false, // 8
   notificationStore: false, // 9
   notificationScheduleStore: false, // 10
-  folderListStore: false, // 11
-  folderContentIndexStore: false, // 12
-  folderContentStore: false // 13
+  folderIndexStore: false, // 11
+  folderListStore: false, // 12
+  folderContentIndexStore: false, // 13
+  folderContentStore: false // 14
 };
 
-const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 let dummyStorage = false;
 async function lfDummyOpen() {
