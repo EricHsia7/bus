@@ -627,6 +627,8 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   if (index > -1 && thisFolderContentIndexArray.length > 0) {
     thisFolderContentIndexArray.splice(index, 1);
     await lfSetItem(13, folderKey, JSON.stringify(thisFolderContentIndexArray));
+  } else {
+    return false;
   }
 
   // Remove content if there are no other references
