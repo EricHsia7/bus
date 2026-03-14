@@ -515,10 +515,7 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 
 export async function saveToFolder(folderID: Folder['id'], content: FolderContent): Promise<boolean> {
   const folderKey = `f_${folderID}`;
-  const contentKey = `${content.type}_${content.id}`;
-  const thisFolder = getFolder(folderID);
-
-  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+  if (!hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
 
@@ -528,6 +525,8 @@ export async function saveToFolder(folderID: Folder['id'], content: FolderConten
   }
 
   const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+
+  const contentKey = `${content.type}_${content.id}`;
   if (thisFolderContentIndexArray.length === 0 || thisFolderContentIndexArray.indexOf(contentKey) < 0) {
     thisFolderContentIndexArray.push(contentKey);
     await lfSetItem(13, folderKey, JSON.stringify(thisFolderContentIndexArray));
