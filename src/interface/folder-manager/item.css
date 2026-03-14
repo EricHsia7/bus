@@ -14,6 +14,10 @@
   scroll-snap-type: x mandatory;
 }
 
+.css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item::-webkit-scrollbar {
+  display: none;
+}
+
 /* item > head */
 .css_folder_manager_field .css_folder_manager_body .css_folder_manager_folder_list .css_folder_manager_folder_item .css_folder_manager_folder_item_head {
   position: relative;

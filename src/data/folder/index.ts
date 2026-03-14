@@ -219,7 +219,7 @@ export async function updateFolderIndex(folderID: Folder['id'], direction: 'up' 
 
 export async function removeFolder(folderID: Folder['id']): Promise<boolean> {
   const folderKey = `f_${folderID}`;
-  if (hasOwnProperty(FolderList, folderKey)) {
+  if (!hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
 
