@@ -16,15 +16,15 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Main container
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_folder_manager_folder_item');
-  itemElement.onclick = function () {
-    openFolderEditor(item.id, function () {
-      initializeFolderManagerField();
-    });
-  };
 
   // Head
   const headElement = documentCreateDivElement();
   headElement.classList.add('css_folder_manager_folder_item_head');
+  headElement.onclick = function () {
+    openFolderEditor(item.id, function () {
+      initializeFolderManagerField();
+    });
+  };
 
   // Icon
   const iconElement = documentCreateDivElement();
@@ -55,7 +55,7 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   sortUpElement.classList.add('css_folder_manager_folder_item_drawer_button');
   sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortUpElement.onclick = () => {
-    moveItemOnFolderManager(itemElement, folder.id, 'up');
+    moveItemOnFolderManager(itemElement, item.id, 'up');
   };
 
   // Sort down control
@@ -63,7 +63,7 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   sortDownElement.classList.add('css_folder_manager_folder_item_drawer_button');
   sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
   sortDownElement.onclick = () => {
-    moveItemOnFolderManager(itemElement, folder.id, 'down');
+    moveItemOnFolderManager(itemElement, item.id, 'down');
   };
 
   // Delete control
@@ -71,7 +71,7 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   deleteElement.classList.add('css_folder_manager_folder_item_drawer_button');
   deleteElement.appendChild(getIconElement('delete'));
   deleteElement.onclick = () => {
-    removeItemOnFolderManager(itemElement, folder.id);
+    removeItemOnFolderManager(itemElement, item.id);
   };
 
   // Assemble drawer
