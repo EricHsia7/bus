@@ -88,15 +88,24 @@ export interface FolderWithContentLength extends Folder {
 export type FolderWithContentLengthArray = Array<FolderWithContentLength>;
 
 const FolderList: { [key: string]: Folder } = {};
+const FolderIndex: Array<string> = [];
 
 export async function initializeFolderList() {
-  const folderKeys = await lfListItemKeys(12);
-  for (const folderKey of folderKeys) {
+  const folderIndexJSON = await lfGetItem(11, 'folderIndex');
+  let folderIndexArray: Array<string> = [];
+  if (folderIndexJSON) {
+    folderIndexArray = JSON.parse(folderIndexJSON) as Array<string>;
+  } else {
+    folderIndexArray = await lfListItemKeys(12);
+    await lfSetItem(11, 'folderIndex', JSON.stringify(folderIndexArray));
+  }
+  for (const folderKey of folderIndexArray) {
     const thisFolderJSON = await lfGetItem(12, folderKey);
     if (thisFolderJSON) {
       const thisFolderObject = JSON.parse(thisFolderJSON) as Folder;
       if (!hasOwnProperty(FolderList, folderKey)) {
         FolderList[folderKey] = thisFolderObject;
+        FolderIndex.push(folderKey);
       }
     }
   }
@@ -115,6 +124,11 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
   if (hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
+  const folderIndexJSON = await lfGetItem(11, 'folderIndex');
+  const folderIndexArray = JSON.parse(folderIndexJSON) as Array<string>;
+  if (folderIndexArray.indexOf(folderKey) > -1) {
+    return false;
+  }
   const existingFolder = await lfGetItem(12, folderKey);
   if (existingFolder) {
     return false;
@@ -131,6 +145,8 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
 
   // Save folder
   FolderList[folderKey] = newFolder;
+  folderIndexArray.push(folderKey);
+  await lfSetItem(11, 'folderIndex', JSON.stringify(folderIndexArray));
   await lfSetItem(12, folderKey, JSON.stringify(newFolder));
   await lfSetItem(13, folderKey, JSON.stringify([]));
   return folderID;
@@ -166,6 +182,40 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   return true;
 }
 
+export async function updateFolderIndex(folderID: Folder['id'], direction: 'up' | 'down'): Promise<boolean> {
+  const folderKey = `f_${folderID}`;
+
+  const folderIndexJSON = await lfGetItem(11, 'folderIndex');
+  if (!folderIndexJSON) {
+    return false;
+  }
+  const folderIndexArray = JSON.parse(folderIndexJSON) as Array<string>;
+
+  const index = folderIndexArray.indexOf(folderKey);
+  if (index > -1 && folderIndexArray.length > 1) {
+    let offset: number = 0;
+    switch (direction) {
+      case 'up':
+        offset = -1;
+        break;
+      case 'down':
+        offset = 1;
+        break;
+      default:
+        offset = 0;
+        break;
+    }
+    folderIndexArray.splice(index, 1);
+    folderIndexArray.splice(index + offset, 0, folderKey);
+    FolderIndex.splice(index, 1);
+    FolderIndex.splice(index + offset, 0, folderKey);
+    await lfSetItem(11, 'folderIndex', JSON.stringify(folderIndexArray));
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function getFolder(folderID: Folder['id']): Folder | false {
   const folderKey: string = `f_${folderID}`;
   if (!hasOwnProperty(FolderList, folderKey)) {
@@ -178,12 +228,11 @@ export function getFolder(folderID: Folder['id']): Folder | false {
     timestamp: FolderList[folderKey].timestamp
   };
   return folderObject;
-  // return cloneDeep(Folders[folderKey]);
 }
 
 export function listFolders(): FolderArray {
   const result = [];
-  for (const folderKey in FolderList) {
+  for (const folderKey of FolderIndex) {
     const folderObject: Folder = {
       name: FolderList[folderKey].name,
       icon: FolderList[folderKey].icon,
