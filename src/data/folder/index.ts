@@ -217,6 +217,60 @@ export async function updateFolderIndex(folderID: Folder['id'], direction: 'up' 
   }
 }
 
+export async function removeFolder(folderID: Folder['id']): Promise<boolean> {
+  const folderKey = `f_${folderID}`;
+  if (hasOwnProperty(FolderList, folderKey)) {
+    return false;
+  }
+
+  const folderIndexJSON = await lfGetItem(11, 'folderIndex');
+  if (!folderIndexJSON) {
+    return false;
+  }
+
+  const folderIndexArray = JSON.parse(folderIndexJSON) as Array<string>;
+  const thisFolderIndex = folderIndexArray.indexOf(folderKey);
+  if (thisFolderIndex < 0) {
+    return false;
+  }
+
+  const thisFolderJSON = await lfGetItem(12, folderKey);
+  if (!thisFolderJSON) {
+    return false;
+  }
+
+  const thisFolderContentIndexJSON = await lfGetItem(13, folderKey);
+  if (!thisFolderContentIndexJSON) {
+    return false;
+  }
+  const thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
+
+  delete FolderList[folderKey];
+  FolderIndex.splice(thisFolderIndex, 1);
+  folderIndexArray.splice(thisFolderIndex, 1);
+  await lfSetItem(11, 'folderIndex', JSON.stringify(folderIndexArray));
+  await lfRemoveItem(12, folderKey);
+  await lfRemoveItem(13, folderKey);
+
+  let folderContentIndexArray: Array<string> = [];
+  for (const key of folderIndexArray) {
+    const folderContentIndexJSON = await lfGetItem(13, key);
+    if (!folderContentIndexJSON) {
+      continue;
+    }
+    folderContentIndexArray = folderContentIndexArray.concat(JSON.parse(folderContentIndexJSON) as Array<string>);
+  }
+
+  for (const key of thisFolderContentIndexArray) {
+    // Remove content if there are no other references
+    if (folderContentIndexArray.indexOf(key) < 0) {
+      await lfRemoveItem(14, key);
+    }
+  }
+
+  return true;
+}
+
 export function getFolder(folderID: Folder['id']): Folder | false {
   const folderKey: string = `f_${folderID}`;
   if (!hasOwnProperty(FolderList, folderKey)) {
@@ -559,8 +613,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   const thisFolderContentKey = `${type}_${id}`;
 
   // Check existence
-  const thisFolder = getFolder(folderID);
-  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+  if (!hasOwnProperty(FolderList, folderKey)) {
     return false;
   }
 
