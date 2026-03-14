@@ -145,6 +145,7 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
 
   // Save folder
   FolderList[folderKey] = newFolder;
+  FolderIndex.push(folderKey);
   folderIndexArray.push(folderKey);
   await lfSetItem(11, 'folderIndex', JSON.stringify(folderIndexArray));
   await lfSetItem(12, folderKey, JSON.stringify(newFolder));
