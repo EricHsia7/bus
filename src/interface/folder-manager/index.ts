@@ -1,9 +1,10 @@
-import { FolderWithContentLength, listFoldersWithContentLength } from '../../data/folder/index';
+import { FolderWithContentLength, listFoldersWithContentLength, removeFolder, updateFolderIndex } from '../../data/folder/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { promptMessage } from '../prompt/index';
 
 const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
 const bodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
@@ -13,10 +14,13 @@ const rightButtonElement = elementQuerySelector(headElement, '.css_folder_manage
 
 function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Main container
-  const folderItemElement = documentCreateDivElement();
-  folderItemElement.classList.add('css_folder_manager_folder_item');
+  const itemElement = documentCreateDivElement();
+  itemElement.classList.add('css_folder_manager_folder_item');
 
-  folderItemElement.onclick = function () {
+  // Head
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_folder_manager_folder_item_head');
+  headElement.onclick = function () {
     openFolderEditor(item.id, function () {
       initializeFolderManagerField();
     });
@@ -42,13 +46,49 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   arrowElement.classList.add('css_folder_manager_folder_item_arrow');
   arrowElement.appendChild(getIconElement('arrow_forward_ios'));
 
-  // Assemble
-  folderItemElement.appendChild(iconElement);
-  folderItemElement.appendChild(nameElement);
-  folderItemElement.appendChild(statusElement);
-  folderItemElement.appendChild(arrowElement);
+  // Drawer
+  const drawerElement = documentCreateDivElement();
+  drawerElement.classList.add('css_folder_manager_folder_item_drawer');
 
-  return folderItemElement;
+  // Sort up control
+  const sortUpElement = documentCreateDivElement();
+  sortUpElement.classList.add('css_folder_manager_folder_item_drawer_button');
+  sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
+  sortUpElement.onclick = () => {
+    moveItemOnFolderManager(itemElement, item.id, 'up');
+  };
+
+  // Sort down control
+  const sortDownElement = documentCreateDivElement();
+  sortDownElement.classList.add('css_folder_manager_folder_item_drawer_button');
+  sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
+  sortDownElement.onclick = () => {
+    moveItemOnFolderManager(itemElement, item.id, 'down');
+  };
+
+  // Delete control
+  const deleteElement = documentCreateDivElement();
+  deleteElement.classList.add('css_folder_manager_folder_item_drawer_button');
+  deleteElement.appendChild(getIconElement('delete'));
+  deleteElement.onclick = () => {
+    removeItemOnFolderManager(itemElement, item.id);
+  };
+
+  // Assemble drawer
+  drawerElement.appendChild(sortUpElement);
+  drawerElement.appendChild(sortDownElement);
+  drawerElement.appendChild(deleteElement);
+
+  // Assemble head
+  headElement.appendChild(iconElement);
+  headElement.appendChild(nameElement);
+  headElement.appendChild(statusElement);
+  headElement.appendChild(arrowElement);
+
+  itemElement.appendChild(headElement);
+  itemElement.appendChild(drawerElement);
+
+  return itemElement;
 }
 
 async function initializeFolderManagerField() {
@@ -86,4 +126,40 @@ export function closeFolderManager(): void {
   hideFolderManager();
   showPreviousPage();
   revokePageHistory('FolderManager');
+}
+
+export async function removeItemOnFolderManager(itemElement: HTMLElement, folderID: Folder['id']) {
+  const removal = await removeFolder(folderID);
+  if (removal) {
+    itemElement.remove();
+    promptMessage('delete', '已移除資料夾');
+  } else {
+    promptMessage('error', '無法移除');
+  }
+}
+
+export async function moveItemOnFolderManager(itemElement: HTMLElement, folderID: Folder['id'], direction: 'up' | 'down') {
+  const update = await updateFolderIndex(folderID, direction);
+  if (update) {
+    switch (direction) {
+      case 'up':
+        const previousSibling = itemElement.previousElementSibling;
+        if (previousSibling) {
+          itemElement.parentNode.insertBefore(itemElement, previousSibling);
+        }
+        promptMessage('arrow_circle_up', '已往上移');
+        break;
+      case 'down':
+        const nextSibling = itemElement.nextElementSibling;
+        if (nextSibling) {
+          itemElement.parentNode.insertBefore(nextSibling, itemElement);
+        }
+        promptMessage('arrow_circle_down', '已往下移');
+        break;
+      default:
+        break;
+    }
+  } else {
+    promptMessage('error', '無法移動');
+  }
 }
