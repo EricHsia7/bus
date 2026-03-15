@@ -41,6 +41,7 @@ function storeIndexToCategory(store: number): StoreCategory {
     ['通知', 'notification'],
     ['資料夾', 'folders'],
     ['資料夾', 'folders'],
+    ['資料夾', 'folders'],
     ['資料夾', 'folders']
   ][store] || ['其他', 'others'];
   const result = {
