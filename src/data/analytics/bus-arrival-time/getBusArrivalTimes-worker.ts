@@ -7,7 +7,6 @@ interface task {
   busArrivalTimeDataGroups: BusArrivalTimeDataGroupArray;
   chartWidth: number;
   chartHeight: number;
-  taskID: string;
   port: any;
 }
 
@@ -19,16 +18,16 @@ if ('onconnect' in self) {
   self.onconnect = function (e) {
     const port = e.ports[0];
     port.onmessage = function (event) {
-      const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID] = event.data;
-      taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID, port });
+      const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
+      taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
       processWorkerTask();
     };
   };
 } else {
   const port = self;
   self.onmessage = function (event) {
-    const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID] = event.data;
-    taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID, port });
+    const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
+    taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
     processWorkerTask();
   };
 }
@@ -54,7 +53,7 @@ function processWorkerTask(): void {
   isProcessing = true;
 
   // Dequeue the next task
-  const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID, port }: task = taskQueue.shift();
+  const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port }: task = taskQueue.shift();
 
   const result: BusArrivalTimes = {};
 
@@ -136,8 +135,8 @@ function processWorkerTask(): void {
     }
   }
 
-  // Send the complete HTML back to the main thread
-  port.postMessage([result, taskID]);
+  // Send the complete SVG back to the main thread
+  port.postMessage(result);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in the queue if any

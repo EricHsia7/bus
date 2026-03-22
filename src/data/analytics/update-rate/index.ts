@@ -282,7 +282,7 @@ export async function discardUpdateRateDataGroups() {
   }
 }
 
-const getUpdateRateWorkerResponses = {};
+const getUpdateRateWorkerResolution = [];
 let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -297,10 +297,10 @@ if (typeof SharedWorker !== 'undefined') {
 
 // Handle messages from the worker
 port.onmessage = function (e) {
-  const [result, taskID] = e.data;
-  if (getUpdateRateWorkerResponses[taskID]) {
-    getUpdateRateWorkerResponses[taskID](result); // Resolve the correct promise
-    delete getUpdateRateWorkerResponses[taskID]; // Clean up the response handler
+  const result = e.data;
+  const resolve = getUpdateRateWorkerResolution.shift();
+  if (resolve) {
+    resolve(result); // Resolve the correct promise
   }
 };
 
@@ -311,16 +311,15 @@ port.onerror = function (e) {
 
 export async function getUpdateRate(): Promise<number> {
   const dataGroups = await listUpdateRateDataGroups();
-  const taskID = generateIdentifier();
 
   const result = await new Promise((resolve, reject) => {
-    getUpdateRateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+    getUpdateRateWorkerResolution.push(resolve); // Store the resolve function
 
     port.onerror = function (e) {
       reject(e.message);
     };
 
-    port.postMessage([dataGroups, taskID]); // Send the task to the worker
+    port.postMessage(dataGroups); // Send the task to the worker
   });
 
   return result;

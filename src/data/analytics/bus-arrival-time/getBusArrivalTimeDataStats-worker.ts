@@ -2,7 +2,6 @@ import { BusArrivalTimeData } from './index';
 
 interface task {
   data: Array<BusArrivalTimeData>;
-  taskID: string;
   port: any;
 }
 
@@ -14,16 +13,16 @@ if ('onconnect' in self) {
   self.onconnect = function (e) {
     const port = e.ports[0];
     port.onmessage = function (event) {
-      const [data, taskID] = event.data;
-      taskQueue.push({ data, taskID, port });
+      const data = event.data;
+      taskQueue.push({ data, port });
       processWorkerTask();
     };
   };
 } else {
   const port = self;
   self.onmessage = function (event) {
-    const [data, taskID] = event.data;
-    taskQueue.push({ data, taskID, port });
+    const data = event.data;
+    taskQueue.push({ data, port });
     processWorkerTask();
   };
 }
@@ -32,7 +31,7 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
   
   isProcessing = true;
-  const { data, taskID, port }: task = taskQueue.shift();
+  const { data, port }: task = taskQueue.shift();
 
   const statsArray = new Uint32Array(60 * 24); // one day in minutes
   const dataLength = data.length;
@@ -52,7 +51,7 @@ function processWorkerTask(): void {
     statsArray[index] += offset;
   }
   // Send the complete HTML back to the main thread
-  port.postMessage([Array.from(statsArray), taskID]);
+  port.postMessage(Array.from(statsArray));
 
   isProcessing = false;
   processWorkerTask(); // Process next task in the queue if any
