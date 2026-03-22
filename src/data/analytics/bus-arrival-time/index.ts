@@ -68,7 +68,7 @@ getBusArrivalTimeDataStatsPort.onmessage = function (e) {
   const result = e.data;
   const resolve = getBusArrivalTimeDataStatsWorkerResolution.shift();
   if (resolve) {
-    resolve(result); // resolve
+    resolve(result); // Resolve the correct promise
   }
 };
 
