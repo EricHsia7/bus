@@ -1,5 +1,5 @@
-let pakoInflateWorkerResolution = [];
-var port;
+const pakoInflateWorkerResolution = [];
+let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
 if (typeof SharedWorker !== 'undefined') {
@@ -27,8 +27,7 @@ port.onerror = function (e) {
 
 export async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
   const result = await new Promise((resolve, reject) => {
-    // Store the resolve function
-    pakoInflateWorkerResolution.push(resolve);
+    pakoInflateWorkerResolution.push(resolve); // Store the resolve function
 
     port.onerror = function (e) {
       reject(e.message);

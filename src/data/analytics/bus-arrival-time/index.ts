@@ -50,7 +50,7 @@ export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
 }
 
-const getBusArrivalTimeDataStatsWorkerTasks = {};
+const getBusArrivalTimeDataStatsWorkerResolution = [];
 let getBusArrivalTimeDataStatsPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -65,10 +65,10 @@ if (typeof SharedWorker !== 'undefined') {
 
 // Handle messages from the worker
 getBusArrivalTimeDataStatsPort.onmessage = function (e) {
-  const [result, taskID] = e.data;
-  if (getBusArrivalTimeDataStatsWorkerTasks[taskID]) {
-    getBusArrivalTimeDataStatsWorkerTasks[taskID](result); // resolve
-    delete getBusArrivalTimeDataStatsWorkerTasks[taskID];
+  const result = e.data;
+  const resolve = getBusArrivalTimeDataStatsWorkerResolution.shift();
+  if (resolve) {
+    resolve(result); // resolve
   }
 };
 
@@ -78,14 +78,13 @@ getBusArrivalTimeDataStatsPort.onerror = function (e) {
 };
 
 async function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): Promise<BusArrivalTimeDataGroupStats> {
-  const taskID = generateIdentifier();
-
   const result = await new Promise((resolve, reject) => {
-    getBusArrivalTimeDataStatsWorkerTasks[taskID] = resolve; // Store the resolve function for this taskID
+    getBusArrivalTimeDataStatsWorkerResolution.push(resolve); // Store the resolve function
+
     getBusArrivalTimeDataStatsPort.onerror = function (e) {
       reject(e.message);
     };
-    getBusArrivalTimeDataStatsPort.postMessage([data, taskID]); // Send the task to the worker
+    getBusArrivalTimeDataStatsPort.postMessage(data); // Send the task to the worker
   });
   return result;
 }
@@ -226,7 +225,7 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
   return result;
 }
 
-const getBusArrivalTimesWorkerResponses = {};
+const getBusArrivalTimesWorkerResolution = [];
 let getBusArrivalTimesPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -241,10 +240,10 @@ if (typeof SharedWorker !== 'undefined') {
 
 // Handle messages from the worker
 getBusArrivalTimesPort.onmessage = function (e) {
-  const [result, taskID] = e.data;
-  if (getBusArrivalTimesWorkerResponses[taskID]) {
-    getBusArrivalTimesWorkerResponses[taskID](result); // Resolve the correct promise
-    delete getBusArrivalTimesWorkerResponses[taskID]; // Clean up the response handler
+  const result = e.data;
+  const resolve = getBusArrivalTimesWorkerResolution.shift();
+  if (resolve) {
+    resolve(result); // Resolve the correct promise
   }
 };
 
@@ -254,17 +253,16 @@ getBusArrivalTimesPort.onerror = function (e) {
 };
 
 export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
-  const taskID = generateIdentifier();
-
   const personalSchedules = await listPersonalSchedules();
   const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
 
   const result = await new Promise((resolve, reject) => {
-    getBusArrivalTimesWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+    getBusArrivalTimesWorkerResolution.push(resolve); // Store the resolve function
+
     getBusArrivalTimesPort.onerror = function (e) {
       reject(e.message);
     };
-    getBusArrivalTimesPort.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, taskID]); // Send the task to the worker
+    getBusArrivalTimesPort.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight]); // Send the task to the worker
   });
   return result;
 }

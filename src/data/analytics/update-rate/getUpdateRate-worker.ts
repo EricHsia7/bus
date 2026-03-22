@@ -2,7 +2,6 @@ import { UpdateRateDataGroupArray } from './index';
 
 interface task {
   dataGroups: UpdateRateDataGroupArray;
-  taskID: string;
   port: any;
 }
 
@@ -14,8 +13,8 @@ if ('onconnect' in self) {
     const port = e.ports[0];
 
     port.onmessage = function (event) {
-      const [dataGroups, taskID] = event.data;
-      taskQueue.push({ dataGroups, taskID, port });
+      const dataGroups = event.data;
+      taskQueue.push({ dataGroups, port });
       processWorkerTask();
     };
   };
@@ -23,8 +22,8 @@ if ('onconnect' in self) {
   const port = self;
 
   self.onmessage = function (event) {
-    const [dataGroups, taskID] = event.data;
-    taskQueue.push({ dataGroups, taskID, port });
+    const dataGroups = event.data;
+    taskQueue.push({ dataGroups, port });
     processWorkerTask();
   };
 }
@@ -33,10 +32,10 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const { dataGroups, taskID, port }: task = taskQueue.shift();
+  const { dataGroups, port }: task = taskQueue.shift();
 
   if (dataGroups.length === 0) {
-    port.postMessage([0.8, taskID]);
+    port.postMessage(0.8);
   } else {
     // Perform the calculation
     let weightedAverage: number = 0;
@@ -57,7 +56,7 @@ function processWorkerTask(): void {
     const result = isNaN(weightedAverage) || weightedAverage < 0.1 || weightedAverage > 1 ? 0.8 : weightedAverage;
 
     // Send the result back to the main thread
-    port.postMessage([result, taskID]);
+    port.postMessage(result);
   }
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
