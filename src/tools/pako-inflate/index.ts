@@ -1,6 +1,4 @@
-import { generateIdentifier } from '../index';
-
-let pakoInflateWorkerResponses = {};
+let pakoInflateWorkerResolution = [];
 var port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -15,10 +13,10 @@ if (typeof SharedWorker !== 'undefined') {
 
 // Handle messages from the worker
 port.onmessage = function (e) {
-  const [result, taskID] = e.data;
-  if (pakoInflateWorkerResponses[taskID]) {
-    pakoInflateWorkerResponses[taskID](result); // Resolve the correct promise
-    delete pakoInflateWorkerResponses[taskID]; // Clean up the response handler
+  const result = e.data;
+  const resolve = pakoInflateWorkerResolution.shift();
+  if (resolve) {
+    resolve(result); // Resolve the correct promise
   }
 };
 
@@ -28,16 +26,15 @@ port.onerror = function (e) {
 };
 
 export async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
-  const taskID = generateIdentifier();
-
   const result = await new Promise((resolve, reject) => {
-    pakoInflateWorkerResponses[taskID] = resolve; // Store the resolve function for this taskID
+    // Store the resolve function
+    pakoInflateWorkerResolution.push(resolve);
 
     port.onerror = function (e) {
       reject(e.message);
     };
 
-    port.postMessage([buffer, taskID]); // Send the task to the worker
+    port.postMessage(buffer); // Send the task to the worker
   });
 
   return result;
