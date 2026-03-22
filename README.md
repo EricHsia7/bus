@@ -2,9 +2,9 @@
 
 [2.81 MB] **\*.\***
 <details>
-<summary>[31.74 KB] <b>*.html</b></summary>
+<summary>[31.72 KB] <b>*.html</b></summary>
 
-- [31.74 KB] **index.html**
+- [31.72 KB] **index.html**
 </details>
 <details>
 <summary>[348.38 KB] <b>*.js</b></summary>
@@ -126,7 +126,7 @@
 - [52.37 KB] **3e91ae10a6c09ba3266e.js.map**
 - [51.76 KB] **0215f8c0103a9f3ea4d0.css.map**
 - [50.61 KB] **8278444b8b83d15fe1cf.js.map**
-- [50.08 KB] **a78b564a8404e6dc086a.js.map**
+- [50.1 KB] **a78b564a8404e6dc086a.js.map**
 - [48.15 KB] **5e8130de5655276bcc7e.css.map**
 - [47.55 KB] **5fd822ec4315af836b22.js.map**
 - [47.45 KB] **08b34839ad1a473597d4.js.map**
