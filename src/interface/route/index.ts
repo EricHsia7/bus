@@ -82,8 +82,8 @@ export function initializeRouteSliding(): void {
         }
         delta = Math.abs(currentIndex - routeSliding_initialIndex);
       }
-      const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
-      const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
+      const initialSize = routeSliding_groupStyles[`gs_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
+      const targetSize = routeSliding_groupStyles[`gs_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
@@ -1017,19 +1017,19 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   for (let i = 0; i < groupQuantity; i++) {
     const groupKey = groupKeys[i];
     const width = getTextWidth(groupNames[groupKey], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    routeSliding_groupStyles[groupKey] = {
+    routeSliding_groupStyles[`gs_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  routeSliding_groupStyles[`g_${groupQuantity}`] = {
+  routeSliding_groupStyles[`gs_${groupQuantity}`] = {
     width: 0,
     offset: cumulativeOffset
   };
 
   if (!routeSliding_sliding) {
-    const initialGroupKey = `g_${routeSliding_initialIndex}`;
+    const initialGroupKey = `gs_${routeSliding_initialIndex}`;
     const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
     const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
@@ -1126,8 +1126,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
     thisTabSpanElement.innerText = groupNames[groupKey];
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[groupKey].offset}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[`gs_${i}`].offset}px`);
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[`gs_${i}`].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
     if (skeletonScreen) {
