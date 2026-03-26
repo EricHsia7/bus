@@ -246,7 +246,7 @@ export function showErrorMessage(): void {
 }
 
 export type GroupStyles = {
-  [groupKey: string]: {
+  [gs_index: string]: {
     width: number;
     offset: number;
   };

@@ -80,8 +80,8 @@ export function initializeLocationSliding(): void {
         }
         delta = Math.abs(currentIndex - locationSliding_initialIndex);
       }
-      const initialSize = locationSliding_groupStyles[`g_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
-      const targetSize = locationSliding_groupStyles[`g_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
+      const initialSize = locationSliding_groupStyles[`gs_${locationSliding_initialIndex}`] || { width: 0, offset: 0 };
+      const targetSize = locationSliding_groupStyles[`gs_${locationSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + locationSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateLocationCSS(locationSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
@@ -801,6 +801,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
   const groups = integration.groups;
+  const groupKeys = [];
+  for (const groupKey in itemQuantity) {
+    groupKeys.push(groupKey);
+  }
 
   locationSliding_groupQuantity = groupQuantity;
   locationSliding_fieldWidth = FieldWidth;
@@ -808,21 +812,21 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   let cumulativeOffset = 0;
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
+    const groupKey = groupKeys[i];
     const width = getTextWidth(groups[groupKey].name, 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    locationSliding_groupStyles[groupKey] = {
+    locationSliding_groupStyles[`gs_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  locationSliding_groupStyles[`g_${groupQuantity}`] = {
+  locationSliding_groupStyles[`gs_${groupQuantity}`] = {
     width: 0,
     offset: cumulativeOffset
   };
 
   if (!locationSliding_sliding) {
-    const initialGroupKey = `g_${locationSliding_initialIndex}`;
+    const initialGroupKey = `gs_${locationSliding_initialIndex}`;
     const initialGroupStyle = locationSliding_groupStyles[initialGroupKey];
     const offset = initialGroupStyle.offset * -1 + locationSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
@@ -881,7 +885,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
   const LocationGroupElements = elementQuerySelectorAll(LocationGroupsElement, '.css_location_group');
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
+    const groupKey = groupKeys[i];
 
     const thisLocationGroupElement = LocationGroupElements[i];
 

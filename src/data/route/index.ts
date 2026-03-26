@@ -60,10 +60,10 @@ export interface integratedStopItem {
 }
 
 export interface IntegratedRoute {
-  groupNames: { [key: string]: string };
-  groupedItems: { [key: string]: Array<integratedStopItem> };
+  groupNames: { [g_index: string]: string };
+  groupedItems: { [g_index: string]: Array<integratedStopItem> };
   groupQuantity: number;
-  itemQuantity: { [key: string]: number };
+  itemQuantity: { [g_index: string]: number };
   RouteName: string;
   RouteEndPoints: [departure: string, destination: string];
   dataUpdateTime: number;
