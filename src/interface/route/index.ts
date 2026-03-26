@@ -82,8 +82,8 @@ export function initializeRouteSliding(): void {
         }
         delta = Math.abs(currentIndex - routeSliding_initialIndex);
       }
-      const initialSize = routeSliding_groupStyles[`g_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
-      const targetSize = routeSliding_groupStyles[`g_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
+      const initialSize = routeSliding_groupStyles[`gs_${routeSliding_initialIndex}`] || { width: 0, offset: 0 };
+      const targetSize = routeSliding_groupStyles[`gs_${routeSliding_targetIndex}`] || { width: 0, offset: 0 };
       const tabWidth = initialSize.width + (targetSize.width - initialSize.width) * delta;
       const offset = (initialSize.offset + (targetSize.offset - initialSize.offset) * delta) * -1 + routeSliding_fieldWidth * 0.5 - tabWidth * 0.5;
       updateRouteCSS(routeSliding_groupQuantity, offset, tabWidth - tabPadding, currentIndex);
@@ -606,7 +606,7 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
   }
   updateRouteField(
     {
-      groupNames: ['往載入中', '往載入中'],
+      groupNames: { g_0: '往載入中', g_1: '往載入中' },
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
       itemQuantity: {
@@ -1003,28 +1003,33 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
   const groupNames = integration.groupNames;
+  const groupKeys = [];
+  for (const groupKey in itemQuantity) {
+    groupKeys.push(groupKey);
+  }
 
   routeSliding_groupQuantity = groupQuantity;
   routeSliding_fieldWidth = FieldWidth;
   routeSliding_fieldHeight = FieldHeight;
 
   let cumulativeOffset = 0;
+
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
-    const width = getTextWidth(groupNames[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
-    routeSliding_groupStyles[groupKey] = {
+    const groupKey = groupKeys[i];
+    const width = getTextWidth(groupNames[groupKey], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    routeSliding_groupStyles[`gs_${i}`] = {
       width: width,
       offset: cumulativeOffset
     };
     cumulativeOffset += width;
   }
-  routeSliding_groupStyles[`g_${groupQuantity}`] = {
+  routeSliding_groupStyles[`gs_${groupQuantity}`] = {
     width: 0,
     offset: cumulativeOffset
   };
 
   if (!routeSliding_sliding) {
-    const initialGroupKey = `g_${routeSliding_initialIndex}`;
+    const initialGroupKey = `gs_${routeSliding_initialIndex}`;
     const initialGroupStyle = routeSliding_groupStyles[initialGroupKey];
     const offset = initialGroupStyle.offset * -1 + routeSliding_fieldWidth * 0.5 - initialGroupStyle.width * 0.5;
     const tabLineWidth = initialGroupStyle.width - tabPadding;
@@ -1083,7 +1088,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
+    const groupKey = groupKeys[i];
 
     const thisGroupElement = groupElements[i];
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
@@ -1120,9 +1125,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
-    thisTabSpanElement.innerText = groupNames[i];
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[groupKey].offset}px`);
-    thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
+    thisTabSpanElement.innerText = groupNames[groupKey];
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[`gs_${i}`].offset}px`);
+    thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[`gs_${i}`].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
 
     if (skeletonScreen) {

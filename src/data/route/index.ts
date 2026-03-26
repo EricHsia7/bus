@@ -60,10 +60,10 @@ export interface integratedStopItem {
 }
 
 export interface IntegratedRoute {
-  groupNames: Array<string>;
-  groupedItems: { [key: string]: Array<integratedStopItem> };
+  groupNames: { [g_index: string]: string };
+  groupedItems: { [g_index: string]: Array<integratedStopItem> };
   groupQuantity: number;
-  itemQuantity: { [key: string]: number };
+  itemQuantity: { [g_index: string]: number };
   RouteName: string;
   RouteEndPoints: [departure: string, destination: string];
   dataUpdateTime: number;
@@ -344,7 +344,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   const thisRouteDestination = thisRoute.des;
 
   const result2: IntegratedRoute = {
-    groupNames: [`往${thisRouteDestination}`, `往${thisRouteDeparture}`],
+    groupNames: { g_0: `往${thisRouteDestination}`, g_1: `往${thisRouteDeparture}` },
     groupedItems: groupedItems,
     groupQuantity: groupQuantity,
     itemQuantity: itemQuantity,
