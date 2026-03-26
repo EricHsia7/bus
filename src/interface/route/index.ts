@@ -606,7 +606,7 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
   }
   updateRouteField(
     {
-      groupNames: ['往載入中', '往載入中'],
+      groupNames: { g_0: '往載入中', g_1: '往載入中' },
       groupedItems: groupedItems,
       groupQuantity: defaultGroupQuantity,
       itemQuantity: {
@@ -1003,15 +1003,20 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   const itemQuantity = integration.itemQuantity;
   const groupedItems = integration.groupedItems;
   const groupNames = integration.groupNames;
+  const groupKeys = [];
+  for (const groupKey in itemQuantity) {
+    groupKeys.push(groupKey);
+  }
 
   routeSliding_groupQuantity = groupQuantity;
   routeSliding_fieldWidth = FieldWidth;
   routeSliding_fieldHeight = FieldHeight;
 
   let cumulativeOffset = 0;
+
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
-    const width = getTextWidth(groupNames[i], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
+    const groupKey = groupKeys[i];
+    const width = getTextWidth(groupNames[groupKey], 500, '17px', `"Noto Sans TC", sans-serif`) + tabPadding;
     routeSliding_groupStyles[groupKey] = {
       width: width,
       offset: cumulativeOffset
@@ -1083,7 +1088,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   for (let i = 0; i < groupQuantity; i++) {
-    const groupKey = `g_${i}`;
+    const groupKey = groupKeys[i];
 
     const thisGroupElement = groupElements[i];
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
@@ -1120,7 +1125,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
-    thisTabSpanElement.innerText = groupNames[i];
+    thisTabSpanElement.innerText = groupNames[groupKey];
     thisTabElement.style.setProperty('--b-cssvar-route-tab-offset', `${routeSliding_groupStyles[groupKey].offset}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-width', `${routeSliding_groupStyles[groupKey].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-route-tab-index', i.toString());
