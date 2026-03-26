@@ -485,7 +485,8 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
           if (hasOwnProperty(batchFoundEstimateTime, thisStopKey)) {
             thisEstimateTime = batchFoundEstimateTime[thisStopKey];
           } else {
-            break;
+            continue;
+            // break;
           }
           integratedItem.status = parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode);
           const thisRouteKey = `r_${integratedItem.route.id}`;
