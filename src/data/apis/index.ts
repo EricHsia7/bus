@@ -1,5 +1,4 @@
 import { hasOwnProperty } from '../../tools/index';
-import { clamp } from '../../tools/math';
 import { formatTime } from '../../tools/time';
 import { BusData, BusDataItem } from './getBusData/index';
 import { BusEvent, BusEventItem } from './getBusEvent/index';

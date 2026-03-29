@@ -2,9 +2,10 @@ import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools/index';
 import { BusData, getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
-import { CarInfoItem, getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
+import { CarInfoItem, getCarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from '../apis/getCarInfo/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
-import { getStop, SimplifiedStop } from '../apis/getStop/index';
+import { SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { searchRouteByPathAttributeId } from '../search/index';
@@ -24,13 +25,10 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const [CarInfo, BusData, BusEvent] = (await Promise.all([getCarInfo(requestID, true), getBusData(requestID), getBusEvent(requestID)])) as [SimplifiedCarInfo, BusData, BusEvent];
   const [Stop, Location] = (await Promise.all([getStop(requestID), getLocation(requestID, 0)])) as [SimplifiedStop, SimplifiedLocation];
 
-  let result: integratedBus = {
-    properties: [],
-    LocationName: ''
-  };
+  const result: integratedBus = { properties: [], RouteID: 0, FullPathAttributeId: [] };
 
   // Collect data from CarInfo
-  let thisCar = {};
+  let thisCar = {} as SimplifiedCarInfoItem;
   if (hasOwnProperty(CarInfo, carKey)) {
     thisCar = CarInfo[carKey];
   } else {
@@ -88,7 +86,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   // Search routes
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
-  let searchedRoute = {};
+  let searchedRoute = {} as SimplifiedRouteItem;
   if (searchedRoutes.length > 0) {
     searchedRoute = searchedRoutes[0];
   } else {
@@ -111,7 +109,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
 
   // Collect data from Stop
   const StopKey = `s_${thisBusEventItemStopID}`;
-  let thisStopItem = {};
+  let thisStopItem = {} as SimplifiedStopItem;
   if (hasOwnProperty(Stop, StopKey)) {
     thisStopItem = Stop[StopKey];
   } else {
