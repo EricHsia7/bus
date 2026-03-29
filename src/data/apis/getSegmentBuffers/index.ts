@@ -17,7 +17,7 @@ export interface SegmentBufferItem {
 
 export type SegmentBuffers = Array<SegmentBufferItem>;
 
-export type SimplifiedSegmentBufferItem = { [key: string]: Array<BufferZoneItem> };
+export type SimplifiedSegmentBufferItem = { [key: string]: BufferZones };
 
 export type SimplifiedSegmentBuffer = { [key: string]: SimplifiedSegmentBufferItem };
 

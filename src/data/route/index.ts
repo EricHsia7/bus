@@ -7,8 +7,8 @@ import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getSegmentBuffers, SimplifiedSegmentBuffer, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
-import { getStop, SimplifiedStop, SimplifiedStopItem, Stop } from '../apis/getStop/index';
+import { BufferZones, getSegmentBuffers, SimplifiedSegmentBuffer, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForRoute, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
@@ -208,7 +208,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       });
 
       // Collect data from 'BusArrivalTimes'
-      let thisBusArrivalTimes = [];
+      let thisBusArrivalTimes: integratedStopItem['busArrivalTimes'] = [];
       if (hasOwnProperty(BusArrivalTimes, thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
@@ -221,7 +221,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
       let useReversed: boolean = false;
       if (hasSegmentBuffers) {
         const groupKey = `g_${integratedStopItem.goBack}`;
-        let segmentBufferGroup = [];
+        let segmentBufferGroup: BufferZones = [];
 
         if (hasOwnProperty(thisSegmentBuffers, groupKey)) {
           segmentBufferGroup = thisSegmentBuffers[groupKey];
