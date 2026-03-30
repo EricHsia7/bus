@@ -80,7 +80,7 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
   // it means we have a shared edge, so we delete both (cancellation).
   const segments = new Map(); // Key: "x1,y1", Value: { endX, endY, command }
 
-  function addSegment(x1, y1, x2, y2, command) {
+  function addSegment(x1: number, y1: number, x2: number, y2: number, command: string) {
     const keyForward = `${x1},${y1}:${x2},${y2}`;
     const keyReverse = `${x2},${y2}:${x1},${y1}`;
 
