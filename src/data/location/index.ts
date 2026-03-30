@@ -9,8 +9,8 @@ import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
-import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
-import { getStop, SimplifiedStop } from '../apis/getStop/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForLocation, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
@@ -23,7 +23,7 @@ type BatchFoundEstimateTime = {
 };
 
 function batchFindEstimateTime(EstimateTime: EstimateTime, StopIDList: Array<number>): BatchFoundEstimateTime {
-  const result = {};
+  const result: BatchFoundEstimateTime = {};
   for (const item of EstimateTime) {
     if (StopIDList.indexOf(item.StopID) > -1) {
       const thisStopKey: string = `s_${item.StopID}`;
@@ -131,9 +131,9 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const [Route, Stop, Location] = (await Promise.all([await getRoute(requestID, true), await getStop(requestID), await getLocation(requestID, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
   const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(requestID), getBusEvent(requestID), getBusData(requestID), getBusArrivalTimes(chartWidth, chartHeight)]);
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
-  const location_labels = getSettingOptionValue('location_labels');
-  const display_user_orientation = getSettingOptionValue('display_user_orientation');
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
+  const location_labels = getSettingOptionValue('location_labels') as string;
+  const display_user_orientation = getSettingOptionValue('display_user_orientation') as boolean;
 
   const groupedItems = {} as IntegratedLocation['groupedItems'];
   const itemQuantity = {} as IntegratedLocation['itemQuantity'];
@@ -223,7 +223,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       // Collect data from 'Stop'
       const thisStopID = thisLocation.s[i][o];
       const thisStopKey = `s_${thisStopID}`;
-      let thisStop: SimplifiedStopItem = {};
+      let thisStop = {} as SimplifiedStopItem;
       if (hasOwnProperty(Stop, thisStopKey)) {
         thisStop = Stop[thisStopKey];
       } else {
@@ -241,7 +241,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       // Collect data from 'Route'
       const thisRouteID: number = thisLocation.r[i][o];
       const thisRouteKey = `r_${thisRouteID}`;
-      let thisRoute: SimplifiedRouteItem = {};
+      let thisRoute = {} as SimplifiedRouteItem;
       if (hasOwnProperty(Route, thisRouteKey)) {
         thisRoute = Route[thisRouteKey];
       } else {
@@ -262,14 +262,14 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       integratedItem.status = parsedEstimateTime;
 
       // Collect data from 'batchFoundBuses'
-      let buses = [];
+      let buses: Array<FormattedBus> = [];
       if (hasOwnProperty(batchFoundBuses, thisStopKey)) {
         buses = batchFoundBuses[thisStopKey].map((e) => formatBus(e));
       }
       integratedItem.buses = buses;
 
       // Collect data from 'BusArrivalTimes'
-      let thisBusArrivalTimes = [];
+      let thisBusArrivalTimes: Array<BusArrivalTime> = [];
       if (hasOwnProperty(BusArrivalTimes, thisStopKey)) {
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
@@ -313,6 +313,6 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   };
   deleteDataReceivingProgress(requestID);
   deleteDataUpdateTime(requestID);
-  //await recordEstimateTimeForUpdateRate(EstimateTime);
+  // await recordEstimateTimeForUpdateRate(EstimateTime);
   return result;
 }

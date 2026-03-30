@@ -2,7 +2,7 @@ import { hasOwnProperty } from '../../tools/index';
 import { formatTime } from '../../tools/time';
 import { BusData, BusDataItem } from './getBusData/index';
 import { BusEvent, BusEventItem } from './getBusEvent/index';
-import { SimplifiedRoute } from './getRoute/index';
+import { SimplifiedRoute, SimplifiedRouteItem } from './getRoute/index';
 
 export interface EstimateTimeStatus {
   code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // 8: loading
@@ -234,7 +234,7 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
     };
 
     // Search data from 'Route'
-    let searchedRoute = {};
+    let searchedRoute = {} as SimplifiedRouteItem;
     let isRouteSearched = false;
     for (const key in Route) {
       const thisRouteItem = Route[key];
@@ -258,7 +258,7 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
 }
 
 interface FormattedBusStatus {
-  onStop: boolean;
+  onStop: string;
   situation: string;
   text: string;
 }
