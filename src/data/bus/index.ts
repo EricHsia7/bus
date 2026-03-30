@@ -1,7 +1,7 @@
 import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools/index';
-import { BusData, getBusData } from '../apis/getBusData/index';
-import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
+import { BusData, BusDataItem, getBusData } from '../apis/getBusData/index';
+import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from '../apis/getCarInfo/index';
 import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -51,7 +51,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   });
 
   // Collect data from BusData
-  let thisBusDataItem = {};
+  let thisBusDataItem = {} as BusDataItem;
   for (const BusDataItem of BusData) {
     const thisBusDataItemBusID = BusDataItem.BusID;
     if (thisBusDataItemBusID === thisCarNumber) {
@@ -66,7 +66,7 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
   const thisBusDataItemGoBack = parseInt(thisBusDataItem.GoBack);
 
   // Collect data from BusEvent
-  let thisBusEventItem = {};
+  let thisBusEventItem = {} as BusEventItem;
   for (const BusEventItem of BusEvent) {
     const thisBusEventItemBusID = BusEventItem.BusID;
     if (thisBusEventItemBusID === thisCarNumber) {
