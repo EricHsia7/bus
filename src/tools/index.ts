@@ -1,5 +1,3 @@
-import { promptMessage } from '../interface/prompt/index';
-
 export const md5 = require('md5');
 export const { sha512 } = require('js-sha512');
 
