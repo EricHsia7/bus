@@ -46,6 +46,7 @@ function generateElementOfItem(item: PersonalSchedule): HTMLElement {
   headElement.appendChild(nameElement);
   headElement.appendChild(arrowElement);
   itemElement.appendChild(headElement);
+  drawerElement.appendChild(deleteElement);
   itemElement.appendChild(drawerElement);
 
   return itemElement;
