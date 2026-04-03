@@ -670,6 +670,10 @@ export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: 
     }
   };
   const save = await saveToFolder(folderID, newContent);
+
+  deleteDataReceivingProgress(requestID);
+  deleteDataUpdateTime(requestID);
+
   return save;
 }
 

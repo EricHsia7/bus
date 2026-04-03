@@ -57,7 +57,7 @@ export interface SimplifiedRouteItem {
   id: number;
 }
 
-export type SimplifiedRoute = { [key: string]: SimplifiedRouteItem };
+export type SimplifiedRoute = { [r_id: string]: SimplifiedRouteItem };
 
 let RouteAPIVariableCache_available: boolean = false;
 let RouteAPIVariableCache_data: object = {};
