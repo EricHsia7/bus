@@ -218,7 +218,7 @@ export function showPreviousPage(): void {
   }
 }
 
-export function fadeOutSplashScreen(callback: Function): void {
+export function fadeOutSplashScreen(callback?: Function): void {
   function fadeOut() {
     SplashScreenElement.classList.add('css_splash_screen_fade_out');
     SplashScreenElement.addEventListener(
