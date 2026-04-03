@@ -105,7 +105,7 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
 }
 
 export async function removePersonalSchedule(personalScheduleID: PersonalSchedule['id']): Promise<boolean> {
-  if (hasOwnProperty(PersonalSchedules, personalScheduleID)) {
+  if (!hasOwnProperty(PersonalSchedules, personalScheduleID)) {
     return false;
   }
 
