@@ -38,7 +38,7 @@ export type ExportedData = ExportedDataVersion1 | ExportedDataVersion2 | Exporte
 export async function exportData(): Promise<string> {
   const foldersWithContent = await listFoldersWithContent();
   const settings = listSettingsWithOptions();
-  const personalSchedules = await listPersonalSchedules();
+  const personalSchedules = listPersonalSchedules();
   const RecentViews = await listRecentViews();
   let result: ExportedDataVersion4 = {};
   result.time = new Date().toISOString();

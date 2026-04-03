@@ -253,7 +253,7 @@ getBusArrivalTimesPort.onerror = function (e) {
 };
 
 export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
-  const personalSchedules = await listPersonalSchedules();
+  const personalSchedules = listPersonalSchedules();
   const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
 
   const result = await new Promise((resolve, reject) => {
