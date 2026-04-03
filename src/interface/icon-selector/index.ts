@@ -110,7 +110,7 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
   previousAnimation = animation;
 }
 
-function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement) {
+function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const quantity = Math.floor(WindowSize.width / 50) * (Math.floor(WindowSize.height / 50) + 3);

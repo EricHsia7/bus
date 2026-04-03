@@ -6,18 +6,29 @@ import { initializePersonalScheduleManagerField } from '../personal-schedule-man
 import { promptMessage } from '../prompt/index';
 
 const PersonalScheduleCreatorField = documentQuerySelector('.css_personal_schedule_creator_field');
-const PersonalScheduleCreatorBodyElement = elementQuerySelector(PersonalScheduleCreatorField, '.css_personal_schedule_creator_body');
-const PersonalScheduleCreatorGroups = elementQuerySelector(PersonalScheduleCreatorBodyElement, '.css_personal_schedule_creator_groups');
-const nameInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-name"] .css_personal_schedule_creator_group_body input');
-const startTimeInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-start-time"] .css_personal_schedule_creator_group_body input');
-const endTimeInputElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-end-time"] .css_personal_schedule_creator_group_body input');
-const dayGroupBodyElement = elementQuerySelector(PersonalScheduleCreatorGroups, '.css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body');
-const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_creator_day');
+const bodyElement = elementQuerySelector(PersonalScheduleCreatorField, '.css_personal_schedule_creator_body');
+const groupsElement = elementQuerySelector(bodyElement, '.css_personal_schedule_creator_groups');
 
-export async function createFormulatedPersonalSchedule(): void {
-  const name = nameInputElement.value;
-  const startTime = startTimeInputElement.value;
-  const endTime = endTimeInputElement.value;
+const scheduleNameGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-name"]');
+const scheduleNameGroupBodyElement = elementQuerySelector(scheduleNameGroupElement, '.css_personal_schedule_creator_group_body');
+const scheduleNameInputElement = elementQuerySelector(scheduleNameGroupBodyElement, 'input') as HTMLInputElement;
+
+const scheduleStartTimeGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-start-time"]');
+const scheduleStartTimeGroupBodyElement = elementQuerySelector(scheduleStartTimeGroupElement, '.css_personal_schedule_creator_group_body');
+const scheduleStartTimeInputElement = elementQuerySelector(scheduleStartTimeGroupBodyElement, 'input') as HTMLInputElement;
+
+const scheduleEndTimeGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-end-time"]');
+const scheduleEndTimeGroupBodyElement = elementQuerySelector(scheduleEndTimeGroupElement, '.css_personal_schedule_creator_group_body');
+const scheduleEndTimeInputElement = elementQuerySelector(scheduleEndTimeGroupBodyElement, 'input') as HTMLInputElement;
+
+const scheduleDaysGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-days"]');
+const scheduleDaysGroupBodyElement = elementQuerySelector(scheduleDaysGroupElement, '.css_personal_schedule_creator_group_body');
+const scheduleDayElements = elementQuerySelectorAll(scheduleDaysGroupBodyElement, '.css_personal_schedule_creator_day');
+
+export async function createFormulatedPersonalSchedule() {
+  const name = scheduleNameInputElement.value;
+  const startTime = scheduleStartTimeInputElement.value;
+  const endTime = scheduleEndTimeInputElement.value;
 
   const [startHours, startMinutes] = String(startTime)
     .split(':')
@@ -28,7 +39,7 @@ export async function createFormulatedPersonalSchedule(): void {
 
   let days = [];
   for (let i = 0; i < 7; i++) {
-    const thisDayElement = dayElements[i];
+    const thisDayElement = scheduleDayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
     const day = parseInt(thisDayElement.getAttribute('day'));
     if (highlighted === 'true') {
@@ -68,7 +79,7 @@ export function closePersonalScheduleCreator(): void {
 }
 
 export function switchPersonalScheduleCreatorDay(day: WeekDayIndex): void {
-  const thisDayElement = elementQuerySelector(dayGroupBodyElement, `.css_personal_schedule_creator_day[day="${day}"]`);
+  const thisDayElement = elementQuerySelector(scheduleDaysGroupBodyElement, `.css_personal_schedule_creator_day[day="${day}"]`);
   const highlighted = thisDayElement.getAttribute('highlighted');
   if (highlighted === 'true') {
     thisDayElement.setAttribute('highlighted', 'false');

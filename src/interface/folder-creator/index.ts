@@ -1,6 +1,7 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
+import { MaterialSymbols } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -14,17 +15,17 @@ const groupsElement = elementQuerySelector(bodyElement, '.css_folder_creator_gro
 
 const folderNameGroupElement = elementQuerySelector(groupsElement, '.css_folder_creator_group[group="folder-name"]');
 const folderNameGroupBodyElement = elementQuerySelector(folderNameGroupElement, '.css_folder_creator_group_body');
-const folderNameInputElement = elementQuerySelector(folderNameGroupBodyElement, 'input');
+const folderNameInputElement = elementQuerySelector(folderNameGroupBodyElement, 'input') as HTMLInputElement;
 
 const iconGroupElement = elementQuerySelector(groupsElement, '.css_folder_creator_group[group="folder-icon"]');
 const iconGroupBodyElement = elementQuerySelector(iconGroupElement, '.css_folder_creator_group_body');
-const iconInputElement = elementQuerySelector(iconGroupBodyElement, '.css_folder_creator_icon_input input');
+const iconInputElement = elementQuerySelector(iconGroupBodyElement, '.css_folder_creator_icon_input input') as HTMLInputElement;
 const openIconSelectorElement = elementQuerySelector(groupsElement, '.css_folder_creator_icon_input .css_folder_creator_open_icon_selector');
 
 export async function createFormulatedFolder(callback: Function) {
   const name = folderNameInputElement.value;
   const icon = iconInputElement.value;
-  const creation = await createFolder(name, icon);
+  const creation = await createFolder(name, icon as MaterialSymbols);
   if (creation) {
     closeFolderCreator();
     promptMessage('folder', '已建立資料夾');

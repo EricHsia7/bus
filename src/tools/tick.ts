@@ -8,7 +8,7 @@ export class Tick {
   timerId: number | null;
   callback: Function;
 
-  constructor(callback: () => Promise<number>, interval: number): void {
+  constructor(callback: () => Promise<number>, interval: number) {
     this.pivot = new Date().getTime();
     this.interval = interval;
     this.lastTickCount = -1;
