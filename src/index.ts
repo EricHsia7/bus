@@ -3,6 +3,7 @@ import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index'
 import { discardUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { initializeFolderList } from './data/folder/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
+import { initializePersonalSchedules } from './data/personal-schedule';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeSettings } from './data/settings/index';
 import { checkAppVersion } from './data/settings/version';
@@ -11,11 +12,11 @@ import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator } from './interface/folder-creator/index';
-import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
 import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
+import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
 import { fadeOutSplashScreen, showErrorMessage } from './interface/index';
 import { closeLocationDetails } from './interface/location-details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
@@ -25,6 +26,7 @@ import { closePersonalScheduleEditor, openPersonalScheduleEditor, saveEditedPers
 import { closePersonalScheduleManager } from './interface/personal-schedule-manager/index';
 import { closeQRCode } from './interface/qrcode/index';
 import { openRegisterNotification } from './interface/register-notification/index';
+import { closeRouteCalendar } from './interface/route-calendar/index';
 import { closeRouteDetails } from './interface/route-details/index';
 import { closeRoute, initializeRouteSliding } from './interface/route/index';
 import { closeSaveToFolder } from './interface/save-to-folder/index';
@@ -34,8 +36,6 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { closeRouteCalendar } from './interface/route-calendar/index';
-import { initializePersonalSchedules } from './data/personal-schedule';
 
 import './interface/theme.css';
 
