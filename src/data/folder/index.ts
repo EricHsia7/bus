@@ -642,9 +642,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
 
 export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: number): Promise<boolean> {
   const requestID = generateIdentifier();
-  const Stop = (await getStop(requestID)) as SimplifiedStop;
-  const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const [Stop, Location, Route] = (await Promise.all([getStop(requestID), getLocation(requestID, 0), getRoute(requestID, true)])) as [SimplifiedStop, SimplifiedLocation, SimplifiedRoute];
 
   const thisStop = Stop[`s_${StopID}`];
   const thisStopDirection: number = parseInt(thisStop.goBack);
