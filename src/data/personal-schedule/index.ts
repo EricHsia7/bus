@@ -1,3 +1,4 @@
+import { IntervalArray, union } from '../../tools/array';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
@@ -14,6 +15,7 @@ export type PersonalScheduleArray = Array<PersonalSchedule>;
 export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
 
 const PersonalSchedules: { [key: string]: PersonalSchedule } = {};
+const PersonalSchedulesTimeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = [[], [], [], [], [], [], []];
 
 export async function initializePersonalSchedules() {
   const keys = await lfListItemKeys(7);
@@ -25,6 +27,19 @@ export async function initializePersonalSchedules() {
         PersonalSchedules[key] = thisPersonalScheduleObject;
       }
     }
+  }
+}
+
+export function initializePersonalSchedulesTimeline(): void {
+  const personalSchedules = listPersonalSchedules();
+  const timeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
+  for (const personalSchedule of personalSchedules) {
+    for (const day of personalSchedule.days) {
+      timeline[day].push([personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes, personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes]);
+    }
+  }
+  for (let i = 0; i < 7; i++) {
+    PersonalSchedulesTimeline[i] = union(timeline[i]);
   }
 }
 
@@ -77,6 +92,8 @@ export async function createPersonalSchedule(name: string, startHours: number, s
   };
   await lfSetItem(7, identifier, JSON.stringify(object));
   PersonalSchedules[identifier] = object;
+  initializePersonalSchedulesTimeline();
+
   return true;
 }
 
@@ -97,10 +114,13 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
   if (!hasOwnProperty(PersonalSchedules, personalSchedule.id)) {
     return false;
   }
+
   await lfSetItem(7, personalSchedule.id, JSON.stringify(personalSchedule));
   PersonalSchedules[personalSchedule.id].name = personalSchedule.name;
   PersonalSchedules[personalSchedule.id].days = personalSchedule.days;
   PersonalSchedules[personalSchedule.id].period = personalSchedule.period;
+  initializePersonalSchedulesTimeline();
+
   return true;
 }
 
@@ -116,6 +136,7 @@ export async function removePersonalSchedule(personalScheduleID: PersonalSchedul
 
   await lfRemoveItem(7, personalScheduleID);
   delete PersonalSchedules[personalScheduleID];
+  initializePersonalSchedulesTimeline();
 
   return true;
 }
@@ -142,6 +163,7 @@ export function listPersonalSchedules(): PersonalScheduleArray {
   return result;
 }
 
+/*
 export function getMergedPersonalScheduleTimeline(): MergedPersonalScheduleTimeline {
   const personalSchedules = listPersonalSchedules();
 
@@ -185,20 +207,14 @@ export function getMergedPersonalScheduleTimeline(): MergedPersonalScheduleTimel
 
   return result;
 }
+*/
 
 export function isInPersonalSchedule(date: Date): boolean {
-  const timeline = getMergedPersonalScheduleTimeline();
   const day = date.getDay();
-  const dayKey = `d_${day}`;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  if (hasOwnProperty(timeline, dayKey)) {
-    const personalSchedulesOfTheDay = timeline[dayKey];
-    for (const personalScheduleOfTheDay of personalSchedulesOfTheDay) {
-      if (hours * 60 + minutes >= personalScheduleOfTheDay.start.hours * 60 + personalScheduleOfTheDay.start.minutes && hours * 60 + minutes <= personalScheduleOfTheDay.end.hours * 60 + personalScheduleOfTheDay.end.minutes) {
-        return true;
-      }
+  const time = date.getHours() * 60 + date.getMinutes();
+  for (const interval of PersonalSchedulesTimeline[day]) {
+    if (time >= interval[0] && time <= interval[1]) {
+      return true;
     }
   }
   return false;

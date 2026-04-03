@@ -3,7 +3,7 @@ import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index'
 import { discardUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { initializeFolderList } from './data/folder/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
-import { initializePersonalSchedules } from './data/personal-schedule';
+import { initializePersonalSchedules, initializePersonalSchedulesTimeline } from './data/personal-schedule';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeSettings } from './data/settings/index';
 import { checkAppVersion } from './data/settings/version';
@@ -213,6 +213,7 @@ window.bus = {
 
     // initialize personal schedules
     await initializePersonalSchedules();
+    initializePersonalSchedulesTimeline();
 
     // setup skeleton screen
     setupRecentViewsFieldSkeletonScreen();
