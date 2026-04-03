@@ -35,6 +35,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { closeRouteCalendar } from './interface/route-calendar/index';
+import { initializePersonalSchedules } from './data/personal-schedule';
 
 import './interface/theme.css';
 
@@ -209,6 +210,9 @@ window.bus = {
 
     // initalize folder list
     await initializeFolderList();
+
+    // initialize personal schedules
+    await initializePersonalSchedules();
 
     // setup skeleton screen
     setupRecentViewsFieldSkeletonScreen();

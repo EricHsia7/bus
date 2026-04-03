@@ -1,6 +1,6 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
-import { timeObjectToString, WeekDayIndex } from '../../tools/time';
+import { timeObjectToString, WeekDayIndex, WeekDayIndexArray } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
@@ -28,7 +28,7 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
     .split(':')
     .map((e) => parseInt(e));
 
-  let days = [];
+  let days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
@@ -38,23 +38,26 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
     }
   }
 
-  let personalSchedule = await getPersonalSchedule(personalScheduleID);
-  personalSchedule.name = name;
-  personalSchedule.days = days;
-  personalSchedule.period.start.hours = startHours;
-  personalSchedule.period.start.minutes = startMinutes;
-  personalSchedule.period.end.hours = endHours;
-  personalSchedule.period.end.minutes = endMinutes;
+  const personalSchedule = getPersonalSchedule(personalScheduleID);
+  if (personalSchedule) {
+    personalSchedule.name = name;
+    personalSchedule.days = days;
+    personalSchedule.period.start.hours = startHours;
+    personalSchedule.period.start.minutes = startMinutes;
+    personalSchedule.period.end.hours = endHours;
+    personalSchedule.period.end.minutes = endMinutes;
 
-  const update = await updatePersonalSchedule(personalSchedule);
-  if (update) {
-    closePersonalScheduleEditor();
-    // callback
-    initializePersonalScheduleManagerField();
+    const update = await updatePersonalSchedule(personalSchedule);
+    if (update) {
+      closePersonalScheduleEditor();
+      // callback
+      initializePersonalScheduleManagerField();
+    } else {
+      promptMessage('error', '無法儲存變更');
+    }
   } else {
-    promptMessage('error', '無法儲存變更');
+    promptMessage('error', '發生錯誤');
   }
-
 }
 
 async function initializePersonalScheduleEditorField(personalScheduleID: string) {

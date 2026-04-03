@@ -54,7 +54,7 @@ function generateElementOfItem(item: PersonalSchedule): HTMLElement {
 
 export async function initializePersonalScheduleManagerField() {
   ListElement.innerHTML = '';
-  const personalSchedules = await listPersonalSchedules();
+  const personalSchedules = listPersonalSchedules();
   const fragment = new DocumentFragment();
   for (const item of personalSchedules) {
     const thisElement = generateElementOfItem(item);
