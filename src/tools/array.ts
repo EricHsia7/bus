@@ -64,3 +64,34 @@ export function getIntersection(arrayA: Array, arrayB: Array): Array {
   }
   return result;
 }
+
+export type Interval = [start: number, end: number];
+export type IntervalArray = Array<Interval>;
+
+export function union(intervals: IntervalArray): IntervalArray {
+  const length = intervals.length;
+  if (length < 2) {
+    return intervals;
+  }
+
+  intervals.sort(function (a, b) {
+    return a[0] - b[0];
+  });
+
+  const result = [intervals[0]];
+  let index = 0;
+
+  for (let i = 1; i < length; i++) {
+    if (intervals[i][0] >= result[index][0] && intervals[i][0] <= result[index][1]) {
+      if (intervals[i][1] <= result[index][1]) {
+        continue;
+      } else {
+        result[index][1] = intervals[i][1];
+      }
+    } else {
+      result.push(intervals[i]);
+      index++;
+    }
+  }
+  return result;
+}

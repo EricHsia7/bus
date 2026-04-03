@@ -1,3 +1,4 @@
+import { IntervalArray, union } from '../../tools/array';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
@@ -11,9 +12,8 @@ export interface PersonalSchedule {
 
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
-export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
-
-const PersonalSchedules: { [key: string]: PersonalSchedule } = {};
+const PersonalSchedules: { [id: string]: PersonalSchedule } = {};
+const PersonalSchedulesTimeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = [[], [], [], [], [], [], []];
 
 export async function initializePersonalSchedules() {
   const keys = await lfListItemKeys(7);
@@ -25,6 +25,19 @@ export async function initializePersonalSchedules() {
         PersonalSchedules[key] = thisPersonalScheduleObject;
       }
     }
+  }
+}
+
+export function initializePersonalSchedulesTimeline(): void {
+  const personalSchedules = listPersonalSchedules();
+  const timeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
+  for (const personalSchedule of personalSchedules) {
+    for (const day of personalSchedule.days) {
+      timeline[day].push([personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes, personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes]);
+    }
+  }
+  for (let i = 0; i < 7; i++) {
+    PersonalSchedulesTimeline[i] = union(timeline[i]);
   }
 }
 
@@ -77,6 +90,8 @@ export async function createPersonalSchedule(name: string, startHours: number, s
   };
   await lfSetItem(7, identifier, JSON.stringify(object));
   PersonalSchedules[identifier] = object;
+  initializePersonalSchedulesTimeline();
+
   return true;
 }
 
@@ -97,10 +112,13 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
   if (!hasOwnProperty(PersonalSchedules, personalSchedule.id)) {
     return false;
   }
+
   await lfSetItem(7, personalSchedule.id, JSON.stringify(personalSchedule));
   PersonalSchedules[personalSchedule.id].name = personalSchedule.name;
   PersonalSchedules[personalSchedule.id].days = personalSchedule.days;
   PersonalSchedules[personalSchedule.id].period = personalSchedule.period;
+  initializePersonalSchedulesTimeline();
+
   return true;
 }
 
@@ -116,6 +134,7 @@ export async function removePersonalSchedule(personalScheduleID: PersonalSchedul
 
   await lfRemoveItem(7, personalScheduleID);
   delete PersonalSchedules[personalScheduleID];
+  initializePersonalSchedulesTimeline();
 
   return true;
 }
@@ -142,63 +161,12 @@ export function listPersonalSchedules(): PersonalScheduleArray {
   return result;
 }
 
-export function getMergedPersonalScheduleTimeline(): MergedPersonalScheduleTimeline {
-  const personalSchedules = listPersonalSchedules();
-
-  const result: MergedPersonalScheduleTimeline = {};
-
-  for (const personalSchedule of personalSchedules) {
-    for (const day of personalSchedule.days) {
-      const dayKey = `d_${day}`;
-      if (!hasOwnProperty(result, dayKey)) {
-        result[dayKey] = [];
-      }
-      const object = {
-        start: personalSchedule.period.start,
-        end: personalSchedule.period.end
-      };
-      result[dayKey].push(object);
-    }
-  }
-
-  for (const dayKey in result) {
-    const personalSchedulesOfThisDay = result[dayKey];
-    const personalSchedulesOfThisDayLength = personalSchedulesOfThisDay.length;
-    const mergedPersonalSchedulesOfThisDay = [];
-    for (let i = 0; i < personalSchedulesOfThisDayLength; i++) {
-      const previousPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i - 1] || personalSchedulesOfThisDay[i];
-      const currentPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i];
-      if (mergedPersonalSchedulesOfThisDay.length === 0) {
-        mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
-      } else {
-        // Check whether the current is after the previous and  the current is before the previous's end
-        if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes >= previousPersonalScheduleOfThisDay.start.hours * 60 + previousPersonalScheduleOfThisDay.start.minutes && currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes <= previousPersonalScheduleOfThisDay.end.hours * 60 + previousPersonalScheduleOfThisDay.end.minutes) {
-          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.hours = currentPersonalScheduleOfThisDay.end.hours;
-          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.minutes = currentPersonalScheduleOfThisDay.end.minutes;
-        } else {
-          mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
-        }
-      }
-    }
-    result[dayKey] = mergedPersonalSchedulesOfThisDay;
-  }
-
-  return result;
-}
-
 export function isInPersonalSchedule(date: Date): boolean {
-  const timeline = getMergedPersonalScheduleTimeline();
   const day = date.getDay();
-  const dayKey = `d_${day}`;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  if (hasOwnProperty(timeline, dayKey)) {
-    const personalSchedulesOfTheDay = timeline[dayKey];
-    for (const personalScheduleOfTheDay of personalSchedulesOfTheDay) {
-      if (hours * 60 + minutes >= personalScheduleOfTheDay.start.hours * 60 + personalScheduleOfTheDay.start.minutes && hours * 60 + minutes <= personalScheduleOfTheDay.end.hours * 60 + personalScheduleOfTheDay.end.minutes) {
-        return true;
-      }
+  const time = date.getHours() * 60 + date.getMinutes();
+  for (const interval of PersonalSchedulesTimeline[day]) {
+    if (time >= interval[0] && time <= interval[1]) {
+      return true;
     }
   }
   return false;
