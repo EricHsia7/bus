@@ -12,9 +12,7 @@ export interface PersonalSchedule {
 
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
-export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
-
-const PersonalSchedules: { [key: string]: PersonalSchedule } = {};
+const PersonalSchedules: { [id: string]: PersonalSchedule } = {};
 const PersonalSchedulesTimeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = [[], [], [], [], [], [], []];
 
 export async function initializePersonalSchedules() {
@@ -162,52 +160,6 @@ export function listPersonalSchedules(): PersonalScheduleArray {
 
   return result;
 }
-
-/*
-export function getMergedPersonalScheduleTimeline(): MergedPersonalScheduleTimeline {
-  const personalSchedules = listPersonalSchedules();
-
-  const result: MergedPersonalScheduleTimeline = {};
-
-  for (const personalSchedule of personalSchedules) {
-    for (const day of personalSchedule.days) {
-      const dayKey = `d_${day}`;
-      if (!hasOwnProperty(result, dayKey)) {
-        result[dayKey] = [];
-      }
-      const object = {
-        start: personalSchedule.period.start,
-        end: personalSchedule.period.end
-      };
-      result[dayKey].push(object);
-    }
-  }
-
-  for (const dayKey in result) {
-    const personalSchedulesOfThisDay = result[dayKey];
-    const personalSchedulesOfThisDayLength = personalSchedulesOfThisDay.length;
-    const mergedPersonalSchedulesOfThisDay = [];
-    for (let i = 0; i < personalSchedulesOfThisDayLength; i++) {
-      const previousPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i - 1] || personalSchedulesOfThisDay[i];
-      const currentPersonalScheduleOfThisDay = personalSchedulesOfThisDay[i];
-      if (mergedPersonalSchedulesOfThisDay.length === 0) {
-        mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
-      } else {
-        // Check whether the current is after the previous and  the current is before the previous's end
-        if (currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes >= previousPersonalScheduleOfThisDay.start.hours * 60 + previousPersonalScheduleOfThisDay.start.minutes && currentPersonalScheduleOfThisDay.start.hours * 60 + currentPersonalScheduleOfThisDay.start.minutes <= previousPersonalScheduleOfThisDay.end.hours * 60 + previousPersonalScheduleOfThisDay.end.minutes) {
-          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.hours = currentPersonalScheduleOfThisDay.end.hours;
-          mergedPersonalSchedulesOfThisDay[mergedPersonalSchedulesOfThisDay.length - 1].end.minutes = currentPersonalScheduleOfThisDay.end.minutes;
-        } else {
-          mergedPersonalSchedulesOfThisDay.push(currentPersonalScheduleOfThisDay);
-        }
-      }
-    }
-    result[dayKey] = mergedPersonalSchedulesOfThisDay;
-  }
-
-  return result;
-}
-*/
 
 export function isInPersonalSchedule(date: Date): boolean {
   const day = date.getDay();
