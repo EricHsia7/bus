@@ -1,6 +1,6 @@
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
-import { lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface PersonalSchedule {
   name: string;
@@ -13,17 +13,20 @@ export type PersonalScheduleArray = Array<PersonalSchedule>;
 
 export type MergedPersonalScheduleTimeline = { [key: string]: Array<TimePeriod> };
 
-export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: Array<number>): Promise<boolean> {
+export async function createPersonalSchedule(name: string, startHours: number, startMinutes: number, endHours: number, endMinutes: number, days: WeekDayIndexArray): Promise<boolean> {
   const identifier = generateIdentifier();
   if (startHours < 0 || startHours > 23 || startMinutes < 0 || startMinutes > 59 || endHours < 0 || endHours > 23 || endMinutes < 0 || endMinutes > 59) {
     return false;
   }
+
   if (!Number.isInteger(startHours) || !Number.isInteger(startMinutes) || !Number.isInteger(endHours) || !Number.isInteger(endMinutes)) {
     return false;
   }
+
   if (days.length > 7) {
     return false;
   }
+
   for (const day of days) {
     if (typeof day === 'number') {
       if (day < 0 || day > 6 || !Number.isInteger(day)) {
@@ -51,12 +54,13 @@ export async function createPersonalSchedule(name: string, startHours: number, s
   return true;
 }
 
-export async function getPersonalSchedule(personalScheduleID: string): Promise<PersonalSchedule> {
+export async function getPersonalSchedule(personalScheduleID: PersonalSchedule['id']): Promise<PersonalSchedule | false> {
   const existingPersonalSchedule = await lfGetItem(7, personalScheduleID);
   if (existingPersonalSchedule) {
     const object = JSON.parse(existingPersonalSchedule);
     return object;
   }
+  return false;
 }
 
 export async function updatePersonalSchedule(personalSchedule: PersonalSchedule): Promise<boolean> {
@@ -66,6 +70,15 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
     return true;
   }
   return false;
+}
+
+export async function removePersonalSchedule(personalScheduleID: PersonalSchedule['id']): Promise<boolean> {
+  const existingPersonalSchedule = await lfGetItem(7, personalScheduleID);
+  if (!existingPersonalSchedule) {
+    return false;
+  }
+  await lfRemoveItem(7, personalScheduleID);
+  return true;
 }
 
 export async function listPersonalSchedules(): Promise<PersonalScheduleArray> {
@@ -134,7 +147,7 @@ export async function getMergedPersonalScheduleTimeline(): Promise<MergedPersona
   return result;
 }
 
-export async function isInPersonalSchedule(date: Date): boolean {
+export async function isInPersonalSchedule(date: Date): Promise<boolean> {
   const timeline = await getMergedPersonalScheduleTimeline();
   const day = date.getDay();
   const dayKey = `d_${day}`;
