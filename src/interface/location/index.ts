@@ -10,6 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
+import { VisibilityMonitor } from '../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocationDetails } from '../location-details/index';
@@ -42,6 +43,7 @@ let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
+const locationVisibilityMonitor = new VisibilityMonitor({ threshold: 0.5 });
 
 let currentHashSet_hash: string = '';
 
@@ -517,14 +519,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
       if (!skeletonScreen) {
         if (animation) {
-          const thisElementRect = thisElement.getBoundingClientRect();
-          const top = thisElementRect.top;
-          const left = thisElementRect.left;
-          const bottom = thisElementRect.bottom;
-          const right = thisElementRect.right;
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+          if (locationVisibilityMonitor.isVisible(thisElement)) {
             currentSlideElement.addEventListener(
               'animationend',
               function () {
@@ -557,14 +552,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
       if (!skeletonScreen) {
         if (animation) {
-          const thisElementRect = thisElement.getBoundingClientRect();
-          const top = thisElementRect.top;
-          const left = thisElementRect.left;
-          const bottom = thisElementRect.bottom;
-          const right = thisElementRect.right;
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+          if (locationVisibilityMonitor.isVisible(thisElement)) {
             currentSlideElement.addEventListener(
               'animationend',
               function () {
@@ -927,6 +915,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           itemElements.push(newItemElement);
         }
         thisLocationGroupItemsElement.append(fragment);
+        locationVisibilityMonitor.add(itemElements);
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[p].remove();
