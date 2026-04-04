@@ -4,7 +4,7 @@ import { cancelNotification } from '../../data/notification/apis/cancelNotificat
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -141,7 +141,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       if (thisItem.minutes !== previousItem.minutes) {
         updateMinutes(thisItemElement, thisItem);
       }
-      if (!compareThings(previousItem.schedule_id, thisItem.schedule_id)) {
+      if (previousItem.schedule_id !== thisItem.schedule_id) {
         updateMain(thisItemElement, thisItem);
         updateContext(thisItemElement, thisItem);
         updateCancel(thisItemElement, thisItem);

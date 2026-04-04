@@ -1,44 +1,6 @@
 export const md5 = require('md5');
 export const { sha512 } = require('js-sha512');
 
-export function compareThings(a: any, b: any): boolean {
-  function anyToString(any: any): string {
-    return JSON.stringify({ e: any });
-  }
-  const ax = anyToString(a);
-  const bx = anyToString(b);
-  const length: number = 32;
-  const axLength: number = ax.length;
-  const bxLength: number = bx.length;
-  if (axLength === bxLength) {
-    if (axLength > length || bxLength > length) {
-      const hash_a: string = md5(ax);
-      const hash_b: string = md5(bx);
-
-      let equal: boolean = true;
-      for (let i = 0; i < 8; i++) {
-        const a_i: string = hash_a.charAt(i);
-        const b_i: string = hash_b.charAt(i);
-        if (a_i === b_i) {
-          continue;
-        } else {
-          equal = false;
-          break;
-        }
-      }
-      return equal;
-    } else {
-      if (ax === bx) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  } else {
-    return false;
-  }
-}
-
 export function generateIdentifier(): string {
   const chars = [
     [48, 10], // 0-9: 48 - 57
