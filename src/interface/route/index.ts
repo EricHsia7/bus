@@ -644,17 +644,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
       if (!skeletonScreen) {
         if (animation) {
-          /*
-          const thisItemElementRect = thisItemElement.getBoundingClientRect();
-          const top = thisItemElementRect.top;
-          const left = thisItemElementRect.left;
-          const bottom = thisItemElementRect.bottom;
-          const right = thisItemElementRect.right;
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-          
-          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-          */
           if (routeVisibilityMonitor.isVisible(thisItemElement)) {
             currentThreadSlideElement.addEventListener(
               'animationend',
@@ -681,7 +670,6 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
             currentItemSlideElement.classList.add('css_slide_fade_out');
             return;
           }
-          // }
         }
       }
 

@@ -5,6 +5,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
 import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
+import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
 import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { querySize } from '../../index';
@@ -23,6 +24,7 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const foldersTick = new Tick(refreshFolders, 15 * 1000);
+const foldersVisibilityMonitor = new VisibilityMonitor({ threshold: 1 });
 
 function generateElementOfItem(): HTMLElement {
   // Main container
@@ -223,14 +225,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
     function updateStatus(thisElement: HTMLElement, thisItem: integratedFolderContent, animation: boolean): void {
       if (thisItem.type === 'stop') {
-        const thisElementRect = thisElement.getBoundingClientRect();
-        const top = thisElementRect.top;
-        const left = thisElementRect.left;
-        const bottom = thisElementRect.bottom;
-        const right = thisElementRect.right;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
         const thisItemStatusElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_status');
         const nextSlideElement = elementQuerySelector(thisItemStatusElement, '.css_next_slide');
         const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
@@ -238,23 +232,27 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         nextSlideElement.setAttribute('code', thisItem.status.code.toString());
         nextSlideElement.innerText = thisItem.status.text;
 
-        if (animation && bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
-          currentSlideElement.addEventListener(
-            'animationend',
-            function () {
-              currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-              currentSlideElement.innerText = thisItem.status.text;
-              currentSlideElement.classList.remove('css_slide_fade_out');
-              nextSlideElement.setAttribute('displayed', 'false');
-            },
-            { once: true }
-          );
-          nextSlideElement.setAttribute('displayed', 'true');
-          currentSlideElement.classList.add('css_slide_fade_out');
-        } else {
-          currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-          currentSlideElement.innerText = thisItem.status.text;
+        if (!skeletonScreen) {
+          if (animation) {
+            if (foldersVisibilityMonitor.isVisible(thisElement)) {
+              currentSlideElement.addEventListener(
+                'animationend',
+                function () {
+                  currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+                  currentSlideElement.innerText = thisItem.status.text;
+                  currentSlideElement.classList.remove('css_slide_fade_out');
+                  nextSlideElement.setAttribute('displayed', 'false');
+                },
+                { once: true }
+              );
+              nextSlideElement.setAttribute('displayed', 'true');
+              currentSlideElement.classList.add('css_slide_fade_out');
+              return;
+            }
+          }
         }
+        currentSlideElement.setAttribute('code', thisItem.status.code.toString());
+        currentSlideElement.innerText = thisItem.status.text;
       }
     }
 
@@ -507,11 +505,14 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     if (thisFolderContentLength !== currentFolderContentItemElementsLength) {
       const difference = currentFolderContentItemElementsLength - thisFolderContentLength;
       if (difference < 0) {
+        const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newItemElement = generateElementOfItem();
-          thisFolderContentElement.appendChild(newItemElement);
+          fragment.appendChild(newItemElement);
           thisFolderContentItemElements.push(newItemElement);
         }
+        thisFolderContentElement.append(fragment);
+        foldersVisibilityMonitor.add(thisFolderContentItemElements);
       } else if (difference > 0) {
         for (let p = currentFolderContentItemElementsLength - 1, q = currentFolderContentItemElementsLength - difference - 1; p > q; p--) {
           thisFolderContentItemElements[p].remove();
