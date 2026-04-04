@@ -1,8 +1,8 @@
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { dateToRelativeTime } from '../../tools/time';
-import { getCarInfo } from '../apis/getCarInfo/index';
+import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
-import { getRoute } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
@@ -86,16 +86,18 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   } else {
     switch (type) {
       case 'route': {
-        const Route = await getRoute(requestID, true);
-        const routeKey = `r_${param}`;
-        if (hasOwnProperty(Route, routeKey)) {
-          const thisRoute = Route[routeKey];
+        const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+        deleteDataReceivingProgress(requestID);
+        deleteDataUpdateTime(requestID);
+        const RouteKey = `r_${param}`;
+        if (hasOwnProperty(Route, RouteKey)) {
+          const thisRoute = Route[RouteKey];
           const name = thisRoute.n;
           const recentViewRouteObject: RecentViewRoute = {
             type: 'route',
             time: time,
             name: name,
-            id: param
+            id: param as number
           };
           await lfSetItem(8, key, JSON.stringify(recentViewRouteObject));
         }
@@ -103,6 +105,8 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
       }
       case 'location': {
         const Location = (await getLocation(requestID, 1)) as MergedLocation;
+        deleteDataReceivingProgress(requestID);
+        deleteDataUpdateTime(requestID);
         const LocationKey = `ml_${param}`;
         if (hasOwnProperty(Location, LocationKey)) {
           const thisLocation = Location[LocationKey];
@@ -111,14 +115,16 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
             type: 'location',
             time: time,
             name: name,
-            hash: param
+            hash: param as string
           };
           await lfSetItem(8, key, JSON.stringify(recentViewLocationObject));
         }
         break;
       }
       case 'bus': {
-        const CarInfo = await getCarInfo(requestID, true);
+        const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;
+        deleteDataReceivingProgress(requestID);
+        deleteDataUpdateTime(requestID);
         const CarKey = `c_${param}`;
         if (hasOwnProperty(CarInfo, CarKey)) {
           const thisCar = CarInfo[CarKey];
@@ -127,7 +133,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
             type: 'bus',
             time: time,
             name: name,
-            id: param
+            id: param as number
           };
           await lfSetItem(8, key, JSON.stringify(recentViewBusObject));
         }
