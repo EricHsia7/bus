@@ -2,8 +2,9 @@ import { getUpdateRate } from '../../../data/analytics/update-rate/index';
 import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
@@ -363,7 +364,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       } else {
         switch (thisItem.type) {
           case 'stop':
-            if (!compareThings(previousItem.route, thisItem.route)) {
+            if (!deepEqual(previousItem.route, thisItem.route)) {
               updateContext(thisElement, thisItem);
               updateButton(thisElement, thisItem);
             }
@@ -378,7 +379,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (previousItem.id !== thisItem.id) {
               updateButton(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.endPoints, thisItem.endPoints)) {
+            if (!deepEqual(previousItem.endPoints, thisItem.endPoints)) {
               updateContext(thisElement, thisItem);
             }
             if (previousItem.name !== thisItem.name) {
@@ -393,17 +394,17 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
               updateMain(thisElement, thisItem);
             }
             /*
-            if (!compareThings(previousItem.labels, thisItem.labels)) {
+            if (!deepEqual(previousItem.labels, thisItem.labels)) {
               updateContext(thisElement, thisItem);
             }
             */
             break;
           case 'bus':
             /*
-            if (!compareThings(previousItem.currentRoute, thisItem.currentRoute)) {
+            if (!deepEqual(previousItem.currentRoute, thisItem.currentRoute)) {
               updateContext(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.busID, thisItem.busID)) {
+            if (!deepEqual(previousItem.busID, thisItem.busID)) {
               updateMain(thisElement, thisItem);
             }
             */

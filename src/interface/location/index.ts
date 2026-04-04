@@ -5,9 +5,10 @@ import { IntegratedLocation, IntegratedLocationItem, integrateLocation, Location
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { deepEqual } from '../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { booleanToString, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { VisibilityMonitor } from '../../tools/visibility-monitor';
@@ -726,10 +727,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         updateRouteName(thisElement, thisItem);
         updateSaveToFolderButton(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.buses, thisItem.buses)) {
+      if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
-      if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+      if (!deepEqual(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisElement, thisItem);
       }
       if (animation !== previousAnimation) {
@@ -766,10 +767,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (!compareThings(previousProperty.icon, thisProperty.icon)) {
+      if (previousProperty.icon !== thisProperty.icon) {
         updateIcon(thisElement, thisProperty);
       }
-      if (!compareThings(previousProperty.value, thisProperty.value)) {
+      if (previousProperty.value !== thisProperty.value) {
         updateValue(thisElement, thisProperty);
       }
       if (animation !== previousAnimation) {

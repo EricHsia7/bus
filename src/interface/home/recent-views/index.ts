@@ -1,7 +1,8 @@
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
+import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
-import { booleanToString, compareThings, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
@@ -170,35 +171,31 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       } else {
         switch (thisItem.type) {
           case 'location':
-            if (!compareThings(previousItem.name, thisItem.name)) {
-              updateName(thisElement, thisItem);
-            }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (!compareThings(previousItem.hash, thisItem.hash)) {
+            if (previousItem.hash !== thisItem.hash) {
+              updateName(thisElement, thisItem);
               updateOnclick(thisElement, thisItem);
             }
             break;
           case 'route':
-            if (previousItem.name !== thisItem.name) {
-              updateName(thisElement, thisItem);
-            }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (previousItem.id !== thisItem.id || !compareThings(previousItem.pid, thisItem.pid)) {
+            if (previousItem.id !== thisItem.id || !deepEqual(previousItem.pid, thisItem.pid)) {
+              updateName(thisElement, thisItem);
               updateOnclick(thisElement, thisItem);
             }
             break;
           case 'bus':
             if (previousItem.name !== thisItem.name) {
-              updateName(thisElement, thisItem);
             }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
             if (previousItem.id !== thisItem.id) {
+              updateName(thisElement, thisItem);
               updateOnclick(thisElement, thisItem);
             }
             break;

@@ -10,14 +10,18 @@ import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { searchRouteByPathAttributeId } from '../search/index';
 
+export interface integratedBusProperty {
+  key: string;
+  icon: MaterialSymbols;
+  value: string;
+}
+
+export type integratedBusPropertyArray = Array<integratedBusProperty>;
+
 export interface integratedBus {
-  properties: Array<{
-    key: string;
-    icon: MaterialSymbols;
-    value: string;
-  }>;
-  RouteID: number;
-  FullPathAttributeId: Array<number>;
+  properties: integratedBusPropertyArray;
+  RouteID: SimplifiedRouteItem['id'];
+  FullPathAttributeId: SimplifiedRouteItem['pid'];
 }
 
 export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {

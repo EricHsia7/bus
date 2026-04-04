@@ -5,9 +5,10 @@ import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { deepEqual } from '../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { booleanToString, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { VisibilityMonitor } from '../../tools/visibility-monitor';
@@ -960,10 +961,10 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         updateStatus(thisItemElement, thisThreadBoxElement, thisItem, skeletonScreen, animation);
         updateScheduleNotificationButton(thisItemElement, thisItem);
       }
-      if (!compareThings(previousItem.buses, thisItem.buses)) {
+      if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
       }
-      if (!compareThings(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+      if (!deepEqual(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
       }
       if (previousItem.nearest !== thisItem.nearest) {

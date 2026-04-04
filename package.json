@@ -50,6 +50,7 @@
     "workbox-webpack-plugin": "7.4.0"
   },
   "dependencies": {
+    "fast-equals": "6.0.0",
     "js-levenshtein": "1.1.6",
     "js-sha512": "0.9.0",
     "localforage": "1.10.0",
