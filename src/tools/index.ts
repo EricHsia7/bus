@@ -47,14 +47,13 @@ export function supportTouch(): boolean {
 }
 
 export function booleanToString(x: boolean): 'true' | 'false' | 'unsupported' {
-  if (typeof x === 'boolean') {
-    if (x) {
-      return 'true';
-    } else {
-      return 'false';
-    }
+  if (x === true) {
+    return 'true';
+  } else if (x === false) {
+    return 'false';
+  } else {
+    return 'unsupported';
   }
-  return 'unsupported';
 }
 
 export function hasOwnProperty(x: any, property: string): boolean {
