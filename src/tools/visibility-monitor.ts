@@ -18,7 +18,6 @@ export class VisibilityMonitor {
   add(elements: Array<HTMLElement>): void {
     if (!elements || elements.length === 0) return;
 
-    // NodeList supports .forEach()
     for (const element of elements) {
       // Initialize state to false until the observer fires its first check
       this.visibilityState.set(element, false);

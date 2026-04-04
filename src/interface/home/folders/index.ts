@@ -512,7 +512,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           thisFolderContentItemElements.push(newItemElement);
         }
         thisFolderContentElement.append(fragment);
-        foldersVisibilityMonitor.add(thisFolderContentItemElements);
+        foldersVisibilityMonitor.add(thisFolderContentItemElements.slice(currentFolderContentItemElementsLength));
       } else if (difference > 0) {
         for (let p = currentFolderContentItemElementsLength - 1, q = currentFolderContentItemElementsLength - difference - 1; p > q; p--) {
           thisFolderContentItemElements[p].remove();

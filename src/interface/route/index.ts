@@ -1108,7 +1108,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
-        routeVisibilityMonitor.add(itemElements);
+        routeVisibilityMonitor.add(itemElements.slice(currentItemElementsLength));
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[p].remove();

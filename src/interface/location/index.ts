@@ -915,7 +915,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           itemElements.push(newItemElement);
         }
         thisLocationGroupItemsElement.append(fragment);
-        locationVisibilityMonitor.add(itemElements);
+        locationVisibilityMonitor.add(itemElements.slice(currentItemElementsLength));
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[p].remove();
