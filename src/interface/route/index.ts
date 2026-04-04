@@ -10,6 +10,7 @@ import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, compareThings, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
+import { VisibilityMonitor } from '../../tools/visibility-monitor';
 import { getIconElement } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
@@ -43,6 +44,7 @@ let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
 const routeTick = new Tick(refreshRoute, 15 * 1000);
+const routeVisibilityMonitor = new VisibilityMonitor({ threshold: 0.5 });
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
@@ -642,14 +644,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
       if (!skeletonScreen) {
         if (animation) {
-          const thisItemElementRect = thisItemElement.getBoundingClientRect();
-          const top = thisItemElementRect.top;
-          const left = thisItemElementRect.left;
-          const bottom = thisItemElementRect.bottom;
-          const right = thisItemElementRect.right;
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-          if (bottom > 0 && top < windowHeight && right > 0 && left < windowWidth) {
+          if (routeVisibilityMonitor.isVisible(thisItemElement)) {
             currentThreadSlideElement.addEventListener(
               'animationend',
               function () {
@@ -1113,6 +1108,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
+        routeVisibilityMonitor.add(itemElements.slice(currentItemElementsLength));
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[p].remove();
