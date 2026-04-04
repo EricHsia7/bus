@@ -39,7 +39,7 @@ export type RecentView = RecentViewRoute | RecentViewLocation | RecentViewBus | 
 export type RecentViewArray = Array<RecentView>;
 
 export async function listRecentViews(): Promise<RecentViewArray> {
-  const result = [];
+  const result: RecentViewArray = [];
   const now = new Date().getTime();
   const keys = await lfListItemKeys(8);
   for (const key of keys) {
@@ -156,7 +156,7 @@ export async function getRecentView(type: RecentView['type'], param: RecentViewR
 }
 
 interface integratedRecentViewTime {
-  absolute: string;
+  absolute: number;
   relative: string;
 }
 
@@ -199,74 +199,63 @@ export interface integratedRecentViews {
 
 export async function integrateRecentViews(requestID: string): Promise<integratedRecentViews> {
   const recentViewList = await listRecentViews();
-  const Route = await getRoute(requestID, true);
-  let items: Array<integratedRecentView> = [];
+  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const items: Array<integratedRecentView> = [];
   let itemQuantity: number = 0;
   for (const recentView of recentViewList) {
     const recentViewType = recentView.type;
     const recentViewTime = new Date(recentView.time);
     switch (recentViewType) {
       case 'route': {
-        let integratedRecentViewRoute: integratedRecentViewRoute = {};
-        integratedRecentViewRoute.type = 'route';
-        const thisRouteName = recentView.name;
-        integratedRecentViewRoute.name = thisRouteName;
-        const thisRouteID = recentView.id;
-        integratedRecentViewRoute.id = thisRouteID;
-        const thisRouteKey = `r_${thisRouteID}`;
-        const thisRoute = Route[thisRouteKey];
-        const thisRoutePathAttributeId = thisRoute.pid;
-        integratedRecentViewRoute.pid = thisRoutePathAttributeId;
-        integratedRecentViewRoute.time = {
-          absolute: recentViewTime.getTime(),
-          relative: dateToRelativeTime(recentViewTime)
-        };
-        items.push(integratedRecentViewRoute);
-        itemQuantity += 1;
+        items.push({
+          type: 'route',
+          id: recentView.id,
+          pid: Route[`r_${recentView.id}`].pid,
+          name: recentView.name,
+          time: {
+            absolute: recentViewTime.getTime(),
+            relative: dateToRelativeTime(recentViewTime)
+          }
+        } as integratedRecentViewRoute);
+        itemQuantity++;
         break;
       }
       case 'location': {
-        let integratedRecentViewLocation: integratedRecentViewLocation = {};
-        integratedRecentViewLocation.type = 'location';
-        const thisLocationHash = recentView.hash;
-        integratedRecentViewLocation.hash = thisLocationHash;
-        const thisLocationName = recentView.name;
-        integratedRecentViewLocation.name = thisLocationName;
-        integratedRecentViewLocation.time = {
-          absolute: recentViewTime.getTime(),
-          relative: dateToRelativeTime(recentViewTime)
-        };
-        items.push(integratedRecentViewLocation);
-        itemQuantity += 1;
+        items.push({
+          type: 'location',
+          hash: recentView.hash,
+          name: recentView.name,
+          time: {
+            absolute: recentViewTime.getTime(),
+            relative: dateToRelativeTime(recentViewTime)
+          }
+        } as integratedRecentViewLocation);
+        itemQuantity++;
         break;
       }
       case 'bus': {
-        let integratedRecentViewBus: integratedRecentViewBus = {};
-        integratedRecentViewBus.type = 'bus';
-        const thisBusID = recentView.id;
-        integratedRecentViewBus.id = thisBusID;
-        const thisBusName = recentView.name;
-        integratedRecentViewBus.name = thisBusName;
-        integratedRecentViewBus.time = {
-          absolute: recentViewTime.getTime(),
-          relative: dateToRelativeTime(recentViewTime)
-        };
-        items.push(integratedRecentViewBus);
-        itemQuantity += 1;
+        items.push({
+          type: 'bus',
+          id: recentView.id,
+          name: recentView.name,
+          time: {
+            absolute: recentViewTime.getTime(),
+            relative: dateToRelativeTime(recentViewTime)
+          }
+        } as integratedRecentViewBus);
+        itemQuantity++;
         break;
       }
       case 'empty': {
-        let integratedRecentViewEmpty: integratedRecentViewEmpty = {};
-        integratedRecentViewEmpty.type = 'empty';
-        const thisEmptyID = recentView.id;
-        integratedRecentViewEmpty.id = thisEmptyID;
-        const thisEmptyName = recentView.name;
-        integratedRecentViewEmpty.name = thisEmptyName;
-        integratedRecentViewEmpty.time = {
-          absolute: recentViewTime.getTime(),
-          relative: dateToRelativeTime(recentViewTime)
-        };
-        items.push(integratedRecentViewEmpty);
+        items.push({
+          type: 'empty',
+          id: recentView.id,
+          name: recentView.name,
+          time: {
+            absolute: recentViewTime.getTime(),
+            relative: dateToRelativeTime(recentViewTime)
+          }
+        } as integratedRecentViewEmpty);
         itemQuantity = 1;
         break;
       }
