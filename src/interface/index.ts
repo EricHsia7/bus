@@ -1,5 +1,4 @@
 import { documentQuerySelector } from '../tools/elements';
-import { isRunningStandalone } from '../tools/index';
 import { hideBus, showBus } from './bus/index';
 import { hideDataUsage, showDataUsage } from './data-usage/index';
 import { hideFolderCreator, showFolderCreator } from './folder-creator/index';
