@@ -28,7 +28,7 @@ const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
-const fontWeight = '400';
+const fontWeight = 400;
 const fontSize = '20px';
 const fontFamily = '"Noto Sans TC", sans-serif';
 const searchInputPlaceholder = '搜尋路線、地點、公車';
@@ -167,8 +167,8 @@ function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
 function updateSearchInput(): void {
   const scrollLeft = searchInputElement.scrollLeft;
   const currentValue = searchInputElement.value;
-  const selectionStart = searchInputElement.selectionStart;
-  const selectionEnd = searchInputElement.selectionEnd;
+  const selectionStart = searchInputElement.selectionStart || undefined;
+  const selectionEnd = searchInputElement.selectionEnd || undefined;
 
   const empty = currentValue.length === 0;
   const text = empty ? searchInputPlaceholder : currentValue;
