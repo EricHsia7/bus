@@ -36,11 +36,11 @@ export class VisibilityMonitor {
     }
   }
 
-  isVisible(element: HTMLElement) {
+  isVisible(element: HTMLElement): boolean {
     return !!this.visibilityState.get(element);
   }
 
-  disconnect() {
+  disconnect(): void {
     this.observer.disconnect();
   }
 }
