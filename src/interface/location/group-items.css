@@ -121,6 +121,7 @@
   border-radius: var(--b-cssvar-border-radius-medium);
   overflow: clip;
   display: block;
+  contain: layout;
   visibility: inherit;
 }
 
@@ -328,6 +329,7 @@
   height: 30px;
   overflow: clip;
   display: block;
+  contain: layout;
   visibility: inherit;
 }
 

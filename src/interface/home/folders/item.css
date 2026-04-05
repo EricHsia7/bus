@@ -229,6 +229,7 @@
   height: 30px;
   overflow: clip;
   display: block;
+  contain: layout;
 }
 
 /* type: stop */
