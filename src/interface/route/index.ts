@@ -45,7 +45,7 @@ let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
 const routeTick = new Tick(refreshRoute, 15 * 1000);
-const routeVisibilityMonitor = new VisibilityMonitor({ threshold: 0.5 });
+const routeVisibilityMonitor = new VisibilityMonitor({ root: RouteGroupsElement, threshold: 0.5 });
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
