@@ -281,7 +281,7 @@
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide {
-  opacity: 0;
+  visibility: hidden;
 }
 
 /* code: 8 */
