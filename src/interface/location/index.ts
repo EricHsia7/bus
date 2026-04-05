@@ -44,7 +44,7 @@ let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
-const locationVisibilityMonitor = new VisibilityMonitor({ threshold: 0.5 });
+const locationVisibilityMonitor = new VisibilityMonitor({ root: LocationGroupsElement, threshold: 0.5 });
 
 let currentHashSet_hash: string = '';
 

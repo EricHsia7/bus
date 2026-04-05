@@ -25,7 +25,7 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const foldersTick = new Tick(refreshFolders, 15 * 1000);
-const foldersVisibilityMonitor = new VisibilityMonitor({ threshold: 1 });
+const foldersVisibilityMonitor = new VisibilityMonitor({ root: HomeBodyElement, threshold: 1 });
 
 function generateElementOfItem(): HTMLElement {
   // Main container
