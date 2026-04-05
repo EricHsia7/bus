@@ -184,8 +184,8 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
       const dataGroup = {} as BusArrivalTimeDataGroup;
       const existingData = await lfGetItem(6, stopKey);
       const stopKeyComponents = stopKey.split('_');
-      const stopID = parseInt(stopKeyComponents[1]);
-      const day = parseInt(stopKeyComponents[2]);
+      const stopID = parseInt(stopKeyComponents[1], 10);
+      const day = parseInt(stopKeyComponents[2], 10);
       if (existingData) {
         const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
         const newStats = await getBusArrivalTimeDataStats(thisStopData);

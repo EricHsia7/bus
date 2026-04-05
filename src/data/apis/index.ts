@@ -119,7 +119,7 @@ export interface BatchFoundBus {
 
 export type BatchFoundBuses = { [key: string]: Array<BatchFoundBus> };
 
-export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: number, PathAttributeId: Array<number>): BatchFoundBuses {
+export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Route: SimplifiedRoute, RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid']): BatchFoundBuses {
   const result = {} as BatchFoundBuses;
   const BusDataObj: {
     [key: string]: BusDataItem;
@@ -139,8 +139,8 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
     processedItem.CarOnStop = BusEventItem.CarOnStop;
 
     // check whether this bus is on the route
-    const thisRouteID = parseInt(BusEventItem.RouteID);
-    const thisBusID = String(BusEventItem.BusID);
+    const thisRouteID = parseInt(BusEventItem.RouteID, 10);
+    const thisBusID = BusEventItem.BusID;
     let isOnThisRoute: boolean = false;
     let index: number = 0;
     if (thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10) {

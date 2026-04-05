@@ -27,7 +27,7 @@ export interface UpdateRateDataGroup {
 export type UpdateRateDataGroupArray = Array<UpdateRateDataGroup>;
 
 export interface UpdateRateDataWriteAheadLogGroup {
-  data: Array<UpdateRateData>;
+  data: { [s_id: string]: Array<UpdateRateData> };
   timestamp: number;
   id: string;
 }
@@ -153,7 +153,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
       if (!hasOwnProperty(updateRateData_writeAheadLog_group.data, stopKey)) {
         updateRateData_writeAheadLog_group.data[stopKey] = [];
       }
-      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
+      updateRateData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime, 10), Math.floor((currentTimestamp - updateRateData_writeAheadLog_group.timestamp) / 1000)]);
     }
   }
 
@@ -187,7 +187,7 @@ export async function collectUpdateRateData(EstimateTime: EstimateTime) {
         const existingIndex = updateRateData_groupsIndex[stopKey];
         updateRateData_groups.splice(existingIndex, 1, dataGroup);
       } else {
-        updateRateData_groups[stopKey] = updateRateData_groups.length;
+        updateRateData_groupsIndex[stopKey] = updateRateData_groups.length;
         updateRateData_groups.push(dataGroup);
       }
       await lfRemoveItem(4, updateRateData_writeAheadLog_id);
@@ -220,14 +220,14 @@ export async function recoverUpdateRateDataFromWriteAheadLog() {
           } else {
             dataGroup.stats = getUpdateRateDataStats(thisStopData);
             dataGroup.timestamp = thisTimestamp;
-            dataGroup.id = parseInt(stopKey.split('_')[1]);
+            dataGroup.id = parseInt(stopKey.split('_')[1], 10);
           }
           await lfSetItem(3, stopKey, JSON.stringify(dataGroup));
           if (hasOwnProperty(updateRateData_groupsIndex, stopKey)) {
             const existingIndex = updateRateData_groupsIndex[stopKey];
             updateRateData_groups.splice(existingIndex, 1, dataGroup);
           } else {
-            updateRateData_groups[stopKey] = updateRateData_groups.length;
+            updateRateData_groupsIndex[stopKey] = updateRateData_groups.length;
             updateRateData_groups.push(dataGroup);
           }
         }
@@ -282,7 +282,7 @@ export async function discardUpdateRateDataGroups() {
   }
 }
 
-const getUpdateRateWorkerResolution = [];
+const getUpdateRateWorkerResolution: Array<Function> = [];
 let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
