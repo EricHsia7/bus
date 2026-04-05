@@ -966,7 +966,12 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
       }
-      if (!deepEqual(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+      if (
+        !deepEqual(
+          previousItem.busArrivalTimes.map((e) => e.state),
+          thisItem.busArrivalTimes.map((e) => e.state)
+        )
+      ) {
         updateBusArrivalTimes(thisItemElement, thisItem);
       }
       if (previousItem.nearest !== thisItem.nearest) {

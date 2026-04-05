@@ -53,7 +53,7 @@ function processWorkerTask(): void {
   isProcessing = true;
 
   // Dequeue the next task
-  const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port }: task = taskQueue.shift();
+  const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port } = taskQueue.shift() as task;
 
   const result: BusArrivalTimes = {};
 
@@ -107,7 +107,12 @@ function processWorkerTask(): void {
       const bottomLinePathCommand = `M0 ${chartHeight - 0.35 / 2} L${chartWidth} ${chartHeight - 0.35 / 2}`;
       const bottomLine = `<path d="${bottomLinePathCommand}" fill="none" stroke-width="0.35" component="bottom-line"/>`;
 
-      // Bars
+      // Bars & Numbers
+      const numbers = [];
+      const counts = [];
+      let lastNumber = -1;
+      let numberIndex = -1;
+
       let barsPathCommand = '';
       barsPathCommand += `M${chartWidth} ${chartHeight}`;
       if (statsMax !== 0) {
@@ -117,6 +122,14 @@ function processWorkerTask(): void {
           barsPathCommand += ` L${x} ${y}`;
           barsPathCommand += ` L${x - barWidth} ${y}`;
           barsPathCommand += ` L${x - barWidth} ${chartHeight}`;
+
+          if (statsArray[j] !== lastNumber) {
+            numbers.push(statsArray[j]);
+            counts.push(0);
+            lastNumber = statsArray[j];
+            numberIndex++;
+          }
+          counts[numberIndex]++;
         }
       }
       barsPathCommand += ' Z';
@@ -130,6 +143,7 @@ function processWorkerTask(): void {
       result[stopKey].push({
         personalSchedule: personalSchedule,
         chart: svg,
+        state: [[chartWidth, chartHeight], numbers, counts],
         day: busArrivalTimeDataGroup.day
       });
     }

@@ -730,7 +730,12 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
-      if (!deepEqual(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
+      if (
+        !deepEqual(
+          previousItem.busArrivalTimes.map((e) => e.state),
+          thisItem.busArrivalTimes.map((e) => e.state)
+        )
+      ) {
         updateBusArrivalTimes(thisElement, thisItem);
       }
       if (animation !== previousAnimation) {
