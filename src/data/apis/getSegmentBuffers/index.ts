@@ -97,7 +97,7 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
     }
     return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       const extractedResult = await extractSegmentBuffers(result);
       const simplifiedResult = await simplifySegmentBuffers(extractedResult);

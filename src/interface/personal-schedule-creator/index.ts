@@ -32,10 +32,10 @@ export async function createFormulatedPersonalSchedule() {
 
   const [startHours, startMinutes] = String(startTime)
     .split(':')
-    .map((e) => parseInt(e));
+    .map((e) => parseInt(e, 10));
   const [endHours, endMinutes] = String(endTime)
     .split(':')
-    .map((e) => parseInt(e));
+    .map((e) => parseInt(e, 10));
 
   let days = [];
   for (let i = 0; i < 7; i++) {

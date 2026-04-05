@@ -23,16 +23,16 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
 
   const [startHours, startMinutes] = String(startTime)
     .split(':')
-    .map((e) => parseInt(e));
+    .map((e) => parseInt(e, 10));
   const [endHours, endMinutes] = String(endTime)
     .split(':')
-    .map((e) => parseInt(e));
+    .map((e) => parseInt(e, 10));
 
   let days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
-    const day = parseInt(thisDayElement.getAttribute('day'));
+    const day = parseInt(thisDayElement.getAttribute('day'), 10);
     if (highlighted === 'true') {
       days.push(day);
     }

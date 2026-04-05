@@ -450,7 +450,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     const thisRouteName = thisRoute.n;
     const thisRouteDeparture = thisRoute.dep;
     const thisRouteDestination = thisRoute.des;
-    const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisStopGoBack ? parseInt(thisStopGoBack) : 0];
+    const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisStopGoBack ? parseInt(thisStopGoBack, 10) : 0];
 
     // Collect data from scheduleNotificationOptions
     const thisOption = scheduleNotificationOptions[index];

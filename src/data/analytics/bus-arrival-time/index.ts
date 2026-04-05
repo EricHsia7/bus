@@ -125,7 +125,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         if (!hasOwnProperty(busArrivalTimeData_writeAheadLog_group.data, stopKey)) {
           busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
         }
-        busArrivalTimeData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime), currentTimestamp]);
+        busArrivalTimeData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime, 10), currentTimestamp]);
       }
     }
 

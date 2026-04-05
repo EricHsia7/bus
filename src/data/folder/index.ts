@@ -645,7 +645,7 @@ export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: 
   const [Stop, Location, Route] = (await Promise.all([getStop(requestID), getLocation(requestID, 0), getRoute(requestID, true)])) as [SimplifiedStop, SimplifiedLocation, SimplifiedRoute];
 
   const thisStop = Stop[`s_${StopID}`];
-  const thisStopDirection: number = parseInt(thisStop.goBack);
+  const thisStopDirection: number = parseInt(thisStop.goBack, 10);
   const thisLocation = Location[`l_${thisStop.stopLocationId}`];
   const thisStopName: string = thisLocation.n;
 

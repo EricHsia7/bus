@@ -95,7 +95,7 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
     }
     return finalResult;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       let finalResult;
       if (simplified) {

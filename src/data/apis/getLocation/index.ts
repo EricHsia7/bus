@@ -199,7 +199,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     }
     return finalResult;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       let finalResult;
       switch (type) {
         case 0: {

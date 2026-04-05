@@ -85,7 +85,7 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
     }
     return simplified_result;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       const simplified_result = await simplifyStop(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());

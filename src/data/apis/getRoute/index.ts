@@ -117,7 +117,7 @@ export async function getRoute(requestID: string, simplify: boolean = true): Pro
     }
     return simplified_result;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       const simplified_result = await simplifyRoute(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());

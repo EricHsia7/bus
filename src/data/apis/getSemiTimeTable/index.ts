@@ -49,7 +49,7 @@ export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable
     }
     return result;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
       await lfSetItem(0, cacheKey, JSON.stringify(result));

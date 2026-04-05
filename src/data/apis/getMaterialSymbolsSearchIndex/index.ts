@@ -51,7 +51,7 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
     }
     return unpacked;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp) > cacheTimeToLive) {
+    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
       const unpacked = unpackMaterialSymbolsSearchIndex(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());

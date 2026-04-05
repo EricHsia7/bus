@@ -44,7 +44,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
   for (const thisStopKey in batchFoundEstimateTime) {
     const thisBatchFoundEstimateTimeItem = batchFoundEstimateTime[thisStopKey];
     const thisStopID = thisBatchFoundEstimateTimeItem.StopID;
-    const thisEstimateTime = parseInt(thisBatchFoundEstimateTimeItem.EstimateTime);
+    const thisEstimateTime = parseInt(thisBatchFoundEstimateTimeItem.EstimateTime, 10);
     if (thisEstimateTime >= 0 && StopIDList.indexOf(thisStopID) > -1) {
       rankingArray.push([thisStopID, thisEstimateTime]);
     }
@@ -248,7 +248,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.route_name = thisRoute.n;
-      integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack)]}`;
+      integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'

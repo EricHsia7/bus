@@ -50,7 +50,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
 
   // Read chunks
-  const contentLength = parseInt(String(response.headers.get('content-length')));
+  const contentLength = parseInt(String(response.headers.get('content-length')), 10);
   const reader = response.body.getReader();
   const chunks = [];
   let receivedLength = 0;

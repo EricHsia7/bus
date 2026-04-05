@@ -203,9 +203,9 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
   for (const BusEventItem of BusEvent) {
     const processedItem = {} as BatchFoundBus;
 
-    const thisStopID = parseInt(BusEventItem.StopID);
-    const thisRouteID = parseInt(BusEventItem.RouteID);
-    const thisBusID = String(BusEventItem.BusID);
+    const thisStopID = parseInt(BusEventItem.StopID, 10);
+    const thisRouteID = parseInt(BusEventItem.RouteID, 10);
+    const thisBusID = BusEventItem.BusID;
 
     // Check whether this bus is on one of the specified stops
     if (StopIDList.indexOf(thisStopID) < 0) {
