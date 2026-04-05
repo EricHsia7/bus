@@ -120,7 +120,8 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-medium);
   overflow: clip;
-  contain: layout;
+  display: block;
+  visibility: inherit;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide,
@@ -326,7 +327,7 @@
   width: 55px;
   height: 30px;
   overflow: clip;
-  contain: layout;
+  display: block;
   visibility: inherit;
 }
 

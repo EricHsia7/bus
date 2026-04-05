@@ -259,7 +259,7 @@
   width: 55px;
   height: 30px;
   overflow: clip;
-  contain: layout;
+  display: block;
   visibility: inherit;
 }
 
