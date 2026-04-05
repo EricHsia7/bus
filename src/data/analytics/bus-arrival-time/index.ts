@@ -43,7 +43,7 @@ export interface BusArrivalTimeDataWriteAheadLog {
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
   chart: string; // svg
-  state: [numbers: Array<number>, counts: Array<number>];
+  state: [size: [width: number, height: number], numbers: Array<number>, counts: Array<number>];
   day: WeekDayIndex;
 }
 

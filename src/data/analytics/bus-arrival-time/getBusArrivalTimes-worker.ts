@@ -143,7 +143,7 @@ function processWorkerTask(): void {
       result[stopKey].push({
         personalSchedule: personalSchedule,
         chart: svg,
-        state: [numbers, counts],
+        state: [[chartWidth, chartHeight], numbers, counts],
         day: busArrivalTimeDataGroup.day
       });
     }
