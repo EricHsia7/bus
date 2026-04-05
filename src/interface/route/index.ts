@@ -881,17 +881,19 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       const thisThreadProgressElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread .css_route_group_thread_progress');
       if (!skeletonScreen) {
         if (animation) {
-          if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
-            thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '100%');
-            thisThreadProgressElement.addEventListener(
-              'transitionend',
-              function () {
-                thisThreadProgressElement.setAttribute('displayed', 'false');
-                thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '-100%');
-              },
-              { once: true }
-            );
-            return;
+          if (routeVisibilityMonitor.isVisible(thisItemElement)) {
+            if (previousProgress !== 0 && thisProgress === 0 && Math.abs(thisProgress - previousProgress) > 0) {
+              thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '100%');
+              thisThreadProgressElement.addEventListener(
+                'transitionend',
+                function () {
+                  thisThreadProgressElement.setAttribute('displayed', 'false');
+                  thisThreadProgressElement.style.setProperty('--b-cssvar-thread-progress-translate-y', '-100%');
+                },
+                { once: true }
+              );
+              return;
+            }
           }
         }
       }
