@@ -1,4 +1,4 @@
-const pakoInflateWorkerResolution = [];
+const pakoInflateWorkerResolution: Array<Function> = [];
 let port;
 
 // Check if SharedWorker is supported, and fall back to Worker if not

@@ -50,7 +50,7 @@ export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
 }
 
-const getBusArrivalTimeDataStatsWorkerResolution = [];
+const getBusArrivalTimeDataStatsWorkerResolution: Array<Function> = [];
 let getBusArrivalTimeDataStatsPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
@@ -225,7 +225,7 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
   return result;
 }
 
-const getBusArrivalTimesWorkerResolution = [];
+const getBusArrivalTimesWorkerResolution: Array<Function> = [];
 let getBusArrivalTimesPort;
 
 // Check if SharedWorker is supported, and fall back to Worker if not
