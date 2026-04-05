@@ -31,12 +31,12 @@ export function timeStampToNumber(string: string, timeZoneOffset: number = 0): n
   const match = string.match(regex);
   if (match) {
     const localTimeZoneOffset = new Date().getTimezoneOffset();
-    const year = parseInt(match[0]);
-    const month = parseInt(match[2]);
-    const date = parseInt(match[4]);
-    const hours = parseInt(match[6]);
-    const minutes = parseInt(match[8]);
-    const seconds = parseInt(match[10]);
+    const year = parseInt(match[0], 10);
+    const month = parseInt(match[2], 10);
+    const date = parseInt(match[4], 10);
+    const hours = parseInt(match[6], 10);
+    const minutes = parseInt(match[8], 10);
+    const seconds = parseInt(match[10], 10);
     const date_object = new Date();
     date_object.setDate(1);
     date_object.setMonth(0);
@@ -188,7 +188,7 @@ export function indexToDay(index: WeekDayIndex): WeekDay {
 }
 
 export function dateValueToDayOfWeek(dateValue: string): WeekDay {
-  const int = parseInt(dateValue);
+  const int = parseInt(dateValue, 10);
   const index = int - 1;
   return indexToDay(index);
 }
