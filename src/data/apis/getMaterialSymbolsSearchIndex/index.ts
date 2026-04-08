@@ -1,33 +1,34 @@
-import { MaterialSymbols } from '../../../interface/icons/material-symbols-type';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress } from '../loader';
 
 interface MaterialSymbolsSearchIndex {
   dictionary: string;
-  symbols: { [symbolKey: string]: Array<number> };
+  symbols: { [symbolKey: string]: string };
 }
 
 export interface UnpackedMaterialSymbolsSearchIndex {
   dictionary: string;
-  symbols: { [symbol: MaterialSymbols]: Array<number> };
+  symbols: { [symbol: string]: Array<number> };
 }
 
 let MaterialSymbolsAPIVariableCache_available: boolean = false;
 let MaterialSymbolsAPIVariableCache_data: UnpackedMaterialSymbolsSearchIndex = [];
 
 function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): UnpackedMaterialSymbolsSearchIndex {
+  const unpackedData: UnpackedMaterialSymbolsSearchIndex = {
+    dictionary: data.dictionary,
+    symbols: {}
+  };
   const dictionary = data.dictionary.split(',');
   for (const symbolKey in data.symbols) {
     const symbolNameComponents = symbolKey.split('_');
     for (let i = symbolNameComponents.length - 1; i >= 0; i--) {
-      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i])]);
+      symbolNameComponents.splice(i, 1, dictionary[parseInt(symbolNameComponents[i], 36)]);
     }
-    data.symbols[symbolNameComponents.join('_')] = data.symbols[symbolKey];
-    delete data.symbols[symbolKey];
+    unpackedData.symbols[symbolNameComponents.join('_')] = data.symbols[symbolKey].split(',').map((k) => parseInt(k, 36));
   }
-
-  return data as UnpackedMaterialSymbolsSearchIndex;
+  return unpackedData as UnpackedMaterialSymbolsSearchIndex;
 }
 
 export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<UnpackedMaterialSymbolsSearchIndex> {
@@ -38,7 +39,7 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_search_index_v4_cache';
+  const cacheKey = 'bus_material_symbols_search_index_v5_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
