@@ -814,6 +814,7 @@
   display: flex;
   align-items: center;
   font-size: 20px;
+  line-height: 20px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
@@ -925,7 +926,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_endpoints,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_distance {
   position: absolute;
-  top: 35px;
+  top: calc(10px + 20px + 5px / 2);
   left: 10px;
   width: calc(100% - 20px);
   height: 40px;
@@ -944,7 +945,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions {
   position: absolute;
-  top: 75px;
+  top: calc(10px + 20px + 5px / 2 + 40px + 5px / 2);
   left: 10px;
   width: calc(100% - 20px);
   display: grid;
