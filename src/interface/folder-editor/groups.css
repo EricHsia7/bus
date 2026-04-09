@@ -40,8 +40,8 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group .css_folder_editor_group_head .css_folder_editor_group_icon span.css_material_symbols_rounded {
   height: 18px;
   width: 18px;
-  color: var(--b-cssvar-333333);
   font-size: 18px;
+  color: var(--b-cssvar-333333);
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group .css_folder_editor_group_head .css_folder_editor_group_name {

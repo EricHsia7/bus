@@ -40,8 +40,8 @@
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group .css_folder_creator_group_head .css_folder_creator_group_icon span.css_material_symbols_rounded {
   height: 18px;
   width: 18px;
-  color: var(--b-cssvar-333333);
   font-size: 18px;
+  color: var(--b-cssvar-333333);
 }
 
 .css_folder_creator_field .css_folder_creator_body .css_folder_creator_groups .css_folder_creator_group .css_folder_creator_group_head .css_folder_creator_group_name {
