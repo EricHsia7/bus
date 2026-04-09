@@ -22,8 +22,6 @@
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group[group="properties"] .css_bus_group_body .css_bus_property .css_bus_property_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
   color: var(--b-cssvar-333333);
 }
 
