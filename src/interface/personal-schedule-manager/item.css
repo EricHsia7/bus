@@ -56,8 +56,8 @@
 }
 
 .css_personal_schedule_manager_field .css_personal_schedule_manager_body .css_personal_schedule_manager_list .css_personal_schedule_manager_item .css_personal_schedule_manager_item_head .css_personal_schedule_manager_item_arrow span.css_material_symbols_rounded {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   font-size: 18px;
   color: var(--b-cssvar-333333-60-flattened);
 }
@@ -88,6 +88,6 @@
 .css_personal_schedule_manager_field .css_personal_schedule_manager_body .css_personal_schedule_manager_list .css_personal_schedule_manager_item .css_personal_schedule_manager_item_drawer .css_personal_schedule_manager_item_drawer_button span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-  color: var(--b-cssvar-333333);
   font-size: 20px;
+  color: var(--b-cssvar-333333);
 }

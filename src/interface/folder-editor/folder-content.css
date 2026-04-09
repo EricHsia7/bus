@@ -104,8 +104,8 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
-  color: var(--b-cssvar-333333);
   font-size: 20px;
+  color: var(--b-cssvar-333333);
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button:nth-child(1) span.css_material_symbols_rounded {

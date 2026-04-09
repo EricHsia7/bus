@@ -303,8 +303,6 @@
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
@@ -691,6 +689,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
+  font-size: 20px;
   color: var(--b-cssvar-333333);
 }
 

@@ -32,8 +32,6 @@
 }
 
 .css_settings_field .css_settings_body .css_settings .css_setting .css_setting_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
   color: var(--b-cssvar-333333);
 }
 
@@ -96,12 +94,12 @@
 
 .css_settings_field .css_settings_body .css_settings .css_setting[type="info"] .css_setting_arrow,
 .css_settings_field .css_settings_body .css_settings .css_setting[type="action"] .css_setting_arrow {
-  display: none;
+  visibility: hidden;
 }
 
 .css_settings_field .css_settings_body .css_settings .css_setting .css_setting_arrow span.css_material_symbols_rounded {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   font-size: 18px;
   color: var(--b-cssvar-333333-60-flattened);
 }

@@ -234,8 +234,6 @@
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
@@ -800,6 +798,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_title .css_route_group_item_nearby_location_icon span.css_material_symbols_rounded {
   width: 20px;
   height: 20px;
+  font-size: 20px;
   color: var(--b-cssvar-333333);
 }
 
