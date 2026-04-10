@@ -38,10 +38,10 @@
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group .css_bus_group_head .css_bus_group_icon span.css_material_symbols_rounded {
-  height: 15px;
-  width: 15px;
-  color: var(--b-cssvar-333333);
+  height: 18px;
+  width: 18px;
   font-size: 18px;
+  color: var(--b-cssvar-333333);
 }
 
 .css_bus_field .css_bus_body .css_bus_groups .css_bus_group .css_bus_group_head .css_bus_group_name {

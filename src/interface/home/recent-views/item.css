@@ -49,14 +49,14 @@
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item .css_home_recent_views_item_head .css_home_recent_views_item_icon span.css_material_symbols_rounded {
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   font-size: 18px;
   color: var(--b-cssvar-333333);
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon span.css_material_symbols_rounded {
-  display: none;
+  visibility: hidden;
 }
 
 /* recent-views > content > item > head > title */

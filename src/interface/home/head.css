@@ -61,6 +61,9 @@
 
 .css_home_field .css_home_head .css_home_button_left {
   left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .css_home_field .css_home_head .css_home_button_right {
@@ -68,11 +71,6 @@
 }
 
 .css_home_field .css_home_head .css_home_button_left span.css_material_symbols_rounded {
-  position: absolute;
-  top: calc((55px - 20px) / 2);
-  left: calc((55px - 20px) / 2);
-  width: 20px;
-  height: 20px;
   color: var(--b-cssvar-333333);
 }
 

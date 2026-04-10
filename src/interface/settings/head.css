@@ -39,8 +39,6 @@
 .css_settings_field .css_settings_head .css_settings_button_right span.css_material_symbols_rounded,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_left span.css_material_symbols_rounded,
 .css_settings_options_field .css_settings_options_head .css_settings_options_button_right span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
   color: var(--b-cssvar-333333);
 }
 
