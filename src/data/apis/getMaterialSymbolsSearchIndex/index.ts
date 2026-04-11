@@ -39,7 +39,7 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_search_index_v5_cache';
+  const cacheKey = 'bus_material_symbols_search_index_v6_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();

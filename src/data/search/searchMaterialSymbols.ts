@@ -14,6 +14,7 @@ export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMateria
   const symbols = materialSymbols.symbols;
   const names = [];
   const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
+  const symbolToWords: Array<Array<number>> = []; // [[0, 1, 2, 3], [4, 5, 6], ...]
 
   let nameIndex = 0;
   for (const symbol in symbols) {
@@ -27,17 +28,18 @@ export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMateria
       }
       wordToSymbols[wordIndexKey].push(nameIndex);
     }
+    symbolToWords.push(symbols[symbol]);
     nameIndex++;
   }
 
-  searchStructure = { dictionary, names, wordToSymbols };
+  searchStructure = { dictionary, names, wordToSymbols, symbolToWords };
   readyToSearch = true;
 }
 
 export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): Array<{ item: MaterialSymbols; score: number }> {
   if (!readyToSearch) return [];
 
-  const { dictionary, names, wordToSymbols } = searchStructure;
+  const { dictionary, names, wordToSymbols, symbolToWords } = searchStructure;
   const broadLength = Math.round(names.length * broadThreshold);
 
   // Split query
@@ -96,7 +98,8 @@ export function searchForMaterialSymbols(query: string, searchFrom: number = 0, 
       if (matchedWordIndexes[j] < 0) continue;
       const symbolWordIndexes = wordToSymbols[`w${matchedWordIndexes[j]}`] || [];
       if (symbolWordIndexes.indexOf(candidates[i]) > -1) {
-        score -= j; // earlier query words = higher weight
+        score -= j + (symbolToWords[candidates[i]].indexOf(matchedWordIndexes[j]) + 1) * matchedWordIndexes[j];
+        // earlier query words && higher proability = higher weight
       }
     }
     scored.push({
