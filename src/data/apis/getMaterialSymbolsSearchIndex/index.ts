@@ -13,7 +13,7 @@ export interface UnpackedMaterialSymbolsSearchIndex {
 }
 
 let MaterialSymbolsAPIVariableCache_available: boolean = false;
-let MaterialSymbolsAPIVariableCache_data: UnpackedMaterialSymbolsSearchIndex = [];
+let MaterialSymbolsAPIVariableCache_data = {} as UnpackedMaterialSymbolsSearchIndex;
 
 function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): UnpackedMaterialSymbolsSearchIndex {
   const unpackedData: UnpackedMaterialSymbolsSearchIndex = {
