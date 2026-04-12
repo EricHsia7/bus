@@ -60,6 +60,7 @@ module.exports = (env, argv) => {
         include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
         navigateFallback: './index.html',
+        navigateFallbackDenylist: [/\/[^\/]+\.(?!(html$))[^\/.]{0,}$/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com/,
