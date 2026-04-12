@@ -58,7 +58,7 @@ module.exports = (env, argv) => {
         skipWaiting: true,
         exclude: [/\.map$/, /\.erm$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/, /index\.html$/],
-        cacheId: `bus-${thisVersion.hash}`,
+        cacheId: `bus-${thisVersion.full_hash}`,
         navigateFallback: './index.html',
         navigateFallbackDenylist: [/\/[^\/]+\.(?!(html$))[^\/.]{0,}$/],
         runtimeCaching: [
