@@ -145,7 +145,7 @@ module.exports = (env, argv) => {
           plugins: [postcssColorMixFunction({ preserve: false, enableProgressiveCustomProperties: false })]
         }),
         new CssMinimizerPlugin({
-          parallel: 4,
+          parallel: true,
           minimizerOptions: {
             preset: [
               'default',
