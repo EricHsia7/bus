@@ -669,7 +669,7 @@
   top: 10px;
   left: 10px;
   width: calc(100% - 20px);
-  height: 20px;
+  height: 25px;
 }
 
 /* items > item > body > buses, bus arrival times > bus, bus arrival time > title > icon */
@@ -678,8 +678,8 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -687,9 +687,9 @@
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_buses .css_location_group_item_bus .css_location_group_item_bus_title .css_location_group_item_bus_icon span.css_material_symbols_rounded,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_icon span.css_material_symbols_rounded {
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
   color: var(--b-cssvar-333333);
 }
 
@@ -698,11 +698,11 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_personal_schedule_name {
   position: absolute;
   top: 0px;
-  left: 25px;
-  width: calc(100% - 20px - 5px);
-  height: 20px;
+  left: calc(25px + 5px);
+  width: calc(100% - 25px - 5px);
+  height: 25px;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 25px;
   color: var(--b-cssvar-333333);
   white-space: nowrap;
   word-break: keep-all;
@@ -713,7 +713,7 @@
 
 /* items > item > body > bus arrival times > bus arrival time > title > personal schedule name */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_body .css_location_group_item_bus_arrival_times .css_location_group_item_bus_arrival_time .css_location_group_item_bus_arrival_time_title .css_location_group_item_bus_arrival_time_personal_schedule_name {
-  width: calc(100% - 20px - 5px - 120px);
+  width: calc(100% - 25px - 5px - 120px);
 }
 
 /* items > item > body > bus arrival times > bus arrival time > title > personal schedule time */
@@ -722,9 +722,9 @@
   top: 0px;
   right: 0px;
   width: 120px;
-  height: 20px;
+  height: 25px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 25px;
   color: var(--b-cssvar-333333-70-flattened);
   white-space: nowrap;
   word-break: keep-all;
