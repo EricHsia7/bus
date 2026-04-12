@@ -7,7 +7,7 @@
 - [32.12 KB] **index.html**
 </details>
 <details>
-<summary>[357.51 KB] <b>*.js</b></summary>
+<summary>[357.4 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **5c5cf1b15fc939dcdf2f.js**
 - [23.38 KB] **a6b82cb50ce1f17099de.js**
@@ -36,7 +36,7 @@
 - [4.83 KB] **853d41b3f5273378f0bf.js**
 - [4.79 KB] **c98adb6e2c73c52d92c8.js**
 - [3.97 KB] **a00a0ff18bd3c309cfc8.js**
-- [3.37 KB] **service-worker.js**
+- [3.26 KB] **service-worker.js**
 - [2.38 KB] **9d82df78cf2afdbced30.js**
 - [2.01 KB] **a9e099856c32f811a5ab.js**
 - [2 KB] **77d6e45ceead72483d62.js**
@@ -148,7 +148,7 @@
 - [13.04 KB] **a9e099856c32f811a5ab.js.map**
 - [12.8 KB] **5023d20ed1a6f5d0da2b.js.map**
 - [9.79 KB] **e9521c74ad32ba30ed46.js.map**
-- [8.05 KB] **service-worker.js.map**
+- [7.82 KB] **service-worker.js.map**
 - [3.92 KB] **a65676885100d5405d0c.js.map**
 - [3.51 KB] **68bdaf18ed97e4da36eb.js.map**
 - [1.95 KB] **82a2e0280e7aaf91e0be.js.map**
