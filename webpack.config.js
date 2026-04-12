@@ -74,13 +74,6 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'google-fonts-sources'
             }
-          },
-          {
-            urlPattern: new RegExp(`/\\?v=${thisVersion.hash}$/`),
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'versioned-html'
-            }
           }
         ]
       }),

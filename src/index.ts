@@ -6,7 +6,6 @@ import { discardExpiredNotificationSchedules, initializeNotificationSchedules, l
 import { initializePersonalSchedules, initializePersonalSchedulesTimeline } from './data/personal-schedule';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeSettings } from './data/settings/index';
-import { checkAppVersion } from './data/settings/version';
 import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
@@ -239,9 +238,8 @@ interface BusWindow extends Window {
     setupRecentViewsFieldSkeletonScreen();
     setupFolderFieldSkeletonScreen();
 
-    // check app version
-    const status = await checkAppVersion();
-    if (status === 'ok') {
+    // check network connection
+    if (navigator.onLine) {
       // handle permanent link
       openPermalink();
 
@@ -284,7 +282,7 @@ interface BusWindow extends Window {
           { once: true }
         );
       });
-    } else if (status === 'fetchError' || status === 'unknownError') {
+    } else {
       showErrorMessage();
       fadeOutSplashScreen();
     }
