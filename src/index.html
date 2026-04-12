@@ -670,10 +670,12 @@
         bus.initialize();
       });
       window.addEventListener('load', function () {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('./service-worker.js');
-        }
         bus.secondlyInitialize();
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./service-worker.js').then((registration) => {
+            registration.update();
+          });
+        }
       });
     </script>
   </body>
