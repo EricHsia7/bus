@@ -238,54 +238,51 @@ interface BusWindow extends Window {
     setupRecentViewsFieldSkeletonScreen();
     setupFolderFieldSkeletonScreen();
 
-    // check network connection
-    if (navigator.onLine) {
-      // handle permanent link
-      openPermalink();
+    // handle permanent link
+    openPermalink();
 
-      // initialize recent views
-      initializeRecentViews();
+    // initialize recent views
+    initializeRecentViews();
 
-      // initialize folders
-      initializeFolders();
+    // initialize folders
+    initializeFolders();
 
-      // initialize sliding
-      initializeRouteSliding();
-      initializeLocationSliding();
+    // initialize sliding
+    initializeRouteSliding();
+    initializeLocationSliding();
 
-      // initialize search inputs
-      initializeSearchInput();
-      initializeIconSelectorSearchInput();
+    // initialize search inputs
+    initializeSearchInput();
+    initializeIconSelectorSearchInput();
 
-      // handle window resize
+    // handle window resize
+    resizeSearchInputSVG();
+
+    window.addEventListener('resize', () => {
       resizeSearchInputSVG();
+    });
 
-      window.addEventListener('resize', () => {
-        resizeSearchInputSVG();
-      });
-
-      if ('screen' in self) {
-        if (screen.orientation) {
-          screen.orientation.addEventListener('change', () => {
-            resizeSearchInputSVG();
-          });
-        }
+    if ('screen' in self) {
+      if (screen.orientation) {
+        screen.orientation.addEventListener('change', () => {
+          resizeSearchInputSVG();
+        });
       }
-
-      fadeOutSplashScreen(function () {
-        document.addEventListener(
-          'click',
-          function () {
-            askForPositioningPermission();
-            askForCalibratingPermission();
-          },
-          { once: true }
-        );
-      });
-    } else {
-      showErrorMessage();
-      fadeOutSplashScreen();
     }
+
+    fadeOutSplashScreen(function () {
+      document.addEventListener(
+        'click',
+        function () {
+          askForPositioningPermission();
+          askForCalibratingPermission();
+        },
+        { once: true }
+      );
+    });
+
+    // showErrorMessage();
+    // fadeOutSplashScreen();
   },
   secondlyInitialize: async function () {
     if (busSecondlyInitialized) return;
