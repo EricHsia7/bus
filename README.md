@@ -7,7 +7,7 @@
 - [32.12 KB] **index.html**
 </details>
 <details>
-<summary>[356.97 KB] <b>*.js</b></summary>
+<summary>[356.96 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **5c5cf1b15fc939dcdf2f.js**
 - [23.38 KB] **a6b82cb50ce1f17099de.js**
@@ -36,7 +36,7 @@
 - [4.83 KB] **853d41b3f5273378f0bf.js**
 - [4.79 KB] **c98adb6e2c73c52d92c8.js**
 - [3.97 KB] **a00a0ff18bd3c309cfc8.js**
-- [3.3 KB] **service-worker.js**
+- [3.29 KB] **service-worker.js**
 - [2.38 KB] **9d82df78cf2afdbced30.js**
 - [2.01 KB] **a9e099856c32f811a5ab.js**
 - [2 KB] **77d6e45ceead72483d62.js**
