@@ -197,8 +197,8 @@ import './interface/qrcode/qrcode.css';
 
 import './interface/prompt/index.css';
 
-let busInitialized = false;
-let busSecondlyInitialized = false;
+let busInitialized: boolean = false;
+let busSecondlyInitialized: boolean = false;
 
 type pageFunctions = { [functionName: string]: Function };
 

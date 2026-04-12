@@ -39,15 +39,15 @@ async function getAppVersion(): Promise<AppVersion | false> {
 }
 
 export function getHTMLVersionHash(): string {
-  return documentQuerySelector('head meta[name="version-hash"]').getAttribute('content');
+  return documentQuerySelector('head meta[name="version-hash"]').getAttribute('content') || '';
 }
 
 export function getHTMLVersionFullHash(): string {
-  return documentQuerySelector('head meta[name="version-full-hash"]').getAttribute('content');
+  return documentQuerySelector('head meta[name="version-full-hash"]').getAttribute('content') || '';
 }
 
 export function getHTMLVersionBranchName(): string {
-  return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content');
+  return documentQuerySelector('head meta[name="version-branch-name"]').getAttribute('content') || '';
 }
 
 export function getTreeURLOfCurrentVersion(): string {
