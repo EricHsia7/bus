@@ -287,13 +287,6 @@ interface BusWindow extends Window {
     } else if (status === 'fetchError' || status === 'unknownError') {
       showErrorMessage();
       fadeOutSplashScreen();
-      /*
-      if (status === 'fetchError') {
-        window.addEventListener('online', function () {
-          location.reload();
-        });
-      }
-      */
     }
   },
   secondlyInitialize: async function () {
