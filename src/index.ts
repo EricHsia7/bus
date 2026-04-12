@@ -6,7 +6,6 @@ import { discardExpiredNotificationSchedules, initializeNotificationSchedules, l
 import { initializePersonalSchedules, initializePersonalSchedulesTimeline } from './data/personal-schedule';
 import { discardExpiredRecentViews } from './data/recent-views/index';
 import { initializeSettings } from './data/settings/index';
-import { checkAppVersion } from './data/settings/version';
 import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
@@ -239,55 +238,51 @@ interface BusWindow extends Window {
     setupRecentViewsFieldSkeletonScreen();
     setupFolderFieldSkeletonScreen();
 
-    // check app version
-    const status = await checkAppVersion();
-    if (status === 'ok') {
-      // handle permanent link
-      openPermalink();
+    // handle permanent link
+    openPermalink();
 
-      // initialize recent views
-      initializeRecentViews();
+    // initialize recent views
+    initializeRecentViews();
 
-      // initialize folders
-      initializeFolders();
+    // initialize folders
+    initializeFolders();
 
-      // initialize sliding
-      initializeRouteSliding();
-      initializeLocationSliding();
+    // initialize sliding
+    initializeRouteSliding();
+    initializeLocationSliding();
 
-      // initialize search inputs
-      initializeSearchInput();
-      initializeIconSelectorSearchInput();
+    // initialize search inputs
+    initializeSearchInput();
+    initializeIconSelectorSearchInput();
 
-      // handle window resize
+    // handle window resize
+    resizeSearchInputSVG();
+
+    window.addEventListener('resize', () => {
       resizeSearchInputSVG();
+    });
 
-      window.addEventListener('resize', () => {
-        resizeSearchInputSVG();
-      });
-
-      if ('screen' in self) {
-        if (screen.orientation) {
-          screen.orientation.addEventListener('change', () => {
-            resizeSearchInputSVG();
-          });
-        }
+    if ('screen' in self) {
+      if (screen.orientation) {
+        screen.orientation.addEventListener('change', () => {
+          resizeSearchInputSVG();
+        });
       }
-
-      fadeOutSplashScreen(function () {
-        document.addEventListener(
-          'click',
-          function () {
-            askForPositioningPermission();
-            askForCalibratingPermission();
-          },
-          { once: true }
-        );
-      });
-    } else if (status === 'fetchError' || status === 'unknownError') {
-      showErrorMessage();
-      fadeOutSplashScreen();
     }
+
+    fadeOutSplashScreen(function () {
+      document.addEventListener(
+        'click',
+        function () {
+          askForPositioningPermission();
+          askForCalibratingPermission();
+        },
+        { once: true }
+      );
+    });
+
+    // showErrorMessage();
+    // fadeOutSplashScreen();
   },
   secondlyInitialize: async function () {
     if (busSecondlyInitialized) return;

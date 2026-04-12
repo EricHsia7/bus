@@ -60,6 +60,7 @@ module.exports = (env, argv) => {
         include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
         navigateFallback: './index.html',
+        navigateFallbackDenylist: [/\/[^\/]+\.(?!(html$))[^\/.]{0,}$/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com/,
@@ -73,13 +74,6 @@ module.exports = (env, argv) => {
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'google-fonts-sources'
-            }
-          },
-          {
-            urlPattern: new RegExp(`/\\?v=${thisVersion.hash}$/`),
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'versioned-html'
             }
           }
         ]
