@@ -200,7 +200,27 @@ import './interface/prompt/index.css';
 let busInitialized = false;
 let busSecondlyInitialized = false;
 
-window.bus = {
+type pageFunctions = { [functionName: string]: Function };
+
+interface BusWindow extends Window {
+  bus: {
+    initialize: Function;
+    secondlyInitialize: Function;
+    route: pageFunctions;
+    location: pageFunctions;
+    folder: pageFunctions;
+    search: pageFunctions;
+    storage: pageFunctions;
+    dataUsage: pageFunctions;
+    personalSchedule: pageFunctions;
+    settings: pageFunctions;
+    bus: pageFunctions;
+    notification: pageFunctions;
+    qrcode: pageFunctions;
+  };
+}
+
+(window as unknown as BusWindow).bus = {
   initialize: async function () {
     if (busInitialized) return;
     busInitialized = true;
@@ -348,4 +368,4 @@ window.bus = {
   }
 };
 
-export default window.bus;
+export default (window as unknown as BusWindow).bus;
