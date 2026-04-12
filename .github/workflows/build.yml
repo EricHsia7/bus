@@ -50,9 +50,9 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: ./dist/splash-screen
-          key: bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+          key: bus-splash-screen-${{ hashFiles('package.json') }}-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
           restore-keys: |
-            bus-splash-screen-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
+            bus-splash-screen-${{ hashFiles('package.json') }}-${{ hashFiles('generate-splash-screen.js') }}-${{ hashFiles('splash-screen-device-data.json') }}
 
       - name: Generate splash screen
         if: steps.restore-cached-splash-screen.outputs.cache-hit != 'true'
