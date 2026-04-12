@@ -268,7 +268,7 @@ window.bus = {
       showErrorMessage();
       fadeOutSplashScreen();
       if (status === 'fetchError') {
-        document.addEventListener('online', function () {
+        window.addEventListener('online', function () {
           location.reload();
         });
       }
