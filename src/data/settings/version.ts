@@ -56,7 +56,7 @@ export function getTreeURLOfCurrentVersion(): string {
 }
 
 export function getHTMLVersionTimeStamp(): string {
-  return documentQuerySelector('head meta[name="version-time-stamp"]').getAttribute('content');
+  return documentQuerySelector('head meta[name="version-time-stamp"]').getAttribute('content') || '';
 }
 
 type AppVersionStatus = 'fetchError' | 'unknownError' | 'refreshing' | 'ok';
