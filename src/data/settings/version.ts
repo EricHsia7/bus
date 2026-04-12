@@ -71,10 +71,10 @@ export async function checkAppVersion(): Promise<AppVersionStatus> {
     }
   } else {
     if (getHTMLVersionHash() !== appVersion.hash) {
-      refreshPageWithVersionHash(appVersion.hash, true);
+      // refreshPageWithVersionHash(appVersion.hash, true);
       return 'refreshing';
     } else {
-      refreshPageWithVersionHash(appVersion.hash, false);
+      // refreshPageWithVersionHash(appVersion.hash, false);
       return 'ok';
     }
   }
