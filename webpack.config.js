@@ -59,7 +59,6 @@ module.exports = (env, argv) => {
         exclude: [/\.map$/, /\.erm$/, /LICENSE\.txt$/],
         include: [/\.js|css|png$/, /index\.html$/],
         cacheId: `bus-${thisVersion.hash}`,
-        navigateFallback: './index.html',
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com/,
@@ -73,6 +72,13 @@ module.exports = (env, argv) => {
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'google-fonts-sources'
+            }
+          },
+          {
+            urlPattern: new RegExp(`/(\\?|&)v=${thisVersion.hash}$/`),
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'versioned-html'
             }
           }
         ]
