@@ -1,6 +1,6 @@
 import { documentQuerySelector } from '../../tools/elements';
 
-function refreshPageWithTimeStamp(id: string, enforce: boolean = false): void {
+function refreshPageWithVersionHash(id: string, enforce: boolean = false): void {
   // Get the URLSearchParams object from the current URL
   const searchParams = new URLSearchParams(window.location.search);
   // Set the 'timestamp' query parameter to the current timestamp
@@ -71,10 +71,10 @@ export async function checkAppVersion(): Promise<AppVersionStatus> {
     }
   } else {
     if (getHTMLVersionHash() !== appVersion.hash) {
-      refreshPageWithTimeStamp(appVersion.hash, true);
+      refreshPageWithVersionHash(appVersion.hash, true);
       return 'refreshing';
     } else {
-      refreshPageWithTimeStamp(appVersion.hash, false);
+      refreshPageWithVersionHash(appVersion.hash, false);
       return 'ok';
     }
   }

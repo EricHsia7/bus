@@ -267,6 +267,11 @@ window.bus = {
     } else if (status === 'fetchError' || status === 'unknownError') {
       showErrorMessage();
       fadeOutSplashScreen();
+      if (status === 'fetchError') {
+        document.addEventListener('online', function () {
+          location.reload();
+        });
+      }
     }
   },
   secondlyInitialize: async function () {
