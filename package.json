@@ -46,7 +46,7 @@
     "webpack-cli": "7.0.2",
     "webpack-sources": "3.3.4",
     "webpack-subresource-integrity": "5.1.0",
-    "webpack": "5.106.1",
+    "webpack": "5.106.2",
     "workbox-webpack-plugin": "7.4.0"
   },
   "dependencies": {
