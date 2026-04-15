@@ -75,6 +75,13 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'google-fonts-sources'
             }
+          },
+          {
+            urlPattern: /\/icons\/[a-z0-9\-]+\.png$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'icons'
+            }
           }
         ]
       }),
