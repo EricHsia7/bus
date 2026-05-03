@@ -48,7 +48,7 @@ export function searchForMaterialSymbols(query: string, searchFrom: number = 0, 
       query
         .trim()
         .toLowerCase()
-        .split(/[\s_-]+/)
+        .split(/[\s_]+/)
     )
   );
   const queryWordsLength = queryWords.length;
