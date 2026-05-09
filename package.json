@@ -47,7 +47,7 @@
     "webpack-sources": "3.4.1",
     "webpack-subresource-integrity": "5.1.0",
     "webpack": "5.106.2",
-    "workbox-webpack-plugin": "7.4.0"
+    "workbox-webpack-plugin": "7.4.1"
   },
   "dependencies": {
     "fast-equals": "6.0.0",
