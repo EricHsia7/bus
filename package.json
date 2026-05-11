@@ -42,7 +42,7 @@
     "postcss": "8.5.14",
     "stylelint-config-standard": "40.0.0",
     "stylelint": "17.10.0",
-    "typescript-eslint": "8.59.1",
+    "typescript-eslint": "8.59.3",
     "webpack-cli": "7.0.2",
     "webpack-sources": "3.4.1",
     "webpack-subresource-integrity": "5.1.0",
