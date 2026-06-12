@@ -43,7 +43,7 @@
     "stylelint-config-standard": "40.0.0",
     "stylelint": "17.13.0",
     "typescript-eslint": "8.60.1",
-    "webpack-cli": "7.0.2",
+    "webpack-cli": "7.0.3",
     "webpack-sources": "3.5.0",
     "webpack-subresource-integrity": "5.1.0",
     "webpack": "5.107.2",
