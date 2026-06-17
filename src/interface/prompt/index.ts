@@ -15,7 +15,18 @@ export interface PromptButton {
 }
 
 export function promptMessage(icon: MaterialSymbols, message: string, button?: PromptButton | null): void {
-  promptElement.classList.remove('css_show_prompt');
+  const promptElementAnimations = promptElement.getAnimations();
+  const promptIconElementAnimations = promptIconElement.getAnimations();
+
+  for (const animation of promptElementAnimations) {
+    animation.cancel();
+    animation.play();
+  }
+
+  for (const animation of promptIconElementAnimations) {
+    animation.cancel();
+    animation.play();
+  }
 
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
