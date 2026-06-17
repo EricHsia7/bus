@@ -6,6 +6,7 @@ import { MaterialSymbols } from '../icons/material-symbols-type';
 
 const promptElement = documentQuerySelector('.css_prompt');
 const promptIconElement = elementQuerySelector(promptElement, '.css_prompt_icon');
+const promptIconSpanElement = elementQuerySelector(promptElement, 'span.css_material_symbols_rounded');
 const promptMessageElement = elementQuerySelector(promptElement, '.css_prompt_message');
 const promptButtonElement = elementQuerySelector(promptElement, '.css_prompt_button');
 
@@ -18,22 +19,21 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
   const promptElementAnimations = promptElement.getAnimations();
-  const promptIconElementAnimations = promptIconElement.getAnimations();
+  const promptIconSpanElementAnimations = promptIconSpanElement.getAnimations();
 
   for (const animation of promptElementAnimations) {
     animation.cancel();
     animation.play();
   }
 
-  for (const animation of promptIconElementAnimations) {
+  for (const animation of promptIconSpanElementAnimations) {
     animation.cancel();
     animation.play();
   }
 
   promptElement.setAttribute('animation', booleanToString(playing_animation));
 
-  setIcon(promptIconElement, icon);
-
+  promptIconSpanElement.innerText = icon;
   promptMessageElement.innerText = message;
 
   if (typeof button === 'object' && button !== null && button !== undefined) {
