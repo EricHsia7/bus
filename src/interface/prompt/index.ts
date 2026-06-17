@@ -15,6 +15,8 @@ export interface PromptButton {
 }
 
 export function promptMessage(icon: MaterialSymbols, message: string, button?: PromptButton | null): void {
+  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+
   const promptElementAnimations = promptElement.getAnimations();
   const promptIconElementAnimations = promptIconElement.getAnimations();
 
@@ -27,8 +29,6 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
     animation.cancel();
     animation.play();
   }
-
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
   promptElement.setAttribute('animation', booleanToString(playing_animation));
 
@@ -50,12 +50,10 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
     'animationend',
     function () {
       promptElement.setAttribute('displayed', 'false');
-      promptElement.classList.remove('css_show_prompt');
       promptButtonElement.onclick = null;
     },
     { once: true }
   );
 
   promptElement.setAttribute('displayed', 'true');
-  promptElement.classList.add('css_show_prompt');
 }
