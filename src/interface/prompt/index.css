@@ -36,6 +36,12 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   overflow: clip;
   will-change: transform, opacity;
+  visibility: hidden;
+}
+
+/* displayed: true */
+.css_prompt[displayed="true"] {
+  visibility: visible;
 }
 
 .css_prompt.css_show_prompt {
@@ -123,6 +129,6 @@
   visibility: hidden;
 }
 
-.css_prompt[button="true"] .css_prompt_button {
+.css_prompt[displayed="true"][button="true"] .css_prompt_button {
   visibility: visible;
 }
