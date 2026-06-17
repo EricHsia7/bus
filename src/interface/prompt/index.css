@@ -35,11 +35,21 @@
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   overflow: clip;
+  will-change: transform, opacity;
+  visibility: hidden;
+}
+
+/* animation: true */
+.css_prompt[animation="true"] {
   animation-name: show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
-  will-change: transform, opacity;
+}
+
+/* displayed: true */
+.css_prompt[displayed="true"] {
+  visibility: visible;
 }
 
 .css_prompt .css_prompt_icon {
@@ -120,6 +130,6 @@
   visibility: hidden;
 }
 
-.css_prompt[button="true"] .css_prompt_button {
+.css_prompt[displayed="true"][button="true"] .css_prompt_button {
   visibility: visible;
 }
