@@ -1,12 +1,11 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { setIcon } from '../icons/index';
 import { MaterialSymbols } from '../icons/material-symbols-type';
 
 const promptElement = documentQuerySelector('.css_prompt');
 const promptIconElement = elementQuerySelector(promptElement, '.css_prompt_icon');
-const promptIconSpanElement = elementQuerySelector(promptElement, 'span.css_material_symbols_rounded');
+const promptIconSpanElement = elementQuerySelector(promptIconElement, 'span.css_material_symbols_rounded');
 const promptMessageElement = elementQuerySelector(promptElement, '.css_prompt_message');
 const promptButtonElement = elementQuerySelector(promptElement, '.css_prompt_button');
 
