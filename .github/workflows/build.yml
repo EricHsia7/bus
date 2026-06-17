@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-show-prompt-2
 
 jobs:
   build:

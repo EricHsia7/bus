@@ -35,11 +35,14 @@
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   overflow: clip;
+  will-change: transform, opacity;
+}
+
+.css_prompt.css_show_prompt {
   animation-name: show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
-  will-change: transform, opacity;
 }
 
 .css_prompt .css_prompt_icon {
@@ -71,7 +74,7 @@
   color: var(--b-cssvar-333333);
 }
 
-.css_prompt[animation="true"] .css_prompt_icon span.css_material_symbols_rounded {
+.css_prompt[animation="true"].css_show_prompt .css_prompt_icon span.css_material_symbols_rounded {
   --b-cssvar-font-variation-settings-fill: 0;
   animation-name: fill-prompt-icon;
   animation-duration: 2800ms;
