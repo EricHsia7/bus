@@ -43,7 +43,11 @@ export function promptMessage(icon: MaterialSymbols, message: string, button?: P
         button.action();
       };
       promptElement.setAttribute('button', 'true');
+    } else {
+      promptElement.setAttribute('button', 'false');
     }
+  } else {
+    promptElement.setAttribute('button', 'false');
   }
 
   promptElement.addEventListener(
