@@ -15,6 +15,8 @@ export interface PromptButton {
 }
 
 export function promptMessage(icon: MaterialSymbols, message: string, button?: PromptButton | null): void {
+  promptElement.classList.remove('css_show_prompt');
+
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
   promptElement.setAttribute('animation', booleanToString(playing_animation));
