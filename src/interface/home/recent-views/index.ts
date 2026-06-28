@@ -6,6 +6,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
+import { MaterialSymbols } from '../../icons/material-symbols-type';
 import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
@@ -60,11 +61,11 @@ function generateElementOfRecentViewItem(): HTMLElement {
 }
 
 function updateRecentViewsField(integration: integratedRecentViews, skeletonScreen: boolean, animation: boolean) {
-  function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView): void {
+  function updateItem(thisElement: HTMLElement, thisItem: integratedRecentView, previousItem: integratedRecentView | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
       const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_icon');
-      let icon = '';
+      let icon: MaterialSymbols = '';
       switch (thisItem.type) {
         case 'route':
           icon = 'route';
@@ -118,28 +119,32 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       thisNameElement.innerText = thisItem.name;
     }
 
-    function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView): void {
-      switch (thisItem.type) {
-        case 'route':
-          thisElement.onclick = function () {
-            openRoute(thisItem.id, thisItem.pid);
-          };
-          break;
-        case 'location':
-          thisElement.onclick = function () {
-            openLocation(thisItem.hash);
-          };
-          break;
-        case 'bus':
-          thisElement.onclick = function () {
-            openBus(thisItem.id);
-          };
-          break;
-        case 'empty':
-          thisElement.onclick = null;
-          break;
-        default:
-          break;
+    function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView, skeletonScreen: boolean): void {
+      if (skeletonScreen) {
+        thisElement.onclick = null;
+      } else {
+        switch (thisItem.type) {
+          case 'route':
+            thisElement.onclick = function () {
+              openRoute(thisItem.id, thisItem.pid);
+            };
+            break;
+          case 'location':
+            thisElement.onclick = function () {
+              openLocation(thisItem.hash);
+            };
+            break;
+          case 'bus':
+            thisElement.onclick = function () {
+              openBus(thisItem.id);
+            };
+            break;
+          case 'empty':
+            thisElement.onclick = null;
+            break;
+          default:
+            break;
+        }
       }
     }
 
@@ -156,7 +161,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       updateTitle(thisElement, thisItem);
       updateTime(thisElement, thisItem);
       updateName(thisElement, thisItem);
-      updateOnclick(thisElement, thisItem);
+      updateOnclick(thisElement, thisItem, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
@@ -165,7 +170,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         updateTitle(thisElement, thisItem);
         updateTime(thisElement, thisItem);
         updateName(thisElement, thisItem);
-        updateOnclick(thisElement, thisItem);
+        updateOnclick(thisElement, thisItem, skeletonScreen);
         updateAnimation(thisElement, animation);
         updateSkeletonScreen(thisElement, skeletonScreen);
       } else {
@@ -176,7 +181,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             }
             if (previousItem.hash !== thisItem.hash) {
               updateName(thisElement, thisItem);
-              updateOnclick(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem, skeletonScreen);
             }
             break;
           case 'route':
@@ -185,7 +190,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             }
             if (previousItem.id !== thisItem.id || !deepEqual(previousItem.pid, thisItem.pid)) {
               updateName(thisElement, thisItem);
-              updateOnclick(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem, skeletonScreen);
             }
             break;
           case 'bus':
@@ -196,7 +201,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             }
             if (previousItem.id !== thisItem.id) {
               updateName(thisElement, thisItem);
-              updateOnclick(thisElement, thisItem);
+              updateOnclick(thisElement, thisItem, skeletonScreen);
             }
             break;
           case 'empty':

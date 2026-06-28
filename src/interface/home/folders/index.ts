@@ -258,6 +258,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     }
 
     function updateMain(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
+      const mainElement = elementQuerySelector(thisElement, '.css_home_folder_item_main');
       let main: string = '';
       switch (thisItem.type) {
         case 'stop':
@@ -279,10 +280,11 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           main = 'null';
           break;
       }
-      elementQuerySelector(thisElement, '.css_home_folder_item_main').innerText = main;
+      mainElement.innerText = main;
     }
 
     function updateContext(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
+      const contextElement = elementQuerySelector(thisElement, '.css_home_folder_item_context');
       let context: string = '';
       switch (thisItem.type) {
         case 'stop':
@@ -304,33 +306,39 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           context = 'null';
           break;
       }
-      elementQuerySelector(thisElement, '.css_home_folder_item_context').innerText = context;
+      contextElement.innerText = context;
     }
 
-    function updateButton(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
-      const buttonElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule .css_home_folder_item_button');
-      switch (thisItem.type) {
-        case 'stop':
-          buttonElement.onclick = function () {
-            openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
-          };
-          break;
-        case 'route':
-          buttonElement.onclick = function () {
-            openRoute(thisItem.id, thisItem.pathAttributeId);
-          };
-          break;
-        case 'location':
-          buttonElement.onclick = function () {
-            openLocation(thisItem.id);
-          };
-          break;
-        case 'bus':
-          break;
-        case 'empty':
-          break;
-        default:
-          break;
+    function updateButton(thisElement: HTMLElement, thisItem: integratedFolderContent, skeletonScreen: boolean): void {
+      const capsuleElement = elementQuerySelector(thisElement, '.css_home_folder_item_capsule');
+      const buttonElement = elementQuerySelector(capsuleElement, '.css_home_folder_item_button');
+      if (skeletonScreen) {
+        buttonElement.onclick = null;
+      } else {
+        switch (thisItem.type) {
+          case 'stop':
+            buttonElement.onclick = function () {
+              openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
+            };
+            break;
+          case 'route':
+            buttonElement.onclick = function () {
+              openRoute(thisItem.id, thisItem.pathAttributeId);
+            };
+            break;
+          case 'location':
+            buttonElement.onclick = function () {
+              openLocation(thisItem.id);
+            };
+            break;
+          case 'bus':
+            break;
+          case 'empty':
+            break;
+          default:
+            buttonElement.onclick = null;
+            break;
+        }
       }
     }
 
@@ -348,7 +356,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       updateStatus(thisElement, thisItem, animation);
       updateMain(thisElement, thisItem);
       updateContext(thisElement, thisItem);
-      updateButton(thisElement, thisItem);
+      updateButton(thisElement, thisItem, skeletonScreen);
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
@@ -358,7 +366,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         updateStatus(thisElement, thisItem, animation);
         updateMain(thisElement, thisItem);
         updateContext(thisElement, thisItem);
-        updateButton(thisElement, thisItem);
+        updateButton(thisElement, thisItem, skeletonScreen);
         updateAnimation(thisElement, animation);
         updateSkeletonScreen(thisElement, skeletonScreen);
       } else {
@@ -366,7 +374,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           case 'stop':
             if (!deepEqual(previousItem.route, thisItem.route)) {
               updateContext(thisElement, thisItem);
-              updateButton(thisElement, thisItem);
+              updateButton(thisElement, thisItem, skeletonScreen);
             }
             if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
@@ -377,7 +385,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             break;
           case 'route':
             if (previousItem.id !== thisItem.id) {
-              updateButton(thisElement, thisItem);
+              updateButton(thisElement, thisItem, skeletonScreen);
             }
             if (!deepEqual(previousItem.endPoints, thisItem.endPoints)) {
               updateContext(thisElement, thisItem);
@@ -388,7 +396,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             break;
           case 'location':
             if (previousItem.id !== thisItem.id) {
-              updateButton(thisElement, thisItem);
+              updateButton(thisElement, thisItem, skeletonScreen);
             }
             if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
