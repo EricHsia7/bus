@@ -25,7 +25,6 @@ import { hideSettingsOptions, showSettingsOptions } from './settings/options';
 import { hideStorage, showStorage } from './storage/index';
 
 const SplashScreenElement = documentQuerySelector('.css_splash_screen');
-const ErrorMessageElement = documentQuerySelector('.css_error_message');
 
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
@@ -238,10 +237,6 @@ export function fadeOutSplashScreen(callback?: Function): void {
   } else {
     fadeOut();
   }
-}
-
-export function showErrorMessage(): void {
-  ErrorMessageElement.setAttribute('displayed', 'true');
 }
 
 export type GroupStyles = {
