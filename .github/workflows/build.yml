@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-identifier-generator-3
 
 jobs:
   build:
