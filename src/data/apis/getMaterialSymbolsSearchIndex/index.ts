@@ -12,8 +12,8 @@ export interface UnpackedMaterialSymbolsSearchIndex {
   symbols: { [symbol: string]: Array<number> };
 }
 
-let MaterialSymbolsAPIVariableCache_available: boolean = false;
-let MaterialSymbolsAPIVariableCache_data = {} as UnpackedMaterialSymbolsSearchIndex;
+let MaterialSymbolsSearchIndexVariableCache_available: boolean = false;
+let MaterialSymbolsSearchIndexVariableCache_data = {} as UnpackedMaterialSymbolsSearchIndex;
 
 function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): UnpackedMaterialSymbolsSearchIndex {
   const unpackedData: UnpackedMaterialSymbolsSearchIndex = {
@@ -28,13 +28,13 @@ function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): Unp
     }
     unpackedData.symbols[symbolNameComponents.join('_')] = data.symbols[symbolKey].split(',').map((k) => parseInt(k, 36));
   }
-  return unpackedData as UnpackedMaterialSymbolsSearchIndex;
+  return unpackedData;
 }
 
 export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<UnpackedMaterialSymbolsSearchIndex> {
-  async function getData() {
-    const apiurl = getMaterialSymbolsAPIURL();
-    const data = await fetchData(apiurl, requestID, 'getMaterialSymbolsSearchIndex', 'json');
+  async function getData(): Promise<MaterialSymbolsSearchIndex> {
+    const apiurl = getMaterialSymbolsAPIURL(0);
+    const data = (await fetchData(apiurl, requestID, 'getMaterialSymbolsSearchIndex', 'json')) as MaterialSymbolsSearchIndex;
     return data;
   }
 
@@ -46,9 +46,9 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
     const unpacked = unpackMaterialSymbolsSearchIndex(result);
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
     await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-    if (!MaterialSymbolsAPIVariableCache_available) {
-      MaterialSymbolsAPIVariableCache_available = true;
-      MaterialSymbolsAPIVariableCache_data = unpacked;
+    if (!MaterialSymbolsSearchIndexVariableCache_available) {
+      MaterialSymbolsSearchIndexVariableCache_available = true;
+      MaterialSymbolsSearchIndexVariableCache_data = unpacked;
     }
     return unpacked;
   } else {
@@ -57,19 +57,19 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
       const unpacked = unpackMaterialSymbolsSearchIndex(result);
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
       await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-      if (!MaterialSymbolsAPIVariableCache_available) {
-        MaterialSymbolsAPIVariableCache_available = true;
-        MaterialSymbolsAPIVariableCache_data = unpacked;
+      if (!MaterialSymbolsSearchIndexVariableCache_available) {
+        MaterialSymbolsSearchIndexVariableCache_available = true;
+        MaterialSymbolsSearchIndexVariableCache_data = unpacked;
       }
       return unpacked;
     } else {
-      if (!MaterialSymbolsAPIVariableCache_available) {
+      if (!MaterialSymbolsSearchIndexVariableCache_available) {
         const cache = await lfGetItem(0, cacheKey);
-        MaterialSymbolsAPIVariableCache_available = true;
-        MaterialSymbolsAPIVariableCache_data = JSON.parse(cache);
+        MaterialSymbolsSearchIndexVariableCache_available = true;
+        MaterialSymbolsSearchIndexVariableCache_data = JSON.parse(cache);
       }
       setDataReceivingProgress(requestID, 'getMaterialSymbolsSearchIndex', 0, true);
-      return MaterialSymbolsAPIVariableCache_data;
+      return MaterialSymbolsSearchIndexVariableCache_data;
     }
   }
 }

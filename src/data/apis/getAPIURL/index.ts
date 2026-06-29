@@ -27,6 +27,14 @@ export function getAPIURL(city: number, api: number, alternative: boolean = fals
   }
 }
 
-export function getMaterialSymbolsAPIURL(interval: number = 10000): string {
-  return `https://erichsia7.github.io/material-symbols-list/search-index.gz?_=${getNoCacheParameter(interval)}`;
+/**
+ *
+ * @param api 0: search index; 1: description; 2: similarity; 3: list
+ * @param interval The interval for no cache parameter
+ * @returns
+ */
+
+export function getMaterialSymbolsAPIURL(api: number, interval: number = 10000): string {
+  const buckets = ['search-index', 'description', 'similarity', 'index'];
+  return `https://erichsia7.github.io/material-symbols-list/${buckets[api]}.gz?_=${getNoCacheParameter(interval)}`;
 }
