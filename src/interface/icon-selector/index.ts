@@ -17,6 +17,10 @@ let previousInputElement;
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
   element.classList.add('css_icon_selector_list_item');
+  element.setAttribute('animation', 'false');
+  element.setAttribute('skeleton-screen', 'false');
+  element.setAttribute('stretched', 'false');
+  element.setAttribute('stretching', 'false');
 
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_icon_selector_list_item_icon');
@@ -28,6 +32,9 @@ function generateElementOfItem(): HTMLElement {
   const stretchElement = documentCreateDivElement();
   stretchElement.classList.add('css_icon_selector_list_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
+  stretchElement.addEventListener('click', function () {
+    stretchSymbolItem(element);
+  });
 
   const bodyElement = documentCreateDivElement();
   bodyElement.classList.add('css_icon_selector_list_item_body');
@@ -52,9 +59,9 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
-      thisElement.onclick = function () {
-        selectIcon(thisItem.name, inputElement);
-      };
+      // thisElement.onclick = function () {
+      //   selectIcon(thisItem.name, inputElement);
+      // };
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
@@ -177,4 +184,15 @@ export function closeIconSelector(): void {
   hideIconSelector();
   showPreviousPage();
   revokePageHistory('IconSelector');
+}
+
+function stretchSymbolItem(thisElement: HTMLElement): void {
+  const stretched = thisElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = thisElement.getAttribute('animation') === 'true' ? true : false;
+
+  if (stretched) {
+    thisElement.setAttribute('stretched', 'false');
+  } else {
+    thisElement.setAttribute('stretched', 'true');
+  }
 }

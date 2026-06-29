@@ -13,7 +13,7 @@
 }
 
 /* head > title */
-.css_icon_selector_field .css_icon_selector_head .css_icon_selector_head_title {
+.css_icon_selector_field .css_icon_selector_head .css_icon_selector_title {
   position: absolute;
   top: var(--b-cssvar-safe-area-top);
   left: 55px;
