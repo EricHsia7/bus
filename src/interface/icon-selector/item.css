@@ -24,20 +24,31 @@
   transform-origin: top left;
 }
 
+/* stretched: true */
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_icon {
+  width: calc(50px + 90px);
+  height: calc(50px + 90px);
+}
+
 .css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_icon span.css_material_symbols_rounded {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   width: 30px;
   height: 30px;
   font-size: 30px;
   color: var(--b-cssvar-333333);
+  transform-origin: top left;
 }
 
 /* animation: true */
 .css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_icon {
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_icon {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_icon span.css_material_symbols_rounded {
   transform: scale(calc((50 + 90) / 50));
 }
 
@@ -65,6 +76,7 @@
 /* animation: true */
 .css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_name {
   transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
 }
 
 /* stretched: true */
