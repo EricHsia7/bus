@@ -7,12 +7,17 @@ import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPr
 
 const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
 const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
-const listElement = elementQuerySelector(bodyElement, '.css_icon_selector_list');
+const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray');
+const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
 
 let previousIntegration: IntegratedMaterialSymbols = [];
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
+
+let windowWidth = 0;
+let windowHeight = 0;
+let visibleElementsQuantity = 0;
 
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
@@ -23,7 +28,7 @@ function generateElementOfItem(): HTMLElement {
   element.setAttribute('stretching', 'false');
 
   const iconElement = documentCreateDivElement();
-  iconElement.classList.add('css_icon_selector_list_item_icon');
+  iconElement.classList.add('css_icon_selector_item_icon');
   iconElement.appendChild(getBlankIconElement());
 
   const nameElement = documentCreateDivElement();
@@ -97,8 +102,12 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
   }
 
+  const windowSize = querySize('window');
+  windowWidth = windowSize.width;
+  windowHeight = windowSize.height;
+
   const itemsLength = integration.length;
-  const itemElements = Array.from(elementQuerySelectorAll(listElement, '.css_icon_selector_list_item'));
+  const itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
   const currentItemElementsLength = itemElements.length;
   if (itemsLength !== currentItemElementsLength) {
     const difference = currentItemElementsLength - itemsLength;
@@ -109,7 +118,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      listElement.append(fragment);
+      contentElement.append(fragment);
     } else if (difference > 0) {
       for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
