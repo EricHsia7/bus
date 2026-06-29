@@ -200,7 +200,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
     function updateIcon(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
-      let icon = '' as MaterialSymbols;
+      let icon: MaterialSymbols = '';
       switch (thisItem.type) {
         case 'stop':
           icon = 'location_on';

@@ -1,110 +1,128 @@
-import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
-import { deleteDataReceivingProgress } from '../../data/apis/loader';
-import { prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
 import { getSettingOptionValue } from '../../data/settings/index';
+import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMaterialSymbols } from '../../data/symbols';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
-import { containPhoneticSymbols } from '../../tools/text';
-import { getBlankIconElement, setIcon } from '../icons/index';
-import { MaterialSymbols } from '../icons/material-symbols-type';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
-const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
-const searchInputElement = elementQuerySelector(headElement, '#search_material_symbols_input') as HTMLInputElement;
 const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
-const symbolsElement = elementQuerySelector(bodyElement, '.css_icon_selector_material_symbols');
+const listElement = elementQuerySelector(bodyElement, '.css_icon_selector_list');
 
-let currentSymbols: Array<MaterialSymbols> = [];
-
-let previousSymbols: Array<MaterialSymbols> = [];
+let previousIntegration: IntegratedMaterialSymbols = [];
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
 
-function generateElementOfSymbol(): HTMLElement {
+function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_icon_selector_material_symbols_symbol');
-  element.appendChild(getBlankIconElement());
+  element.classList.add('css_icon_selector_list_item');
+
+  const iconElement = documentCreateDivElement();
+  iconElement.classList.add('css_icon_selector_list_item_icon');
+  iconElement.appendChild(getBlankIconElement());
+
+  const nameElement = documentCreateDivElement();
+  nameElement.classList.add('css_icon_selector_list_item_name');
+
+  const stretchElement = documentCreateDivElement();
+  stretchElement.classList.add('css_icon_selector_list_item_stretch');
+  stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
+
+  const bodyElement = documentCreateDivElement();
+  bodyElement.classList.add('css_icon_selector_list_item_body');
+
+  element.appendChild(iconElement);
+  element.appendChild(nameElement);
+  element.appendChild(stretchElement);
+  element.appendChild(bodyElement);
+
   return element;
 }
 
-function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: HTMLInputElement, skeletonScreen: boolean, animation: boolean): void {
-  function updateSymbol(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols, previousSymbol: MaterialSymbols | null): void {
-    function updateIcon(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols): void {
-      setIcon(thisSymbolElement, thisSymbol);
+function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, skeletonScreen: boolean, animation: boolean): void {
+  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, previousSymbol: IntegratedMaterialSymbolsItem | null): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+      setIcon(thisElement, thisItem.name);
     }
 
-    function updateOnclick(thisSymbolElement: HTMLElement, thisSymbol: MaterialSymbols, inputElement: HTMLInputElement): void {
-      thisSymbolElement.onclick = function () {
-        selectIcon(thisSymbol, inputElement);
+    function updateName(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_icon_selector_list_item_name');
+      nameElement.innerText = thisItem.name;
+    }
+
+    function updateOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
+      thisElement.onclick = function () {
+        selectIcon(thisItem.name, inputElement);
       };
     }
 
-    function updateSkeletonScreen(thisSymbolElement: HTMLElement, skeletonScreen: boolean): void {
-      thisSymbolElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    function updateAnimation(thisSymbolElement: HTMLElement, animation: boolean): void {
-      thisSymbolElement.setAttribute('animation', booleanToString(animation));
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
     }
 
     if (previousSymbol === null || previousSymbol === undefined) {
-      updateIcon(thisSymbolElement, thisSymbol);
-      updateOnclick(thisSymbolElement, thisSymbol, inputElement);
-      updateSkeletonScreen(thisSymbolElement, skeletonScreen);
-      updateAnimation(thisSymbolElement, animation);
+      updateIcon(thisElement, thisItem);
+      updateName(thisElement, thisItem);
+      updateOnclick(thisElement, thisItem, inputElement);
+      updateSkeletonScreen(thisElement, skeletonScreen);
+      updateAnimation(thisElement, animation);
     } else {
-      if (previousSymbol !== thisSymbol) {
-        updateIcon(thisSymbolElement, thisSymbol);
-        updateOnclick(thisSymbolElement, thisSymbol, inputElement);
+      if (previousSymbol.name !== thisItem.name) {
+        updateIcon(thisElement, thisItem);
+        updateName(thisElement, thisItem);
+        updateOnclick(thisElement, thisItem, inputElement);
       } else if (previousInputElement !== inputElement) {
-        updateOnclick(thisSymbolElement, thisSymbol, inputElement);
+        updateOnclick(thisElement, thisItem, inputElement);
       }
 
       if (previosuSkeletonScreen !== skeletonScreen) {
-        updateSkeletonScreen(thisSymbolElement, skeletonScreen);
+        updateSkeletonScreen(thisElement, skeletonScreen);
       }
 
       if (previousAnimation !== animation) {
-        updateAnimation(thisSymbolElement, animation);
+        updateAnimation(thisElement, animation);
       }
     }
   }
 
-  const symbolsLength = symbols.length;
-  const symbolElements = Array.from(elementQuerySelectorAll(symbolsElement, '.css_icon_selector_material_symbols_symbol'));
-  const currentSymbolElementsLength = symbolElements.length;
-  if (symbolsLength !== currentSymbolElementsLength) {
-    const difference = currentSymbolElementsLength - symbolsLength;
+  const itemsLength = integration.length;
+  const itemElements = Array.from(elementQuerySelectorAll(listElement, '.css_icon_selector_list_item'));
+  const currentItemElementsLength = itemElements.length;
+  if (itemsLength !== currentItemElementsLength) {
+    const difference = currentItemElementsLength - itemsLength;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
-        const newSymbolElement = generateElementOfSymbol();
-        fragment.appendChild(newSymbolElement);
-        symbolElements.push(newSymbolElement);
+        const newItemElement = generateElementOfItem();
+        fragment.appendChild(newItemElement);
+        itemElements.push(newItemElement);
       }
-      symbolsElement.append(fragment);
+      listElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentSymbolElementsLength - 1, q = currentSymbolElementsLength - difference - 1; p > q; p--) {
-        symbolElements[p].remove();
-        symbolElements.splice(p, 1);
+      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+        itemElements[p].remove();
+        itemElements.splice(p, 1);
       }
     }
   }
 
-  for (let i = 0; i < symbolsLength; i++) {
-    const previousSymbol = previousSymbols[i];
-    const currentSymbol = symbols[i];
-    const thisSymbolElement = symbolElements[i];
-    if (previousSymbol) {
-      updateSymbol(thisSymbolElement, currentSymbol, previousSymbol);
+  for (let i = 0; i < itemsLength; i++) {
+    const previousItem = previousIntegration[i];
+    const currentItem = integration[i];
+    const thisElement = itemElements[i];
+    if (previousItem) {
+      updateItem(thisElement, currentItem, previousItem);
     } else {
-      updateSymbol(thisSymbolElement, currentSymbol, null);
+      updateItem(thisElement, currentItem, null);
     }
   }
 
-  previousSymbols = symbols.slice();
+  previousIntegration = integration.slice();
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
@@ -113,63 +131,26 @@ function updateIconSelectorField(symbols: Array<MaterialSymbols>, inputElement: 
 function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
-  const quantity = Math.floor(WindowSize.width / 50) * (Math.floor(WindowSize.height / 50) + 3);
-  const symbols = [];
+  const quantity = Math.floor(WindowSize.height / 50) + 3;
+  const items: IntegratedMaterialSymbols = [];
   for (let i = 0; i < quantity; i++) {
-    symbols.push('');
+    items.push({
+      name: '',
+      description: '',
+      related: [],
+      keywords: []
+    });
   }
-  updateIconSelectorField(symbols, inputElement, true, playing_animation);
+  updateIconSelectorField(items, inputElement, true, playing_animation);
 }
 
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
-  searchInputElement.value = '';
   setupIconSelectorFieldSkeleton(inputElement);
-  const materialSymbols = await getMaterialSymbolsSearchIndex(requestID);
-  currentSymbols = [];
-  for (const symbol in materialSymbols.symbols) {
-    currentSymbols.push(symbol);
-  }
-  updateIconSelectorField(currentSymbols, inputElement, false, playing_animation);
-  prepareForMaterialSymbolsSearch(materialSymbols);
-  deleteDataReceivingProgress(requestID);
-}
 
-export function initializeIconSelectorSearchInput(): void {
-  searchInputElement.addEventListener('paste', function () {
-    updateMaterialSymbolsSearchResult();
-  });
-
-  searchInputElement.addEventListener('cut', function () {
-    updateMaterialSymbolsSearchResult();
-  });
-
-  searchInputElement.addEventListener('selectionchange', function () {
-    updateMaterialSymbolsSearchResult();
-  });
-
-  document.addEventListener('selectionchange', function () {
-    updateMaterialSymbolsSearchResult();
-  });
-
-  searchInputElement.addEventListener('keyup', function () {
-    updateMaterialSymbolsSearchResult();
-  });
-}
-
-export function updateMaterialSymbolsSearchResult(): void {
-  const query = searchInputElement.value;
-  if (!containPhoneticSymbols(query)) {
-    const searchResults = searchForMaterialSymbols(query); // TODO: return name index
-    for (let i = searchResults.length - 1; i >= 0; i--) {
-      const item = searchResults[i].item;
-      const currentIndex = currentSymbols.indexOf(item);
-      if (!currentSymbols[i] || currentIndex < 0) continue;
-      [currentSymbols[i], currentSymbols[currentIndex]] = [currentSymbols[currentIndex], currentSymbols[i]];
-    }
-    updateIconSelectorField(currentSymbols, previousInputElement, false, previousAnimation);
-  }
+  const inetgration = await integrateMaterialSymbols(requestID);
+  updateIconSelectorField(inetgration, inputElement, false, playing_animation);
 }
 
 function selectIcon(symbol: string, inputElement: HTMLInputElement): void {

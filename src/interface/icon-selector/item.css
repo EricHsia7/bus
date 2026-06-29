@@ -9,7 +9,7 @@
 /* TODO: stretch */
 
 /* list > item > icon */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_icon {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_icon {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -21,7 +21,7 @@
   transform-origin: top left;
 }
 
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_icon span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_icon span.css_material_symbols_rounded {
   width: 35px;
   height: 35px;
   font-size: 35px;
@@ -29,17 +29,17 @@
 }
 
 /* animation: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_icon {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_icon {
   transition: transform var(--b-cssvar-transition-duration);
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_icon {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_icon {
   transform: scale(calc((50 + 90) / 50));
 }
 
 /* list > item > name */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_name {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_name {
   position: absolute;
   top: 10px;
   left: 50px;
@@ -59,12 +59,12 @@
   transform-origin: top left;
 }
 
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_name {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_name {
   transform: translateX(90px);
 }
 
 /* list > item > stretch */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_stretch {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_stretch {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -79,18 +79,27 @@
   contain: layout;
 }
 
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
 
 /* animation: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
+}
+
+/* list > item > body */
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item .css_icon_selector_list_item_body {
+  position: absolute;
+  top: 50px;
+  left: calc(50px + 90px);
+  width: calc(100% - 50px - 90px - 15px);
+  visibility: hidden;
 }

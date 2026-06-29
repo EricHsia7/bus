@@ -15,7 +15,7 @@ import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
-import { closeIconSelector, initializeIconSelectorSearchInput } from './interface/icon-selector/index';
+import { closeIconSelector } from './interface/icon-selector/index';
 import { fadeOutSplashScreen } from './interface/index';
 import { closeLocationDetails } from './interface/location-details/index';
 import { closeLocation, initializeLocationSliding } from './interface/location/index';
@@ -35,6 +35,7 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
+import { initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 
 import './interface/theme.css';
 
@@ -131,7 +132,8 @@ import './interface/folder-creator/folder-icon.css';
 import './interface/icon-selector/field.css';
 import './interface/icon-selector/head.css';
 import './interface/icon-selector/body.css';
-import './interface/icon-selector/symbols.css';
+import './interface/icon-selector/list.css';
+import './interface/icon-selector/item.css';
 import './interface/icon-selector/index.css';
 
 import './interface/personal-schedule-manager/field.css';
