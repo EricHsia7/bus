@@ -11,10 +11,6 @@ export type UnpackedMaterialSymbolsList = Array<string>;
 let MaterialSymbolsListVariableCache_available: boolean = false;
 let MaterialSymbolsListVariableCache_data = [] as UnpackedMaterialSymbolsList;
 
-function unpackMaterialSymbolsList(data: MaterialSymbolsList): UnpackedMaterialSymbolsList {
-  return data.list.split(',');
-}
-
 export async function getMaterialSymbolsList(requestID: string): Promise<UnpackedMaterialSymbolsList> {
   async function getData(): Promise<MaterialSymbolsList> {
     const apiurl = getMaterialSymbolsAPIURL(3);
@@ -23,13 +19,13 @@ export async function getMaterialSymbolsList(requestID: string): Promise<Unpacke
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_list_cache';
+  const cacheKey = 'bus_material_symbols_list_v2_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
-    const unpacked = unpackMaterialSymbolsList(result);
+    const unpacked = result.list.split(',');
     await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
+    await lfSetItem(0, cacheKey, result.list);
     if (!MaterialSymbolsListVariableCache_available) {
       MaterialSymbolsListVariableCache_available = true;
       MaterialSymbolsListVariableCache_data = unpacked;
@@ -38,9 +34,9 @@ export async function getMaterialSymbolsList(requestID: string): Promise<Unpacke
   } else {
     if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
       const result = await getData();
-      const unpacked = unpackMaterialSymbolsList(result);
+      const unpacked = result.list.split(',');
       await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
+      await lfSetItem(0, cacheKey, result.list);
       if (!MaterialSymbolsListVariableCache_available) {
         MaterialSymbolsListVariableCache_available = true;
         MaterialSymbolsListVariableCache_data = unpacked;
@@ -50,7 +46,7 @@ export async function getMaterialSymbolsList(requestID: string): Promise<Unpacke
       if (!MaterialSymbolsListVariableCache_available) {
         const cache = await lfGetItem(0, cacheKey);
         MaterialSymbolsListVariableCache_available = true;
-        MaterialSymbolsListVariableCache_data = JSON.parse(cache);
+        MaterialSymbolsListVariableCache_data = cache.split(',');
       }
       setDataReceivingProgress(requestID, 'getMaterialSymbolsList', 0, true);
       return MaterialSymbolsListVariableCache_data;
