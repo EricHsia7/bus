@@ -8,6 +8,7 @@ import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
+import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
 import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
@@ -114,9 +115,9 @@ export async function initializeFolderList() {
 export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<Folder['id'] | false> {
   // Validate icon
   const requestID = generateIdentifier();
-  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
+  const materialSymbolsList = await getMaterialSymbolsList(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
+  if (materialSymbolsList.indexOf(icon) < 0) return false;
 
   // Check existence
   const folderID = generateIdentifier();
@@ -165,9 +166,9 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
 
   // Validate icon
   const requestID = generateIdentifier();
-  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
+  const materialSymbolsSearchList = await getMaterialSymbolsList(requestID);
   deleteDataReceivingProgress(requestID);
-  if (!hasOwnProperty(materialSymbolsSearchIndex.symbols, icon)) return false;
+  if (materialSymbolsSearchList.indexOf(icon) < 0) return false;
 
   // Generate folder
   const modifiedFolder: Folder = {
