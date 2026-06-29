@@ -49,7 +49,7 @@
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[stretched="true"] .css_icon_selector_list_item_icon span.css_material_symbols_rounded {
-  transform: scale(calc((50 + 90) / 50));
+  transform: scale(calc((50 + 90 - 10 - 10) / 30));
 }
 
 /* list > item > name */
