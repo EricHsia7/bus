@@ -42,7 +42,7 @@
 }
 
 /* animation: true */
-.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_icon {
+.css_icon_selector_field .css_icon_selector_list .css_icon_selector_list_item[animation="true"] .css_icon_selector_list_item_icon span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
