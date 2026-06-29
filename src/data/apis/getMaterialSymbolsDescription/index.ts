@@ -3,6 +3,9 @@ import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchData, setDataReceivingProgress } from '../loader';
 
+/**
+ * a stringified array of words (word_1,word_2,word_3,...)
+ */
 export type MaterialSymbolsDescriptionDictionary = string;
 
 export type MaterialSymbolsDescriptionDelimiters = Array<string>;
@@ -20,11 +23,6 @@ export interface MaterialSymbolsDescription {
 }
 
 /**
- * a stringified array of words (word_1,word_2,word_3,...)
- */
-export type UnpackedMaterialSymbolsDescriptionDictionary = string;
-
-/**
  * Symbol identifier
  */
 export type UnpackedMaterialSymbolsDescriptionSymbolKey = string;
@@ -34,21 +32,13 @@ export type UnpackedMaterialSymbolsDescriptionSymbolKey = string;
  */
 export type UnpackedMaterialSymbolsDescriptionSymbolDescription = string;
 
-export type UnpackedMaterialSymbolsDescriptionSymbols = Record<UnpackedMaterialSymbolsDescriptionSymbolKey, UnpackedMaterialSymbolsDescriptionSymbolDescription>;
-
-export interface UnpackedMaterialSymbolsDescription {
-  dictionary: MaterialSymbolsDescriptionDictionary;
-  descriptions: UnpackedMaterialSymbolsDescriptionSymbols;
-}
+export type UnpackedMaterialSymbolsDescription = Record<UnpackedMaterialSymbolsDescriptionSymbolKey, UnpackedMaterialSymbolsDescriptionSymbolDescription>;
 
 let MaterialSymbolsDescriptionVariableCache_available: boolean = false;
 let MaterialSymbolsDescriptionVariableCache_data = {} as UnpackedMaterialSymbolsDescription;
 
 function unpackMaterialSymbolsDescription(data: MaterialSymbolsDescription): UnpackedMaterialSymbolsDescription {
-  const unpackedData: UnpackedMaterialSymbolsDescription = {
-    dictionary: data.dictionary,
-    descriptions: {}
-  };
+  const unpackedData: UnpackedMaterialSymbolsDescription = {};
   const dictionary = data.dictionary.split(',');
   for (const key in data.descriptions) {
     const symbolNameComponents = key.split('_');
@@ -61,7 +51,7 @@ function unpackMaterialSymbolsDescription(data: MaterialSymbolsDescription): Unp
       result.splice(i, 1, dictionary[parseInt(result[i], 36)]);
     }
 
-    unpackedData.descriptions[symbolNameComponents.join('_')] = joinByDelimiters(result, delimiters);
+    unpackedData[symbolNameComponents.join('_')] = joinByDelimiters(result, delimiters);
   }
 
   return unpackedData;
@@ -75,7 +65,7 @@ export async function getMaterialSymbolsDescription(requestID: string): Promise<
   }
 
   const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_description_cache';
+  const cacheKey = 'bus_material_symbols_description_v2_cache';
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     const result = await getData();
