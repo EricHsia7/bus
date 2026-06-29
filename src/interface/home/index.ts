@@ -1,7 +1,9 @@
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
 import { getLocation } from '../../data/apis/getLocation/index';
 import { getMaterialSymbolsDescription } from '../../data/apis/getMaterialSymbolsDescription/index';
+import { getMaterialSymbolsList } from '../../data/apis/getMaterialSymbolsList';
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
+import { getMaterialSymbolsSimilarity } from '../../data/apis/getMaterialSymbolsSimilarity';
 import { getRoute } from '../../data/apis/getRoute/index';
 import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
@@ -34,8 +36,11 @@ export async function downloadData() {
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_1', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSearchIndex', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsDescription', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSimilarity', 0, false);
+  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsList', 0, false);
   document.addEventListener(dataDownloadRequestID, handleDataReceivingProgressUpdates);
-  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true), getMaterialSymbolsSearchIndex(dataDownloadRequestID), getMaterialSymbolsDescription(dataDownloadRequestID)]);
+  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true), getMaterialSymbolsSearchIndex(dataDownloadRequestID), getMaterialSymbolsDescription(dataDownloadRequestID), getMaterialSymbolsList(dataDownloadRequestID), getMaterialSymbolsSimilarity(dataDownloadRequestID)]);
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }
