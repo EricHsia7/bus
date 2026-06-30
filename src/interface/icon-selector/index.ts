@@ -131,6 +131,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
 
     function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
+      thisElement.setAttribute('stretching', 'false');
       thisElement.setAttribute('stretched', booleanToString(stretched));
     }
 
@@ -176,8 +177,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       }
     }
   }
-  
-  contentElement.setAttribute('binding', 'true');
 
   for (let k = 0; k < visibleElementsQuantity; k++) {
     const thisElement = itemElements[k];
@@ -187,8 +186,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
     }
   }
-
-  contentElement.setAttribute('binding', 'false');
 
   currentItemsLength = itemsLength;
   previousInputElement = inputElement;
@@ -253,6 +250,7 @@ function stretchSymbolItem(thisElement: HTMLElement): void {
   const stretched = thisElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = thisElement.getAttribute('animation') === 'true' ? true : false;
   const index = parseInt(thisElement.getAttribute('index') || '0', 10);
+  thisElement.setAttribute('stretching', 'true');
   if (stretched) {
     thisElement.setAttribute('stretched', 'false');
     state.set(index, 0);
@@ -260,4 +258,5 @@ function stretchSymbolItem(thisElement: HTMLElement): void {
     thisElement.setAttribute('stretched', 'true');
     state.set(index, 1);
   }
+  trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }
