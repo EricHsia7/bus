@@ -17,7 +17,7 @@ let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
 
-const buffer = 10;
+const buffer = 16;
 const itemHeight = 50;
 const itemExtraHeight = 171;
 
@@ -233,6 +233,10 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         descriptionElement.innerText = thisItem.description;
       }
     }
+
+    function updateRelated(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
+
+    function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
 
     function updateCapsuleMainOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
       const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
