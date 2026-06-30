@@ -18,7 +18,7 @@ let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
 
-const buffer = 8;
+const buffer = 16;
 const itemHeight = 50;
 const itemExtraHeight = 90;
 
@@ -81,6 +81,7 @@ function generateElementOfItem(): HTMLElement {
   element.classList.add('css_icon_selector_item');
   element.setAttribute('animation', 'false');
   element.setAttribute('skeleton-screen', 'false');
+  element.setAttribute('stretching', 'false');
   element.setAttribute('stretched', 'false');
   element.setAttribute('index', '0');
 
