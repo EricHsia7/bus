@@ -352,14 +352,7 @@
   font-size: 16px;
   text-align: justify;
   word-break: break-word;
-  visibility: hidden;
 }
-
-/* displayed: true */
-.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description[displayed="true"] {
-  visibility: visible;
-}
-
 
 /* tray > content > item > body > related */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related {
@@ -370,16 +363,6 @@
   /* padding: 15px + padding: 15px */
   height: calc(171px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
-  color: var(--b-cssvar-333333);
-  font-size: 16px;
-  text-align: justify;
-  word-break: break-word;
-  visibility: hidden;
-}
-
-/* displayed: true */
-.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[displayed="true"] {
-  visibility: visible;
 }
 
 /* tray > content > item > body > keywords */
@@ -391,16 +374,13 @@
   /* padding: 15px + padding: 15px */
   height: calc(171px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
-  color: var(--b-cssvar-333333);
-  font-size: 16px;
-  text-align: justify;
-  word-break: break-word;
-  visibility: hidden;
 }
 
-/* displayed: true */
-.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[displayed="true"] {
-  visibility: visible;
+/* displayed: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description[displayed="false"],
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[displayed="false"],
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[displayed="false"] {
+  visibility: hidden;
 }
 
 /* empty: true */
