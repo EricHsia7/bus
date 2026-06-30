@@ -3,6 +3,7 @@ import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMate
 import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
+import { clamp } from '../../tools/math';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -110,7 +111,7 @@ function generateElementOfItem(): HTMLElement {
 }
 
 function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, firstVisibleIndex: number, skeletonScreen: boolean, animation: boolean): void {
-  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean, previousItem: IntegratedMaterialSymbolsItem | null): void {
+  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       setIcon(thisElement, thisItem.name);
     }
@@ -142,33 +143,13 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       thisElement.setAttribute('animation', booleanToString(animation));
     }
 
-    if (previousItem === null || previousItem === undefined) {
-      updateIcon(thisElement, thisItem);
-      updateName(thisElement, thisItem);
-      updateOnclick(thisElement, thisItem, inputElement);
-      updateIndex(thisElement, thisIndex);
-      updateStretched(thisElement, stretched);
-      updateSkeletonScreen(thisElement, skeletonScreen);
-      updateAnimation(thisElement, animation);
-    } else {
-      if (previousItem.name !== thisItem.name) {
-        updateIcon(thisElement, thisItem);
-        updateName(thisElement, thisItem);
-        updateOnclick(thisElement, thisItem, inputElement);
-        updateIndex(thisElement, thisIndex);
-        updateStretched(thisElement, stretched);
-      } else if (previousInputElement !== inputElement) {
-        updateOnclick(thisElement, thisItem, inputElement);
-      }
-
-      if (previosuSkeletonScreen !== skeletonScreen) {
-        updateSkeletonScreen(thisElement, skeletonScreen);
-      }
-
-      if (previousAnimation !== animation) {
-        updateAnimation(thisElement, animation);
-      }
-    }
+    updateIcon(thisElement, thisItem);
+    updateName(thisElement, thisItem);
+    updateOnclick(thisElement, thisItem, inputElement);
+    updateIndex(thisElement, thisIndex);
+    updateStretched(thisElement, stretched);
+    updateSkeletonScreen(thisElement, skeletonScreen);
+    updateAnimation(thisElement, animation);
   }
 
   const itemsLength = integration.length;
@@ -203,10 +184,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     const thisElement = itemElements[k];
     const index = firstVisibleIndex + k;
     const currentItem = integration[index];
-    if (currentFirstVisibleIndex + k !== index) {
-      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false, integration[currentFirstVisibleIndex + k]);
-    } else {
-      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false, null);
+    if (currentItem) {
+      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
     }
   }
 
