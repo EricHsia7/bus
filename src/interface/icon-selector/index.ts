@@ -42,11 +42,11 @@ export function initializeIconSelectorVirtualScroll(): void {
   visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
 
   bodyElement.addEventListener('scroll', function () {
-    const first = getFirstVisibleIndex(bodyElement.scrollTop);
-    const anchor = Math.max(0, first - (first % buffer));
+    const firstVisibleIndex = getFirstVisibleIndex(bodyElement.scrollTop);
+    const anchor = Math.max(0, firstVisibleIndex - (firstVisibleIndex % buffer));
     if (anchor !== currentStartIndex) {
       currentStartIndex = anchor;
-      updateIconSelectorField(currentIntegration.slice(first, first + visibleElementsQuantity), previousInputElement, first, previosuSkeletonScreen, previousAnimation);
+      updateIconSelectorField(currentIntegration, previousInputElement, firstVisibleIndex, previosuSkeletonScreen, previousAnimation);
       contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
     }
   });
@@ -239,7 +239,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   const integration = await integrateMaterialSymbols(requestID);
   currentIntegration = integration;
-  updateIconSelectorField(integration.slice(0, visibleElementsQuantity), inputElement, 0, false, playing_animation);
+  updateIconSelectorField(integration, inputElement, 0, false, playing_animation);
 }
 
 function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
