@@ -12,7 +12,7 @@ const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray')
 const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
 
 let currentIntegration: IntegratedMaterialSymbols = [];
-
+let currentItemsLength: number = 0;
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
@@ -172,7 +172,10 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
   }
 
   const itemsLength = integration.length;
-  state.resize(itemsLength);
+  if (currentItemsLength !== itemsLength) {
+    state.resize(itemsLength);
+    trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+  }
 
   if (visibleElementsQuantity !== currentItemElementsLength) {
     itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
@@ -209,6 +212,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
   contentElement.setAttribute('binding', 'false');
 
+  currentItemsLength = itemsLength;
   currentFirstVisibleIndex = firstVisibleIndex;
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
