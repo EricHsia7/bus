@@ -3,6 +3,7 @@ import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMate
 import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
+import { getCSSVariableValue } from '../../tools/style';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -28,6 +29,7 @@ let windowWidth = 0;
 let windowHeight = 0;
 let visibleElementsQuantity = 0;
 let currentStartIndex = -1;
+let offsetY = 0;
 let itemElements: Array<HTMLElement> = [];
 
 let initialized: boolean = false;
@@ -40,6 +42,7 @@ export function initializeIconSelectorVirtualScroll(): void {
   windowWidth = windowSize.width;
   windowHeight = windowSize.height;
   visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
+  offsetY = parseInt(getCSSVariableValue('--b-cssvar-safe-area-top')) + 55;
 
   bodyElement.addEventListener('scroll', function () {
     const firstVisibleIndex = getFirstVisibleIndex(bodyElement.scrollTop);
@@ -55,11 +58,11 @@ export function initializeIconSelectorVirtualScroll(): void {
 }
 
 function getTrayHeight(): number {
-  return state.length * itemHeight + state.sum(state.length) * itemExtraHeight;
+  return offsetY + state.length * itemHeight + state.sum(state.length) * itemExtraHeight;
 }
 
 function getElementTop(index: number): number {
-  return index * itemHeight + state.sum(index) * itemExtraHeight;
+  return offsetY + index * itemHeight + state.sum(index) * itemExtraHeight;
 }
 
 function getFirstVisibleIndex(scrollTop: number): number {

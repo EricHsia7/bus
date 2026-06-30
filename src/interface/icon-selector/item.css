@@ -29,7 +29,7 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content {
   position: absolute;
   width: 100%;
-  top: calc(var(--b-cssvar-safe-area-top) + 55px);
+  top: 0px;
   left: 0px;
   transform: translateY(var(--b-cssvar-icon-selector-content-translate-y));
 }
