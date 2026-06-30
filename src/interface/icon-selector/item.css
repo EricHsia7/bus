@@ -225,6 +225,16 @@
   transform: rotate(180deg);
 }
 
+/* tray > content > item > head > capsule > separator */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_separator {
+  position: absolute;
+  top: 3px;
+  left: calc(55px - 1px / 2);
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
+}
+
 /* tray > content > item > body */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body {
   position: absolute;

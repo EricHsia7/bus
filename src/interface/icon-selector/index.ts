@@ -86,16 +86,22 @@ function generateElementOfItem(): HTMLElement {
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   element.setAttribute('index', '0');
 
+  // head
   const headElement = documentCreateDivElement();
   headElement.classList.add('css_icon_selector_item_head');
 
+  // icon
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_icon_selector_item_icon');
   iconElement.appendChild(getBlankIconElement());
+  headElement.appendChild(iconElement);
 
+  // name
   const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_icon_selector_item_name');
+  headElement.appendChild(nameElement);
 
+  // capsule
   const capsuleElement = documentCreateDivElement();
   capsuleElement.classList.add('css_icon_selector_item_capsule');
 
@@ -111,6 +117,12 @@ function generateElementOfItem(): HTMLElement {
     stretchItemElement(element);
   });
   capsuleElement.appendChild(stretchElement);
+
+  const separatorElement = documentCreateDivElement();
+  separatorElement.classList.add('css_icon_selector_item_capsule_separator');
+  capsuleElement.appendChild(separatorElement);
+
+  headElement.appendChild(capsuleElement);
 
   const bodyElement = documentCreateDivElement();
   bodyElement.classList.add('css_icon_selector_item_body');
@@ -190,13 +202,8 @@ function generateElementOfItem(): HTMLElement {
   keywordsElement.setAttribute('displayed', 'false');
   bodyElement.appendChild(keywordsElement);
 
-  headElement.appendChild(iconElement);
-  headElement.appendChild(nameElement);
-  headElement.appendChild(capsuleElement);
   element.appendChild(headElement);
-
   element.appendChild(bodyElement);
-
   return element;
 }
 
