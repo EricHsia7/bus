@@ -13,15 +13,16 @@
 /* tray */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray {
   position: relative;
-  overflow: clip;
+  width: 100%;
   height: var(--b-cssvar-icon-selector-tray-height);
+  overflow: clip;
 }
 
 /* tray > content */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content {
   position: absolute;
   width: 100%;
-  top: 0px;
+  top: calc(var(--b-cssvar-safe-area-top) + 55px);
   left: 0px;
   transform: translateY(var(--b-cssvar-icon-selector-content-translate-y));
 }
