@@ -86,6 +86,9 @@ function generateElementOfItem(): HTMLElement {
   element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   element.setAttribute('index', '0');
 
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_icon_selector_item_head');
+
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_icon_selector_item_icon');
   iconElement.appendChild(getBlankIconElement());
@@ -93,8 +96,15 @@ function generateElementOfItem(): HTMLElement {
   const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_icon_selector_item_name');
 
+  const capsuleElement = documentCreateDivElement();
+  capsuleElement.classList.add('css_icon_selector_item_capsule');
+
+  const mainElement = documentCreateDivElement();
+  mainElement.classList.add('css_icon_selector_item_capsule_main');
+  mainElement.innerText = '使用圖示';
+
   const stretchElement = documentCreateDivElement();
-  stretchElement.classList.add('css_icon_selector_item_capsule');
+  stretchElement.classList.add('css_icon_selector_item_capsule_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.addEventListener('click', function () {
     stretchItemElement(element);
@@ -104,9 +114,15 @@ function generateElementOfItem(): HTMLElement {
   bodyElement.classList.add('css_icon_selector_item_body');
   bodyElement.setAttribute('displayed', 'false');
 
-  element.appendChild(iconElement);
-  element.appendChild(nameElement);
-  element.appendChild(stretchElement);
+  headElement.appendChild(iconElement);
+  headElement.appendChild(nameElement);
+
+  capsuleElement.appendChild(mainElement);
+  capsuleElement.appendChild(stretchElement);
+  headElement.appendChild(capsuleElement);
+
+  element.appendChild(headElement);
+
   element.appendChild(bodyElement);
 
   return element;
