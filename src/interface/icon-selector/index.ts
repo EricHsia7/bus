@@ -176,7 +176,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       }
     }
   }
-
+  
   contentElement.setAttribute('binding', 'true');
 
   for (let k = 0; k < visibleElementsQuantity; k++) {
