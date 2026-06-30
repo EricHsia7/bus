@@ -55,7 +55,7 @@ export function initializeIconSelectorVirtualScroll(): void {
 }
 
 function getTrayHeight(): number {
-  return state.length * itemHeight + state.sum(-1) * itemExtraHeight;
+  return state.length * itemHeight + state.sum(state.length) * itemExtraHeight;
 }
 
 function getElementTop(index: number): number {
@@ -308,7 +308,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     if (currentItem) {
       updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
     }
-    
   }
 
   currentItemsLength = itemsLength;
