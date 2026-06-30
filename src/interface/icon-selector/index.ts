@@ -94,14 +94,14 @@ function generateElementOfItem(): HTMLElement {
   nameElement.classList.add('css_icon_selector_item_name');
 
   const stretchElement = documentCreateDivElement();
-  stretchElement.classList.add('css_icon_selector_item_stretch');
+  stretchElement.classList.add('css_icon_selector_item_capsule');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.addEventListener('click', function () {
     stretchItemElement(element);
   });
 
   const bodyElement = documentCreateDivElement();
-  bodyElement.classList.add('css_icon_selector_list_item_body');
+  bodyElement.classList.add('css_icon_selector_item_body');
   bodyElement.setAttribute('displayed', 'false');
 
   element.appendChild(iconElement);
@@ -250,7 +250,7 @@ export function closeIconSelector(): void {
 
 function stretchItemElement(itemElement: HTMLElement): void {
   const contentElement = itemElement.parentElement as HTMLElement;
-  const itemBodyElement = elementQuerySelector(itemElement, '.css_icon_selector_list_item_body');
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_icon_selector_item_body');
 
   const elementsBelow = getElementsBelow(itemElement, 'css_icon_selector_item');
   const elementsBelowLength = elementsBelow.length;

@@ -117,47 +117,40 @@
   /* head: 50px + body: 171px */
 }
 
-/* tray > content > item > icon */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_icon {
+/* tray > content > item > head */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 50px;
+  width: 100%;
+  overflow: clip;
+}
+
+/* tray > content > item > head > icon */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 55px;
   height: 50px;
+  overflow: clip;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_icon {
-  width: calc(55px + 40px);
-  height: calc(50px + 171px);
-}
-
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_icon span.css_material_symbols_rounded {
-  position: absolute;
-  top: calc((50px - 24px) / 2);
-  left: calc((55px - 24px) / 2);
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
   color: var(--b-cssvar-333333);
-  transform-origin: top left;
 }
 
-/* stretching: true && animation: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"][animation="true"] .css_icon_selector_item_icon span.css_material_symbols_rounded {
-  transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
-}
-
-/* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_icon span.css_material_symbols_rounded {
-  transform: scale(calc((55 + 40 - (55 - 24)) / 24));
-}
-
-/* tray > content > item > name */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_name {
+/* tray > content > item > head > name */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_name {
   position: absolute;
   top: 10px;
   left: 55px;
-  width: calc(100% - 55px - 40px - 10px - 30px - 15px);
-  /* icon (expanded): (55px + 40px) + gap: 10px + stretch: 30px + padding: 15px */
+  width: calc(100% - 55px - 10px - 85px - 15px);
+  /* icon: 55px + gap: 10px + capsule: 30px + padding: 15px */
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;
@@ -169,26 +162,14 @@
   /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   font-weight: 400;
   contain: layout;
-  transform-origin: top left;
 }
 
-/* stretching: true && animation: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"][animation="true"] .css_icon_selector_item_name {
-  transition: transform var(--b-cssvar-transition-duration);
-  transition-timing-function: ease;
-}
-
-/* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_name {
-  transform: translateX(40px);
-}
-
-/* tray > content > item > stretch */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_stretch {
+/* tray > content > item > head > capsule */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule {
   position: absolute;
   top: 10px;
-  right: 10px;
-  width: 30px;
+  right: 15px;
+  width: 85px;
   height: 30px;
   display: flex;
   align-items: center;
@@ -199,29 +180,58 @@
   contain: layout;
 }
 
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_stretch span.css_material_symbols_rounded {
+/* tray > content > item > head > capsule > main */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_main {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  color: var(--b-cssvar-333333);
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: clip;
+}
+
+/* tray > content > item > head > capsule > stretch */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
 
 /* stretching: true && animation: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"][animation="true"] .css_icon_selector_item_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"][animation="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 
 /* tray > content > item > body */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_body {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body {
   position: absolute;
   top: 50px;
   left: calc(55px + 40px);
   width: calc(100% - 55px - 40px - 10px - 30px - 15px);
-  /* icon (expanded): (55px + 40px) + gap: 10px + stretch: 30px + padding: 15px */
+  /* icon: 55px + gap: 10px + stretch: 30px + padding: 15px */
   height: 171px;
   opacity: 0;
   transform: translateY(-10px);
@@ -229,23 +239,23 @@
 }
 
 /* animation: true && stretching: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretching="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_list_item_body {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretching="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_item_body {
   transition: opacity var(--b-cssvar-transition-duration), transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* ststretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_list_item_body {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_body {
   opacity: 1;
   transform: translateY(0px);
 }
 
 /* displayed: false */
-.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_icon_selector_list_item_body[displayed="false"] {
+.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body[displayed="false"] {
   visibility: hidden;
 }
 
 /* displayed: true */
-.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_icon_selector_list_item_body[displayed="true"] {
+.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body[displayed="true"] {
   visibility: visible;
 }
