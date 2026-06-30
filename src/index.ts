@@ -132,7 +132,6 @@ import './interface/folder-creator/folder-icon.css';
 import './interface/icon-selector/field.css';
 import './interface/icon-selector/head.css';
 import './interface/icon-selector/body.css';
-import './interface/icon-selector/list.css';
 import './interface/icon-selector/item.css';
 import './interface/icon-selector/index.css';
 
