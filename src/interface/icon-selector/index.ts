@@ -338,6 +338,8 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   setupIconSelectorFieldSkeleton(inputElement);
 
+  bodyElement.scrollTop = 0;
+
   const integration = await integrateMaterialSymbols(requestID);
   currentIntegration = integration;
   updateIconSelectorField(integration, inputElement, 0, false, playing_animation);
