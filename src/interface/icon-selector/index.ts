@@ -252,10 +252,12 @@ export function closeIconSelector(): void {
 function stretchSymbolItem(thisElement: HTMLElement): void {
   const stretched = thisElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = thisElement.getAttribute('animation') === 'true' ? true : false;
-
+  const index = parseInt(thisElement.getAttribute('index') || '0', 10);
   if (stretched) {
     thisElement.setAttribute('stretched', 'false');
+    state.add(index, -1);
   } else {
     thisElement.setAttribute('stretched', 'true');
+    state.add(index, 1);
   }
 }
