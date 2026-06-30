@@ -248,7 +248,9 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
 
     function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
+      const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       thisElement.setAttribute('stretched', booleanToString(stretched));
+      bodyElement.setAttribute('displayed', booleanToString(stretched));
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {

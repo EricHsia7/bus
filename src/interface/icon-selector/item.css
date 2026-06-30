@@ -251,7 +251,6 @@
   opacity: 0;
   transform: translateY(-10px);
   visibility: inherit;
-  contain: layout;
 }
 
 /* animation: true && stretching: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
