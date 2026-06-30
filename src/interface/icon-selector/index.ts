@@ -29,7 +29,6 @@ let windowWidth = 0;
 let windowHeight = 0;
 let visibleElementsQuantity = 0;
 let currentStartIndex = -1;
-let currentFirstVisibleIndex = -1;
 let itemElements: Array<HTMLElement> = [];
 
 let initialized: boolean = false;
@@ -47,7 +46,7 @@ export function initializeIconSelectorVirtualScroll(): void {
     const anchor = Math.max(0, firstVisibleIndex - (firstVisibleIndex % buffer));
     if (anchor !== currentStartIndex) {
       currentStartIndex = anchor;
-      updateIconSelectorField(currentIntegration, previousInputElement, firstVisibleIndex, previosuSkeletonScreen, previousAnimation);
+      updateIconSelectorField(currentIntegration, previousInputElement, currentStartIndex, previosuSkeletonScreen, previousAnimation);
       contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
     }
   });
@@ -110,7 +109,7 @@ function generateElementOfItem(): HTMLElement {
   return element;
 }
 
-function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, firstVisibleIndex: number, skeletonScreen: boolean, animation: boolean): void {
+function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       setIcon(thisElement, thisItem.name);
@@ -182,7 +181,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
   for (let k = 0; k < visibleElementsQuantity; k++) {
     const thisElement = itemElements[k];
-    const index = firstVisibleIndex + k;
+    const index = startIndex + k;
     const currentItem = integration[index];
     if (currentItem) {
       updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
@@ -192,7 +191,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
   contentElement.setAttribute('binding', 'false');
 
   currentItemsLength = itemsLength;
-  currentFirstVisibleIndex = firstVisibleIndex;
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
