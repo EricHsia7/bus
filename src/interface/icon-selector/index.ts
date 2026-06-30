@@ -17,7 +17,7 @@ let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
 
-const buffer = 16;
+const buffer = 10;
 const itemHeight = 50;
 const itemExtraHeight = 171;
 
@@ -308,6 +308,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     if (currentItem) {
       updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
     }
+    
   }
 
   currentItemsLength = itemsLength;

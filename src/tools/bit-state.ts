@@ -35,7 +35,7 @@ export class BitState {
 
   add(index: number, difference: number): void {
     if (index < 0) {
-      index += this.length + 1;
+      index += this.length + 2;
     }
     if (index < 1) {
       return;
@@ -47,7 +47,7 @@ export class BitState {
 
   sum(index: number): number {
     if (index < 0) {
-      index += this.length + 1;
+      index += this.length + 2;
     }
     if (index < 1) {
       return 0;
