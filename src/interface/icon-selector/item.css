@@ -40,6 +40,7 @@
   height: 50px;
   background: var(--b-cssvar-ffffff-normal);
   overflow: clip;
+  contain: layout;
 }
 
 /* stretching: true */
@@ -125,6 +126,7 @@
   height: 50px;
   width: 100%;
   overflow: clip;
+  contain: layout;
 }
 
 /* tray > content > item > head > icon */
@@ -138,6 +140,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  contain: layout;
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
@@ -194,6 +197,7 @@
   justify-content: center;
   align-items: center;
   overflow: clip;
+  contain: layout;
 }
 
 /* tray > content > item > head > capsule > stretch */
@@ -207,6 +211,7 @@
   align-items: center;
   justify-content: center;
   overflow: clip;
+  contain: layout;
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
@@ -245,6 +250,7 @@
   opacity: 0;
   transform: translateY(-10px);
   visibility: inherit;
+  contain: layout;
 }
 
 /* animation: true && stretching: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
@@ -360,6 +366,8 @@
   /* padding: 15px + padding: 15px */
   height: calc(171px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
+  contain: layout;
+  overflow: clip;
 }
 
 /* tray > content > item > body > related */
