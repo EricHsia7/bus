@@ -327,6 +327,12 @@
   color: var(--b-cssvar-main-color);
 }
 
+/* animation: true && stretched: true && skeleton-screen: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button {
+  transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
 /* tray > content > item > body > buttons > button > button icon */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button .css_icon_selector_item_button_icon {
   position: relative;
