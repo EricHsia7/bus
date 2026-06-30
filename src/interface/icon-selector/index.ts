@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMaterialSymbols } from '../../data/symbols';
 import { BitState } from '../../tools/bit-state';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
 import { clamp } from '../../tools/math';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
@@ -96,11 +96,12 @@ function generateElementOfItem(): HTMLElement {
   stretchElement.classList.add('css_icon_selector_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.addEventListener('click', function () {
-    stretchSymbolItem(element);
+    stretchItemElement(element);
   });
 
   const bodyElement = documentCreateDivElement();
   bodyElement.classList.add('css_icon_selector_list_item_body');
+  bodyElement.setAttribute('displayed', 'false');
 
   element.appendChild(iconElement);
   element.appendChild(nameElement);
@@ -247,17 +248,83 @@ export function closeIconSelector(): void {
   revokePageHistory('IconSelector');
 }
 
-function stretchSymbolItem(thisElement: HTMLElement): void {
-  const stretched = thisElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = thisElement.getAttribute('animation') === 'true' ? true : false;
-  const index = parseInt(thisElement.getAttribute('index') || '0', 10);
-  thisElement.setAttribute('stretching', 'true');
+function stretchItemElement(itemElement: HTMLElement): void {
+  const contentElement = itemElement.parentElement as HTMLElement;
+  const itemBodyElement = elementQuerySelector(itemElement, '.css_icon_selector_list_item_body');
+
+  const elementsBelow = getElementsBelow(itemElement, 'css_icon_selector_item');
+  const elementsBelowLength = elementsBelow.length;
+
+  const itemElementRect = itemElement.getBoundingClientRect();
+  const contentElementRect = contentElement.getBoundingClientRect();
+  const itemElementY = itemElementRect.top - contentElementRect.top; // itemElementRect.top + scrollTop - (contentElementRect.top + scrollTop)
+
+  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
+  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+
+  if (animation) {
+    const pushDirection = stretched ? '2' : '1';
+
+    // Separate the elements from the document flow while keeping its position
+    itemElement.setAttribute('stretching', 'true');
+    itemElement.style.setProperty('--b-cssvar-icon-selector-item-y', `${itemElementY}px`);
+
+    // Set push direction and push state
+    for (let i = 0; i < elementsBelowLength; i++) {
+      const thisItemElement = elementsBelow[i];
+      thisItemElement.setAttribute('push-direction', pushDirection);
+      thisItemElement.setAttribute('push-state', '1');
+    }
+
+    itemBodyElement.addEventListener(
+      'transitionend',
+      function () {
+        // Reset the push direction and push state
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelow[i];
+          thisItemElement.setAttribute('push-direction', '0');
+          thisItemElement.setAttribute('push-state', '0');
+        }
+        // Deposit the element
+        itemElement.setAttribute('stretching', 'false');
+      },
+      { once: true }
+    );
+
+    itemBodyElement.addEventListener(
+      'transitionstart',
+      function () {
+        // Transition the elements below
+        for (let i = 0; i < elementsBelowLength; i++) {
+          const thisItemElement = elementsBelow[i];
+          thisItemElement.setAttribute('push-state', '2');
+        }
+      },
+      { once: true }
+    );
+  }
+
+  const index = parseInt(itemElement.getAttribute('index') || '0', 10);
+
   if (stretched) {
-    thisElement.setAttribute('stretched', 'false');
+    if (animation) {
+      itemBodyElement.addEventListener(
+        'transitionend',
+        function () {
+          itemBodyElement.setAttribute('displayed', 'false');
+        },
+        { once: true }
+      );
+    } else {
+      itemBodyElement.setAttribute('displayed', 'false');
+    }
+    itemElement.setAttribute('stretched', 'false');
     state.set(index, 0);
   } else {
-    thisElement.setAttribute('stretched', 'true');
+    itemBodyElement.setAttribute('displayed', 'true');
+    itemElement.setAttribute('stretched', 'true');
     state.set(index, 1);
   }
+
   trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }

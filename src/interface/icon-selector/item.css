@@ -10,6 +10,12 @@
   initial-value: 0px;
 }
 
+@property --b-cssvar-icon-selector-item-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 /* tray */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray {
   position: relative;
@@ -36,9 +42,79 @@
   overflow: clip;
 }
 
+/* stretching: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"] {
+  position: absolute;
+  left: 0px;
+  top: var(--b-cssvar-icon-selector-item-y);
+}
+
+/* push-direction: 0 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="1"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="2"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="1"] {
+  transform: translateY(50px);
+  /* compensate the height of the already collapsed element separated from the document flow */
+}
+
+/* push-direction: 1 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="2"] {
+  transform: translateY(calc(50px + 90px));
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* push-direction: 2 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 2 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="1"] {
+  transform: translateY(calc(50px + 90px));
+  /* compensate the height of the already expanded element separated from the document flow */
+}
+
+/* push-direction: 2 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="2"] {
+  transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: false && stretching: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="false"] {
+  height: 50px;
+}
+
+/* stretched: false && stretching: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="true"] {
+  height: calc(50px + 90px);
+  /* head: 50px + body: 90px */
+}
+
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] {
   height: calc(50px + 90px);
+  /* head: 50px + body: 90px */
 }
 
 /* tray > content > item > icon */
@@ -152,5 +228,30 @@
   top: 50px;
   left: calc(50px + 90px);
   width: calc(100% - 50px - 90px - 15px);
+  height: 90px;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: inherit;
+}
+
+/* animation: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_list_item_body {
+  transition: opacity var(--b-cssvar-transition-duration), transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* ststretched: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_list_item_body {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+/* displayed: false */
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_icon_selector_list_item_body[displayed="false"] {
   visibility: hidden;
+}
+
+/* displayed: true */
+.css_route_field[displayed="true"] .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_icon_selector_list_item_body[displayed="true"] {
+  visibility: visible;
 }
