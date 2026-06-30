@@ -12,7 +12,6 @@ const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray')
 const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
 
 let currentIntegration: IntegratedMaterialSymbols = [];
-let previousVisibleItems: IntegratedMaterialSymbols = [];
 
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
@@ -29,6 +28,7 @@ let windowWidth = 0;
 let windowHeight = 0;
 let visibleElementsQuantity = 0;
 let currentStartIndex = -1;
+let currentFirstVisibleIndex = -1;
 let itemElements: Array<HTMLElement> = [];
 
 let initialized: boolean = false;
@@ -109,7 +109,7 @@ function generateElementOfItem(): HTMLElement {
   return element;
 }
 
-function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
+function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, firstVisibleIndex: number, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean, previousItem: IntegratedMaterialSymbolsItem | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       setIcon(thisElement, thisItem.name);
@@ -171,11 +171,12 @@ function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElemen
     }
   }
 
-  const itemsLength = symbols.length;
+  const itemsLength = integration.length;
   state.resize(itemsLength);
 
   if (visibleElementsQuantity !== currentItemElementsLength) {
     itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
+    currentItemElementsLength = itemElements.length;
     const difference = currentItemElementsLength - visibleElementsQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
@@ -197,18 +198,18 @@ function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElemen
 
   for (let k = 0; k < visibleElementsQuantity; k++) {
     const thisElement = itemElements[k];
-    const previousItem = previousVisibleItems[k];
-    const currentItem = symbols[k];
-    if (previousItem) {
-      updateItem(thisElement, currentItem, startIndex + k, state.state[startIndex + k] === 1 ? true : false, previousItem);
+    const index = firstVisibleIndex + k;
+    const currentItem = integration[index];
+    if (currentFirstVisibleIndex + k !== index) {
+      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false, integration[currentFirstVisibleIndex + k]);
     } else {
-      updateItem(thisElement, currentItem, startIndex + k, state.state[startIndex + k] === 1 ? true : false, null);
+      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false, null);
     }
   }
 
   contentElement.setAttribute('binding', 'false');
 
-  previousVisibleItems = symbols;
+  currentFirstVisibleIndex = firstVisibleIndex;
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
