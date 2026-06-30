@@ -2,9 +2,9 @@
 
 [2.84 MB] **\*.\***
 <details>
-<summary>[32.18 KB] <b>*.html</b></summary>
+<summary>[32.2 KB] <b>*.html</b></summary>
 
-- [32.18 KB] **index.html**
+- [32.2 KB] **index.html**
 </details>
 <details>
 <summary>[339.9 KB] <b>*.js</b></summary>
