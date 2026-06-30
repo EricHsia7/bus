@@ -102,6 +102,7 @@ function generateElementOfItem(): HTMLElement {
   const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_icon_selector_item_capsule_main');
   mainElement.innerText = '使用圖示';
+  capsuleElement.appendChild(mainElement);
 
   const stretchElement = documentCreateDivElement();
   stretchElement.classList.add('css_icon_selector_item_capsule_stretch');
@@ -109,20 +110,72 @@ function generateElementOfItem(): HTMLElement {
   stretchElement.addEventListener('click', function () {
     stretchItemElement(element);
   });
+  capsuleElement.appendChild(stretchElement);
 
   const bodyElement = documentCreateDivElement();
   bodyElement.classList.add('css_icon_selector_item_body');
   bodyElement.setAttribute('displayed', 'false');
 
+  const buttonsElement = documentCreateDivElement();
+  buttonsElement.classList.add('css_icon_selector_item_buttons');
+
+  // Tab: Description
+  const tabDescriptionElement = documentCreateDivElement();
+  tabDescriptionElement.classList.add('css_icon_selector_item_button');
+  tabDescriptionElement.setAttribute('highlighted', 'true');
+  tabDescriptionElement.setAttribute('type', 'tab');
+  tabDescriptionElement.setAttribute('code', '0');
+  tabDescriptionElement.onclick = () => {
+    switchItemBodyElementTab(element, 0);
+  };
+
+  const tabDescriptionIconElement = documentCreateDivElement();
+  tabDescriptionIconElement.classList.add('css_icon_selector_item_button_icon');
+  tabDescriptionIconElement.appendChild(getIconElement('description'));
+  tabDescriptionElement.appendChild(tabDescriptionIconElement);
+  tabDescriptionElement.appendChild(document.createTextNode('描述'));
+  buttonsElement.appendChild(tabDescriptionElement);
+
+  // Tab: Related
+  const tabRelatedElement = documentCreateDivElement();
+  tabRelatedElement.classList.add('css_icon_selector_item_button');
+  tabRelatedElement.setAttribute('highlighted', 'false');
+  tabRelatedElement.setAttribute('type', 'tab');
+  tabRelatedElement.setAttribute('code', '1');
+  tabRelatedElement.onclick = () => {
+    switchItemBodyElementTab(element, 0);
+  };
+
+  const tabRelatedIconElement = documentCreateDivElement();
+  tabRelatedIconElement.classList.add('css_icon_selector_item_button_icon');
+  tabRelatedIconElement.appendChild(getIconElement('join'));
+  tabRelatedElement.appendChild(tabRelatedIconElement);
+  tabRelatedElement.appendChild(document.createTextNode('相關'));
+  buttonsElement.appendChild(tabRelatedElement);
+
+  // Tab: Keywords
+  const tabKeywordsElement = documentCreateDivElement();
+  tabKeywordsElement.classList.add('css_icon_selector_item_button');
+  tabKeywordsElement.setAttribute('highlighted', 'false');
+  tabKeywordsElement.setAttribute('type', 'tab');
+  tabKeywordsElement.setAttribute('code', '2');
+  tabKeywordsElement.onclick = () => {
+    switchItemBodyElementTab(element, 0);
+  };
+
+  const tabKeywordsIconElement = documentCreateDivElement();
+  tabKeywordsIconElement.classList.add('css_icon_selector_item_button_icon');
+  tabKeywordsIconElement.appendChild(getIconElement('tag'));
+  tabKeywordsElement.appendChild(tabKeywordsIconElement);
+  tabKeywordsElement.appendChild(document.createTextNode('標籤'));
+  buttonsElement.appendChild(tabKeywordsElement);
+
   headElement.appendChild(iconElement);
   headElement.appendChild(nameElement);
-
-  capsuleElement.appendChild(mainElement);
-  capsuleElement.appendChild(stretchElement);
   headElement.appendChild(capsuleElement);
-
   element.appendChild(headElement);
 
+  bodyElement.appendChild(buttonsElement);
   element.appendChild(bodyElement);
 
   return element;
@@ -131,18 +184,36 @@ function generateElementOfItem(): HTMLElement {
 function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
-      setIcon(thisElement, thisItem.name);
+      const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
+      const iconElement = elementQuerySelector(headElement, '.css_icon_selector_item_icon');
+      setIcon(iconElement, thisItem.name);
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_icon_selector_item_name');
+      const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
+      const nameElement = elementQuerySelector(headElement, '.css_icon_selector_item_name');
       nameElement.innerText = thisItem.name;
     }
 
-    function updateOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
-      // thisElement.onclick = function () {
-      //   selectIcon(thisItem.name, inputElement);
-      // };
+    function updateDescription(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+      const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
+      const descriptionElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_description');
+      if (thisItem.description === false) {
+        descriptionElement.setAttribute('empty', 'true');
+        descriptionElement.innerText = '';
+      } else {
+        descriptionElement.setAttribute('empty', 'false');
+        descriptionElement.innerText = thisItem.description;
+      }
+    }
+
+    function updateCapsuleMainOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
+      const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
+      const capsuleElement = elementQuerySelector(headElement, '.css_icon_selector_item_capsule');
+      const capsuleMainElement = elementQuerySelector(capsuleElement, '.css_icon_selector_item_capsule_main');
+      capsuleMainElement.onclick = function () {
+        selectIcon(thisItem.name, inputElement);
+      };
     }
 
     function updateIndex(thisElement: HTMLElement, index: number): void {
@@ -163,7 +234,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
     updateIcon(thisElement, thisItem);
     updateName(thisElement, thisItem);
-    updateOnclick(thisElement, thisItem, inputElement);
+    updateDescription(thisElement, thisItem);
+    updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
     updateIndex(thisElement, thisIndex);
     updateStretched(thisElement, stretched);
     updateSkeletonScreen(thisElement, skeletonScreen);
@@ -343,4 +415,32 @@ function stretchItemElement(itemElement: HTMLElement): void {
   }
 
   trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+}
+
+function switchItemBodyElementTab(itemElement: HTMLElement, tabCode: number): void {
+  const buttons = elementQuerySelector(itemElement, '.css_icon_selector_item_buttons');
+  const button = elementQuerySelectorAll(buttons, '.css_icon_selector_item_button[highlighted="true"][type="tab"]');
+  for (const t of button) {
+    t.setAttribute('highlighted', 'false');
+  }
+  elementQuerySelector(buttons, `.css_icon_selector_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
+  switch (tabCode) {
+    case 0:
+      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'false');
+      break;
+    case 1:
+      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'true');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'false');
+      break;
+    case 2:
+      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'false');
+      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'true');
+      break;
+    default:
+      break;
+  }
 }
