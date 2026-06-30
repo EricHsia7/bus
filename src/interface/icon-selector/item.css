@@ -20,7 +20,8 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray {
   position: relative;
   width: 100%;
-  height: calc(var(--b-cssvar-safe-area-top) + 55px + var(--b-cssvar-icon-selector-tray-height) + var(--b-cssvar-safe-area-bottom));
+  height: var(--b-cssvar-icon-selector-tray-height);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
   overflow: clip;
 }
 
