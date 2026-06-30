@@ -3,7 +3,6 @@ import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMate
 import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
-import { clamp } from '../../tools/math';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -20,7 +19,7 @@ let previousInputElement;
 
 const buffer = 16;
 const itemHeight = 50;
-const itemExtraHeight = 90;
+const itemExtraHeight = 171;
 
 const state = new BitState(1);
 
@@ -135,7 +134,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
 
     function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
-      thisElement.setAttribute('stretching', 'false');
       thisElement.setAttribute('stretched', booleanToString(stretched));
     }
 

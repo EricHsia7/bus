@@ -10,7 +10,7 @@ export class BitState {
   }
 
   resize(length: number): void {
-    if (length !== this.length) {
+    if (length > this.length) {
       const newState = new Uint8Array(length);
       newState.set(this.state, 0);
       this.state = newState;
@@ -19,6 +19,10 @@ export class BitState {
       newBit.set(this.bit, 0);
       this.bit = newBit;
 
+      this.length = length;
+    } else if (length < this.length) {
+      this.state = new Uint8Array(length);
+      this.bit = new Int32Array(length + 1);
       this.length = length;
     }
   }

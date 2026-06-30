@@ -77,7 +77,7 @@
 
 /* push-direction: 1 && push-state: 2 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="2"] {
-  transform: translateY(calc(50px + 90px));
+  transform: translateY(calc(50px + 171px));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
@@ -89,7 +89,7 @@
 
 /* push-direction: 2 && push-state: 1 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="1"] {
-  transform: translateY(calc(50px + 90px));
+  transform: translateY(calc(50px + 171px));
   /* compensate the height of the already expanded element separated from the document flow */
 }
 
@@ -107,14 +107,14 @@
 
 /* stretched: false && stretching: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="true"] {
-  height: calc(50px + 90px);
-  /* head: 50px + body: 90px */
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] {
-  height: calc(50px + 90px);
-  /* head: 50px + body: 90px */
+  height: calc(50px + 171px);
+  /* head: 50px + body: 171px */
 }
 
 /* tray > content > item > icon */
@@ -132,8 +132,8 @@
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_icon {
-  width: calc(50px + 90px);
-  height: calc(50px + 90px);
+  width: calc(50px + 171px);
+  height: calc(50px + 171px);
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_icon span.css_material_symbols_rounded {
@@ -163,8 +163,8 @@
   position: absolute;
   top: 10px;
   left: 50px;
-  width: calc(100% - 50px - 90px - 10px - 30px - 15px);
-  /* icon (expanded): (50px + 90px) + gap: 10px + stretch: 30px + padding: 15px */
+  width: calc(100% - 50px - 171px - 10px - 30px - 15px);
+  /* icon (expanded): (50px + 171px) + gap: 10px + stretch: 30px + padding: 15px */
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;
@@ -187,7 +187,7 @@
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_name {
-  transform: translateX(90px);
+  transform: translateX(171px);
 }
 
 /* tray > content > item > stretch */
@@ -226,16 +226,16 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_body {
   position: absolute;
   top: 50px;
-  left: calc(50px + 90px);
-  width: calc(100% - 50px - 90px - 15px);
-  height: 90px;
+  left: calc(50px + 171px);
+  width: calc(100% - 50px - 171px - 15px);
+  height: 171px;
   opacity: 0;
   transform: translateY(-10px);
   visibility: inherit;
 }
 
-/* animation: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_list_item_body {
+/* animation: true && stretching: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretching="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_list_item_body {
   transition: opacity var(--b-cssvar-transition-duration), transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
