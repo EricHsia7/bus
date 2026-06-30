@@ -34,6 +34,7 @@ let initialized: boolean = false;
 
 export function initializeIconSelectorVirtualScroll(): void {
   if (initialized) return;
+  initialized = true;
 
   const windowSize = querySize('window');
   windowWidth = windowSize.width;
