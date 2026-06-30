@@ -263,7 +263,7 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons {
   position: absolute;
   top: 5px;
-  left: 0px;
+  left: 15px;
   width: calc(100% - 15px - 15px);
   /* padding: 15px + padding: 15px */
   height: 35px;
@@ -340,32 +340,8 @@
 }
 
 /* tray > content > item > body > description */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description {
-  position: absolute;
-  top: calc(5px + 35px + 5px);
-  left: 15px;
-  width: calc(100% - 15px - 15px);
-  /* padding: 15px + padding: 15px */
-  height: calc(171px - (5px + 35px + 5px) - 5px);
-  /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
-  color: var(--b-cssvar-333333);
-  font-size: 16px;
-  text-align: justify;
-  word-break: break-word;
-}
-
-/* tray > content > item > body > related */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related {
-  position: absolute;
-  top: calc(5px + 35px + 5px);
-  left: 15px;
-  width: calc(100% - 15px - 15px);
-  /* padding: 15px + padding: 15px */
-  height: calc(171px - (5px + 35px + 5px) - 5px);
-  /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
-}
-
-/* tray > content > item > body > keywords */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords {
   position: absolute;
   top: calc(5px + 35px + 5px);
@@ -374,6 +350,14 @@
   /* padding: 15px + padding: 15px */
   height: calc(171px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
+}
+
+/* tray > content > item > body > related */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description {
+  color: var(--b-cssvar-333333);
+  font-size: 16px;
+  text-align: start;
+  word-break: break-word;
 }
 
 /* displayed: false */

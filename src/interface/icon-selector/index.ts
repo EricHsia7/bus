@@ -143,7 +143,7 @@ function generateElementOfItem(): HTMLElement {
   tabRelatedElement.setAttribute('type', 'tab');
   tabRelatedElement.setAttribute('code', '1');
   tabRelatedElement.onclick = () => {
-    switchItemBodyElementTab(element, 0);
+    switchItemBodyElementTab(element, 1);
   };
 
   const tabRelatedIconElement = documentCreateDivElement();
@@ -160,7 +160,7 @@ function generateElementOfItem(): HTMLElement {
   tabKeywordsElement.setAttribute('type', 'tab');
   tabKeywordsElement.setAttribute('code', '2');
   tabKeywordsElement.onclick = () => {
-    switchItemBodyElementTab(element, 0);
+    switchItemBodyElementTab(element, 2);
   };
 
   const tabKeywordsIconElement = documentCreateDivElement();
