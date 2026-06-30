@@ -4,7 +4,7 @@
   initial-value: 0px;
 }
 
-@property --b-cssvar-icon-selector-tray-translate-y {
+@property --b-cssvar-icon-selector-content-translate-y {
   syntax: '<length>';
   inherits: false;
   initial-value: 0px;
@@ -23,7 +23,7 @@
   width: 100%;
   top: 0px;
   left: 0px;
-  transform: translateY(var(--b-cssvar-icon-selector-list-translate-y));
+  transform: translateY(var(--b-cssvar-icon-selector-content-translate-y));
 }
 
 /* tray > content > item */

@@ -1,5 +1,6 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMaterialSymbols } from '../../data/symbols';
+import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
@@ -10,14 +11,70 @@ const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_
 const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray');
 const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
 
-let previousIntegration: IntegratedMaterialSymbols = [];
+let currentIntegration: IntegratedMaterialSymbols = [];
+let previousVisibleItems: IntegratedMaterialSymbols = [];
+
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
 let previousInputElement;
 
+const buffer = 8;
+const itemHeight = 50;
+const itemExtraHeight = 90;
+
+const state = new BitState(1);
+
+let currentItemElementsLength = 0;
 let windowWidth = 0;
 let windowHeight = 0;
 let visibleElementsQuantity = 0;
+let currentStartIndex = -1;
+let itemElements: Array<HTMLElement> = [];
+
+let initialized: boolean = false;
+
+export function initializeIconSelectorVirtualScroll(): void {
+  if (initialized) return;
+
+  const windowSize = querySize('window');
+  windowWidth = windowSize.width;
+  windowHeight = windowSize.height;
+  visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
+
+  bodyElement.addEventListener('scroll', function () {
+    const first = getFirstVisibleIndex(bodyElement.scrollTop);
+    const anchor = Math.max(0, first - (first % buffer));
+    if (anchor !== currentStartIndex) {
+      currentStartIndex = anchor;
+      updateIconSelectorField(currentIntegration.slice(first, first + visibleElementsQuantity), previousInputElement, previosuSkeletonScreen, previousAnimation);
+      contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
+    }
+  });
+
+  trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+}
+
+function getTrayHeight(): number {
+  return state.length * itemHeight + state.sum(-1) * itemExtraHeight;
+}
+
+function getElementTop(index: number): number {
+  return index * itemHeight + state.sum(index) * itemExtraHeight;
+}
+
+function getFirstVisibleIndex(scrollTop: number): number {
+  let low = 0;
+  let high = state.length * 1;
+  while (low < high) {
+    const mid = (low + high + 1) >> 1;
+    if (getElementTop(mid) <= scrollTop) {
+      low = mid;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return low;
+}
 
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
@@ -25,7 +82,7 @@ function generateElementOfItem(): HTMLElement {
   element.setAttribute('animation', 'false');
   element.setAttribute('skeleton-screen', 'false');
   element.setAttribute('stretched', 'false');
-  element.setAttribute('stretching', 'false');
+  element.setAttribute('index', '0');
 
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_icon_selector_item_icon');
@@ -52,8 +109,8 @@ function generateElementOfItem(): HTMLElement {
   return element;
 }
 
-function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, skeletonScreen: boolean, animation: boolean): void {
-  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, previousSymbol: IntegratedMaterialSymbolsItem | null): void {
+function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
+  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean, previousItem: IntegratedMaterialSymbolsItem | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       setIcon(thisElement, thisItem.name);
     }
@@ -69,6 +126,14 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       // };
     }
 
+    function updateIndex(thisElement: HTMLElement, index: number): void {
+      thisElement.setAttribute('index', index.toString());
+    }
+
+    function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
+      thisElement.setAttribute('index', booleanToString(stretched));
+    }
+
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
@@ -77,17 +142,21 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       thisElement.setAttribute('animation', booleanToString(animation));
     }
 
-    if (previousSymbol === null || previousSymbol === undefined) {
+    if (previousItem === null || previousItem === undefined) {
       updateIcon(thisElement, thisItem);
       updateName(thisElement, thisItem);
       updateOnclick(thisElement, thisItem, inputElement);
+      updateIndex(thisElement, thisIndex);
+      updateStretched(thisElement, stretched);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
     } else {
-      if (previousSymbol.name !== thisItem.name) {
+      if (previousItem.name !== thisItem.name) {
         updateIcon(thisElement, thisItem);
         updateName(thisElement, thisItem);
         updateOnclick(thisElement, thisItem, inputElement);
+        updateIndex(thisElement, thisIndex);
+        updateStretched(thisElement, stretched);
       } else if (previousInputElement !== inputElement) {
         updateOnclick(thisElement, thisItem, inputElement);
       }
@@ -102,15 +171,12 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
   }
 
-  const windowSize = querySize('window');
-  windowWidth = windowSize.width;
-  windowHeight = windowSize.height;
+  const itemsLength = symbols.length;
+  state.resize(itemsLength);
 
-  const itemsLength = integration.length;
-  const itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (itemsLength !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - itemsLength;
+  if (visibleElementsQuantity !== currentItemElementsLength) {
+    itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
+    const difference = currentItemElementsLength - visibleElementsQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -127,18 +193,22 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
   }
 
-  for (let i = 0; i < itemsLength; i++) {
-    const previousItem = previousIntegration[i];
-    const currentItem = integration[i];
-    const thisElement = itemElements[i];
+  contentElement.setAttribute('binding', 'true');
+
+  for (let k = 0; k < visibleElementsQuantity; k++) {
+    const thisElement = itemElements[k];
+    const previousItem = previousVisibleItems[k];
+    const currentItem = symbols[k];
     if (previousItem) {
-      updateItem(thisElement, currentItem, previousItem);
+      updateItem(thisElement, currentItem, startIndex + k, state.state[startIndex + k] === 1 ? true : false, previousItem);
     } else {
-      updateItem(thisElement, currentItem, null);
+      updateItem(thisElement, currentItem, startIndex + k, state.state[startIndex + k] === 1 ? true : false, null);
     }
   }
 
-  previousIntegration = integration.slice();
+  contentElement.setAttribute('binding', 'false');
+
+  previousVisibleItems = symbols;
   previousInputElement = inputElement;
   previosuSkeletonScreen = skeletonScreen;
   previousAnimation = animation;
@@ -163,10 +233,14 @@ function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const requestID = generateIdentifier();
+
+  initializeIconSelectorVirtualScroll();
+
   setupIconSelectorFieldSkeleton(inputElement);
 
-  const inetgration = await integrateMaterialSymbols(requestID);
-  updateIconSelectorField(inetgration, inputElement, false, playing_animation);
+  const integration = await integrateMaterialSymbols(requestID);
+  currentIntegration = integration;
+  updateIconSelectorField(integration.slice(0, visibleElementsQuantity), inputElement, false, playing_animation);
 }
 
 function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
