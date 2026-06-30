@@ -40,7 +40,7 @@ export class BitState {
     if (index < 1) {
       return;
     }
-    for (let i = index; i < this.length; i += i & -i) {
+    for (let i = index; i <= this.length; i += i & -i) {
       this.bit[i] += difference;
     }
   }
