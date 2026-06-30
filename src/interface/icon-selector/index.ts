@@ -46,7 +46,7 @@ export function initializeIconSelectorVirtualScroll(): void {
     const anchor = Math.max(0, first - (first % buffer));
     if (anchor !== currentStartIndex) {
       currentStartIndex = anchor;
-      updateIconSelectorField(currentIntegration.slice(first, first + visibleElementsQuantity), previousInputElement, previosuSkeletonScreen, previousAnimation);
+      updateIconSelectorField(currentIntegration.slice(first, first + visibleElementsQuantity), previousInputElement, first, previosuSkeletonScreen, previousAnimation);
       contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
     }
   });
@@ -78,7 +78,7 @@ function getFirstVisibleIndex(scrollTop: number): number {
 
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_icon_selector_list_item');
+  element.classList.add('css_icon_selector_item');
   element.setAttribute('animation', 'false');
   element.setAttribute('skeleton-screen', 'false');
   element.setAttribute('stretched', 'false');
@@ -89,10 +89,10 @@ function generateElementOfItem(): HTMLElement {
   iconElement.appendChild(getBlankIconElement());
 
   const nameElement = documentCreateDivElement();
-  nameElement.classList.add('css_icon_selector_list_item_name');
+  nameElement.classList.add('css_icon_selector_item_name');
 
   const stretchElement = documentCreateDivElement();
-  stretchElement.classList.add('css_icon_selector_list_item_stretch');
+  stretchElement.classList.add('css_icon_selector_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.addEventListener('click', function () {
     stretchSymbolItem(element);
@@ -116,7 +116,7 @@ function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElemen
     }
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_icon_selector_list_item_name');
+      const nameElement = elementQuerySelector(thisElement, '.css_icon_selector_item_name');
       nameElement.innerText = thisItem.name;
     }
 

@@ -82,7 +82,7 @@
 }
 
 /* tray > content > item > name */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_name {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_name {
   position: absolute;
   top: 10px;
   left: 50px;
@@ -103,18 +103,18 @@
 }
 
 /* animation: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"] .css_icon_selector_list_item_name {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"] .css_icon_selector_item_name {
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_list_item_name {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_name {
   transform: translateX(90px);
 }
 
 /* tray > content > item > stretch */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_stretch {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_stretch {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -129,19 +129,19 @@
   contain: layout;
 }
 
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_stretch span.css_material_symbols_rounded {
   transform: rotate(0deg);
   color: var(--b-cssvar-333333);
 }
 
 /* animation: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"] .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"] .css_icon_selector_item_stretch span.css_material_symbols_rounded {
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
 
 /* stretched: true */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_list_item_stretch span.css_material_symbols_rounded {
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_stretch span.css_material_symbols_rounded {
   transform: rotate(180deg);
 }
 
