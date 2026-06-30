@@ -160,7 +160,7 @@ function generateElementOfItem(): HTMLElement {
 
   const tabRelatedIconElement = documentCreateDivElement();
   tabRelatedIconElement.classList.add('css_icon_selector_item_button_icon');
-  tabRelatedIconElement.appendChild(getIconElement('join'));
+  tabRelatedIconElement.appendChild(getIconElement('category'));
   tabRelatedElement.appendChild(tabRelatedIconElement);
   tabRelatedElement.appendChild(document.createTextNode('相關'));
   buttonsElement.appendChild(tabRelatedElement);
