@@ -170,12 +170,30 @@ function generateElementOfItem(): HTMLElement {
   tabKeywordsElement.appendChild(document.createTextNode('標籤'));
   buttonsElement.appendChild(tabKeywordsElement);
 
+  bodyElement.appendChild(buttonsElement);
+
+  // description
+
+  const descriptionElement = documentCreateDivElement();
+  descriptionElement.classList.add('css_icon_selector_item_description');
+  descriptionElement.setAttribute('displayed', 'true');
+  bodyElement.appendChild(descriptionElement);
+
+  const relatedElement = documentCreateDivElement();
+  relatedElement.classList.add('css_icon_selector_item_related');
+  relatedElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(relatedElement);
+
+  const keywordsElement = documentCreateDivElement();
+  keywordsElement.classList.add('css_icon_selector_item_keywords');
+  keywordsElement.setAttribute('displayed', 'false');
+  bodyElement.appendChild(keywordsElement);
+
   headElement.appendChild(iconElement);
   headElement.appendChild(nameElement);
   headElement.appendChild(capsuleElement);
   element.appendChild(headElement);
 
-  bodyElement.appendChild(buttonsElement);
   element.appendChild(bodyElement);
 
   return element;
