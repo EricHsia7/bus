@@ -216,10 +216,8 @@ function updateIconSelectorField(symbols: IntegratedMaterialSymbols, inputElemen
 
 function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const WindowSize = querySize('window');
-  const quantity = Math.floor(WindowSize.height / 50) + 3;
   const items: IntegratedMaterialSymbols = [];
-  for (let i = 0; i < quantity; i++) {
+  for (let i = 0; i < visibleElementsQuantity; i++) {
     items.push({
       name: '',
       description: '',
@@ -227,7 +225,7 @@ function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
       keywords: []
     });
   }
-  updateIconSelectorField(items, inputElement, true, playing_animation);
+  updateIconSelectorField(items, inputElement, 0, true, playing_animation);
 }
 
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
@@ -240,7 +238,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   const integration = await integrateMaterialSymbols(requestID);
   currentIntegration = integration;
-  updateIconSelectorField(integration.slice(0, visibleElementsQuantity), inputElement, false, playing_animation);
+  updateIconSelectorField(integration.slice(0, visibleElementsQuantity), inputElement, 0, false, playing_animation);
 }
 
 function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
