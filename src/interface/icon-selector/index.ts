@@ -132,7 +132,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     }
 
     function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
-      thisElement.setAttribute('index', booleanToString(stretched));
+      thisElement.setAttribute('stretched', booleanToString(stretched));
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
