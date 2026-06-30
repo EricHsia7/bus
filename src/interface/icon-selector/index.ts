@@ -173,17 +173,18 @@ function generateElementOfItem(): HTMLElement {
   bodyElement.appendChild(buttonsElement);
 
   // description
-
   const descriptionElement = documentCreateDivElement();
   descriptionElement.classList.add('css_icon_selector_item_description');
   descriptionElement.setAttribute('displayed', 'true');
   bodyElement.appendChild(descriptionElement);
 
+  // related
   const relatedElement = documentCreateDivElement();
   relatedElement.classList.add('css_icon_selector_item_related');
   relatedElement.setAttribute('displayed', 'false');
   bodyElement.appendChild(relatedElement);
 
+  // keywords
   const keywordsElement = documentCreateDivElement();
   keywordsElement.classList.add('css_icon_selector_item_keywords');
   keywordsElement.setAttribute('displayed', 'false');
@@ -256,8 +257,14 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
     updateIndex(thisElement, thisIndex);
     updateStretched(thisElement, stretched);
-    updateSkeletonScreen(thisElement, skeletonScreen);
-    updateAnimation(thisElement, animation);
+
+    if (skeletonScreen !== previosuSkeletonScreen) {
+      updateSkeletonScreen(thisElement, skeletonScreen);
+    }
+
+    if (animation !== previousAnimation) {
+      updateAnimation(thisElement, animation);
+    }
   }
 
   const itemsLength = integration.length;
