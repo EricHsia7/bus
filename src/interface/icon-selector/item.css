@@ -122,27 +122,20 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 50px;
+  width: 55px;
   height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: top left;
 }
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_icon {
-  width: calc(50px + 171px);
+  width: calc(55px + 40px);
   height: calc(50px + 171px);
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_icon span.css_material_symbols_rounded {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 30px;
-  height: 30px;
-  font-size: 30px;
+  top: calc((50px - 24px) / 2);
+  left: calc((55px - 24px) / 2);
   color: var(--b-cssvar-333333);
   transform-origin: top left;
 }
@@ -155,16 +148,16 @@
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_icon span.css_material_symbols_rounded {
-  transform: scale(calc((50 + 90 - 10 - 10) / 30));
+  transform: scale(calc((55 + 40 - (55 - 24)) / 24));
 }
 
 /* tray > content > item > name */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_name {
   position: absolute;
   top: 10px;
-  left: 50px;
-  width: calc(100% - 50px - 171px - 10px - 30px - 15px);
-  /* icon (expanded): (50px + 171px) + gap: 10px + stretch: 30px + padding: 15px */
+  left: 55px;
+  width: calc(100% - 55px - 40px - 10px - 30px - 15px);
+  /* icon (expanded): (55px + 40px) + gap: 10px + stretch: 30px + padding: 15px */
   height: 30px;
   white-space: nowrap;
   word-break: keep-all;
@@ -187,7 +180,7 @@
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_name {
-  transform: translateX(171px);
+  transform: translateX(40px);
 }
 
 /* tray > content > item > stretch */
@@ -226,8 +219,9 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_list_item_body {
   position: absolute;
   top: 50px;
-  left: calc(50px + 171px);
-  width: calc(100% - 50px - 171px - 15px);
+  left: calc(55px + 40px);
+  width: calc(100% - 55px - 40px - 10px - 30px - 15px);
+  /* icon (expanded): (55px + 40px) + gap: 10px + stretch: 30px + padding: 15px */
   height: 171px;
   opacity: 0;
   transform: translateY(-10px);
