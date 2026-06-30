@@ -23,7 +23,13 @@ export class BitState {
     }
   }
 
-  add(index: number, delta: number): void {
+  set(index: number, value: number): void {
+    const difference = value - this.state[index];
+    this.state[index] = value;
+    this.add(index, difference);
+  }
+
+  add(index: number, difference: number): void {
     if (index < 0) {
       index += this.length + 1;
     }
@@ -31,7 +37,7 @@ export class BitState {
       return;
     }
     for (let i = index; i < this.length; i += i & -i) {
-      this.bit[i] += delta;
+      this.bit[i] += difference;
     }
   }
 

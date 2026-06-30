@@ -255,9 +255,9 @@ function stretchSymbolItem(thisElement: HTMLElement): void {
   const index = parseInt(thisElement.getAttribute('index') || '0', 10);
   if (stretched) {
     thisElement.setAttribute('stretched', 'false');
-    state.add(index, -1);
+    state.set(index, 0);
   } else {
     thisElement.setAttribute('stretched', 'true');
-    state.add(index, 1);
+    state.set(index, 1);
   }
 }
