@@ -81,8 +81,10 @@ function generateElementOfItem(): HTMLElement {
   element.classList.add('css_icon_selector_item');
   element.setAttribute('animation', 'false');
   element.setAttribute('skeleton-screen', 'false');
-  element.setAttribute('stretching', 'false');
   element.setAttribute('stretched', 'false');
+  element.setAttribute('stretching', 'false');
+  element.setAttribute('push-direction', '0'); // 0: normal state, 1: downward, 2: upward
+  element.setAttribute('push-state', '0'); // 0: normal state, 1: compensation , 2: transition
   element.setAttribute('index', '0');
 
   const iconElement = documentCreateDivElement();
