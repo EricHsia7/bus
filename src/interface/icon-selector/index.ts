@@ -20,7 +20,7 @@ let previousInputElement;
 
 const buffer = 16;
 const itemHeight = 50;
-const itemExtraHeight = 171;
+const itemExtraHeight = 145;
 
 const state = new BitState(1);
 

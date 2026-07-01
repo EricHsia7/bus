@@ -79,7 +79,7 @@
 
 /* push-direction: 1 && push-state: 2 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="2"] {
-  transform: translateY(calc(50px + 171px));
+  transform: translateY(calc(50px + 145px));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
@@ -91,7 +91,7 @@
 
 /* push-direction: 2 && push-state: 1 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="1"] {
-  transform: translateY(calc(50px + 171px));
+  transform: translateY(calc(50px + 145px));
   /* compensate the height of the already expanded element separated from the document flow */
 }
 
@@ -109,14 +109,14 @@
 
 /* stretched: false && stretching: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="true"] {
-  height: calc(50px + 171px);
-  /* head: 50px + body: 171px */
+  height: calc(50px + 145px);
+  /* head: 50px + body: 145px */
 }
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] {
-  height: calc(50px + 171px);
-  /* head: 50px + body: 171px */
+  height: calc(50px + 145px);
+  /* head: 50px + body: 145px */
 }
 
 /* tray > content > item > head */
@@ -246,7 +246,7 @@
   top: 50px;
   left: 0px;
   width: 100%;
-  height: 171px;
+  height: 145px;
   opacity: 0;
   transform: translateY(-10px);
   visibility: inherit;
@@ -370,7 +370,7 @@
   left: 15px;
   width: calc(100% - 15px - 15px);
   /* padding: 15px + padding: 15px */
-  height: calc(171px - (5px + 35px + 5px) - 5px);
+  height: calc(145px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
   contain: layout;
   overflow: clip;
@@ -448,7 +448,7 @@
 /* tray > content > item > body > related > item */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item {
   position: relative;
-  height: 121px;
+  height: calc(145px - (5px + 35px + 5px) - 5px);
   box-sizing: border-box;
   background-color: var(--b-cssvar-f9f9fb-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
@@ -466,7 +466,7 @@
   /* w = W - 15 (padding) - 15 (padding) → W * 0.6 = (w + 30) * 0.6 = 60% + 18px */
   /* W = window width */
   /* w = parent width */
-  height: 121px;
+  height: calc(145px - (5px + 35px + 5px) - 5px);
   box-sizing: border-box;
   background-color: var(--b-cssvar-f9f9fb-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
