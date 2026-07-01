@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - dev-icon-selector-2
+      - dev-icon-selector-2-search
 
 jobs:
   build:

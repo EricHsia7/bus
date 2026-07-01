@@ -1,4 +1,16 @@
+import { documentQuerySelector } from '../../tools/elements';
+
 let initialized: boolean = false;
+
+const iconSelectorSearchField = documentQuerySelector('css_icon_selector_search_field');
+
+export function showIconSelectorSearch(): void {
+  iconSelectorSearchField.setAttribute('displayed', 'true');
+}
+
+export function hideIconSelectorSearch(): void {
+  iconSelectorSearchField.setAttribute('displayed', 'false');
+}
 
 export function initializeIconSelectorSearchInput(): void {
   if (initialized) return;

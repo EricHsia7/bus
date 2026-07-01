@@ -5,6 +5,7 @@ import { hideFolderCreator, showFolderCreator } from './folder-creator/index';
 import { hideFolderEditor, showFolderEditor } from './folder-editor/index';
 import { hideFolderManager, showFolderManager } from './folder-manager/index';
 import { hideHome, showHome } from './home/index';
+import { hideIconSelectorSearch, showIconSelectorSearch } from './icon-selector-search';
 import { hideIconSelector, showIconSelector } from './icon-selector/index';
 import { hideLocationDetails, showLocationDetails } from './location-details/index';
 import { hideLocation, showLocation } from './location/index';
@@ -29,7 +30,7 @@ const SplashScreenElement = documentQuerySelector('.css_splash_screen');
 const splashScreenTimer_minimalTimeOut = 100;
 const splashScreenTimer_openTime = new Date().getTime();
 
-type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'RouteCalendar' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
+type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'IconSelectorSearch' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'RouteCalendar' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
 let pageHistory: Array<Page> = ['Home'];
 
@@ -66,6 +67,9 @@ export function hidePreviousPage(): void {
         break;
       case 'IconSelector':
         hideIconSelector();
+        break;
+      case 'IconSelectorSearch':
+        hideIconSelectorSearch();
         break;
       case 'FolderManager':
         hideFolderManager();
@@ -149,6 +153,9 @@ export function showPreviousPage(): void {
         break;
       case 'IconSelector':
         showIconSelector();
+        break;
+      case 'IconSelectorSearch':
+        showIconSelectorSearch();
         break;
       case 'FolderManager':
         showFolderManager();
