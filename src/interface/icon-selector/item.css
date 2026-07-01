@@ -373,7 +373,6 @@
   height: calc(141px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
   contain: layout;
-  overflow: clip;
   visibility: inherit;
 }
 
@@ -428,6 +427,7 @@
   line-height: calc((141px - (5px + 35px + 5px) - 5px) / 4);
   text-align: start;
   word-break: break-word;
+  overflow: clip;
 }
 
 /* tray > content > item > body > related, keywords */
