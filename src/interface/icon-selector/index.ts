@@ -211,6 +211,25 @@ function generateElementOfItem(): HTMLElement {
   return element;
 }
 
+function generateElementOfRelatedItem(): HTMLElement {
+  const element = documentCreateDivElement();
+  element.classList.add('css_icon_selector_item_related_item');
+
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_icon_selector_item_related_item_head');
+
+  const iconElement = documentCreateDivElement();
+  iconElement.classList.add('css_icon_selector_item_related_item_head_icon');
+  iconElement.appendChild(getBlankIconElement());
+  headElement.appendChild(iconElement);
+
+  const nameElement = documentCreateDivElement();
+  nameElement.classList.add('css_icon_selector_item_related_item_head_name');
+  headElement.appendChild(nameElement);
+
+  return element;
+}
+
 function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
@@ -237,7 +256,39 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       }
     }
 
-    function updateRelated(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
+    function updateRelated(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+      const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
+      const relatedElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_related');
+      const length = thisItem.related.length;
+      const relatedItemElements = Array.from(elementQuerySelectorAll(relatedElement, '.css_icon_selector_item'));
+      const currentElementsLength = relatedItemElements.length;
+
+      const difference = currentElementsLength - length;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let o = 0; o > difference; o--) {
+          const newElement = generateElementOfRelatedItem();
+          fragment.appendChild(newElement);
+          relatedItemElements.push(newElement);
+        }
+        relatedElement.append(fragment);
+      } else if (difference > 0) {
+        for (let p = currentElementsLength - 1, q = currentElementsLength - difference - 1; p > q; p--) {
+          relatedItemElements[p].remove();
+          relatedItemElements.splice(p, 1);
+        }
+      }
+
+      for (let i = 0; i < length; i++) {
+        const thisName = thisItem.related[i];
+        const relatedItemElement = relatedItemElements[i];
+        const headElement = elementQuerySelector(relatedItemElement, '.css_icon_selector_item_related_item_head');
+        const iconElement = elementQuerySelector(headElement, '.css_icon_selector_item_related_item_head_icon');
+        const nameElement = elementQuerySelector(headElement, '.css_icon_selector_item_related_item_head_name');
+        setIcon(iconElement, thisName);
+        nameElement.innerText = thisName;
+      }
+    }
 
     function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
 
@@ -271,6 +322,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateIcon(thisElement, thisItem);
     updateName(thisElement, thisItem);
     updateDescription(thisElement, thisItem);
+    updateRelated(thisElement, thisItem);
     updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
     updateIndex(thisElement, thisIndex);
     updateStretched(thisElement, stretched);

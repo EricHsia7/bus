@@ -362,7 +362,7 @@
   --b-cssvar-font-variation-settings-fill: 1;
 }
 
-/* tray > content > item > body > description */
+/* tray > content > item > body > description, related, keywords  */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords {
@@ -375,14 +375,8 @@
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
   contain: layout;
   overflow: clip;
-}
-
-/* tray > content > item > body > related */
-.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description {
-  color: var(--b-cssvar-333333-60-flattened);
-  font-size: 16px;
-  text-align: start;
-  word-break: break-word;
+  visibility: inherit;
+  display: block;
 }
 
 /* displayed: false */
@@ -422,4 +416,107 @@
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[empty="true"]::after {
   content: '目前沒有標籤可顯示'
+}
+
+/* tray > content > item > body > description */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description {
+  color: var(--b-cssvar-333333-60-flattened);
+  font-size: 16px;
+  text-align: start;
+  word-break: break-word;
+}
+
+/* tray > content > item > body > related */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related {
+  overflow-x: scroll;
+  overflow-y: clip;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  word-break: keep-all;
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+/* tray > content > item > body > related > item */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item {
+  position: relative;
+  height: 121px;
+  box-sizing: border-box;
+  background-color: var(--b-cssvar-f9f9fb-normal);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: inline-flex;
+  margin-right: 5px;
+  scroll-snap-align: center;
+  contain: layout;
+  vertical-align: top;
+}
+
+/* tray > content > item > body > related > item */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item {
+  position: relative;
+  width: calc(60% + 18px);
+  /* w = W - 15 (padding) - 15 (padding) → W * 0.6 = (w + 30) * 0.6 = 60% + 18px */
+  /* W = window width */
+  /* w = parent width */
+  height: 121px;
+  box-sizing: border-box;
+  background-color: var(--b-cssvar-f9f9fb-normal);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: inline-flex;
+  margin-right: 5px;
+  scroll-snap-align: center;
+  contain: layout;
+  vertical-align: top;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item:last-child {
+  margin-right: 0px;
+}
+
+/* tray > content > item > body > related > item > head */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: calc(100% - 20px);
+  height: 25px;
+}
+
+/* tray > content > item > body > related > item > head > icon */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_icon span.css_material_symbols_rounded {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: var(--b-cssvar-333333);
+}
+
+/* tray > content > item > body > related > item > head > name */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_name {
+  position: absolute;
+  top: 0px;
+  left: calc(25px + 5px);
+  height: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 25px;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: clip;
+  contain: layout;
+  text-overflow: ellipsis;
 }
