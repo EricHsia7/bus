@@ -143,8 +143,22 @@
   align-items: center;
 }
 
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon {
+  top: 10px;
+  left: 12.5px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
   color: var(--b-cssvar-333333);
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
+  visibility: hidden;
 }
 
 /* tray > content > item > head > name */
@@ -165,6 +179,12 @@
   /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
   font-weight: 400;
   contain: layout;
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_name {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-normal);
 }
 
 /* tray > content > item > head > capsule */
