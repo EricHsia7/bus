@@ -141,9 +141,9 @@ function generateElementOfItem(): HTMLElement {
   tabDescriptionElement.setAttribute('highlighted', 'true');
   tabDescriptionElement.setAttribute('type', 'tab');
   tabDescriptionElement.setAttribute('code', '0');
-  tabDescriptionElement.onclick = () => {
+  tabDescriptionElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 0);
-  };
+  });
 
   const tabDescriptionIconElement = documentCreateDivElement();
   tabDescriptionIconElement.classList.add('css_icon_selector_item_button_icon');
@@ -158,9 +158,9 @@ function generateElementOfItem(): HTMLElement {
   tabRelatedElement.setAttribute('highlighted', 'false');
   tabRelatedElement.setAttribute('type', 'tab');
   tabRelatedElement.setAttribute('code', '1');
-  tabRelatedElement.onclick = () => {
+  tabRelatedElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 1);
-  };
+  });
 
   const tabRelatedIconElement = documentCreateDivElement();
   tabRelatedIconElement.classList.add('css_icon_selector_item_button_icon');
@@ -175,9 +175,9 @@ function generateElementOfItem(): HTMLElement {
   tabKeywordsElement.setAttribute('highlighted', 'false');
   tabKeywordsElement.setAttribute('type', 'tab');
   tabKeywordsElement.setAttribute('code', '2');
-  tabKeywordsElement.onclick = () => {
+  tabKeywordsElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 2);
-  };
+  });
 
   const tabKeywordsIconElement = documentCreateDivElement();
   tabKeywordsIconElement.classList.add('css_icon_selector_item_button_icon');
