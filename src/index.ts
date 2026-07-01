@@ -58,6 +58,7 @@ import './interface/home/folders/item.css';
 import './interface/search/field.css';
 import './interface/search/head.css';
 import './interface/search/body.css';
+import './interface/search/results.css';
 import './interface/search/keyboard.css';
 
 import './interface/route/field.css';
