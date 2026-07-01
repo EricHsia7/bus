@@ -111,7 +111,7 @@ function generateElementOfItem(): HTMLElement {
 
   const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_icon_selector_item_capsule_main');
-  mainElement.innerText = '使用圖示';
+  mainElement.innerText = '使用圖標';
   capsuleElement.appendChild(mainElement);
 
   const stretchElement = documentCreateDivElement();
@@ -229,7 +229,7 @@ function generateElementOfRelatedItem(): HTMLElement {
 
   const selectIconButtonElement = documentCreateDivElement();
   selectIconButtonElement.classList.add('css_icon_selector_item_related_item_action_button');
-  selectIconButtonElement.innerText = '使用圖示';
+  selectIconButtonElement.innerText = '使用圖標';
   actionsElement.appendChild(selectIconButtonElement);
 
   const searchButtonElement = documentCreateDivElement();

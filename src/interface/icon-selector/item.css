@@ -408,7 +408,7 @@
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[empty="true"]::after {
-  content: '目前沒有相關圖示可顯示'
+  content: '目前沒有相關圖標可顯示'
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[empty="true"]::after {
