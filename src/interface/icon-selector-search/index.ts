@@ -15,7 +15,7 @@ let initialized: boolean = false;
 
 const iconSelectorSearchField = documentQuerySelector('.css_icon_selector_search_field');
 const headElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_head');
-const inputElement = elementQuerySelector(headElement, '.css_icon_selector_search_input input[type="text"]') as HTMLInputElement;
+const searchInputElement = elementQuerySelector(headElement, '.css_icon_selector_search_input input[type="text"]') as HTMLInputElement;
 const bodyElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_body');
 const resultsElement = elementQuerySelector(bodyElement, '.css_icon_selector_search_results');
 
@@ -61,15 +61,15 @@ export function initializeIconSelectorSearchInput(): void {
   if (initialized) return;
   initialized = true;
 
-  inputElement.addEventListener('paste', function () {
+  searchInputElement.addEventListener('paste', function () {
     updateResults();
   });
 
-  inputElement.addEventListener('cut', function () {
+  searchInputElement.addEventListener('cut', function () {
     updateResults();
   });
 
-  inputElement.addEventListener('selectionchange', function () {
+  searchInputElement.addEventListener('selectionchange', function () {
     updateResults();
   });
 
@@ -77,7 +77,7 @@ export function initializeIconSelectorSearchInput(): void {
     updateResults();
   });
 
-  inputElement.addEventListener('keyup', function () {
+  searchInputElement.addEventListener('keyup', function () {
     updateResults();
   });
 }
@@ -113,7 +113,7 @@ function updateResults(): void {
     }
   }
 
-  const query = inputElement.value;
+  const query = searchInputElement.value;
   if (!containPhoneticSymbols(query)) {
     const searchResults = searchForMaterialSymbols(query);
     const searchResultsLength = searchResults.length;
@@ -155,7 +155,7 @@ function updateResults(): void {
 
 async function initializeIconSelectorSearchField(query: string, inputElement: HTMLInputElement) {
   const requestID = generateIdentifier();
-  inputElement.value = query;
+  searchInputElement.value = query;
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   prepareForMaterialSymbolsSearch(materialSymbolsSearchIndex);
   updateResults();
