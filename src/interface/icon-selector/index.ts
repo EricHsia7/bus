@@ -22,10 +22,11 @@ const buffer = 16;
 const itemHeight = 50;
 const itemExtraHeight = 145;
 
-const state = new BitState(1);
+const stretchState = new BitState(1);
+const tabState = new BitState(1);
 
 let currentItemElementsLength = 0;
-let windowWidth = 0;
+// let windowWidth = 0;
 let windowHeight = 0;
 let visibleElementsQuantity = 0;
 let currentStartIndex = -1;
@@ -39,7 +40,7 @@ export function initializeIconSelectorVirtualScroll(): void {
   initialized = true;
 
   const windowSize = querySize('window');
-  windowWidth = windowSize.width;
+  // windowWidth = windowSize.width;
   windowHeight = windowSize.height;
   visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
   offsetY = parseInt(getCSSVariableValue('--b-cssvar-safe-area-top')) + 55;
@@ -58,16 +59,16 @@ export function initializeIconSelectorVirtualScroll(): void {
 }
 
 function getTrayHeight(): number {
-  return offsetY + state.length * itemHeight + state.sum(state.length) * itemExtraHeight;
+  return offsetY + stretchState.length * itemHeight + stretchState.sum(stretchState.length) * itemExtraHeight;
 }
 
 function getElementTop(index: number): number {
-  return offsetY + index * itemHeight + state.sum(index) * itemExtraHeight;
+  return offsetY + index * itemHeight + stretchState.sum(index) * itemExtraHeight;
 }
 
 function getFirstVisibleIndex(scrollTop: number): number {
   let low = 0;
-  let high = state.length * 1;
+  let high = stretchState.length * 1;
   while (low < high) {
     const mid = (low + high + 1) >> 1;
     if (getElementTop(mid) <= scrollTop) {
@@ -233,7 +234,7 @@ function generateElementOfRelatedItem(): HTMLElement {
 }
 
 function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
-  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, stretched: boolean): void {
+  function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, thisStretched: boolean, thisTabCode: number): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
       const iconElement = elementQuerySelector(headElement, '.css_icon_selector_item_icon');
@@ -305,14 +306,27 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       };
     }
 
-    function updateIndex(thisElement: HTMLElement, index: number): void {
-      thisElement.setAttribute('index', index.toString());
+    function updateIndex(thisElement: HTMLElement, thisIndex: number): void {
+      thisElement.setAttribute('index', thisIndex.toString());
     }
 
-    function updateStretched(thisElement: HTMLElement, stretched: boolean): void {
+    function updateStretched(thisElement: HTMLElement, thisStretched: boolean): void {
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
-      thisElement.setAttribute('stretched', booleanToString(stretched));
-      bodyElement.setAttribute('displayed', booleanToString(stretched));
+      thisElement.setAttribute('stretched', booleanToString(thisStretched));
+      bodyElement.setAttribute('displayed', booleanToString(thisStretched));
+    }
+
+    function updateTab(thisElement: HTMLElement, thisIndex: number, thisTabCode: number): void {
+      const buttonsElement = elementQuerySelector(thisElement, '.css_icon_selector_item_buttons');
+      const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_icon_selector_item_button');
+      const tabElements = [elementQuerySelector(thisElement, '.css_icon_selector_item_description'), elementQuerySelector(thisElement, '.css_icon_selector_item_related'), elementQuerySelector(thisElement, '.css_icon_selector_item_keywords')];
+      const state = new Array(3).fill('false');
+      state[thisTabCode] = 'true';
+      for (let i = 0; i < 3; i++) {
+        buttonElements[i].setAttribute('highlighted', state[i]);
+        tabElements[i].setAttribute('displayed', state[i]);
+      }
+      tabState.set(thisIndex, thisTabCode);
     }
 
     function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
@@ -329,7 +343,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateRelated(thisElement, thisItem);
     updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
     updateIndex(thisElement, thisIndex);
-    updateStretched(thisElement, stretched);
+    updateStretched(thisElement, thisStretched);
+    updateTab(thisElement, thisIndex, thisTabCode);
 
     if (skeletonScreen !== previosuSkeletonScreen) {
       updateSkeletonScreen(thisElement, skeletonScreen);
@@ -342,7 +357,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
   const itemsLength = integration.length;
   if (currentItemsLength !== itemsLength) {
-    state.resize(itemsLength);
+    stretchState.resize(itemsLength);
+    tabState.resize(itemsLength);
     trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
   }
 
@@ -371,7 +387,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     const index = startIndex + k;
     const currentItem = integration[index];
     if (currentItem) {
-      updateItem(thisElement, currentItem, index, state.state[index] === 1 ? true : false);
+      updateItem(thisElement, currentItem, index, stretchState.state[index] === 1 ? true : false, tabState.state[index]);
     }
   }
 
@@ -507,40 +523,26 @@ function stretchItemElement(itemElement: HTMLElement): void {
       itemBodyElement.setAttribute('displayed', 'false');
     }
     itemElement.setAttribute('stretched', 'false');
-    state.set(index, 0);
+    stretchState.set(index, 0);
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
-    state.set(index, 1);
+    stretchState.set(index, 1);
   }
 
   trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }
 
 function switchItemBodyElementTab(itemElement: HTMLElement, tabCode: number): void {
-  const buttons = elementQuerySelector(itemElement, '.css_icon_selector_item_buttons');
-  const button = elementQuerySelectorAll(buttons, '.css_icon_selector_item_button[highlighted="true"][type="tab"]');
-  for (const t of button) {
-    t.setAttribute('highlighted', 'false');
+  const buttonsElement = elementQuerySelector(itemElement, '.css_icon_selector_item_buttons');
+  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_icon_selector_item_button');
+  const tabElements = [elementQuerySelector(itemElement, '.css_icon_selector_item_description'), elementQuerySelector(itemElement, '.css_icon_selector_item_related'), elementQuerySelector(itemElement, '.css_icon_selector_item_keywords')];
+  const state = new Array(3).fill('false');
+  state[tabCode] = 'true';
+  for (let i = 0; i < 3; i++) {
+    buttonElements[i].setAttribute('highlighted', state[i]);
+    tabElements[i].setAttribute('displayed', state[i]);
   }
-  elementQuerySelector(buttons, `.css_icon_selector_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
-  switch (tabCode) {
-    case 0:
-      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'false');
-      break;
-    case 1:
-      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'false');
-      break;
-    case 2:
-      elementQuerySelector(itemElement, '.css_icon_selector_item_description').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_related').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_icon_selector_item_keywords').setAttribute('displayed', 'true');
-      break;
-    default:
-      break;
-  }
+  const index = parseInt(itemElement.getAttribute('index') || '0', 10);
+  tabState.set(index, tabCode);
 }

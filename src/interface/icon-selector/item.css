@@ -275,7 +275,7 @@
   visibility: visible;
 }
 
-/* tray > content > item > body > buttons */
+/* tray > content > item > body > buttons */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons {
   position: absolute;
   top: 5px;
