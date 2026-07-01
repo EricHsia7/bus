@@ -260,7 +260,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       const relatedElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_related');
       const length = thisItem.related.length;
-      const relatedItemElements = Array.from(elementQuerySelectorAll(relatedElement, '.css_icon_selector_item'));
+      const relatedItemElements = Array.from(elementQuerySelectorAll(relatedElement, '.css_icon_selector_item_related_item'));
       const currentElementsLength = relatedItemElements.length;
 
       const difference = currentElementsLength - length;
