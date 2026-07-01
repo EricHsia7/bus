@@ -20,7 +20,7 @@ let previousInputElement;
 
 const buffer = 16;
 const itemHeight = 50;
-const itemExtraHeight = 145;
+const itemExtraHeight = 141;
 
 const stretchState = new BitState(1);
 const tabState = new BitState(1);

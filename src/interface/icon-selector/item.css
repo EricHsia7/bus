@@ -79,7 +79,7 @@
 
 /* push-direction: 1 && push-state: 2 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="2"] {
-  transform: translateY(calc(50px + 145px));
+  transform: translateY(calc(50px + 141px));
   transition: transform var(--b-cssvar-transition-duration);
   transition-timing-function: ease;
 }
@@ -91,7 +91,7 @@
 
 /* push-direction: 2 && push-state: 1 */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="1"] {
-  transform: translateY(calc(50px + 145px));
+  transform: translateY(calc(50px + 141px));
   /* compensate the height of the already expanded element separated from the document flow */
 }
 
@@ -109,14 +109,14 @@
 
 /* stretched: false && stretching: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="true"] {
-  height: calc(50px + 145px);
-  /* head: 50px + body: 145px */
+  height: calc(50px + 141px);
+  /* head: 50px + body: 141px */
 }
 
 /* stretched: true */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] {
-  height: calc(50px + 145px);
-  /* head: 50px + body: 145px */
+  height: calc(50px + 141px);
+  /* head: 50px + body: 141px */
 }
 
 /* tray > content > item > head */
@@ -246,7 +246,7 @@
   top: 50px;
   left: 0px;
   width: 100%;
-  height: 145px;
+  height: 141px;
   opacity: 0;
   transform: translateY(-10px);
   visibility: inherit;
@@ -370,7 +370,7 @@
   left: 15px;
   width: calc(100% - 15px - 15px);
   /* padding: 15px + padding: 15px */
-  height: calc(145px - (5px + 35px + 5px) - 5px);
+  height: calc(141px - (5px + 35px + 5px) - 5px);
   /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
   contain: layout;
   overflow: clip;
@@ -448,7 +448,7 @@
 /* tray > content > item > body > related > item */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item {
   position: relative;
-  height: calc(145px - (5px + 35px + 5px) - 5px);
+  height: calc(141px - (5px + 35px + 5px) - 5px);
   box-sizing: border-box;
   background-color: var(--b-cssvar-f9f9fb-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
@@ -466,7 +466,7 @@
   /* w = W - 15 (padding) - 15 (padding) → W * 0.6 = (w + 30) * 0.6 = 60% + 18px */
   /* W = window width */
   /* w = parent width */
-  height: calc(145px - (5px + 35px + 5px) - 5px);
+  height: calc(141px - (5px + 35px + 5px) - 5px);
   box-sizing: border-box;
   background-color: var(--b-cssvar-f9f9fb-normal);
   border-radius: var(--b-cssvar-border-radius-normal);
@@ -529,12 +529,14 @@
 /* tray > content > item > body > related > item > actions */
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions {
   position: absolute;
-  top: calc(10px + 25px + 5px);
+  top: calc(10px + 25px + 10px);
+  /* padding: 10px + head: 25px + gap: 10px */
   left: 10px;
   width: calc(100% - 10px - 10px);
+  /* padding: 10px + padding: 10px */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 45px;
+  height: 36px;
   padding: 0px;
   column-gap: 5px;
 }
