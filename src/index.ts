@@ -35,7 +35,7 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { closeIconSelectorSearch, initializeIconSelectorSearchInput, openIconSelectorSearch } from './interface/icon-selector-search';
+import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 
 import './interface/theme.css';
 
@@ -323,7 +323,6 @@ interface BusWindow extends Window {
   },
   iconSelector: {
     closeIconSelector,
-    openIconSelectorSearch,
     closeIconSelectorSearch
   },
   search: {

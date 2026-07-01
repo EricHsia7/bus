@@ -44,9 +44,9 @@ export function hideIconSelectorSearch(): void {
   iconSelectorSearchField.setAttribute('displayed', 'false');
 }
 
-export function openIconSelectorSearch(inputElement: HTMLInputElement): void {
+export function openIconSelectorSearch(query: string, inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelectorSearch');
-  initializeIconSelectorSearchField(inputElement);
+  initializeIconSelectorSearchField(query, inputElement);
   showIconSelectorSearch();
   hidePreviousPage();
 }
@@ -153,11 +153,12 @@ function updateResults(): void {
   }
 }
 
-async function initializeIconSelectorSearchField(inputElement: HTMLInputElement) {
+async function initializeIconSelectorSearchField(query: string, inputElement: HTMLInputElement) {
   const requestID = generateIdentifier();
-  // inputElement.value = '';
+  inputElement.value = query;
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   prepareForMaterialSymbolsSearch(materialSymbolsSearchIndex);
+  updateResults();
   deleteDataReceivingProgress(requestID);
   previousInputElement = inputElement;
 }

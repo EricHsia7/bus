@@ -338,13 +338,15 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         selectIconButtonElement.onclick = function () {
           selectIcon(thisName, inputElement);
         };
-        // TODO: search icon name
+        searchButtonElement.onclick = function () {
+          openIconSelectorSearch(thisName, inputElement);
+        };
       }
 
       relatedElement.setAttribute('empty', booleanToString(length === 0));
     }
 
-    function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+    function updateKeywords(thisElement: HTMLElement, inputElement: HTMLInputElement, thisItem: IntegratedMaterialSymbolsItem): void {
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       const keywordsElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_keywords');
 
@@ -377,14 +379,14 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         const searchButtonElement = elementQuerySelector(actionsElement, '.css_icon_selector_item_keywords_item_action_button');
         keywordElement.innerText = thisKeyword;
         searchButtonElement.onclick = function () {
-          // TODO: search keyword
+          openIconSelectorSearch(thisKeyword, inputElement);
         };
       }
 
       keywordsElement.setAttribute('empty', booleanToString(length === 0));
     }
 
-    function updateCapsuleMainOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
+    function updateCapsuleMainOnclick(thisElement: HTMLElement, inputElement: HTMLInputElement, thisItem: IntegratedMaterialSymbolsItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
       const capsuleElement = elementQuerySelector(headElement, '.css_icon_selector_item_capsule');
       const capsuleMainElement = elementQuerySelector(capsuleElement, '.css_icon_selector_item_capsule_main');
@@ -428,8 +430,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateName(thisElement, thisItem);
     updateDescription(thisElement, thisItem);
     updateRelated(thisElement, thisItem);
-    updateKeywords(thisElement, thisItem);
-    updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
+    updateKeywords(thisElement, inputElement, thisItem);
+    updateCapsuleMainOnclick(thisElement, inputElement, thisItem);
     updateIndex(thisElement, thisIndex);
     updateStretched(thisElement, thisStretched);
     updateTab(thisElement, thisIndex, thisTabCode);
@@ -452,7 +454,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
   if (previousInputElement !== inputElement) {
     rightButtonElement.onclick = function () {
-      openIconSelectorSearch(inputElement);
+      openIconSelectorSearch('', inputElement);
     };
   }
 
