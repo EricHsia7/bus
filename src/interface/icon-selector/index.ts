@@ -244,6 +244,36 @@ function generateElementOfRelatedItem(): HTMLElement {
   return element;
 }
 
+function generateElementOfKeywordItem(): HTMLElement {
+  const element = documentCreateDivElement();
+  element.classList.add('css_icon_selector_item_keywords_item');
+
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_icon_selector_item_keywords_item_head');
+
+  const iconElement = documentCreateDivElement();
+  iconElement.classList.add('css_icon_selector_item_keywords_item_head_icon');
+  iconElement.appendChild(getIconElement('tag'));
+  headElement.appendChild(iconElement);
+
+  const keywordElement = documentCreateDivElement();
+  keywordElement.classList.add('css_icon_selector_item_keywords_item_head_keyword');
+  headElement.appendChild(keywordElement);
+
+  const actionsElement = documentCreateDivElement();
+  actionsElement.classList.add('css_icon_selector_item_keywords_item_actions');
+
+  const searchButtonElement = documentCreateDivElement();
+  searchButtonElement.classList.add('css_icon_selector_item_keywords_item_action_button');
+  searchButtonElement.innerText = '搜尋';
+  actionsElement.appendChild(searchButtonElement);
+
+  element.appendChild(headElement);
+  element.appendChild(actionsElement);
+
+  return element;
+}
+
 function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputElement: HTMLInputElement, startIndex: number, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, thisIndex: number, thisStretched: boolean, thisTabCode: number): void {
     function updateIcon(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
@@ -312,7 +342,45 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       relatedElement.setAttribute('empty', booleanToString(length === 0));
     }
 
-    function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
+    function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
+      const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
+      const keywordsElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_keywords');
+
+      const length = thisItem.keywords.length;
+      const keywordItemElements = Array.from(elementQuerySelectorAll(keywordsElement, '.css_icon_selector_item_keywords_item'));
+      const currentElementsLength = keywordItemElements.length;
+
+      const difference = currentElementsLength - length;
+      if (difference < 0) {
+        const fragment = new DocumentFragment();
+        for (let o = 0; o > difference; o--) {
+          const newElement = generateElementOfKeywordItem();
+          fragment.appendChild(newElement);
+          keywordItemElements.push(newElement);
+        }
+        keywordsElement.append(fragment);
+      } else if (difference > 0) {
+        for (let p = currentElementsLength - 1, q = currentElementsLength - difference - 1; p > q; p--) {
+          keywordItemElements[p].remove();
+          keywordItemElements.splice(p, 1);
+        }
+      }
+
+      for (let i = 0; i < length; i++) {
+        const thisKeyword = thisItem.keywords[i];
+        const keywordItemElement = keywordItemElements[i];
+        const headElement = elementQuerySelector(keywordItemElement, '.css_icon_selector_item_keywords_item_head');
+        const keywordElement = elementQuerySelector(headElement, '.css_icon_selector_item_keywords_item_head_keyword');
+        const actionsElement = elementQuerySelector(keywordItemElement, '.css_icon_selector_item_keywords_item_actions');
+        const searchButtonElement = elementQuerySelector(actionsElement, '.css_icon_selector_item_keywords_item_action_button');
+        keywordElement.innerText = thisKeyword;
+        searchButtonElement.onclick = function () {
+          // TODO: search keyword
+        };
+      }
+
+      keywordsElement.setAttribute('empty', booleanToString(length === 0));
+    }
 
     function updateCapsuleMainOnclick(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem, inputElement: HTMLInputElement): void {
       const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
@@ -358,6 +426,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateName(thisElement, thisItem);
     updateDescription(thisElement, thisItem);
     updateRelated(thisElement, thisItem);
+    updateKeywords(thisElement, thisItem);
     updateCapsuleMainOnclick(thisElement, thisItem, inputElement);
     updateIndex(thisElement, thisIndex);
     updateStretched(thisElement, thisStretched);
