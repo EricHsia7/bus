@@ -17,7 +17,8 @@
   position: absolute;
   top: var(--b-cssvar-safe-area-top);
   left: 55px;
-  width: calc(100% - 55px);
+  width: calc(100% - 55px - 10px);
+  /* button: 55px + padding: 10px */
   height: 55px;
 }
 
