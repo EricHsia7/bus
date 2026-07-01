@@ -141,7 +141,6 @@ function generateElementOfItem(): HTMLElement {
   tabDescriptionElement.classList.add('css_icon_selector_item_button');
   tabDescriptionElement.setAttribute('highlighted', 'true');
   tabDescriptionElement.setAttribute('type', 'tab');
-  tabDescriptionElement.setAttribute('code', '0');
   tabDescriptionElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 0);
   });
@@ -158,7 +157,6 @@ function generateElementOfItem(): HTMLElement {
   tabRelatedElement.classList.add('css_icon_selector_item_button');
   tabRelatedElement.setAttribute('highlighted', 'false');
   tabRelatedElement.setAttribute('type', 'tab');
-  tabRelatedElement.setAttribute('code', '1');
   tabRelatedElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 1);
   });
@@ -175,7 +173,6 @@ function generateElementOfItem(): HTMLElement {
   tabKeywordsElement.classList.add('css_icon_selector_item_button');
   tabKeywordsElement.setAttribute('highlighted', 'false');
   tabKeywordsElement.setAttribute('type', 'tab');
-  tabKeywordsElement.setAttribute('code', '2');
   tabKeywordsElement.addEventListener('click', function () {
     switchItemBodyElementTab(element, 2);
   });
@@ -228,7 +225,21 @@ function generateElementOfRelatedItem(): HTMLElement {
   nameElement.classList.add('css_icon_selector_item_related_item_head_name');
   headElement.appendChild(nameElement);
 
+  const actionsElement = documentCreateDivElement();
+  actionsElement.classList.add('css_icon_selector_item_related_item_actions');
+
+  const selectIconButtonElement = documentCreateDivElement();
+  selectIconButtonElement.classList.add('css_icon_selector_item_related_item_action_button');
+  selectIconButtonElement.innerText = '使用圖示';
+  actionsElement.appendChild(selectIconButtonElement);
+
+  const searchButtonElement = documentCreateDivElement();
+  searchButtonElement.classList.add('css_icon_selector_item_related_item_action_button');
+  searchButtonElement.innerText = '搜尋';
+  actionsElement.appendChild(searchButtonElement);
+
   element.appendChild(headElement);
+  element.appendChild(actionsElement);
 
   return element;
 }
@@ -288,8 +299,14 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         const headElement = elementQuerySelector(relatedItemElement, '.css_icon_selector_item_related_item_head');
         const iconElement = elementQuerySelector(headElement, '.css_icon_selector_item_related_item_head_icon');
         const nameElement = elementQuerySelector(headElement, '.css_icon_selector_item_related_item_head_name');
+        const actionsElement = elementQuerySelector(relatedItemElement, '.css_icon_selector_item_related_item_actions');
+        const [selectIconButtonElement, searchButtonElement] = elementQuerySelectorAll(actionsElement, '.css_icon_selector_item_related_item_action_button');
         setIcon(iconElement, thisName);
         nameElement.innerText = thisName;
+        selectIconButtonElement.onclick = function () {
+          selectIcon(thisName, inputElement);
+        };
+        // TODO: search icon name
       }
 
       relatedElement.setAttribute('empty', booleanToString(length === 0));

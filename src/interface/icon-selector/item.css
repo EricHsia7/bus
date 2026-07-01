@@ -486,7 +486,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  width: calc(100% - 20px);
+  width: calc(100% - 10px - 10px);
   height: 25px;
 }
 
@@ -524,4 +524,28 @@
   overflow: clip;
   contain: layout;
   text-overflow: ellipsis;
+}
+
+/* tray > content > item > body > related > item > actions */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions {
+  position: absolute;
+  top: calc(10px + 25px + 5px);
+  left: 10px;
+  width: calc(100% - 10px - 10px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 45px;
+  padding: 0px;
+  column-gap: 5px;
+}
+
+/* tray > content > item > body > related > item > actions > action button */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions .css_icon_selector_item_related_item_action_button,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions .css_icon_selector_item_related_item_action_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-large);
+  color: var(--b-cssvar-333333);
 }
