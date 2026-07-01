@@ -249,7 +249,6 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabBusElement.classList.add('css_route_group_item_button');
   tabBusElement.setAttribute('highlighted', 'true');
   tabBusElement.setAttribute('type', 'tab');
-  tabBusElement.setAttribute('code', '0');
   tabBusElement.onclick = () => {
     switchRouteBodyTab(itemElement, 0);
   };
@@ -266,7 +265,6 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabArrivalElement.classList.add('css_route_group_item_button');
   tabArrivalElement.setAttribute('highlighted', 'false');
   tabArrivalElement.setAttribute('type', 'tab');
-  tabArrivalElement.setAttribute('code', '1');
   tabArrivalElement.onclick = () => {
     switchRouteBodyTab(itemElement, 1);
   };
@@ -283,7 +281,6 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabRouteElement.classList.add('css_route_group_item_button');
   tabRouteElement.setAttribute('highlighted', 'false');
   tabRouteElement.setAttribute('type', 'tab');
-  tabRouteElement.setAttribute('code', '2');
   tabRouteElement.onclick = () => {
     switchRouteBodyTab(itemElement, 2);
   };
@@ -300,7 +297,6 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabLocationElement.classList.add('css_route_group_item_button');
   tabLocationElement.setAttribute('highlighted', 'false');
   tabLocationElement.setAttribute('type', 'tab');
-  tabLocationElement.setAttribute('code', '3');
   tabLocationElement.onclick = () => {
     switchRouteBodyTab(itemElement, 3);
   };
@@ -1351,38 +1347,13 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
 }
 
 export function switchRouteBodyTab(itemElement: HTMLElement, tabCode: number): void {
-  const buttons = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
-  const button = elementQuerySelectorAll(buttons, '.css_route_group_item_button[highlighted="true"][type="tab"]');
-  for (const t of button) {
-    t.setAttribute('highlighted', 'false');
-  }
-  elementQuerySelector(buttons, `.css_route_group_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
-  switch (tabCode) {
-    case 0:
-      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_nearby_locations').setAttribute('displayed', 'false');
-      break;
-    case 1:
-      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_nearby_locations').setAttribute('displayed', 'false');
-      break;
-    case 2:
-      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_route_group_item_nearby_locations').setAttribute('displayed', 'false');
-      break;
-    case 3:
-      elementQuerySelector(itemElement, '.css_route_group_item_buses').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_route_group_item_nearby_locations').setAttribute('displayed', 'true');
-      break;
-    default:
-      break;
+  const buttonsElement = elementQuerySelector(itemElement, '.css_route_group_item_buttons');
+  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_route_group_item_button[type="tab"]');
+  const tabElements = [elementQuerySelector(itemElement, '.css_route_group_item_buses'), elementQuerySelector(itemElement, '.css_route_group_item_bus_arrival_times'), elementQuerySelector(itemElement, '.css_route_group_item_overlapping_routes'), elementQuerySelector(itemElement, '.css_route_group_item_nearby_locations')];
+  const state = new Array(4).fill('false');
+  state[tabCode] = 'true';
+  for (let i = 0; i < 4; i++) {
+    buttonElements[i].setAttribute('highlighted', state[i]);
+    tabElements[i].setAttribute('displayed', state[i]);
   }
 }
