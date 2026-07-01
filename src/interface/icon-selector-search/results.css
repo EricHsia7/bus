@@ -28,6 +28,10 @@
   margin-top: calc(var(--b-cssvar-safe-area-top) + 55px);
 }
 
+.css_icon_selector_search_field .css_icon_selector_search_body .css_icon_selector_search_results .css_icon_selector_search_result:last-child {
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+}
+
 .css_icon_selector_search_field .css_icon_selector_search_body .css_icon_selector_search_results .css_icon_selector_search_result .css_icon_selector_search_result_icon {
   position: absolute;
   top: 0px;
