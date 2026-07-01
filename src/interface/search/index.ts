@@ -20,9 +20,9 @@ const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
 const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
 const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input') as HTMLInputElement;
 
-const searchInputSVGElement = elementQuerySelector(searchHeadElement, '.css_search_search_input svg') as SVGElement;
-const searchInputSVGTextElement = elementQuerySelector(searchInputSVGElement, 'text[component="text"]') as SVGTextElement;
-const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement, 'path[component="cursor"]') as SVGPathElement;
+const searchInputSVGElement = elementQuerySelector(searchHeadElement, '.css_search_search_input svg') as Element as SVGElement;
+const searchInputSVGTextElement = elementQuerySelector(searchInputSVGElement as Element as HTMLElement, 'text[component="text"]') as Element as SVGTextElement;
+const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement as Element as HTMLElement, 'path[component="cursor"]') as Element as SVGPathElement;
 
 const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
@@ -47,7 +47,7 @@ let keyboardInitialized = false;
 let previousValue: string = '';
 let previousType = 0;
 
-export function typeTextIntoInput(value): void {
+export function typeTextIntoInput(value: string): void {
   const currentValue = searchInputElement.value;
   const newValue = `${currentValue}${value}`;
   searchInputElement.value = newValue;
@@ -226,32 +226,32 @@ function generateElementOfSearchResultItem(): HTMLElement {
 export function updateSearchResult(): void {
   const typeToIcon: Array<MaterialSymbol> = ['route', 'location_on', 'directions_bus'];
 
-  function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
-    function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
-      const thisSearchResultTypeElement = elementQuerySelector(element, '.css_search_search_result_type');
-      setIcon(thisSearchResultTypeElement, typeToIcon[item.item.type]);
+  function updateItem(thisElement: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
+    function updateTypeIcon(thisElement: HTMLElement, thisItem: SearchResult): void {
+      const thisSearchResultTypeElement = elementQuerySelector(thisElement, '.css_search_search_result_type');
+      setIcon(thisSearchResultTypeElement, typeToIcon[thisItem.item.type]);
     }
 
-    function updateName(item: SearchResult, element: HTMLElement): void {
-      const nameElement = elementQuerySelector(element, '.css_search_search_result_name');
-      nameElement.innerText = item.item.n;
+    function updateName(thisElement: HTMLElement, thisItem: SearchResult): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_search_search_result_name');
+      nameElement.innerText = thisItem.item.n;
     }
 
-    function updateClickHandler(item: SearchResult, element: HTMLElement): void {
-      switch (item.item.type) {
+    function updateClickHandler(thisElement: HTMLElement, thisItem: SearchResult): void {
+      switch (thisItem.item.type) {
         case 0:
-          element.onclick = function () {
-            openRoute(item.item.id as number, item.item.pid);
+          thisElement.onclick = function () {
+            openRoute(thisItem.item.id as number, thisItem.item.pid);
           };
           break;
         case 1:
-          element.onclick = function () {
-            openLocation(item.item.hash);
+          thisElement.onclick = function () {
+            openLocation(thisItem.item.hash);
           };
           break;
         case 2:
-          element.onclick = function () {
-            openBus(item.item.id as number);
+          thisElement.onclick = function () {
+            openBus(thisItem.item.id as number);
           };
           break;
         default:
@@ -259,20 +259,20 @@ export function updateSearchResult(): void {
       }
     }
     // compare the current item with the previous item
-    if (previousItem) {
+    if (previousItem !== null) {
       if (currentItem.item.type !== previousItem.item.type) {
-        updateTypeIcon(currentItem, element);
+        updateTypeIcon(thisElement, currentItem);
       }
       if (currentItem.item.id !== previousItem.item.id) {
-        updateName(currentItem, element);
-        updateClickHandler(currentItem, element);
+        updateName(thisElement, currentItem);
+        updateClickHandler(thisElement, currentItem);
       }
     }
     // if the previous item is null, it means this is a new item
     else {
-      updateTypeIcon(currentItem, element);
-      updateName(currentItem, element);
-      updateClickHandler(currentItem, element);
+      updateTypeIcon(thisElement, currentItem);
+      updateName(thisElement, currentItem);
+      updateClickHandler(thisElement, currentItem);
     }
   }
 
