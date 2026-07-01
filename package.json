@@ -7,12 +7,20 @@
     "type": "git",
     "url": "https://github.com/EricHsia7/bus.git"
   },
-  "keywords": ["bus", "typescript", "progressive", "web", "application"],
+  "keywords": [
+    "bus",
+    "typescript",
+    "progressive",
+    "web",
+    "application"
+  ],
   "author": "EricHsia7",
   "bugs": {
     "url": "https://github.com/erichsia7/bus/issues"
   },
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "homepage": "https://erichsia7.github.io/bus/",
   "devDependencies": {
     "@babel/core": "8.0.1",
@@ -42,6 +50,7 @@
     "postcss": "8.5.15",
     "stylelint-config-standard": "40.0.0",
     "stylelint": "17.14.0",
+    "terser-webpack-plugin": "5.6.1",
     "typescript-eslint": "8.62.1",
     "webpack-cli": "7.1.0",
     "webpack-sources": "3.5.0",
