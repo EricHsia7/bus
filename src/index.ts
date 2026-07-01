@@ -35,7 +35,7 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { initializeIconSelectorSearchInput } from './interface/icon-selector-search';
+import { closeIconSelectorSearch, initializeIconSelectorSearchInput, openIconSelectorSearch } from './interface/icon-selector-search';
 
 import './interface/theme.css';
 
@@ -135,6 +135,11 @@ import './interface/icon-selector/body.css';
 import './interface/icon-selector/item.css';
 import './interface/icon-selector/index.css';
 
+import './interface/icon-selector-search/field.css';
+import './interface/icon-selector-search/head.css';
+import './interface/icon-selector-search/body.css';
+import './interface/icon-selector-search/results.css';
+
 import './interface/personal-schedule-manager/field.css';
 import './interface/personal-schedule-manager/head.css';
 import './interface/personal-schedule-manager/body.css';
@@ -209,6 +214,7 @@ interface BusWindow extends Window {
     route: pageFunctions;
     location: pageFunctions;
     folder: pageFunctions;
+    iconSelector: pageFunctions;
     search: pageFunctions;
     storage: pageFunctions;
     dataUsage: pageFunctions;
@@ -313,8 +319,12 @@ interface BusWindow extends Window {
   folder: {
     closeSaveToFolder,
     closeFolderManager,
-    closeIconSelector,
     closeFolderCreator
+  },
+  iconSelector: {
+    closeIconSelector,
+    openIconSelectorSearch,
+    closeIconSelectorSearch
   },
   search: {
     openSearch,
