@@ -141,7 +141,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  contain: layout;
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
@@ -424,6 +423,7 @@
   font-size: 16px;
   text-align: start;
   word-break: break-word;
+  text-overflow: ellipsis;
 }
 
 /* tray > content > item > body > related */
@@ -509,8 +509,6 @@
   top: 0px;
   left: calc(25px + 5px);
   height: 25px;
-  display: flex;
-  align-items: center;
   font-size: 20px;
   line-height: 25px;
   color: var(--b-cssvar-333333);
