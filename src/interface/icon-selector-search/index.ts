@@ -1,3 +1,4 @@
+import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { documentQuerySelector } from '../../tools/elements';
 
 let initialized: boolean = false;
@@ -12,7 +13,19 @@ export function hideIconSelectorSearch(): void {
   iconSelectorSearchField.setAttribute('displayed', 'false');
 }
 
-export function initializeIconSelectorSearchInput(): void {
+export function openIconSelectorSearch(): void {
+  pushPageHistory('IconSelectorSearch');
+  showIconSelectorSearch();
+  hidePreviousPage();
+}
+
+export function closeIconSelectorSearch(): void {
+  hideIconSelectorSearch();
+  showPreviousPage();
+  revokePageHistory('IconSelectorSearch');
+}
+
+export function initializeIconSelectorSearch(): void {
   if (initialized) return;
 
   // searchInputElement.addEventListener('paste', function () {

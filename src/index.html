@@ -426,12 +426,12 @@
         </div>
       </div>
       <div class="css_icon_selector_head">
-        <div class="css_icon_selector_button_left" onclick="bus.folder.closeIconSelector()">
+        <div class="css_icon_selector_button_left" onclick="bus.iconSelector.closeIconSelector()">
           <span class="css_material_symbols_rounded">arrow_back</span>
         </div>
         <div class="css_icon_selector_title">選擇圖示</div>
         <div class="css_icon_selector_button_right">
-          <span class="css_material_symbols_rounded">search</span>
+          <span class="css_material_symbols_rounded" onclick="bus.iconSelector.openIconSelectorSearch()">search</span>
         </div>
       </div>
     </div>
@@ -440,7 +440,7 @@
       <div class="css_icon_selector_search_body"></div>
       <div class="css_icon_selector_search_head">
         <div class="css_icon_selector_search_button_left">
-          <span class="css_material_symbols_rounded">arrow_back</span>
+          <span class="css_material_symbols_rounded" onclick="bus.iconSelector.closeIconSelectorSearch()">arrow_back</span>
         </div>
         <div class="css_icon_selector_search_input">
           <input type="text" placeholder="搜尋圖標" />

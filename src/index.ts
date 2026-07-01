@@ -35,7 +35,7 @@ import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
 import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
-import { initializeIconSelectorSearchInput } from './interface/icon-selector-search';
+import { closeIconSelectorSearch, initializeIconSelectorSearch, openIconSelectorSearch } from './interface/icon-selector-search';
 
 import './interface/theme.css';
 
@@ -213,6 +213,7 @@ interface BusWindow extends Window {
     route: pageFunctions;
     location: pageFunctions;
     folder: pageFunctions;
+    iconSelector: pageFunctions;
     search: pageFunctions;
     storage: pageFunctions;
     dataUsage: pageFunctions;
@@ -258,7 +259,7 @@ interface BusWindow extends Window {
 
     // initialize search inputs
     initializeSearchInput();
-    initializeIconSelectorSearchInput();
+    initializeIconSelectorSearch();
 
     // handle window resize
     resizeSearchInputSVG();
@@ -317,8 +318,12 @@ interface BusWindow extends Window {
   folder: {
     closeSaveToFolder,
     closeFolderManager,
-    closeIconSelector,
     closeFolderCreator
+  },
+  iconSelector: {
+    closeIconSelector,
+    openIconSelectorSearch,
+    closeIconSelectorSearch
   },
   search: {
     openSearch,
