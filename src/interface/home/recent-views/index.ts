@@ -6,7 +6,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
-import { MaterialSymbols } from '../../icons/material-symbols-type';
+import { MaterialSymbol } from '../../icons/material-symbols-type';
 import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
@@ -65,7 +65,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
     function updateIcon(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
       const thisIconElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_icon');
-      let icon: MaterialSymbols = '';
+      let icon: MaterialSymbol = '';
       switch (thisItem.type) {
         case 'route':
           icon = 'route';

@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools/index';
 import { BusData, BusDataItem, getBusData } from '../apis/getBusData/index';
 import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
@@ -12,7 +12,7 @@ import { searchRouteByPathAttributeId } from '../search/index';
 
 export interface integratedBusProperty {
   key: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   value: string;
 }
 

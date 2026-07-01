@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { openRouteCalendar } from '../../interface/route-calendar/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
@@ -35,7 +35,7 @@ function findProvider(Provider: Provider, providerId: number): ProviderItem {
 // }
 
 export interface IntegratedRouteDetailsAction {
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   action: Function;
   key: string;
   name: string;

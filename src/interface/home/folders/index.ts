@@ -8,7 +8,7 @@ import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../to
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
-import { MaterialSymbols } from '../../icons/material-symbols-type';
+import { MaterialSymbol } from '../../icons/material-symbols-type';
 import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
@@ -200,7 +200,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
     function updateIcon(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
       const thisIconElement = elementQuerySelector(thisElement, '.css_home_folder_item_icon');
-      let icon: MaterialSymbols = '';
+      let icon: MaterialSymbol = '';
       switch (thisItem.type) {
         case 'stop':
           icon = 'location_on';

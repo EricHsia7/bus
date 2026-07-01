@@ -1,7 +1,7 @@
 import { createFolder } from '../../data/folder/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
-import { MaterialSymbols } from '../icons/material-symbols-type';
+import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -25,7 +25,7 @@ const openIconSelectorElement = elementQuerySelector(groupsElement, '.css_folder
 export async function createFormulatedFolder(callback: Function) {
   const name = folderNameInputElement.value;
   const icon = iconInputElement.value;
-  const creation = await createFolder(name, icon as MaterialSymbols);
+  const creation = await createFolder(name, icon as MaterialSymbol);
   if (creation) {
     closeFolderCreator();
     promptMessage('folder', '已建立資料夾');

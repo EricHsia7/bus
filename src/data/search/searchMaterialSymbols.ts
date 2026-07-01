@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
 import { hasOwnProperty } from '../../tools/index';
 import { levenshtein } from '../../tools/levenshtein';
@@ -46,7 +46,7 @@ export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMateria
 }
 
 export interface MaterialSymbolsSearchResult {
-  item: MaterialSymbols;
+  item: MaterialSymbol;
   score: number;
 }
 

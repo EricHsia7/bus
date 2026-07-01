@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools';
 import { getMaterialSymbolsDescription } from '../apis/getMaterialSymbolsDescription';
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
@@ -7,9 +7,9 @@ import { getMaterialSymbolsSimilarity } from '../apis/getMaterialSymbolsSimilari
 import { deleteDataReceivingProgress } from '../apis/loader';
 
 export interface IntegratedMaterialSymbolsItem {
-  name: MaterialSymbols;
+  name: MaterialSymbol;
   description: string | false;
-  related: Array<MaterialSymbols>;
+  related: Array<MaterialSymbol>;
   keywords: Array<string>;
 }
 

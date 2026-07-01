@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../interface/icons/material-symbols-type';
 import { normalizeVector } from './math';
 
 export type CardinalDirectionVector = [number, number];
@@ -8,7 +8,7 @@ export interface CardinalDirection {
   id: number;
   name: string;
   symbol: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
 }
 
 export const UnknownCardinalDirection: CardinalDirection = {

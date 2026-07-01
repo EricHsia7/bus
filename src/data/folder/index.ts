@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 // import { generateLabelFromAddresses } from '../../tools/address';
 // import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
@@ -68,7 +68,7 @@ export type FolderContent = FolderContentStop | FolderContentRoute | FolderConte
 
 export interface Folder {
   name: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   id: string;
   timestamp: number;
 }

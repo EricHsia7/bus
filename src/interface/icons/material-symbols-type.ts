@@ -1,1 +1,1 @@
-export type MaterialSymbols = string;
+export type MaterialSymbol = string;

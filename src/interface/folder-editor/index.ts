@@ -2,7 +2,7 @@ import { Folder, FolderContent, getFolder, listFolderContent, removeFromFolder, 
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openIconSelector } from '../icon-selector/index';
 import { getIconElement } from '../icons/index';
-import { MaterialSymbols } from '../icons/material-symbols-type';
+import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -33,7 +33,7 @@ function generateElementOfItem(folder: Folder, item: FolderContent): HTMLElement
   // Icon, context, main text
   let context = '';
   let main = '';
-  let icon: MaterialSymbols = '';
+  let icon: MaterialSymbol = '';
   switch (item.type) {
     case 'stop':
       icon = 'location_on';

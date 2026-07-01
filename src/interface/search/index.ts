@@ -7,7 +7,7 @@ import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
 import { dataDownloadCompleted } from '../home/index';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
-import { MaterialSymbols } from '../icons/material-symbols-type';
+import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, scrollDocumentToTop, showPreviousPage } from '../index';
 import { openLocation } from '../location/index';
 import { promptMessage } from '../prompt/index';
@@ -224,7 +224,7 @@ function generateElementOfSearchResultItem(): HTMLElement {
 }
 
 export function updateSearchResult(): void {
-  const typeToIcon: Array<MaterialSymbols> = ['route', 'location_on', 'directions_bus'];
+  const typeToIcon: Array<MaterialSymbol> = ['route', 'location_on', 'directions_bus'];
 
   function updateItem(element: HTMLElement, currentItem: SearchResult, previousItem: SearchResult | null): void {
     function updateTypeIcon(item: SearchResult, element: HTMLElement): void {
@@ -326,7 +326,7 @@ export function switchSearchTypeFilter(): void {
   } else {
     newType = -1;
   }
-  const icons: Array<MaterialSymbols> = ['filter_list', 'route', 'location_on', 'directions_bus'];
+  const icons: Array<MaterialSymbol> = ['filter_list', 'route', 'location_on', 'directions_bus'];
   setIcon(searchTypeFilterButtonElement, icons[newType + 1]);
   searchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();
