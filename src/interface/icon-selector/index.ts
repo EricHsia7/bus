@@ -4,6 +4,7 @@ import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { booleanToString, generateIdentifier } from '../../tools/index';
 import { getCSSVariableValue } from '../../tools/style';
+import { openIconSelectorSearch } from '../icon-selector-search';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -11,6 +12,8 @@ const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
 const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
 const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray');
 const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
+const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
+const rightButtonElement = elementQuerySelector(headElement, '.css_icon_selector_button_right');
 
 let currentIntegration: IntegratedMaterialSymbols = [];
 let currentItemsLength: number = 0;
@@ -445,6 +448,12 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     stretchState.resize(itemsLength);
     tabState.resize(itemsLength);
     trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+  }
+
+  if (previousInputElement !== inputElement) {
+    rightButtonElement.onclick = function () {
+      openIconSelectorSearch(inputElement);
+    };
   }
 
   if (visibleElementsQuantity !== currentItemElementsLength) {

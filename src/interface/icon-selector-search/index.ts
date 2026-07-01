@@ -4,10 +4,13 @@ import { MaterialSymbolsSearchResult, MaterialSymbolsSearchResults, prepareForMa
 import { generateIdentifier } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { containPhoneticSymbols } from '../../tools/text';
+import { closeIconSelector } from '../icon-selector';
 import { getBlankIconElement, setIcon } from '../icons';
+import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 let previousSearchResults: MaterialSymbolsSearchResults = [];
+let previousInputElement;
 let initialized: boolean = false;
 
 const iconSelectorSearchField = documentQuerySelector('.css_icon_selector_search_field');
@@ -41,9 +44,9 @@ export function hideIconSelectorSearch(): void {
   iconSelectorSearchField.setAttribute('displayed', 'false');
 }
 
-export function openIconSelectorSearch(): void {
+export function openIconSelectorSearch(inputElement: HTMLInputElement): void {
   pushPageHistory('IconSelectorSearch');
-  initializeIconSelectorSearchField();
+  initializeIconSelectorSearchField(inputElement);
   showIconSelectorSearch();
   hidePreviousPage();
 }
@@ -80,7 +83,7 @@ export function initializeIconSelectorSearchInput(): void {
 }
 
 function updateResults(): void {
-  function updateItem(thisElement: HTMLElement, currentItem: MaterialSymbolsSearchResult, previousItem: MaterialSymbolsSearchResult | null): void {
+  function updateItem(thisElement: HTMLElement, inputElement: HTMLInputElement, currentItem: MaterialSymbolsSearchResult, previousItem: MaterialSymbolsSearchResult | null): void {
     function updateTypeIcon(thisElement: HTMLElement, thisItem: MaterialSymbolsSearchResult): void {
       const iconElement = elementQuerySelector(thisElement, '.css_icon_selector_search_result_icon');
       setIcon(iconElement, thisItem.item);
@@ -91,18 +94,22 @@ function updateResults(): void {
       nameElement.innerText = thisItem.item;
     }
 
-    function updateOnclick(thisElement: HTMLElement, thisItem: MaterialSymbolsSearchResult): void {}
+    function updateOnclick(thisElement: HTMLElement, inputElement: HTMLInputElement, thisItem: MaterialSymbolsSearchResult): void {
+      thisElement.onclick = function () {
+        selectIcon(thisItem.item, inputElement);
+      };
+    }
 
     if (previousItem !== null) {
       if (currentItem.item !== previousItem.item) {
         updateTypeIcon(thisElement, currentItem);
         updateName(thisElement, currentItem);
-        updateOnclick(thisElement, currentItem);
+        updateOnclick(thisElement, inputElement, currentItem);
       }
     } else {
       updateTypeIcon(thisElement, currentItem);
       updateName(thisElement, currentItem);
-      updateOnclick(thisElement, currentItem);
+      updateOnclick(thisElement, inputElement, currentItem);
     }
   }
 
@@ -136,9 +143,9 @@ function updateResults(): void {
       const thisItem = searchResults[i];
       const previousItem = previousSearchResults[i];
       if (previousItem) {
-        updateItem(thisElement, thisItem, previousItem);
+        updateItem(thisElement, previousInputElement, thisItem, previousItem);
       } else {
-        updateItem(thisElement, thisItem, null);
+        updateItem(thisElement, previousInputElement, thisItem, null);
       }
     }
 
@@ -146,10 +153,17 @@ function updateResults(): void {
   }
 }
 
-async function initializeIconSelectorSearchField() {
+async function initializeIconSelectorSearchField(inputElement: HTMLInputElement) {
   const requestID = generateIdentifier();
-  inputElement.value = '';
+  // inputElement.value = '';
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   prepareForMaterialSymbolsSearch(materialSymbolsSearchIndex);
   deleteDataReceivingProgress(requestID);
+  previousInputElement = inputElement;
+}
+
+function selectIcon(icon: MaterialSymbol, inputElement: HTMLInputElement): void {
+  inputElement.value = icon;
+  closeIconSelectorSearch();
+  closeIconSelector();
 }
