@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { hasOwnProperty } from '../../tools/index';
@@ -72,7 +72,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
 
 export interface LocationGroupProperty {
   key: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   value: string;
 }
 

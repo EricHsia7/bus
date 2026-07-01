@@ -1,0 +1,593 @@
+@property --b-cssvar-icon-selector-tray-height {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-icon-selector-content-translate-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --b-cssvar-icon-selector-item-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* tray */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray {
+  position: relative;
+  width: 100%;
+  height: var(--b-cssvar-icon-selector-tray-height);
+  margin-bottom: var(--b-cssvar-safe-area-bottom);
+  overflow: clip;
+}
+
+/* tray > content */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  transform: translateY(var(--b-cssvar-icon-selector-content-translate-y));
+}
+
+/* tray > content > item */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  background: var(--b-cssvar-ffffff-normal);
+  overflow: clip;
+  contain: layout;
+}
+
+/* stretching: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"] {
+  position: absolute;
+  left: 0px;
+  top: var(--b-cssvar-icon-selector-item-y);
+}
+
+/* push-direction: 0 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="1"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 0 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="0"][push-state="2"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 1 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="1"] {
+  transform: translateY(50px);
+  /* compensate the height of the already collapsed element separated from the document flow */
+}
+
+/* push-direction: 1 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="1"][push-state="2"] {
+  transform: translateY(calc(50px + 141px));
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* push-direction: 2 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="0"] {
+  transform: translateY(0px);
+}
+
+/* push-direction: 2 && push-state: 1 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="1"] {
+  transform: translateY(calc(50px + 141px));
+  /* compensate the height of the already expanded element separated from the document flow */
+}
+
+/* push-direction: 2 && push-state: 2 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[push-direction="2"][push-state="2"] {
+  transform: translateY(50px);
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: false && stretching: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="false"] {
+  height: 50px;
+}
+
+/* stretched: false && stretching: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="false"][stretching="true"] {
+  height: calc(50px + 141px);
+  /* head: 50px + body: 141px */
+}
+
+/* stretched: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] {
+  height: calc(50px + 141px);
+  /* head: 50px + body: 141px */
+}
+
+/* tray > content > item > head */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 50px;
+  width: 100%;
+  overflow: clip;
+  contain: layout;
+}
+
+/* tray > content > item > head > icon */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 50px;
+  overflow: clip;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon {
+  top: 10px;
+  left: 12.5px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-333333);
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon span.css_material_symbols_rounded {
+  visibility: hidden;
+}
+
+/* tray > content > item > head > name */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_name {
+  position: absolute;
+  top: 10px;
+  left: 55px;
+  width: calc(100% - 55px - 10px - 85px - 15px);
+  /* icon: 55px + gap: 10px + capsule: 30px + padding: 15px */
+  height: 30px;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  overflow: clip;
+  color: var(--b-cssvar-333333);
+  font-size: 20px;
+  line-height: 30px;
+  /* text-overflow: ellipsis doesn't work with display: flex -> set line-height to container height to center text vertically */
+  font-weight: 400;
+  contain: layout;
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_name {
+  color: rgba(0, 0, 0, 0);
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+/* tray > content > item > head > capsule */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 85px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  overflow: clip;
+  contain: layout;
+}
+
+/* tray > content > item > head > capsule > main */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_main {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 55px;
+  height: 30px;
+  color: var(--b-cssvar-333333-60-flattened);
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: clip;
+  contain: layout;
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_main {
+  visibility: hidden;
+}
+
+/* tray > content > item > head > capsule > stretch */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  contain: layout;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
+  transform: rotate(0deg);
+  color: var(--b-cssvar-333333);
+}
+
+/* stretching: true && animation: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretching="true"][animation="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
+  transition: transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* stretched: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
+  transform: rotate(180deg);
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch {
+  visibility: hidden;
+}
+
+/* tray > content > item > head > capsule > separator */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_separator {
+  position: absolute;
+  top: 3px;
+  left: calc(55px - 1px / 2);
+  width: 1px;
+  height: 24px;
+  background: var(--b-cssvar-aeaeb2);
+}
+
+/* skeleton-screen: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_separator {
+  visibility: hidden;
+}
+
+/* tray > content > item > body */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  width: 100%;
+  height: 141px;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: inherit;
+  contain: layout;
+}
+
+/* animation: true && stretching: true && skeleton-screen: false && push-direction: 0 && push-state: 0 */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretching="true"][skeleton-screen="false"][push-direction="0"][push-state="0"] .css_icon_selector_item_body {
+  transition: opacity var(--b-cssvar-transition-duration), transform var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* ststretched: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[stretched="true"] .css_icon_selector_item_body {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+/* displayed: false */
+.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body[displayed="false"] {
+  visibility: hidden;
+}
+
+/* displayed: true */
+.css_icon_selector_field[displayed="true"] .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body[displayed="true"] {
+  visibility: visible;
+}
+
+/* tray > content > item > body > buttons */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons {
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  width: calc(100% - 15px - 15px);
+  /* padding: 15px + padding: 15px */
+  height: 35px;
+  overflow-x: scroll;
+  overflow-y: clip;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  white-space: nowrap;
+  word-break: keep-all;
+  border-radius: var(--b-cssvar-border-radius-large);
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons::-webkit-scrollbar {
+  display: none;
+}
+
+/* tray > content > item > body > buttons > button */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button {
+  position: relative;
+  height: 35px;
+  display: inline-flex;
+  background-color: var(--b-cssvar-ededf2);
+  color: var(--b-cssvar-333333);
+  border-radius: var(--b-cssvar-border-radius-large);
+  align-items: center;
+  justify-content: center;
+  padding: 0px 9px;
+  margin-right: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: none;
+  overflow: clip;
+  vertical-align: top;
+  contain: layout;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button:last-child {
+  margin-right: 0px;
+}
+
+/* highlighted: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button[highlighted="true"] {
+  background-color: var(--b-cssvar-main-color-16-flattened);
+  color: var(--b-cssvar-main-color);
+}
+
+/* animation: true && stretched: true && skeleton-screen: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button {
+  transition: background-color var(--b-cssvar-transition-duration), color var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* tray > content > item > body > buttons > button > button icon */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button .css_icon_selector_item_button_icon {
+  position: relative;
+  display: inline-flex;
+  height: 35px;
+  width: 18px;
+  align-items: center;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button .css_icon_selector_item_button_icon span.css_material_symbols_rounded {
+  width: 15px;
+  height: 15px;
+  font-size: 18px;
+  color: var(--b-cssvar-333333);
+}
+
+/* animation: true && stretched: true && skeleton-screen: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][stretched="true"][skeleton-screen="false"] .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button .css_icon_selector_item_button_icon span.css_material_symbols_rounded {
+  transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* highlighted: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button[highlighted="true"] .css_icon_selector_item_button_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-main-color);
+  --b-cssvar-font-variation-settings-fill: 1;
+}
+
+/* tray > content > item > body > description, related, keywords  */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords {
+  position: absolute;
+  top: calc(5px + 35px + 5px);
+  left: 15px;
+  width: calc(100% - 15px - 15px);
+  /* padding: 15px + padding: 15px */
+  height: calc(141px - (5px + 35px + 5px) - 5px);
+  /* gap: 5px + buttons: 35px + gap: 5px + padding: 5px */
+  contain: layout;
+  visibility: inherit;
+}
+
+/* displayed: false */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description[displayed="false"],
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[displayed="false"],
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[displayed="false"] {
+  visibility: hidden;
+}
+
+/* empty: true */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description[empty="true"]::after,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[empty="true"]::after,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[empty="true"]::after {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--b-cssvar-333333-60-flattened);
+  white-space: nowrap;
+  word-break: keep-all;
+  font-size: 16px;
+  contain: layout;
+  overflow: clip;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description[empty="true"]::after {
+  content: '目前沒有描述可顯示'
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related[empty="true"]::after {
+  content: '目前沒有相關圖標可顯示'
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords[empty="true"]::after {
+  content: '目前沒有標籤可顯示'
+}
+
+/* tray > content > item > body > description */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_description {
+  color: var(--b-cssvar-333333-60-flattened);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  box-orient: vertical;
+  font-size: 15px;
+  line-clamp: 4;
+  line-height: calc((141px - (5px + 35px + 5px) - 5px) / 4);
+  text-align: start;
+  word-break: break-word;
+  overflow: clip;
+}
+
+/* tray > content > item > body > related, keywords */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords {
+  display: block;
+  overflow-x: scroll;
+  overflow-y: clip;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  word-break: keep-all;
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related::-webkit-scrollbar,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords::-webkit-scrollbar {
+  display: none;
+}
+
+/* tray > content > item > body > related, keywords > item */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item {
+  position: relative;
+  width: calc(60% + 18px);
+  /* w = W - 15 (padding) - 15 (padding) → W * 0.6 = (w + 30) * 0.6 = 60% + 18px */
+  /* W = window width */
+  /* w = parent width */
+  height: calc(141px - (5px + 35px + 5px) - 5px);
+  box-sizing: border-box;
+  background-color: var(--b-cssvar-f9f9fb-normal);
+  border-radius: var(--b-cssvar-border-radius-normal);
+  display: inline-flex;
+  margin-right: 5px;
+  scroll-snap-align: center;
+  contain: layout;
+  vertical-align: top;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item:last-child,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item:last-child {
+  margin-right: 0px;
+}
+
+/* tray > content > item > body > related, keywords > item > head */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_head {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: calc(100% - 10px - 10px);
+  height: 25px;
+}
+
+/* tray > content > item > body > related, keywords > item > head > icon */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_icon,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_head .css_icon_selector_item_keywords_item_head_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_icon span.css_material_symbols_rounded,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_head .css_icon_selector_item_keywords_item_head_icon span.css_material_symbols_rounded {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: var(--b-cssvar-333333);
+}
+
+/* tray > content > item > body > related, keywords > item > head > name, keyword */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_head .css_icon_selector_item_related_item_head_name,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_head .css_icon_selector_item_keywords_item_head_keyword {
+  position: absolute;
+  top: 0px;
+  left: calc(25px + 5px);
+  width: calc(100% - 25px - 5px);
+  height: 25px;
+  font-size: 20px;
+  line-height: 25px;
+  color: var(--b-cssvar-333333);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: clip;
+  contain: layout;
+  text-overflow: ellipsis;
+}
+
+/* tray > content > item > body > related, keywords > item > actions */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_actions {
+  position: absolute;
+  top: calc(10px + 25px + 10px);
+  /* padding: 10px + head: 25px + gap: 10px */
+  left: 10px;
+  width: calc(100% - 10px - 10px);
+  /* padding: 10px + padding: 10px */
+  display: grid;
+  height: 36px;
+  padding: 0px;
+  column-gap: 5px;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions {
+  grid-template-columns: 1fr 1fr;
+}
+
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_actions {
+  grid-template-columns: 1fr;
+}
+
+/* tray > content > item > body > related, keywords > item > actions > action button */
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_related .css_icon_selector_item_related_item .css_icon_selector_item_related_item_actions .css_icon_selector_item_related_item_action_button,
+.css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_keywords .css_icon_selector_item_keywords_item .css_icon_selector_item_keywords_item_actions .css_icon_selector_item_keywords_item_action_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--b-cssvar-ededf2);
+  border-radius: var(--b-cssvar-border-radius-large);
+  color: var(--b-cssvar-333333);
+}

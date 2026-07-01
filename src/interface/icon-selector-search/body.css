@@ -1,4 +1,4 @@
-.css_icon_selector_field .css_icon_selector_body {
+.css_icon_selector_search_field .css_icon_selector_search_body {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -12,6 +12,6 @@
   overflow-anchor: none;
 }
 
-.css_icon_selector_field .css_icon_selector_body::-webkit-scrollbar {
+.css_icon_selector_search_field .css_icon_selector_search_body::-webkit-scrollbar {
   display: none;
 }

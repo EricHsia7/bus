@@ -1,6 +1,6 @@
 import { openDataUsage } from '../../interface/data-usage/index';
 import { openFolderManager } from '../../interface/folder-manager/index';
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
 import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
 import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewSourceCodeOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
@@ -49,7 +49,7 @@ export type SettingSelectOptions = Array<SettingSelectOption>;
 export interface SettingSelect {
   key: string;
   name: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   status: string;
   action: Function;
   type: 'select';
@@ -62,7 +62,7 @@ export interface SettingSelect {
 export interface SettingPage {
   key: string;
   name: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   status: string;
   type: 'page';
   action: Function;
@@ -72,7 +72,7 @@ export interface SettingPage {
 export interface SettingInfo {
   key: string;
   name: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   status: string;
   type: 'info';
   action: Function;
@@ -82,7 +82,7 @@ export interface SettingInfo {
 export interface SettingAction {
   key: string;
   name: string;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   status: string;
   type: 'action';
   action: Function;

@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
-import { MaterialSymbols } from '../icons/material-symbols-type';
+import { MaterialSymbol } from '../icons/material-symbols-type';
 
 const promptElement = documentQuerySelector('.css_prompt');
 const promptIconElement = elementQuerySelector(promptElement, '.css_prompt_icon');
@@ -14,7 +14,7 @@ export interface PromptButton {
   action: Function;
 }
 
-export function promptMessage(icon: MaterialSymbols, message: string, button?: PromptButton | null): void {
+export function promptMessage(icon: MaterialSymbol, message: string, button?: PromptButton | null): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
 
   const promptElementAnimations = promptElement.getAnimations();

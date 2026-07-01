@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { generateIdentifier, hasOwnProperty, isValidURL } from '../../tools/index';
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -361,7 +361,7 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
 export interface ScheduleNotificationOption {
   name: string;
   time_offset: number;
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   index: number;
 }
 

@@ -1,10 +1,19 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { getIntersection } from '../../tools/array';
 import { hasOwnProperty } from '../../tools/index';
 import { levenshtein } from '../../tools/levenshtein';
 import { UnpackedMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 
-let searchStructure = {};
+type wordIndexKey = string;
+
+interface SearchStructure {
+  dictionary: Array<string>;
+  names: Array<string>;
+  wordToSymbols: Record<wordIndexKey, Array<number>>;
+  symbolToWords: Array<Array<number>>;
+}
+
+let searchStructure: SearchStructure = { dictionary: [], names: [], wordToSymbols: {}, symbolToWords: [] };
 let readyToSearch = false;
 
 export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMaterialSymbolsSearchIndex): void {
@@ -13,8 +22,8 @@ export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMateria
   const dictionary = materialSymbols.dictionary.split(',');
   const symbols = materialSymbols.symbols;
   const names = [];
-  const wordToSymbols: { [wordIndexKey: string]: Array<number> } = {};
-  const symbolToWords: Array<Array<number>> = []; // [[0, 1, 2, 3], [4, 5, 6], ...]
+  const wordToSymbols: SearchStructure['wordToSymbols'] = {};
+  const symbolToWords: SearchStructure['symbolToWords'] = []; // [[0, 1, 2, 3], [4, 5, 6], ...]
 
   let nameIndex = 0;
   for (const symbol in symbols) {
@@ -36,7 +45,14 @@ export function prepareForMaterialSymbolsSearch(materialSymbols: UnpackedMateria
   readyToSearch = true;
 }
 
-export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): Array<{ item: MaterialSymbols; score: number }> {
+export interface MaterialSymbolsSearchResult {
+  item: MaterialSymbol;
+  score: number;
+}
+
+export type MaterialSymbolsSearchResults = Array<MaterialSymbolsSearchResult>;
+
+export function searchForMaterialSymbols(query: string, searchFrom: number = 0, skipBroadTerms: boolean = true, broadThreshold: number = 0.3): MaterialSymbolsSearchResults {
   if (!readyToSearch) return [];
 
   const { dictionary, names, wordToSymbols, symbolToWords } = searchStructure;
@@ -105,7 +121,7 @@ export function searchForMaterialSymbols(query: string, searchFrom: number = 0, 
     scored.push({
       item: names[candidates[i]],
       score: score
-    });
+    } as MaterialSymbolsSearchResult);
   }
 
   scored.sort((a, b) => b.score - a.score);

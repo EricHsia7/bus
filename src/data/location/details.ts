@@ -1,4 +1,4 @@
-import { MaterialSymbols } from '../../interface/icons/material-symbols-type';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
@@ -6,7 +6,7 @@ import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export interface IntegratedLocationDetailsAction {
-  icon: MaterialSymbols;
+  icon: MaterialSymbol;
   action: Function;
   key: string;
   name: string;
