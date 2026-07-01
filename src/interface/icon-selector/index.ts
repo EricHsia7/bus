@@ -227,6 +227,8 @@ function generateElementOfRelatedItem(): HTMLElement {
   nameElement.classList.add('css_icon_selector_item_related_item_head_name');
   headElement.appendChild(nameElement);
 
+  element.appendChild(headElement);
+
   return element;
 }
 
