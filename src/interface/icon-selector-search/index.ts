@@ -11,6 +11,7 @@ import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage 
 
 let previousSearchResults: MaterialSymbolsSearchResults = [];
 let previousInputElement;
+let previousQuery: string = '';
 let initialized: boolean = false;
 
 const iconSelectorSearchField = documentQuerySelector('.css_icon_selector_search_field');
@@ -114,7 +115,7 @@ function updateResults(): void {
   }
 
   const query = searchInputElement.value;
-  if (!containPhoneticSymbols(query)) {
+  if (!containPhoneticSymbols(query) && query !== previousQuery) {
     const searchResults = searchForMaterialSymbols(query);
     const searchResultsLength = searchResults.length;
 
@@ -150,6 +151,7 @@ function updateResults(): void {
     }
 
     previousSearchResults = searchResults;
+    previousQuery = query;
   }
 }
 
