@@ -4,7 +4,7 @@ import { getMaterialSymbolsDescription } from '../apis/getMaterialSymbolsDescrip
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
 import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex';
 import { getMaterialSymbolsSimilarity } from '../apis/getMaterialSymbolsSimilarity';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
+import { deleteDataReceivingProgress } from '../apis/loader';
 
 export interface IntegratedMaterialSymbolsItem {
   name: MaterialSymbols;
