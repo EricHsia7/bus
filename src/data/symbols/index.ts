@@ -48,7 +48,7 @@ export async function integrateMaterialSymbols(requestID: string): Promise<Integ
     }
 
     // collect data from similarity
-    if (hasOwnProperty(similarity, symbol)) {
+    if (hasOwnProperty(similarity.similarity, symbol)) {
       const symbolIndices = similarity.similarity[symbol];
       const symbolIndicesLength = symbolIndices.length;
       const relatedSymbols = new Array(symbolIndicesLength).fill('');

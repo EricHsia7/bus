@@ -288,6 +288,8 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         setIcon(iconElement, thisName);
         nameElement.innerText = thisName;
       }
+
+      relatedElement.setAttribute('empty', booleanToString(length === 0));
     }
 
     function updateKeywords(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {}
