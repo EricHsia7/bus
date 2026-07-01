@@ -1,4 +1,8 @@
+let initialized: boolean = false;
+
 export function initializeIconSelectorSearchInput(): void {
+  if (initialized) return;
+
   // searchInputElement.addEventListener('paste', function () {
   //   updateMaterialSymbolsSearchResult();
   // });

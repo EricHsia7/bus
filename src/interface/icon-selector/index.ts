@@ -25,14 +25,13 @@ const itemExtraHeight = 141;
 const stretchState = new BitState(1);
 const tabState = new BitState(1);
 
-let currentItemElementsLength = 0;
+let currentItemElementsLength: number = 0;
 // let windowWidth = 0;
-let windowHeight = 0;
-let visibleElementsQuantity = 0;
-let currentStartIndex = -1;
-let offsetY = 0;
+let windowHeight: number = 0;
+let visibleElementsQuantity: number = 0;
+let currentStartIndex: number = -1;
+let offsetY: number = 0;
 let itemElements: Array<HTMLElement> = [];
-
 let initialized: boolean = false;
 
 export function initializeIconSelectorVirtualScroll(): void {
