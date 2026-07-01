@@ -138,6 +138,7 @@ import './interface/icon-selector/index.css';
 import './interface/icon-selector-search/field.css';
 import './interface/icon-selector-search/head.css';
 import './interface/icon-selector-search/body.css';
+import './interface/icon-selector-search/results.css';
 
 import './interface/personal-schedule-manager/field.css';
 import './interface/personal-schedule-manager/head.css';
