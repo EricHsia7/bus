@@ -1,9 +1,3 @@
-@property --b-cssvar-route-group-quantity {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 2;
-}
-
 .css_route_field {
   position: fixed;
   top: 0px;

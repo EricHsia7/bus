@@ -1,3 +1,9 @@
+@property --b-cssvar-route-group-quantity {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 2;
+}
+
 .css_route_field .css_route_groups {
   position: absolute;
   top: 0px;

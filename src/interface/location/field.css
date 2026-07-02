@@ -1,9 +1,3 @@
-@property --b-cssvar-location-group-quantity {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 2;
-}
-
 .css_location_field {
   position: fixed;
   top: 0px;
