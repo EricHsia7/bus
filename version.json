@@ -1,7 +1,7 @@
 {
-  "build": 1337,
-  "hash": "e6d3ad3",
-  "full_hash": "e6d3ad324c231d1426d9a66c066a0501707ae7d4",
-  "branch_name": "main",
-  "timestamp": "2026-07-02T02:50:05.201Z"
+  "build": 1338,
+  "hash": "b8ca792",
+  "full_hash": "b8ca7928e21d83a74dc9ad0ad47b768ce2d08a76",
+  "branch_name": "dev-mangle-css-namespace-plugin",
+  "timestamp": "2026-07-02T05:19:23.419Z"
 }
