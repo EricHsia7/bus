@@ -699,9 +699,9 @@
             registration.installing.addEventListener('statechange', () => {
               if (registration.installing.state === 'installed') {
                 if (navigator.serviceWorker.controller) {
-                  console.log('Assets updated.');
+                  console.log('Assets updated.', performance.now());
                 } else {
-                  console.log('First time use.');
+                  console.log('First time use.', performance.now());
                 }
               }
             });
