@@ -689,16 +689,32 @@
     <!-- splash screen -->
     <div class="css_splash_screen" displayed="true"></div>
     <script>
+      async function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('./service-worker.js');
+          registration.addEventListener('updatefound', () => {
+            console.log('Service Worker update found.', performance.now());
+          });
+          if (registration.installing) {
+            registration.installing.addEventListener('statechange', () => {
+              if (registration.installing.state === 'installed') {
+                if (navigator.serviceWorker.controller) {
+                  console.log('Assets updated.', performance.now());
+                } else {
+                  console.log('First time use.', performance.now());
+                }
+              }
+            });
+          }
+          registration.update();
+        }
+      }
       document.addEventListener('DOMContentLoaded', function () {
         bus.initialize();
       });
       window.addEventListener('load', function () {
         bus.secondlyInitialize();
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('./service-worker.js').then((registration) => {
-            registration.update();
-          });
-        }
+        registerServiceWorker();
       });
     </script>
   </body>
