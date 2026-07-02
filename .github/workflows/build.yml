@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-service-worker-events
 
 jobs:
   build:
