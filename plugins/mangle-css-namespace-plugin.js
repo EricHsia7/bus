@@ -1,12 +1,12 @@
 const { RawSource, ReplaceSource, SourceMapSource } = require('webpack-sources'); // one module instance
 
-const PLUGIN = 'MangleCssNamespacePlugin';
+const pluginName = 'MangleCssNamespacePlugin';
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Deterministic, collision-resistant short-name generator.
 // Same input set => same output names (stable across builds).
-const START = 'abcdefghijklmnopqrstuvwxyz'; // valid ident start
-const CONT = START + '0123456789'; // valid ident continuation
+const starting = 'abcdefghijklmnopqrstuvwxyz'; // valid ident start
+const continuation = starting + '0123456789'; // valid ident continuation
 
 class NameGenerator {
   constructor({ prefix = '', reserved = new Set() } = {}) {
@@ -17,11 +17,11 @@ class NameGenerator {
   }
 
   _encode(n) {
-    let name = START[n % START.length];
-    n = Math.floor(n / START.length);
+    let name = starting[n % starting.length];
+    n = Math.floor(n / starting.length);
     while (n > 0) {
-      name += CONT[n % CONT.length];
-      n = Math.floor(n / CONT.length);
+      name += continuation[n % continuation.length];
+      n = Math.floor(n / continuation.length);
     }
     return name;
   }
@@ -57,13 +57,13 @@ class MangleCssNamespacePlugin {
     const { Compilation } = compiler.webpack;
     const HtmlWebpackPlugin = this._resolveHtmlPlugin(compiler);
 
-    compiler.hooks.thisCompilation.tap(PLUGIN, (compilation) => {
+    compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
       let namespaceMap = null;
       const ensureNamespaceMap = () => (namespaceMap = namespaceMap || this._buildNamespaceMap(compilation));
 
       compilation.hooks.processAssets.tapPromise(
         {
-          name: PLUGIN,
+          name: pluginName,
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
         async (assets) => {
@@ -88,7 +88,7 @@ class MangleCssNamespacePlugin {
 
       // HtmlWebpackPlugin output: NOT in compilation.assets yet, so hook its own pipeline. beforeEmit exposes the final `index.html` string.
       if (HtmlWebpackPlugin && typeof HtmlWebpackPlugin.getHooks === 'function') {
-        HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(PLUGIN, (data, cb) => {
+        HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(pluginName, (data, cb) => {
           try {
             const m = ensureNamespaceMap();
             if (m.size && data && typeof data.html === 'string') {
