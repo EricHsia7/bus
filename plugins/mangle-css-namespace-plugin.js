@@ -59,7 +59,7 @@ class MangleCssNamespacePlugin {
 
     compiler.hooks.thisCompilation.tap(PLUGIN, (compilation) => {
       let namespaceMap = null;
-      const ensureNamespaceMap = () => (namespaceMap = namespaceMap || this._buildMap(compilation));
+      const ensureNamespaceMap = () => (namespaceMap = namespaceMap || this._buildNamespaceMap(compilation));
 
       compilation.hooks.processAssets.tapPromise(
         {
@@ -73,7 +73,8 @@ class MangleCssNamespacePlugin {
           for (const [pathname, source] of Object.entries(assets)) {
             if (!this.opts.test.test(pathname)) continue;
 
-            const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+            // const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+            const { source: originalSource, map: originalMap } = source.sourceAndMap(); // Capture the unprocessed state
 
             this._rewriteAsset(compilation, pathname, source, originalSource, originalMap, namespaceMap);
           }
@@ -119,7 +120,7 @@ class MangleCssNamespacePlugin {
     return Object.keys(compilation.assets).filter((f) => this.opts.test.test(f));
   }
 
-  _discoveryRe() {
+  _getDiscoveryRegex() {
     const alt = this.opts.prefixes.map(escapeRe).join('|');
     return new RegExp(`(?:${alt})[A-Za-z0-9_-]*`, 'g'); // non-capturing prefix
   }
@@ -127,8 +128,8 @@ class MangleCssNamespacePlugin {
   // Deterministic name map, discovered from the CSS/JS already in the compilation.
   // HTML is intentionally NOT a discovery source: names used there must be defined
   // in CSS/JS anyway, and we only ever apply mappings that already exist.
-  _buildMap(compilation) {
-    const re = this._discoveryRe();
+  _buildNamespaceMap(compilation) {
+    const re = this._getDiscoveryRegex();
     const found = new Set();
     for (const file of this._matchingAssets(compilation)) {
       const src = compilation.assets[file].source().toString();
