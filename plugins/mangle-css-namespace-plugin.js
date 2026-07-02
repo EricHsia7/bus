@@ -5,7 +5,7 @@ const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Deterministic, collision-resistant short-name generator.
 // Same input set => same output names (stable across builds).
-const starting = 'abcdefghijklmnopqrstuvwxyz'; // valid ident start
+const starting = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; // valid ident start
 const continuation = starting + '0123456789'; // valid ident continuation
 
 class NameGenerator {
