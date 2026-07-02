@@ -1,4 +1,4 @@
-const { RawSource, ReplaceSource } = require('webpack-sources'); // one module instance
+const { RawSource, ReplaceSource, SourceMapSource } = require('webpack-sources'); // one module instance
 
 const PLUGIN = 'MangleCssNamespacePlugin';
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -58,32 +58,38 @@ class MangleCssNamespacePlugin {
     const HtmlWebpackPlugin = this._resolveHtmlPlugin(compiler);
 
     compiler.hooks.thisCompilation.tap(PLUGIN, (compilation) => {
-      // One map per compilation, built lazily so ordering vs. other plugins
-      // (like html-webpack-plugin) never matters.
-      let map = null;
-      const ensureMap = () => (map = map || this._buildMap(compilation));
+      let namespaceMap = null;
+      const ensureNamespaceMap = () => (namespaceMap = namespaceMap || this._buildMap(compilation));
 
-      // --- CSS / JS assets: rewrite before minification ---
-      compilation.hooks.processAssets.tapPromise({ name: PLUGIN, stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE - 1 }, async () => {
-        const m = ensureMap();
-        if (!m.size) return;
-        // CSS, JS, HTML: one and the same exact-token pass. No per-language
-        // routing — a purebred namespace token is unambiguous everywhere.
-        for (const file of this._matchingAssets(compilation)) {
-          this._rewriteAsset(compilation, file, compilation.assets[file], m);
-        }
-        if (this.opts.emitManifest) {
-          const json = JSON.stringify(Object.fromEntries(m), null, 2);
-          compilation.emitAsset(this.opts.manifestFilename, new RawSource(json));
-        }
-      });
+      compilation.hooks.processAssets.tapPromise(
+        {
+          name: PLUGIN,
+          stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+        },
+        async (assets) => {
+          const namespaceMap = ensureNamespaceMap();
+          if (!namespaceMap.size) return;
 
-      // --- HtmlWebpackPlugin output: NOT in compilation.assets yet, so hook
-      //     its own pipeline. beforeEmit exposes the final `data.html` string. ---
+          for (const [pathname, source] of Object.entries(assets)) {
+            if (!this.opts.test.test(pathname)) continue;
+
+            const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+
+            this._rewriteAsset(compilation, pathname, source, originalSource, originalMap, namespaceMap);
+          }
+
+          if (this.opts.emitManifest) {
+            const json = JSON.stringify(Object.fromEntries(namespaceMap), null, 2);
+            compilation.emitAsset(this.opts.manifestFilename, new RawSource(json));
+          }
+        }
+      );
+
+      // HtmlWebpackPlugin output: NOT in compilation.assets yet, so hook its own pipeline. beforeEmit exposes the final `index.html` string.
       if (HtmlWebpackPlugin && typeof HtmlWebpackPlugin.getHooks === 'function') {
         HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(PLUGIN, (data, cb) => {
           try {
-            const m = ensureMap();
+            const m = ensureNamespaceMap();
             if (m.size && data && typeof data.html === 'string') {
               data.html = this._rewriteString(data.html, m);
             }
@@ -158,23 +164,35 @@ class MangleCssNamespacePlugin {
 
   // CSS / JS / HTML assets: one dictionary-based, coordinate-safe pass over a snapshot.
   // Works uniformly because the tokens are reserved, language-agnostic namespaces — selectors, var(), shorthand values, @keyframes, @property, and attribute selectors are all just "the exact token appears here".
-  _rewriteAsset(compilation, file, originalSource, map) {
-    const raw = originalSource.source().toString();
-    const re = this._getTokenRegex(map);
-    const output = new ReplaceSource(new RawSource(raw)); // snapshot the raw string
+  _rewriteAsset(compilation, pathname, source, originalSource, originalMap, namespaceMap) {
+    const raw = source.source().toString();
+    const re = this._getTokenRegex(namespaceMap);
+    const output = new ReplaceSource(source);
     let m;
     let changed = false;
     while ((m = re.exec(raw))) {
       const dashes = m[1] || '';
       const name = m[2];
-      const mangled = map.get(name);
+      const mangled = namespaceMap.get(name);
       if (!mangled) continue;
       const start = m.index + dashes.length;
       const end = start + name.length - 1; // inclusive (webpack-sources)
       output.replace(start, end, mangled);
       changed = true;
     }
-    if (changed) compilation.updateAsset(file, output);
+    if (changed) {
+      compilation.updateAsset(
+        pathname,
+        new SourceMapSource(
+          output.source().toString(), // The modified code
+          pathname, // The filename
+          source.sourceAndMap().map, // The map for specific changes
+          originalSource, // The code before changes
+          originalMap, // The map before changes
+          true // Remove original source from the map? (usually true for production)
+        )
+      );
+    }
   }
 }
 
