@@ -187,7 +187,7 @@ class MangleCssNamespacePlugin {
         new SourceMapSource(
           output.source().toString(), // The modified code
           pathname, // The filename
-          source.sourceAndMap().map, // The map for specific changes
+          output.sourceAndMap().map, // The map for specific changes
           originalSource, // The code before changes
           originalMap, // The map before changes
           true // Remove original source from the map? (usually true for production)
