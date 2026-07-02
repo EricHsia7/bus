@@ -1,2 +1,0 @@
-!function(o,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define("bus",[],e):"object"==typeof exports?exports.bus=e():o.bus=e()}(self,()=>(()=>{"use strict";var o={};return self.onmessage=function(o){const e=function(o){const e={};for(const t of o){const o=`s_${t.Id}`,s={};s.seqNo=t.seqNo,s.goBack=t.goBack,s.stopLocationId=t.stopLocationId,e[o]=s}return e}(o.data);self.postMessage(e)},o=o.default})());
-//# sourceMappingURL=4717b4f8012c1d1ade5b.js.map
