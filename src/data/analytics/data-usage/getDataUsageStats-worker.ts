@@ -65,8 +65,8 @@ function processWorkerTask(data: data): DataUsageStats {
   const yAxis = `<line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height + padding}" />`;
 
   // Axis Labels
-  const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding}" text-anchor="middle" font-size="12">時間</text>`;
-  const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" transform="rotate(-90, ${padding * 0.7}, ${padding + height / 2})">累計傳輸量</text>`;
+  const xAxisLabel = `<text x="${padding + width / 2}" y="${padding + height + padding / 2}" text-anchor="middle" dominant-baseline="middle" font-size="12">時間</text>`;
+  const yAxisLabel = `<text x="${padding / 2}" y="${padding + height / 2}" text-anchor="middle" font-size="12" transform="rotate(-90, ${padding / 2}, ${padding + height / 2})">累計傳輸量</text>`;
 
   // Paths
   const simplifiedPath = simplifyPath(points, 1.1);
