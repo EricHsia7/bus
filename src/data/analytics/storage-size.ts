@@ -23,7 +23,7 @@ export type CategorizedSizes = { [key: string]: StoreSize };
 
 export interface StoreSizeStatistics {
   categorizedSizes: CategorizedSizes;
-  totalSize: number;
+  totalSize: string;
 }
 
 function storeIndexToCategory(store: number): StoreCategory {

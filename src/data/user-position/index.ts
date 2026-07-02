@@ -6,6 +6,10 @@ interface position {
   longitude: number;
 }
 
+interface positionWithID extends position {
+  id: number;
+}
+
 const userPosition = {
   current: {
     latitude: 0,
@@ -79,7 +83,7 @@ export function isNearUserPosition(latitude: number, longitude: number, radius: 
   }
 }
 
-export function getNearestPosition(positions: Array<position>, radius: number = 450): position | null {
+export function getNearestPosition(positions: Array<positionWithID>, radius: number = 450): positionWithID | null {
   const currentUserPosition = getUserPosition();
   let shortestDistance = Infinity;
   let nearestIndex = -1;
