@@ -3,7 +3,7 @@ import { openFolderManager } from '../../interface/folder-manager/index';
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { openNotificationScheduleManager } from '../../interface/notification-schedule-manager/index';
 import { openPersonalScheduleManager } from '../../interface/personal-schedule-manager/index';
-import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewSourceCodeOfCurrentVersion, viewGitHubRepository } from '../../interface/settings/index';
+import { downloadExportFile, openFileToImportData, showPromptToAskForPersistentStorage, viewGitHubRepository, viewSourceCodeOfCurrentVersion } from '../../interface/settings/index';
 import { openSettingsOptions } from '../../interface/settings/options';
 import { openStorage } from '../../interface/storage/index';
 import { hasOwnProperty } from '../../tools/index';
