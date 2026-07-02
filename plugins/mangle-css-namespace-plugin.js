@@ -1,7 +1,7 @@
 const { RawSource, ReplaceSource, SourceMapSource } = require('webpack-sources'); // one module instance
 
 const pluginName = 'MangleCssNamespacePlugin';
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Deterministic, collision-resistant short-name generator.
 // Same input set => same output names (stable across builds).
@@ -121,7 +121,7 @@ class MangleCssNamespacePlugin {
   }
 
   _getDiscoveryRegex() {
-    const alt = this.opts.prefixes.map(escapeRe).join('|');
+    const alt = this.opts.prefixes.map(escapeRegex).join('|');
     return new RegExp(`(?:${alt})[A-Za-z0-9_-]*`, 'g'); // non-capturing prefix
   }
 
@@ -150,7 +150,7 @@ class MangleCssNamespacePlugin {
   _getTokenRegex(map) {
     const names = [...map.keys()]
       .sort((a, b) => b.length - a.length) // longest first -> avoid incomplete substring replacement (ex: foo_bar, foo)
-      .map(escapeRe);
+      .map(escapeRegex);
     return new RegExp(`(?<![A-Za-z0-9_-])(--)?(${names.join('|')})(?![A-Za-z0-9_-])`, 'g');
   }
 
