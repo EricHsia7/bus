@@ -14,6 +14,7 @@ const { Hasher } = require('./hasher');
 const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
 const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
 const { BundleStatsMarkdownPlugin } = require('./plugins/bundle-stats-markdown-plugin');
+const { MangleCssNamespacePlugin } = require('./plugins/mangle-css-namespace-plugin');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
@@ -24,11 +25,10 @@ module.exports = (env, argv) => {
         filename: '[contenthash].css',
         runtime: false
       }),
-      new MangleCssClassPlugin({
-        classNameRegExp: '(css_|b-cssvar-)[a-z0-9_-]*',
+      new MangleCssNamespacePlugin({
+        prefixes: ['css_', 'b-cssvar-'],
         mangleCssVariables: true,
-        /*ignorePrefix: [''],*/
-        log: false
+        emitManifest: true
       }),
       new webpack.DefinePlugin({
         'process.env': {
