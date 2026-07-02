@@ -217,7 +217,6 @@ function generateElementOfItem(): HTMLElement {
   busTabButtonElement.classList.add('css_location_group_item_button');
   busTabButtonElement.setAttribute('highlighted', 'true');
   busTabButtonElement.setAttribute('type', 'tab');
-  busTabButtonElement.setAttribute('code', '0');
   const busTabIconElement = documentCreateDivElement();
   busTabIconElement.classList.add('css_location_group_item_button_icon');
   busTabIconElement.appendChild(getIconElement('directions_bus'));
@@ -232,7 +231,6 @@ function generateElementOfItem(): HTMLElement {
   arrivalTabButtonElement.classList.add('css_location_group_item_button');
   arrivalTabButtonElement.setAttribute('highlighted', 'false');
   arrivalTabButtonElement.setAttribute('type', 'tab');
-  arrivalTabButtonElement.setAttribute('code', '1');
   const arrivalTabIconElement = documentCreateDivElement();
   arrivalTabIconElement.classList.add('css_location_group_item_button_icon');
   arrivalTabIconElement.appendChild(getIconElement('departure_board'));
@@ -1145,21 +1143,12 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
 export function switchLocationBodyTab(itemElement: HTMLElement, tabCode: number): void {
   const itemBodyElement = elementQuerySelector(itemElement, '.css_location_group_item_body');
   const buttonsElement = elementQuerySelector(itemBodyElement, '.css_location_group_item_buttons');
-  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[highlighted="true"][type="tab"]');
-  for (const t of buttonElements) {
-    t.setAttribute('highlighted', 'false');
-  }
-  elementQuerySelector(buttonsElement, `.css_location_group_item_button[code="${tabCode}"]`).setAttribute('highlighted', 'true');
-  switch (tabCode) {
-    case 0:
-      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'true');
-      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'false');
-      break;
-    case 1:
-      elementQuerySelector(itemElement, '.css_location_group_item_buses').setAttribute('displayed', 'false');
-      elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times').setAttribute('displayed', 'true');
-      break;
-    default:
-      break;
+  const buttonElements = elementQuerySelectorAll(buttonsElement, '.css_location_group_item_button[type="tab"]');
+  const tabElements = [elementQuerySelector(itemElement, '.css_location_group_item_buses'), elementQuerySelector(itemElement, '.css_location_group_item_bus_arrival_times')];
+  const state = new Array(2).fill('false');
+  state[tabCode] = 'true';
+  for (let i = 0; i < 2; i++) {
+    buttonElements[i].setAttribute('highlighted', state[i]);
+    tabElements[i].setAttribute('displayed', state[i]);
   }
 }
