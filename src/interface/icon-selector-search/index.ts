@@ -107,6 +107,10 @@ function updateResults(): void {
         updateName(thisElement, currentItem);
         updateOnclick(thisElement, inputElement, currentItem);
       }
+
+      if (previousInputElement !== inputElement) {
+        updateOnclick(thisElement, inputElement, currentItem);
+      }
     } else {
       updateTypeIcon(thisElement, currentItem);
       updateName(thisElement, currentItem);
@@ -156,13 +160,13 @@ function updateResults(): void {
 }
 
 async function initializeIconSelectorSearchField(query: string, inputElement: HTMLInputElement) {
-  const requestID = generateIdentifier();
+  previousInputElement = inputElement;
   searchInputElement.value = query;
+  const requestID = generateIdentifier();
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
   prepareForMaterialSymbolsSearch(materialSymbolsSearchIndex);
   updateResults();
   deleteDataReceivingProgress(requestID);
-  previousInputElement = inputElement;
 }
 
 function selectIcon(icon: MaterialSymbol, inputElement: HTMLInputElement): void {
