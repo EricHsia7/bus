@@ -693,14 +693,14 @@
         if ('serviceWorker' in navigator) {
           const registration = await navigator.serviceWorker.register('./service-worker.js');
           registration.addEventListener('updatefound', () => {
-            console.log('Service Worker update found.', performance.now());
+            console.log('updatefound', performance.now());
+            const serviceWorker = registration.installing || registration.waiting || registration.active;
+            if (serviceWorker !== null) {
+              serviceWorker.addEventListener('statechange', (event) => {
+                console.log('statechange', event.target.state, performance.now());
+              });
+            }
           });
-          const serviceWorker = registration.installing || registration.waiting || registration.active;
-          if (serviceWorker !== null) {
-            serviceWorker.addEventListener('statechange', (event) => {
-              console.log(event.target.state);
-            });
-          }
           registration.update();
         }
       }
