@@ -697,6 +697,7 @@
           });
           if (registration.installing) {
             registration.installing.addEventListener('statechange', () => {
+              console.log(registration.installing.state);
               if (registration.installing.state === 'installed') {
                 if (navigator.serviceWorker.controller) {
                   console.log('Assets updated.', performance.now());
