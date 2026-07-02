@@ -7,9 +7,9 @@
 - [23.52 KB] **css-mangle-manifest.json**
 </details>
 <details>
-<summary>[33.27 KB] <b>*.html</b></summary>
+<summary>[33.26 KB] <b>*.html</b></summary>
 
-- [33.27 KB] **index.html**
+- [33.26 KB] **index.html**
 </details>
 <details>
 <summary>[349.9 KB] <b>*.js</b></summary>
