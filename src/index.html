@@ -695,16 +695,10 @@
           registration.addEventListener('updatefound', () => {
             console.log('Service Worker update found.', performance.now());
           });
-          if (registration.installing) {
-            registration.installing.addEventListener('statechange', () => {
-              console.log(registration.installing.state);
-              if (registration.installing.state === 'installed') {
-                if (navigator.serviceWorker.controller) {
-                  console.log('Assets updated.', performance.now());
-                } else {
-                  console.log('First time use.', performance.now());
-                }
-              }
+          const serviceWorker = registration.installing || registration.waiting || registration.active;
+          if (serviceWorker !== null) {
+            serviceWorker.addEventListener('statechange', (event) => {
+              console.log(event.target.state);
             });
           }
           registration.update();
