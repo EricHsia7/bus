@@ -17,3 +17,37 @@
   width: 100%;
   position: relative;
 }
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg defs linearGradient stop:nth-child(1) {
+  stop-color: var(--b-cssvar-main-color-30-flattened);
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg defs linearGradient stop:nth-child(2) {
+  stop-color: var(--b-cssvar-main-color-09-flattened);
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg defs linearGradient stop:nth-child(3) {
+  stop-color: var(--b-cssvar-ffffff-blocky);
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg path[component="fill"] {
+  stroke: none;
+  stroke-width: 0;
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg path[component="curve"] {
+  fill: none;
+  stroke: var(--b-cssvar-main-color);
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg text {
+  fill: var(--b-cssvar-333333);
+}
+
+.css_data_usage_field .css_data_usage_body .css_data_usage_chart svg line {
+  stroke: var(--b-cssvar-333333);
+  stroke-width: 1;
+}
