@@ -496,7 +496,7 @@ let Settings: SettingsObject = {
   persistent_storage: {
     key: 'persistent_storage',
     name: '永久儲存',
-    icon: 'storage',
+    icon: 'data_table',
     status: '',
     action: showPromptToAskForPersistentStorage,
     type: 'action',
