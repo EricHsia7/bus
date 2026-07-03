@@ -7,7 +7,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
-const advancedPreset = require('cssnano-preset-advanced');
 const { Hasher } = require('./hasher');
 const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
 const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
@@ -152,7 +151,6 @@ module.exports = (env, argv) => {
           minimizerOptions: {
             preset: [
               'default',
-              advancedPreset,
               {
                 discardComments: { removeAll: true }
               }
