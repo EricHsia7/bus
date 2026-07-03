@@ -496,7 +496,7 @@ let Settings: SettingsObject = {
   persistent_storage: {
     key: 'persistent_storage',
     name: '永久儲存',
-    icon: 'data_table',
+    icon: 'overview',
     status: '',
     action: showPromptToAskForPersistentStorage,
     type: 'action',
@@ -532,7 +532,7 @@ let Settings: SettingsObject = {
   branch: {
     key: 'branch',
     name: '分支',
-    icon: 'rebase',
+    icon: 'graph_8',
     status: '',
     type: 'info',
     action: function () {},
