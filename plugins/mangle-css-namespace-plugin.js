@@ -6,7 +6,9 @@ const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // Deterministic, collision-resistant short-name generator.
 // Same input set => same output names (stable across builds).
 const starting = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; // valid ident start
+const startingLength = starting.length;
 const continuation = starting + '0123456789'; // valid ident continuation
+const continuationLength = continuation.length;
 
 class NameGenerator {
   constructor({ prefix = '', reserved = new Set() } = {}) {
@@ -17,11 +19,11 @@ class NameGenerator {
   }
 
   _encode(n) {
-    let name = starting[n % starting.length];
-    n = Math.floor(n / starting.length);
+    let name = starting[n % startingLength];
+    n = Math.floor(n / startingLength);
     while (n > 0) {
-      name += continuation[n % continuation.length];
-      n = Math.floor(n / continuation.length);
+      name += continuation[n % continuationLength];
+      n = Math.floor(n / continuationLength);
     }
     return name;
   }
@@ -67,9 +69,18 @@ class MangleCssNamespacePlugin {
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
         async (assets) => {
+          // assets is of CompilationAssets
+          // interface CompilationAssets {
+          // 	[index: string]: Source;
+          // }
           const namespaceMap = ensureNamespaceMap();
           if (!namespaceMap.size) return;
 
+          // 1. Source is the Source, not RawSource, OriginalSource, ReplaceSource, SourceMapSource, ConcatSource, PrefixSource, CachedSource, SizeOnlySource, or CompatSource.
+          // 2. RawSource, OriginalSource, ReplaceSource, SourceMapSource, ConcatSource, PrefixSource, CachedSource, SizeOnlySource, and CompatSource are based on Source.
+          // 3. Source is not guaranteeed to have the extended properties or methods.
+          // 4. RawSource represents content; OriginalSource retians metadata and content.
+          // 5. source.sourceAndMap() wraps source.source() and source.map() in an object
           for (const [pathname, source] of Object.entries(assets)) {
             if (!this.opts.test.test(pathname)) continue;
             this._rewriteAsset(compilation, pathname, source, namespaceMap);
