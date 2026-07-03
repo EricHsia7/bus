@@ -25,9 +25,6 @@ class ErrorCodePlugin {
           for (const [pathname, source] of Object.entries(assets)) {
             if (!pathname.endsWith('.js')) continue;
 
-            // const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
-            const { source: originalSource, map: originalMap } = source.sourceAndMap();
-
             const code = source.source();
             const s = new MagicString(code);
             const ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
@@ -62,8 +59,8 @@ class ErrorCodePlugin {
                 s.toString(), // The modified code
                 pathname, // The filename
                 newMap, // The map for specific changes
-                originalSource, // The code before changes
-                originalMap, // The map before changes
+                source.source(), // The code before changes
+                source.map(), // The map before changes
                 true // Remove original source from the map? (usually true for production)
               )
             );

@@ -72,11 +72,7 @@ class MangleCssNamespacePlugin {
 
           for (const [pathname, source] of Object.entries(assets)) {
             if (!this.opts.test.test(pathname)) continue;
-
-            // const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
-            const { source: originalSource, map: originalMap } = source.sourceAndMap(); // Capture the unprocessed state
-
-            this._rewriteAsset(compilation, pathname, source, originalSource, originalMap, namespaceMap);
+            this._rewriteAsset(compilation, pathname, source, namespaceMap);
           }
 
           if (this.opts.emitManifest) {
@@ -165,13 +161,13 @@ class MangleCssNamespacePlugin {
 
   // CSS / JS / HTML assets: one dictionary-based, coordinate-safe pass over a snapshot.
   // Works uniformly because the tokens are reserved, language-agnostic namespaces — selectors, var(), shorthand values, @keyframes, @property, and attribute selectors are all just "the exact token appears here".
-  _rewriteAsset(compilation, pathname, source, originalSource, originalMap, namespaceMap) {
-    const raw = source.source().toString();
-    const re = this._getTokenRegex(namespaceMap);
+  _rewriteAsset(compilation, pathname, source, namespaceMap) {
+    const code = source.source().toString();
+    const tokenRegex = this._getTokenRegex(namespaceMap);
     const output = new ReplaceSource(source);
     let m;
     let changed = false;
-    while ((m = re.exec(raw))) {
+    while ((m = tokenRegex.exec(code))) {
       const dashes = m[1] || '';
       const name = m[2];
       const mangled = namespaceMap.get(name);
@@ -187,9 +183,9 @@ class MangleCssNamespacePlugin {
         new SourceMapSource(
           output.source().toString(), // The modified code
           pathname, // The filename
-          output.sourceAndMap().map, // The map for specific changes
-          originalSource, // The code before changes
-          originalMap, // The map before changes
+          output.map(), // The map for specific changes
+          source.source(), // The code before changes
+          source.map(), // The map before changes
           true // Remove original source from the map? (usually true for production)
         )
       );

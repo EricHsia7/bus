@@ -20,8 +20,6 @@ class PostCssOptimizationPlugin {
           for (const [pathname, source] of Object.entries(assets)) {
             if (!pathname.endsWith('.css')) continue;
 
-            const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
-
             try {
               const code = source.source();
               const { css: newCSS, map: newSourceMapGenerator } = await postcss(this.options.plugins || []).process(code, {
@@ -39,8 +37,8 @@ class PostCssOptimizationPlugin {
                   newCSS, // The modified css
                   pathname, // The filename
                   newSourceMapGenerator.toJSON(), // The map for specific changes
-                  originalSource, // The code before changes
-                  originalMap, // The map before changes
+                  source.source(), // The code before changes
+                  source.map(), // The map before changes
                   true // Remove original source from the map? (usually true for production)
                 )
               );
