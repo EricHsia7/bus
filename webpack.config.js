@@ -3,7 +3,6 @@ const fs = require('fs');
 const webpack = require('webpack');
 const MinimizerPlugin = require('minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
@@ -135,7 +134,7 @@ module.exports = (env, argv) => {
         new MinimizerPlugin({
           test: /\.[cm]?js(\?.*)?$/i,
           minify: MinimizerPlugin.terserMinify,
-          extractComments: true, // stays a top-level option
+          extractComments: true,
           minimizerOptions: {
             compress: {
               drop_console: [/* 'log', */ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
@@ -151,8 +150,7 @@ module.exports = (env, argv) => {
           parallel: true,
           minimizerOptions: {
             preset: [
-              'default',
-              AdvancedPreset,
+              'cssnano-preset-advanced',
               {
                 discardComments: { removeAll: true }
               }
