@@ -57,6 +57,7 @@ export function initializeIconSelectorVirtualScroll(): void {
     }
   });
 
+  contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${offsetY}px`);
   trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }
 
@@ -515,7 +516,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   setupIconSelectorFieldSkeleton(inputElement);
 
-  bodyElement.scrollTop = offsetY;
+  bodyElement.scrollTop = 0;
 
   const integration = await integrateMaterialSymbols(requestID);
   currentIntegration = integration;
