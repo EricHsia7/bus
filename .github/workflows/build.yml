@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-icon-selector-search-elements-cache
 
 jobs:
   build:

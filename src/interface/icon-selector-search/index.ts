@@ -19,6 +19,8 @@ const headElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_sel
 const searchInputElement = elementQuerySelector(headElement, '.css_icon_selector_search_input input[type="text"]') as HTMLInputElement;
 const bodyElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_body');
 const resultsElement = elementQuerySelector(bodyElement, '.css_icon_selector_search_results');
+const resultElements: Array<HTMLElement> = [];
+let resultElementsLength: number = 0;
 
 function generateElementOfResultItem(): HTMLElement {
   const element = documentCreateDivElement();
@@ -123,10 +125,9 @@ function updateResults(): void {
     const searchResults = searchForMaterialSymbols(query);
     const searchResultsLength = searchResults.length;
 
-    const resultElements = Array.from(elementQuerySelectorAll(resultsElement, '.css_icon_selector_search_result'));
-    const currentSearchResultElementsLength = resultElements.length;
-    if (searchResultsLength !== currentSearchResultElementsLength) {
-      const difference = currentSearchResultElementsLength - searchResultsLength;
+    resultElementsLength = resultElements.length;
+    if (searchResultsLength !== resultElementsLength) {
+      const difference = resultElementsLength - searchResultsLength;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
@@ -136,7 +137,7 @@ function updateResults(): void {
         }
         resultsElement.appendChild(fragment);
       } else if (difference > 0) {
-        for (let p = currentSearchResultElementsLength - 1, q = currentSearchResultElementsLength - difference - 1; p > q; p--) {
+        for (let p = resultElementsLength - 1, q = resultElementsLength - difference - 1; p > q; p--) {
           resultElements[p].remove();
           resultElements.splice(p, 1);
         }
