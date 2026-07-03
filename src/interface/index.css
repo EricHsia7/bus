@@ -71,7 +71,7 @@ body input[type="text"] {
 }
 
 .css_splash_screen_fade_out {
-  animation-name: fadeout;
+  animation-name: b-css-fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;

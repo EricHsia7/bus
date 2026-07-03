@@ -25,7 +25,7 @@ module.exports = (env, argv) => {
         runtime: false
       }),
       new MangleCssNamespacePlugin({
-        prefixes: ['css_', 'css-', 'b-cssvar-'],
+        prefixes: ['css_', 'b-css-', 'b-cssvar-'],
         mangleCssVariables: true,
         emitManifest: true
       }),

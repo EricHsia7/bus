@@ -1,4 +1,4 @@
-@keyframes skeleton-loading {
+@keyframes b-css-skeleton-loading {
   0% {
     background-position: 0% 0%;
   }
@@ -8,7 +8,7 @@
   }
 }
 
-@keyframes fadeout {
+@keyframes b-css-fadeout {
   0% {
     opacity: 1;
   }
@@ -18,7 +18,7 @@
   }
 }
 
-@keyframes scaledown {
+@keyframes b-css-scaledown {
   0% {
     transform: scaleX(1);
   }
@@ -29,7 +29,7 @@
 }
 
 
-@keyframes processing {
+@keyframes b-css-processing {
   0% {
     opacity: 0.6;
   }

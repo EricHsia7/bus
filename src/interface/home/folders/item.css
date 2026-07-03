@@ -348,7 +348,7 @@
 
 /* fadeout */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_status .css_slide_fade_out {
-  animation-name: fadeout;
+  animation-name: b-css-fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
@@ -362,7 +362,7 @@
   background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
-  animation: skeleton-loading;
+  animation: b-css-skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
