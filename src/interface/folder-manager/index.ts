@@ -1,4 +1,4 @@
-import { FolderWithContentLength, listFoldersWithContentLength, removeFolder, updateFolderIndex } from '../../data/folder/index';
+import { Folder, FolderWithContentLength, listFoldersWithContentLength, removeFolder, updateFolderIndex } from '../../data/folder/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
@@ -145,14 +145,18 @@ export async function moveItemOnFolderManager(itemElement: HTMLElement, folderID
       case 'up':
         const previousSibling = itemElement.previousElementSibling;
         if (previousSibling) {
-          itemElement.parentNode.insertBefore(itemElement, previousSibling);
+          if (itemElement.parentNode) {
+            itemElement.parentNode.insertBefore(itemElement, previousSibling);
+          }
         }
         promptMessage('arrow_circle_up', '已往上移');
         break;
       case 'down':
         const nextSibling = itemElement.nextElementSibling;
         if (nextSibling) {
-          itemElement.parentNode.insertBefore(nextSibling, itemElement);
+          if (itemElement.parentNode) {
+            itemElement.parentNode.insertBefore(nextSibling, itemElement);
+          }
         }
         promptMessage('arrow_circle_down', '已往下移');
         break;
