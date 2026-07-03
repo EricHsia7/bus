@@ -14,7 +14,7 @@ class PostCssOptimizationPlugin {
       compilation.hooks.processAssets.tapPromise(
         {
           name: pluginName,
-          stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+          stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE - 1 // before mangling css namespaces
         },
         async (assets) => {
           for (const [pathname, source] of Object.entries(assets)) {
