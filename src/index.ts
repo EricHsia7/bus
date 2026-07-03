@@ -325,7 +325,9 @@ interface BusWindow extends Window {
             promptMessage('check_circle', '更新完成', {
               text: '重新整理',
               action: function () {
-                window.location.reload();
+                if ('window' in self) {
+                  window.location.reload();
+                }
               }
             });
           }

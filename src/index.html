@@ -696,10 +696,8 @@
         bus.secondlyInitialize();
         bus
           .registerServiceWorker()
-          .then((e) => {
-            console.log(e);
-          })
-          .catch((e) => {
+          .then(() => {})
+          .catch(() => {
             navigator.serviceWorker.register('./service-worker.js').then((registration) => {
               registration.update();
             });
