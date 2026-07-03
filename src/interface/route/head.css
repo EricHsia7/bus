@@ -278,7 +278,7 @@
 }
 
 .css_route_field .css_route_head .css_route_update_timer_box .css_route_update_timer.css_route_update_timer_scale_down {
-  animation-name: css-scaledown;
+  animation-name: b-css-scaledown;
   animation-timing-function: linear;
   animation-direction: normal;
   animation-fill-mode: forwards;
