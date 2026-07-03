@@ -26,9 +26,9 @@ const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement a
 
 const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
-const searchResultElements: Array<HTMLElement> = [];
-let searchResultElementsLength: number = 0;
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
+
+const searchResultElements: Array<HTMLElement> = [];
 
 const fontWeight = 400;
 const fontSize = '20px';
@@ -283,8 +283,7 @@ export function updateSearchResult(): void {
   if (!containPhoneticSymbols(currentValue) && (currentValue !== previousValue || currentType !== previousType)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
-
-    searchResultElementsLength = searchResultElements.length;
+    const searchResultElementsLength = searchResultElements.length;
     if (searchResultLength !== searchResultElementsLength) {
       const difference = searchResultElementsLength - searchResultLength;
       if (difference < 0) {

@@ -19,8 +19,8 @@ const headElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_sel
 const searchInputElement = elementQuerySelector(headElement, '.css_icon_selector_search_input input[type="text"]') as HTMLInputElement;
 const bodyElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_body');
 const resultsElement = elementQuerySelector(bodyElement, '.css_icon_selector_search_results');
+
 const resultElements: Array<HTMLElement> = [];
-let resultElementsLength: number = 0;
 
 function generateElementOfResultItem(): HTMLElement {
   const element = documentCreateDivElement();
@@ -125,7 +125,7 @@ function updateResults(): void {
     const searchResults = searchForMaterialSymbols(query);
     const searchResultsLength = searchResults.length;
 
-    resultElementsLength = resultElements.length;
+    const resultElementsLength = resultElements.length;
     if (searchResultsLength !== resultElementsLength) {
       const difference = resultElementsLength - searchResultsLength;
       if (difference < 0) {

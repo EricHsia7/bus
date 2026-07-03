@@ -16,6 +16,8 @@ const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent_views');
 const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
 
+const itemElements: Array<HTMLElement> = []
+
 let previousIntegration = {};
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
@@ -224,10 +226,9 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
   const itemQuantity = integration.itemQuantity;
 
-  const itemElements = Array.from(elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (itemQuantity !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - itemQuantity;
+  const itemElementsLength = itemElements.length;
+  if (itemQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -237,7 +238,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       }
       RecentViewsContentElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }
