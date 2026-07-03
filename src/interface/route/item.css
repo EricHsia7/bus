@@ -444,7 +444,7 @@
 
 /* fadeout */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_status .css_slide_fade_out {
-  animation-name: fadeout;
+  animation-name: css-fadeout;
   animation-timing-function: ease-in-out;
   animation-duration: var(--b-cssvar-transition-duration);
   animation-fill-mode: forwards;
@@ -570,7 +570,7 @@
 
 /* processing: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button[processing="true"] {
-  animation-name: processing;
+  animation-name: css-processing;
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;

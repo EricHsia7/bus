@@ -1,4 +1,4 @@
-@keyframes show-prompt {
+@keyframes css-show-prompt {
   0% {
     opacity: 0;
     transform: translateX(-50%) scale(0.98);
@@ -41,7 +41,7 @@
 
 /* animation: true */
 .css_prompt[animation="true"] {
-  animation-name: show-prompt;
+  animation-name: css-show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
@@ -63,7 +63,7 @@
   align-items: center;
 }
 
-@keyframes fill-prompt-icon {
+@keyframes css-fill-prompt-icon {
   0% {
     --b-cssvar-font-variation-settings-fill: 0;
   }
@@ -83,9 +83,9 @@
 
 .css_prompt[animation="true"] .css_prompt_icon span.css_material_symbols_rounded {
   --b-cssvar-font-variation-settings-fill: 0;
-  animation-name: fill-prompt-icon;
+  animation-name: css-fill-prompt-icon;
   animation-duration: 2800ms;
-  /* avoid show-prompt from synchronizing with this shorter timeline */
+  /* avoid css-show-prompt from synchronizing with this shorter timeline */
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }

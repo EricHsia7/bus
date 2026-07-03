@@ -107,7 +107,7 @@
   background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
-  animation: skeleton-loading;
+  animation: css-skeleton-loading;
   animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
