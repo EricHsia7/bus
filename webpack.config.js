@@ -1,9 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
+const MinimizerPlugin = require('minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AdvancedPreset = require('cssnano-preset-advanced');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
@@ -133,18 +132,22 @@ module.exports = (env, argv) => {
       minimize: true,
       minimizer: [
         new ErrorCodePlugin(),
-        new TerserPlugin({
-          extractComments: true,
-          terserOptions: {
+        new MinimizerPlugin({
+          test: /\.[cm]?js(\?.*)?$/i,
+          minify: MinimizerPlugin.terserMinify,
+          extractComments: true, // stays a top-level option
+          minimizerOptions: {
             compress: {
-              drop_console: [/*'log',*/ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
+              drop_console: [/* 'log', */ 'assert', 'clear', 'count', 'countReset', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeLog', 'timeStamp', 'trace', 'warn']
             }
           }
         }),
         new PostCssOptimizationPlugin({
           plugins: [postcssColorMixFunction({ preserve: false, enableProgressiveCustomProperties: false })]
         }),
-        new CssMinimizerPlugin({
+        new MinimizerPlugin({
+          test: /\.css(\?.*)?$/i,
+          minify: MinimizerPlugin.cssnanoMinify,
           parallel: true,
           minimizerOptions: {
             preset: [
