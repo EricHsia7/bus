@@ -1,5 +1,5 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getTextBoundingBox } from '../../tools/graphic';
 import { booleanToString, supportTouch } from '../../tools/index';
 import { clamp } from '../../tools/math';
@@ -28,7 +28,7 @@ const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
-const searchResultElements: Array<HTMLElement> = [];
+const searchResultElements: Array<HTMLElement> = []; // div.css_search_search_result in div.css_search_results
 
 const fontWeight = 400;
 const fontSize = '20px';

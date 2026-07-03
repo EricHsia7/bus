@@ -3,7 +3,7 @@ import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
@@ -20,8 +20,8 @@ const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_folders');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
-const folderElements: Array<HTMLElement> = [];
-const folderContentItemElements: Array<Array<HTMLElement>> = [];
+const folderElements: Array<HTMLElement> = []; // div.css_home_folder in div.css_home_folders
+const folderContentItemElements: Array<Array<HTMLElement>> = []; // div.css_home_folder_item in div.css_home_folder
 
 let previousIntegration = {} as integratedFolders;
 let previousAnimation: boolean = false;

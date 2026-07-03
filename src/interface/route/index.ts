@@ -32,6 +32,11 @@ const RouteGroupTabLineTrackElement = elementQuerySelector(RouteHeadElement, '.c
 const RouteGroupTabLineElement = elementQuerySelector(RouteGroupTabLineTrackElement, '.css_route_group_tab_line');
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
+const groupElements: Array<HTMLElement> = []; // div.css_route_group in div.css_route_groups
+const tabElements: Array<HTMLElement> = []; // div.css_route_group_tab in div.css_route_group_tabs_tray
+const itemElements: Array<Array<HTMLElement>> = []; // div.css_route_group_item in div.css_route_group_items_track in div.css_route_group
+const threadBoxElements: Array<Array<HTMLElement>> = []; // div.css_route_group_thread_box in div.css_route_group_threads_track in div.css_route_group
+
 let previousIntegration = {} as IntegratedRoute;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
@@ -1057,12 +1062,9 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     RouteNameSpanElement.innerText = integration.RouteName;
   }
 
-  const groupElements = Array.from(elementQuerySelectorAll(RouteGroupsElement, '.css_route_group'));
-  const tabElements = Array.from(elementQuerySelectorAll(RouteGroupTabsTrayElement, '.css_route_group_tab'));
-
-  const currentGroupElementsLength = groupElements.length;
-  if (groupQuantity !== currentGroupElementsLength) {
-    const difference = currentGroupElementsLength - groupQuantity;
+  const groupElementsLength = groupElements.length;
+  if (groupQuantity !== groupElementsLength) {
+    const difference = groupElementsLength - groupQuantity;
     if (difference < 0) {
       const newGroupsFragment = new DocumentFragment();
       const newTabsFragment = new DocumentFragment();
@@ -1073,15 +1075,21 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newTabElement = generateElementOfTab();
         newTabsFragment.appendChild(newTabElement);
         tabElements.push(newTabElement);
+        // push an empty array to hold its children
+        itemElements.push([]);
+        threadBoxElements.push([]);
       }
       RouteGroupsElement.append(newGroupsFragment);
       RouteGroupTabsTrayElement.append(newTabsFragment);
     } else if (difference > 0) {
-      for (let p = currentGroupElementsLength - 1, q = currentGroupElementsLength - difference - 1; p > q; p--) {
+      for (let p = groupElementsLength - 1, q = groupElementsLength - difference - 1; p > q; p--) {
         groupElements[p].remove();
         groupElements.splice(p, 1);
         tabElements[p].remove();
         tabElements.splice(p, 1);
+        itemElements.splice(p, 1);
+        threadBoxElements.splice(p, 1);
+        // the children are already removed since thier parant nodes are removed
       }
     }
   }
@@ -1093,10 +1101,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     const thisGroupItemsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_items_track');
     const thisGroupThreadsTrackElement = elementQuerySelector(thisGroupElement, '.css_route_group_threads_track');
 
-    const itemElements = Array.from(elementQuerySelectorAll(thisGroupItemsTrackElement, '.css_route_group_item'));
-    const threadBoxElements = Array.from(elementQuerySelectorAll(thisGroupThreadsTrackElement, '.css_route_group_thread_box'));
-
-    const currentItemElementsLength = itemElements.length;
+    const currentItemElementsLength = itemElements[i].length;
     if (itemQuantity[groupKey] !== currentItemElementsLength) {
       const difference = currentItemElementsLength - itemQuantity[groupKey];
       if (difference < 0) {
@@ -1106,19 +1111,19 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           const newThreadBoxElement = generateElementOfThreadBox(-1 * currentItemElementsLength + o);
           const newItemElement = generateElementOfItem(newThreadBoxElement);
           newItemsFragment.appendChild(newItemElement);
-          itemElements.push(newItemElement);
+          itemElements[i].push(newItemElement);
           newThreadBoxesFragment.appendChild(newThreadBoxElement);
-          threadBoxElements.push(newThreadBoxElement);
+          threadBoxElements[i].push(newThreadBoxElement);
         }
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
-        routeVisibilityMonitor.add(itemElements.slice(currentItemElementsLength));
+        routeVisibilityMonitor.add(itemElements[i].slice(currentItemElementsLength));
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
-          itemElements[p].remove();
-          itemElements.splice(p, 1);
-          threadBoxElements[p].remove();
-          threadBoxElements.splice(p, 1);
+          itemElements[i][p].remove();
+          itemElements[i].splice(p, 1);
+          threadBoxElements[i][p].remove();
+          threadBoxElements[i].splice(p, 1);
         }
       }
     }
@@ -1135,8 +1140,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
 
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
-      const thisItemElement = itemElements[j];
-      const thisThreadBoxElement = threadBoxElements[j];
+      const thisItemElement = itemElements[i][j];
+      const thisThreadBoxElement = threadBoxElements[i][j];
       const thisItem = groupedItems[groupKey][j];
       if (hasOwnProperty(previousIntegration, 'groupedItems')) {
         if (hasOwnProperty(previousIntegration.groupedItems, groupKey)) {
