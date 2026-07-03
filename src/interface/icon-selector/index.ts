@@ -515,7 +515,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   setupIconSelectorFieldSkeleton(inputElement);
 
-  bodyElement.scrollTop = 0;
+  bodyElement.scrollTop = offsetY;
 
   const integration = await integrateMaterialSymbols(requestID);
   currentIntegration = integration;
