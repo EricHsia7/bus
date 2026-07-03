@@ -213,7 +213,6 @@ interface BusWindow extends Window {
   bus: {
     initialize: Function;
     secondlyInitialize: Function;
-    // registerServiceWorker: Function;
     route: pageFunctions;
     location: pageFunctions;
     folder: pageFunctions;
@@ -310,26 +309,6 @@ interface BusWindow extends Window {
     await initializeUpdateRateDataGroups();
     await recoverUpdateRateDataFromWriteAheadLog();
   },
-  // registerServiceWorker: async function () {
-  //   if ('serviceWorker' in navigator) {
-  //     const registration = await navigator.serviceWorker.register('./service-worker.js');
-  //     registration.addEventListener('updatefound', () => {
-  //       promptMessage('package_2', '正在下載更新');
-  //       const serviceWorker = registration.installing || registration.waiting || registration.active;
-  //       if (serviceWorker !== null) {
-  //         serviceWorker.addEventListener('statechange', (event: Event) => {
-  //           const target = event.target as ServiceWorker;
-  //           const state = target.state;
-  //           if (state === 'activated') {
-  //             // latest assets fully replaced old ones
-  //             promptMessage('check_circle', '更新完成');
-  //           }
-  //         });
-  //       }
-  //     });
-  //     registration.update();
-  //   }
-  // },
   route: {
     closeRoute,
     closeRouteDetails,

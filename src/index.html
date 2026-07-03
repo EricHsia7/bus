@@ -694,7 +694,6 @@
       });
       window.addEventListener('load', function () {
         bus.secondlyInitialize();
-        // bus.registerServiceWorker();
         navigator.serviceWorker.register('./service-worker.js').then((registration) => {
           registration.update();
         });
