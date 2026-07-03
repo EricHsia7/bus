@@ -26,6 +26,8 @@ const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement a
 
 const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
+const searchResultElements: Array<HTMLElement> = [];
+let searchResultElementsLength: number = 0;
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
 const fontWeight = 400;
@@ -281,10 +283,10 @@ export function updateSearchResult(): void {
   if (!containPhoneticSymbols(currentValue) && (currentValue !== previousValue || currentType !== previousType)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
-    const searchResultElements = Array.from(elementQuerySelectorAll(searchResultsElement, '.css_search_search_result'));
-    const currentSearchResultElementsLength = searchResultElements.length;
-    if (searchResultLength !== currentSearchResultElementsLength) {
-      const difference = currentSearchResultElementsLength - searchResultLength;
+
+    searchResultElementsLength = searchResultElements.length;
+    if (searchResultLength !== searchResultElementsLength) {
+      const difference = searchResultElementsLength - searchResultLength;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
@@ -294,7 +296,7 @@ export function updateSearchResult(): void {
         }
         searchResultsElement.appendChild(fragment);
       } else if (difference > 0) {
-        for (let p = currentSearchResultElementsLength - 1, q = currentSearchResultElementsLength - difference - 1; p > q; p--) {
+        for (let p = searchResultElementsLength - 1, q = searchResultElementsLength - difference - 1; p > q; p--) {
           searchResultElements[p].remove();
           searchResultElements.splice(p, 1);
         }
