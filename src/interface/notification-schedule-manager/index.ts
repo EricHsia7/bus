@@ -17,6 +17,8 @@ const NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(Notif
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
+const itemElements: Array<HTMLElement> = [];
+
 let previousIntegration = {} as IntegratedNotificationSchedules;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
@@ -161,10 +163,9 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   const itemQuantity = integration.itemQuantity;
   const items = integration.items;
 
-  const itemElements = Array.from(elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (itemQuantity !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - itemQuantity;
+  const itemElementsLength = itemElements.length;
+  if (itemQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -174,7 +175,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       }
       NotificationScheduleList.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }
@@ -261,6 +262,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     const interval = Math.max(5000, nextUpdate - lastUpdate);
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
+    return interval;
   } catch (err) {
     const interval = 10 * 1000;
     promptMessage('error', `通知發生錯誤，將在${interval / 1000}秒後重試。`);

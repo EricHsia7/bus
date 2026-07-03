@@ -1,8 +1,8 @@
-import { Folder, FolderWithContentLength, listFoldersWithContentLength, removeFolder, updateFolderIndex } from '../../data/folder/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { Folder, FolderWithContentLength, FolderWithContentLengthArray, listFoldersWithContentLength, removeFolder, updateFolderIndex } from '../../data/folder/index';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { openFolderCreator } from '../folder-creator/index';
 import { openFolderEditor } from '../folder-editor/index';
-import { getIconElement } from '../icons/index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
@@ -12,7 +12,11 @@ const listElement = elementQuerySelector(bodyElement, '.css_folder_manager_folde
 const headElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_folder_manager_button_right');
 
-function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
+const folderItemElements: Array<HTMLElement> = [];
+
+let previousFoldersWithContentLength: FolderWithContentLengthArray = [];
+
+function generateElementOfItem(): HTMLElement {
   // Main container
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_folder_manager_folder_item');
@@ -20,26 +24,19 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   // Head
   const headElement = documentCreateDivElement();
   headElement.classList.add('css_folder_manager_folder_item_head');
-  headElement.onclick = function () {
-    openFolderEditor(item.id, function () {
-      initializeFolderManagerField();
-    });
-  };
 
   // Icon
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_folder_manager_folder_item_icon');
-  iconElement.appendChild(getIconElement(item.icon));
+  iconElement.appendChild(getBlankIconElement());
 
   // Name
   const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_folder_manager_folder_item_name');
-  nameElement.innerText = item.name;
 
   // Status
   const statusElement = documentCreateDivElement();
   statusElement.classList.add('css_folder_manager_folder_item_status');
-  statusElement.innerText = String(item.contentLength);
 
   // Arrow
   const arrowElement = documentCreateDivElement();
@@ -54,25 +51,16 @@ function generateElementOfItem(item: FolderWithContentLength): HTMLElement {
   const sortUpElement = documentCreateDivElement();
   sortUpElement.classList.add('css_folder_manager_folder_item_drawer_button');
   sortUpElement.appendChild(getIconElement('keyboard_arrow_down'));
-  sortUpElement.onclick = () => {
-    moveItemOnFolderManager(itemElement, item.id, 'up');
-  };
 
   // Sort down control
   const sortDownElement = documentCreateDivElement();
   sortDownElement.classList.add('css_folder_manager_folder_item_drawer_button');
   sortDownElement.appendChild(getIconElement('keyboard_arrow_down'));
-  sortDownElement.onclick = () => {
-    moveItemOnFolderManager(itemElement, item.id, 'down');
-  };
 
   // Delete control
   const deleteElement = documentCreateDivElement();
   deleteElement.classList.add('css_folder_manager_folder_item_drawer_button');
   deleteElement.appendChild(getIconElement('delete'));
-  deleteElement.onclick = () => {
-    removeItemOnFolderManager(itemElement, item.id);
-  };
 
   // Assemble drawer
   drawerElement.appendChild(sortUpElement);
@@ -97,14 +85,112 @@ async function initializeFolderManagerField() {
       initializeFolderManagerField();
     });
   };
-  const foldersWithContent = await listFoldersWithContentLength();
-  listElement.innerHTML = '';
-  const fragment = new DocumentFragment();
-  for (const item of foldersWithContent) {
-    const newItemElement = generateElementOfItem(item);
-    fragment.appendChild(newItemElement);
+  const foldersWithContentLength = await listFoldersWithContentLength();
+  updateFolderManagerField(foldersWithContentLength);
+}
+
+function updateFolderManagerField(foldersWithContentLength: FolderWithContentLengthArray): void {
+  // TODO: skeletonScreen, animation
+  function updateItem(thisElement: HTMLElement, thisItem: FolderWithContentLength, previousItem: FolderWithContentLength | null): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
+      const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
+      const iconElement = elementQuerySelector(headElement, '.css_folder_manager_folder_item_icon');
+      setIcon(iconElement, thisItem.icon);
+    }
+
+    function updateName(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
+      const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
+      const nameElement = elementQuerySelector(headElement, '.css_folder_manager_folder_item_name');
+      nameElement.innerText = thisItem.name;
+    }
+
+    function updateStatus(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
+      const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
+      const statusElement = elementQuerySelector(headElement, '.css_folder_manager_folder_item_status');
+      statusElement.innerText = thisItem.contentLength.toString();
+    }
+
+    function updateDrawer(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
+      const [sortUpElement, sortDownElement, deleteElement] = elementQuerySelectorAll(thisElement, '.css_folder_manager_folder_item_drawer_button');
+      sortUpElement.onclick = () => {
+        moveItemOnFolderManager(thisElement, thisItem.id, 'up');
+      };
+      sortDownElement.onclick = () => {
+        moveItemOnFolderManager(thisElement, thisItem.id, 'down');
+      };
+      deleteElement.onclick = () => {
+        removeItemOnFolderManager(thisElement, thisItem.id);
+      };
+    }
+
+    function updateOnclick(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
+      const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
+      headElement.onclick = function () {
+        openFolderEditor(thisItem.id, function () {
+          initializeFolderManagerField();
+        });
+      };
+    }
+
+    if (previousItem !== null) {
+      if (previousItem.icon !== thisItem.icon) {
+        updateIcon(thisElement, thisItem);
+      }
+
+      if (previousItem.name !== thisItem.name) {
+        updateName(thisElement, thisItem);
+      }
+
+      if (previousItem.contentLength !== thisItem.contentLength) {
+        updateStatus(thisElement, thisItem);
+      }
+
+      if (previousItem.id !== thisItem.id) {
+        updateDrawer(thisElement, thisItem);
+        updateOnclick(thisElement, thisItem);
+      }
+    } else {
+      updateIcon(thisElement, thisItem);
+      updateName(thisElement, thisItem);
+      updateStatus(thisElement, thisItem);
+      updateDrawer(thisElement, thisItem);
+      updateOnclick(thisElement, thisItem);
+    }
   }
-  listElement.append(fragment);
+
+  const foldersWithContentLengthLength = foldersWithContentLength.length;
+
+  const folderElementsLength = folderItemElements.length;
+  if (foldersWithContentLengthLength !== folderElementsLength) {
+    const difference = folderElementsLength - foldersWithContentLengthLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newFolderItemElement = generateElementOfItem();
+        fragment.appendChild(newFolderItemElement);
+        folderItemElements.push(newFolderItemElement);
+      }
+      listElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = folderElementsLength - 1, q = folderElementsLength - difference - 1; p > q; p--) {
+        folderItemElements[p].remove();
+        folderItemElements.splice(p, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < foldersWithContentLengthLength; i++) {
+    const thisElement = folderItemElements[i];
+    const thisItem = foldersWithContentLength[i];
+    const previousItem = previousFoldersWithContentLength[i];
+    if (previousItem) {
+      updateItem(thisElement, thisItem, previousItem);
+    } else {
+      updateItem(thisElement, thisItem, null);
+    }
+  }
+
+  previousFoldersWithContentLength = foldersWithContentLength;
 }
 
 export function showFolderManager(): void {

@@ -2,7 +2,7 @@ import { getLocation, MergedLocation, MergedLocationItem } from '../../data/apis
 import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../data/location/details';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { getPermalink } from '../../tools/permalink';
 import { shareLink } from '../../tools/share';
@@ -17,6 +17,8 @@ let previousSkeletonScreen: boolean = false;
 const LocationDetailsField = documentQuerySelector('.css_location_details_field');
 const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
 const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
+
+const actionElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
@@ -86,10 +88,9 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
   const actions = integration.actions;
   const actionsQuantity = integration.actionsQuantity;
 
-  const actionElements = Array.from(elementQuerySelectorAll(LocationDetailsActionsElement, '.css_location_details_action'));
-  const currentActionElementsLength = actionElements.length;
-  if (actionsQuantity !== currentActionElementsLength) {
-    const difference = currentActionElementsLength - actionsQuantity;
+  const actionElementsLength = actionElements.length;
+  if (actionsQuantity !== actionElementsLength) {
+    const difference = actionElementsLength - actionsQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -99,7 +100,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
       }
       LocationDetailsActionsElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentActionElementsLength - 1, q = currentActionElementsLength - difference - 1; p > q; p--) {
+      for (let p = actionElementsLength - 1, q = actionElementsLength - difference - 1; p > q; p--) {
         actionElements[p].remove();
         actionElements.splice(p, 1);
       }
