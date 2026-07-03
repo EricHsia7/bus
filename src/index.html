@@ -694,9 +694,16 @@
       });
       window.addEventListener('load', function () {
         bus.secondlyInitialize();
-        navigator.serviceWorker.register('./service-worker.js').then((registration) => {
-          registration.update();
-        });
+        bus
+          .registerServiceWorker()
+          .then((e) => {
+            console.log(e);
+          })
+          .catch((e) => {
+            navigator.serviceWorker.register('./service-worker.js').then((registration) => {
+              registration.update();
+            });
+          });
       });
     </script>
   </body>

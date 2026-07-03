@@ -206,6 +206,7 @@ import './interface/prompt/index.css';
 
 let busInitialized: boolean = false;
 let busSecondlyInitialized: boolean = false;
+let serviceWorkerRegistered: boolean = false;
 
 type pageFunctions = { [functionName: string]: Function };
 
@@ -213,6 +214,7 @@ interface BusWindow extends Window {
   bus: {
     initialize: Function;
     secondlyInitialize: Function;
+    registerServiceWorker: Function;
     route: pageFunctions;
     location: pageFunctions;
     folder: pageFunctions;
@@ -308,6 +310,30 @@ interface BusWindow extends Window {
 
     await initializeUpdateRateDataGroups();
     await recoverUpdateRateDataFromWriteAheadLog();
+  },
+  registerServiceWorker: async function () {
+    if (serviceWorkerRegistered) return true;
+    const registration = await navigator.serviceWorker.register('./service-worker.js');
+    registration.addEventListener('updatefound', function () {
+      promptMessage('arrow_circle_down', '正在下載最新版本');
+      const worker = registration.installing || registration.waiting || registration.active;
+      if (worker !== null) {
+        worker.addEventListener('statechange', function (event: Event) {
+          const target = event.target as ServiceWorker;
+          const state = target.state;
+          if (state === 'activated') {
+            promptMessage('check_circle', '更新完成', {
+              text: '重新整理',
+              action: function () {
+                window.location.reload();
+              }
+            });
+          }
+        });
+      }
+    });
+    serviceWorkerRegistered = true;
+    return true;
   },
   route: {
     closeRoute,
