@@ -25,7 +25,8 @@ class ErrorCodePlugin {
           for (const [pathname, source] of Object.entries(assets)) {
             if (!pathname.endsWith('.js')) continue;
 
-            const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+            // const { source: originalSource, map: originalMap } = compilation.getAsset(pathname).source.sourceAndMap();
+            const { source: originalSource, map: originalMap } = source.sourceAndMap();
 
             const code = source.source();
             const s = new MagicString(code);
