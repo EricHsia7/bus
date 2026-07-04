@@ -317,6 +317,8 @@ export async function removeItemOnFolderEditor(itemElement: HTMLElement, folderI
   const removal = await removeFromFolder(folderID, type, id);
   if (removal) {
     itemElement.remove();
+    const index = itemElements.indexOf(itemElement);
+    itemElements.splice(index, 1);
     switch (type) {
       case 'stop':
         promptMessage('delete', '已移除站牌');

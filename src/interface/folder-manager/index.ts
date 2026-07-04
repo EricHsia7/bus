@@ -218,6 +218,8 @@ export async function removeItemOnFolderManager(itemElement: HTMLElement, folder
   const removal = await removeFolder(folderID);
   if (removal) {
     itemElement.remove();
+    const index = folderItemElements.indexOf(itemElement);
+    folderItemElements.splice(index, 1);
     promptMessage('delete', '已移除資料夾');
   } else {
     promptMessage('error', '無法移除');

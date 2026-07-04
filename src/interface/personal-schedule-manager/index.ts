@@ -88,6 +88,7 @@ export async function removeItemOnPersonalScheduleManager(itemElement: HTMLEleme
   const removal = await removePersonalSchedule(personalScheduleID);
   if (removal) {
     itemElement.remove();
+    // TODO: remove the element in the array
     promptMessage('delete', '已移除行程');
   } else {
     promptMessage('error', '無法移除');
