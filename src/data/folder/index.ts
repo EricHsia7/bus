@@ -641,7 +641,7 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
   return true;
 }
 
-export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: number): Promise<boolean> {
+export async function saveStop(folderID: Folder['id'], StopID: FolderContentStop['id'], RouteID: FolderContentStop['route']['id']): Promise<boolean> {
   const requestID = generateIdentifier();
   const [Stop, Location, Route] = (await Promise.all([getStop(requestID), getLocation(requestID, 0), getRoute(requestID, true)])) as [SimplifiedStop, SimplifiedLocation, SimplifiedRoute];
 
@@ -678,7 +678,7 @@ export async function saveStop(folderID: Folder['id'], StopID: number, RouteID: 
   return save;
 }
 
-export async function saveRoute(folderID: Folder['id'], RouteID: number): Promise<boolean> {
+export async function saveRoute(folderID: Folder['id'], RouteID: FolderContentRoute['id']): Promise<boolean> {
   const requestID = generateIdentifier();
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   deleteDataReceivingProgress(requestID);
@@ -705,7 +705,7 @@ export async function saveRoute(folderID: Folder['id'], RouteID: number): Promis
   return save;
 }
 
-export async function saveLocation(folderID: Folder['id'], hash: string): Promise<boolean> {
+export async function saveLocation(folderID: Folder['id'], hash: FolderContentLocation['id']): Promise<boolean> {
   const requestID = generateIdentifier();
   const Location = (await getLocation(requestID, 1)) as MergedLocation;
   deleteDataReceivingProgress(requestID);

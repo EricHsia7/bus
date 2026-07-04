@@ -1,6 +1,6 @@
 import { getStoresSizeStatistics, StoreSize, StoreSizeStatistics } from '../../data/analytics/storage-size';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { clamp } from '../../tools/math';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -12,6 +12,8 @@ let previousSkeletonScreen: boolean = false;
 const StorageField = documentQuerySelector('.css_storage_field');
 const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
 const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
+
+const itemElements: Array<HTMLElement> = []; // div.css_storage_statistics_item in div.css_storage_statistics
 
 function generateElementOfItem(): HTMLElement {
   // Create root element
@@ -88,10 +90,9 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
   }
 
   const categoriesQuantity = categories.length;
-  const itemElements = Array.from(elementQuerySelectorAll(StatisticsElement, '.css_storage_statistics_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (categoriesQuantity !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - categoriesQuantity;
+  const itemElementsLength = itemElements.length;
+  if (categoriesQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - categoriesQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -101,7 +102,7 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
       }
       StatisticsElement.appendChild(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }
@@ -132,7 +133,7 @@ function setupStorageFieldSkeletonScreen(): void {
   const defaultCategoriesQuantity = clamp(Math.floor(FieldHeight / 55) + 2, 0, 7);
   const statistics: StoreSizeStatistics = {
     categorizedSizes: {},
-    totalSize: 0
+    totalSize: ''
   };
   for (let i = 0; i < defaultCategoriesQuantity; i++) {
     const categoryKey = `store-${i}`;

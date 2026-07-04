@@ -1,54 +1,44 @@
 import { exportData } from '../../data/export/index';
 import { importData } from '../../data/import/index';
-import { listSettings, Setting } from '../../data/settings/index';
+import { listSettings, Setting, SettingsArray } from '../../data/settings/index';
 import { getTreeURLOfCurrentVersion } from '../../data/settings/version';
 import { askForPersistentStorage } from '../../data/storage/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateIdentifier } from '../../tools/index';
 import { shareFile } from '../../tools/share';
-import { getIconElement } from '../icons/index';
+import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const SettingsField = documentQuerySelector('.css_settings_field');
-const SettingsBodyElement = elementQuerySelector(SettingsField, '.css_settings_body');
-const SettingsElement = elementQuerySelector(SettingsBodyElement, '.css_settings');
+const Field = documentQuerySelector('.css_settings_field');
+const BodyElement = elementQuerySelector(Field, '.css_settings_body');
+const SettingsElement = elementQuerySelector(BodyElement, '.css_settings');
 
-function generateElementOfItem(item: Setting): HTMLElement {
+const settingElements: Array<HTMLElement> = []; // div.css_setting in div.css_settings
+
+let initialized: boolean = false;
+
+function generateElementOfItem(): HTMLElement {
   const settingElement = documentCreateDivElement();
   settingElement.classList.add('css_setting');
-  settingElement.setAttribute('type', item.type);
 
   // Icon
   const iconElement = documentCreateDivElement();
   iconElement.classList.add('css_setting_icon');
-  iconElement.appendChild(getIconElement(item.icon));
+  iconElement.appendChild(getBlankIconElement());
 
   // Name
   const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_setting_name');
-  nameElement.innerText = item.name;
 
   // Status
   const statusElement = documentCreateDivElement();
   statusElement.classList.add('css_setting_status');
-  statusElement.innerText = item.status;
 
   // Arrow
   const arrowElement = documentCreateDivElement();
   arrowElement.classList.add('css_setting_arrow');
-  const arrowSpanElement = document.createElement('span');
-  arrowSpanElement.appendChild(getIconElement('arrow_forward_ios'));
-  arrowElement.appendChild(arrowSpanElement);
-
-  // Event handler (lambda)
-  if (typeof item.action === 'function') {
-    settingElement.onclick = function () {
-      item.action();
-    };
-  } else if (typeof item.action === 'string') {
-    settingElement.setAttribute('onclick', item.action);
-  }
+  arrowElement.appendChild(getIconElement('arrow_forward_ios'));
 
   // Assemble
   settingElement.appendChild(iconElement);
@@ -61,21 +51,83 @@ function generateElementOfItem(item: Setting): HTMLElement {
 
 export async function initializeSettingsField() {
   const list = await listSettings();
-  SettingsElement.innerHTML = '';
-  const fragment = new DocumentFragment();
-  for (const item of list) {
-    const thisElement = generateElementOfItem(item);
-    fragment.appendChild(thisElement);
+  updateSettingsField(list);
+}
+
+function updateSettingsField(list: SettingsArray): void {
+  function updateItem(thisElement: HTMLElement, thisItem: Setting): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: Setting): void {
+      const iconElement = elementQuerySelector(thisElement, '.css_setting_icon');
+      setIcon(iconElement, thisItem.icon);
+    }
+
+    function updateName(thisElement: HTMLElement, thisItem: Setting): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_setting_name');
+      nameElement.innerText = thisItem.name;
+    }
+
+    function updateStatus(thisElement: HTMLElement, thisItem: Setting): void {
+      const statusElement = elementQuerySelector(thisElement, '.css_setting_status');
+      statusElement.innerText = thisItem.status;
+    }
+
+    function updateType(thisElement: HTMLElement, thisItem: Setting): void {
+      thisElement.setAttribute('type', thisItem.type);
+    }
+
+    function updateOnclick(thisElement: HTMLElement, thisItem: Setting): void {
+      if (typeof thisItem.action === 'function') {
+        thisElement.onclick = function () {
+          thisItem.action();
+        };
+      }
+    }
+
+    if (!initialized) {
+      updateIcon(thisElement, thisItem);
+      updateName(thisElement, thisItem);
+      updateType(thisElement, thisItem);
+      updateOnclick(thisElement, thisItem);
+    }
+
+    updateStatus(thisElement, thisItem);
   }
-  SettingsElement.append(fragment);
+
+  const listLength = list.length;
+  const settingElementsLength = settingElements.length;
+  if (listLength !== settingElementsLength) {
+    const difference = settingElementsLength - listLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newSettingElement = generateElementOfItem();
+        fragment.appendChild(newSettingElement);
+        settingElements.push(newSettingElement);
+      }
+      SettingsElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = settingElementsLength - 1, q = settingElementsLength - difference - 1; p > q; p--) {
+        settingElements[p].remove();
+        settingElements.splice(p, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < listLength; i++) {
+    const thisElement = settingElements[i];
+    const thisItem = list[i];
+    updateItem(thisElement, thisItem);
+  }
+
+  initialized = true;
 }
 
 export function shwoSettings(): void {
-  SettingsField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideSettings(): void {
-  SettingsField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openSettings(): void {

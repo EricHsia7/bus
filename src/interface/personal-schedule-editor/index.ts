@@ -1,4 +1,5 @@
 import { getPersonalSchedule, updatePersonalSchedule } from '../../data/personal-schedule/index';
+import { booleanToString } from '../../tools';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { timeObjectToString, WeekDayIndex, WeekDayIndexArray } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
@@ -10,9 +11,9 @@ const PersonalScheduleEditorBodyElement = elementQuerySelector(PersonalScheduleE
 const PersonalScheduleEditorHeadElement = elementQuerySelector(PersonalScheduleEditorField, '.css_personal_schedule_editor_head');
 const leftButtonElement = elementQuerySelector(PersonalScheduleEditorHeadElement, '.css_personal_schedule_editor_button_left');
 const PersonalScheduleEditorGroups = elementQuerySelector(PersonalScheduleEditorBodyElement, '.css_personal_schedule_editor_groups');
-const nameInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-name"] .css_personal_schedule_editor_group_body input');
-const startTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-start-time"] .css_personal_schedule_editor_group_body input');
-const endTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-end-time"] .css_personal_schedule_editor_group_body input');
+const nameInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-name"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
+const startTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-start-time"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
+const endTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-end-time"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
 const dayGroupBodyElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body');
 const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_editor_day');
 
@@ -32,9 +33,8 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
-    const day = parseInt(thisDayElement.getAttribute('day'), 10);
     if (highlighted === 'true') {
-      days.push(day);
+      days.push(i as WeekDayIndex);
     }
   }
 
@@ -62,13 +62,15 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
 
 async function initializePersonalScheduleEditorField(personalScheduleID: string) {
   const personalSchedule = await getPersonalSchedule(personalScheduleID);
+  if (personalSchedule === false) return;
+
   nameInputElement.value = personalSchedule.name;
   startTimeInputElement.value = timeObjectToString(personalSchedule.period.start);
   endTimeInputElement.value = timeObjectToString(personalSchedule.period.end);
 
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
-    if (personalSchedule.days.indexOf(i) > -1) {
+    if (personalSchedule.days.indexOf(i as WeekDayIndex) > -1) {
       thisDayElement.setAttribute('highlighted', 'true');
     } else {
       thisDayElement.setAttribute('highlighted', 'false');
@@ -101,11 +103,7 @@ export function closePersonalScheduleEditor(): void {
 }
 
 export function switchPersonalScheduleEditorDay(day: WeekDayIndex): void {
-  const thisDayElement = elementQuerySelector(dayGroupBodyElement, `.css_personal_schedule_editor_day[day="${day}"]`);
-  const highlighted = thisDayElement.getAttribute('highlighted');
-  if (highlighted === 'true') {
-    thisDayElement.setAttribute('highlighted', 'false');
-  } else {
-    thisDayElement.setAttribute('highlighted', 'true');
-  }
+  const thisDayElement = dayElements[day];
+  const highlighted = thisDayElement.getAttribute('highlighted') === 'true';
+  thisDayElement.setAttribute('highlighted', booleanToString(!highlighted));
 }

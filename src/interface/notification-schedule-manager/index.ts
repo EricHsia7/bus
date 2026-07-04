@@ -17,6 +17,8 @@ const NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(Notif
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
+const itemElements: Array<HTMLElement> = [];
+
 let previousIntegration = {} as IntegratedNotificationSchedules;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
@@ -93,7 +95,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       thisItemMinutesElement.innerText = thisItem.minutes;
     }
 
-    function updateMain(thisItemElement: HTMLElementm, thisItem: IntegratedNotificationScheduleItem): void {
+    function updateMain(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_main');
       thisItemMainElement.innerText = thisItem.name;
@@ -161,10 +163,9 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
   const itemQuantity = integration.itemQuantity;
   const items = integration.items;
 
-  const itemElements = Array.from(elementQuerySelectorAll(NotificationScheduleList, '.css_notification_schedule_manager_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (itemQuantity !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - itemQuantity;
+  const itemElementsLength = itemElements.length;
+  if (itemQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -174,7 +175,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       }
       NotificationScheduleList.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }
@@ -261,6 +262,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     const interval = Math.max(5000, nextUpdate - lastUpdate);
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
+    return interval;
   } catch (err) {
     const interval = 10 * 1000;
     promptMessage('error', `通知發生錯誤，將在${interval / 1000}秒後重試。`);
@@ -301,6 +303,8 @@ export async function cancelNotificationOnNotificationScheduleManager(thisItemEl
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
     thisItemElement.remove();
+    const index = itemElements.indexOf(thisItemElement);
+    itemElements.splice(index, 1);
     promptMessage('check_circle', '已取消通知');
     // TODO: refresh
   } else {

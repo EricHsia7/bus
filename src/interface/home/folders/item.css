@@ -10,10 +10,10 @@
 /* folders > folder > content > item > icon */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_icon {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 50px;
-  height: 50px;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,10 +21,6 @@
 
 /* skeleton screen: true */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item[skeleton-screen="true"] .css_home_folder_item_icon {
-  top: 10px;
-  left: 10px;
-  width: 30px;
-  height: 30px;
   border-radius: var(--b-cssvar-border-radius-normal);
 }
 

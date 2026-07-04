@@ -18,6 +18,8 @@ const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
 const RouteDetailsActionsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_actions');
 
+const actionElements: Array<HTMLElement> = []; // div.css_route_details_action in div.css_route_details_actions
+
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();
   element.classList.add('css_route_details_action');
@@ -86,10 +88,9 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
   const actions = integration.actions;
   const actionsQuantity = integration.actionsQuantity;
 
-  const actionElements = Array.from(elementQuerySelectorAll(RouteDetailsActionsElement, '.css_route_details_action'));
-  const currentActionElementsLength = actionElements.length;
-  if (actionsQuantity !== currentActionElementsLength) {
-    const difference = currentActionElementsLength - actionsQuantity;
+  const actionElementsLength = actionElements.length;
+  if (actionsQuantity !== actionElementsLength) {
+    const difference = actionElementsLength - actionsQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -99,7 +100,7 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
       }
       RouteDetailsActionsElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentActionElementsLength - 1, q = currentActionElementsLength - difference - 1; p > q; p--) {
+      for (let p = actionElementsLength - 1, q = actionElementsLength - difference - 1; p > q; p--) {
         actionElements[p].remove();
         actionElements.splice(p, 1);
       }

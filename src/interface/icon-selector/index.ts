@@ -15,6 +15,8 @@ const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_con
 const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_icon_selector_button_right');
 
+const itemElements: Array<HTMLElement> = [];
+
 let currentIntegration: IntegratedMaterialSymbols = [];
 let currentItemsLength: number = 0;
 let previousAnimation: boolean = false;
@@ -28,13 +30,11 @@ const itemExtraHeight = 141;
 const stretchState = new BitState(1);
 const tabState = new BitState(1);
 
-let currentItemElementsLength: number = 0;
 // let windowWidth = 0;
 let windowHeight: number = 0;
 let visibleElementsQuantity: number = 0;
 let currentStartIndex: number = -1;
 let offsetY: number = 0;
-let itemElements: Array<HTMLElement> = [];
 let initialized: boolean = false;
 
 export function initializeIconSelectorVirtualScroll(): void {
@@ -459,10 +459,9 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     };
   }
 
-  if (visibleElementsQuantity !== currentItemElementsLength) {
-    itemElements = Array.from(elementQuerySelectorAll(contentElement, '.css_icon_selector_item'));
-    currentItemElementsLength = itemElements.length;
-    const difference = currentItemElementsLength - visibleElementsQuantity;
+  const itemElementsLength = itemElements.length;
+  if (visibleElementsQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - visibleElementsQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -472,7 +471,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       }
       contentElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }

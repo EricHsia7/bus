@@ -1,7 +1,7 @@
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
@@ -16,7 +16,9 @@ const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent_views');
 const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
 
-let previousIntegration = {};
+const itemElements: Array<HTMLElement> = []; // div.css_home_recent_views_item in div.css_home_recent_views
+
+let previousIntegration = {} as integratedRecentViews;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
@@ -224,10 +226,9 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 
   const itemQuantity = integration.itemQuantity;
 
-  const itemElements = Array.from(elementQuerySelectorAll(RecentViewsContentElement, '.css_home_recent_views_item'));
-  const currentItemElementsLength = itemElements.length;
-  if (itemQuantity !== currentItemElementsLength) {
-    const difference = currentItemElementsLength - itemQuantity;
+  const itemElementsLength = itemElements.length;
+  if (itemQuantity !== itemElementsLength) {
+    const difference = itemElementsLength - itemQuantity;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
@@ -237,7 +238,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
       }
       RecentViewsContentElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
+      for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
         itemElements.splice(p, 1);
       }

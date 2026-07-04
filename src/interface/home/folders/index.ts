@@ -3,7 +3,7 @@ import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
@@ -19,6 +19,9 @@ const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_folders');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
+
+const folderElements: Array<HTMLElement> = []; // div.css_home_folder in div.css_home_folders
+const folderContentItemElements: Array<Array<HTMLElement>> = []; // div.css_home_folder_item in div.css_home_folder
 
 let previousIntegration = {} as integratedFolders;
 let previousAnimation: boolean = false;
@@ -481,22 +484,23 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
   const folders = integration.folders;
   const foldersLength = folders.length;
 
-  const folderElements = Array.from(elementQuerySelectorAll(HomeFoldersElement, '.css_home_folder'));
-  const currentFolderElementsLength = folderElements.length;
-  if (foldersLength !== currentFolderElementsLength) {
-    const difference = currentFolderElementsLength - foldersLength;
+  const folderElementsLength = folderElements.length;
+  if (foldersLength !== folderElementsLength) {
+    const difference = folderElementsLength - foldersLength;
     if (difference < 0) {
       const fragment = new DocumentFragment();
       for (let o = 0; o > difference; o--) {
         const newFolderElement = generateElementOfFolder();
         fragment.appendChild(newFolderElement);
         folderElements.push(newFolderElement);
+        folderContentItemElements.push([]); // push an empty array to store children
       }
       HomeFoldersElement.append(fragment);
     } else if (difference > 0) {
-      for (let p = currentFolderElementsLength - 1, q = currentFolderElementsLength - difference - 1; p > q; p--) {
+      for (let p = folderElementsLength - 1, q = folderElementsLength - difference - 1; p > q; p--) {
         folderElements[p].remove();
         folderElements.splice(p, 1);
+        folderContentItemElements.splice(p, 1);
       }
     }
   }
@@ -508,24 +512,23 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
     const thisFolderElement = folderElements[i];
     const thisFolderContentElement = elementQuerySelector(thisFolderElement, '.css_home_folder_content');
-    const thisFolderContentItemElements = Array.from(elementQuerySelectorAll(thisFolderContentElement, '.css_home_folder_item'));
 
-    const currentFolderContentItemElementsLength = thisFolderContentItemElements.length;
-    if (thisFolderContentLength !== currentFolderContentItemElementsLength) {
-      const difference = currentFolderContentItemElementsLength - thisFolderContentLength;
+    const thisFolderContentItemElementsLength = folderContentItemElements[i].length; // thisFolderContentItemElements = folderContentItemElements[i]
+    if (thisFolderContentLength !== thisFolderContentItemElementsLength) {
+      const difference = thisFolderContentItemElementsLength - thisFolderContentLength;
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newItemElement = generateElementOfItem();
           fragment.appendChild(newItemElement);
-          thisFolderContentItemElements.push(newItemElement);
+          folderContentItemElements[i].push(newItemElement);
         }
         thisFolderContentElement.append(fragment);
-        foldersVisibilityMonitor.add(thisFolderContentItemElements.slice(currentFolderContentItemElementsLength));
+        foldersVisibilityMonitor.add(folderContentItemElements[i].slice(thisFolderContentItemElementsLength));
       } else if (difference > 0) {
-        for (let p = currentFolderContentItemElementsLength - 1, q = currentFolderContentItemElementsLength - difference - 1; p > q; p--) {
-          thisFolderContentItemElements[p].remove();
-          thisFolderContentItemElements.splice(p, 1);
+        for (let p = thisFolderContentItemElementsLength - 1, q = thisFolderContentItemElementsLength - difference - 1; p > q; p--) {
+          folderContentItemElements[i][p].remove();
+          folderContentItemElements[i].splice(p, 1);
         }
       }
     }
@@ -542,7 +545,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     }
 
     for (let j = 0; j < thisFolderContentLength; j++) {
-      const thisElement = thisFolderContentItemElements[j];
+      const thisElement = folderContentItemElements[i][j];
       const thisItem = thisFolderContent[j];
       if (hasOwnProperty(previousIntegration, 'folders')) {
         if (previousIntegration.folders[i]) {
