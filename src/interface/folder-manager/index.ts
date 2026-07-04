@@ -112,13 +112,13 @@ function updateFolderManagerField(foldersWithContentLength: FolderWithContentLen
 
     function updateDrawer(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
       const [sortUpElement, sortDownElement, deleteElement] = elementQuerySelectorAll(thisElement, '.css_folder_manager_folder_item_drawer_button');
-      sortUpElement.onclick = () => {
+      sortUpElement.onclick = function () {
         moveItemOnFolderManager(thisElement, thisItem.id, 'up');
       };
-      sortDownElement.onclick = () => {
+      sortDownElement.onclick = function () {
         moveItemOnFolderManager(thisElement, thisItem.id, 'down');
       };
-      deleteElement.onclick = () => {
+      deleteElement.onclick = function () {
         removeItemOnFolderManager(thisElement, thisItem.id);
       };
     }
@@ -228,24 +228,24 @@ export async function moveItemOnFolderManager(itemElement: HTMLElement, folderID
   const update = await updateFolderIndex(folderID, direction);
   if (update) {
     switch (direction) {
-      case 'up':
+      case 'up': {
         const previousSibling = itemElement.previousElementSibling;
-        if (previousSibling) {
-          if (itemElement.parentNode) {
-            itemElement.parentNode.insertBefore(itemElement, previousSibling);
-          }
+        const parentNode = itemElement.parentNode;
+        if (previousSibling && parentNode) {
+          parentNode.insertBefore(itemElement, previousSibling);
         }
         promptMessage('arrow_circle_up', '已往上移');
         break;
-      case 'down':
+      }
+      case 'down': {
         const nextSibling = itemElement.nextElementSibling;
-        if (nextSibling) {
-          if (itemElement.parentNode) {
-            itemElement.parentNode.insertBefore(nextSibling, itemElement);
-          }
+        const parentNode = itemElement.parentNode;
+        if (nextSibling && parentNode) {
+          parentNode.insertBefore(nextSibling, itemElement);
         }
         promptMessage('arrow_circle_down', '已往下移');
         break;
+      }
       default:
         break;
     }

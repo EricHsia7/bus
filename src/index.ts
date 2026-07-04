@@ -123,6 +123,7 @@ import './interface/folder-editor/groups.css';
 import './interface/folder-editor/folder-name.css';
 import './interface/folder-editor/folder-icon.css';
 import './interface/folder-editor/folder-content.css';
+import './interface/folder-editor/index.css';
 
 import './interface/folder-creator/field.css';
 import './interface/folder-creator/head.css';
