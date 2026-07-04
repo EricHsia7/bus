@@ -1,4 +1,4 @@
-const { inflate } = require('pako');
+import { inflate } from 'pako';
 
 interface task {
   buffer: ArrayBuffer | null;
@@ -9,9 +9,9 @@ const taskQueue: Array<task> = [];
 let isProcessing: boolean = false;
 
 if ('onconnect' in self) {
-  self.onconnect = function (e) {
-    const port = e.ports[0];
-    port.onmessage = function (event) {
+  self.onconnect = function (event: MessageEvent) {
+    const port = event.ports[0];
+    port.onmessage = function (event: MessageEvent) {
       const buffer = event.data;
       taskQueue.push({ buffer, port });
       processWorkerTask();
@@ -19,7 +19,7 @@ if ('onconnect' in self) {
   };
 } else {
   const port = self;
-  self.onmessage = function (event) {
+  self.onmessage = function (event: MessageEvent) {
     const buffer = event.data;
     taskQueue.push({ buffer, port });
     processWorkerTask();
