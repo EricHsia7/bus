@@ -4,6 +4,8 @@ const supportSharedWorker = typeof SharedWorker !== 'undefined'; // Check if Sha
 
 const worker: Worker | SharedWorker = supportSharedWorker ? new SharedWorker(new URL('./worker.ts', import.meta.url)) : new Worker(new URL('./worker.ts', import.meta.url));
 
+const decoder = new TextDecoder();
+
 if (supportSharedWorker) {
   (worker as SharedWorker).port.start();
   // Access the port for communication
@@ -12,7 +14,7 @@ if (supportSharedWorker) {
   (worker as SharedWorker).port.onmessage = function (event: MessageEvent) {
     const callback = pakoInflateWorkerCallback.shift();
     if (callback) {
-      callback[0](event.data); // Resolve the promise
+      callback[0](decoder.decode(event.data)); // Resolve the promise
     }
   };
 
@@ -27,7 +29,7 @@ if (supportSharedWorker) {
   (worker as Worker).onmessage = function (event: MessageEvent) {
     const callback = pakoInflateWorkerCallback.shift();
     if (callback) {
-      callback[0](event.data); // Resolve the promise
+      callback[0](decoder.decode(event.data)); // Resolve the promise
     }
   };
 

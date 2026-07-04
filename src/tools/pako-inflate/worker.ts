@@ -33,10 +33,10 @@ function processWorkerTask(): void {
   const { buffer, port } = taskQueue.shift() as task;
 
   // Perform the inflate operation (using Pako)
-  const result = inflate(buffer, { to: 'string' });
+  const result = inflate(buffer) as Uint8Array;
 
   // Send the result back to the main thread
-  port.postMessage(result);
+  port.postMessage(result.buffer, [result.buffer]);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
