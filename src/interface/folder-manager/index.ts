@@ -90,7 +90,6 @@ async function initializeFolderManagerField() {
 }
 
 function updateFolderManagerField(foldersWithContentLength: FolderWithContentLengthArray): void {
-  // TODO: skeletonScreen, animation
   function updateItem(thisElement: HTMLElement, thisItem: FolderWithContentLength, previousItem: FolderWithContentLength | null): void {
     function updateIcon(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
       const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
@@ -111,7 +110,8 @@ function updateFolderManagerField(foldersWithContentLength: FolderWithContentLen
     }
 
     function updateDrawer(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
-      const [sortUpElement, sortDownElement, deleteElement] = elementQuerySelectorAll(thisElement, '.css_folder_manager_folder_item_drawer_button');
+      const drawerElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_drawer');
+      const [sortUpElement, sortDownElement, deleteElement] = elementQuerySelectorAll(drawerElement, '.css_folder_manager_folder_item_drawer_button');
       sortUpElement.onclick = function () {
         moveItemOnFolderManager(thisElement, thisItem.id, 'up');
       };
@@ -236,6 +236,9 @@ export async function moveItemOnFolderManager(itemElement: HTMLElement, folderID
         if (previousSibling && parentNode) {
           parentNode.insertBefore(itemElement, previousSibling);
         }
+        const index = folderItemElements.indexOf(itemElement);
+        folderItemElements.splice(index, 1);
+        folderItemElements.splice(index - 1, 0, itemElement);
         promptMessage('arrow_circle_up', '已往上移');
         break;
       }
@@ -245,6 +248,9 @@ export async function moveItemOnFolderManager(itemElement: HTMLElement, folderID
         if (nextSibling && parentNode) {
           parentNode.insertBefore(nextSibling, itemElement);
         }
+        const index = folderItemElements.indexOf(itemElement);
+        folderItemElements.splice(index, 1);
+        folderItemElements.splice(index + 1, 0, itemElement);
         promptMessage('arrow_circle_down', '已往下移');
         break;
       }

@@ -11,8 +11,8 @@ import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage 
 import { promptMessage } from '../prompt/index';
 
 const Field = documentQuerySelector('.css_settings_field');
-const bodyElement = elementQuerySelector(Field, '.css_settings_body');
-const settingsElement = elementQuerySelector(bodyElement, '.css_settings');
+const BodyElement = elementQuerySelector(Field, '.css_settings_body');
+const SettingsElement = elementQuerySelector(BodyElement, '.css_settings');
 
 const settingElements: Array<HTMLElement> = []; // div.css_setting in div.css_settings
 
@@ -104,7 +104,7 @@ function updateSettingsField(list: SettingsArray): void {
         fragment.appendChild(newSettingElement);
         settingElements.push(newSettingElement);
       }
-      settingsElement.append(fragment);
+      SettingsElement.append(fragment);
     } else if (difference > 0) {
       for (let p = settingElementsLength - 1, q = settingElementsLength - difference - 1; p > q; p--) {
         settingElements[p].remove();

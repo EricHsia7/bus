@@ -348,6 +348,9 @@ export async function moveItemOnFolderEditor(itemElement: HTMLElement, folderID:
         if (previousSibling && parentNode) {
           parentNode.insertBefore(itemElement, previousSibling);
         }
+        const index = itemElements.indexOf(itemElement);
+        itemElements.splice(index, 1);
+        itemElements.splice(index - 1, 0, itemElement);
         promptMessage('arrow_circle_up', '已往上移');
         break;
       }
@@ -357,6 +360,9 @@ export async function moveItemOnFolderEditor(itemElement: HTMLElement, folderID:
         if (nextSibling && parentNode) {
           parentNode.insertBefore(nextSibling, itemElement);
         }
+        const index = itemElements.indexOf(itemElement);
+        itemElements.splice(index, 1);
+        itemElements.splice(index + 1, 0, itemElement);
         promptMessage('arrow_circle_down', '已往下移');
         break;
       }
