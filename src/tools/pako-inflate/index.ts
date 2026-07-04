@@ -25,10 +25,9 @@ if (supportSharedWorker) {
 } else {
   // Fallback to standard worker
   (worker as Worker).onmessage = function (event: MessageEvent) {
-    const result = event.data;
     const callback = pakoInflateWorkerCallback.shift();
     if (callback) {
-      callback[0](result); // Resolve the promise
+      callback[0](event.data); // Resolve the promise
     }
   };
 

@@ -30,7 +30,7 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const { buffer, port }: task = taskQueue.shift();
+  const { buffer, port } = taskQueue.shift() as task;
 
   // Perform the inflate operation (using Pako)
   const result = inflate(buffer, { to: 'string' });
