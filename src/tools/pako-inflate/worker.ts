@@ -1,7 +1,7 @@
 const { inflate } = require('pako');
 
 interface task {
-  buffer: ArrayBuffer;
+  buffer: ArrayBuffer | null;
   port: any;
 }
 
@@ -30,13 +30,16 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const { buffer, port } = taskQueue.shift() as task;
+  const task = taskQueue.shift() as task;
 
   // Perform the inflate operation (using Pako)
-  const result = inflate(buffer) as Uint8Array;
+  const result = inflate(task.buffer as ArrayBuffer) as Uint8Array;
 
   // Send the result back to the main thread
-  port.postMessage(result.buffer, [result.buffer]);
+  task.port.postMessage(result.buffer, [result.buffer]);
+
+  // Destroy the buffer
+  task.buffer = null;
 
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
