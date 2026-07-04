@@ -1,40 +1,54 @@
-const pakoInflateWorkerResolution: Array<Function> = [];
-let port;
+const pakoInflateWorkerCallback: Array<[resolve: Function, reject: Function]> = [];
 
-// Check if SharedWorker is supported, and fall back to Worker if not
-if (typeof SharedWorker !== 'undefined') {
-  const pakoInflateSharedWorker = new SharedWorker(new URL('./worker.ts', import.meta.url)); // Reusable shared worker
-  port = pakoInflateSharedWorker.port; // Access the port for communication
-  port.start(); // Start the port (required by some browsers)
+const supportSharedWorker = typeof SharedWorker !== 'undefined'; // Check if SharedWorker is supported, and fall back to Worker if not
+
+const worker: Worker | SharedWorker = supportSharedWorker ? new SharedWorker(new URL('./worker.ts', import.meta.url)) : new Worker(new URL('./worker.ts', import.meta.url));
+
+if (supportSharedWorker) {
+  (worker as SharedWorker).port.start();
+  // Access the port for communication
+  // Start the port (required by some browsers)
+
+  (worker as SharedWorker).port.onmessage = function (event: MessageEvent) {
+    const callback = pakoInflateWorkerCallback.shift();
+    if (callback) {
+      callback[0](event.data); // Resolve the promise
+    }
+  };
+
+  (worker as SharedWorker).onerror = function (event: ErrorEvent) {
+    const callback = pakoInflateWorkerCallback.shift();
+    if (callback) {
+      callback[1](event.message); // Reject the promise
+    }
+  };
 } else {
-  const pakoInflateWorker = new Worker(new URL('./worker.ts', import.meta.url)); // Fallback to standard worker
-  port = pakoInflateWorker; // Use Worker directly for communication
+  // Fallback to standard worker
+  (worker as Worker).onmessage = function (event: MessageEvent) {
+    const result = event.data;
+    const callback = pakoInflateWorkerCallback.shift();
+    if (callback) {
+      callback[0](result); // Resolve the promise
+    }
+  };
+
+  (worker as Worker).onerror = function (event: ErrorEvent) {
+    const callback = pakoInflateWorkerCallback.shift();
+    if (callback) {
+      callback[1](event.message); // Reject the promise
+    }
+  };
 }
 
-// Handle messages from the worker
-port.onmessage = function (e) {
-  const result = e.data;
-  const resolve = pakoInflateWorkerResolution.shift();
-  if (resolve) {
-    resolve(result); // Resolve the correct promise
-  }
-};
-
-// Handle errors
-port.onerror = function (e) {
-  console.error(e.message);
-};
-
 export async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
-  const result = await new Promise((resolve, reject) => {
-    pakoInflateWorkerResolution.push(resolve); // Store the resolve function
-
-    port.onerror = function (e) {
-      reject(e.message);
-    };
-
-    port.postMessage(buffer); // Send the task to the worker
-  });
+  const result = (await new Promise((resolve, reject) => {
+    pakoInflateWorkerCallback.push([resolve, reject]); // Store the callback functions
+    if (supportSharedWorker) {
+      (worker as SharedWorker).port.postMessage(buffer, [buffer]); // Send the task to the worker
+    } else {
+      (worker as Worker).postMessage(buffer, [buffer]); // Send the task to the worker
+    }
+  })) as string;
 
   return result;
 }
