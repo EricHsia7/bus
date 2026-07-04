@@ -30,16 +30,13 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const task = taskQueue.shift() as task;
+  const { buffer, port } = taskQueue.shift() as task;
 
   // Perform the inflate operation (using Pako)
-  const result = inflate(task.buffer as ArrayBuffer) as Uint8Array;
+  const result = inflate(buffer as ArrayBuffer) as Uint8Array;
 
   // Send the result back to the main thread
-  task.port.postMessage(result.buffer, [result.buffer]);
-
-  // Destroy the buffer
-  task.buffer = null;
+  port.postMessage(result.buffer, [result.buffer]);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
