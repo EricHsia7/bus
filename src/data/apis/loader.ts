@@ -78,10 +78,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  // Create a blob from the concatenated Uint8Array
-  const blob = new Blob([uint8Array], { type: 'application/gzip' });
-  const arrayBuffer = await blob.arrayBuffer();
-  const inflatedData = await pakoInflate(arrayBuffer);
+  const inflatedData = await pakoInflate(uint8Array.buffer);
 
   let result;
   switch (fileType) {
