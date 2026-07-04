@@ -316,7 +316,7 @@ interface BusWindow extends Window {
     if (serviceWorkerRegistered) return true;
     const registration = await navigator.serviceWorker.register('./service-worker.js');
     registration.addEventListener('updatefound', function () {
-      promptMessage('arrow_circle_down', '正在下載最新版本');
+      promptMessage('archive', '正在下載最新版本');
       const worker = registration.installing || registration.waiting || registration.active;
       if (worker !== null) {
         worker.addEventListener('statechange', function (event: Event) {
