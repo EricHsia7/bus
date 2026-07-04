@@ -95,7 +95,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
       thisItemMinutesElement.innerText = thisItem.minutes;
     }
 
-    function updateMain(thisItemElement: HTMLElementm, thisItem: IntegratedNotificationScheduleItem): void {
+    function updateMain(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
       const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_main');
       thisItemMainElement.innerText = thisItem.name;
@@ -303,6 +303,8 @@ export async function cancelNotificationOnNotificationScheduleManager(thisItemEl
   const cancellation = await cancelNotification(schedule_id);
   if (cancellation) {
     thisItemElement.remove();
+    const index = itemElements.indexOf(thisItemElement);
+    itemElements.splice(index, 1);
     promptMessage('check_circle', '已取消通知');
     // TODO: refresh
   } else {
