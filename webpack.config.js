@@ -184,12 +184,12 @@ module.exports = (env, argv) => {
           }
         }
       },
-      usedExports: true,
-      innerGraph: true,
-      concatenateModules: true,
+      avoidEntryIife: true,
       chunkIds: 'deterministic',
+      concatenateModules: true,
+      innerGraph: true,
       mangleExports: 'size',
-      avoidEntryIife: true
+      usedExports: true
     },
     devtool: 'source-map',
     devServer: {
