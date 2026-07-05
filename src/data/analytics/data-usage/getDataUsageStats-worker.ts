@@ -12,7 +12,7 @@ type data = [dataUsageStatsChunks: DataUsageStatsChunkArray, width: number, heig
 const minutesPerDay = 60 * 24;
 
 // Main processing function
-function processWorkerTask(data: data): DataUsageStats {
+function processWorkerTask(data: data): void {
   const [dataUsageStatsChunks, width, height, padding] = data;
 
   const dataUsageStatsChunksLength = dataUsageStatsChunks.length;
