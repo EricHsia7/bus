@@ -1,4 +1,4 @@
-const QRCode = require('qrcode/lib/core/qrcode');
+const { create: QRCode_create } = require('qrcode/lib/core/qrcode');
 
 export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
 
@@ -10,7 +10,7 @@ export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
  */
 
 export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel): Array<Array<0 | 1>> {
-  const qrData = QRCode.create(text, {
+  const qrData = QRCode_create(text, {
     errorCorrectionLevel: errorCorrectionLevel
   });
 
