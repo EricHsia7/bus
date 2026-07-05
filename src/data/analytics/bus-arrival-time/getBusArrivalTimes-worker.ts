@@ -15,9 +15,9 @@ let isProcessing: boolean = false;
 
 // Setup message handling (works for dedicated or shared workers)
 if ('onconnect' in self) {
-  self.onconnect = function (e) {
+  self.onconnect = function (e: MessageEvent) {
     const port = e.ports[0];
-    port.onmessage = function (event) {
+    port.onmessage = function (event: MessageEvent) {
       const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
       taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
       processWorkerTask();
@@ -25,7 +25,7 @@ if ('onconnect' in self) {
   };
 } else {
   const port = self;
-  self.onmessage = function (event) {
+  self.onmessage = function (event: MessageEvent) {
     const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
     taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
     processWorkerTask();
@@ -56,6 +56,8 @@ function processWorkerTask(): void {
   const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port } = taskQueue.shift() as task;
 
   const result: BusArrivalTimes = {};
+
+  const stateBuffers = [];
 
   // For each personalSchedule, build an SVG graph
   for (const personalSchedule of personalSchedules) {
@@ -140,17 +142,24 @@ function processWorkerTask(): void {
       if (!hasOwnProperty(result, stopKey)) {
         result[stopKey] = [];
       }
+      const state = new Int32Array(2 + numbers.length + 1 + counts.length);
+      state[0] = chartWidth;
+      state[1] = chartHeight;
+      state.set(numbers, 2);
+      state[numbers.length] = -1;
+      state.set(counts, 2 + numbers.length + 1);
       result[stopKey].push({
         personalSchedule: personalSchedule,
         chart: svg,
-        state: [[chartWidth, chartHeight], numbers, counts],
+        state: state,
         day: busArrivalTimeDataGroup.day
       });
+      stateBuffers.push(state.buffer);
     }
   }
 
   // Send the complete SVG back to the main thread
-  port.postMessage(result);
+  port.postMessage(result, stateBuffers);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in the queue if any

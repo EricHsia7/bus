@@ -3,8 +3,9 @@ import { findGlobalExtrema } from '../../../tools/math';
 import { WeekDayIndex } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { listAllFolderContent } from '../../folder/index';
-import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule } from '../../personal-schedule/index';
+import { isInPersonalSchedule, PersonalSchedule } from '../../personal-schedule/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
+import { getBusArrivalTimeDataStats } from './getBusArrivalTimeDataStats';
 
 const busArrivalTimeData_writeAheadLog_maxDataLength: number = 32;
 let busArrivalTimeData_writeAheadLog_id: string = '';
@@ -43,51 +44,12 @@ export interface BusArrivalTimeDataWriteAheadLog {
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
   chart: string; // svg
-  state: [size: [width: number, height: number], numbers: Array<number>, counts: Array<number>];
+  state: Int32Array;
   day: WeekDayIndex;
 }
 
 export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
-}
-
-const getBusArrivalTimeDataStatsWorkerResolution: Array<Function> = [];
-let getBusArrivalTimeDataStatsPort;
-
-// Check if SharedWorker is supported, and fall back to Worker if not
-if (typeof SharedWorker !== 'undefined') {
-  const getBusArrivalTimeDataStatsWorker = new SharedWorker(new URL('./getBusArrivalTimeDataStats-worker.ts', import.meta.url)); // Reusable shared worker
-  getBusArrivalTimeDataStatsPort = getBusArrivalTimeDataStatsWorker.port; // Access the port for communication
-  getBusArrivalTimeDataStatsPort.start(); // Start the port (required by some browsers)
-} else {
-  const getBusArrivalTimeDataStatsWorker = new Worker(new URL('./getBusArrivalTimeDataStats-worker.ts', import.meta.url)); // Fallback to standard worker
-  getBusArrivalTimeDataStatsPort = getBusArrivalTimeDataStatsWorker; // Use Worker directly for communication
-}
-
-// Handle messages from the worker
-getBusArrivalTimeDataStatsPort.onmessage = function (e) {
-  const result = e.data;
-  const resolve = getBusArrivalTimeDataStatsWorkerResolution.shift();
-  if (resolve) {
-    resolve(result); // Resolve the correct promise
-  }
-};
-
-// Handle errors
-getBusArrivalTimeDataStatsPort.onerror = function (e) {
-  console.error(e.message);
-};
-
-async function getBusArrivalTimeDataStats(data: Array<BusArrivalTimeData>): Promise<BusArrivalTimeDataGroupStats> {
-  const result = await new Promise((resolve, reject) => {
-    getBusArrivalTimeDataStatsWorkerResolution.push(resolve); // Store the resolve function
-
-    getBusArrivalTimeDataStatsPort.onerror = function (e) {
-      reject(e.message);
-    };
-    getBusArrivalTimeDataStatsPort.postMessage(data); // Send the task to the worker
-  });
-  return result;
 }
 
 function mergeBusArrivalTimeDataStats(targetStats: BusArrivalTimeDataGroupStats, sourceStats: BusArrivalTimeDataGroupStats): BusArrivalTimeDataGroupStats {
@@ -153,7 +115,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const mergedExtrema = findGlobalExtrema(mergedStats);
           dataGroup.min = mergedExtrema[0];
           dataGroup.max = mergedExtrema[1];
-          dataGroup.day = currentDay;
+          dataGroup.day = currentDay as WeekDayIndex;
           dataGroup.timestamp = existingDataObject.timestamp;
           dataGroup.id = stopID;
         } else {
@@ -162,7 +124,7 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
           const newExtrema = findGlobalExtrema(newStats);
           dataGroup.min = newExtrema[0];
           dataGroup.max = newExtrema[1];
-          dataGroup.day = currentDay;
+          dataGroup.day = currentDay as WeekDayIndex;
           dataGroup.timestamp = currentTimestamp;
           dataGroup.id = stopID;
         }
@@ -204,7 +166,7 @@ export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
         const newExtremum = findGlobalExtrema(newStats);
         dataGroup.min = newExtremum[0];
         dataGroup.max = newExtremum[1];
-        dataGroup.day = day;
+        dataGroup.day = day as WeekDayIndex;
         dataGroup.timestamp = object.timestamp;
         dataGroup.id = stopID;
       }
@@ -223,47 +185,5 @@ export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeData
       result.push(JSON.parse(json) as BusArrivalTimeDataGroup);
     }
   }
-  return result;
-}
-
-const getBusArrivalTimesWorkerResolution: Array<Function> = [];
-let getBusArrivalTimesPort;
-
-// Check if SharedWorker is supported, and fall back to Worker if not
-if (typeof SharedWorker !== 'undefined') {
-  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getBusArrivalTimes-worker.ts', import.meta.url)); // Reusable shared worker
-  getBusArrivalTimesPort = getUpdateRateSharedWorker.port; // Access the port for communication
-  getBusArrivalTimesPort.start(); // Start the port (required by some browsers)
-} else {
-  const getUpdateRateWorker = new Worker(new URL('./getBusArrivalTimes-worker.ts', import.meta.url)); // Fallback to standard worker
-  getBusArrivalTimesPort = getUpdateRateWorker; // Use Worker directly for communication
-}
-
-// Handle messages from the worker
-getBusArrivalTimesPort.onmessage = function (e) {
-  const result = e.data;
-  const resolve = getBusArrivalTimesWorkerResolution.shift();
-  if (resolve) {
-    resolve(result); // Resolve the correct promise
-  }
-};
-
-// Handle errors
-getBusArrivalTimesPort.onerror = function (e) {
-  console.error(e.message);
-};
-
-export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
-  const personalSchedules = listPersonalSchedules();
-  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
-
-  const result = await new Promise((resolve, reject) => {
-    getBusArrivalTimesWorkerResolution.push(resolve); // Store the resolve function
-
-    getBusArrivalTimesPort.onerror = function (e) {
-      reject(e.message);
-    };
-    getBusArrivalTimesPort.postMessage([personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight]); // Send the task to the worker
-  });
   return result;
 }

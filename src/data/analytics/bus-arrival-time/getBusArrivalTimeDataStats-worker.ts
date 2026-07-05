@@ -10,9 +10,9 @@ let isProcessing: boolean = false;
 
 // Setup message handling (works for dedicated or shared workers)
 if ('onconnect' in self) {
-  self.onconnect = function (e) {
+  self.onconnect = function (e: MessageEvent) {
     const port = e.ports[0];
-    port.onmessage = function (event) {
+    port.onmessage = function (event: MessageEvent) {
       const data = event.data;
       taskQueue.push({ data, port });
       processWorkerTask();
@@ -20,7 +20,7 @@ if ('onconnect' in self) {
   };
 } else {
   const port = self;
-  self.onmessage = function (event) {
+  self.onmessage = function (event: MessageEvent) {
     const data = event.data;
     taskQueue.push({ data, port });
     processWorkerTask();
@@ -29,9 +29,9 @@ if ('onconnect' in self) {
 
 function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
-  
+
   isProcessing = true;
-  const { data, port }: task = taskQueue.shift();
+  const { data, port } = taskQueue.shift() as task;
 
   const statsArray = new Uint32Array(60 * 24); // one day in minutes
   const dataLength = data.length;
