@@ -40,7 +40,8 @@ export async function downloadData() {
   setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSimilarity', 0, false);
   setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsList', 0, false);
   document.addEventListener(dataDownloadRequestID, handleDataReceivingProgressUpdates);
-  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true), getMaterialSymbolsSearchIndex(dataDownloadRequestID), getMaterialSymbolsDescription(dataDownloadRequestID), getMaterialSymbolsList(dataDownloadRequestID), getMaterialSymbolsSimilarity(dataDownloadRequestID)]);
+  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true)]);
+  await Promise.all([getMaterialSymbolsSearchIndex(dataDownloadRequestID), getMaterialSymbolsDescription(dataDownloadRequestID), getMaterialSymbolsList(dataDownloadRequestID), getMaterialSymbolsSimilarity(dataDownloadRequestID)]);
   deleteDataReceivingProgress(dataDownloadRequestID);
   deleteDataUpdateTime(dataDownloadRequestID);
 }
