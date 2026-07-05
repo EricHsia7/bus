@@ -1,4 +1,4 @@
-import { inflate } from 'pako';
+const { inflate }  =  require('pako/lib/inflate.js');
 
 interface task {
   buffer: ArrayBuffer | null;

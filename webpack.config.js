@@ -118,6 +118,7 @@ module.exports = (env, argv) => {
                 [
                   '@babel/preset-env',
                   {
+                    modules: false,
                     exclude: ['@babel/plugin-transform-regenerator', '@babel/plugin-transform-template-literals', '@babel/plugin-transform-for-of']
                   }
                 ],
