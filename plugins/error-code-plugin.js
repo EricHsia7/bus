@@ -74,14 +74,17 @@ class ErrorCodePlugin {
   }
 
   isNewError(node) {
+    if (node === null) return false;
     return node.type === 'NewExpression' && node.callee.type === 'Identifier' && node.callee.name === 'Error';
   }
 
   isNewTypeError(node) {
+    if (node === null) return false;
     return node.type === 'NewExpression' && node.callee.type === 'Identifier' && node.callee.name === 'TypeError';
   }
 
   walk(node, callback) {
+    if (node === null) return false;
     callback(node);
     for (const key in node) {
       if (node[key] && typeof node[key] === 'object') {
