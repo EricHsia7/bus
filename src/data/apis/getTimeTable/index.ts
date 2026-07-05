@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 let TimetableAPIVariableCache_available: boolean = false;
 let TimetableAPIVariableCache_data: object = {};
@@ -26,7 +26,7 @@ export async function getTimeTable(requestID: string): Promise<Timetable> {
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+      const inflatedData = await fetchInflate(url, function (message) {
         setDataReceivingProgress(requestID, `getTimeTable_${api[0]}`, message.percent, false);
       });
       const data = JSON.parse(decoder.decode(inflatedData));

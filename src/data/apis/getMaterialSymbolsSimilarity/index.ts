@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress } from '../loader';
+import { fetchInflate, setDataReceivingProgress } from '../loader';
 
 /**
  * a stringified array of symbol names
@@ -66,7 +66,7 @@ export async function getMaterialSymbolsSimilarity(requestID: string): Promise<U
   async function getData(): Promise<MaterialSymbolsSimilarity> {
     const apiurl = getMaterialSymbolsAPIURL(2);
     const decoder = new TextDecoder();
-    const inflatedData = await fetchInflate(apiurl, function (message: LoaderMessageProgress) {
+    const inflatedData = await fetchInflate(apiurl, function (message) {
       setDataReceivingProgress(requestID, 'getMaterialSymbolsSimilarity', message.percent, false);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsSimilarity;

@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress } from '../loader';
+import { fetchInflate, setDataReceivingProgress } from '../loader';
 
 export interface MaterialSymbolsList {
   list: string;
@@ -15,7 +15,7 @@ export async function getMaterialSymbolsList(requestID: string): Promise<Unpacke
   async function getData(): Promise<MaterialSymbolsList> {
     const apiurl = getMaterialSymbolsAPIURL(3);
     const decoder = new TextDecoder();
-    const inflatedData = await fetchInflate(apiurl, function (message: LoaderMessageProgress) {
+    const inflatedData = await fetchInflate(apiurl, function (message) {
       setDataReceivingProgress(requestID, 'getMaterialSymbolsList', message.percent, false);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsList;

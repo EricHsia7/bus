@@ -82,7 +82,13 @@ function concatChunks(chunks: Array<Uint8Array>): Uint8Array {
   return result;
 }
 
-export function fetchInflate(url: string, onProgress: Function): Promise<Uint8Array> {
+/**
+ * fetch a url, and inflate the response
+ * @param url URL to fetch
+ * @param onProgress function called on progress
+ * @returns inflated Uint8Array
+ */
+export function fetchInflate(url: string, onProgress: (message: LoaderMessageProgress) => void): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject, onProgress, chunks: [] });

@@ -29,7 +29,7 @@ export async function getBusData(requestID: string): Promise<BusData> {
   const decoder = new TextDecoder();
   for (const api of apis) {
     const url = getAPIURL(api[0], api[1]);
-    const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+    const inflatedData = await fetchInflate(url, function (message) {
       setDataReceivingProgress(requestID, `getBusData_${api[0]}`, message.percent, false);
     });
     const data = JSON.parse(decoder.decode(inflatedData));

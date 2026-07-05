@@ -1,7 +1,7 @@
 import { ParsedAddress } from '../../../tools/address';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -154,7 +154,7 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+      const inflatedData = await fetchInflate(url, function (message) {
         setDataReceivingProgress(requestID, `getLocation_${api[0]}`, message.percent, false);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
