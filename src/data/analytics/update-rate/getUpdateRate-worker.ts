@@ -9,10 +9,9 @@ const taskQueue: Array<task> = [];
 let isProcessing: boolean = false;
 
 if ('onconnect' in self) {
-  self.onconnect = function (e) {
+  self.onconnect = function (e: MessageEvent) {
     const port = e.ports[0];
-
-    port.onmessage = function (event) {
+    port.onmessage = function (event: MessageEvent) {
       const dataGroups = event.data;
       taskQueue.push({ dataGroups, port });
       processWorkerTask();
@@ -20,8 +19,7 @@ if ('onconnect' in self) {
   };
 } else {
   const port = self;
-
-  self.onmessage = function (event) {
+  self.onmessage = function (event: MessageEvent) {
     const dataGroups = event.data;
     taskQueue.push({ dataGroups, port });
     processWorkerTask();
@@ -32,7 +30,7 @@ function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
 
   isProcessing = true;
-  const { dataGroups, port }: task = taskQueue.shift();
+  const { dataGroups, port } = taskQueue.shift() as task;
 
   if (dataGroups.length === 0) {
     port.postMessage(0.8);
@@ -58,6 +56,7 @@ function processWorkerTask(): void {
     // Send the result back to the main thread
     port.postMessage(result);
   }
+
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
 }

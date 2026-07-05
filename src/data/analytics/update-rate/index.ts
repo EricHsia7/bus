@@ -282,45 +282,58 @@ export async function discardUpdateRateDataGroups() {
   }
 }
 
-const getUpdateRateWorkerResolution: Array<Function> = [];
-let port;
+const workerCallback: Array<[resolve: Function, reject: Function]> = [];
 
-// Check if SharedWorker is supported, and fall back to Worker if not
-if (typeof SharedWorker !== 'undefined') {
-  const getUpdateRateSharedWorker = new SharedWorker(new URL('./getUpdateRate-worker.ts', import.meta.url)); // Reusable shared worker
-  port = getUpdateRateSharedWorker.port; // Access the port for communication
-  port.start(); // Start the port (required by some browsers)
+const supportSharedWorker = typeof SharedWorker !== 'undefined'; // Check if SharedWorker is supported, and fall back to Worker if not
+
+const worker: Worker | SharedWorker = supportSharedWorker ? new SharedWorker(new URL('./getUpdateRate-worker.ts', import.meta.url)) : new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url));
+
+if (supportSharedWorker) {
+  (worker as SharedWorker).port.start();
+  // Access the port for communication
+  // Start the port (required by some browsers)
+
+  (worker as SharedWorker).port.onmessage = function (event: MessageEvent) {
+    const callback = workerCallback.shift();
+    if (callback) {
+      callback[0](event.data); // Resolve the promise
+    }
+  };
+
+  (worker as SharedWorker).onerror = function (event: ErrorEvent) {
+    const callback = workerCallback.shift();
+    if (callback) {
+      callback[1](event.message); // Reject the promise
+    }
+  };
 } else {
-  const getUpdateRateWorker = new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url)); // Fallback to standard worker
-  port = getUpdateRateWorker; // Use Worker directly for communication
+  // Fallback to standard worker
+  (worker as Worker).onmessage = function (event: MessageEvent) {
+    const callback = workerCallback.shift();
+    if (callback) {
+      callback[0](event.data); // Resolve the promise
+    }
+  };
+
+  (worker as Worker).onerror = function (event: ErrorEvent) {
+    const callback = workerCallback.shift();
+    if (callback) {
+      callback[1](event.message); // Reject the promise
+    }
+  };
 }
-
-// Handle messages from the worker
-port.onmessage = function (e) {
-  const result = e.data;
-  const resolve = getUpdateRateWorkerResolution.shift();
-  if (resolve) {
-    resolve(result); // Resolve the correct promise
-  }
-};
-
-// Handle errors
-port.onerror = function (e) {
-  console.error(e.message);
-};
 
 export async function getUpdateRate(): Promise<number> {
   const dataGroups = await listUpdateRateDataGroups();
 
-  const result = await new Promise((resolve, reject) => {
-    getUpdateRateWorkerResolution.push(resolve); // Store the resolve function
-
-    port.onerror = function (e) {
-      reject(e.message);
-    };
-
-    port.postMessage(dataGroups); // Send the task to the worker
-  });
+  const result = (await new Promise((resolve, reject) => {
+    workerCallback.push([resolve, reject]); // Store the callback functions
+    if (supportSharedWorker) {
+      (worker as SharedWorker).port.postMessage(dataGroups); // Send the task to the worker
+    } else {
+      (worker as Worker).postMessage(dataGroups); // Send the task to the worker
+    }
+  })) as number;
 
   return result;
 }
