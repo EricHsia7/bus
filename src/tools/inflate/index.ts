@@ -41,13 +41,13 @@ if (supportSharedWorker) {
   };
 }
 
-export async function pakoInflate(buffer: ArrayBuffer): Promise<string> {
+export async function inflate(data: Uint8Array): Promise<string> {
   const result = (await new Promise((resolve, reject) => {
     workerCallback.push([resolve, reject]); // Store the callback functions
     if (supportSharedWorker) {
-      (worker as SharedWorker).port.postMessage(buffer, [buffer]); // Send the task to the worker
+      (worker as SharedWorker).port.postMessage(data, [data.buffer]); // Send the task to the worker
     } else {
-      (worker as Worker).postMessage(buffer, [buffer]); // Send the task to the worker
+      (worker as Worker).postMessage(data, [data.buffer]); // Send the task to the worker
     }
   })) as string;
 

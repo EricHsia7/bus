@@ -1,6 +1,6 @@
 import { hasOwnProperty } from '../../tools/index';
 import { clamp } from '../../tools/math';
-import { pakoInflate } from '../../tools/pako-inflate/index';
+import { inflate } from '../../tools/inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
 
@@ -78,7 +78,7 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
     position += chunk.length;
   }
 
-  const inflatedData = await pakoInflate(uint8Array.buffer);
+  const inflatedData = await inflate(uint8Array);
 
   let result;
   switch (fileType) {
