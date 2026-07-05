@@ -3,6 +3,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 const MinimizerPlugin = require('minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
@@ -18,6 +19,7 @@ const thisVersion = require('./dist/version.json');
 module.exports = (env, argv) => {
   return {
     plugins: [
+      new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({
         filename: '[contenthash].css',
         runtime: false

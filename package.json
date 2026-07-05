@@ -50,6 +50,7 @@
     "stylelint": "17.14.0",
     "typescript-eslint": "8.62.1",
     "webpack-cli": "7.2.1",
+    "webpack-remove-empty-scripts": "1.1.1",
     "webpack-sources": "3.5.0",
     "webpack-subresource-integrity": "5.1.0",
     "webpack": "5.108.4",
