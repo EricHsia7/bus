@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 let SemiTimetableAPIVariableCache_available: boolean = false;
 let SemiTimetableAPIVariableCache_data: object = {};
@@ -25,9 +25,13 @@ export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable
       [1, 12]
     ];
     const result = [];
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getSemiTimeTable_${api[0]}`, 'json');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getSemiTimeTable_${api[0]}`, message.percent, false);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }

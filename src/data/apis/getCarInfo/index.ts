@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface CarInfoItem {
   BusId: number; // BusId ≠ BusID
@@ -40,7 +40,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
   const worker = new Worker(new URL('./simplifyCarInfo-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -52,7 +52,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
     };
 
     worker.postMessage(CarInfo); // Send data to the worker
-  });
+  })) as SimplifiedCarInfo;
 
   return result;
 }
@@ -64,9 +64,13 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
       [1, 2]
     ];
     const result = [];
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getCarInfo_${api[0]}`, 'json');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getCarInfo_${api[0]}`, message.percent, false);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }

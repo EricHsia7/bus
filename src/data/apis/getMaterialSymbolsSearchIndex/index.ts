@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress } from '../loader';
 
 interface MaterialSymbolsSearchIndex {
   dictionary: string;
@@ -34,7 +34,11 @@ function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): Unp
 export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<UnpackedMaterialSymbolsSearchIndex> {
   async function getData(): Promise<MaterialSymbolsSearchIndex> {
     const apiurl = getMaterialSymbolsAPIURL(0);
-    const data = (await fetchData(apiurl, requestID, 'getMaterialSymbolsSearchIndex', 'json')) as MaterialSymbolsSearchIndex;
+    const decoder = new TextDecoder();
+    const inflatedData = await fetchInflate(apiurl, function (message: LoaderMessageProgress) {
+      setDataReceivingProgress(requestID, 'getMaterialSymbolsSearchIndex', message.percent, false);
+    });
+    const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsSearchIndex;
     return data;
   }
 

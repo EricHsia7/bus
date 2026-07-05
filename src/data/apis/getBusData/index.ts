@@ -1,5 +1,5 @@
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataUpdateTime } from '../loader';
+import { LoaderMessageProgress, fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface BusDataItem {
   ProviderID: number;
@@ -26,10 +26,14 @@ export async function getBusData(requestID: string): Promise<BusData> {
     [1, 0]
   ];
   const result = [];
+  const decoder = new TextDecoder();
   for (const api of apis) {
     const url = getAPIURL(api[0], api[1]);
-    const data = await fetchData(url, requestID, `getBusData_${api[0]}`, 'json');
-    for (let i = 0, l = data.BusInfo.length; i < l; i ++) {
+    const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+      setDataReceivingProgress(requestID, `getBusData_${api[0]}`, message.percent, false);
+    });
+    const data = JSON.parse(decoder.decode(inflatedData));
+    for (let i = 0, l = data.BusInfo.length; i < l; i++) {
       result.push(data.BusInfo[i]);
     }
     setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
