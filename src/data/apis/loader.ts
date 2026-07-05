@@ -132,6 +132,90 @@ export async function fetchData(url: string, requestID: string, tag: string, fil
   }
 }
 
+export interface LoaderMessageProgress {
+  type: 'progress';
+  id: number;
+  loaded: number;
+  total: number;
+  percent: number;
+}
+
+export interface LoaderMessageData {
+  type: 'data';
+  id: number;
+  chunk: Uint8Array;
+  final: boolean;
+}
+
+export interface LoaderMessageDone {
+  type: 'done';
+  id: number;
+}
+
+export interface LoaderMessageError {
+  type: 'error';
+  id: number;
+  error: Error['message'];
+}
+
+export type LoaderMessage = LoaderMessageProgress | LoaderMessageData | LoaderMessageDone | LoaderMessageError;
+
+export interface LoaderJob {
+  resolve: Function;
+  reject: Function;
+  onProgress: Function;
+  chunks: Array<Uint8Array>;
+}
+
+const worker = new Worker(new URL('./loader-worker.ts', import.meta.url));
+
+let nextId: number = 0;
+const pending = new Map<number, LoaderJob>();
+
+worker.onmessage = (event: MessageEvent) => {
+  const msg = event.data as LoaderMessage;
+  const job = pending.get(msg.id);
+  if (!job) return;
+
+  switch (msg.type) {
+    case 'progress':
+      job.onProgress?.(msg);
+      break;
+    case 'data':
+      job.chunks.push(msg.chunk); // inflated Uint8Array
+      break;
+    case 'done':
+      pending.delete(msg.id);
+      job.resolve(concatChunks(job.chunks));
+      break;
+    case 'error':
+      pending.delete(msg.id);
+      job.reject(new Error(msg.error));
+      break;
+  }
+};
+
+worker.onerror = (e) => console.error('Worker crashed:', e.message);
+
+function concatChunks(chunks: Array<Uint8Array>): Uint8Array {
+  const size = chunks.reduce((n, c) => n + c.length, 0);
+  const result = new Uint8Array(size);
+  let pos = 0;
+  for (const chunk of chunks) {
+    result.set(chunk, pos);
+    pos += chunk.length;
+  }
+  return result;
+}
+
+export function fetchInflate(url: string, onProgress: Function): Promise<Uint8Array> {
+  return new Promise((resolve, reject) => {
+    const id = nextId++;
+    pending.set(id, { resolve, reject, onProgress, chunks: [] });
+    worker.postMessage({ id, url });
+  });
+}
+
 function discardExpiredFetchTasks(): void {
   const now = new Date().getTime();
   for (const url in tasks) {
