@@ -51,7 +51,7 @@ function processWorkerTask(): void {
     statsArray[index] += offset;
   }
   // Send the complete HTML back to the main thread
-  port.postMessage(Array.from(statsArray));
+  port.postMessage(statsArray, [statsArray.buffer]);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in the queue if any
