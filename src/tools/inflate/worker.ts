@@ -34,7 +34,7 @@ function processWorkerTask(): void {
   const result = decompressSync(data);
 
   // Send the result back to the main thread
-  port.postMessage(result.buffer, [result.buffer]);
+  port.postMessage(result, [result.buffer]);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in queue, if any
