@@ -172,6 +172,7 @@ import './interface/notification-schedule-manager/head.css';
 import './interface/notification-schedule-manager/body.css';
 import './interface/notification-schedule-manager/list.css';
 import './interface/notification-schedule-manager/item.css';
+import './interface/notification-schedule-manager/index.css';
 
 import './interface/register-notification/field.css';
 import './interface/register-notification/head.css';

@@ -3,7 +3,7 @@ import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { getIconElement } from '../icons/index';
@@ -27,7 +27,7 @@ const notifcationScheduleManagerTick = new Tick(refreshNotificationScheduleManag
 
 function animateUpdateTimer(interval: number): void {
   NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
-  NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_slide_rtl');
+  NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_scale_down');
 }
 
 function handleDataReceivingProgressUpdates(event: Event): void {
@@ -39,84 +39,71 @@ function handleDataReceivingProgressUpdates(event: Event): void {
 }
 
 function generateElementOfItem(): HTMLElement {
-  // Main item element
-  const itemElement = documentCreateDivElement();
-  itemElement.classList.add('css_notification_schedule_manager_item');
+  const element = documentCreateDivElement();
+  element.classList.add('css_notification_schedule_manager_item');
 
-  // Hours element
-  const hoursElement = documentCreateDivElement();
-  hoursElement.classList.add('css_notification_schedule_manager_item_hours');
-  itemElement.appendChild(hoursElement);
+  // Head
+  const headElement = documentCreateDivElement();
+  headElement.classList.add('css_notification_schedule_manager_item_head');
 
-  // Notification schedule container
-  const notificationScheduleElement = documentCreateDivElement();
-  notificationScheduleElement.classList.add('css_notification_schedule_manager_item_notification_schedule');
-
-  // Minutes element
-  const minutesElement = documentCreateDivElement();
-  minutesElement.classList.add('css_notification_schedule_manager_item_notification_schedule_minutes');
-  notificationScheduleElement.appendChild(minutesElement);
-
-  // Context element
+  // Context
   const contextElement = documentCreateDivElement();
-  contextElement.classList.add('css_notification_schedule_manager_item_notification_schedule_context');
-  notificationScheduleElement.appendChild(contextElement);
+  contextElement.classList.add('css_notification_schedule_manager_item_context');
+  headElement.appendChild(contextElement);
 
-  // Main element
+  // Main
   const mainElement = documentCreateDivElement();
-  mainElement.classList.add('css_notification_schedule_manager_item_notification_schedule_main');
-  notificationScheduleElement.appendChild(mainElement);
+  mainElement.classList.add('css_notification_schedule_manager_item_main');
+  headElement.appendChild(mainElement);
 
-  // Cancel button element
-  const cancelElement = documentCreateDivElement();
-  cancelElement.classList.add('css_notification_schedule_manager_item_notification_schedule_cancel');
-  const iconElement = document.createElement('span');
-  iconElement.appendChild(getIconElement('close'));
-  cancelElement.appendChild(iconElement);
+  // Time
+  const timeElement = documentCreateDivElement();
+  timeElement.classList.add('css_notification_schedule_manager_item_time');
+  headElement.appendChild(timeElement);
 
-  notificationScheduleElement.appendChild(cancelElement);
+  element.appendChild(headElement);
 
-  // Assemble
-  itemElement.appendChild(notificationScheduleElement);
+  // Drawer
+  const drawerElement = documentCreateDivElement();
+  drawerElement.classList.add('css_notification_schedule_manager_item_drawer');
 
-  return itemElement;
+  // Button
+  const buttonElement = documentCreateDivElement();
+  buttonElement.classList.add('css_notification_schedule_manager_item_drawer_button');
+  buttonElement.appendChild(getIconElement('close'));
+  drawerElement.appendChild(buttonElement);
+
+  element.appendChild(drawerElement);
+
+  return element;
 }
 
 function updateNotificationScheduleManagerField(integration: IntegratedNotificationSchedules, skeletonScreen: boolean, animation: boolean): void {
   function updateItem(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem, previousItem: IntegratedNotificationScheduleItem | null): void {
-    function updateHours(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      const thisItemHoursElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_hours');
-      thisItemHoursElement.innerText = thisItem.hours;
+    function updateTime(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
+      const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
+      const timeElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_time');
+      timeElement.innerText = `${thisItem.hours}:${thisItem.minutes}`;
     }
 
-    function updateMinutes(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
-      const thisItemMinutesElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_minutes');
-      thisItemMinutesElement.innerText = thisItem.minutes;
+    function updateMain(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
+      const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
+      const mainElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_main');
+      mainElement.innerText = thisItem.name;
     }
 
-    function updateMain(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
-      const thisItemMainElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_main');
-      thisItemMainElement.innerText = thisItem.name;
+    function updateContext(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
+      const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
+      const contextElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_context');
+      contextElement.innerText = `${thisItem.route.name} - 往${thisItem.route.direction}`;
     }
 
-    function updateContext(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
-      const thisItemContextElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_context');
-      thisItemContextElement.innerText = `${thisItem.route.name} - 往${thisItem.route.direction}`;
-    }
-
-    function updateCancel(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      const thisItemNotificationScheduleElement = elementQuerySelector(thisItemElement, '.css_notification_schedule_manager_item_notification_schedule');
-      const thisItemCancelElement = elementQuerySelector(thisItemNotificationScheduleElement, '.css_notification_schedule_manager_item_notification_schedule_cancel');
-      thisItemCancelElement.onclick = function () {
+    function updateButton(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
+      const drawerElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_drawer');
+      const buttonElement = elementQuerySelector(drawerElement, '.css_notification_schedule_manager_item_drawer_button');
+      buttonElement.onclick = function () {
         cancelNotificationOnNotificationScheduleManager(thisItemElement, thisItem.schedule_id);
       };
-    }
-
-    function updateFirst(thisItemElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
-      thisItemElement.setAttribute('first', booleanToString(thisItem.is_first));
     }
 
     function updateAnimation(thisItemElement: HTMLElement, animation: boolean): void {
@@ -128,32 +115,28 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
     }
 
     if (previousItem === null || previousItem === undefined) {
-      updateHours(thisItemElement, thisItem);
-      updateMinutes(thisItemElement, thisItem);
+      updateTime(thisItemElement, thisItem);
       updateMain(thisItemElement, thisItem);
       updateContext(thisItemElement, thisItem);
-      updateCancel(thisItemElement, thisItem);
-      updateFirst(thisItemElement, thisItem);
+      updateButton(thisItemElement, thisItem);
       updateAnimation(thisItemElement, animation);
       updateSkeletonScreen(thisItemElement, skeletonScreen);
     } else {
-      if (thisItem.hours !== previousItem.hours) {
-        updateHours(thisItemElement, thisItem);
+      if (thisItem.hours !== previousItem.hours || thisItem.minutes !== previousItem.minutes) {
+        updateTime(thisItemElement, thisItem);
       }
-      if (thisItem.minutes !== previousItem.minutes) {
-        updateMinutes(thisItemElement, thisItem);
-      }
+
       if (previousItem.schedule_id !== thisItem.schedule_id) {
+        updateTime(thisItemElement, thisItem);
         updateMain(thisItemElement, thisItem);
         updateContext(thisItemElement, thisItem);
-        updateCancel(thisItemElement, thisItem);
+        updateButton(thisItemElement, thisItem);
       }
-      if (previousItem.is_first !== thisItem.is_first) {
-        updateFirst(thisItemElement, thisItem);
-      }
+
       if (previousAnimation !== animation) {
         updateAnimation(thisItemElement, animation);
       }
+
       if (previousSkeletonScreen !== skeletonScreen) {
         updateSkeletonScreen(thisItemElement, skeletonScreen);
       }
@@ -199,6 +182,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
 
   previousIntegration = integration;
   previousSkeletonScreen = skeletonScreen;
+  previousAnimation = animation;
 }
 
 function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
@@ -244,7 +228,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
     const requestID = generateIdentifier();
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
-    NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_slide_rtl');
+    NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_scale_down');
     document.addEventListener(requestID, handleDataReceivingProgressUpdates);
     const integration = await integrateNotifcationSchedules(requestID);
     updateNotificationScheduleManagerField(integration, false, playing_animation);

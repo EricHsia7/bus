@@ -1,0 +1,19 @@
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_context,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_main,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_time {
+  background: var(--b-cssvar-ededf2);
+}
+
+
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_context,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_main,
+.css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item[animation="true"][skeleton-screen="true"] .css_notification_schedule_manager_item_head .css_notification_schedule_manager_item_time {
+  background: var(--b-cssvar-ededf2);
+  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-size: 400% 100%;
+  background-position-x: 0% 0%;
+  animation: b-css-skeleton-loading;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}

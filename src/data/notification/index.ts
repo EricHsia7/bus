@@ -3,7 +3,7 @@ import { generateIdentifier, hasOwnProperty, isValidURL } from '../../tools/inde
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime } from '../apis/loader';
+import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 import { scheduleNotification } from './apis/scheduleNotification/index';
@@ -260,7 +260,6 @@ export interface IntegratedNotificationScheduleItem {
     id: NotificationSchedule['route_id'];
     pathAttributeId: SimplifiedRouteItem['pid'];
   };
-  is_first: boolean;
   date: string;
   hours: string;
   minutes: string;
@@ -273,6 +272,8 @@ export interface IntegratedNotificationSchedules {
 }
 
 export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotificationSchedules> {
+  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
+  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
   const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
   const notificationSchedules = listNotifcationSchedules();
   const now = new Date().getTime();
@@ -333,28 +334,15 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
     return a.scheduled_time - b.scheduled_time;
   });
 
-  const items2: Array<IntegratedNotificationScheduleItem> = [];
-  let itemQuantity: IntegratedNotificationSchedules['itemQuantity'] = 0;
-  const groups: { [key: string]: true } = {};
-  for (const item of items) {
-    const groupKey = `g_${item.date}_${item.hours}`;
-    if (!hasOwnProperty(groups, groupKey)) {
-      groups[groupKey] = true;
-      item.is_first = true;
-    } else {
-      item.is_first = false;
-    }
-    items2.push(item);
-    itemQuantity += 1;
-  }
-
   const result: IntegratedNotificationSchedules = {
-    items: items2,
-    itemQuantity: itemQuantity,
+    items: items,
+    itemQuantity: items.length,
     dataUpdateTime: Math.max(getDataUpdateTime(requestID), now)
   };
+
   deleteDataUpdateTime(requestID);
   deleteDataReceivingProgress(requestID);
+
   return result;
 }
 
