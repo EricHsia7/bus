@@ -51,6 +51,7 @@ let routeSliding_sliding: boolean = false;
 
 const routeTick = new Tick(refreshRoute, 15 * 1000);
 const routeVisibilityMonitor = new VisibilityMonitor({ root: RouteGroupsElement, threshold: 0.5 });
+const decoder = new TextDecoder();
 
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
@@ -812,7 +813,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_route_group_item_bus_arrival_time_chart');
         personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
         personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
-        chartElement.innerHTML = busArrivalTimeItem.chart;
+        chartElement.innerHTML = decoder.decode(busArrivalTimeItem.chart);
       }
 
       thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));

@@ -47,6 +47,8 @@ if (typeof OffscreenCanvas !== 'undefined') {
   supportOffscreenCanvas = true;
 }
 
+const encoder = new TextEncoder();
+
 // Main processing function
 function processWorkerTask(): void {
   if (isProcessing || taskQueue.length === 0) return;
@@ -57,7 +59,7 @@ function processWorkerTask(): void {
 
   const result: BusArrivalTimes = {};
 
-  const stateBuffers = [];
+  const transferableObjects = [];
 
   // For each personalSchedule, build an SVG graph
   for (const personalSchedule of personalSchedules) {
@@ -138,6 +140,8 @@ function processWorkerTask(): void {
       const bars = `<path d="${barsPathCommand}" stroke="none" stroke-width="0" component="bars"/>`;
 
       const svg = `<svg width="${chartWidth}" height="${chartHeight}" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">${verticalGridline}${verticalGridlineLabels}${bottomLine}${bars}</svg>`;
+      const encodedSvg = encoder.encode(svg);
+      transferableObjects.push(encodedSvg.buffer);
       const stopKey = `s_${busArrivalTimeDataGroup.id}`;
       if (!hasOwnProperty(result, stopKey)) {
         result[stopKey] = [];
@@ -146,20 +150,20 @@ function processWorkerTask(): void {
       state[0] = chartWidth;
       state[1] = chartHeight;
       state.set(numbers, 2);
-      state[numbers.length] = -1;
+      state[2 + numbers.length] = -1;
       state.set(counts, 2 + numbers.length + 1);
       result[stopKey].push({
         personalSchedule: personalSchedule,
-        chart: svg,
+        chart: encodedSvg.buffer,
         state: state,
         day: busArrivalTimeDataGroup.day
       });
-      stateBuffers.push(state.buffer);
+      transferableObjects.push(state.buffer);
     }
   }
 
   // Send the complete SVG back to the main thread
-  port.postMessage(result, stateBuffers);
+  port.postMessage(result, transferableObjects);
 
   isProcessing = false;
   processWorkerTask(); // Process next task in the queue if any

@@ -50,6 +50,7 @@ let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
 const locationVisibilityMonitor = new VisibilityMonitor({ root: LocationGroupsElement, threshold: 0.5 });
+const decoder = new TextDecoder()
 
 let currentHashSet_hash: string = '';
 
@@ -662,7 +663,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_chart');
         personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
         personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
-        chartElement.innerHTML = busArrivalTimeItem.chart;
+        chartElement.innerHTML = decoder.decode(busArrivalTimeItem.chart);
       }
 
       thisBusArrivalTimesElement.setAttribute('empty', booleanToString(busArrivalTimesQuantity === 0));
