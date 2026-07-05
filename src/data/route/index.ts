@@ -1,7 +1,8 @@
 import { convertPositionsToDistance } from '../../tools/convert';
 import { hasOwnProperty } from '../../tools/index';
 import { clamp } from '../../tools/math';
-import { BusArrivalTime, getBusArrivalTimes } from '../analytics/bus-arrival-time/index';
+import { getBusArrivalTimes } from '../analytics/bus-arrival-time/getBusArrivalTimes';
+import { BusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, getEstimateTime } from '../apis/getEstimateTime/index';
