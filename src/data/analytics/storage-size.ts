@@ -55,6 +55,7 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
   let totalSizeInBytes: number = 0;
   const categorizedSizesInBytes: CategorizedSizesInBytes = {};
   const storesLength = getStoresLength();
+  const encoder = new TextEncoder()
 
   for (let i = 0; i < storesLength; i++) {
     const keysInStore = await lfListItemKeys(i);
@@ -62,7 +63,7 @@ export async function getStoresSizeStatistics(): Promise<StoreSizeStatistics> {
     for (const itemKey of keysInStore) {
       const item = await lfGetItem(i, itemKey);
       const itemInString = String(item);
-      const itemLength = itemInString.length + itemKey.length;
+      const itemLength = encoder.encode(itemInString).byteLength + encoder.encode(itemKey).byteLength;
       totalSizeInBytes += itemLength;
       thisStoreSizeInBytes += itemLength;
     }
