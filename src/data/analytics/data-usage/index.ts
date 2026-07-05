@@ -20,7 +20,7 @@ export interface DataUsageStats {
     min: number;
   };
   period: TimeStampPeriod;
-  chart: string;
+  chart: ArrayBuffer; // encoded svg string
 }
 
 export const DataUsagePeriod = 7; // days
@@ -108,7 +108,7 @@ export async function getDataUsageStats(width: number, height: number, padding: 
   const worker = new Worker(new URL('./getDataUsageStats-worker.ts', import.meta.url));
   const dataUsageStatsChunks = await listDataUsageStatsChunks();
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -118,6 +118,7 @@ export async function getDataUsageStats(width: number, height: number, padding: 
       worker.terminate(); // Terminate the worker if an error occurs
     };
     worker.postMessage([dataUsageStatsChunks, width, height, padding]); // Send data to the worker
-  });
+  })) as DataUsageStats;
+
   return result;
 }

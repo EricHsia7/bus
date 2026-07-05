@@ -24,7 +24,7 @@ async function initializeDataUsage() {
   minDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.min);
   startTimeElement.innerText = dateToString(stats.period.start, 'YYYY-MM-DD');
   endTimeElement.innerText = dateToString(stats.period.end, 'YYYY-MM-DD');
-  chartElement.innerHTML = stats.chart;
+  chartElement.innerHTML = new TextDecoder().decode(stats.chart);
 }
 
 export function showDataUsage(): void {

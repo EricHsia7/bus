@@ -4,8 +4,7 @@ import { createDateObjectFromDate } from '../../../tools/time';
 import { DataUsagePeriod, DataUsageStats, DataUsageStatsChunkArray } from './index';
 
 self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+  processWorkerTask(e.data);
 };
 
 type data = [dataUsageStatsChunks: DataUsageStatsChunkArray, width: number, height: number, padding: number];
@@ -77,7 +76,8 @@ function processWorkerTask(data: data): DataUsageStats {
   const filling = `<linearGradient id="grad1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" /><stop offset="73%" /><stop offset="100%" /></linearGradient>`;
 
   // SVG
-  const chart = /*html*/ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${fillingPath}${path}${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}</svg>`;
+  const svg = /*html*/ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}"><defs>${filling}</defs>${fillingPath}${path}${xAxis}${yAxis}${xAxisLabel}${yAxisLabel}</svg>`;
+  const encodedSvg = new TextEncoder().encode(svg);
 
   const result: DataUsageStats = {
     stats: {
@@ -89,9 +89,9 @@ function processWorkerTask(data: data): DataUsageStats {
       start: startDate,
       end: endDate
     },
-    chart
+    chart: encodedSvg.buffer
   };
 
   // Send the result back to the main thread
-  return result;
+  self.postMessage(result, [encodedSvg.buffer]);
 }
