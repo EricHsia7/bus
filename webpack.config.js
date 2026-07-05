@@ -183,6 +183,8 @@ module.exports = (env, argv) => {
           }
         }
       },
+      usedExports: true,
+      innerGraph: true,
       concatenateModules: true,
       chunkIds: 'deterministic',
       mangleExports: 'size',
