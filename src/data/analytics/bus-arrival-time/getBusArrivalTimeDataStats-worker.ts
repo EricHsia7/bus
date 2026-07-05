@@ -50,7 +50,7 @@ function processWorkerTask(): void {
     const index = date.getHours() * 60 + date.getMinutes();
     statsArray[index] += offset;
   }
-  // Send the complete HTML back to the main thread
+  // Send the complete data back to the main thread
   port.postMessage(statsArray, [statsArray.buffer]);
 
   isProcessing = false;
