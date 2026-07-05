@@ -12,7 +12,7 @@ async function streamInflate(id: number, url: string) {
   if (!response.body) throw new Error('No response body to stream');
 
   const total = parseInt(String(response.headers.get('content-length')), 10);
-  let loaded = 0;
+  let loaded: number = 0;
 
   const inflater = new Decompress();
 
@@ -41,5 +41,5 @@ async function streamInflate(id: number, url: string) {
   }
 
   inflater.push(new Uint8Array(0), true); // final = true -> flush the tail
-  self.postMessage({ id, type: 'done' } as LoaderMessageDone);
+  self.postMessage({ id, type: 'done', loaded, total } as LoaderMessageDone);
 }

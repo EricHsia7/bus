@@ -1,136 +1,7 @@
 import { hasOwnProperty } from '../../tools/index';
 import { clamp } from '../../tools/math';
-import { inflate } from '../../tools/inflate/index';
 import { timeStampToNumber } from '../../tools/time';
 import { recordDataUsage } from '../analytics/data-usage/index';
-
-type FetchTaskRequest = [resolve: Function, reject: Function, requestID: string, tag: string];
-
-interface FetchTask {
-  processing: boolean;
-  requests: Array<FetchTaskRequest>;
-  failed: boolean;
-  timestamp: number;
-  result: any;
-}
-
-type FetchTasks = { [url: string]: FetchTask };
-
-const tasks: FetchTasks = {};
-
-const TTL = 30000;
-const FetchError = new Error('FetchError');
-
-async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
-  // Check concurrency
-  if (hasOwnProperty(tasks, url)) {
-    if (tasks[url].processing) {
-      return await new Promise((resolve, reject) => {
-        tasks[url].requests.push([resolve, reject, requestID, tag]);
-      });
-    } else if (tasks[url].result !== null && new Date().getTime() <= tasks[url].timestamp) {
-      setDataReceivingProgress(requestID, tag, 0, true);
-      return tasks[url].result;
-    }
-  } else {
-    tasks[url] = {
-      processing: true,
-      requests: [],
-      failed: false,
-      timestamp: -1,
-      result: null
-    };
-  }
-
-  // Fetch data
-  const response = await fetch(url);
-  if (!response.ok) {
-    setDataReceivingProgress(requestID, tag, 0, true);
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  // Read chunks
-  const contentLength = parseInt(String(response.headers.get('content-length')), 10);
-  const reader = response.body.getReader();
-  const chunks = [];
-  let receivedLength = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-    chunks.push(value);
-    receivedLength += value.length;
-    const progress = receivedLength / contentLength;
-    setDataReceivingProgress(requestID, tag, progress, false);
-    if (hasOwnProperty(tasks, url)) {
-      for (const request of tasks[url].requests) {
-        setDataReceivingProgress(request[2], request[3], progress, false);
-      }
-    }
-  }
-
-  // Concatenate all the chunks into a single Uint8Array
-  const uint8Array = new Uint8Array(receivedLength);
-  let position = 0;
-  for (const chunk of chunks) {
-    uint8Array.set(chunk, position);
-    position += chunk.length;
-  }
-
-  const inflatedData = await inflate(uint8Array);
-
-  let result;
-  switch (fileType) {
-    case 'json':
-      if (/^<!doctype html>/.test(inflatedData)) {
-        result = await fetchData(url.replace('https://tcgbusfs.blob.core.windows.net/', 'https://erichsia7.github.io/bus-alternative-static-apis/'), requestID, tag, fileType);
-      } else {
-        result = JSON.parse(inflatedData);
-      }
-      break;
-    case 'xml':
-      result = inflatedData;
-      break;
-    default:
-      break;
-  }
-
-  // Record data usage
-  const now = new Date();
-  await recordDataUsage(contentLength, now);
-
-  if (result) {
-    // Resolve promises
-    if (hasOwnProperty(tasks, url)) {
-      const progress = receivedLength / contentLength;
-      let request = tasks[url].requests.shift();
-      while (request) {
-        request[0](result);
-        setDataReceivingProgress(request[2], request[3], progress, false);
-        request = tasks[url].requests.shift();
-      }
-      tasks[url].result = result;
-      tasks[url].timestamp = now.getTime() + TTL;
-      tasks[url].processing = false;
-    }
-    discardExpiredFetchTasks();
-    return result;
-  } else {
-    // Reject promises
-    if (hasOwnProperty(tasks, url)) {
-      let request = tasks[url].requests.shift();
-      while (request) {
-        request[1](FetchError);
-        setDataReceivingProgress(request[2], request[3], 0, true);
-        request = tasks[url].requests.shift();
-      }
-      tasks[url].failed = true;
-    }
-    discardExpiredFetchTasks();
-    throw FetchError;
-  }
-}
 
 export interface LoaderMessageProgress {
   type: 'progress';
@@ -150,6 +21,8 @@ export interface LoaderMessageData {
 export interface LoaderMessageDone {
   type: 'done';
   id: number;
+  loaded: number;
+  total: number;
 }
 
 export interface LoaderMessageError {
@@ -186,6 +59,7 @@ worker.onmessage = (event: MessageEvent) => {
       break;
     case 'done':
       pending.delete(msg.id);
+      recordDataUsage(msg.loaded, new Date());
       job.resolve(concatChunks(job.chunks));
       break;
     case 'error':
@@ -214,24 +88,6 @@ export function fetchInflate(url: string, onProgress: Function): Promise<Uint8Ar
     pending.set(id, { resolve, reject, onProgress, chunks: [] });
     worker.postMessage({ id, url });
   });
-}
-
-function discardExpiredFetchTasks(): void {
-  const now = new Date().getTime();
-  for (const url in tasks) {
-    if (hasOwnProperty(tasks, url)) {
-      if (!tasks[url].processing) {
-        if (now > tasks[url].timestamp) {
-          delete tasks[url];
-          continue;
-        }
-      }
-      if (tasks[url].failed) {
-        delete tasks[url];
-        continue;
-      }
-    }
-  }
 }
 
 export type DataReceivingProgress = {
