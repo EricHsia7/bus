@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface ProviderItem {
   id: number;
@@ -26,9 +26,13 @@ export async function getProvider(requestID: string): Promise<Provider> {
       [1, 9]
     ];
     const result = [];
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getProvider_${api[0]}`, 'json');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getProvider_${api[0]}`, message.percent, false);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }

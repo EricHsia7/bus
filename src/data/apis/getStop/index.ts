@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface StopItem {
   Id: number; // StopID
@@ -36,7 +36,7 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
   const worker = new Worker(new URL('./simplifyStop-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -48,7 +48,7 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
     };
 
     worker.postMessage(array); // Send data to the worker
-  });
+  })) as SimplifiedStop;
 
   return result;
 }
@@ -60,9 +60,13 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
       [1, 11]
     ];
     const result = [];
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getStop_${api[0]}`, 'json');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getStop_${api[0]}`, message.percent, false);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }

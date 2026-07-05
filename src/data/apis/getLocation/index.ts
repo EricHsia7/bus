@@ -1,7 +1,7 @@
 import { ParsedAddress } from '../../../tools/address';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -78,7 +78,7 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
   const worker = new Worker(new URL('./simplifyLocation-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -90,7 +90,7 @@ async function simplifyLocation(Location: Location): Promise<SimplifiedLocation>
     };
 
     worker.postMessage(Location); // Send data to the worker
-  });
+  })) as SimplifiedLocation;
 
   return result;
 }
@@ -99,7 +99,7 @@ async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLo
   const worker = new Worker(new URL('./mergeLocationByName-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -111,7 +111,7 @@ async function mergeLocationByName(object: SimplifiedLocation): Promise<MergedLo
     };
 
     worker.postMessage(object); // Send data to the worker
-  });
+  })) as MergedLocation;
 
   return result;
 }
@@ -120,7 +120,7 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
   const worker = new Worker(new URL('./indexLocationByGeohash-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -132,7 +132,7 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
     };
 
     worker.postMessage(object); // Send data to the worker
-  });
+  })) as IndexedLocation;
 
   return result;
 }
@@ -151,9 +151,13 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
       [1, 11]
     ];
     const result = [];
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getLocation_${api[0]}`, 'json');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getLocation_${api[0]}`, message.percent, false);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }

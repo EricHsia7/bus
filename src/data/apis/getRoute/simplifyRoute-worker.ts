@@ -1,5 +1,5 @@
 import { hasOwnProperty } from '../../../tools/index';
-import { Route, SimplifiedRoute } from './index';
+import { Route, SimplifiedRoute, SimplifiedRouteItem } from './index';
 
 self.onmessage = function (e) {
   const result = processWorkerTask(e.data);
@@ -9,7 +9,7 @@ self.onmessage = function (e) {
 function processWorkerTask(Route: Route): SimplifiedRoute {
   const result: SimplifiedRoute = {};
   for (const item of Route) {
-    const simplifiedItem = {};
+    const simplifiedItem = {} as SimplifiedRouteItem;
     simplifiedItem.pd = item.providerId;
     simplifiedItem.n = item.nameZh;
     simplifiedItem.pid = [item.pathAttributeId];

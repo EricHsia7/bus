@@ -1,7 +1,7 @@
 import { joinByDelimiters, splitByDelimiter } from '../../../tools/text';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress } from '../loader';
 
 /**
  * a stringified array of words (word_1,word_2,word_3,...)
@@ -60,7 +60,11 @@ function unpackMaterialSymbolsDescription(data: MaterialSymbolsDescription): Unp
 export async function getMaterialSymbolsDescription(requestID: string): Promise<UnpackedMaterialSymbolsDescription> {
   async function getData(): Promise<MaterialSymbolsDescription> {
     const apiurl = getMaterialSymbolsAPIURL(1);
-    const data = (await fetchData(apiurl, requestID, 'getMaterialSymbolsDescription', 'json')) as MaterialSymbolsDescription;
+    const decoder = new TextDecoder();
+    const inflatedData = await fetchInflate(apiurl, function (message: LoaderMessageProgress) {
+      setDataReceivingProgress(requestID, 'getMaterialSymbolsDescription', message.percent, false);
+    });
+    const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsDescription;
     return data;
   }
 

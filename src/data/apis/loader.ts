@@ -21,7 +21,7 @@ const tasks: FetchTasks = {};
 const TTL = 30000;
 const FetchError = new Error('FetchError');
 
-export async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
+async function fetchData(url: string, requestID: string, tag: string, fileType: 'json' | 'xml'): Promise<object> {
   // Check concurrency
   if (hasOwnProperty(tasks, url)) {
     if (tasks[url].processing) {

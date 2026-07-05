@@ -1,6 +1,6 @@
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchData, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate, LoaderMessageProgress, setDataReceivingProgress, setDataUpdateTime } from '../loader';
 
 export interface BufferZoneItem {
   Direction: 0 | 1 | 2; // (goBack/GoBack)
@@ -28,7 +28,7 @@ async function extractSegmentBuffers(xml: string): Promise<SegmentBuffers> {
   const worker = new Worker(new URL('./extractSegmentBuffers-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
-  const result = await new Promise((resolve, reject) => {
+  const result = (await new Promise((resolve, reject) => {
     worker.onmessage = function (e) {
       resolve(e.data); // Resolve the promise with the worker's result
       worker.terminate(); // Terminate the worker when done
@@ -40,7 +40,7 @@ async function extractSegmentBuffers(xml: string): Promise<SegmentBuffers> {
     };
 
     worker.postMessage(xml); // Send data to the worker
-  });
+  })) as SegmentBuffers;
 
   return result;
 }
@@ -73,11 +73,15 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
       [1, 15]
     ];
     let result = '';
+    const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const data = await fetchData(url, requestID, `getSegmentBuffers_${api[0]}`, 'xml');
+      const inflatedData = await fetchInflate(url, function (message: LoaderMessageProgress) {
+        setDataReceivingProgress(requestID, `getSegmentBuffers_${api[0]}`, message.percent, false);
+      });
+      const data = decoder.decode(inflatedData); // xml
       result += data;
-      setDataUpdateTime(requestID, -1);
+      setDataUpdateTime(requestID, -1, -480); // UTC+8
     }
     return result;
   }
@@ -112,7 +116,7 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
       }
       setDataReceivingProgress(requestID, 'getSegmentBuffers_0', 0, true);
       setDataReceivingProgress(requestID, 'getSegmentBuffers_1', 0, true);
-      setDataUpdateTime(requestID, -1);
+      setDataUpdateTime(requestID, -1, -480);
       return SegmentBuffersAPIVariableCache_data;
     }
   }
