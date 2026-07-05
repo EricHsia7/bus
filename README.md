@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[3.03 MB] **\*.\***
+[3.02 MB] **\*.\***
 <details>
 <summary>[23.6 KB] <b>*.json</b></summary>
 
@@ -127,13 +127,13 @@
 - [68.76 KB] **feb6193395ddc503c2a9.css.map**
 - [65.32 KB] **fd3307cbc4b3f57005b1.js.map**
 - [62.37 KB] **318468fad5617a09054f.css.map**
-- [60.26 KB] **634b8a99cb1efdcd5929.js.map**
+- [60.17 KB] **634b8a99cb1efdcd5929.js.map**
 - [59.6 KB] **2b3eaa72e94f0bd9424d.css.map**
 - [56.52 KB] **965c6243cc5758a110a8.js.map**
 - [55.24 KB] **33dd258576d7c8e8613c.js.map**
 - [54.78 KB] **62e3bb4644405a0499ec.js.map**
 - [53.12 KB] **f11b7415b2f64986619a.css.map**
-- [51.01 KB] **a342adcfd32d8807e707.js.map**
+- [50.84 KB] **a342adcfd32d8807e707.js.map**
 - [50.64 KB] **015c9977cc3f1b691745.js.map**
 - [50.31 KB] **ca26a42f9712adb38161.js.map**
 - [49.77 KB] **93bc5e9de0781d4c1652.js.map**
