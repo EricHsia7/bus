@@ -1,39 +1,13 @@
-import { UpdateRateDataGroupArray } from './index';
+import { getUpdateRateMessageDone, getUpdateRateMessageError, UpdateRateDataGroupArray } from './index';
 
-interface task {
-  dataGroups: UpdateRateDataGroupArray;
-  port: any;
-}
+self.onmessage = function (event: MessageEvent): void {
+  const { id, dataGroups } = event.data;
+  calculateUpdateRate(id, dataGroups).catch((error: Error) => self.postMessage({ id, type: 'error', error: error.message } as getUpdateRateMessageError));
+};
 
-const taskQueue: Array<task> = [];
-let isProcessing: boolean = false;
-
-if ('onconnect' in self) {
-  self.onconnect = function (e: MessageEvent) {
-    const port = e.ports[0];
-    port.onmessage = function (event: MessageEvent) {
-      const dataGroups = event.data;
-      taskQueue.push({ dataGroups, port });
-      processWorkerTask();
-    };
-  };
-} else {
-  const port = self;
-  self.onmessage = function (event: MessageEvent) {
-    const dataGroups = event.data;
-    taskQueue.push({ dataGroups, port });
-    processWorkerTask();
-  };
-}
-
-function processWorkerTask(): void {
-  if (isProcessing || taskQueue.length === 0) return;
-
-  isProcessing = true;
-  const { dataGroups, port } = taskQueue.shift() as task;
-
+async function calculateUpdateRate(id: number, dataGroups: UpdateRateDataGroupArray) {
   if (dataGroups.length === 0) {
-    port.postMessage(0.8);
+    self.postMessage({ id, type: 'done', result: 0.8 } as getUpdateRateMessageDone);
   } else {
     // Perform the calculation
     let weightedAverage: number = 0;
@@ -54,9 +28,6 @@ function processWorkerTask(): void {
     const result = isNaN(weightedAverage) || weightedAverage < 0.1 || weightedAverage > 1 ? 0.8 : weightedAverage;
 
     // Send the result back to the main thread
-    port.postMessage(result);
+    self.postMessage({ id, type: 'done', result } as getUpdateRateMessageDone);
   }
-
-  isProcessing = false;
-  processWorkerTask(); // Process next task in queue, if any
 }

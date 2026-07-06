@@ -282,58 +282,53 @@ export async function discardUpdateRateDataGroups() {
   }
 }
 
-const workerCallback: Array<[resolve: Function, reject: Function]> = [];
-
-const supportSharedWorker = typeof SharedWorker !== 'undefined'; // Check if SharedWorker is supported, and fall back to Worker if not
-
-const worker: Worker | SharedWorker = supportSharedWorker ? new SharedWorker(new URL('./getUpdateRate-worker.ts', import.meta.url)) : new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url));
-
-if (supportSharedWorker) {
-  (worker as SharedWorker).port.start();
-  // Access the port for communication
-  // Start the port (required by some browsers)
-
-  (worker as SharedWorker).port.onmessage = function (event: MessageEvent) {
-    const callback = workerCallback.shift();
-    if (callback) {
-      callback[0](event.data); // Resolve the promise
-    }
-  };
-
-  (worker as SharedWorker).onerror = function (event: ErrorEvent) {
-    const callback = workerCallback.shift();
-    if (callback) {
-      callback[1](event.message); // Reject the promise
-    }
-  };
-} else {
-  // Fallback to standard worker
-  (worker as Worker).onmessage = function (event: MessageEvent) {
-    const callback = workerCallback.shift();
-    if (callback) {
-      callback[0](event.data); // Resolve the promise
-    }
-  };
-
-  (worker as Worker).onerror = function (event: ErrorEvent) {
-    const callback = workerCallback.shift();
-    if (callback) {
-      callback[1](event.message); // Reject the promise
-    }
-  };
+export interface getUpdateRateJob {
+  resolve: Function;
+  reject: Function;
 }
 
+export interface getUpdateRateMessageDone {
+  type: 'done';
+  id: number;
+  result: number;
+}
+
+export interface getUpdateRateMessageError {
+  type: 'error';
+  id: number;
+  error: Error['message'];
+}
+
+export type getUpdateRateMessage = getUpdateRateMessageDone | getUpdateRateMessageError;
+
+const worker = new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url));
+
+let nextId: number = 0;
+const pending = new Map<number, getUpdateRateJob>();
+
+worker.onmessage = (event: MessageEvent) => {
+  const message = event.data as getUpdateRateMessage;
+  const job = pending.get(message.id);
+  if (!job) return;
+  switch (message.type) {
+    case 'done':
+      pending.delete(message.id);
+      job.resolve(message.result);
+      break;
+    case 'error':
+      pending.delete(message.id);
+      job.reject(new Error(message.error));
+      break;
+  }
+};
+
+worker.onerror = (e) => console.error('Worker crashed:', e.message);
+
 export async function getUpdateRate(): Promise<number> {
-  const dataGroups = await listUpdateRateDataGroups();
-
-  const result = (await new Promise((resolve, reject) => {
-    workerCallback.push([resolve, reject]); // Store the callback functions
-    if (supportSharedWorker) {
-      (worker as SharedWorker).port.postMessage(dataGroups); // Send the task to the worker
-    } else {
-      (worker as Worker).postMessage(dataGroups); // Send the task to the worker
-    }
-  })) as number;
-
-  return result;
+  const dataGroups = listUpdateRateDataGroups();
+  return new Promise((resolve, reject) => {
+    const id = nextId++;
+    pending.set(id, { resolve, reject });
+    worker.postMessage({ id, dataGroups });
+  });
 }
