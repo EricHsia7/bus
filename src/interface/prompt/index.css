@@ -39,8 +39,7 @@
   visibility: hidden;
 }
 
-/* animation: true */
-.css_prompt[animation="true"] {
+.css_prompt {
   animation-name: b-css-show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
