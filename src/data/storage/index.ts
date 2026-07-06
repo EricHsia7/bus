@@ -20,29 +20,42 @@ let storage = {
 
 const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
-let dummyStorage = false;
-async function lfDummyOpen() {
-  if (dummyStorage === false) {
-    dummyStorage = await localforage.createInstance({
+function promiseWithTimeout<T>(p: Promise<T>, ms: number = 5000): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('store timed out')), ms);
+    p.then(
+      (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(t);
+        reject(e);
+      }
+    );
+  });
+}
+
+function lfDummyOpen() {
+  localforage
+    .createInstance({
       name: 'dummyStorage'
-    });
-  }
-  await dummyStorage.dropInstance();
-  dummyStorage = false;
+    })
+    .dropInstance();
 }
 
 export async function lfSetItem(store: number, key: string, value: any): Promise<any> {
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
-      storage[storeKey] = await localforage.createInstance({
+      storage[storeKey] = localforage.createInstance({
         name: storeKey
       });
     }
-    const operation = await storage[storeKey].setItem(key, value);
+    const operation = await promiseWithTimeout<any>(storage[storeKey].setItem(key, value));
     return operation;
   } catch (err) {
-    console.error(err);
+    console.log(err);
     lfDummyOpen();
     return null;
   }
@@ -52,14 +65,14 @@ export async function lfGetItem(store: number, key: string): Promise<any> {
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
-      storage[storeKey] = await localforage.createInstance({
+      storage[storeKey] = localforage.createInstance({
         name: storeKey
       });
     }
-    const operation = await storage[storeKey].getItem(key);
+    const operation = await promiseWithTimeout<any>(storage[storeKey].getItem(key));
     return operation;
   } catch (err) {
-    console.error(err);
+    console.log(err);
     lfDummyOpen();
     return null;
   }
@@ -69,14 +82,14 @@ export async function lfRemoveItem(store: number, key: string): Promise<any> {
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
-      storage[storeKey] = await localforage.createInstance({
+      storage[storeKey] = localforage.createInstance({
         name: storeKey
       });
     }
-    const operation = await storage[storeKey].removeItem(key);
+    const operation = await promiseWithTimeout<any>(storage[storeKey].removeItem(key));
     return operation;
   } catch (err) {
-    console.error(err);
+    console.log(err);
     lfDummyOpen();
     return null;
   }
@@ -86,14 +99,14 @@ export async function lfListItemKeys(store: number): Promise<Array<string>> {
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
-      storage[storeKey] = await localforage.createInstance({
+      storage[storeKey] = localforage.createInstance({
         name: storeKey
       });
     }
-    const keys = await storage[storeKey].keys();
+    const keys = await promiseWithTimeout<Array<string>>(storage[storeKey].keys());
     return keys;
   } catch (err) {
-    console.error(err);
+    console.log(err);
     lfDummyOpen();
     return [];
   }
