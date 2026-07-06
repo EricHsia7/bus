@@ -1,10 +1,10 @@
 import { getLocation, MergedLocation, MergedLocationItem } from '../../data/apis/getLocation/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { IntegratedLocationDetails, IntegratedLocationDetailsAction, integrateLocationDetails } from '../../data/location/details';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, hasOwnProperty } from '../../tools/index';
 import { getPermalink } from '../../tools/permalink';
+import { Progress } from '../../tools/progress';
 import { shareLink } from '../../tools/share';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
@@ -153,9 +153,8 @@ function setupLocationDetailsFieldSkeletonScreen(): void {
 
 async function initializeLocationDetailsField(hash: string) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const requestID = generateIdentifier();
   setupLocationDetailsFieldSkeletonScreen();
-  const integration = await integrateLocationDetails(hash, requestID);
+  const integration = await integrateLocationDetails(hash, function () {});
   updateLocationDetailsField(integration, false, playing_animation);
 }
 
@@ -180,10 +179,9 @@ export function closeLocationDetails(): void {
 }
 
 export async function shareLocationPermalink(hash: string) {
-  const requestID = generateIdentifier();
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Location = (await getLocation(progress, 1)) as MergedLocation;
+  progress.terminate();
   const thisLocationKey = `ml_${hash}`;
   if (hasOwnProperty(Location, thisLocationKey)) {
     const thisLocation = Location[thisLocationKey] as MergedLocationItem;
@@ -195,10 +193,9 @@ export async function shareLocationPermalink(hash: string) {
 }
 
 export async function showLocationPermalinkQRCode(hash: string) {
-  const requestID = generateIdentifier();
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Location = (await getLocation(progress, 1)) as MergedLocation;
+  progress.terminate();
   const thisLocationKey = `ml_${hash}`;
   if (hasOwnProperty(Location, thisLocationKey)) {
     const link = getPermalink(1, {

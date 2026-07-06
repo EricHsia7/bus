@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress } from '../loader';
+import { fetchInflate } from '../loader';
 
 interface MaterialSymbolsSearchIndex {
   dictionary: string;
@@ -31,12 +32,13 @@ function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): Unp
   return unpackedData;
 }
 
-export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<UnpackedMaterialSymbolsSearchIndex> {
+export async function getMaterialSymbolsSearchIndex(progress: Progress): Promise<UnpackedMaterialSymbolsSearchIndex> {
   async function getData(): Promise<MaterialSymbolsSearchIndex> {
     const apiurl = getMaterialSymbolsAPIURL(0);
     const decoder = new TextDecoder();
+    const listenID = progress.listen();
     const inflatedData = await fetchInflate(apiurl, function (message) {
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsSearchIndex', message.percent, false);
+      progress.update(listenID, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsSearchIndex;
     return data;
@@ -72,7 +74,7 @@ export async function getMaterialSymbolsSearchIndex(requestID: string): Promise<
         MaterialSymbolsSearchIndexVariableCache_available = true;
         MaterialSymbolsSearchIndexVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsSearchIndex', 0, true);
+      progress.update(progress.listen(), 1, 1);
       return MaterialSymbolsSearchIndexVariableCache_data;
     }
   }

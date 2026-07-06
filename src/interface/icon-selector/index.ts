@@ -2,7 +2,7 @@ import { getSettingOptionValue } from '../../data/settings/index';
 import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMaterialSymbols } from '../../data/symbols';
 import { BitState } from '../../tools/bit-state';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
-import { booleanToString, generateIdentifier } from '../../tools/index';
+import { booleanToString } from '../../tools/index';
 import { getCSSVariableValue } from '../../tools/style';
 import { openIconSelectorSearch } from '../icon-selector-search';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
@@ -509,7 +509,6 @@ function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
 
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const requestID = generateIdentifier();
 
   initializeIconSelectorVirtualScroll();
 
@@ -517,7 +516,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   bodyElement.scrollTop = 0;
 
-  const integration = await integrateMaterialSymbols(requestID);
+  const integration = await integrateMaterialSymbols(function () {});
   currentIntegration = integration;
   updateIconSelectorField(integration, inputElement, 0, false, playing_animation);
 }

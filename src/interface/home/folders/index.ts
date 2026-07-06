@@ -1,10 +1,10 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
-import { DataReceivingProgressEvent } from '../../../data/apis/loader';
 import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { booleanToString, hasOwnProperty } from '../../../tools/index';
+import { ProgressMessage } from '../../../tools/progress';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
@@ -131,13 +131,7 @@ function animateUpdateTimer(interval: number): void {
   HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 
-function handleDataReceivingProgressUpdates(event: Event): void {
-  const CustomEvent = event as DataReceivingProgressEvent;
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-scale-x', CustomEvent.detail.progress.toString());
-  if (CustomEvent.detail.stage === 'end') {
-    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-  }
-}
+function handleDataReceivingProgressUpdates(message: ProgressMessage): void {}
 
 export function setupFolderFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
@@ -573,11 +567,11 @@ async function refreshFolders(): Promise<number> {
   try {
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-    const requestID = generateIdentifier();
     HomeUpdateTimerElement.setAttribute('refreshing', 'true');
     HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
-    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
-    const integration = await integrateFolders(requestID);
+    const integration = await integrateFolders(function (message) {
+      HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-scale-x', message.percent.toString());
+    });
     updateFoldersElement(integration, false, playing_animation);
     let updateRate = 0;
     if (refresh_interval_setting.dynamic) {

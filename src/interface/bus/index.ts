@@ -2,7 +2,6 @@ import { integrateBus } from '../../data/bus/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { generateIdentifier } from '../../tools/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { setupBusPropertiesFieldSkeletonScreen, updateBusPropertiesField } from './properties';
 
@@ -39,8 +38,7 @@ export function closeBus(): void {
 async function initializeBusPage(id: number) {
   setupBusPropertiesFieldSkeletonScreen();
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const requestID = generateIdentifier();
-  const integration = await integrateBus(id, requestID);
+  const integration = await integrateBus(id, function () {});
   updateBusPropertiesField(integration.properties, false, playing_animation);
 }
 

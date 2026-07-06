@@ -2,6 +2,7 @@ import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 // import { generateLabelFromAddresses } from '../../tools/address';
 // import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 // import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 // import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
@@ -9,11 +10,9 @@ import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
-import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
@@ -114,9 +113,9 @@ export async function initializeFolderList() {
 
 export async function createFolder(name: Folder['name'], icon: Folder['icon']): Promise<Folder['id'] | false> {
   // Validate icon
-  const requestID = generateIdentifier();
-  const materialSymbolsList = await getMaterialSymbolsList(requestID);
-  deleteDataReceivingProgress(requestID);
+  const progress = new Progress(1, function () {});
+  const materialSymbolsList = await getMaterialSymbolsList(progress);
+  progress.terminate();
   if (materialSymbolsList.indexOf(icon) < 0) return false;
 
   // Check existence
@@ -165,9 +164,9 @@ export async function updateFolder(folderID: Folder['id'], name: Folder['name'],
   const existingFolderObject = JSON.parse(existingFolderJSON) as Folder;
 
   // Validate icon
-  const requestID = generateIdentifier();
-  const materialSymbolsSearchList = await getMaterialSymbolsList(requestID);
-  deleteDataReceivingProgress(requestID);
+  const progress = new Progress(1, function () {});
+  const materialSymbolsSearchList = await getMaterialSymbolsList(progress);
+  progress.terminate();
   if (materialSymbolsSearchList.indexOf(icon) < 0) return false;
 
   // Generate folder
@@ -433,14 +432,10 @@ export interface integratedFolders {
   dataUpdateTime: number;
 }
 
-export async function integrateFolders(requestID: string): Promise<integratedFolders> {
-  setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
-  setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
-  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
-  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
-
-  const [foldersWithContent, Route, EstimateTime] = (await Promise.all([listFoldersWithContent(), getRoute(requestID, true), getEstimateTime(requestID)])) as [FolderWithContentArray, SimplifiedRoute, EstimateTime];
-  // const Location = (await getLocation(requestID, 1)) as MergedLocation;
+export async function integrateFolders(progressCallback: ProgressCallback): Promise<integratedFolders> {
+  const progress = new Progress(4, progressCallback); // getRoute: 2 + getEstimateTime: 2
+  const [foldersWithContent, Route, EstimateTime] = (await Promise.all([listFoldersWithContent(), getRoute(progress, true), getEstimateTime(progress)])) as [FolderWithContentArray, SimplifiedRoute, EstimateTime];
+  // const Location = (await getLocation(progress, 1)) as MergedLocation;
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
   // const location_labels = getSettingOptionValue('location_labels');
@@ -553,11 +548,10 @@ export async function integrateFolders(requestID: string): Promise<integratedFol
 
   const result: integratedFolders = {
     folders: folders,
-    dataUpdateTime: getDataUpdateTime(requestID)
+    dataUpdateTime: progress.getTime()
   };
 
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  progress.terminate();
 
   if (!power_saving) {
     if (refresh_interval_setting.dynamic) {
@@ -642,8 +636,8 @@ export async function removeFromFolder(folderID: Folder['id'], type: FolderConte
 }
 
 export async function saveStop(folderID: Folder['id'], StopID: FolderContentStop['id'], RouteID: FolderContentStop['route']['id']): Promise<boolean> {
-  const requestID = generateIdentifier();
-  const [Stop, Location, Route] = (await Promise.all([getStop(requestID), getLocation(requestID, 0), getRoute(requestID, true)])) as [SimplifiedStop, SimplifiedLocation, SimplifiedRoute];
+  const progress = new Progress(6, function () {});
+  const [Stop, Location, Route] = (await Promise.all([getStop(progress), getLocation(progress, 0), getRoute(progress, true)])) as [SimplifiedStop, SimplifiedLocation, SimplifiedRoute];
 
   const thisStop = Stop[`s_${StopID}`];
   const thisStopDirection: number = parseInt(thisStop.goBack, 10);
@@ -671,18 +665,14 @@ export async function saveStop(folderID: Folder['id'], StopID: FolderContentStop
     }
   };
   const save = await saveToFolder(folderID, newContent);
-
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
-
+  progress.terminate();
   return save;
 }
 
 export async function saveRoute(folderID: Folder['id'], RouteID: FolderContentRoute['id']): Promise<boolean> {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+  progress.terminate();
   const thisRouteKey = `r_${RouteID}`;
   let thisRoute = {} as SimplifiedRouteItem;
   if (hasOwnProperty(Route, thisRouteKey)) {
@@ -706,10 +696,9 @@ export async function saveRoute(folderID: Folder['id'], RouteID: FolderContentRo
 }
 
 export async function saveLocation(folderID: Folder['id'], hash: FolderContentLocation['id']): Promise<boolean> {
-  const requestID = generateIdentifier();
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Location = (await getLocation(progress, 1)) as MergedLocation;
+  progress.terminate();
   const thisLocationKey = `ml_${hash}`;
   let thisLocation = {} as MergedLocationItem;
   if (hasOwnProperty(Location, thisLocationKey)) {

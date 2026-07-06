@@ -1,5 +1,6 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusData, BusDataItem, getBusData } from '../apis/getBusData/index';
 import { BusEvent, BusEventItem, getBusEvent } from '../apis/getBusEvent/index';
 import { CarInfoItem, getCarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from '../apis/getCarInfo/index';
@@ -7,7 +8,6 @@ import { getLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { searchRouteByPathAttributeId } from '../search/index';
 
 export interface integratedBusProperty {
@@ -24,10 +24,11 @@ export interface integratedBus {
   FullPathAttributeId: SimplifiedRouteItem['pid'];
 }
 
-export async function integrateBus(id: CarInfoItem['BusId'], requestID: string): Promise<integratedBus> {
+export async function integrateBus(id: CarInfoItem['BusId'], progressCallback: ProgressCallback): Promise<integratedBus> {
   const carKey = `c_${id}`;
-  const [CarInfo, BusData, BusEvent] = (await Promise.all([getCarInfo(requestID, true), getBusData(requestID), getBusEvent(requestID)])) as [SimplifiedCarInfo, BusData, BusEvent];
-  const [Stop, Location] = (await Promise.all([getStop(requestID), getLocation(requestID, 0)])) as [SimplifiedStop, SimplifiedLocation];
+  const progress = new Progress(10, progressCallback);
+  const [CarInfo, BusData, BusEvent] = (await Promise.all([getCarInfo(progress, true), getBusData(progress), getBusEvent(progress)])) as [SimplifiedCarInfo, BusData, BusEvent];
+  const [Stop, Location] = (await Promise.all([getStop(progress), getLocation(progress, 0)])) as [SimplifiedStop, SimplifiedLocation];
 
   const result: integratedBus = { properties: [], RouteID: 0, FullPathAttributeId: [] };
 
@@ -131,7 +132,6 @@ export async function integrateBus(id: CarInfoItem['BusId'], requestID: string):
     value: thisLocationItemName
   });
 
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  progress.terminate();
   return result;
 }

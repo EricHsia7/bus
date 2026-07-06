@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress } from '../loader';
+import { fetchInflate } from '../loader';
 
 /**
  * a stringified array of symbol names
@@ -62,12 +63,13 @@ function unpackMaterialSymbolsSimilarity(data: MaterialSymbolsSimilarity): Unpac
   return unpackedData;
 }
 
-export async function getMaterialSymbolsSimilarity(requestID: string): Promise<UnpackedMaterialSymbolsSimilarity> {
+export async function getMaterialSymbolsSimilarity(progress: Progress): Promise<UnpackedMaterialSymbolsSimilarity> {
   async function getData(): Promise<MaterialSymbolsSimilarity> {
     const apiurl = getMaterialSymbolsAPIURL(2);
     const decoder = new TextDecoder();
+    const listenID = progress.listen();
     const inflatedData = await fetchInflate(apiurl, function (message) {
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsSimilarity', message.percent, false);
+      progress.update(listenID, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsSimilarity;
     return data;
@@ -103,7 +105,7 @@ export async function getMaterialSymbolsSimilarity(requestID: string): Promise<U
         MaterialSymbolsSimilarityVariableCache_available = true;
         MaterialSymbolsSimilarityVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsSimilarity', 0, true);
+      progress.update(progress.listen(), 1, 1);
       return MaterialSymbolsSimilarityVariableCache_data;
     }
   }

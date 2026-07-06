@@ -1,7 +1,8 @@
+import { Progress } from '../../../tools/progress';
 import { joinByDelimiters, splitByDelimiter } from '../../../tools/text';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress } from '../loader';
+import { fetchInflate } from '../loader';
 
 /**
  * a stringified array of words (word_1,word_2,word_3,...)
@@ -57,12 +58,13 @@ function unpackMaterialSymbolsDescription(data: MaterialSymbolsDescription): Unp
   return unpackedData;
 }
 
-export async function getMaterialSymbolsDescription(requestID: string): Promise<UnpackedMaterialSymbolsDescription> {
+export async function getMaterialSymbolsDescription(progress: Progress): Promise<UnpackedMaterialSymbolsDescription> {
   async function getData(): Promise<MaterialSymbolsDescription> {
     const apiurl = getMaterialSymbolsAPIURL(1);
     const decoder = new TextDecoder();
+    const listenID = progress.listen();
     const inflatedData = await fetchInflate(apiurl, function (message) {
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsDescription', message.percent, false);
+      progress.update(listenID, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsDescription;
     return data;
@@ -98,7 +100,7 @@ export async function getMaterialSymbolsDescription(requestID: string): Promise<
         MaterialSymbolsDescriptionVariableCache_available = true;
         MaterialSymbolsDescriptionVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getMaterialSymbolsDescription', 0, true);
+      progress.update(progress.listen(), 1, 1);
       return MaterialSymbolsDescriptionVariableCache_data;
     }
   }

@@ -1,10 +1,10 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { hasOwnProperty } from '../../tools';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { getMaterialSymbolsDescription } from '../apis/getMaterialSymbolsDescription';
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
 import { getMaterialSymbolsSearchIndex } from '../apis/getMaterialSymbolsSearchIndex';
 import { getMaterialSymbolsSimilarity } from '../apis/getMaterialSymbolsSimilarity';
-import { deleteDataReceivingProgress } from '../apis/loader';
 
 export interface IntegratedMaterialSymbolsItem {
   name: MaterialSymbol;
@@ -15,8 +15,9 @@ export interface IntegratedMaterialSymbolsItem {
 
 export type IntegratedMaterialSymbols = Array<IntegratedMaterialSymbolsItem>;
 
-export async function integrateMaterialSymbols(requestID: string): Promise<IntegratedMaterialSymbols> {
-  const [searchIndex, description, similarity, list] = await Promise.all([getMaterialSymbolsSearchIndex(requestID), getMaterialSymbolsDescription(requestID), getMaterialSymbolsSimilarity(requestID), getMaterialSymbolsList(requestID)]);
+export async function integrateMaterialSymbols(progressCallback: ProgressCallback): Promise<IntegratedMaterialSymbols> {
+  const progress = new Progress(4, progressCallback);
+  const [searchIndex, description, similarity, list] = await Promise.all([getMaterialSymbolsSearchIndex(progress), getMaterialSymbolsDescription(progress), getMaterialSymbolsSimilarity(progress), getMaterialSymbolsList(progress)]);
 
   const searchIndexDictionary = searchIndex.dictionary.split(',');
   const similaritySymbols = similarity.symbols.split(',');
@@ -63,7 +64,7 @@ export async function integrateMaterialSymbols(requestID: string): Promise<Integ
     result.push(integratedItem);
   }
 
-  deleteDataReceivingProgress(requestID);
+  progress.terminate();
 
   return result;
 }

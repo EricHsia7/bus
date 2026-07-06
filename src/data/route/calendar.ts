@@ -1,8 +1,8 @@
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
 import { getTimeTable } from '../apis/getTimeTable/index';
 import { parseTimeCode, TimeMoment } from '../apis/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export type integratedRouteCalendarEventTime = [start: number, end: number]; // hours * 60 + minutes
 export type integratedRouteCalendarEventInterval = [min: number, max: number];
@@ -35,8 +35,9 @@ export interface integratedRouteCalendar {
   timeZoneOffset: -480;
 }
 
-export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid'], requestID: string): Promise<integratedRouteCalendar> {
-  const [SemiTimeTable, TimeTable] = await Promise.all([getSemiTimeTable(requestID), getTimeTable(requestID)]);
+export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid'], progressCallback: ProgressCallback): Promise<integratedRouteCalendar> {
+  const progress = new Progress(4, progressCallback);
+  const [SemiTimeTable, TimeTable] = await Promise.all([getSemiTimeTable(progress), getTimeTable(progress)]);
 
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
@@ -154,8 +155,6 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
     result.trackQuantity[i] = lastEndTime.length;
   }
 
-  deleteDataUpdateTime(requestID);
-  deleteDataReceivingProgress(requestID);
-
+  progress.terminate();
   return result;
 }

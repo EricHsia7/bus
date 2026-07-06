@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 export interface BufferZoneItem {
   Direction: 0 | 1 | 2; // (goBack/GoBack)
@@ -66,7 +67,7 @@ async function simplifySegmentBuffers(array: SegmentBuffers): Promise<Simplified
   return result;
 }
 
-export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSegmentBuffer> {
+export async function getSegmentBuffers(progress: Progress): Promise<SimplifiedSegmentBuffer> {
   async function getData() {
     const apis = [
       [0, 15],
@@ -76,12 +77,13 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getSegmentBuffers_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = decoder.decode(inflatedData); // xml
       result += data;
-      setDataUpdateTime(requestID, -1, -480); // UTC+8
+      // progress.timestamp(-1, -480); // UTC+8
     }
     return result;
   }
@@ -114,9 +116,8 @@ export async function getSegmentBuffers(requestID: string): Promise<SimplifiedSe
         SegmentBuffersAPIVariableCache_available = true;
         SegmentBuffersAPIVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getSegmentBuffers_0', 0, true);
-      setDataReceivingProgress(requestID, 'getSegmentBuffers_1', 0, true);
-      setDataUpdateTime(requestID, -1, -480);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return SegmentBuffersAPIVariableCache_data;
     }
   }

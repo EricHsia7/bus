@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 export interface CarInfoItem {
   BusId: number; // BusId ≠ BusID
@@ -57,7 +58,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
   return result;
 }
 
-export async function getCarInfo(requestID: string, simplified: boolean = false): Promise<CarInfo | SimplifiedCarInfo> {
+export async function getCarInfo(progress: Progress, simplified: boolean = false): Promise<CarInfo | SimplifiedCarInfo> {
   async function getData() {
     const apis = [
       [0, 2],
@@ -67,14 +68,15 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getCarInfo_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+      progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
@@ -116,9 +118,8 @@ export async function getCarInfo(requestID: string, simplified: boolean = false)
         CarInfoAPIVariableCache[cacheType].available = true;
         CarInfoAPIVariableCache[cacheType].data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getCarInfo_0', 0, true);
-      setDataReceivingProgress(requestID, 'getCarInfo_1', 0, true);
-      setDataUpdateTime(requestID, -1);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return CarInfoAPIVariableCache[cacheType].data;
     }
   }

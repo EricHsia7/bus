@@ -1,7 +1,8 @@
 import { ParsedAddress } from '../../../tools/address';
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 export interface LocationItem {
   Id: number; // StopID
@@ -139,12 +140,12 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
 
 /**
  * getLocation
- * @param requestID
+ * @param progress
  * @param type 0: simplified, 1: merged, 2: indexed
  * @returns SimplifiedLocation, MergedLocation, or IndexedLocation
  */
 
-export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<SimplifiedLocation | MergedLocation | IndexedLocation> {
+export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<SimplifiedLocation | MergedLocation | IndexedLocation> {
   async function getData() {
     const apis = [
       [0, 11],
@@ -154,14 +155,15 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getLocation_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+      progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
@@ -180,13 +182,13 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
         break;
       }
       case 1: {
-        const simplified_result = await getLocation(requestID, 0);
+        const simplified_result = await getLocation(progress, 0);
         const merged_result = await mergeLocationByName(simplified_result);
         finalResult = merged_result;
         break;
       }
       case 2: {
-        const merged_result = await getLocation(requestID, 1);
+        const merged_result = await getLocation(progress, 1);
         const indexed_result = await indexLocationByGeohash(merged_result);
         finalResult = indexed_result;
         break;
@@ -213,13 +215,13 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
           break;
         }
         case 1: {
-          const simplified_result = await getLocation(requestID, 0);
+          const simplified_result = await getLocation(progress, 0);
           const merged_result = await mergeLocationByName(simplified_result);
           finalResult = merged_result;
           break;
         }
         case 2: {
-          const merged_result = await getLocation(requestID, 1);
+          const merged_result = await getLocation(progress, 1);
           const indexed_result = await indexLocationByGeohash(merged_result);
           finalResult = indexed_result;
           break;
@@ -241,9 +243,8 @@ export async function getLocation(requestID: string, type: 0 | 1 | 2): Promise<S
         LocationAPIVariableCache[cacheType].available = true;
         LocationAPIVariableCache[cacheType].data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getLocation_0', 0, true);
-      setDataReceivingProgress(requestID, 'getLocation_1', 0, true);
-      setDataUpdateTime(requestID, -1);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return LocationAPIVariableCache[cacheType].data;
     }
   }

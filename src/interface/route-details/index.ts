@@ -1,10 +1,10 @@
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../../data/apis/loader';
 import { IntegratedRouteDetails, IntegratedRouteDetailsAction, integrateRouteDetails } from '../../data/route/details';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, hasOwnProperty } from '../../tools/index';
 import { getPermalink } from '../../tools/permalink';
+import { Progress } from '../../tools/progress';
 import { shareLink } from '../../tools/share';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
@@ -158,9 +158,8 @@ function setupRouteDetailsFieldSkeletonScreen(): void {
 
 async function initializeRouteDetailsField(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid']) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-  const requestID = generateIdentifier();
   setupRouteDetailsFieldSkeletonScreen();
-  const integration = await integrateRouteDetails(RouteID, PathAttributeId, requestID);
+  const integration = await integrateRouteDetails(RouteID, PathAttributeId, function () {});
   updateRouteDetailsField(integration, false, playing_animation);
 }
 
@@ -186,10 +185,9 @@ export function closeRouteDetails(): void {
 }
 
 export async function shareRoutePermalink(RouteID: SimplifiedRouteItem['id']) {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+  progress.terminate();
   const thisRouteKey = `r_${RouteID}`;
   if (hasOwnProperty(Route, thisRouteKey)) {
     const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
@@ -202,10 +200,9 @@ export async function shareRoutePermalink(RouteID: SimplifiedRouteItem['id']) {
 }
 
 export async function showRoutePermalinkQRCode(RouteID: SimplifiedRouteItem['id']) {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+  progress.terminate();
   const thisRouteKey = `r_${RouteID}`;
   if (hasOwnProperty(Route, thisRouteKey)) {
     const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;

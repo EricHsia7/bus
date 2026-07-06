@@ -26,7 +26,7 @@ export function offsetDate(origin: Date, date: number, hours: number, minutes: n
   return duplicatedOrigin;
 }
 
-export function timeStampToNumber(string: string, timeZoneOffset: number = 0): number {
+export function timestampToNumber(string: string, timeZoneOffset: number = 0): number {
   const regex = /[0-9\.]*/gm;
   const match = string.match(regex);
   if (match) {

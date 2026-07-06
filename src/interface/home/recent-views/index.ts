@@ -2,7 +2,7 @@ import { integratedRecentView, integratedRecentViews, integrateRecentViews } fro
 import { getSettingOptionValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../../tools/index';
+import { booleanToString, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
 import { openBus } from '../../bus/index';
 import { getBlankIconElement, setIcon } from '../../icons/index';
@@ -296,8 +296,7 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
 async function refreshRecentViews(): Promise<number> {
   try {
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const requestID = generateIdentifier();
-    const integration = await integrateRecentViews(requestID);
+    const integration = await integrateRecentViews(function () {});
     updateRecentViewsField(integration, false, playing_animation);
     return 15 * 1000;
   } catch (err) {

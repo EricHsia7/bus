@@ -1,5 +1,4 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
@@ -8,7 +7,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { deepEqual } from '../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { booleanToString, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { VisibilityMonitor } from '../../tools/visibility-monitor';
@@ -125,14 +124,6 @@ export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWid
 function animateUpdateTimer(interval: number): void {
   RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${interval.toString()}ms`);
   RouteUpdateTimerElement.classList.add('css_route_update_timer_scale_down');
-}
-
-function handleDataReceivingProgressUpdates(event: Event): void {
-  const CustomEvent = event as DataReceivingProgressEvent;
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', CustomEvent.detail.progress.toString());
-  if (CustomEvent.detail.stage === 'end') {
-    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-  }
 }
 
 function generateElementOfThreadBox(index: number): HTMLElement {
@@ -1173,11 +1164,11 @@ async function refreshRoute(): Promise<number> {
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
-    const requestID = generateIdentifier();
     RouteUpdateTimerElement.setAttribute('refreshing', 'true');
     RouteUpdateTimerElement.classList.remove('css_route_update_timer_scale_down');
-    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
-    const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, requestID);
+    const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
+      RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', message.percent.toString());
+    });
     updateRouteField(integration, false, playing_animation);
     let updateRate = 0;
     if (refresh_interval_setting.dynamic) {

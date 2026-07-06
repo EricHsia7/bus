@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 let TimetableAPIVariableCache_available: boolean = false;
 let TimetableAPIVariableCache_data: object = {};
@@ -16,7 +17,7 @@ export interface TimetableItem {
 
 export type Timetable = Array<TimetableItem>;
 
-export async function getTimeTable(requestID: string): Promise<Timetable> {
+export async function getTimeTable(progress: Progress): Promise<Timetable> {
   async function getData() {
     const apis = [
       [0, 14],
@@ -26,14 +27,15 @@ export async function getTimeTable(requestID: string): Promise<Timetable> {
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getTimeTable_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+      progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
@@ -62,9 +64,8 @@ export async function getTimeTable(requestID: string): Promise<Timetable> {
         TimetableAPIVariableCache_available = true;
         TimetableAPIVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getTimeTable_0', 0, true);
-      setDataReceivingProgress(requestID, 'getTimeTable_1', 0, true);
-      setDataUpdateTime(requestID, -1, -480);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return TimetableAPIVariableCache_data;
     }
   }
