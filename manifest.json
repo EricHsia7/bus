@@ -61,55 +61,55 @@
       "src": "https://erichsia7.github.io/bus/icons/48x48-maskable.png",
       "sizes": "48x48",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/72x72-maskable.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/96x96-maskable.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/144x144-maskable.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/168x168-maskable.png",
       "sizes": "168x168",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/192x192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/256x256-maskable.png",
       "sizes": "256x256",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/512x512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "https://erichsia7.github.io/bus/icons/1024x1024-maskable.png",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "start_url": "./?display=standalone",
