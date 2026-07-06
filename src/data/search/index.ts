@@ -206,7 +206,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
   });
 
   const unicodeGroupsLength1 = unicodeGroups.length - 1;
-  let intersection = [];
+  let intersection: Array<number> = [];
 
   if (unicodeGroupsLength1 === 0) {
     intersection = unicodeGroups[0];

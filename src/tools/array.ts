@@ -47,7 +47,7 @@ export function areItemsDifferent(arr: Array): boolean {
  * @returns An array of the common items
  */
 
-export function getIntersection(arrayA: Array, arrayB: Array): Array {
+export function getIntersection<T>(arrayA: Array<T>, arrayB: Array<T>): Array<T> {
   const result = [];
   if (arrayA.length <= arrayB.length) {
     for (const item of arrayA) {
