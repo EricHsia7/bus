@@ -112,6 +112,7 @@
       "purpose": "any maskable"
     }
   ],
+  "background_color": "#658fc6",
   "start_url": "./?display=standalone",
   "display": "standalone"
 }
