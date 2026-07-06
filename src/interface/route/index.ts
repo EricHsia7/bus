@@ -1161,21 +1161,15 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
 async function refreshRoute(): Promise<number> {
   try {
-    console.log(0);
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
     RouteUpdateTimerElement.setAttribute('refreshing', 'true');
     RouteUpdateTimerElement.classList.remove('css_route_update_timer_scale_down');
-    console.log(1);
     const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
-      console.log(2);
-
       RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', message.percent.toString());
     });
-    console.log(3);
     updateRouteField(integration, false, playing_animation);
-    console.log(4);
     let updateRate = 0;
     if (refresh_interval_setting.dynamic) {
       updateRate = await getUpdateRate();
